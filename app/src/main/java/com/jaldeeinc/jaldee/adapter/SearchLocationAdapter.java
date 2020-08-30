@@ -87,7 +87,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         TextView txtservice1, txtservice2, txtSeeAll, txtwork1, txtworkSeeAll, txtworking;
         TextView txt_earliestAvailable, txt_apptservices, txt_dontservices, txtapptSeeAll, txtdntSeeAll;
         Button btn_appointments, btn_donations;
-        TextView tvAppService1, tvAppService2, tvAppSeeAll;
+        TextView tvAppService1, tvAppService2, tvAppSeeAll, tvAvailDate;
 
         ArrayList<WorkingModel> workingModelArrayList = new ArrayList<>();
         String txtdataMon = "";
@@ -146,6 +146,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             tvAppService1 = view.findViewById(R.id.tv_appService1);
             tvAppService2 = view.findViewById(R.id.tv_appservice2);
             tvAppSeeAll = view.findViewById(R.id.tv_appSeeAll);
+            tvAvailDate = view.findViewById(R.id.txtavaildate);
         }
     }
 
@@ -1059,11 +1060,14 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             if (online_presence) {
                 if (mScheduleList.get(position).isCheckinAllowed()) {
                     myViewHolder.LAppointment.setVisibility(View.VISIBLE);
+                    myViewHolder.tvAvailDate.setText("Available on " + "\n" +  mScheduleList.get(position).getAvailableSchedule().getAvailableDate());
+                    myViewHolder.tvAvailDate.setVisibility(View.VISIBLE);
                     myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
                     myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
                 } else {
                     myViewHolder.LAppointment.setVisibility(View.GONE);
                     myViewHolder.LApp_Services.setVisibility(View.GONE);
+                    myViewHolder.tvAvailDate.setVisibility(View.GONE);
                     myViewHolder.txt_apptservices.setVisibility(View.GONE);
                     myViewHolder.txtapptSeeAll.setVisibility(View.GONE);
                 }
@@ -1072,6 +1076,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 myViewHolder.LApp_Services.setVisibility(View.GONE);
                 myViewHolder.txt_apptservices.setVisibility(View.GONE);
                 myViewHolder.txtapptSeeAll.setVisibility(View.GONE);
+                myViewHolder.tvAvailDate.setVisibility(View.GONE);
             }
 
             ArrayList<SearchAppointmentDepartmentServices> apptServicesList = new ArrayList<>();

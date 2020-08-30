@@ -291,7 +291,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         return convertView;
     }
 
-    CardView cvGmeetDetails,cvZoomDetails,cvWhatsppDetails,cvPhoneDetails;
+    CardView cvGmeetDetails, cvZoomDetails, cvWhatsppDetails, cvPhoneDetails;
 
     @Override
     public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View view, ViewGroup parent) {
@@ -754,7 +754,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
         tv_businessname.setText(Config.toTitleCase(activelist.getBusinessName()));
 
-
         icon_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -937,12 +936,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             tv_batchName.setVisibility(View.GONE);
         }
 
-//        if (activelist.getService().getVirtualCallingModes() != null) {
-//
-//            if (activelist.getService().getVirtualCallingModes().size() > 0) {
-//                apiGetMeetingDetails(activelist.getYnwUuid(), activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getId());
-//            }
-//        }
+
+        if (activelist.getService() != null) {
+            if (activelist.getService().getServiceType().equalsIgnoreCase("virtualService")) {
+                apiGetMeetingDetails(activelist.getYnwUuid(), activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getId());
+            }
+        }
 
         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
 
@@ -2011,7 +2010,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             @Override
             public void onClick(View v) {
 
-                meetingDetailsWindow = new MeetingDetailsWindow(mContext, activelist.getCheckInTime(), activelist.getService().getName(), teleServiceCheckInResponse,activelist.getService().getVirtualCallingModes().get(childPosition).getCallingMode());
+                meetingDetailsWindow = new MeetingDetailsWindow(mContext, activelist.getCheckInTime(), activelist.getService().getName(), teleServiceCheckInResponse, activelist.getService().getVirtualCallingModes().get(childPosition).getCallingMode());
                 meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 meetingDetailsWindow.show();
                 DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
@@ -2149,6 +2148,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                             cvGmeetDetails.setVisibility(View.VISIBLE);
                         }
 
+
                     }
 
 
@@ -2164,11 +2164,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 Config.logV("Fail---------------" + t.toString());
 //                 if (mDialog.isShowing())
 //                 Config.closeDialog(get, mDialog);
-
             }
         });
-
-
     }
 
 
