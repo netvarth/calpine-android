@@ -33,8 +33,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.jaldeeinc.jaldee.activities.Appointment.btn_checkin;
+import static com.jaldeeinc.jaldee.activities.Appointment.coupon_link;
 import static com.jaldeeinc.jaldee.activities.Appointment.dateTime;
 import static com.jaldeeinc.jaldee.activities.Appointment.earliestAvailable;
+import static com.jaldeeinc.jaldee.activities.Appointment.llCoupons;
+import static com.jaldeeinc.jaldee.activities.Appointment.tvNoServiceMessage;
 import static com.jaldeeinc.jaldee.common.MyApplication.getContext;
 
 /**
@@ -188,13 +192,12 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
 
 //                if (mDialog.isShowing())
 //                    Config.closeDialog(getParent(), mDialog);
-
-
                     if (response.code() == 200) {
                         schedResponse = response.body();
                         SharedPreference.getInstance(AppointmentDate.this).setValue("selectedDate",changedDate);
 
                         if (schedResponse.size() != 0) {
+
 
                             if (schedResponse.size() > 0) {
                                 i = 0;
@@ -238,7 +241,6 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
 
 //                            tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
                                 tv_queuetime.setText(schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).geteTime());
-
 
                                 if (schedResponse.get(i).getId() != 0) {
                                     id = String.valueOf(schedResponse.get(i).getId());
@@ -294,6 +296,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
                                         tv_queuetime.setText(schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).geteTime());
 
 
+
                                         if (schedResponse.get(i).getId() != 0) {
                                             id = String.valueOf(schedResponse.get(i).getId());
                                             ApiScheduleId(id, mDate, accountIDs);
@@ -337,6 +340,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
 
 //                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
                                         tv_queuetime.setText(schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).geteTime());
+
 
 
                                         if (schedResponse.get(i).getId() != 0) {
@@ -511,6 +515,11 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
             dateTime = "";
 
         }
+//        else {
+//            coupon_link.setVisibility(View.VISIBLE);
+//            llCoupons.setVisibility(View.VISIBLE);
+//            btn_checkin.setVisibility(View.VISIBLE);
+//        }
     }
 
 

@@ -48,7 +48,6 @@ public class Splash extends AppCompatActivity {
         animation = AnimationUtils.loadAnimation(Splash.this, R.anim.sample);
         ivLogo.startAnimation(animation);
 
-
         Config.logV("SPLASH @@@@@@@@@@@");
     }
 

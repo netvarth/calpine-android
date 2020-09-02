@@ -75,7 +75,7 @@ public class ResetOtp extends AppCompatActivity {
         txtproceed = (TextView) findViewById(R.id.txtproceed);
         final String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
 
-
+       // txtproceed.setText("OTP has been sent to " + loginId);
         Typeface tyface_p = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Light.otf");
         txtproceed.setTypeface(tyface_p);
@@ -142,7 +142,6 @@ public class ResetOtp extends AppCompatActivity {
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 
-//        txt_enterotp.setText(spannable);
         txtproceed.setText(spannable);
 
 

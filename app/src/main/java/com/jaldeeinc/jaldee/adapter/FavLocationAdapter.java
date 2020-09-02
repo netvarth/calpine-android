@@ -150,6 +150,8 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                     iCheckIn.putExtra("getAvail_date",mQueueList.get(position).getNextAvailableQueue().getAvailableDate());
                 }
                 if(queueList.getNextAvailableQueue()!=null){
+                    iCheckIn.putExtra("getAvail_date",queueList.getNextAvailableQueue().getAvailableDate());}
+                if(queueList.getNextAvailableQueue()!=null){
                     iCheckIn.putExtra("isshowtoken", queueList.getNextAvailableQueue().isShowToken());
                 }
 
@@ -170,6 +172,8 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 iCheckIn.putExtra("title", title);
                 iCheckIn.putExtra("terminology",terminologys);
                 iCheckIn.putExtra("place", myViewHolder.tv_loc.getText().toString());
+                if(mQueueList.get(position).getNextAvailableQueue()!=null){
+                    iCheckIn.putExtra("getAvail_date",mQueueList.get(position).getNextAvailableQueue().getAvailableDate());}
                 if(queueList.getNextAvailableQueue()!=null){
                     iCheckIn.putExtra("isshowtoken", queueList.getNextAvailableQueue().isShowToken());
                 }

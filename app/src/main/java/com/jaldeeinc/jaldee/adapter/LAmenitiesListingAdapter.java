@@ -38,8 +38,9 @@ public class LAmenitiesListingAdapter extends RecyclerView.Adapter<LAmenitiesLis
 
         Typeface tyface = Typeface.createFromAsset(context.getAssets(),
                 "fonts/Montserrat_Regular.otf");
-       viewHolder.tvServiceName.setText(listType.get(i).getTypename());
-       viewHolder.tvServiceName.setTypeface(tyface);
+
+        viewHolder.tvServiceName.setText(listType.get(i).getTypename());
+        viewHolder.tvServiceName.setTypeface(tyface);
 
     }
 
@@ -61,3 +62,4 @@ public class LAmenitiesListingAdapter extends RecyclerView.Adapter<LAmenitiesLis
         }
     }
 }
+

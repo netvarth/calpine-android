@@ -2,43 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/1.3.2-Jaldee-Android.iml" filepath="$PROJECT_DIR$/1.3.2-Jaldee-Android.iml" group="1.3.2-Jaldee-Android" />
-      <module fileurl="file://$PROJECT_DIR$/app/1.3.2-Jaldee-Android-app.iml" filepath="$PROJECT_DIR$/app/1.3.2-Jaldee-Android-app.iml" group="1.3.2-Jaldee-Android/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1.3.3Jaldee-Android.iml" filepath="$PROJECT_DIR$/.idea/modules/1.3.3Jaldee-Android.iml" group="1.3.3Jaldee-Android" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/1.3.3Jaldee-Android-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/1.3.3Jaldee-Android-app.iml" group="1.3.3Jaldee-Android/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1.3.4JaldeeAndroid.iml" filepath="$PROJECT_DIR$/.idea/modules/1.3.4JaldeeAndroid.iml" group="1.3.4JaldeeAndroid" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/1.3.4JaldeeAndroid-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/1.3.4JaldeeAndroid-app.iml" group="1.3.4JaldeeAndroid/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1.3.5MultiuserJaldeeAndroid.iml" filepath="$PROJECT_DIR$/.idea/modules/1.3.5MultiuserJaldeeAndroid.iml" group="1.3.5MultiuserJaldeeAndroid" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/1.3.5MultiuserJaldeeAndroid-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/1.3.5MultiuserJaldeeAndroid-app.iml" group="1.3.5MultiuserJaldeeAndroid/app" />
-      <module fileurl="file://$PROJECT_DIR$/FinalJaldeeAndroid-1.3.0.iml" filepath="$PROJECT_DIR$/FinalJaldeeAndroid-1.3.0.iml" group="FinalJaldeeAndroid-1.3.0" />
-      <module fileurl="file://$PROJECT_DIR$/app/FinalJaldeeAndroid-1.3.0-app.iml" filepath="$PROJECT_DIR$/app/FinalJaldeeAndroid-1.3.0-app.iml" group="FinalJaldeeAndroid-1.3.0/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GitHub-calpine-android.iml" filepath="$PROJECT_DIR$/.idea/modules/GitHub-calpine-android.iml" group="calpine-android" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/GitHub-calpine-android-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/GitHub-calpine-android-app.iml" group="calpine-android/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Jaldee 1.3.1-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Jaldee 1.3.1-app.iml" group="Jaldee 1.3.1/app" />
-      <module fileurl="file://$PROJECT_DIR$/Jaldee-Android-Appointments.iml" filepath="$PROJECT_DIR$/Jaldee-Android-Appointments.iml" group="Jaldee-Android-Appointments" />
-      <module fileurl="file://$PROJECT_DIR$/app/Jaldee-Android-Appointments-app.iml" filepath="$PROJECT_DIR$/app/Jaldee-Android-Appointments-app.iml" group="Jaldee-Android-Appointments/app" />
-      <module fileurl="file://$PROJECT_DIR$/JaldeeAndroid-1.2.2.iml" filepath="$PROJECT_DIR$/JaldeeAndroid-1.2.2.iml" group="JaldeeAndroid-1.2.2" />
-      <module fileurl="file://$PROJECT_DIR$/app/JaldeeAndroid-1.2.2-app.iml" filepath="$PROJECT_DIR$/app/JaldeeAndroid-1.2.2-app.iml" group="JaldeeAndroid-1.2.2/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/JaldeeAndroid-calpine-android.iml" filepath="$PROJECT_DIR$/.idea/modules/JaldeeAndroid-calpine-android.iml" group="calpine-android" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/JaldeeAndroid-calpine-android-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/JaldeeAndroid-calpine-android-app.iml" group="calpine-android/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Jaldee_1.3.1.iml" filepath="$PROJECT_DIR$/.idea/modules/Jaldee_1.3.1.iml" group="Jaldee_1.3.1" />
-      <module fileurl="file://$PROJECT_DIR$/Jaldee_Android-1.2.2.iml" filepath="$PROJECT_DIR$/Jaldee_Android-1.2.2.iml" group="Jaldee_Android-1.2.2" />
-      <module fileurl="file://$PROJECT_DIR$/app/Jaldee_Android-1.2.2-app.iml" filepath="$PROJECT_DIR$/app/Jaldee_Android-1.2.2-app.iml" group="Jaldee_Android-1.2.2/app" />
-      <module fileurl="file://$PROJECT_DIR$/Jaldee_Android-1.2.8.iml" filepath="$PROJECT_DIR$/Jaldee_Android-1.2.8.iml" group="Jaldee_Android-1.2.8" />
-      <module fileurl="file://$PROJECT_DIR$/app/Jaldee_Android-1.2.8-app.iml" filepath="$PROJECT_DIR$/app/Jaldee_Android-1.2.8-app.iml" group="Jaldee_Android-1.2.8/app" />
-      <module fileurl="file://$PROJECT_DIR$/Jaldee_Android-1.3.1.iml" filepath="$PROJECT_DIR$/Jaldee_Android-1.3.1.iml" group="Jaldee_Android-1.3.1" />
-      <module fileurl="file://$PROJECT_DIR$/app/Jaldee_Android-1.3.1-app.iml" filepath="$PROJECT_DIR$/app/Jaldee_Android-1.3.1-app.iml" group="Jaldee_Android-1.3.1/app" />
-      <module fileurl="file://$PROJECT_DIR$/LatestJaldeAndroid-1.3.0.iml" filepath="$PROJECT_DIR$/LatestJaldeAndroid-1.3.0.iml" group="LatestJaldeAndroid-1.3.0" />
-      <module fileurl="file://$PROJECT_DIR$/app/LatestJaldeAndroid-1.3.0-app.iml" filepath="$PROJECT_DIR$/app/LatestJaldeAndroid-1.3.0-app.iml" group="LatestJaldeAndroid-1.3.0/app" />
-      <module fileurl="file://$PROJECT_DIR$/UpdatedJaldeeAndroid-1.3.0.iml" filepath="$PROJECT_DIR$/UpdatedJaldeeAndroid-1.3.0.iml" group="UpdatedJaldeeAndroid-1.3.0" />
-      <module fileurl="file://$PROJECT_DIR$/app/UpdatedJaldeeAndroid-1.3.0-app.iml" filepath="$PROJECT_DIR$/app/UpdatedJaldeeAndroid-1.3.0-app.iml" group="UpdatedJaldeeAndroid-1.3.0/app" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/calpine-android.iml" filepath="$PROJECT_DIR$/calpine-android.iml" group="calpine-android" />
-      <module fileurl="file://$PROJECT_DIR$/calpine-android-1.22-git.iml" filepath="$PROJECT_DIR$/calpine-android-1.22-git.iml" group="calpine-android-1.22-git" />
-      <module fileurl="file://$PROJECT_DIR$/app/calpine-android-1.22-git-app.iml" filepath="$PROJECT_DIR$/app/calpine-android-1.22-git-app.iml" group="calpine-android-1.22-git/app" />
-      <module fileurl="file://$PROJECT_DIR$/app/calpine-android-app.iml" filepath="$PROJECT_DIR$/app/calpine-android-app.iml" group="calpine-android/app" />
-      <module fileurl="file://$PROJECT_DIR$/calpine_android_1.2.2.iml" filepath="$PROJECT_DIR$/calpine_android_1.2.2.iml" group="calpine_android_1.2.2" />
-      <module fileurl="file://$PROJECT_DIR$/app/calpine_android_1.2.2-app.iml" filepath="$PROJECT_DIR$/app/calpine_android_1.2.2-app.iml" group="calpine_android_1.2.2/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="calpine-android/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/calpine-android.iml" filepath="$PROJECT_DIR$/.idea/calpine-android.iml" group="calpine-android" />
     </modules>
   </component>
 </project>

@@ -124,7 +124,7 @@ public class Register extends AppCompatActivity {
         spannable_txt.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, text1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable_txt.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), text1.length(), text1.length() + text2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv_provider.setText(spannable_txt);
-        String text_1 = "Download the ";
+        String text_1 = "Download ";
         String text_2 = "Jaldee for Business App ";
         //  <font color='#00AEF2'><b>Terms and Conditions
         Spannable spannable_txt1 = new SpannableString(text_1 + text_2);

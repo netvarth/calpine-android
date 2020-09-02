@@ -178,7 +178,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ImageView ic_pin, ic_yout, ic_fac, ic_gplus, ic_twitt, ic_link, ic_jaldeeverifiedIcon;
     LinearLayout LsocialMedia;
     LinearLayout LSpecialization, LSpecialization_2;
-    RelativeLayout layout_exapnd_moreDetails;
     TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact, tv_coupon, tv_first_ccoupon, specialSeeAll;
     ImageView tv_jdn;
     List<SearchDepartment> departmentList;
@@ -210,7 +209,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     private CardView cvUsers;
     private boolean throughLink = false;
     TextView tvNoRatings;
-
+    private LinearLayout llMDetails;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -238,6 +237,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         specialSeeAll = (TextView) row.findViewById(R.id.specialSeeAll);
         departmentHeading = (TextView) row.findViewById(R.id.departmentHeading);
         tvNoRatings = row.findViewById(R.id.tv_noRR);
+        llMDetails = row.findViewById(R.id.locationlayout);
         count = 0;
         mBusinessDataList = new SearchViewDetail();
         List<CoupnResponse> couponResponse;
@@ -293,6 +293,48 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 // what do you want here
             }
         });
+        SharedPreference.getInstance(mContext).setValue("refreshcheckin", "false");
+        mRecyLocDetail.setNestedScrollingEnabled(false);
+        tv_busName = (TextView) row.findViewById(R.id.txtbus_name);
+        tv_msg = (TextView) row.findViewById(R.id.txtmsg);
+        tv_domain = (TextView) row.findViewById(R.id.txt_domain);
+        mImgeProfile = (ImageView) row.findViewById(R.id.i_profile);
+        mImgthumbProfile = (ImageView) row.findViewById(R.id.iThumb_profile);
+        mImgthumbProfile2 = (ImageView) row.findViewById(R.id.iThumb_profile2);
+        tv_ImageViewText = (TextView) row.findViewById(R.id.mImageViewText);
+        tv_mImageViewTextnew = (TextView) row.findViewById(R.id.mImageViewTextnew);
+        locationHeading = (TextView) row.findViewById(R.id.locationHeading);
+        mImgthumbProfile1 = (ImageView) row.findViewById(R.id.iThumb_profile1);
+        tv_fav = (TextView) row.findViewById(R.id.txtfav);
+        tv_Moredetails = (TextView) row.findViewById(R.id.txtMoredetails);
+        LsocialMedia = (LinearLayout) row.findViewById(R.id.LsocialMedia);
+        LSpecialization_2 = (LinearLayout) row.findViewById(R.id.LSpecialization_2);
+        tv_spec1 = (TextView) row.findViewById(R.id.txtspec1);
+        tv_spec2 = (TextView) row.findViewById(R.id.txtspec2);
+        tv_seeAll = (TextView) row.findViewById(R.id.txtSeeAll);
+        ic_fac = (ImageView) row.findViewById(R.id.ic_fac);
+        ic_gplus = (ImageView) row.findViewById(R.id.ic_gplus);
+        ic_pin = (ImageView) row.findViewById(R.id.ic_pin);
+        ic_link = (ImageView) row.findViewById(R.id.ic_link);
+        ic_twitt = (ImageView) row.findViewById(R.id.ic_twitt);
+        ic_yout = (ImageView) row.findViewById(R.id.ic_yout);
+        ic_jaldeeverifiedIcon = (ImageView) row.findViewById(R.id.ic_jaldeeverifiedIcon);
+        //  tv_exp = (TextView) row.findViewById(R.id.txt_expe);
+        tv_desc = (TextView) row.findViewById(R.id.txt_bus_desc);
+        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_busName.setTypeface(tyface);
+        tv_ImageViewText.setTypeface(tyface);
+        tv_mImageViewTextnew.setTypeface(tyface);
+        L_layout = row.findViewById(R.id.layout_type);
+
+        if (domainVirtual != null && domainVirtual.size() > 0) {
+            tv_Moredetails.setVisibility(View.VISIBLE);
+            llMDetails.setVisibility(View.VISIBLE);
+        } else {
+            tv_Moredetails.setVisibility(View.GONE);
+            llMDetails.setVisibility(View.GONE);
+        }
 
         tv_Moredetails.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -325,23 +367,26 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 }
             }
         });
-        img_arrow.setOnClickListener(new View.OnClickListener() {
+        llMDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mRecycle_virtualfield.getVisibility() != View.VISIBLE) {
                     mRecycle_virtualfield.setVisibility(View.VISIBLE);
-                    img_arrow.setImageResource(R.drawable.icon_angle_up);
+//                img_arrow.setImageResource(R.drawable.icon_angle_up);
                     int size = domainVirtual.size();
                     if (size > 2) {
                         tv_Moredetails.setVisibility(View.VISIBLE);
                     } else {
+                        mRecycle_virtualfield.setVisibility(View.GONE);
+                        img_arrow.setImageResource(R.drawable.icon_angle_down);
                         tv_Moredetails.setVisibility(View.GONE);
                     }
                 } else {
                     mRecycle_virtualfield.setVisibility(View.GONE);
-                    img_arrow.setImageResource(R.drawable.icon_angle_down);
+//                img_arrow.setImageResource(R.drawable.icon_angle_down);
                     tv_Moredetails.setVisibility(View.GONE);
                 }
+
             }
         });
         tv_jdn.setOnClickListener(new View.OnClickListener() {
@@ -458,7 +503,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_Moredetails = (TextView) row.findViewById(R.id.txtMoredetails);
         LsocialMedia = (LinearLayout) row.findViewById(R.id.LsocialMedia);
         LSpecialization_2 = (LinearLayout) row.findViewById(R.id.LSpecialization_2);
-        layout_exapnd_moreDetails = (RelativeLayout) row.findViewById(R.id.layout_exapnd_moreDetails);
         tv_spec1 = (TextView) row.findViewById(R.id.txtspec1);
         tv_spec2 = (TextView) row.findViewById(R.id.txtspec2);
         tv_seeAll = (TextView) row.findViewById(R.id.txtSeeAll);
@@ -1561,11 +1605,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_busName.setText(getBussinessData.getBusinessName());
 
         String rate = String.valueOf(getBussinessData.getAvgRating());
-        if (rate.equalsIgnoreCase("0.0")){
+        if (rate.equalsIgnoreCase("0.0")) {
 
             tvNoRatings.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             tvNoRatings.setVisibility(View.GONE);
             rating.setVisibility(View.VISIBLE);
             rating.setRating(getBussinessData.getAvgRating());
@@ -1747,17 +1790,22 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             LSpecialization.setVisibility(View.GONE);
             LSpecialization_2.setVisibility(View.GONE);
         }
-
         tv_busName.setText(this.searchdetailList.getSearchViewDetail().getBusinessName());
         DatabaseHandler db = new DatabaseHandler(context);
         domainList = db.getSubDomainsByFilter(searchdetailList.getSearchViewDetail().getServiceSector().getDisplayName(), searchdetailList.getSearchViewDetail().getUserSubdomain());
-        tv_domain.setText(domainList.getDisplayname());
+
+        if (domainList.getDisplayname().equalsIgnoreCase("Other / Miscellaneous")) {
+            tv_domain.setVisibility(View.GONE);
+        } else {
+            tv_domain.setText(domainList.getDisplayname());
+        }
 
         if (searchdetailList.getSearchViewDetail().getSocialMedia() != null) {
             if (searchdetailList.getSearchViewDetail().getSocialMedia().size() > 0) {
                 LsocialMedia.setVisibility(View.GONE);
                 for (int i = 0; i < searchdetailList.getSearchViewDetail().getSocialMedia().size(); i++) {
                     if (searchdetailList.getSearchViewDetail().getSocialMedia().get(i).getResource().equalsIgnoreCase("facebook")) {
+
 //                        tv_SocialMedia.setVisibility(View.VISIBLE);
                         ic_fac.setVisibility(View.VISIBLE);
                         final int finalI = i;
@@ -1954,10 +2002,23 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             ic_jaldeeverifiedIcon.setVisibility(View.GONE);
         }
         tv_msg.setEnabled(true);
-        rating.setRating(searchdetailList.getSearchViewDetail().getAvgRating());
+
+        tv_busName.setText(searchdetailList.getSearchViewDetail().getBusinessName());
+
+        try {
+
+            int rate = Math.round(searchdetailList.getSearchViewDetail().getAvgRating());
+            if (rate < 4) {
+                rating.setVisibility(View.GONE);
+            } else {
+                rating.setVisibility(View.VISIBLE);
+                rating.setRating(searchdetailList.getSearchViewDetail().getAvgRating());
+            }
+        } catch (Exception e) {
+
+        }
 
         if (searchdetailList.getSearchViewDetail().getBusinessDesc() != null) {
-
             tv_desc.setVisibility(View.VISIBLE);
             tv_desc.setText(searchdetailList.getSearchViewDetail().getBusinessDesc());
             tv_desc.post(new Runnable() {
@@ -2442,23 +2503,36 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         if (from_user) {
 
-                            if (searchdetailList != null) {
-                                ArrayList<DepartmentUserSearchModel> userDetails = new ArrayList<DepartmentUserSearchModel>();
-                                userDetails.add(searchdetailList);
-                                userDetailAdapter = new UserDetailAdapter(mContext, userDetails, mSearchAWSResponse, mSearchDepartmentList, terminology, mInterface, mSearchmCheckMessageList);
-                                mRecyLocDetail.setAdapter(userDetailAdapter);
-                                userDetailAdapter.notifyDataSetChanged();
+                            try {
+
+                                if (searchdetailList != null) {
+                                    ArrayList<DepartmentUserSearchModel> userDetails = new ArrayList<DepartmentUserSearchModel>();
+                                    userDetails.add(searchdetailList);
+                                    userDetailAdapter = new UserDetailAdapter(mContext, userDetails, mSearchAWSResponse, mSearchDepartmentList, terminology, mInterface, mSearchmCheckMessageList);
+                                    mRecyLocDetail.setAdapter(userDetailAdapter);
+                                    userDetailAdapter.notifyDataSetChanged();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
+
                         } else {
 
-                            if (mBusinessDataList != null && mSearchSettings != null) {
-                                if (mBusinessDataList.getServiceSector() != null && mBusinessDataList.getServiceSubSector() != null) {
-                                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProviderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartmentList, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList, online_presence, donationFundRaising, gServiceList, LaServicesList, virtualServices);
-                                    mRecyLocDetail.setAdapter(mSearchLocAdapter);
-                                    mSearchLocAdapter.notifyDataSetChanged();
+                            try {
+
+                                if (mBusinessDataList != null && mSearchSettings != null) {
+                                    if (mBusinessDataList.getServiceSector() != null && mBusinessDataList.getServiceSubSector() != null) {
+                                        mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProviderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartmentList, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList, online_presence, donationFundRaising, gServiceList, LaServicesList, virtualServices);
+                                        mRecyLocDetail.setAdapter(mSearchLocAdapter);
+                                        mSearchLocAdapter.notifyDataSetChanged();
+                                    }
                                 }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
+
                         }
+
                     }
                 }
 
@@ -2575,7 +2649,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             sub_domainVirtual = response.body().getSubdomain();
                             domainVirtual.addAll(sub_domainVirtual);
                             if (domainVirtual.size() > 0) {
-                                layout_exapnd_moreDetails.setVisibility(View.VISIBLE);
+                                llMDetails.setVisibility(View.VISIBLE);
                                 txtMore.setVisibility(View.VISIBLE);
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                                 mRecycle_virtualfield.setLayoutManager(mLayoutManager);
@@ -2589,7 +2663,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 mRecycle_virtualfield.setAdapter(mAdapter);
                                 mAdapter.notifyDataSetChanged();
                             } else {
-                                layout_exapnd_moreDetails.setVisibility(View.GONE);
+                                llMDetails.setVisibility(View.GONE);
                             }
                         } else {
                             tv_Moredetails.setVisibility(View.GONE);

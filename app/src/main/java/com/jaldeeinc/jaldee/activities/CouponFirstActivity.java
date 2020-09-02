@@ -55,6 +55,7 @@ public class CouponFirstActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // what do you want here
               finish();
+
             }
         });
 

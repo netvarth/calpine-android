@@ -515,6 +515,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 iAppointment.putExtra("terminology", termilogy);
                                 iAppointment.putExtra("isshowtoken", searchdetailList.isShowToken());
                                 iAppointment.putExtra("getAvail_date", searchdetailList.getAvail_date());
+                                iAppointment.putExtra("virtualservice",searchdetailList.getVirtual_service_status());
                                 context.startActivity(iAppointment);
                             } else if (dnts_flag.get(position).equals(true) && appts_flag.get(position).equals(false) && checkins_flag.get(position).equals(false)) {
                                 Intent iDonation = new Intent(v.getContext(), Donation.class);
@@ -1002,7 +1003,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onClick(View view) {
                 Intent iCouponsFirst = new Intent(view.getContext(), CouponFirstActivity.class);
                 context.startActivity(iCouponsFirst);
-               // mAdapterCallback.onMethodFirstCoupn(searchdetailList.getUniqueid());
+
             }
         });
         final TextView dynaText2 = new TextView(context);
@@ -1030,6 +1031,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Intent iCoupons = new Intent(v.getContext(), CouponActivity.class);
                 context.startActivity(iCoupons);
 //                mAdapterCallback.onMethodCoupn(searchdetailList.getUniqueid());
+
             }
         });
     }

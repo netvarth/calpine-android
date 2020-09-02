@@ -84,7 +84,8 @@
     <string name="terms_cond_register3"> By clicking OK, you agree to the </string>
     <string name="terms_cond_register2">Jaldee <font color='#00AEF2'><b>Terms and Conditions</b></font></string>
     <string name="are_provider1"> Are you a <b>Service Provider?</b> </string>
-    <string name="are_provider2">Download the <font color='#00AEF2'><b> Jaldee for Business App</b> </font></string>
+
+    <string name="are_provider2">Download the <font color='#00AEF2'><b>Jaldee for Business App</b> </font></string>
     <string name="ynw_account">You have a Jaldee Account</string>
     <string name="password_logintxt">Please enter Password to Login</string>
     <string name="pls_enterotp">to proceed!</string>

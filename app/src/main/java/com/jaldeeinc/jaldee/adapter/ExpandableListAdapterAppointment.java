@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.adapter;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -42,6 +44,7 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
+import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import org.json.JSONException;
@@ -858,6 +861,13 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
 //            tv_token.setVisibility(View.GONE);
             tv_batchName.setVisibility(View.GONE);
         }
+
+//        if(activelist.getService()!=null) {
+//            if (activelist.getService().getServiceType().equalsIgnoreCase("virtualService")) {
+//                Toast.makeText(mContext,"You took an appointment for virtual service",Toast.LENGTH_SHORT).show();
+//            }
+//        }
+      //  apiGetMeetingDetails(activelist.getUid(), activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getProviderAccount().getId());
 
 
         if (activelist.getApptStatus().equalsIgnoreCase("Cancelled") || activelist.getApptStatus().equalsIgnoreCase("Rejected") ) {
@@ -2003,6 +2013,44 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         });
 
 
+    }
+    private void apiGetMeetingDetails(String uuid, String mode, int accountID) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        Call<TeleServiceCheckIn> call = apiService.getMeetingDetails(uuid, mode, accountID);
+
+        call.enqueue(new Callback<TeleServiceCheckIn>() {
+            @Override
+            public void onResponse(Call<TeleServiceCheckIn> call, Response<TeleServiceCheckIn> response) {
+
+                try {
+
+                    mDialog.dismiss();
+                    if (response.code() == 200) {
+
+
+
+
+                    }
+                } catch (
+                        Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TeleServiceCheckIn> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+//                 if (mDialog.isShowing())
+//                 Config.closeDialog(get, mDialog);
+            }
+        });
     }
 
 

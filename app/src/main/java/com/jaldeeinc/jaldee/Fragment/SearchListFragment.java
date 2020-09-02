@@ -1894,6 +1894,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     searchList.setToday_appt(mSearchRespPass.get(i).getToday_appt());
                                     searchList.setOnline_profile(mSearchRespPass.get(i).getOnline_profile());
                                     searchList.setDonation_status(mSearchRespPass.get(i).getDonation_status());
+                                    searchList.setVirtual_service_status(mSearchRespPass.get(i).getVirtual_service_status());
                                     searchList.setFuture_appt(mSearchRespPass.get(i).getFuture_appt());
                                     searchList.setSpecialization_displayname(mSearchRespPass.get(i).getSpecialization_displayname());
                                     searchList.setVirtual_service_status(mSearchRespPass.get(i).getVirtual_service_status());

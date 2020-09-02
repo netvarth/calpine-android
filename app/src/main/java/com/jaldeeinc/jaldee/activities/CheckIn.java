@@ -52,7 +52,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
 import com.jaldeeinc.jaldee.adapter.CustomSpinnerAdapter;
@@ -866,7 +865,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     ArrayList<SearchService> globalServsList = new ArrayList<>();
                     globalServsList.clear();
 
-
                     for (int i = 0; i < gServiceList.size(); i++) {
                         if (gServiceList.get(i).getProvider() != null) {
                             if (doctResponse.get(position).getId() == (gServiceList.get(i).getProvider().getId())) {
@@ -1074,11 +1072,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
             selectedDateFormat = selecteddateParse.format(date);
             UpdateDAte(selectedDateFormat);
-
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
 
         img_calender_checkin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1738,7 +1734,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             tvTimeHint.setVisibility(View.GONE);
                             Lbottomlayout.setVisibility(View.GONE);
                             txtnocheckin.setVisibility(View.VISIBLE);
-                            txtnocheckin.setText(Word_Change + " for this service is not available at the moment. Please try for a different time or date");
+                            txtnocheckin.setText(Word_Change + " this service is not available at the moment. Please try for a different time or date");
                         }
                         if (mQueueTimeSlotList.size() > 1) {
                             ic_right.setVisibility(View.VISIBLE);
@@ -1877,6 +1873,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         }
         if (queue.getServiceTime() != null) {
             firstWord = "Next Available Time ";
+
             if (type != null) {
                 DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -1894,9 +1891,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 secondWord = "\nToday, " + queue.getServiceTime();
             }
         } else {
-            firstWord = "Est wait time";
-            secondWord = "\n" + Config.getTimeinHourMinutes(queue.getQueueWaitingTime());
+            firstWord = "Est wait time  ";
+            secondWord =  Config.getTimeinHourMinutes(queue.getQueueWaitingTime());
         }
+
         Spannable spannable = new SpannableString(firstWord + secondWord);
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(), "fonts/Montserrat_Bold.otf");
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1945,6 +1943,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                     }
                                 }
                             } else if(mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("multiusercheckin")) {
+
                                 if (!virtualServices) {
                                     if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
                                         LServicesList.remove(mService);
@@ -2810,6 +2809,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         // finish();
                         Config.logV("Response--isPrepayment------------------" + isPrepayment);
                          dialogPayment = new BottomSheetDialog(mContext);
+
                         if (isPrepayment) {
                             if (!showPaytmWallet && !showPayU) {
 
@@ -2857,6 +2857,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                             if (imagePathList.size() > 0) {
                                                 ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialogPayment);
                                             }
+
                                         }
                                     });
 
@@ -2874,6 +2875,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                             if (imagePathList.size() > 0) {
                                                 ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialogPayment);
                                             }
+
                                         }
                                     });
                                 } catch (Exception e) {
@@ -2886,6 +2888,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             if (imagePathList.size() > 0) {
                                 ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialogPayment);
                             }
+
                             Toast.makeText(mContext, toastMessage, Toast.LENGTH_LONG).show();
                             finish();
                         }
@@ -3299,6 +3302,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     public void onPaymentError(int code, String response, PaymentData paymentData) {
         try {
             if (response.contains("Payment failed")) {
+
                 AlertDialog alertDialog = new AlertDialog.Builder(CheckIn.this).create();
                 alertDialog.setTitle("Payment Failed");
                 alertDialog.setMessage("Unable to process your request.Please try again after some time");
@@ -3307,7 +3311,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
-
                                 Intent homeIntent = new Intent(CheckIn.this, Home.class);
                                 startActivity(homeIntent);
                                 finish();
@@ -3316,6 +3319,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         });
                 alertDialog.show();
             } else {
+
                 Toast.makeText(this.mContext, "Payment failed", Toast.LENGTH_SHORT).show();
                 dialogPayment.show();
             }

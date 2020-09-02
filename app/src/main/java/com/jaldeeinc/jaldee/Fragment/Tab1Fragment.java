@@ -25,27 +25,34 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
+
 import androidx.annotation.RequiresApi;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -76,11 +83,13 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
+import com.jaldeeinc.jaldee.custom.NotificationDialog;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.RatingResponse;
+import com.jaldeeinc.jaldee.utils.AppPreferences;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -124,12 +133,13 @@ import static androidx.core.content.ContextCompat.getSystemService;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback,ActiveAdapterOnCallback {
+public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback, ActiveAdapterOnCallback {
 
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
 
     public Tab1Fragment() {
     }
+
     boolean firstTimeRating = false;
     Context mContext;
     Activity mActivity;
@@ -143,7 +153,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
     ArrayList<ActiveAppointment> mAppointmentTodayList = new ArrayList<>();
     ArrayList<ActiveAppointment> mAppointmentFutureList = new ArrayList<>();
     ArrayList<ActiveAppointment> mAppointmentOldList = new ArrayList<>();
-    int tokenCount,checkinCount,appointmentCount;
+    int tokenCount, checkinCount, appointmentCount;
     HistoryAdapterCallback mInterface;
     ActiveAdapterOnCallback mCallback;
     ExpandableListView expandlist;
@@ -167,14 +177,24 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
     private Location mylocation;
     private GoogleApiClient googleApiClient;
     public final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
-     TextView txtTokens,txtCheckins,txtAppointments;
-     EditText edt_message;
-     Dialog mDialog;
+    TextView txtTokens, txtCheckins, txtAppointments;
+    EditText edt_message;
+    Dialog mDialog;
+    public boolean toHome = false;
+    public String message = null;
+    NotificationDialog notificationDialog;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View row = inflater.inflate(R.layout.fragment_tab1, container, false);
+        // checking bundle if it's from notification.
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            toHome = bundle.getBoolean("toHome");
+            message = bundle.getString("message");
+        }
         mContext = getActivity();
         mActivity = getActivity();
         mInterface = (HistoryAdapterCallback) this;
@@ -223,7 +243,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             public void onClick(View v) {
                 Tab2Fragment pfFragment = new Tab2Fragment();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, pfFragment).commit();
@@ -235,7 +255,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             public void onClick(View v) {
                 CheckinsMyJaldee pfFragment = new CheckinsMyJaldee();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, pfFragment).commit();
@@ -246,7 +266,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             public void onClick(View v) {
                 TokensMyJaldee pfFfragment = new TokensMyJaldee();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, pfFfragment).commit();
@@ -258,7 +278,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             public void onClick(View v) {
                 AppointmentMyJaldee afFragment = new AppointmentMyJaldee();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, afFragment).commit();
@@ -288,8 +308,22 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
 //        if (Config.isOnline(mContext)) {
 //            ApiTodayTokenList();
 //        }
+
+        if (message != null) {
+
+            notificationDialog = new NotificationDialog(mContext, message);
+            notificationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            notificationDialog.show();
+            notificationDialog.setCancelable(false);
+            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+            int width = (int) (metrics.widthPixels * 1);
+            notificationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        }
+
         return row;
     }
+
     /*
      * To get Active Appointments [Both Today and Future]
      */
@@ -309,7 +343,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         ArrayList<ActiveAppointment> mActiveAppointments = response.body();
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         appointmentCount = mActiveAppointments.size();
-                        txtAppointments.setText("Appointments ("+appointmentCount+")");
+                        txtAppointments.setText("Appointments (" + appointmentCount + ")");
                         getOldAppointments();
                         for (int i = 0; i < mActiveAppointments.size(); i++) {
                             if (date.equalsIgnoreCase(mActiveAppointments.get(i).getAppmtDate())) {
@@ -330,12 +364,14 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<ActiveAppointment>> call, Throwable t) {
                 // Log error here since request failed
             }
         });
     }
+
     /**
      * To get History/Old Appointments
      */
@@ -363,12 +399,14 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<ActiveAppointment>> call, Throwable t) {
                 // Log error here since request failed
             }
         });
     }
+
     /*
      * To get Active Checkins [Both Today and Future]
      */
@@ -423,7 +461,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         db.DeleteMyCheckin("today");
                         db.DeleteMyCheckin("future");
                         db.insertMyCheckinInfo(response.body());
-                        getOldTokens_Checkins ();
+                        getOldTokens_Checkins();
                         // ApiFutureChekInList();
                     } else {
                         if (response.code() != 419) {
@@ -434,6 +472,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
                 // Log error here since request failed
@@ -441,6 +480,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             }
         });
     }
+
     private void getOldTokens_Checkins() {
 
         Config.logV("API Call");
@@ -467,6 +507,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
                 // Log error here since request failed
@@ -474,6 +515,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             }
         });
     }
+
     @Override
     public void onMethodMessageCallback(final String ynwuuid, final String accountID, String providerNAme, final String from) {
         imagePathList.clear();
@@ -562,9 +604,9 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(from.equalsIgnoreCase("checkin")){
+                if (from.equalsIgnoreCase("checkin")) {
                     ApiCommunicate(ynwuuid, String.valueOf(accountID), edt_message.getText().toString(), dialog);
-                }else{
+                } else {
                     ApiCommunicateAppointment(ynwuuid, String.valueOf(accountID), edt_message.getText().toString(), dialog);
                 }
             }
@@ -698,7 +740,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
-                        if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                        if (imagePathList.size() > 0 && edt_message.getText().toString().equals("")) {
                             Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -846,7 +888,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
 
 
     @Override
-    public void onMethodBillIconCallback(String payStatus, String value, String provider, String accountID, String CustomerName,int customerId) {
+    public void onMethodBillIconCallback(String payStatus, String value, String provider, String accountID, String CustomerName, int customerId) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
@@ -872,9 +914,9 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(from.equalsIgnoreCase("checkin")){
+                if (from.equalsIgnoreCase("checkin")) {
                     ApiDeleteCheckin(ynwuuid, String.valueOf(accountID), dialog);
-                }else{
+                } else {
                     ApiDeleteAppointment(ynwuuid, String.valueOf(accountID), dialog);
                 }
             }
@@ -901,7 +943,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
     }
 
     @Override
-    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer,int customerId) {
+    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer, int customerId) {
         Log.i("Purpose: ", "billPayment");
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
@@ -914,7 +956,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
     }
 
     @Override
-    public void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID, double amountDue,int customerId) {
+    public void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID, double amountDue, int customerId) {
         Log.i("Purpose: ", "prePayment");
         // APIPayment(accountID, ynwUUID, amountDue);
         Intent i = new Intent(mContext, PaymentActivity.class);
@@ -948,9 +990,11 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         mTodayFlag = todayFlag;
         ApiRating(accountID, UUID);
     }
+
     BottomSheetDialog dialog;
     float rate = 0;
     String comment = "";
+
     private void ApiRating(final String accountID, final String UUID) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1369,6 +1413,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
@@ -1378,7 +1423,9 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             }
         });
     }
+
     ArrayList<FavouriteModel> mFavList = new ArrayList<>();
+
     private void ApiFavList() {
         Config.logV("API FAV Call");
         final ApiInterface apiService =
@@ -1460,8 +1507,8 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
 
     private int getCheckinsCount(ArrayList<ActiveCheckIn> activeTokensAndCheckins) {
         ArrayList<ActiveCheckIn> activeCheckins = new ArrayList<>();
-        for (int i = 0; i < activeTokensAndCheckins.size(); i++){
-            if(activeTokensAndCheckins.get(i).getShowToken()!=null && activeTokensAndCheckins.get(i).getShowToken().equalsIgnoreCase("false")){
+        for (int i = 0; i < activeTokensAndCheckins.size(); i++) {
+            if (activeTokensAndCheckins.get(i).getShowToken() != null && activeTokensAndCheckins.get(i).getShowToken().equalsIgnoreCase("false")) {
                 activeCheckins.add(activeTokensAndCheckins.get(i));
             }
         }
@@ -1470,6 +1517,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
 
     ExpandableListAdapter adapter;
     boolean mTodayFlag = false, mOldFlag = false, mFutureFlag = false;
+
     void setItems() {
 
 
@@ -1489,8 +1537,8 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         mTodayTokens_Checkins = db.getMyCheckinList("today");
         mCheckOldList = db.getMyCheckinList("old");
         mCheckFutureList = db.getMyCheckinList("future");
-        txtTokens.setText("Tokens ("+ (getTokensCount(mTodayTokens_Checkins) + getTokensCount((mCheckFutureList))) + ")");
-        txtCheckins.setText("Check-Ins ("+(getCheckinsCount(mTodayTokens_Checkins) + getCheckinsCount((mCheckFutureList)))+")");
+        txtTokens.setText("Tokens (" + (getTokensCount(mTodayTokens_Checkins) + getTokensCount((mCheckFutureList))) + ")");
+        txtCheckins.setText("Check-Ins (" + (getCheckinsCount(mTodayTokens_Checkins) + getCheckinsCount((mCheckFutureList))) + ")");
         if (mDialog.isShowing())
             Config.closeDialog(getActivity(), mDialog);
         // Adding header and childs to hash map
@@ -1512,8 +1560,10 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
 //        }
 
     }
+
     ExpandableListAdapterAppointment adapterAppointment;
     boolean mTodayFlagAppointment = false, mOldFlagAppointment = false, mFutureFlagAppointment = false;
+
     void setItemsAppointment() {
         ArrayList<String> header = new ArrayList<String>();
         HashMap<String, ArrayList<ActiveAppointment>> hashMap = new HashMap<String, ArrayList<ActiveAppointment>>();

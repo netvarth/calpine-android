@@ -35,13 +35,13 @@
             android:id="@+id/jaldeelivetrack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_gravity="center"
             android:padding="@dimen/padding5"
             android:text="Jaldee Live Track"
             android:textColor="@color/black"
             android:textSize="@dimen/dimen_16sp"
             android:textStyle="bold"/>
+
 
         <pl.droidsonroids.gif.GifImageView
             android:layout_width="25dp"

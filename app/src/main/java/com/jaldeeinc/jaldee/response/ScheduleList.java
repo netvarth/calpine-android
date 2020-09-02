@@ -28,6 +28,26 @@ public class ScheduleList implements Serializable {
     @SerializedName("availableSchedule")
     private NextAvailableSchedule availableSchedule;
 
+    public String getAvailableDate() {
+        return availableDate;
+    }
+
+    public void setAvailableDate(String availableDate) {
+        this.availableDate = availableDate;
+    }
+
+    String availableDate;
+
+    public boolean isOpenNow() {
+        return openNow;
+    }
+
+    public void setOpenNow(boolean openNow) {
+        this.openNow = openNow;
+    }
+
+    boolean openNow;
+
     public ScheduleList getProvider() {
         return provider;
     }

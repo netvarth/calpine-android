@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.ParkingModel;
 import com.jaldeeinc.jaldee.adapter.LAmenitiesListingAdapter;
+import com.jaldeeinc.jaldee.adapter.ParkingModel;
 
 import java.util.ArrayList;
 

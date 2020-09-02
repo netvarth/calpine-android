@@ -25,6 +25,8 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Home;
+
+import com.jaldeeinc.jaldee.activities.NotificationActivity;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.utils.NotificationUtils;
 
@@ -44,15 +46,6 @@ public class FirebaseService extends FirebaseMessagingService {
     private static final String TAG = FirebaseMessagingService.class.getSimpleName();
 
     private NotificationUtils notificationUtils;
-
-    /*@Override
-    protected Intent zzD(Intent intent) {
-        Config.logV("ON PUSH BACKGROUND___________________");
-        intent =new Intent(this,Home.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        return super.zzD(intent);
-    }*/
 
 
     @Override
@@ -89,6 +82,7 @@ public class FirebaseService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        super.onMessageReceived(remoteMessage);
         Log.e(TAG, "From: " + remoteMessage.getFrom());
 
         Config.logV("ON MESSAGE RECEIVED___________________");
@@ -185,18 +179,15 @@ public class FirebaseService extends FirebaseMessagingService {
     public static final String NOTIFICATION_CHANNEL_ID = "10001";
 
 
-    private void sendNotification(String title, String messageBody) {
+    public void sendNotification(String title, String messageBody) {
 
-        Config.logV("Notification ONCLICK@@@@@@@@@@@@@@@@@@@@@@@");
-        final Intent intent = new Intent(this, Home.class);
-
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra("message", messageBody);
+        final Intent intent = new Intent(this, NotificationActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.putExtra("message", messageBody);
         final Random randomGenerator = new Random();
         final int randomInt = randomGenerator.nextInt(100);
         final PendingIntent pendingIntent = PendingIntent.getActivity(this, randomInt, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-
         final Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {

@@ -160,8 +160,8 @@ public class VerifyOtp extends AppCompatActivity {
         spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 
-       // txt_enterotp.setText( spannable );
         txtproceed.setText(spannable);
+      //  txt_enterotp.setText( spannable );
 
         /*SmsBroadcastReceiver.bindListener(new SmsListener() {
             @Override
@@ -223,7 +223,7 @@ public class VerifyOtp extends AppCompatActivity {
 
                           //  Toast.makeText(mContext, "OTP resend", Toast.LENGTH_LONG).show();
 
-                            Toast.makeText(mContext,"Otp has been resent to  "+mobno,Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext,"Otp has been resent to  "+ mobno,Toast.LENGTH_LONG).show();
                         }
 
                     }

@@ -14,7 +14,6 @@
         android:layout_marginTop="5dp">
 
     </ImageView>
-
     <TextView
         android:textColor="@color/black"
         android:letterSpacing="0.03"

@@ -10,6 +10,9 @@ public class Constants {
     public static final String MERCHANT_ID = "4934580";
     public static final boolean DEBUG = true;
 
+    public static final String PREFS = "com.jaldeeinc.jaldee";
+
+
     public static final String FIRST_NAME = "Debajyoti";
     public static final String MOBILE = "7204342561";
     public static final String EMAIL = "d.basak.db@gmail.com";
@@ -17,5 +20,9 @@ public class Constants {
     public static final  String PURPOSE_BILLPAYMENT = "billPayment";
     public static final  String PURPOSE_DONATIONPAYMENT = "donation";
     public static final  String SOURCE_PAYMENT = "Android";
+
+    public static final String APPOINTMENT = "appointment";
+    public static final String CHECKIN = "checkIn";
+
 
 }

@@ -44,6 +44,7 @@ import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.response.ShareLocation;
+import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 
 
 import java.util.ArrayList;
@@ -433,7 +434,6 @@ public interface ApiInterface {
     @GET("consumer/waitlist/rating")
     Call<ArrayList<RatingResponse>> getRating(@QueryMap(encoded = true) Map<String, String> query);
 
-
     @GET("consumer/appointment/rating")
     Call<ArrayList<RatingResponse>> getRatingApp(@QueryMap(encoded = true) Map<String, String> query);
 
@@ -448,7 +448,6 @@ public interface ApiInterface {
 
     @POST("consumer/appointment/rating")
     Call<ResponseBody> PostRatingApp(@Query("account") String account, @Body RequestBody jsonObj);
-
 
     @GET("ynwConf/refinedFilters")
     Call<RefinedFilters> getFilters();
@@ -485,6 +484,13 @@ public interface ApiInterface {
 
     @GET("consumer/waitlist/providerByDepartmentId/{departmentId}")
     Call<ArrayList<SearchUsers>> getUsers(@Path("departmentId")  int departmentId, @Query("account") int account);
+
+    @GET("consumer/waitlist/{uuid}/meetingDetails/{mode}")
+    Call<TeleServiceCheckIn> getMeetingDetails(@Path("uuid") String uuid, @Path("mode") String mode, @Query("account") int account);
+
+    @GET("consumer/appointment/{uuid}/meetingDetails/{mode}")
+    Call<TeleServiceCheckIn> getMeetingDetailsAppointment(@Path("uuid") String uuid, @Path("mode") String mode, @Query("account") int account);
+
 
 
 }
