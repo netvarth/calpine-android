@@ -820,6 +820,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 iCheckIn.putExtra("userName",searchdetailList.getSearchViewDetail().getBusinessName());
                 iCheckIn.putExtra("departmentId",String.valueOf(searchdetailList.getDepartmentId()));
                 iCheckIn.putExtra("virtualServices",String.valueOf(searchdetailList.getSearchViewDetail().isVirtualServices()));
+                if (searchdetailList.getQueueList().getNextAvailableQueue()!=null) {
+                    iCheckIn.putExtra("getAvail_date", searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate());
+                }
                 v.getContext().startActivity(iCheckIn);
             }
         });
@@ -847,6 +850,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 iCheckIn.putExtra("userName",searchdetailList.getSearchViewDetail().getBusinessName());
                 iCheckIn.putExtra("departmentId",String.valueOf(searchdetailList.getDepartmentId()));
                 iCheckIn.putExtra("virtualServices",String.valueOf(searchdetailList.getSearchViewDetail().isVirtualServices()));
+                if (searchdetailList.getQueueList().getNextAvailableQueue()!=null) {
+                    iCheckIn.putExtra("getAvail_date", searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate());
+                }
                 v.getContext().startActivity(iCheckIn);
             }
         });

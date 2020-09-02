@@ -236,6 +236,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     iCheckIn.putExtra("departmentId", String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));
                 }
                 iCheckIn.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
+                if (userDetails.get(position).getQueueList().getNextAvailableQueue()!=null) {
+                    iCheckIn.putExtra("getAvail_date", userDetails.get(position).getQueueList().getNextAvailableQueue().getAvailableDate());
+                }
                 context.startActivity(iCheckIn);
             }
         });
@@ -260,6 +263,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     iCheckIn.putExtra("departmentId", String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));
                 }
                 iCheckIn.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
+                if (userDetails.get(position).getQueueList().getNextAvailableQueue()!=null) {
+                    iCheckIn.putExtra("getAvail_date", userDetails.get(position).getQueueList().getNextAvailableQueue().getAvailableDate());
+                }
                 context.startActivity(iCheckIn);
             }
         });
@@ -285,6 +291,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     iCheckIn.putExtra("departmentId", String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));
                 }
                 iCheckIn.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
+                if (userDetails.get(position).getQueueList().getNextAvailableQueue()!=null) {
+                    iCheckIn.putExtra("getAvail_date", userDetails.get(position).getQueueList().getNextAvailableQueue().getAvailableDate());
+                }
                 context.startActivity(iCheckIn);
             }
         });
@@ -309,6 +318,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     iCheckIn.putExtra("departmentId", String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));
                 }
                 iCheckIn.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
+                if (userDetails.get(position).getQueueList().getNextAvailableQueue()!=null) {
+                    iCheckIn.putExtra("getAvail_date", userDetails.get(position).getQueueList().getNextAvailableQueue().getAvailableDate());
+                }
                 context.startActivity(iCheckIn);
             }
         });

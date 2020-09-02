@@ -3670,7 +3670,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                     providerConsumer.put("id", MultiplefamilyList.get(i).getId());
 
 
-                    donor.put("firstName", MultiplefamilyList.get(i).getFirstName());
+                    donor.put("firstName",tv_name.getText().toString());
 
 
 
@@ -3682,7 +3682,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
 
                 consumer.put("id", familyMEmID);
                 providerConsumer.put("id", familyMEmID);
-                donor.put("firstName", mFirstName);
+                donor.put("firstName",tv_name.getText().toString());
 
 
 

@@ -515,6 +515,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 iAppointment.putExtra("terminology", termilogy);
                                 iAppointment.putExtra("isshowtoken", searchdetailList.isShowToken());
                                 iAppointment.putExtra("getAvail_date", searchdetailList.getAvail_date());
+                                iAppointment.putExtra("virtualservice",searchdetailList.getVirtual_service_status());
                                 context.startActivity(iAppointment);
                             } else if (dnts_flag.get(position).equals(true) && appts_flag.get(position).equals(false) && checkins_flag.get(position).equals(false)) {
                                 Intent iDonation = new Intent(v.getContext(), Donation.class);
