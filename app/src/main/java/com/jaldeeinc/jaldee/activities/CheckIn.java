@@ -432,7 +432,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                 });
                 if (imagePathList.size() > 0 && edt_message.getText().toString().equals("")) {
-                    Toast.makeText(CheckIn.this, "Please enter add note", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CheckIn.this, "Please enter note", Toast.LENGTH_SHORT).show();
                 }
                 btn_send.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -3173,7 +3173,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
                         if (imagePathList.size() > 0 && edt_message.getText().toString().equals("")) {
-                            Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "Please enter note", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } catch (Exception e) {
@@ -3205,7 +3205,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 recycle_image_attachment.setAdapter(mDetailFileAdapter);
                 mDetailFileAdapter.notifyDataSetChanged();
                 if (imagePathList.size() > 0 && edt_message.getText().toString().equals("")) {
-                    Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Please enter note", Toast.LENGTH_SHORT).show();
                 }
 
             }

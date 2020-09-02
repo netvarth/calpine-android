@@ -1400,11 +1400,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
         if (online_presence) {
             if (donationFundRaising) {
-                myViewHolder.LDonation.setVisibility(View.VISIBLE);
-                myViewHolder.LDont_Services.setVisibility(View.VISIBLE);
-                myViewHolder.txt_dontservices.setVisibility(View.VISIBLE);
+
 
                 if (gServicesList.size() > 0) {
+                    myViewHolder.LDonation.setVisibility(View.VISIBLE);
+                    myViewHolder.LDont_Services.setVisibility(View.VISIBLE);
+                    myViewHolder.txt_dontservices.setVisibility(View.VISIBLE);
 
                     if (gServicesList.size() == 1) {
 
