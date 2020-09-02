@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,9 +31,11 @@ import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.custom.AppointmentServiceInfoDialog;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.custom.LocationAmenitiesDialog;
 import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
+import com.jaldeeinc.jaldee.custom.UserAppServicesDialog;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.DepartmentModal;
 import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
@@ -78,6 +81,8 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
     Typeface tyface;
     List<SearchService> apptServices;
     ServiceInfoDialog serviceInfoDialog;
+    AppointmentServiceInfoDialog appServInfoDialog;
+    UserAppServicesDialog userAppServicesDialog;
     List<SearchAppointmentDepartmentServices> appointServices;
 
 
@@ -108,6 +113,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
         DepartmentUserSearchModel departmentUserSearchModel = userDetails.get(position);
 
+        holder.rlLocationLayout.setVisibility(View.GONE);
         // getting subdomain from local db
         DatabaseHandler db = new DatabaseHandler(context);
         domainList = db.getSubDomainsByFilter(userDetails.get(position).getSearchViewDetail().getServiceSector().getDisplayName(), userDetails.get(position).getSearchViewDetail().getUserSubdomain());
@@ -130,7 +136,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
             if (terminology != null) {
                 String firstWord = "You have ";
                 String secondWord = mCheckInMessage.get(i).getmAllSearch_checkIn().size() + " " + terminology;
-                String thirdword = " at this location";
+                String thirdword = " for this provider";
                 Spannable spannable = new SpannableString(firstWord + secondWord + thirdword);
                 Typeface tyface_edittext2 = Typeface.createFromAsset(context.getAssets(),
                         "fonts/Montserrat_Bold.otf");
@@ -236,7 +242,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     iCheckIn.putExtra("departmentId", String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));
                 }
                 iCheckIn.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
-                if (userDetails.get(position).getQueueList().getNextAvailableQueue()!=null) {
+                if (userDetails.get(position).getQueueList().getNextAvailableQueue() != null) {
                     iCheckIn.putExtra("getAvail_date", userDetails.get(position).getQueueList().getNextAvailableQueue().getAvailableDate());
                 }
                 context.startActivity(iCheckIn);
@@ -263,7 +269,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     iCheckIn.putExtra("departmentId", String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));
                 }
                 iCheckIn.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
-                if (userDetails.get(position).getQueueList().getNextAvailableQueue()!=null) {
+                if (userDetails.get(position).getQueueList().getNextAvailableQueue() != null) {
                     iCheckIn.putExtra("getAvail_date", userDetails.get(position).getQueueList().getNextAvailableQueue().getAvailableDate());
                 }
                 context.startActivity(iCheckIn);
@@ -291,7 +297,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     iCheckIn.putExtra("departmentId", String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));
                 }
                 iCheckIn.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
-                if (userDetails.get(position).getQueueList().getNextAvailableQueue()!=null) {
+                if (userDetails.get(position).getQueueList().getNextAvailableQueue() != null) {
                     iCheckIn.putExtra("getAvail_date", userDetails.get(position).getQueueList().getNextAvailableQueue().getAvailableDate());
                 }
                 context.startActivity(iCheckIn);
@@ -318,7 +324,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     iCheckIn.putExtra("departmentId", String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));
                 }
                 iCheckIn.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
-                if (userDetails.get(position).getQueueList().getNextAvailableQueue()!=null) {
+                if (userDetails.get(position).getQueueList().getNextAvailableQueue() != null) {
                     iCheckIn.putExtra("getAvail_date", userDetails.get(position).getQueueList().getNextAvailableQueue().getAvailableDate());
                 }
                 context.startActivity(iCheckIn);
@@ -349,167 +355,298 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
         });
 
         if (userDetails.get(position).getServices() != null) {
+
             if (userDetails.get(position).getServices().size() > 0) {
                 servicesList.clear();
                 servicesList = SomeConstructor(userDetails.get(position).getServices());
                 if (servicesList != null) {
 
-                    if (servicesList.size() == 1) {
-                        holder.mLSeriveLayout.setVisibility(View.VISIBLE);
-                        holder.txtservice1.setVisibility(View.VISIBLE);
-                        holder.txtservice2.setVisibility(View.GONE);
-                        holder.txtSeeAll.setVisibility(View.GONE);
-                        holder.txtservice1.setText(userDetails.get(position).getServices().get(0).getName());
+                    if (servicesList.size() > 0) {
 
-                        final String mServicename = userDetails.get(position).getServices().get(0).getName();
-                        final String mServiceprice = userDetails.get(position).getServices().get(0).getTotalAmount();
-                        final String mServicedesc = userDetails.get(position).getServices().get(0).getDescription();
-                        final String mServiceduration = userDetails.get(position).getServices().get(0).getServiceDuration();
-                        final boolean mTaxable = userDetails.get(position).getServices().get(0).isTaxable();
-                        final ArrayList<SearchService> mServiceGallery = userDetails.get(position).getServices().get(0).getServicegallery();
-                        final int mDepartmentCode = userDetails.get(position).getServices().get(0).getDepartment();
+                        holder.LService_2.setVisibility(View.VISIBLE);
+                        holder.txtservices.setVisibility(View.VISIBLE);
+                        if (servicesList.size() == 1) {
 
-                        final boolean isPrepayment = userDetails.get(position).getServices().get(0).isPrePayment();
-                        final String minPrepayment = userDetails.get(position).getServices().get(0).getMinPrePaymentAmount();
-                        holder.txtservice1.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), userDetails.get(position).getServices().get(0));
-                                serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                serviceInfoDialog.show();
-                                DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
-                                int width = (int) (metrics.widthPixels * 1);
-                                serviceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            }
-                        });
-
-                    } else if (servicesList.size() == 2) {
-                        holder.mLSeriveLayout.setVisibility(View.VISIBLE);
-                        holder.txtservice1.setVisibility(View.VISIBLE);
-                        holder.txtservice2.setVisibility(View.VISIBLE);
-                        if (userDetails.get(position).getServices().size() == 2) {
+                            holder.txtservice1.setVisibility(View.VISIBLE);
+                            holder.txtservice2.setVisibility(View.GONE);
                             holder.txtSeeAll.setVisibility(View.GONE);
+                            String name = servicesList.get(0).getName();
+                            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                            holder.txtservice1.setText(name);
+                            holder.txtservice1.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(0));
+                                    serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    serviceInfoDialog.show();
+                                    DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                                    int width = (int) (metrics.widthPixels * 1);
+                                    serviceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                }
+                            });
+
+//                             Toast.makeText(mContext, "set single line", Toast.LENGTH_SHORT).show();
+                        } else if (servicesList.size() >= 2 && servicesList.get(0).getName().length() <= 20 && servicesList.get(1).getName().length() <= 20) {
+
+                            if (servicesList.size() == 2) {
+
+                                holder.txtservice1.setVisibility(View.VISIBLE);
+                                holder.txtservice2.setVisibility(View.VISIBLE);
+                                holder.txtSeeAll.setVisibility(View.GONE);
+                                String name1 = servicesList.get(0).getName();
+                                name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
+                                holder.txtservice1.setText(name1 + ",");
+                                String name2 = servicesList.get(1).getName();
+                                name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
+                                holder.txtservice2.setText(name2);
+                                holder.txtservice1.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(0));
+                                        serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                        serviceInfoDialog.show();
+                                        DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                                        int width = (int) (metrics.widthPixels * 1);
+                                        serviceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    }
+                                });
+
+                                holder.txtservice2.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(1));
+                                        serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                        serviceInfoDialog.show();
+                                        DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                                        int width = (int) (metrics.widthPixels * 1);
+                                        serviceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    }
+                                });
+
+                                // Toast.makeText(mContext, "set text with comma seperated without seemore", Toast.LENGTH_SHORT).show();
+                            } else {
+                                holder.txtservice1.setVisibility(View.VISIBLE);
+                                holder.txtservice2.setVisibility(View.VISIBLE);
+                                holder.txtSeeAll.setVisibility(View.VISIBLE);
+                                String name1 = servicesList.get(0).getName();
+                                name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
+                                holder.txtservice1.setText(name1 + ",");
+                                String name2 = servicesList.get(1).getName();
+                                name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
+                                holder.txtservice2.setText(name2 + ",");
+                                holder.txtservice1.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(0));
+                                        serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                        serviceInfoDialog.show();
+                                        DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                                        int width = (int) (metrics.widthPixels * 1);
+                                        serviceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    }
+                                });
+
+                                holder.txtservice2.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(1));
+                                        serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                        serviceInfoDialog.show();
+                                        DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                                        int width = (int) (metrics.widthPixels * 1);
+                                        serviceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    }
+                                });
+                                holder.txtSeeAll.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        adaptercallback.onMethodServiceCallback(servicesList, userDetails.get(position).getSearchViewDetail().getBusinessName(), mSearchDepartmentList);
+                                    }
+                                });
+                                //  Toast.makeText(mContext, "set text with comma seperated with seemore", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            holder.txtSeeAll.setVisibility(View.VISIBLE);
-                        }
-                        holder.txtservice1.setText(userDetails.get(position).getServices().get(0).getName());
-                        holder.txtservice2.setText(userDetails.get(position).getServices().get(1).getName());
 
-                        String mServicename;
-                        mServicename = userDetails.get(position).getServices().get(0).getName();
-                        final String mServiceprice = userDetails.get(position).getServices().get(0).getTotalAmount();
-                        final String mServicedesc = userDetails.get(position).getServices().get(0).getDescription();
-                        final String mServiceduration = userDetails.get(position).getServices().get(0).getServiceDuration();
-                        final boolean mTaxable = userDetails.get(position).getServices().get(0).isTaxable();
-                        final ArrayList<SearchService> mServiceGallery = userDetails.get(position).getServices().get(0).getServicegallery();
+                            for (int i = 0; i < servicesList.size(); i++) {
 
-                        final boolean isPrepayment = userDetails.get(position).getServices().get(0).isPrePayment();
-                        final String minPrepayment = userDetails.get(position).getServices().get(0).getMinPrePaymentAmount();
-                        final String serviceName1 = mServicename;
-                        holder.txtservice1.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), userDetails.get(position).getServices().get(0));
-                                serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                serviceInfoDialog.show();
-                                DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
-                                int width = (int) (metrics.widthPixels * 1);
-                                serviceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            }
-                        });
-                        String servicename1;
+                                if (i == 0) {
 
-                        servicename1 = userDetails.get(position).getServices().get(1).getName();
+                                    holder.txtservice1.setVisibility(View.VISIBLE);
+                                    String name1 = servicesList.get(0).getName();
+                                    name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
+                                    holder.txtservice1.setText(name1 + ",");
+                                    holder.txtservice1.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(0));
+                                            serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                            serviceInfoDialog.show();
+                                            DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                                            int width = (int) (metrics.widthPixels * 1);
+                                            serviceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                        }
+                                    });
+                                    holder.txtSeeAll.setVisibility(View.VISIBLE);
+                                    holder.txtSeeAll.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            adaptercallback.onMethodServiceCallback(servicesList, userDetails.get(position).getSearchViewDetail().getBusinessName(), mSearchDepartmentList);
+                                        }
+                                    });
 
-                        final String mServicename1 = servicename1;
-
-                        final String mServiceprice1 = userDetails.get(position).getServices().get(1).getTotalAmount();
-                        final String mServicedesc1 = userDetails.get(position).getServices().get(1).getDescription();
-                        final String mServiceduration1 = userDetails.get(position).getServices().get(1).getServiceDuration();
-                        final boolean mTaxable1 = userDetails.get(position).getServices().get(1).isTaxable();
-                        final ArrayList<SearchService> mServiceGallery1 = userDetails.get(position).getServices().get(1).getServicegallery();
-
-                        final boolean isPrepayment1 = userDetails.get(position).getServices().get(1).isPrePayment();
-                        final String minPrepayment1 = userDetails.get(position).getServices().get(1).getMinPrePaymentAmount();
-                        holder.txtservice2.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), userDetails.get(position).getServices().get(1));
-                                serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                serviceInfoDialog.show();
-                                DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
-                                int width = (int) (metrics.widthPixels * 1);
-                                serviceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            }
-                        });
-                    } else if (servicesList.size() >= 3) {
-                        holder.mLSeriveLayout.setVisibility(View.VISIBLE);
-                        holder.txtservice1.setVisibility(View.VISIBLE);
-                        holder.txtservice2.setVisibility(View.VISIBLE);
-                        holder.txtSeeAll.setVisibility(View.VISIBLE);
-                        holder.txtservice1.setText(userDetails.get(position).getServices().get(0).getName());
-                        holder.txtservice2.setText(userDetails.get(position).getServices().get(1).getName());
-
-                        String mServicename;
-                        mServicename = userDetails.get(position).getServices().get(0).getName();
-                        final String mServiceprice = userDetails.get(position).getServices().get(0).getTotalAmount();
-                        final String mServicedesc = userDetails.get(position).getServices().get(0).getDescription();
-                        final String mServiceduration = userDetails.get(position).getServices().get(0).getServiceDuration();
-                        final boolean mTaxable = userDetails.get(position).getServices().get(0).isTaxable();
-                        final ArrayList<SearchService> mServiceGallery = userDetails.get(position).getServices().get(0).getServicegallery();
-
-                        final boolean isPrepayment = userDetails.get(position).getServices().get(0).isPrePayment();
-                        final String minPrepayment = userDetails.get(position).getServices().get(0).getMinPrePaymentAmount();
-                        final String serviceName1 = mServicename;
-                        holder.txtservice1.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), userDetails.get(position).getServices().get(0));
-                                serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                serviceInfoDialog.show();
-                                DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
-                                int width = (int) (metrics.widthPixels * 1);
-                                serviceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            }
-                        });
-                        String servicename1;
-
-                        servicename1 = userDetails.get(position).getServices().get(1).getName();
-
-                        final String mServicename1 = servicename1;
-
-                        final String mServiceprice1 = userDetails.get(position).getServices().get(1).getTotalAmount();
-                        final String mServicedesc1 = userDetails.get(position).getServices().get(1).getDescription();
-                        final String mServiceduration1 = userDetails.get(position).getServices().get(1).getServiceDuration();
-                        final boolean mTaxable1 = userDetails.get(position).getServices().get(1).isTaxable();
-                        final ArrayList<SearchService> mServiceGallery1 = userDetails.get(position).getServices().get(1).getServicegallery();
-
-                        final boolean isPrepayment1 = userDetails.get(position).getServices().get(1).isPrePayment();
-                        final String minPrepayment1 = userDetails.get(position).getServices().get(1).getMinPrePaymentAmount();
-                        holder.txtservice2.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), userDetails.get(position).getServices().get(1));
-                                serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                serviceInfoDialog.show();
-                                DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
-                                int width = (int) (metrics.widthPixels * 1);
-                                serviceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            }
-                        });
-
-                        holder.txtSeeAll.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                servicesList.clear();
-                                servicesList = SomeConstructor(userDetails.get(position).getServices());
-                                if (servicesList != null) {
-                                    adaptercallback.onMethodServiceCallback(servicesList, userDetails.get(position).getSearchViewDetail().getBusinessName(), mSearchDepartmentList);
+                                    // Toast.makeText(mContext, "set single line and see more", Toast.LENGTH_SHORT).show();
+                                    break;
                                 }
                             }
-                        });
+//        for (int i = 0; i < mSearchServiceList.size(); i++) {
+//            Config.logV("1--" + searchLoclist.getId() + "  2--" + mSearchServiceList.get(i).getLocid());
+//            String services = "";
+//            if (searchLoclist.getId() == mSearchServiceList.get(i).getLocid()) {
+//                int size = mSearchServiceList.get(i).getmAllService().size();
+//                if (size == 1) {
+//                    size = 1;
+//                } else if (size >= 2) {
+//                    size = 2;
+//                }
+//                if (size > 0) {
+//                    if (size == 1) {
+//                        myViewHolder.mLSeriveLayout.setVisibility(View.GONE);
+//                        myViewHolder.txtservice1.setVisibility(View.VISIBLE);
+//                        myViewHolder.txtservice2.setVisibility(View.GONE);
+//                        myViewHolder.txtSeeAll.setVisibility(View.GONE);
+//                        myViewHolder.txtservice1.setText(mSearchServiceList.get(i).getmAllService().get(0).getName());
+//
+//                        final String mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName();
+//                        final String mServiceprice = mSearchServiceList.get(i).getmAllService().get(0).getTotalAmount();
+//                        final String mServicedesc = mSearchServiceList.get(i).getmAllService().get(0).getDescription();
+//                        final String mServiceduration = mSearchServiceList.get(i).getmAllService().get(0).getServiceDuration();
+//                        final boolean mTaxable = mSearchServiceList.get(i).getmAllService().get(0).isTaxable();
+//                        final ArrayList<SearchService> mServiceGallery = mSearchServiceList.get(i).getmAllService().get(0).getServicegallery();
+//                        final int mDepartmentCode = mSearchServiceList.get(i).getmAllService().get(0).getDepartment();
+//
+//                        final boolean isPrepayment = mSearchServiceList.get(i).getmAllService().get(0).isPrePayment();
+//                        final String minPrepayment = mSearchServiceList.get(i).getmAllService().get(0).getMinPrePaymentAmount();
+//                        myViewHolder.txtservice1.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+//                                iService.putExtra("name", mServicename);
+//                                iService.putExtra("duration", mServiceduration);
+//                                iService.putExtra("price", mServiceprice);
+//                                iService.putExtra("desc", mServicedesc);
+//                                iService.putExtra("servicegallery", mServiceGallery);
+//                                iService.putExtra("taxable", mTaxable);
+//                                iService.putExtra("title", mTitle);
+//                                iService.putExtra("isPrePayment", isPrepayment);
+//                                iService.putExtra("MinPrePaymentAmount", minPrepayment);
+//                                iService.putExtra("departmentName", mDepartmentCode);
+//                                iService.putExtra("from", "chk");
+//                                mContext.startActivity(iService);
+//                            }
+//                        });
+//
+//                    } else {
+//                        myViewHolder.mLSeriveLayout.setVisibility(View.GONE);
+//                        myViewHolder.txtservice1.setVisibility(View.VISIBLE);
+//                        myViewHolder.txtservice2.setVisibility(View.VISIBLE);
+//                        if (mSearchServiceList.get(i).getmAllService().size() == 2) {
+//                            myViewHolder.txtSeeAll.setVisibility(View.GONE);
+//                        } else {
+//                            myViewHolder.txtSeeAll.setVisibility(View.VISIBLE);
+//                        }
+//                        if (mSearchServiceList.get(i).getmAllService().get(0).getDepartment() != 0) {
+//                            String deptName1 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(0).getDepartment());
+//                            String deptName2 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(1).getDepartment());
+//                            myViewHolder.txtservice1.setText(mSearchServiceList.get(i).getmAllService().get(0).getName().concat(" (").concat(deptName1).concat(")"));
+//                            myViewHolder.txtservice2.setText(mSearchServiceList.get(i).getmAllService().get(1).getName().concat(" (").concat(deptName2).concat(")"));
+//                        } else {
+//                            myViewHolder.txtservice1.setText(mSearchServiceList.get(i).getmAllService().get(0).getName());
+//                            myViewHolder.txtservice2.setText(mSearchServiceList.get(i).getmAllService().get(1).getName());
+//                        }
+//
+//
+//                        final int finalI = i;
+//                        myViewHolder.txtSeeAll.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                adaptercallback.onMethodServiceCallback(mSearchServiceList.get(finalI).getmAllService(), mTitle, mSearchDepartmentList);
+//                            }
+//                        });
+//                        String mServicename;
+//                        if (mSearchServiceList.get(i).getmAllService().get(0).getDepartment() != 0) {
+//                            String deptName1 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(0).getDepartment());
+//                            mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName().concat(" (").concat(deptName1).concat(")");
+//                        } else {
+//                            mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName();
+//                        }
+//
+//                        final String mServiceprice = mSearchServiceList.get(i).getmAllService().get(0).getTotalAmount();
+//                        final String mServicedesc = mSearchServiceList.get(i).getmAllService().get(0).getDescription();
+//                        final String mServiceduration = mSearchServiceList.get(i).getmAllService().get(0).getServiceDuration();
+//                        final boolean mTaxable = mSearchServiceList.get(i).getmAllService().get(0).isTaxable();
+//                        final ArrayList<SearchService> mServiceGallery = mSearchServiceList.get(i).getmAllService().get(0).getServicegallery();
+//
+//                        final boolean isPrepayment = mSearchServiceList.get(i).getmAllService().get(0).isPrePayment();
+//                        final String minPrepayment = mSearchServiceList.get(i).getmAllService().get(0).getMinPrePaymentAmount();
+//                        final String serviceName1 = mServicename;
+//                        myViewHolder.txtservice1.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+//                                iService.putExtra("name", serviceName1);
+//                                iService.putExtra("duration", mServiceduration);
+//                                iService.putExtra("price", mServiceprice);
+//                                iService.putExtra("desc", mServicedesc);
+//                                iService.putExtra("servicegallery", mServiceGallery);
+//                                iService.putExtra("taxable", mTaxable);
+//                                iService.putExtra("title", mTitle);
+//                                iService.putExtra("isPrePayment", isPrepayment);
+//                                iService.putExtra("MinPrePaymentAmount", minPrepayment);
+//                                iService.putExtra("from", "chk");
+//                                mContext.startActivity(iService);
+//                            }
+//                        });
+//                        String servicename1;
+//                        if (mSearchServiceList.get(i).getmAllService().get(1).getDepartment() != 0) {
+//                            String deptName1 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(1).getDepartment());
+//                            servicename1 = mSearchServiceList.get(i).getmAllService().get(1).getName().concat(" (").concat(deptName1).concat(")");
+//                        } else {
+//                            servicename1 = mSearchServiceList.get(i).getmAllService().get(1).getName();
+//                        }
+//                        final String mServicename1 = servicename1;
+////                        String deptName = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(1).getDepartment());
+////                        final String mServicename1 = mSearchServiceList.get(i).getmAllService().get(1).getName().concat(" (").concat(deptName).concat(")");
+//                        final String mServiceprice1 = mSearchServiceList.get(i).getmAllService().get(1).getTotalAmount();
+//                        final String mServicedesc1 = mSearchServiceList.get(i).getmAllService().get(1).getDescription();
+//                        final String mServiceduration1 = mSearchServiceList.get(i).getmAllService().get(1).getServiceDuration();
+//                        final boolean mTaxable1 = mSearchServiceList.get(i).getmAllService().get(1).isTaxable();
+//                        final ArrayList<SearchService> mServiceGallery1 = mSearchServiceList.get(i).getmAllService().get(1).getServicegallery();
+//
+//                        final boolean isPrepayment1 = mSearchServiceList.get(i).getmAllService().get(1).isPrePayment();
+//                        final String minPrepayment1 = mSearchServiceList.get(i).getmAllService().get(1).getMinPrePaymentAmount();
+//                        myViewHolder.txtservice2.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+//                                iService.putExtra("name", mServicename1);
+//                                iService.putExtra("duration", mServiceduration1);
+//                                iService.putExtra("price", mServiceprice1);
+//                                iService.putExtra("desc", mServicedesc1);
+//                                iService.putExtra("servicegallery", mServiceGallery1);
+//                                iService.putExtra("taxable", mTaxable1);
+//                                iService.putExtra("title", mTitle);
+//                                iService.putExtra("isPrePayment", isPrepayment1);
+//                                iService.putExtra("MinPrePaymentAmount", minPrepayment1);
+//                                iService.putExtra("from", "chk");
+//                                mContext.startActivity(iService);
+//                            }
+//                        });
+//                    }
+//                }
+//            }
+//        }
+                        }
                     }
                 }
             } else {
@@ -571,8 +708,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 if (userDetails.get(position).getUserAppointmentServices().size() > 0) {
 
                     setUserAppointmentServices(holder, position);
-                }
-                else {
+                } else {
 
                     holder.LAppointment.setVisibility(View.GONE);
                     holder.LApp_Services.setVisibility(View.GONE);
@@ -585,8 +721,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 if (userDetails.get(position).getAppointmentServices().size() > 0) {
 
                     setAppointmentServices(holder, position);
-                }
-                else {
+                } else {
                     holder.LAppointment.setVisibility(View.GONE);
                     holder.LApp_Services.setVisibility(View.GONE);
                     holder.txt_apptservices.setVisibility(View.GONE);
@@ -819,84 +954,385 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
         appointServices = appointServices == null ? new ArrayList<SearchAppointmentDepartmentServices>() : appointServices;
 
+        if (appointServices.size() > 0) {
 
+            holder.LApp_Services.setVisibility(View.VISIBLE);
+            holder.txt_apptservices.setVisibility(View.VISIBLE);
+            if (appointServices.size() == 1) {
 
-        for (int j = 0; j < appointServices.size(); j++) {
-            if (j < 2) {
-                TextView dynaText = new TextView(context);
-                tyface = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                dynaText.setTypeface(tyface,Typeface.BOLD);
-                dynaText.setText(appointServices.get(j).getName());
-                dynaText.setTextSize(13);
-                dynaText.setPadding(5, 0, 5, 0);
-                dynaText.setTextColor(context.getResources().getColor(R.color.black));
-                dynaText.setMaxLines(1);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 0, 20, 0);
-                dynaText.setLayoutParams(params);
-
-                holder.LApp_Services.addView(dynaText);
-            } else if (j >= 2) {
-
-                holder.txtapptSeeAll.setVisibility(View.VISIBLE);
-                holder.txtapptSeeAll.setOnClickListener(new View.OnClickListener() {
+                holder.tvAppService1.setVisibility(View.VISIBLE);
+                holder.tvAppService2.setVisibility(View.GONE);
+                holder.tvAppSeeAll.setVisibility(View.GONE);
+                String name = appointServices.get(0).getName();
+                name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                holder.tvAppService1.setText(name);
+                holder.tvAppService1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        apptList.clear();
-                        tempList.addAll(appointServices);
-                        if (apptList != null) {
+                        appServInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), appointServices.get(0));
+                        appServInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        appServInfoDialog.show();
+                        DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                        int width = (int) (metrics.widthPixels * 1);
+                        appServInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-                            adaptercallback.onMethodServiceCallbackAppointment(tempList, userDetails.get(position).getSearchViewDetail().getBusinessName(), mSearchDepartmentList);
-                        }
                     }
                 });
-                break;
+
+
+            } else if (appointServices.size() >= 2 && appointServices.get(0).getName().length() <= 20 && appointServices.get(1).getName().length() <= 20) {
+
+                if (appointServices.size() == 2) {
+                    holder.tvAppService1.setVisibility(View.VISIBLE);
+                    holder.tvAppService2.setVisibility(View.VISIBLE);
+                    holder.tvAppSeeAll.setVisibility(View.GONE);
+                    String name1 = appointServices.get(0).getName();
+                    name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
+                    holder.tvAppService1.setText(name1 + ",");
+                    String name2 = appointServices.get(1).getName();
+                    name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
+                    holder.tvAppService2.setText(name2);
+                    holder.tvAppService1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            appServInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), appointServices.get(0));
+                            appServInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            appServInfoDialog.show();
+                            DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            appServInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                        }
+                    });
+
+                    holder.tvAppService2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            appServInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), appointServices.get(1));
+                            appServInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            appServInfoDialog.show();
+                            DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            appServInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                        }
+                    });
+
+                } else {
+                    holder.tvAppService1.setVisibility(View.VISIBLE);
+                    holder.tvAppService2.setVisibility(View.VISIBLE);
+                    holder.tvAppSeeAll.setVisibility(View.VISIBLE);
+                    String name1 = appointServices.get(0).getName();
+                    name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
+                    holder.tvAppService1.setText(name1 + ",");
+                    String name2 = appointServices.get(1).getName();
+                    name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
+                    holder.tvAppService2.setText(name2 + ",");
+                    holder.tvAppService1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            appServInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), appointServices.get(0));
+                            appServInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            appServInfoDialog.show();
+                            DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            appServInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        }
+                    });
+
+                    holder.tvAppService2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            appServInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), appointServices.get(1));
+                            appServInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            appServInfoDialog.show();
+                            DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            appServInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        }
+                    });
+                    holder.tvAppSeeAll.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            tempList.clear();
+                            tempList.addAll(appointServices);
+                            adaptercallback.onMethodServiceCallbackAppointment(tempList, userDetails.get(position).getSearchViewDetail().getBusinessName(), mSearchDepartmentList);
+                        }
+                    });
+                }
+            } else {
+
+                for (int i = 0; i < appointServices.size(); i++) {
+
+                    if (i == 0) {
+                        holder.tvAppService1.setVisibility(View.VISIBLE);
+                        String name1 = appointServices.get(0).getName();
+                        name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
+                        holder.tvAppService1.setText(name1 + ",");
+                        holder.tvAppService1.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                appServInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), appointServices.get(0));
+                                appServInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                appServInfoDialog.show();
+                                DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                                int width = (int) (metrics.widthPixels * 1);
+                                appServInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            }
+                        });
+                        holder.tvAppSeeAll.setVisibility(View.VISIBLE);
+                        holder.tvAppSeeAll.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                tempList.clear();
+                                tempList.addAll(appointServices);
+                                adaptercallback.onMethodServiceCallbackAppointment(tempList, userDetails.get(position).getSearchViewDetail().getBusinessName(), mSearchDepartmentList);
+                            }
+                        });
+                        Toast.makeText(context, "set single line and see more", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+
+                }
 
             }
+        } else {
+
+            holder.txt_apptservices.setVisibility(View.GONE);
+            holder.LApp_Services.setVisibility(View.GONE);
         }
+
+//        for (int j = 0; j < appointServices.size(); j++) {
+//            if (j < 2) {
+//                TextView dynaText = new TextView(context);
+//                tyface = Typeface.createFromAsset(context.getAssets(),
+//                        "fonts/Montserrat_Regular.otf");
+//                dynaText.setTypeface(tyface, Typeface.BOLD);
+//                dynaText.setText(appointServices.get(j).getName());
+//                dynaText.setTextSize(13);
+//                dynaText.setPadding(5, 0, 5, 0);
+//                dynaText.setTextColor(context.getResources().getColor(R.color.black));
+//                dynaText.setMaxLines(1);
+//                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                params.setMargins(0, 0, 20, 0);
+//                dynaText.setLayoutParams(params);
+//
+//                holder.LApp_Services.addView(dynaText);
+//            } else if (j >= 2) {
+//
+//                holder.txtapptSeeAll.setVisibility(View.VISIBLE);
+//                holder.txtapptSeeAll.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                        apptList.clear();
+//                        tempList.addAll(appointServices);
+//                        if (tempList != null) {
+//
+//                            adaptercallback.onMethodServiceCallbackAppointment(tempList, userDetails.get(position).getSearchViewDetail().getBusinessName(), mSearchDepartmentList);
+//                        }
+//                    }
+//                });
+//                break;
+//
+//            }
+//        }
     }
 
     private void setUserAppointmentServices(MyViewHolder holder, int position) {
         apptServices = userDetails.get(position).getUserAppointmentServices();
 
         apptServices = apptServices == null ? new ArrayList<SearchService>() : apptServices;
+        if (apptServices.size() > 0) {
 
-        holder.LApp_Services.setVisibility(View.VISIBLE);
-        for (int j = 0; j < apptServices.size(); j++) {
-            if (j < 2) {
-                TextView dynaText = new TextView(context);
-                tyface = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                dynaText.setTypeface(tyface,Typeface.BOLD);
-                dynaText.setText(apptServices.get(j).getName());
-                dynaText.setTextSize(13);
-                dynaText.setPadding(5, 0, 5, 0);
-                dynaText.setTextColor(context.getResources().getColor(R.color.black));
-                dynaText.setMaxLines(1);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 0, 20, 0);
-                dynaText.setLayoutParams(params);
+            holder.LApp_Services.setVisibility(View.VISIBLE);
+            holder.txt_apptservices.setVisibility(View.VISIBLE);
+            if (apptServices.size() == 1) {
 
-                holder.LApp_Services.addView(dynaText);
-            } else if (j >= 2) {
-
-                holder.txtapptSeeAll.setVisibility(View.VISIBLE);
-                holder.txtapptSeeAll.setOnClickListener(new View.OnClickListener() {
+                holder.tvAppService1.setVisibility(View.VISIBLE);
+                holder.tvAppService2.setVisibility(View.GONE);
+                holder.tvAppSeeAll.setVisibility(View.GONE);
+                String name = apptServices.get(0).getName();
+                name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                holder.tvAppService1.setText(name);
+                holder.tvAppService1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        if (apptServices != null) {
+                        userAppServicesDialog = new UserAppServicesDialog(v.getContext(), apptServices.get(0));
+                        userAppServicesDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        userAppServicesDialog.show();
+                        DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                        int width = (int) (metrics.widthPixels * 1);
+                        userAppServicesDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-                            adaptercallback.onUserAppointmentServices(apptServices, userDetails.get(position).getSearchViewDetail().getBusinessName(), mSearchDepartmentList);
-                        }
                     }
                 });
-                break;
 
+
+            } else if (apptServices.size() >= 2 && apptServices.get(0).getName().length() <= 20 && apptServices.get(1).getName().length() <= 20) {
+
+                if (apptServices.size() == 2) {
+                    holder.tvAppService1.setVisibility(View.VISIBLE);
+                    holder.tvAppService2.setVisibility(View.VISIBLE);
+                    holder.tvAppSeeAll.setVisibility(View.GONE);
+                    String name1 = apptServices.get(0).getName();
+                    name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
+                    holder.tvAppService1.setText(name1 + ",");
+                    String name2 = apptServices.get(1).getName();
+                    name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
+                    holder.tvAppService2.setText(name2);
+                    holder.tvAppService1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            userAppServicesDialog = new UserAppServicesDialog(v.getContext(), apptServices.get(0));
+                            userAppServicesDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            userAppServicesDialog.show();
+                            DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            userAppServicesDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                        }
+                    });
+
+                    holder.tvAppService2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            userAppServicesDialog = new UserAppServicesDialog(v.getContext(), apptServices.get(1));
+                            userAppServicesDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            userAppServicesDialog.show();
+                            DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            userAppServicesDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                        }
+                    });
+
+                } else {
+                    holder.tvAppService1.setVisibility(View.VISIBLE);
+                    holder.tvAppService2.setVisibility(View.VISIBLE);
+                    holder.tvAppSeeAll.setVisibility(View.VISIBLE);
+                    String name1 = apptServices.get(0).getName();
+                    name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
+                    holder.tvAppService1.setText(name1 + ",");
+                    String name2 = apptServices.get(1).getName();
+                    name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
+                    holder.tvAppService2.setText(name2 + ",");
+                    holder.tvAppService1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            userAppServicesDialog = new UserAppServicesDialog(v.getContext(), apptServices.get(0));
+                            userAppServicesDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            userAppServicesDialog.show();
+                            DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            userAppServicesDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                        }
+                    });
+
+                    holder.tvAppService2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            userAppServicesDialog = new UserAppServicesDialog(v.getContext(), apptServices.get(1));
+                            userAppServicesDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            userAppServicesDialog.show();
+                            DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            userAppServicesDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                        }
+                    });
+                    holder.tvAppSeeAll.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            if (apptServices != null) {
+
+                                adaptercallback.onUserAppointmentServices(apptServices, userDetails.get(position).getSearchViewDetail().getBusinessName(), mSearchDepartmentList);
+                            }
+                        }
+                    });
+                }
+            } else {
+
+                for (int i = 0; i < apptServices.size(); i++) {
+
+                    if (i == 0) {
+                        holder.tvAppService1.setVisibility(View.VISIBLE);
+                        String name1 = apptServices.get(0).getName();
+                        name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
+                        holder.tvAppService1.setText(name1 + ",");
+                        holder.tvAppService1.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                userAppServicesDialog = new UserAppServicesDialog(v.getContext(), apptServices.get(0));
+                                userAppServicesDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                userAppServicesDialog.show();
+                                DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                                int width = (int) (metrics.widthPixels * 1);
+                                userAppServicesDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                            }
+                        });
+                        holder.tvAppSeeAll.setVisibility(View.VISIBLE);
+                        holder.tvAppSeeAll.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                if (apptServices != null) {
+                                    adaptercallback.onUserAppointmentServices(apptServices, userDetails.get(position).getSearchViewDetail().getBusinessName(), mSearchDepartmentList);
+                                }
+                            }
+                        });
+                        Toast.makeText(context, "set single line and see more", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                }
             }
+        } else {
+
+            holder.txt_apptservices.setVisibility(View.GONE);
+            holder.LApp_Services.setVisibility(View.GONE);
         }
+//        for (int j = 0; j < apptServices.size(); j++) {
+//            if (j < 2) {
+//                TextView dynaText = new TextView(context);
+//                tyface = Typeface.createFromAsset(context.getAssets(),
+//                        "fonts/Montserrat_Regular.otf");
+//                dynaText.setTypeface(tyface, Typeface.BOLD);
+//                dynaText.setText(apptServices.get(j).getName());
+//                dynaText.setTextSize(13);
+//                dynaText.setPadding(5, 0, 5, 0);
+//                dynaText.setTextColor(context.getResources().getColor(R.color.black));
+//                dynaText.setMaxLines(1);
+//                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                params.setMargins(0, 0, 20, 0);
+//                dynaText.setLayoutParams(params);
+//
+//                holder.LApp_Services.addView(dynaText);
+//            } else if (j >= 2) {
+//
+//                holder.txtapptSeeAll.setVisibility(View.VISIBLE);
+//                holder.txtapptSeeAll.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                        if (apptServices != null) {
+//
+//                            adaptercallback.onUserAppointmentServices(apptServices, userDetails.get(position).getSearchViewDetail().getBusinessName(), mSearchDepartmentList);
+//                        }
+//                    }
+//                });
+//                break;
+//
+//            }
+//        }
     }
 
     @Override
@@ -917,7 +1353,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
         TextView txtservice1, txtservice2, txtSeeAll, txtwork1, txtworkSeeAll, txtworking;
         TextView txt_earliestAvailable, txt_apptservices, txt_dontservices, txtapptSeeAll, txtdntSeeAll;
         Button btn_appointments, btn_donations;
-        private RelativeLayout rlAppServices;
+        private RelativeLayout rlAppServices, rlLocationLayout;
+        TextView tvAppService1, tvAppService2, tvAppSeeAll, tvAvailDate;
+        TextView tvDntService1, tvDntService2, tvDntSeeAll;
 
 
         ArrayList<WorkingModel> workingModelArrayList = new ArrayList<>();
@@ -975,6 +1413,10 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
             txtapptSeeAll = view.findViewById(R.id.txtapptSeeAll);
             txtdntSeeAll = view.findViewById(R.id.txtdntSeeAll);
             rlAppServices = view.findViewById(R.id.rlAppServices);
+            rlLocationLayout = view.findViewById(R.id.locationlayout);
+            tvAppService1 = view.findViewById(R.id.tv_appService1);
+            tvAppService2 = view.findViewById(R.id.tv_appservice2);
+            tvAppSeeAll = view.findViewById(R.id.tv_appSeeAll);
         }
     }
 
