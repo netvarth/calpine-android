@@ -1604,14 +1604,17 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         tv_busName.setText(getBussinessData.getBusinessName());
 
-        String rate = String.valueOf(getBussinessData.getAvgRating());
-        if (rate.equalsIgnoreCase("0.0")) {
+        try {
 
-            tvNoRatings.setVisibility(View.VISIBLE);
-        } else {
-            tvNoRatings.setVisibility(View.GONE);
-            rating.setVisibility(View.VISIBLE);
-            rating.setRating(getBussinessData.getAvgRating());
+            int rate = Math.round(searchdetailList.getSearchViewDetail().getAvgRating());
+            if (rate < 4) {
+                rating.setVisibility(View.GONE);
+            } else {
+                rating.setVisibility(View.VISIBLE);
+                rating.setRating(searchdetailList.getSearchViewDetail().getAvgRating());
+            }
+        } catch (Exception e) {
+
         }
         if (getBussinessData.getServiceSector().getDisplayName() != null && getBussinessData.getServiceSubSector().getDisplayName() != null) {
             if (getBussinessData.getServiceSector().getDisplayName().equalsIgnoreCase("Other / Miscellaneous")) {

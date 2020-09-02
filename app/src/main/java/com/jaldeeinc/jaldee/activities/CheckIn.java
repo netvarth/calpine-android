@@ -168,7 +168,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     static TextView tv_name;
     String mFirstName, mLastName;
     int consumerID;
-    static TextView tv_waittime, tvTimeHint;
+    static TextView tv_waittime;
     static TextView tv_queue;
     static TextView txt_date;
     ImageView img_calender_checkin;
@@ -289,7 +289,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         txtnocheckin = findViewById(R.id.txtnocheckin);
         tv_name = findViewById(R.id.txtname);
         tv_waittime = findViewById(R.id.txt_waittime);
-        tvTimeHint = findViewById(R.id.txt_timeHint);
         txt_date = findViewById(R.id.txt_date);
         img_calender_checkin = findViewById(R.id.calender_checkin);
         LcheckinDatepicker = findViewById(R.id.checkinDatepicker);
@@ -1705,7 +1704,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             Lbottomlayout.setVisibility(View.VISIBLE);
                             tv_queuetime.setVisibility(View.VISIBLE);
                             tv_waittime.setVisibility(View.VISIBLE);
-                            tvTimeHint.setVisibility(View.VISIBLE);
                             txtnocheckin.setVisibility(View.GONE);
                             if (mQueueTimeSlotList.get(i).getId() != 0) {
                                 queueId = mQueueTimeSlotList.get(i).getId();
@@ -1717,11 +1715,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             tv_personahead.setText(Config.getPersonsAheadText(mQueueTimeSlotList.get(0).getQueueSize()));
                             if (isShowToken.equalsIgnoreCase("true") && mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
                                 tv_waittime.setVisibility(View.GONE);
-                                tvTimeHint.setVisibility(View.GONE);
 
                             } else {
                                 tv_waittime.setVisibility(View.VISIBLE);
-                                tvTimeHint.setVisibility(View.VISIBLE);
                                 tv_waittime.setText(getWaitingTime(mQueueTimeSlotList.get(0)));
                             }
                         } else {
@@ -1731,7 +1727,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 //                            tv_queuename.setVisibility(View.GONE);
                             tv_queuetime.setVisibility(View.GONE);
                             tv_waittime.setVisibility(View.GONE);
-                            tvTimeHint.setVisibility(View.GONE);
                             Lbottomlayout.setVisibility(View.GONE);
                             txtnocheckin.setVisibility(View.VISIBLE);
                             txtnocheckin.setText(Word_Change + " this service is not available at the moment. Please try for a different time or date");
@@ -1765,11 +1760,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                     }
                                     if (isShowToken.equalsIgnoreCase("true") && mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc")) {
                                         tv_waittime.setVisibility(View.GONE);
-                                        tvTimeHint.setVisibility(View.GONE);
 
                                     } else {
                                         tv_waittime.setVisibility(View.VISIBLE);
-                                        tvTimeHint.setVisibility(View.VISIBLE);
                                         tv_waittime.setText(getWaitingTime(mQueueTimeSlotList.get(i)));
                                     }
                                 }
@@ -1810,10 +1803,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                     }
                                     if (isShowToken.equalsIgnoreCase("true") && mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc")) {
                                         tv_waittime.setVisibility(View.GONE);
-                                        tvTimeHint.setVisibility(View.GONE);
                                     } else {
                                         tv_waittime.setVisibility(View.VISIBLE);
-                                        tvTimeHint.setVisibility(View.VISIBLE);
                                         tv_waittime.setText(getWaitingTime(mQueueTimeSlotList.get(i)));
                                     }
                                 }
