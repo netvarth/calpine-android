@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -812,104 +813,109 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         mSpinnerService.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                if (LServicesList.size() != 0) {
-                    mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
-                    livetrack = (((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack());
-                    selectedServiceType = (((SearchAppoinment) mSpinnerService.getSelectedItem()).getServiceType());
-                    Log.i("vbnvbnvbn", String.valueOf(mSpinnertext));
-                    Log.i("lkjjkllkjjkl", String.valueOf(livetrack));
+                try {
+                    if (LServicesList.size() != 0) {
+                        mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
+                        livetrack = (((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack());
+                        selectedServiceType = (((SearchAppoinment) mSpinnerService.getSelectedItem()).getServiceType());
+                        Log.i("vbnvbnvbn", String.valueOf(mSpinnertext));
+                        Log.i("lkjjkllkjjkl", String.valueOf(livetrack));
 
-                    serviceSelected = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getName();
-                    selectedService = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
+                        serviceSelected = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getName();
+                        selectedService = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
 
 
-                    if (selectedServiceType.equalsIgnoreCase("virtualService")) {
-                        if (((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().size() > 0) {
-                            callingMode = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getCallingMode();
-                            valueNumber = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
-                            if (callingMode.equalsIgnoreCase("WhatsApp")) {
-                                serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                                tv_enterInstructions.setVisibility(View.VISIBLE);
-                                tv_enterInstructions.setText(serviceInstructions);
-                                et_vitualId.setText(phoneNumber);
-                                et_vitualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
-                                et_vitualId.setVisibility(View.VISIBLE);
-                            } else if (callingMode.equalsIgnoreCase("Phone")) {
-                                serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                                tv_enterInstructions.setVisibility(View.VISIBLE);
-                                tv_enterInstructions.setText(serviceInstructions);
-                                et_vitualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_phone_iphone_black_24dps, 0, 0, 0);
-                                et_vitualId.setText(phoneNumber);
-                                et_vitualId.setVisibility(View.VISIBLE);
-                            } else {
-                                serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                                tv_enterInstructions.setVisibility(View.VISIBLE);
-                                tv_enterInstructions.setText(serviceInstructions);
-                                et_vitualId.setVisibility(View.GONE);
+                        if (selectedServiceType.equalsIgnoreCase("virtualService")) {
+                            if (((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().size() > 0) {
+                                callingMode = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getCallingMode();
+                                valueNumber = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
+                                if (callingMode.equalsIgnoreCase("WhatsApp")) {
+                                    serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                                    tv_enterInstructions.setVisibility(View.VISIBLE);
+                                    tv_enterInstructions.setText(serviceInstructions);
+                                    et_vitualId.setText(phoneNumber);
+                                    et_vitualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                                    et_vitualId.setVisibility(View.VISIBLE);
+                                } else if (callingMode.equalsIgnoreCase("Phone")) {
+                                    serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                                    tv_enterInstructions.setVisibility(View.VISIBLE);
+                                    tv_enterInstructions.setText(serviceInstructions);
+                                    et_vitualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_phone_iphone_black_24dps, 0, 0, 0);
+                                    et_vitualId.setText(phoneNumber);
+                                    et_vitualId.setVisibility(View.VISIBLE);
+                                } else {
+                                    serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                                    tv_enterInstructions.setVisibility(View.VISIBLE);
+                                    tv_enterInstructions.setText(serviceInstructions);
+                                    et_vitualId.setVisibility(View.GONE);
+                                }
                             }
-                        }
-                    } else {
-                        tv_enterInstructions.setVisibility(View.GONE);
-                        et_vitualId.setVisibility(View.GONE);
-                    }
-                    //  selectedServiceType =((SearchAppoinment)  mSpinnerService.getSelectedItem()).getServiceType();
-
-                    // String firstWord = "Check-in for ";
-                    String firstWord = Word_Change;
-                    String secondWord = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getName();
-                    Spannable spannable = new SpannableString(firstWord + secondWord);
-                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                            "fonts/Montserrat_Bold.otf");
-                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tv_checkin_service.setText(spannable);
-
-                    Date date = null;
-                    String selectDate = null;
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                    try {
-                        String selectedDate = txtWaitTime.getText().toString().replace("Today\n", "");
-                        date = format.parse(selectedDate);
-                        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                        //to convert Date to String, use format method of SimpleDateFormat class.
-                        selectDate = dateFormat.format(date);
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
-                        //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
-                        ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), selectDate, modifyAccountID);
-                    } else {
-                        if (selectedDateFormat != null) {
-                            Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                            //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
-                            ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), selectDate, modifyAccountID);
                         } else {
-                            Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@************");
+                            tv_enterInstructions.setVisibility(View.GONE);
+                            et_vitualId.setVisibility(View.GONE);
+                        }
+                        //  selectedServiceType =((SearchAppoinment)  mSpinnerService.getSelectedItem()).getServiceType();
+
+                        // String firstWord = "Check-in for ";
+                        String firstWord = Word_Change;
+                        String secondWord = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getName();
+                        Spannable spannable = new SpannableString(firstWord + secondWord);
+                        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                "fonts/Montserrat_Bold.otf");
+                        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        tv_checkin_service.setText(spannable);
+
+                        Date date = null;
+                        String selectDate = null;
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        try {
+                            String selectedDate = txtWaitTime.getText().toString().replace("Today\n", "");
+                            date = format.parse(selectedDate);
+                            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            //to convert Date to String, use format method of SimpleDateFormat class.
+                            selectDate = dateFormat.format(date);
+
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
+
                             //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                             ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), selectDate, modifyAccountID);
+                        } else {
+                            if (selectedDateFormat != null) {
+                                Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                                //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
+                                ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), selectDate, modifyAccountID);
+                            } else {
+                                Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@************");
+                                //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                                ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), selectDate, modifyAccountID);
+                            }
+
+                        }
+
+
+                        isPrepayment = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getIsPrePayment();
+                        Config.logV("Payment------------" + isPrepayment);
+                        if (isPrepayment.equalsIgnoreCase("true")) {
+
+                            sAmountPay = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
+
+                            Config.logV("Payment----sAmountPay--------" + sAmountPay);
+                            APIPayment(modifyAccountID);
+
+                        } else {
+                            LservicePrepay.setVisibility(View.GONE);
                         }
 
                     }
 
-
-                    isPrepayment = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getIsPrePayment();
-                    Config.logV("Payment------------" + isPrepayment);
-                    if (isPrepayment.equalsIgnoreCase("true")) {
-
-                        sAmountPay = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
-
-                        Config.logV("Payment----sAmountPay--------" + sAmountPay);
-                        APIPayment(modifyAccountID);
-
-                    } else {
-                        LservicePrepay.setVisibility(View.GONE);
-                    }
-
+                } catch (Resources.NotFoundException e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -934,69 +940,74 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 //                            departmentSelected = depResponse.getDepartments().get(k).getDepartmentName();
 //                        }}
 //                }else{
-                selectedDepartment = depResponse.getDepartments().get(position).getDepartmentId();
-                departmentSelected = depResponse.getDepartments().get(position).getDepartmentName();
-                deptSpinnertext = depResponse.getDepartments().get(position).getDepartmentId();
-                //}
-                ArrayList<Integer> serviceIds = depResponse.getDepartments().get(position).getServiceIds();
-                ArrayList<SearchAppoinment> serviceList = new ArrayList<>();
-                ArrayList<SearchUsers> userList = new ArrayList<>();
-                for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
+                try {
 
-                    for (int i = 0; i < gServiceList.size(); i++) {
-                        if (serviceIds.get(serviceIndex) == gServiceList.get(i).getId()) {
-                            serviceList.add(gServiceList.get(i));
-                            break;
+                    selectedDepartment = depResponse.getDepartments().get(position).getDepartmentId();
+                    departmentSelected = depResponse.getDepartments().get(position).getDepartmentName();
+                    deptSpinnertext = depResponse.getDepartments().get(position).getDepartmentId();
+                    //}
+                    ArrayList<Integer> serviceIds = depResponse.getDepartments().get(position).getServiceIds();
+                    ArrayList<SearchAppoinment> serviceList = new ArrayList<>();
+                    ArrayList<SearchUsers> userList = new ArrayList<>();
+                    for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
+
+                        for (int i = 0; i < gServiceList.size(); i++) {
+                            if (serviceIds.get(serviceIndex) == gServiceList.get(i).getId()) {
+                                serviceList.add(gServiceList.get(i));
+                                break;
+                            }
                         }
+
                     }
-
-                }
-                LServicesList.clear();
-                LServicesList.addAll(serviceList);
-                if (LServicesList.size() == 0) {
-                    mSpinnerService.setVisibility(View.GONE);
-                    btn_checkin.setVisibility(View.GONE);
-                    txt_chooseservice.setVisibility(View.GONE);
-                    Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
-                } else {
-                    CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    mSpinnerService.setAdapter(adapter);
-                    mSpinnertext = ((SearchAppoinment) LServicesList.get(0)).getId();
-                    livetrack = LServicesList.get(0).getLivetrack();
-                    mSpinnerService.setVisibility(View.VISIBLE);
-                    txt_chooseservice.setVisibility(View.VISIBLE);
-                    btn_checkin.setVisibility(View.VISIBLE);
-
-                }
-                ApiSearchUsers(selectedDepartment);
-                if (doctResponse.size() > 0) {
-                    LUsersList.clear();
-                    LUsersList.addAll(doctResponse);
-                    if (LUsersList.size() == 0) {
-                        mSpinnerDoctor.setVisibility(View.GONE);
-                        //  btn_checkin.setVisibility(View.GONE);
-                        txt_choosedoctor.setVisibility(View.GONE);
-                        //  Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
+                    LServicesList.clear();
+                    LServicesList.addAll(serviceList);
+                    if (LServicesList.size() == 0) {
+                        mSpinnerService.setVisibility(View.GONE);
+                        btn_checkin.setVisibility(View.GONE);
+                        txt_chooseservice.setVisibility(View.GONE);
+                        Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
                     } else {
-                        ArrayAdapter<SearchUsers> adapter = new ArrayAdapter<SearchUsers>(mActivity, android.R.layout.simple_spinner_dropdown_item, LUsersList);
+                        CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        mSpinnerDoctor.setAdapter(adapter);
+                        mSpinnerService.setAdapter(adapter);
+                        mSpinnertext = ((SearchAppoinment) LServicesList.get(0)).getId();
+                        livetrack = LServicesList.get(0).getLivetrack();
+                        mSpinnerService.setVisibility(View.VISIBLE);
+                        txt_chooseservice.setVisibility(View.VISIBLE);
+                        btn_checkin.setVisibility(View.VISIBLE);
+
+                    }
+                    ApiSearchUsers(selectedDepartment);
+                    if (doctResponse.size() > 0) {
+                        LUsersList.clear();
+                        LUsersList.addAll(doctResponse);
+                        if (LUsersList.size() == 0) {
+                            mSpinnerDoctor.setVisibility(View.GONE);
+                            //  btn_checkin.setVisibility(View.GONE);
+                            txt_choosedoctor.setVisibility(View.GONE);
+                            //  Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
+                        } else {
+                            ArrayAdapter<SearchUsers> adapter = new ArrayAdapter<SearchUsers>(mActivity, android.R.layout.simple_spinner_dropdown_item, LUsersList);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            mSpinnerDoctor.setAdapter(adapter);
 //                    if(mFrom.equalsIgnoreCase("multiusercheckin")){
 //                        userSpinnertext = userId;
 //                    }
 //                    else{
-                        userSpinnertext = ((SearchUsers) LUsersList.get(0)).getId();
+                            userSpinnertext = ((SearchUsers) LUsersList.get(0)).getId();
 
 //                }
-                        //  livetrack = LServicesList.get(0).getLivetrack();
-                        mSpinnerDoctor.setVisibility(View.VISIBLE);
-                        txt_choosedoctor.setVisibility(View.VISIBLE);
-                        //   btn_checkin.setVisibility(View.VISIBLE);
+                            //  livetrack = LServicesList.get(0).getLivetrack();
+                            mSpinnerDoctor.setVisibility(View.VISIBLE);
+                            txt_choosedoctor.setVisibility(View.VISIBLE);
+                            //   btn_checkin.setVisibility(View.VISIBLE);
 
+                        }
+                    } else {
+                        userSpinnertext = 0;
                     }
-                } else {
-                    userSpinnertext = 0;
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -1473,173 +1484,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
     }
 
-    //    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//
-//        if (resultCode == this.RESULT_CANCELED) {
-//            return;
-//        }
-//        if (requestCode == GALLERY) {
-//            if (data != null) {
-//                try {
-//                    if (data.getData() != null) {
-//                        Uri uri = data.getData();
-//                        String filepath = "";//default fileName
-//                        //Uri filePathUri = uri;
-//                        File file;
-//                        String mimeType = this.mContext.getContentResolver().getType(uri);
-//                        String uriString = uri.toString();
-//                        String extension = "";
-//                        if (uriString.contains(".")) {
-//                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
-//                        }
-//
-//                        if (Arrays.asList(imgExtsSupported).contains(extension)) {
-//                            try {
-//                                file = new File(new URI(uri.toString()));
-//                                if (file.exists())
-//                                    filepath = file.getAbsolutePath();
-//
-//                            } catch (URISyntaxException e) {
-//                                e.printStackTrace();
-//                            }
-//                        } else {
-//                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
-//                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
-//                                filepath = getFilePathFromURI(this.mContext, uri, extension);
-//                            } else {
-//                                Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
-//                                return;
-//                            }
-//                        }
-//
-////                        if (uri.getScheme().toString().compareTo("external/images/media") == 0) {
-////
-//////                            String[] projection = { MediaStore.Images.Media.DATA };
-//////                            Cursor cursor = this.mContext.getContentResolver().query(uri, projection, null, null, null);
-//////                            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-//////
-//////                            cursor.moveToFirst();
-//////                            String mImagePath = cursor.getString(column_index);
-//////                            cursor.close();
-//////                            }
-////                            filepath = getFilePathFromURI(this.mContext, uri);
-////                        } else if (uri.getScheme().compareTo("file") == 0) {
-////                            try {
-////                                file = new File(new URI(uri.toString()));
-////                                if (file.exists())
-////                                    filepath = file.getAbsolutePath();
-////
-////                            } catch (URISyntaxException e) {
-////                                e.printStackTrace();
-////                            }
-////                        }  else {
-////                            filepath = uri.getPath();
-////                        }
-//                        imagePathList.add(filepath);
-////                        Uri mImageUri = data.getData();
-////                        filePath = data.getData().getPath();
-////                        String ext1 = FilenameUtils.getExtension(filePath);
-////
-////
-////                        imagePathList.add(mImageUri.toString());
-////             //         bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mImageUri);
-////                       // if(bitmap!=null){
-////                    //    path = saveImage(bitmap);}
-////
-////                      //  else{
-////                            path = getRealFilePath(mImageUri);
-////                     //   }
-//
-//
-//                        DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
-//                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
-//                        recycle_image_attachment.setLayoutManager(mLayoutManager);
-//                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
-//
-//                        mDetailFileAdapter.notifyDataSetChanged();
-//
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//        } else if (requestCode == CAMERA) {
-//            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-//            //      imageview.setImageBitmap(bitmap);
-//            path = saveImage(bitmap);
-//            // imagePathList.add(bitmap.toString());
-//            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
-//            mImageUri = Uri.parse(paths);
-//            float size = getImageSize(mContext, mImageUri);
-//            imagePathList.add(mImageUri.toString());
-//
-//            DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
-//            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
-//            recycle_image_attachment.setLayoutManager(mLayoutManager);
-//            recycle_image_attachment.setAdapter(mDetailFileAdapter);
-//            mDetailFileAdapter.notifyDataSetChanged();
-//
-//        }
-//
-//       else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
-//
-//
-//            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
-//            ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
-//
-//            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
-//
-//                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
-//                    showAlert("Payment Successful");
-//                    finish();
-//                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.CANCELLED)) {
-//                    showAlert("Payment Cancelled");
-//                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.FAILED)) {
-//                    showAlert("Payment Failed");
-//                }
-//
-//            } else if (resultModel != null && resultModel.getError() != null) {
-//                Toast.makeText(this, "Error check log", Toast.LENGTH_SHORT).show();
-//            } else {
-//                //  Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
-//            }
-//        } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
-//            showAlert("Payment Cancelled");
-//        }
-//    }
-//
-//    public String saveImage(Bitmap myBitmap) {
-//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-//        File wallpaperDirectory = new File(
-//                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-//        // have the object build the directory structure, if needed.
-//        if (!wallpaperDirectory.exists()) {
-//            wallpaperDirectory.mkdirs();
-//        }
-//
-//        try {
-//            f = new File(wallpaperDirectory, Calendar.getInstance()
-//                    .getTimeInMillis() + ".jpg");
-//            f.createNewFile();
-//            FileOutputStream fo = new FileOutputStream(f);
-//            fo.write(bytes.toByteArray());
-//            MediaScannerConnection.scanFile(this,
-//                    new String[]{f.getPath()},
-//                    new String[]{"image/jpeg"}, null);
-//            fo.close();
-//            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-//
-//            return f.getAbsolutePath();
-//        } catch (IOException e1) {
-//            e1.printStackTrace();
-//        }
-//        return "";
-//    }
-//
     private void requestMultiplePermissions() {
         Dexter.withActivity(this)
                 .withPermissions(

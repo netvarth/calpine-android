@@ -1505,7 +1505,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             myViewHolder.tvDntSeeAll.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    adaptercallback.onMethodServiceCallback(checkInServicesList, mTitle, mSearchDepartmentList);
+                                    adaptercallback.onMethodServiceCallbackDonation(gServicesList, mTitle);
                                 }
                             });
                             //  Toast.makeText(mContext, "set text with comma seperated with seemore", Toast.LENGTH_SHORT).show();

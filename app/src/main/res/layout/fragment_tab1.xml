@@ -60,24 +60,41 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_appointment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/padding5">
+            app:cardCornerRadius="@dimen/dimen_10dp"
+            android:layout_margin="@dimen/dimen_10dp"
+            app:cardElevation="6dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding5"
+            android:background="#F5F5F5">
+
+            <ImageView
+                android:layout_width="@dimen/padding50"
+                android:layout_height="@dimen/padding50"
+                android:src="@drawable/appointment">
+
+            </ImageView>
 
             <TextView
                 android:id="@+id/appointments"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/input_border_top_diffcolor"
                 android:justificationMode="inter_word"
                 android:letterSpacing="0.03"
                 android:lineSpacingExtra="@dimen/padding3"
                 android:padding="@dimen/padding5"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/dimen_65dp"
                 android:text="Appointments"
                 android:textColor="@color/black"
-                android:textSize="@dimen/txtsize_hint"
+                android:textSize="@dimen/dimen_16dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -89,54 +106,171 @@
                 android:text="No Current Appointments Available"
                 android:textSize="@dimen/txtsize_hint"
                 android:visibility="gone" />
-        </LinearLayout>
 
-        <LinearLayout
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_appointCount"
+                android:layout_width="@dimen/padding25"
+                android:layout_height="@dimen/padding25"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dimen_15dp"
+                app:cardElevation="@dimen/dimen_5dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/spinnerbg">
+
+                <TextView
+                    android:id="@+id/tv_appCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center">
+
+                </TextView>
+
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_token"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            app:cardCornerRadius="@dimen/dimen_10dp"
+            android:layout_margin="@dimen/dimen_10dp"
+            app:cardElevation="6dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#F5F5F5"
             android:padding="@dimen/padding5">
+
+            <ImageView
+                android:layout_width="@dimen/padding45"
+                android:layout_height="@dimen/padding45"
+                android:layout_marginStart="@dimen/padding2"
+                android:src="@drawable/token">
+
+            </ImageView>
 
             <TextView
                 android:id="@+id/tokens"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/input_border_top_diffcolor"
                 android:justificationMode="inter_word"
                 android:letterSpacing="0.03"
+                android:layout_centerVertical="true"
                 android:lineSpacingExtra="@dimen/padding3"
+                android:layout_marginStart="@dimen/dimen_65dp"
                 android:padding="@dimen/padding5"
                 android:text="Tokens"
                 android:textColor="@color/black"
-                android:textSize="@dimen/txtsize_hint"
+                android:textSize="@dimen/dimen_16dp"
                 android:textStyle="bold" />
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_tokenCount"
+                android:layout_width="@dimen/padding25"
+                android:layout_height="@dimen/padding25"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dimen_15dp"
+                app:cardElevation="@dimen/dimen_5dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/spinnerbg">
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_tokenCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center">
 
+                </TextView>
 
-        <LinearLayout
+            </androidx.cardview.widget.CardView>
+
+        </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_checkIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            app:cardCornerRadius="@dimen/dimen_10dp"
+            android:layout_margin="@dimen/dimen_10dp"
+            app:cardElevation="6dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#F5F5F5"
             android:padding="@dimen/padding5">
+
+            <ImageView
+                android:layout_width="@dimen/padding50"
+                android:layout_height="@dimen/padding50"
+                android:src="@drawable/checkin">
+
+            </ImageView>
 
             <TextView
                 android:id="@+id/checkins"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/input_border_top_diffcolor"
                 android:justificationMode="inter_word"
                 android:letterSpacing="0.03"
                 android:lineSpacingExtra="@dimen/padding3"
+                android:layout_marginStart="@dimen/dimen_65dp"
                 android:padding="@dimen/padding5"
                 android:text="Check-Ins"
+                android:layout_centerVertical="true"
                 android:textColor="@color/black"
-                android:textSize="@dimen/txtsize_hint"
+                android:textSize="@dimen/dimen_16dp"
                 android:textStyle="bold" />
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_checkinCount"
+                android:layout_width="@dimen/padding25"
+                android:layout_height="@dimen/padding25"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dimen_15dp"
+                app:cardElevation="@dimen/dimen_5dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/spinnerbg">
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_checkinCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center">
+
+                </TextView>
+
+            </androidx.cardview.widget.CardView>
+
+
+
+
+        </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
 
     </LinearLayout>
 </FrameLayout>
