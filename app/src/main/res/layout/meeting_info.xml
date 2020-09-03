@@ -10,7 +10,7 @@
         android:id="@+id/info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Meeting info"
+        android:text="Meeting Details"
         android:textStyle="bold"
         android:layout_marginTop="@dimen/dimen_10dp"
         android:layout_marginStart="@dimen/dimen_15dp"
@@ -43,7 +43,7 @@
         android:textColor="@color/dark_blue"
         android:layout_below="@id/hint"
         android:layout_marginStart="@dimen/dimen_15sp"
-        android:layout_marginTop="@dimen/padding3">
+        android:layout_marginTop="@dimen/dimen_1dp">
 
     </TextView>
 

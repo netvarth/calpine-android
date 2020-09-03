@@ -134,6 +134,16 @@ public class ActiveAppointment {
     double amountDue;
     String batchId;
 
+    public String getPhone() {
+        return Phone;
+    }
+
+    public void setPhone(String phone) {
+        Phone = phone;
+    }
+
+    String Phone;
+
     public String getParentUuid() {
         return parentUuid;
     }

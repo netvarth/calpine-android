@@ -1999,7 +1999,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                                 @Override
                                 public void onClick(View v) {
 
-                                    meetingInfo = new MeetingInfo(mContext, activelist.getApptTime(), activelist.getService().getName(), whatsappResponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode(),activelist.getPhoneNumber());
+                                    meetingInfo = new MeetingInfo(mContext, activelist.getApptTime(), activelist.getService().getName(), whatsappResponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode(),activelist.getVirtualService().getWhatsApp());
                                     meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                     meetingInfo.show();
                                     DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
@@ -2017,7 +2017,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                                 @Override
                                 public void onClick(View v) {
 
-                                    meetingInfo = new MeetingInfo(mContext, activelist.getApptTime(), activelist.getService().getName(), phoneresponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getPhoneNumber());
+                                    meetingInfo = new MeetingInfo(mContext, activelist.getApptTime(), activelist.getService().getName(), phoneresponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getVirtualService().getPhone());
                                     meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                     meetingInfo.show();
                                     DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();

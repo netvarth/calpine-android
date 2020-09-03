@@ -58,8 +58,12 @@ public class Home extends AppCompatActivity {
 
         Config.logV("Home Screen@@@@@@@@@@@@@@@@@@@");
         mContext = this;
-        mLiveTrackClient = new Intent(Home.this, liveTrackService.getClass());
-        startService(mLiveTrackClient);
+        try {
+            mLiveTrackClient = new Intent(Home.this, liveTrackService.getClass());
+            startService(mLiveTrackClient);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         if (savedInstanceState == null) {
