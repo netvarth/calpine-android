@@ -328,14 +328,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_mImageViewTextnew.setTypeface(tyface);
         L_layout = row.findViewById(R.id.layout_type);
 
-        if (domainVirtual != null && domainVirtual.size() > 0) {
-            tv_Moredetails.setVisibility(View.VISIBLE);
-            llMDetails.setVisibility(View.VISIBLE);
-        } else {
-            tv_Moredetails.setVisibility(View.GONE);
-            llMDetails.setVisibility(View.GONE);
-        }
-
         tv_Moredetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -372,18 +364,20 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             public void onClick(View v) {
                 if (mRecycle_virtualfield.getVisibility() != View.VISIBLE) {
                     mRecycle_virtualfield.setVisibility(View.VISIBLE);
-//                img_arrow.setImageResource(R.drawable.icon_angle_up);
                     int size = domainVirtual.size();
                     if (size > 2) {
                         tv_Moredetails.setVisibility(View.VISIBLE);
                     } else {
-                        mRecycle_virtualfield.setVisibility(View.GONE);
-                        img_arrow.setImageResource(R.drawable.icon_angle_down);
                         tv_Moredetails.setVisibility(View.GONE);
+                    }
+                    if (size > 0){
+                        mRecycle_virtualfield.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        mRecycle_virtualfield.setVisibility(View.GONE);
                     }
                 } else {
                     mRecycle_virtualfield.setVisibility(View.GONE);
-//                img_arrow.setImageResource(R.drawable.icon_angle_down);
                     tv_Moredetails.setVisibility(View.GONE);
                 }
 
@@ -2651,6 +2645,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             sub_domainVirtual.clear();
                             sub_domainVirtual = response.body().getSubdomain();
                             domainVirtual.addAll(sub_domainVirtual);
+
                             if (domainVirtual.size() > 0) {
                                 llMDetails.setVisibility(View.VISIBLE);
                                 txtMore.setVisibility(View.VISIBLE);
@@ -2666,6 +2661,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 mRecycle_virtualfield.setAdapter(mAdapter);
                                 mAdapter.notifyDataSetChanged();
                             } else {
+                                tv_Moredetails.setVisibility(View.GONE);
                                 llMDetails.setVisibility(View.GONE);
                             }
                         } else {

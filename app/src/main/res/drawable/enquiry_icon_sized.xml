@@ -3,8 +3,8 @@
 
     <item
         android:drawable="@drawable/icon_message_gray"
-        android:width="@dimen/dimen_15dp"
-        android:height="@dimen/dimen_15dp"
+        android:width="@dimen/dimen_12sp"
+        android:height="@dimen/dimen_12dp"
 
         />
 

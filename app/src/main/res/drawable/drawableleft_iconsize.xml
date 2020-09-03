@@ -3,8 +3,8 @@
 
     <item
         android:drawable="@drawable/checkin_icon"
-        android:width="@dimen/dimen_25dp"
-        android:height="@dimen/padding25"
+        android:width="15dp"
+        android:height="15dp"
         />
 
 </layer-list >
