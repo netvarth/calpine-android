@@ -54,6 +54,17 @@ public class ActiveCheckIn {
     @SerializedName("service")
     private ServiceDetails service;
 
+    public VirtualServiceDetails getVirtualService() {
+        return virtualService;
+    }
+
+    public void setVirtualService(VirtualServiceDetails virtualService) {
+        this.virtualService = virtualService;
+    }
+
+    @SerializedName("virtualService")
+    private VirtualServiceDetails virtualService;
+
 
     public ArrayList<ServiceDetails> getVirtualCallingModes() {
         return virtualCallingModes;
