@@ -44,6 +44,7 @@ import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.response.ShareLocation;
+import com.jaldeeinc.jaldee.response.SlotsData;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 
 
@@ -491,6 +492,8 @@ public interface ApiInterface {
     @GET("consumer/appointment/{uuid}/meetingDetails/{mode}")
     Call<TeleServiceCheckIn> getMeetingDetailsAppointment(@Path("uuid") String uuid, @Path("mode") String mode, @Query("account") int account);
 
+    @GET("consumer/appointment/schedule/date/{date}/location/{location}/service/{service}")
+    Call<ArrayList<SlotsData>> getSlotsOnDate(@Path("date") String date, @Path("location") int location, @Path("service") int service);
 
 
 }

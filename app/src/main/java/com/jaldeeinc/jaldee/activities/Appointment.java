@@ -71,6 +71,7 @@ import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.AppointmentSchedule;
+import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
@@ -85,6 +86,7 @@ import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchUsers;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
+import com.jaldeeinc.jaldee.response.SlotsData;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -272,7 +274,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     String userName;
     String departmentId, virtualService;
     ArrayList<ProviderUserModel> usersList = new ArrayList<ProviderUserModel>();
-
+    ArrayList<SlotsData> slotsData = new ArrayList<SlotsData>();
     String virtualserviceStatus;
     String changedDate = null;
     static LinearLayout llCoupons;
@@ -1345,6 +1347,69 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         if (extrass != null) {
             selectDate = extras.getString("selectedDate");
         }
+
+        getSlotsOnDate();
+    }
+
+    private void getSlotsOnDate() {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ArrayList<SlotsData>> call = apiService.getSlotsOnDate("2020-09-04",77677,5019);
+
+        call.enqueue(new Callback<ArrayList<SlotsData>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SlotsData>> call, Response<ArrayList<SlotsData>> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+                    if (response.code() == 200) {
+
+                        slotsData = response.body();
+                        ArrayList<AvailableSlotsData> activeSlotsList = new ArrayList<>();
+
+                        for (int i=0;i<slotsData.size();i++){
+                            ArrayList<AvailableSlotsData> availableSlotsList = new ArrayList<>();
+                            availableSlotsList = slotsData.get(i).getAvailableSlots();
+
+                            for (int j=0;j<availableSlotsList.size();j++){
+                                if (availableSlotsList.get(j).getNoOfAvailableSlots()!=0 && availableSlotsList.get(j).isActive()){
+
+                                    activeSlotsList.get(j).setScheduleId(slotsData.get(i).getScheduleId());
+                                    String displayTime = getDisplayTime(availableSlotsList.get(j).getSlotTime());
+                                    activeSlotsList.get(j).setDisplayTime(displayTime);
+                                    activeSlotsList.add(availableSlotsList.get(j));
+
+                                }
+
+                            }
+                        }
+
+
+                    } else {
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<SlotsData>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+    }
+
+    private String getDisplayTime(String slotTime) {
+
+
+
+        return "";
     }
 
     public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
@@ -3732,6 +3797,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     }
 
 
+
     SearchTerminology mSearchTerminology;
 
     private void ApiSearchViewTerminology(String muniqueID) {
@@ -3838,6 +3904,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
 
     }
+
+
 
     private void ApiGenerateHash(String ynwUUID, String amount, String accountID) {
 
