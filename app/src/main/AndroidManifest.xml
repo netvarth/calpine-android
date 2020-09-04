@@ -36,7 +36,6 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
         <activity android:name=".activities.NotificationActivity"></activity>
-        <activity android:name=".activities.CouponFirstActivity"></activity>
 
         <activity
             android:name=".activities.Splash"
@@ -157,6 +156,13 @@
             android:screenOrientation="unspecified" />
         <activity
             android:name=".activities.BillActivity"
+            android:screenOrientation="unspecified" />
+        <activity
+            android:name=".activities.CouponActivity"
+            android:screenOrientation="unspecified" />
+
+        <activity
+            android:name=".activities.CouponFirstActivity"
             android:screenOrientation="unspecified" />
 
         <service android:name=".service.FirebaseService"
