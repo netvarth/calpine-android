@@ -556,6 +556,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                             "fonts/Montserrat_Regular.otf");
                     dynaText.setTypeface(tyface);
                     dynaText.setText(searchdetailList.getServices().get(i).getName());
+                    try{
                     if(searchdetailList.getServices().get(i).getServiceType().equalsIgnoreCase("virtualService")){
 
                         if(searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
@@ -575,6 +576,10 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                             dynaText.setCompoundDrawablePadding(10);
                         }
 
+                    }
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
                     }
                     dynaText.setTextSize(11);
                     dynaText.setPadding(5, 0, 5, 0);

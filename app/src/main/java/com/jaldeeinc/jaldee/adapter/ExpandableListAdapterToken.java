@@ -850,6 +850,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length() + secondWord.length(), firstWord.length() + secondWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             tv_service.setText(spannable);
+            try{
             if(activelist.getService().getServiceType().equalsIgnoreCase("virtualService")){
 
                 if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
@@ -869,6 +870,10 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                     tv_service.setCompoundDrawablePadding(10);
                 }
 
+            }
+            }
+            catch(Exception e){
+                e.printStackTrace();
             }
         } else {
             tv_service.setVisibility(View.GONE);

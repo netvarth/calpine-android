@@ -373,6 +373,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                             String name = servicesList.get(0).getName();
                             name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
                             holder.txtservice1.setText(name);
+                            try{
                             if(servicesList.get(0).getServiceType().equalsIgnoreCase("virtualservice")){
                                 if(servicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                                     holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -390,6 +391,10 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                     holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
                                     holder.txtservice1.setCompoundDrawablePadding(10);
                                 }
+                            }
+                            }
+                            catch(Exception e){
+                                e.printStackTrace();
                             }
                             holder.txtservice1.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -415,6 +420,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                 String name1 = servicesList.get(0).getName();
                                 name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
                                 holder.txtservice1.setText(name1 + ",");
+                                try{
                                 if(servicesList.get(0).getServiceType().equalsIgnoreCase("virtualservice")){
                                     if(servicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                                         holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -433,9 +439,14 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                         holder.txtservice1.setCompoundDrawablePadding(10);
                                     }
                                 }
+                                }
+                                catch(Exception e){
+                                    e.printStackTrace();
+                                }
                                 String name2 = servicesList.get(1).getName();
                                 name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
                                 holder.txtservice2.setText(name2);
+                                try{
                                 if(servicesList.get(1).getServiceType().equalsIgnoreCase("virtualservice")){
                                     if(servicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                                         holder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -453,6 +464,10 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                         holder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
                                         holder.txtservice2.setCompoundDrawablePadding(10);
                                     }
+                                }
+                                }
+                                catch(Exception e){
+                                    e.printStackTrace();
                                 }
                                 holder.txtservice1.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -486,6 +501,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                 String name1 = servicesList.get(0).getName();
                                 name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
                                 holder.txtservice1.setText(name1 + ",");
+                                try{
                                 if(servicesList.get(0).getServiceType().equalsIgnoreCase("virtualservice")){
                                     if(servicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                                         holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -504,9 +520,14 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                         holder.txtservice1.setCompoundDrawablePadding(10);
                                     }
                                 }
+                                }
+                                catch(Exception e){
+                                    e.printStackTrace();
+                                }
                                 String name2 = servicesList.get(1).getName();
                                 name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
                                 holder.txtservice2.setText(name2 + ",");
+                                try{
                                 if(servicesList.get(1).getServiceType().equalsIgnoreCase("virtualservice")){
                                     if(servicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                                         holder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -524,6 +545,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                         holder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
                                         holder.txtservice2.setCompoundDrawablePadding(10);
                                     }
+                                } }
+                                catch(Exception e){
+                                    e.printStackTrace();
                                 }
                                 holder.txtservice1.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -566,6 +590,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                     String name1 = servicesList.get(0).getName();
                                     name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
                                     holder.txtservice1.setText(name1 + ",");
+                                    try{
                                     if(servicesList.get(0).getServiceType().equalsIgnoreCase("virtualservice")){
                                         if(servicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                                             holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -583,6 +608,10 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                             holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
                                             holder.txtservice1.setCompoundDrawablePadding(10);
                                         }
+                                    }
+                                    }
+                                    catch(Exception e){
+                                        e.printStackTrace();
                                     }
                                     holder.txtservice1.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -1074,6 +1103,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 String name = appointServices.get(0).getName();
                 name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
                 holder.tvAppService1.setText(name);
+                try{
                 if(appointServices.get(0).getServiceType().equalsIgnoreCase("virtualservice")){
                     if(appointServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                         holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -1091,6 +1121,10 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                         holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
                         holder.tvAppService1.setCompoundDrawablePadding(10);
                     }
+                }
+                }
+                catch(Exception e){
+                    e.printStackTrace();
                 }
                 holder.tvAppService1.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1116,6 +1150,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     String name1 = appointServices.get(0).getName();
                     name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
                     holder.tvAppService1.setText(name1 + ",");
+                    try{
                     if(appointServices.get(0).getServiceType().equalsIgnoreCase("virtualservice")){
                         if(appointServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                             holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -1134,9 +1169,14 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                             holder.tvAppService1.setCompoundDrawablePadding(10);
                         }
                     }
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
                     String name2 = appointServices.get(1).getName();
                     name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
                     holder.tvAppService2.setText(name2);
+                    try{
                     if(appointServices.get(1).getServiceType().equalsIgnoreCase("virtualservice")){
                         if(appointServices.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                             holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -1154,6 +1194,10 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                             holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
                             holder.tvAppService2.setCompoundDrawablePadding(10);
                         }
+                    }
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
                     }
                     holder.tvAppService1.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -1188,6 +1232,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     String name1 = appointServices.get(0).getName();
                     name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
                     holder.tvAppService1.setText(name1 + ",");
+                    try{
                     if(appointServices.get(1).getServiceType().equalsIgnoreCase("virtualservice")){
                         if(appointServices.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                             holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -1206,9 +1251,14 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                             holder.tvAppService1.setCompoundDrawablePadding(10);
                         }
                     }
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
                     String name2 = appointServices.get(1).getName();
                     name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
                     holder.tvAppService2.setText(name2 + ",");
+                    try{
                     if(appointServices.get(1).getServiceType().equalsIgnoreCase("virtualservice")){
                         if(appointServices.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                             holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -1226,6 +1276,10 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                             holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
                             holder.tvAppService2.setCompoundDrawablePadding(10);
                         }
+                    }
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
                     }
                     holder.tvAppService1.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -1268,6 +1322,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                         String name1 = appointServices.get(0).getName();
                         name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
                         holder.tvAppService1.setText(name1 + ",");
+                        try{
                         if(appointServices.get(0).getServiceType().equalsIgnoreCase("virtualservice")){
                             if(appointServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                                 holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -1285,6 +1340,10 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                 holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
                                 holder.tvAppService1.setCompoundDrawablePadding(10);
                             }
+                        }
+                        }
+                        catch(Exception e){
+                            e.printStackTrace();
                         }
                         holder.tvAppService1.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -1373,6 +1432,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 String name = apptServices.get(0).getName();
                 name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
                 holder.tvAppService1.setText(name);
+                try{
                 if(apptServices.get(0).getServiceType().equalsIgnoreCase("virtualservice")){
                     if(apptServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                         holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -1390,6 +1450,10 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                         holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
                         holder.tvAppService1.setCompoundDrawablePadding(10);
                     }
+                }
+                }
+                catch(Exception e){
+                    e.printStackTrace();
                 }
                 holder.tvAppService1.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1415,6 +1479,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     String name1 = apptServices.get(0).getName();
                     name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
                     holder.tvAppService1.setText(name1 + ",");
+                    try{
                     if(apptServices.get(0).getServiceType().equalsIgnoreCase("virtualservice")){
                         if(apptServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                             holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -1433,9 +1498,14 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                             holder.tvAppService1.setCompoundDrawablePadding(10);
                         }
                     }
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
                     String name2 = apptServices.get(1).getName();
                     name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
                     holder.tvAppService2.setText(name2);
+                    try{
                     if(apptServices.get(1).getServiceType().equalsIgnoreCase("virtualservice")){
                         if(apptServices.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                             holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -1453,6 +1523,10 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                             holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
                             holder.tvAppService2.setCompoundDrawablePadding(10);
                         }
+                    }
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
                     }
                     holder.tvAppService1.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -1488,6 +1562,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     String name1 = apptServices.get(0).getName();
                     name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
                     holder.tvAppService1.setText(name1 + ",");
+                    try{
                     if(apptServices.get(0).getServiceType().equalsIgnoreCase("virtualservice")){
                         if(apptServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                             holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -1506,9 +1581,14 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                             holder.tvAppService1.setCompoundDrawablePadding(10);
                         }
                     }
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
                     String name2 = apptServices.get(1).getName();
                     name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
                     holder.tvAppService2.setText(name2 + ",");
+                    try{
                     if(apptServices.get(1).getServiceType().equalsIgnoreCase("virtualservice")){
                         if(apptServices.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                             holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -1526,6 +1606,10 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                             holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
                             holder.tvAppService2.setCompoundDrawablePadding(10);
                         }
+                    }
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
                     }
                     holder.tvAppService1.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -1574,6 +1658,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                         String name1 = apptServices.get(0).getName();
                         name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
                         holder.tvAppService1.setText(name1 + ",");
+                        try{
                         if(apptServices.get(0).getServiceType().equalsIgnoreCase("virtualservice")){
                             if(apptServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                                 holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
@@ -1591,6 +1676,10 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                 holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
                                 holder.tvAppService1.setCompoundDrawablePadding(10);
                             }
+                        }
+                        }
+                        catch(Exception e){
+                            e.printStackTrace();
                         }
                         holder.tvAppService1.setOnClickListener(new View.OnClickListener() {
                             @Override

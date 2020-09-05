@@ -98,6 +98,7 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
                     serviceName = serviceName.concat(" (").concat(deptName).concat(")");
                 }
                 myViewHolder.tv_service.setText(serviceName);
+                try{
                 if(serviceList.getServiceType().equalsIgnoreCase("virtualservice")){
                     if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                         myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom,0,0,0);
@@ -111,6 +112,9 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
                     else if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){
                         myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneicon_sized,0,0,0);
                     }
+                } }
+                catch(Exception e){
+                    e.printStackTrace();
                 }
 
 
@@ -168,6 +172,7 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
 //                serviceName = serviceName.concat(" (").concat(deptName).concat(")");
 //            }
             myViewHolder.tv_service.setText(serviceName);
+            try{
             if(serviceList.getServiceType().equalsIgnoreCase("virtualservice")){
                 if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                     myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom,0,0,0);
@@ -181,6 +186,10 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
                 else if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){
                     myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneicon_sized,0,0,0);
                 }
+            }
+            }
+            catch(Exception e){
+                e.printStackTrace();
             }
 
 
