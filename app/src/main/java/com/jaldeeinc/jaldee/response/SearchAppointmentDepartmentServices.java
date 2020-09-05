@@ -74,6 +74,36 @@ public class SearchAppointmentDepartmentServices implements Serializable {
 
     String name;
 
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
+
+    String serviceType;
+
+    public ArrayList<SearchAppointmentDepartmentServices> getVirtualCallingModes() {
+        return virtualCallingModes;
+    }
+
+    public void setVirtualCallingModes(ArrayList<SearchAppointmentDepartmentServices> virtualCallingModes) {
+        this.virtualCallingModes = virtualCallingModes;
+    }
+
+    ArrayList<SearchAppointmentDepartmentServices> virtualCallingModes;
+
+    public String getCallingMode() {
+        return callingMode;
+    }
+
+    public void setCallingMode(String callingMode) {
+        this.callingMode = callingMode;
+    }
+
+    String callingMode;
+
     public int getId() {
         return id;
     }

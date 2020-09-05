@@ -803,6 +803,26 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length() + secondWord.length(), firstWord.length() + secondWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             tv_service.setText(spannable);
+            if(activelist.getService().getServiceType().equalsIgnoreCase("virtualService")){
+
+                if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
+                    tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
+                    tv_service.setCompoundDrawablePadding(10);
+                }
+                else if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")){
+                    tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized,0,0,0);
+                    tv_service.setCompoundDrawablePadding(10);
+                }
+                else if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
+                    tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized,0,0,0);
+                    tv_service.setCompoundDrawablePadding(10);
+                }
+                else if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){
+                    tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
+                    tv_service.setCompoundDrawablePadding(10);
+                }
+
+            }
         } else {
             tv_service.setVisibility(View.GONE);
         }

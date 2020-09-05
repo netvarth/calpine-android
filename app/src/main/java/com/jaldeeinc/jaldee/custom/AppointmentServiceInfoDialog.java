@@ -60,6 +60,24 @@ public class AppointmentServiceInfoDialog extends Dialog {
         if (appointmentServices.getName() != null) {
             tv_toolbartitle.setVisibility(View.VISIBLE);
             tv_toolbartitle.setText(appointmentServices.getName());
+            if(appointmentServices.getServiceType().equalsIgnoreCase("virtualservice")){
+                if(appointmentServices.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
+                    tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom,0,0,0);
+                    tv_toolbartitle.setCompoundDrawablePadding(10);
+                }
+                else if(appointmentServices.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")){
+                    tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet,0,0,0);
+                    tv_toolbartitle.setCompoundDrawablePadding(10);
+                }
+                else if(appointmentServices.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
+                    tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp,0,0,0);
+                    tv_toolbartitle.setCompoundDrawablePadding(10);
+                }
+                else if(appointmentServices.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){
+                    tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneicon_sized,0,0,0);
+                    tv_toolbartitle.setCompoundDrawablePadding(10);
+                }
+            }
         } else {
             tv_toolbartitle.setVisibility(View.GONE);
         }
