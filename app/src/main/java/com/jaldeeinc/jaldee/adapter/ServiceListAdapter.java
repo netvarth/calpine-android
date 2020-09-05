@@ -94,6 +94,21 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
             serviceName = serviceName.concat(" (").concat(deptName).concat(")");
         }
         myViewHolder.tv_service.setText(serviceName);
+        if(serviceList.getServiceType().equalsIgnoreCase("virtualservice")){
+            if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
+                myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom,0,0,0);
+            }
+            else if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")){
+                myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet,0,0,0);
+            }
+            else if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
+                myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp,0,0,0);
+            }
+            else if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){
+                myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneicon_sized,0,0,0);
+            }
+        }
+
         myViewHolder.serviceList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

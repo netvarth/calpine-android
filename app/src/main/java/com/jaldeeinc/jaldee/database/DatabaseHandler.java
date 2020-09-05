@@ -433,7 +433,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "showToken TEXT,"
                 + "consumer TEXT,"
                 + "service TEXT,"
-                + "virtualService)";
+                + "virtualService TEXT)";
 
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_checkin) + tblFields;

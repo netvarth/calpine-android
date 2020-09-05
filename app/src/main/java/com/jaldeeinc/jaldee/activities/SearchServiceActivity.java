@@ -33,8 +33,8 @@ public class SearchServiceActivity extends AppCompatActivity {
     ArrayList<SearchDonation> dGallery;
     ArrayList<SearchAppointmentDepartmentServices> aGallery;
     ImageView i_servicegallery;
-    String title,from;
     TextView tv_toolbartitle, tv_descVal,tvisTax;
+    String title,from,callingMode,serviceType;
     ImageView i_backpress;
     boolean isTaxable, isPrepayment;
     LinearLayout Lprepayment, LserviceLayout, LminAmountlayout, LmaxAmountlayout, Lmultilayout, Ldurationlayout;
@@ -82,6 +82,8 @@ public class SearchServiceActivity extends AppCompatActivity {
             isTaxable = extras.getBoolean("taxable");
             isPrepayment = extras.getBoolean("isPrePayment");
             from = extras.getString("from");
+            callingMode = extras.getString("callingMode");
+            serviceType = extras.getString("serviceType");
 
             MinPrePaymentAmount = extras.getString("MinPrePaymentAmount");
             if (from != null) {
@@ -118,6 +120,25 @@ public class SearchServiceActivity extends AppCompatActivity {
         if (name != null) {
             tv_service.setVisibility(View.VISIBLE);
             tv_service.setText(name);
+            if(serviceType.equalsIgnoreCase("virtualService")){
+                if(callingMode.equalsIgnoreCase("Zoom")){
+                    tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
+                    tv_service.setCompoundDrawablePadding(10);
+                }
+                else if(callingMode.equalsIgnoreCase("GoogleMeet")){
+                    tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized,0,0,0);
+                    tv_service.setCompoundDrawablePadding(10);
+                }
+                else if(callingMode.equalsIgnoreCase("WhatsApp")){
+                    tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized,0,0,0);
+                    tv_service.setCompoundDrawablePadding(10);
+                }
+                else if(callingMode.equalsIgnoreCase("phone")){
+                 tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
+                 tv_service.setCompoundDrawablePadding(10);
+                }
+
+            }
         } else {
             tv_service.setVisibility(View.GONE);
         }

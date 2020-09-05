@@ -556,6 +556,26 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                             "fonts/Montserrat_Regular.otf");
                     dynaText.setTypeface(tyface);
                     dynaText.setText(searchdetailList.getServices().get(i).getName());
+                    if(searchdetailList.getServices().get(i).getServiceType().equalsIgnoreCase("virtualService")){
+
+                        if(searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
+                            dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
+                            dynaText.setCompoundDrawablePadding(10);
+                        }
+                        else if(searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")){
+                            dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized,0,0,0);
+                            dynaText.setCompoundDrawablePadding(10);
+                        }
+                        else if(searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
+                            dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized,0,0,0);
+                            dynaText.setCompoundDrawablePadding(10);
+                        }
+                        else if(searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){
+                            dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
+                            dynaText.setCompoundDrawablePadding(10);
+                        }
+
+                    }
                     dynaText.setTextSize(11);
                     dynaText.setPadding(5, 0, 5, 0);
                     dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
@@ -582,6 +602,8 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                     iService.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
                                     iService.putExtra("isPrePayment", searchdetailList.getServices().get(i).isPrePayment());
                                     iService.putExtra("MinPrePaymentAmount", searchdetailList.getServices().get(i).getMinPrePaymentAmount());
+                                    iService.putExtra("serviceType", searchdetailList.getServices().get(i).getServiceType());
+                                    iService.putExtra("callingMode", searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode());
                                     activity.startActivity(iService);
 
                                 }
