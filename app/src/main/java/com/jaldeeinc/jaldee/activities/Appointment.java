@@ -1348,7 +1348,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             selectDate = extras.getString("selectedDate");
         }
 
-        getSlotsOnDate();
+//        getSlotsOnDate();
     }
 
     private void getSlotsOnDate() {
@@ -1407,8 +1407,16 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
     private String getDisplayTime(String slotTime) {
 
+        String displayTime = slotTime.split("-")[0];
 
-
+        try {
+            final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
+            final Date dateObj = sdf.parse(displayTime);
+            System.out.println(dateObj);
+            System.out.println(new SimpleDateFormat("K:mm").format(dateObj));
+        } catch (final ParseException e) {
+            e.printStackTrace();
+        }
         return "";
     }
 

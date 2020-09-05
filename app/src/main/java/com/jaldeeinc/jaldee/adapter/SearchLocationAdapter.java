@@ -1070,6 +1070,20 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 if (aServicesList.get(i).getServices() != null) {
                     apptServicesList.addAll(aServicesList.get(i).getServices());
                 }
+                else {
+
+                    SearchAppointmentDepartmentServices objApptService = new SearchAppointmentDepartmentServices();
+                    objApptService.setName(aServicesList.get(i).getName());
+                    objApptService.setServiceDuration(aServicesList.get(i).getServiceDuration());
+                    objApptService.setTotalAmount(aServicesList.get(i).getTotalAmount());
+                    objApptService.setDescription(aServicesList.get(i).getDescription());
+                    objApptService.setServicegallery(aServicesList.get(i).getServicegallery());
+                    objApptService.setTaxable(aServicesList.get(i).isTaxable());
+                    objApptService.setPrePayment(aServicesList.get(i).isPrePayment());
+                    objApptService.setMinPrePaymentAmount(aServicesList.get(i).getMinPrePaymentAmount());
+                    objApptService.setDepartmentName(aServicesList.get(i).getDepartmentName());
+                    apptServicesList.add(objApptService);
+                }
             }
 
             if (apptServicesList.size() > 0) {
