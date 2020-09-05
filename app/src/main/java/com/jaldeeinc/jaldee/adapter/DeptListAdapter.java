@@ -594,25 +594,30 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                     dynaText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //  ApiService(String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()), searchdetailList.getServices().get(finalI).getName(), searchdetailList.getSearchViewDetail().getBusinessName());
-                            for (int i = 0; i < searchdetailList.getServices().size(); i++) {
-                                if (searchdetailList.getServices().get(i).getName().toLowerCase().toString().equalsIgnoreCase(searchdetailList.getServices().get(finalI).getName())) {
-                                    Intent iService = new Intent(activity, SearchServiceActivity.class);
-                                    iService.putExtra("name", searchdetailList.getServices().get(i).getName());
-                                    iService.putExtra("duration", searchdetailList.getServices().get(i).getServiceDuration());
-                                    iService.putExtra("price", searchdetailList.getServices().get(i).getTotalAmount());
-                                    iService.putExtra("desc", searchdetailList.getServices().get(i).getDescription());
-                                    iService.putExtra("servicegallery", searchdetailList.getServices().get(i).getServicegallery());
-                                    iService.putExtra("taxable", searchdetailList.getServices().get(i).isTaxable());
-                                    iService.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
-                                    iService.putExtra("isPrePayment", searchdetailList.getServices().get(i).isPrePayment());
-                                    iService.putExtra("MinPrePaymentAmount", searchdetailList.getServices().get(i).getMinPrePaymentAmount());
-                                    iService.putExtra("serviceType", searchdetailList.getServices().get(i).getServiceType());
-                                    iService.putExtra("callingMode", searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode());
-                                    activity.startActivity(iService);
+                            try {
+                                //  ApiService(String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()), searchdetailList.getServices().get(finalI).getName(), searchdetailList.getSearchViewDetail().getBusinessName());
+                                for (int i = 0; i < searchdetailList.getServices().size(); i++) {
+                                    if (searchdetailList.getServices().get(i).getName().toLowerCase().toString().equalsIgnoreCase(searchdetailList.getServices().get(finalI).getName())) {
+                                        Intent iService = new Intent(activity, SearchServiceActivity.class);
+                                        iService.putExtra("name", searchdetailList.getServices().get(i).getName());
+                                        iService.putExtra("duration", searchdetailList.getServices().get(i).getServiceDuration());
+                                        iService.putExtra("price", searchdetailList.getServices().get(i).getTotalAmount());
+                                        iService.putExtra("desc", searchdetailList.getServices().get(i).getDescription());
+                                        iService.putExtra("servicegallery", searchdetailList.getServices().get(i).getServicegallery());
+                                        iService.putExtra("taxable", searchdetailList.getServices().get(i).isTaxable());
+                                        iService.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
+                                        iService.putExtra("isPrePayment", searchdetailList.getServices().get(i).isPrePayment());
+                                        iService.putExtra("MinPrePaymentAmount", searchdetailList.getServices().get(i).getMinPrePaymentAmount());
+                                        iService.putExtra("serviceType", searchdetailList.getServices().get(i).getServiceType());
+                                        iService.putExtra("callingMode", searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode());
+                                        activity.startActivity(iService);
 
+                                    }
                                 }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
+
                         }
                     });
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);

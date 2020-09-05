@@ -120,24 +120,28 @@ public class SearchServiceActivity extends AppCompatActivity {
         if (name != null) {
             tv_service.setVisibility(View.VISIBLE);
             tv_service.setText(name);
-            if(serviceType.equalsIgnoreCase("virtualService")){
-                if(callingMode.equalsIgnoreCase("Zoom")){
-                    tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
-                    tv_service.setCompoundDrawablePadding(10);
-                }
-                else if(callingMode.equalsIgnoreCase("GoogleMeet")){
-                    tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized,0,0,0);
-                    tv_service.setCompoundDrawablePadding(10);
-                }
-                else if(callingMode.equalsIgnoreCase("WhatsApp")){
-                    tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized,0,0,0);
-                    tv_service.setCompoundDrawablePadding(10);
-                }
-                else if(callingMode.equalsIgnoreCase("phone")){
-                 tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
-                 tv_service.setCompoundDrawablePadding(10);
-                }
+            try {
+                if(serviceType.equalsIgnoreCase("virtualService")){
+                    if(callingMode.equalsIgnoreCase("Zoom")){
+                        tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
+                        tv_service.setCompoundDrawablePadding(10);
+                    }
+                    else if(callingMode.equalsIgnoreCase("GoogleMeet")){
+                        tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized,0,0,0);
+                        tv_service.setCompoundDrawablePadding(10);
+                    }
+                    else if(callingMode.equalsIgnoreCase("WhatsApp")){
+                        tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized,0,0,0);
+                        tv_service.setCompoundDrawablePadding(10);
+                    }
+                    else if(callingMode.equalsIgnoreCase("phone")){
+                        tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
+                        tv_service.setCompoundDrawablePadding(10);
+                    }
 
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         } else {
             tv_service.setVisibility(View.GONE);

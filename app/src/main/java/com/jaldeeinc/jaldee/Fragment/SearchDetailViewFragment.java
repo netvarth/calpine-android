@@ -370,10 +370,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     } else {
                         tv_Moredetails.setVisibility(View.GONE);
                     }
-                    if (size > 0){
+                    if (size > 0) {
                         mRecycle_virtualfield.setVisibility(View.VISIBLE);
-                    }
-                    else {
+                    } else {
                         mRecycle_virtualfield.setVisibility(View.GONE);
                     }
                 } else {
@@ -386,31 +385,31 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_jdn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//            if(homeUniqueId==null){
-                onMethodJdn(uniqueID);
-//            }else{
-                onMethodJdn(homeUniqueId);
-//            }
+                if (homeUniqueId == null) {
+                    onMethodJdn(uniqueID);
+                } else {
+                    onMethodJdn(homeUniqueId);
+                }
             }
         });
         tv_coupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//            if(homeUniqueId==null){
-                onMethodCoupn(uniqueID);
-//            }else{
-//                onMethodCoupn(homeUniqueId);
-//            }
+                if (homeUniqueId == null) {
+                    onMethodCoupn(uniqueID);
+                } else {
+                    onMethodCoupn(homeUniqueId);
+                }
             }
         });
         tv_first_ccoupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//            if(homeUniqueId==null){
-                onMethodFirstCoupn(uniqueID);
-//            }else{
-//                onMethodFirstCoupn(homeUniqueId);
-//            }
+                if (homeUniqueId == null) {
+                    onMethodFirstCoupn(uniqueID);
+                } else {
+                    onMethodFirstCoupn(homeUniqueId);
+                }
             }
         });
         mInterface = (SearchLocationAdpterCallback) this;
@@ -1334,8 +1333,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     }
 
 
-
-
     /*  ArrayList<SearchViewDetail> emails = new ArrayList<>();
       ArrayList<SearchViewDetail> phoneNumber = new ArrayList<>();*/
     ArrayList<ContactModel> contactDetail = new ArrayList<>();
@@ -2154,23 +2151,21 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     Config.logV("Response--code-----gallery--------------------" + response.code());
                     if (response.code() == 200) {
                         mSearchGallery = response.body();
-                        if(from_user){
-                            UpdateUserGallery(mSearchGallery,searchdetailList);
-                        }
-                        else{
-                        UpdateGallery(mSearchGallery);
+                        if (from_user) {
+                            UpdateUserGallery(mSearchGallery, searchdetailList);
+                        } else {
+                            UpdateGallery(mSearchGallery);
                         }
                     } else {
                         tv_mImageViewTextnew.setVisibility(View.GONE);
-                        if(from_user){
+                        if (from_user) {
                             if (searchdetailList.getSearchViewDetail().getLogo() != null) {
                                 // Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
-                                UpdateUserGallery(mSearchGallery,searchdetailList);
+                                UpdateUserGallery(mSearchGallery, searchdetailList);
                             } else {
                                 tv_mImageViewTextnew.setVisibility(View.GONE);
                             }
-                        }
-                        else {
+                        } else {
 
                             if (mBusinessDataList.getLogo() != null) {
                                 // Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
@@ -2781,8 +2776,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             mRecycle_virtualfield.setVisibility(View.GONE);
                             txtMore.setVisibility(View.GONE);
                         }
-                    }
-                    else{
+                    } else {
                         txtMore.setVisibility(View.GONE);
                         llMDetails.setVisibility(View.GONE);
                     }
