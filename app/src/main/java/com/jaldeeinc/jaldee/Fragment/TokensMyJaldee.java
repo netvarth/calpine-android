@@ -837,6 +837,15 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
                         tv_title.setTypeface(tyface);
                         final Button btn_close = (Button) dialog.findViewById(R.id.btn_cancel);
                         final Button btn_rate = (Button) dialog.findViewById(R.id.btn_send);
+
+                        edt_message.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (mDialog.isShowing())
+                                    Config.closeDialog(getActivity(), mDialog);
+                            }
+                        });
+
                         btn_rate.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -858,7 +867,7 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
                                     btn_rate.setClickable(true);
                                     btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
                                 } else {
-                                    btn_rate.setEnabled(false);
+                                    btn_rate.setEnabled(false );
                                     btn_rate.setClickable(false);
                                     btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                                 }

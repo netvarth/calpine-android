@@ -30,6 +30,7 @@ import androidx.annotation.RequiresApi;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.core.content.ContextCompat;
@@ -183,6 +184,8 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
     public boolean toHome = false;
     public String message = null;
     NotificationDialog notificationDialog;
+    TextView tvAppCount,tvCheckInCount,tvTokenCount;
+    CardView cvAppointCount,cvTokenCount,cvCheckinCount,cvAppointment,cvCheckIns,cvTokens;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -207,6 +210,15 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         txtCheckins = (TextView) row.findViewById(R.id.checkins);
         txtTokens = (TextView) row.findViewById(R.id.tokens);
         txtAppointments = (TextView) row.findViewById(R.id.appointments);
+        tvAppCount = row.findViewById(R.id.tv_appCount);
+        tvCheckInCount = row.findViewById(R.id.tv_checkinCount);
+        tvTokenCount = row.findViewById(R.id.tv_tokenCount);
+        cvAppointCount = row.findViewById(R.id.cv_appointCount);
+        cvTokenCount = row.findViewById(R.id.cv_tokenCount);
+        cvCheckinCount = row.findViewById(R.id.cv_checkinCount);
+        cvAppointment = row.findViewById(R.id.cv_appointment);
+        cvTokens = row.findViewById(R.id.cv_token);
+        cvCheckIns = row.findViewById(R.id.cv_checkIn);
         expandlist = (ExpandableListView) row.findViewById(R.id.simple_expandable_listview);
         expandlistAppointment = (ExpandableListView) row.findViewById(R.id.appointmentView);
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
@@ -250,7 +262,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
 
             }
         });
-        txtCheckins.setOnClickListener(new View.OnClickListener() {
+        cvCheckIns.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CheckinsMyJaldee pfFragment = new CheckinsMyJaldee();
@@ -261,7 +273,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                 transaction.replace(R.id.mainlayout, pfFragment).commit();
             }
         });
-        txtTokens.setOnClickListener(new View.OnClickListener() {
+        cvTokens.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TokensMyJaldee pfFfragment = new TokensMyJaldee();
@@ -273,7 +285,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
 
             }
         });
-        txtAppointments.setOnClickListener(new View.OnClickListener() {
+        cvAppointment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AppointmentMyJaldee afFragment = new AppointmentMyJaldee();
@@ -343,7 +355,10 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         ArrayList<ActiveAppointment> mActiveAppointments = response.body();
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         appointmentCount = mActiveAppointments.size();
-                        txtAppointments.setText("Appointments (" + appointmentCount + ")");
+//                        txtAppointments.setText("Appointments (" + appointmentCount + ")");
+                        tvAppCount.setVisibility(View.VISIBLE);
+                        tvAppCount.setText(String.valueOf(appointmentCount));
+                        cvAppointCount.setVisibility(View.VISIBLE);
                         getOldAppointments();
                         for (int i = 0; i < mActiveAppointments.size(); i++) {
                             if (date.equalsIgnoreCase(mActiveAppointments.get(i).getAppmtDate())) {
@@ -1537,8 +1552,16 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         mTodayTokens_Checkins = db.getMyCheckinList("today");
         mCheckOldList = db.getMyCheckinList("old");
         mCheckFutureList = db.getMyCheckinList("future");
-        txtTokens.setText("Tokens (" + (getTokensCount(mTodayTokens_Checkins) + getTokensCount((mCheckFutureList))) + ")");
-        txtCheckins.setText("Check-Ins (" + (getCheckinsCount(mTodayTokens_Checkins) + getCheckinsCount((mCheckFutureList))) + ")");
+//        txtTokens.setText("Tokens (" + (getTokensCount(mTodayTokens_Checkins) + getTokensCount((mCheckFutureList))) + ")");
+        int tokenCount = (getTokensCount(mTodayTokens_Checkins) + getTokensCount(mCheckFutureList));
+        tvTokenCount.setText(String.valueOf(tokenCount));
+        cvTokenCount.setVisibility(View.VISIBLE);
+        tvTokenCount.setVisibility(View.VISIBLE);
+//        txtCheckins.setText("Check-Ins (" + (getCheckinsCount(mTodayTokens_Checkins) + getCheckinsCount((mCheckFutureList))) + ")");
+        int checkinCount = (getCheckinsCount(mTodayTokens_Checkins) + getCheckinsCount(mCheckFutureList));
+        tvCheckInCount.setText(String.valueOf(checkinCount));
+        cvCheckinCount.setVisibility(View.VISIBLE);
+        tvCheckInCount.setVisibility(View.VISIBLE);
         if (mDialog.isShowing())
             Config.closeDialog(getActivity(), mDialog);
         // Adding header and childs to hash map

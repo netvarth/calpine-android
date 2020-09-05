@@ -456,6 +456,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             //    for(int k = 0;k<checkins_flag.size();k++) {
                 if (checkins_flag.get(position).equals(true) || appts_flag.get(position).equals(true) || dnts_flag.get(position).equals(true)) {
                         myViewHolder.btnbookservice.setVisibility(View.VISIBLE);
+                        myViewHolder.btnbookservice.setText("Book Service");
                         if (searchdetailList.getDepartments() != null) {
                             myViewHolder.L_departments.setVisibility(View.VISIBLE);
                         } else if (searchdetailList.getServices() != null) {
@@ -465,6 +466,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     } else {
                         myViewHolder.btnbookservice.setVisibility(View.GONE);
                     }
+
                 if (checkins_flag.get(position).equals(true) && appts_flag.get(position).equals(false) && dnts_flag.get(position).equals(false) ) {
                     myViewHolder.btncheckin.setVisibility(View.VISIBLE);
                     myViewHolder.L_checkin.setVisibility(View.VISIBLE);
@@ -477,9 +479,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     myViewHolder.btnbookservice.setText("DONATE");
                 }
 
-//                    int finalK = k;
-//                    int finalK1 = k;
-//                    int finalK2 = k;
+
                     myViewHolder.btnbookservice.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -1324,7 +1324,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
                     }
                 }
-            } else {
+            }
+            else {
                 checkins_flag.add(position,false);
                 disableCheckinFeature (myViewHolder);
             }
