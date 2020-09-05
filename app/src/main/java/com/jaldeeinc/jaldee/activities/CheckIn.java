@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -180,7 +181,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     static ImageView ic_left, ic_right;
     static TextView tv_queuetime;
     //    static TextView tv_queuename;
-    static LinearLayout queuelayout;
+    static LinearLayout queuelayout,llqueueBackground;
     String toastMessage;
     TextView txt_chooseservice, txt_choosedepartment, txt_choosedoctor;
     static int i = 0;
@@ -297,6 +298,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         tv_titlename = findViewById(R.id.txt_title);
         tv_checkin_service = findViewById(R.id.txt_checkin_service);
         tv_queuetime = findViewById(R.id.txt_queuetime);
+        llqueueBackground = findViewById(R.id.ll_queueBackground);
 //        tv_queuename = findViewById(R.id.txt_queuename);
         tv_addnote = findViewById(R.id.txtaddnote);
         mSpinnerService = findViewById(R.id.spinnerservice);
@@ -1696,8 +1698,14 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 ////                        }
                         if (mQueueTimeSlotList.size() == 1) {
                             tv_queue.setText("Time window");
+                            llqueueBackground.setBackgroundColor(Color.parseColor("#ffffff"));
+//                            llqueueBackground.setPadding(0,0,0,8);
+
                         } else {
                             tv_queue.setText("Choose the time window");
+                            llqueueBackground.setBackgroundResource(R.drawable.rounded_green_bg);
+                            llqueueBackground.setPadding(0,20,0,20);
+
                         }
                         if (mQueueTimeSlotList.size() > 0) {
                             i = 0;

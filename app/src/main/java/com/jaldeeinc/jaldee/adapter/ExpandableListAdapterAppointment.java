@@ -2141,8 +2141,8 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
 
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
+//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+//        mDialog.show();
 
         Call<TeleServiceCheckIn> call = apiService.getMeetingDetailsAppointment(uuid, mode, accountID);
 
@@ -2152,7 +2152,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
 
                 try {
 
-                    mDialog.dismiss();
+//                    mDialog.dismiss();
                     if (response.code() == 200) {
 
                         teleServiceCheckInResponse = response.body();
