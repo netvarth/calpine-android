@@ -4760,7 +4760,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
-                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
                         imagePathList.clear();
                         dialog.dismiss();
 

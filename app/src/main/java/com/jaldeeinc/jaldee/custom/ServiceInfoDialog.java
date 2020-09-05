@@ -27,7 +27,7 @@ public class ServiceInfoDialog extends Dialog {
 
     private SearchService searchService;
     Context context;
-    TextView tv_price, tv_service, tv_desc, tv_duration, tv_maxvalue, tv_minvalue, tv_multiples;
+    TextView tv_price, tv_service,tvisTax, tv_duration, tv_maxvalue, tv_minvalue, tv_multiples;
     String name, duration, price, desc = "", multiples;
     Toolbar toolbar;
     ArrayList<SearchService> mGallery;
@@ -92,16 +92,20 @@ public class ServiceInfoDialog extends Dialog {
                 tv_price.setVisibility(View.VISIBLE);
                 LserviceLayout.setVisibility(View.VISIBLE);
                 if (searchService.isTaxable()) {
-                    tv_price.setText("₹ " + searchService.getTotalAmount() + " (Tax Applicable)");
+                    tv_price.setText("₹ " + searchService.getTotalAmount());
+                    tvisTax.setVisibility(View.VISIBLE);
                 } else {
                     tv_price.setText("₹ " + searchService.getTotalAmount());
+                    tvisTax.setVisibility(View.GONE);
                 }
             } else {
                 tv_price.setVisibility(View.GONE);
+                tvisTax.setVisibility(View.GONE);
                 LserviceLayout.setVisibility(View.GONE);
             }
         } else {
             tv_price.setVisibility(View.GONE);
+            tvisTax.setVisibility(View.GONE);
             LserviceLayout.setVisibility(View.GONE);
         }
 
@@ -150,14 +154,12 @@ public class ServiceInfoDialog extends Dialog {
         }
 
         if (searchService.getDescription() != null && searchService.getDescription().length() > 0 && !searchService.getDescription().equalsIgnoreCase("")) {
-            tv_desc.setVisibility(View.VISIBLE);
             tv_descVal.setVisibility(View.VISIBLE);
 //            Typeface tyfacedesc = Typeface.createFromAsset(getAssets(),
 //                    "fonts/Montserrat_Bold.otf");
 //            tv_descVal.setTypeface(tyfacedesc);
             tv_descVal.setText(searchService.getDescription());
         } else {
-            tv_desc.setVisibility(View.GONE);
             tv_descVal.setVisibility(View.GONE);
         }
 
@@ -205,7 +207,7 @@ public class ServiceInfoDialog extends Dialog {
         tv_duration = findViewById(R.id.txtduration);
         tv_price = findViewById(R.id.txtprice);
         tv_service = findViewById(R.id.txtservice);
-        tv_desc = findViewById(R.id.txtdesc);
+        tvisTax = findViewById(R.id.tv_isTax);
         tv_descVal = findViewById(R.id.txtdescVal);
         toolbar = findViewById(R.id.toolbar);
         i_servicegallery = findViewById(R.id.img_service);

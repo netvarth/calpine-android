@@ -587,6 +587,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                 if (i == 0) {
 
                                     holder.txtservice1.setVisibility(View.VISIBLE);
+                                    holder.txtservice2.setVisibility(View.GONE);
                                     String name1 = servicesList.get(0).getName();
                                     name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
                                     holder.txtservice1.setText(name1 + ",");
@@ -1319,6 +1320,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
                     if (i == 0) {
                         holder.tvAppService1.setVisibility(View.VISIBLE);
+                        holder.tvAppService2.setVisibility(View.GONE);
                         String name1 = appointServices.get(0).getName();
                         name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
                         holder.tvAppService1.setText(name1 + ",");
@@ -1655,6 +1657,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
                     if (i == 0) {
                         holder.tvAppService1.setVisibility(View.VISIBLE);
+                        holder.tvAppService2.setVisibility(View.GONE);
                         String name1 = apptServices.get(0).getName();
                         name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
                         holder.tvAppService1.setText(name1 + ",");

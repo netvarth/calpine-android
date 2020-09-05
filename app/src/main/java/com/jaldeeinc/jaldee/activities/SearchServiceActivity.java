@@ -25,7 +25,7 @@ import java.util.ArrayList;
  */
 
 public class SearchServiceActivity extends AppCompatActivity {
-    TextView tv_price, tv_service, tv_desc, tv_duration, tv_maxvalue, tv_minvalue, tv_multiples;
+    TextView tv_price, tv_service, tv_duration, tv_maxvalue, tv_minvalue, tv_multiples;
 
     String name, duration, price, desc = "", multiples;
     Toolbar toolbar;
@@ -33,8 +33,8 @@ public class SearchServiceActivity extends AppCompatActivity {
     ArrayList<SearchDonation> dGallery;
     ArrayList<SearchAppointmentDepartmentServices> aGallery;
     ImageView i_servicegallery;
+    TextView tv_toolbartitle, tv_descVal,tvisTax;
     String title,from,callingMode,serviceType;
-    TextView tv_toolbartitle, tv_descVal;
     ImageView i_backpress;
     boolean isTaxable, isPrepayment;
     LinearLayout Lprepayment, LserviceLayout, LminAmountlayout, LmaxAmountlayout, Lmultilayout, Ldurationlayout;
@@ -50,7 +50,6 @@ public class SearchServiceActivity extends AppCompatActivity {
         tv_duration = findViewById(R.id.txtduration);
         tv_price = findViewById(R.id.txtprice);
         tv_service = findViewById(R.id.txtservice);
-        tv_desc = findViewById(R.id.txtdesc);
         tv_descVal = findViewById(R.id.txtdescVal);
         toolbar = findViewById(R.id.toolbar);
         i_servicegallery = findViewById(R.id.img_service);
@@ -65,6 +64,7 @@ public class SearchServiceActivity extends AppCompatActivity {
         tv_minvalue = findViewById(R.id.txtminValue);
         tv_maxvalue = findViewById(R.id.txtmaxvalue);
         tv_multiples = findViewById(R.id.txtmultiples);
+        tvisTax = findViewById(R.id.tv_isTax);
 
         i_backpress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,16 +149,20 @@ public class SearchServiceActivity extends AppCompatActivity {
                 tv_price.setVisibility(View.VISIBLE);
                 LserviceLayout.setVisibility(View.VISIBLE);
                 if (isTaxable) {
-                    tv_price.setText("₹ " + price + " (Tax Applicable)");
+                    tv_price.setText("₹ " + price);
+                    tvisTax.setVisibility(View.VISIBLE);
                 } else {
                     tv_price.setText("₹ " + price);
+                    tvisTax.setVisibility(View.GONE);
                 }
             } else {
                 tv_price.setVisibility(View.GONE);
+                tvisTax.setVisibility(View.GONE);
                 LserviceLayout.setVisibility(View.GONE);
             }
         } else {
             tv_price.setVisibility(View.GONE);
+            tvisTax.setVisibility(View.GONE);
             LserviceLayout.setVisibility(View.GONE);
         }
 
@@ -207,14 +211,12 @@ public class SearchServiceActivity extends AppCompatActivity {
             Lprepayment.setVisibility(View.GONE);
         }
         if (desc != null && desc.length() > 0 && !desc.equalsIgnoreCase("")) {
-            tv_desc.setVisibility(View.VISIBLE);
             tv_descVal.setVisibility(View.VISIBLE);
 //            Typeface tyfacedesc = Typeface.createFromAsset(getAssets(),
 //                    "fonts/Montserrat_Bold.otf");
 //            tv_descVal.setTypeface(tyfacedesc);
             tv_descVal.setText(desc);
         } else {
-            tv_desc.setVisibility(View.GONE);
             tv_descVal.setVisibility(View.GONE);
         }
 

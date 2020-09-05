@@ -78,6 +78,23 @@
             android:textSize="@dimen/txtsize_subtitle"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/txtdescVal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginRight="@dimen/dimen_5dp"
+            android:layout_marginBottom="@dimen/dimen_5dp"
+            android:justificationMode="inter_word"
+            android:letterSpacing="0.03"
+            android:lineSpacingExtra="@dimen/padding3"
+            android:text=""
+            android:visibility="gone"
+            android:textColor="@color/black"
+            android:textSize="@dimen/txtsize_12"
+            android:textStyle="bold" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -130,6 +147,18 @@
 
 
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_isTax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tax Applicable"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:layout_gravity="end">
+
+                </TextView>
 
 
             </LinearLayout>
@@ -307,33 +336,8 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/txtdesc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_5dp"
-            android:layout_marginTop="@dimen/default_padding"
-            android:layout_marginRight="@dimen/dimen_5dp"
-            android:text="Description"
-            android:textColor="#AAAAAA"
-            android:textSize="@dimen/txtsize_hint"
-            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/txtdescVal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_5dp"
-            android:layout_marginTop="@dimen/padding2"
-            android:layout_marginRight="@dimen/dimen_5dp"
-            android:layout_marginBottom="@dimen/dimen_5dp"
-            android:justificationMode="inter_word"
-            android:letterSpacing="0.03"
-            android:lineSpacingExtra="@dimen/padding3"
-            android:text="Description"
-            android:textColor="@color/black"
-            android:textSize="@dimen/txtsize_12"
-            android:textStyle="bold" />
+
 
 
     </LinearLayout>

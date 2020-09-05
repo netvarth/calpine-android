@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class DonationServiceDialog extends Dialog {
 
     Context context;
-    TextView tv_price, tv_service, tv_desc, tv_duration, tv_maxvalue, tv_minvalue, tv_multiples;
+    TextView tv_price, tv_service, tv_duration, tv_maxvalue, tv_minvalue, tv_multiples;
     String name, duration, price, desc = "";
     Toolbar toolbar;
     ArrayList<SearchService> mGallery;
@@ -103,12 +103,10 @@ public class DonationServiceDialog extends Dialog {
         }
 
         if (donationInfo.getDescription() != null && donationInfo.getDescription().length() > 0 && !donationInfo.getDescription().equalsIgnoreCase("")) {
-            tv_desc.setVisibility(View.VISIBLE);
             tv_descVal.setVisibility(View.VISIBLE);
 
             tv_descVal.setText(donationInfo.getDescription());
         } else {
-            tv_desc.setVisibility(View.GONE);
             tv_descVal.setVisibility(View.GONE);
         }
 
@@ -152,7 +150,6 @@ public class DonationServiceDialog extends Dialog {
         tv_duration = findViewById(R.id.txtduration);
         tv_price = findViewById(R.id.txtprice);
         tv_service = findViewById(R.id.txtservice);
-        tv_desc = findViewById(R.id.txtdesc);
         tv_descVal = findViewById(R.id.txtdescVal);
         toolbar = findViewById(R.id.toolbar);
         i_servicegallery = findViewById(R.id.img_service);

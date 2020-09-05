@@ -85,6 +85,7 @@
             android:name=".activities.Home"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
             android:screenOrientation="unspecified"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
