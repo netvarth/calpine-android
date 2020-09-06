@@ -493,7 +493,7 @@ public interface ApiInterface {
     Call<TeleServiceCheckIn> getMeetingDetailsAppointment(@Path("uuid") String uuid, @Path("mode") String mode, @Query("account") int account);
 
     @GET("consumer/appointment/schedule/date/{date}/location/{location}/service/{service}")
-    Call<ArrayList<SlotsData>> getSlotsOnDate(@Path("date") String date, @Path("location") int location, @Path("service") int service);
+    Call<ArrayList<SlotsData>> getSlotsOnDate(@Path("date") String date, @Path("location") int location, @Path("service") int service, @Query("account") int accountId);
 
 
 }

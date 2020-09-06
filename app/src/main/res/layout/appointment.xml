@@ -127,11 +127,11 @@
                                         android:textSize="@dimen/txtsize_12" />
 
                                     <TextView
-                                        android:drawablePadding="@dimen/padding3"
                                         android:id="@+id/txtaddmember"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:drawableRight="@drawable/ic_person_pink_24dp"
+                                        android:drawablePadding="@dimen/padding3"
                                         android:gravity="right|center"
                                         android:text="@string/change"
                                         android:textAllCaps="false"
@@ -195,12 +195,12 @@
                                         android:textSize="@dimen/dimen_14sp"
                                         android:theme="@android:style/Theme.Holo.Light" />
 
-<!--                                    <ImageView-->
-<!--                                        android:layout_width="15dp"-->
-<!--                                        android:layout_height="15dp"-->
-<!--                                        android:layout_gravity="center"-->
-<!--                                        android:layout_marginLeft="@dimen/padding3"-->
-<!--                                        android:src="@drawable/edit_icon" />-->
+                                    <!--                                    <ImageView-->
+                                    <!--                                        android:layout_width="15dp"-->
+                                    <!--                                        android:layout_height="15dp"-->
+                                    <!--                                        android:layout_gravity="center"-->
+                                    <!--                                        android:layout_marginLeft="@dimen/padding3"-->
+                                    <!--                                        android:src="@drawable/edit_icon" />-->
 
 
                                 </LinearLayout>
@@ -213,7 +213,6 @@
                             </LinearLayout>
 
                             <TextView
-                                android:textStyle="bold"
                                 android:id="@+id/txt_choosedepartment"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -222,6 +221,7 @@
                                 android:text="@string/selectDepartment"
                                 android:textColor="#AAA"
                                 android:textSize="@dimen/txtsize_12"
+                                android:textStyle="bold"
                                 android:visibility="gone" />
 
                             <Spinner
@@ -236,8 +236,8 @@
                                 android:visibility="gone">
 
                             </Spinner>
+
                             <TextView
-                                android:textStyle="bold"
                                 android:id="@+id/txt_choosedoctor"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -246,7 +246,9 @@
                                 android:text="Provider"
                                 android:textColor="#AAA"
                                 android:textSize="@dimen/txtsize_12"
+                                android:textStyle="bold"
                                 android:visibility="gone" />
+
                             <Spinner
                                 android:id="@+id/spinnerdoctor"
                                 android:layout_width="match_parent"
@@ -274,7 +276,6 @@
                             </Spinner>
 
                             <TextView
-                                android:textStyle="bold"
                                 android:id="@+id/txt_selectedHint"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -283,10 +284,10 @@
                                 android:text="Selected Provider"
                                 android:textColor="#AAA"
                                 android:textSize="@dimen/txtsize_12"
+                                android:textStyle="bold"
                                 android:visibility="gone" />
 
                             <TextView
-                                android:textStyle="bold"
                                 android:id="@+id/tv_selectedProvider"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -295,10 +296,10 @@
                                 android:text="Dr. Mahadev Shetty"
                                 android:textColor="@color/dark_blue"
                                 android:textSize="@dimen/txtsize_14"
+                                android:textStyle="bold"
                                 android:visibility="gone" />
 
                             <TextView
-                                android:textStyle="bold"
                                 android:id="@+id/txt_chooseservice"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -307,6 +308,7 @@
                                 android:text="@string/selectservice"
                                 android:textColor="#AAA"
                                 android:textSize="@dimen/txtsize_12"
+                                android:textStyle="bold"
                                 android:visibility="gone" />
 
                             <Spinner
@@ -321,30 +323,31 @@
                                 android:visibility="gone">
 
                             </Spinner>
+
                             <TextView
-                                android:layout_marginLeft="@dimen/default_padding"
-                                android:layout_marginRight="@dimen/default_padding"
-                                android:textStyle="bold"
                                 android:id="@+id/txt_enterinstructions"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/default_padding"
                                 android:layout_marginTop="@dimen/dimen_7dp"
+                                android:layout_marginRight="@dimen/default_padding"
                                 android:gravity="left"
                                 android:text="@string/selectservice"
                                 android:textColor="#AAA"
                                 android:textSize="@dimen/txtsize_12"
+                                android:textStyle="bold"
                                 android:visibility="gone" />
 
                             <EditText
-                                android:drawablePadding="@dimen/dimen_4dp"
-                                android:layout_marginLeft="@dimen/default_padding"
-                                android:layout_marginRight="@dimen/default_padding"
+                                android:id="@+id/virtual_id"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/virtual_id"
+                                android:layout_marginLeft="@dimen/default_padding"
+                                android:layout_marginRight="@dimen/default_padding"
+                                android:drawablePadding="@dimen/dimen_4dp"
                                 android:gravity="center"
                                 android:textSize="@dimen/txtsize_12"
-                                android:visibility="visible"/>
+                                android:visibility="visible" />
 
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/recycle_family"
@@ -354,8 +357,7 @@
                                 android:layout_marginTop="@dimen/padding7"
                                 android:layout_marginRight="@dimen/default_padding"
                                 android:nestedScrollingEnabled="false"
-                                android:visibility="gone">
-                            </androidx.recyclerview.widget.RecyclerView>
+                                android:visibility="gone"></androidx.recyclerview.widget.RecyclerView>
 
                             <TextView
                                 android:id="@+id/txt_queue"
@@ -482,66 +484,132 @@
                             </LinearLayout>
 
                             <TextView
-                                android:textStyle="bold"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/default_padding"
                                 android:layout_marginTop="@dimen/padding3"
                                 android:layout_marginRight="@dimen/default_padding"
                                 android:layout_marginBottom="@dimen/padding3"
+                                android:gravity="center_horizontal"
                                 android:text="Date and time"
                                 android:textAlignment="center"
                                 android:textColor="#AAA"
                                 android:textSize="@dimen/txtsize_12"
-                                android:gravity="center_horizontal" />
+                                android:textStyle="bold" />
 
 
                             <LinearLayout
                                 android:id="@+id/checkinlayout"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:layout_marginBottom="@dimen/default_padding"
                                 android:background="@color/spinnerbg"
                                 android:orientation="horizontal">
 
-                                <TextView
-                                    android:lineSpacingExtra="1dp"
-                                    android:id="@+id/txtWaitTime"
+                                <LinearLayout
+                                    android:id="@+id/ll_calender"
                                     android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
+                                    android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:layout_weight="1"
-                                    android:drawableTop="@drawable/ic_calen"
-                                    android:drawableTint="@color/dark_blue"
-                                    android:drawablePadding="@dimen/padding3"
-                                    android:padding="@dimen/padding3"
-                                    android:text="Today\nMay 21"
-                                    android:textAlignment="center"
-                                    android:textColor="@color/dark_blue"
-                                    android:textSize="@dimen/txtsize_hint_11"
-                                    android:textStyle="bold"
-                                    android:visibility="visible" />
+                                    android:gravity="center">
 
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:layout_marginEnd="@dimen/dimen_10dp"
+                                        android:src="@drawable/ic_calen"
+                                        android:tint="@color/dark_blue">
 
-                                <TextView
-                                    android:lineSpacingExtra="1dp"
-                                    android:id="@+id/earliestAvailable"
+                                    </ImageView>
+
+                                    <TextView
+                                        android:id="@+id/txtWaitTime"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:lineSpacingExtra="1dp"
+                                        android:padding="@dimen/padding3"
+                                        android:text=""
+                                        android:textAlignment="center"
+                                        android:letterSpacing="0.09"
+                                        android:textColor="@color/dark_blue"
+                                        android:textSize="@dimen/txtsize_hint_11"
+                                        android:textStyle="bold"
+                                        android:visibility="visible" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
+                                    android:layout_height="wrap_content"
                                     android:layout_gravity="center"
+                                    android:layout_marginEnd="@dimen/dimen_5dp"
                                     android:layout_weight="1"
-                                    android:drawableTop="@drawable/ic_access_time_black_24dp"
-                                    android:drawablePadding="@dimen/padding3"
-                                    android:drawableTint="@color/dark_blue"
-                                    android:padding="@dimen/padding3"
-                                    android:text=""
-                                    android:textAlignment="center"
-                                    android:textColor="@color/dark_blue"
-                                    android:textSize="@dimen/txtsize_hint_11"
-                                    android:textStyle="bold"
-                                    android:visibility="visible" />
+                                    android:gravity="center"
+                                    android:padding="@dimen/dimen_5dp">
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginEnd="@dimen/dimen_10dp"
+                                        android:src="@drawable/ic_access_time_black_24dp"
+                                        android:tint="@color/dark_blue">
+
+                                    </ImageView>
+
+                                    <TextView
+                                        android:id="@+id/earliestAvailable"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:lineSpacingExtra="1dp"
+                                        android:letterSpacing="0.05"
+                                        android:padding="@dimen/padding3"
+                                        android:text=""
+                                        android:textAlignment="center"
+                                        android:textColor="@color/dark_blue"
+                                        android:textSize="@dimen/txtsize_hint_11"
+                                        android:textStyle="bold"
+                                        android:visibility="visible" />
+
+                                </LinearLayout>
+
                             </LinearLayout>
+
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/cv_slots"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone"
+                                card_view:cardBackgroundColor="@color/spinnerbg">
+
+                                <androidx.cardview.widget.CardView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="150dp"
+                                    android:layout_marginEnd="@dimen/dimen_10dp"
+                                    android:layout_marginStart="@dimen/dimen_10dp"
+                                    android:layout_marginBottom="@dimen/dimen_10dp"
+                                    android:layout_marginTop="@dimen/dimen_10dp"
+                                    card_view:cardElevation="@dimen/dimen_50dp"
+                                    card_view:cardCornerRadius="@dimen/padding3">
+
+                                    <androidx.recyclerview.widget.RecyclerView
+                                        android:id="@+id/recycler_time_slot"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:focusableInTouchMode="true"
+                                        android:paddingTop="@dimen/padding5"
+                                        android:paddingBottom="@dimen/padding5"
+                                        android:layout_marginStart="@dimen/padding5"
+                                        android:layout_marginEnd="@dimen/padding5">
+
+                                    </androidx.recyclerview.widget.RecyclerView>
+
+                                </androidx.cardview.widget.CardView>
+                            </androidx.cardview.widget.CardView>
 
                             <LinearLayout
                                 android:id="@+id/layout_party"
@@ -651,9 +719,6 @@
                             </LinearLayout>
 
 
-
-
-
                             <LinearLayout
                                 android:id="@+id/LservicePrepay"
                                 android:layout_width="match_parent"
@@ -673,7 +738,7 @@
                                     android:gravity="center"
                                     android:text="@string/serve_prepay"
                                     android:textColor="@color/title_grey"
-                                    android:textSize="@dimen/txtsize_12" />
+                                    android:textSize="@dimen/txtsize_hint_11" />
 
                                 <TextView
                                     android:id="@+id/txtprepayamount"
@@ -683,7 +748,7 @@
                                     android:gravity="center"
                                     android:text="Prepayment Amount:"
                                     android:textColor="@color/title_grey"
-                                    android:textSize="@dimen/txtsize_12" />
+                                    android:textSize="@dimen/txtsize_hint_11" />
                             </LinearLayout>
 
                             <TextView
@@ -758,14 +823,14 @@
                                     android:background="#1A000000" />
 
                                 <TextView
-                                    android:visibility="gone"
                                     android:id="@+id/tv_noServiceMessage"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="20dp"
                                     android:layout_marginEnd="15dp"
+                                    android:text="Appointment for this service is not available at the moment. Please try for a different date"
                                     android:textSize="@dimen/txtsize_12"
-                                    android:text="Appointment for this service is not available at the moment. Please try for a different date">
+                                    android:visibility="gone">
 
                                 </TextView>
 
@@ -775,8 +840,8 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/padding7"
-                                    android:visibility="visible"
-                                    android:orientation="vertical">
+                                    android:orientation="vertical"
+                                    android:visibility="visible">
 
 
                                     <LinearLayout
@@ -810,10 +875,10 @@
                                             android:layout_alignParentRight="true"
                                             android:layout_marginRight="@dimen/default_padding"
                                             android:layout_weight="0.5"
+                                            android:drawableRight="@drawable/ic_attach_file_black_24dp"
                                             android:gravity="right|center"
                                             android:text="@string/addnote"
                                             android:textColor="#AAA"
-                                            android:drawableRight="@drawable/ic_attach_file_black_24dp"
                                             android:textSize="@dimen/txtsize_12"
                                             android:textStyle="bold" />
 

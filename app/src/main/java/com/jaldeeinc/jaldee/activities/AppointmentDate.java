@@ -128,11 +128,11 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
         }
         if (!timeslot.isEmpty()) {
             tv_noavail_slot.setVisibility(View.GONE);
-            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
-            recycle_timeslots.setLayoutManager(mLayoutManager);
-            sAdapter = new TimeSlotsAdapter(timeslotFormat, timeslot);
-            recycle_timeslots.setAdapter(sAdapter);
-            sAdapter.notifyDataSetChanged();
+//            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+//            recycle_timeslots.setLayoutManager(mLayoutManager);
+//            sAdapter = new TimeSlotsAdapter(timeslotFormat, timeslot);
+//            recycle_timeslots.setAdapter(sAdapter);
+//            sAdapter.notifyDataSetChanged();
         } else {
             tv_noavail_slot.setVisibility(View.VISIBLE);
             Appointment.timeslotdate("Time Slots not available", "");
@@ -471,12 +471,12 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
                             } else {
                                 tv_noavail_slot.setVisibility(View.GONE);
                             }
-                            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
-                            recycle_timeslots.setLayoutManager(mLayoutManager);
-                            sAdapter = new TimeSlotsAdapter(timeslotsFormat, timeslots);
-                            recycle_timeslots.setAdapter(sAdapter);
-                            sAdapter.notifyDataSetChanged();
-                            recycle_timeslots.setAlpha(1);
+//                            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
+//                            recycle_timeslots.setLayoutManager(mLayoutManager);
+//                            sAdapter = new TimeSlotsAdapter(timeslotsFormat, timeslots);
+//                            recycle_timeslots.setAdapter(sAdapter);
+//                            sAdapter.notifyDataSetChanged();
+//                            recycle_timeslots.setAlpha(1);
                             if (timeslots != null) {
                                 earliestAvailable.setText("Earliest available\n" + timeslotsFormat.get(0));
                             }

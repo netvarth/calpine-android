@@ -19,6 +19,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -27,7 +28,7 @@ import androidx.annotation.RequiresApi;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import androidx.fragment.app.DialogFragment;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,6 +44,8 @@ import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -54,13 +57,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
 import com.jaldeeinc.jaldee.adapter.CustomSpinnerAdapterAppointment;
-import com.jaldeeinc.jaldee.adapter.DetailFileAdapter;
 import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.adapter.MultipleFamilyMemberAdapter;
+import com.jaldeeinc.jaldee.adapter.TimeSlotsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -119,7 +122,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -143,7 +145,7 @@ import retrofit2.Response;
  * Created by sharmila on 6/8/18.
  */
 
-public class Appointment extends AppCompatActivity implements PaymentResultWithDataListener {
+public class Appointment extends AppCompatActivity implements PaymentResultWithDataListener, ISelectSlotInterface {
 
     ArrayList<String> couponArraylist = new ArrayList<>();
 
@@ -279,6 +281,18 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     String changedDate = null;
     static LinearLayout llCoupons;
     static TextView tvNoServiceMessage;
+    CardView cvSlots;
+    RecyclerView rvSlots;
+    TimeSlotsAdapter sAdapter;
+    LinearLayout llCalender;
+    final Calendar myCalendar = Calendar.getInstance();
+    private ISelectSlotInterface iSelectSlotInterface;
+    String selectedTimeSlot;
+    ArrayList<AvailableSlotsData> activeSlotsList = new ArrayList<>();
+    Animation slideUp,slideRight;
+    String pickedDate = "";
+    String timeSlot = "";
+    int selectedShcdId;
 
 
     @Override
@@ -302,6 +316,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         applycouponbtn = findViewById(R.id.applybtn);
         LcouponCheckin = findViewById(R.id.couponCheckin);
         mActivity = this;
+        iSelectSlotInterface = this;
         recycle_family = findViewById(R.id.recycle_family);
         btn_checkin = findViewById(R.id.btn_checkin);
         editpartysize = findViewById(R.id.editpartysize);
@@ -343,6 +358,13 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         tvSelectedProvider = findViewById(R.id.tv_selectedProvider);
         llCoupons = findViewById(R.id.ll_coupouns);
         tvNoServiceMessage = findViewById(R.id.tv_noServiceMessage);
+        cvSlots = findViewById(R.id.cv_slots);
+        rvSlots = findViewById(R.id.recycler_time_slot);
+        llCalender = findViewById(R.id.ll_calender);
+        slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
+        slideRight = AnimationUtils.loadAnimation(this, R.anim.slide_out_right);
+
+
         // to Empty previous selected date in pref's
         SharedPreference.getInstance(Appointment.this).setValue("selectedDate", "");
 
@@ -747,46 +769,51 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         earliestAvailable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent appDate = new Intent(v.getContext(), AppointmentDate.class);
-                appDate.putExtra("timeslots", timeslots);
-                appDate.putExtra("serviceId", serviceId);
-                appDate.putExtra("mSpinnertext", mSpinnertext);
-                appDate.putExtra("accountId", modifyAccountID);
-                appDate.putExtra("id", id);
-                if (txtWaitTime.getText().toString().contains("Today")) {
-                    appDate.putExtra("selectDate", sdfss.format(currentTimes));
-                } else {
-                    appDate.putExtra("selectDate", txtWaitTime.getText().toString());
+
+                if (activeSlotsList != null) {
+                    if (activeSlotsList.size() > 0) {
+                        if (cvSlots.getVisibility() == View.GONE) {
+                            cvSlots.setVisibility(View.VISIBLE);
+                            cvSlots.startAnimation(slideUp);
+                        }
+                    }
                 }
-                appDate.putExtra("timeslotsFormat", timeslotsFormat);
-                startActivity(appDate);
             }
         });
 
 
         final Date currentTimess = new Date();
         final SimpleDateFormat sdfs = new SimpleDateFormat(
-                "yyyy-MM-dd", Locale.US);
-        sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
+                "yyyy-MM-dd");
         System.out.println("UTC time: " + sdfs.format(currentTimess));
         txtWaitTime.setText("Today\n" + sdfs.format(currentTimess));
 
-        txtWaitTime.setOnClickListener(new View.OnClickListener() {
+
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                updateSelectedDate(txtWaitTime,year,monthOfYear,dayOfMonth);
+            }
+        };
+
+        llCalender.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent appDate = new Intent(v.getContext(), AppointmentDate.class);
-                appDate.putExtra("timeslots", timeslots);
-                appDate.putExtra("serviceId", serviceId);
-                appDate.putExtra("mSpinnertext", mSpinnertext);
-                appDate.putExtra("accountId", modifyAccountID);
-                appDate.putExtra("id", id);
-                if (txtWaitTime.getText().toString().contains("Today")) {
-                    appDate.putExtra("selectDate", sdfss.format(currentTimes));
-                } else {
-                    appDate.putExtra("selectDate", txtWaitTime.getText().toString());
-                }
-                appDate.putExtra("timeslotsFormat", timeslotsFormat);
-                startActivity(appDate);
+
+                DatePickerDialog da = new DatePickerDialog(Appointment.this, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+
+
+                da.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                da.show();
             }
         });
 
@@ -872,8 +899,19 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         Date date = null;
                         String selectDate = null;
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        String selectedDate = "";
                         try {
-                            String selectedDate = txtWaitTime.getText().toString().replace("Today\n", "");
+                            if (txtWaitTime.getText().toString().contains("Today")) {
+                                selectedDate  = txtWaitTime.getText().toString().replace("Today\n", "");
+                            }
+                            else {
+                                String newDate = txtWaitTime.getText().toString().split("\n")[1];
+                                String deliveryDate=newDate;
+                                SimpleDateFormat dateFormatprev = new SimpleDateFormat("dd-MM-yyyy");
+                                Date d = dateFormatprev.parse(deliveryDate);
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                selectedDate = dateFormat.format(d);
+                            }
                             date = format.parse(selectedDate);
                             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                             //to convert Date to String, use format method of SimpleDateFormat class.
@@ -886,16 +924,16 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
                             //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
-                            ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), selectDate, modifyAccountID);
+                            getSlotsOnDate(serviceId, mSpinnertext, selectDate, modifyAccountID);
                         } else {
                             if (selectedDateFormat != null) {
                                 Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
                                 //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
-                                ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), selectDate, modifyAccountID);
+                                getSlotsOnDate(serviceId, mSpinnertext, selectDate, modifyAccountID);
                             } else {
                                 Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@************");
                                 //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
-                                ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), selectDate, modifyAccountID);
+                                getSlotsOnDate(serviceId, mSpinnertext, selectDate, modifyAccountID);
                             }
 
                         }
@@ -1092,7 +1130,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                         }
                     }
-                }else {
+                } else {
                     userSpinnertext = 0;
                     ArrayList<SearchAppoinment> globalServiceList = new ArrayList<>();
 
@@ -1253,8 +1291,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         img_calender_checkin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment newFragment = new MyDatePickerDialog();
-                newFragment.show(getSupportFragmentManager(), "date picker");
+
             }
         });
         Bundle extrasnew = getIntent().getExtras();
@@ -1348,17 +1385,47 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             selectDate = extras.getString("selectedDate");
         }
 
-//        getSlotsOnDate();
     }
 
-    private void getSlotsOnDate() {
+    private void updateSelectedDate(TextView tvSelecteDate, int year, int monthOfYear, int dayOfMonth) {
+
+        try {
+
+
+            SimpleDateFormat simpledateformat = new SimpleDateFormat("EEEE");
+            Date date = new Date(year, monthOfYear, dayOfMonth - 1);
+            String dayOfWeek = simpledateformat.format(date);
+
+            String sMonth = "";
+            if (monthOfYear < 10) {
+                sMonth = "0"+String.valueOf(monthOfYear+1);
+            } else {
+                sMonth = String.valueOf(monthOfYear+1);
+            }
+
+            mDate = dayOfWeek+"\n"+ dayOfMonth +
+                    "/" + (sMonth) +
+                    "/" + year;
+            txtWaitTime.setText(mDate);
+
+            String apiFormat = "yyyy-MM-dd"; // your format
+            SimpleDateFormat apiSdf = new SimpleDateFormat(apiFormat);
+            pickedDate = apiSdf.format(myCalendar.getTime());
+            getSlotsOnDate(serviceId, mSpinnertext, pickedDate, modifyAccountID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void getSlotsOnDate(int serviceId, int mSpinnertext, String selectDate, String modifyAccountID) {
 
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ArrayList<SlotsData>> call = apiService.getSlotsOnDate("2020-09-04",77677,5019);
+        Call<ArrayList<SlotsData>> call = apiService.getSlotsOnDate(selectDate, serviceId, mSpinnertext, Integer.parseInt(modifyAccountID));
 
         call.enqueue(new Callback<ArrayList<SlotsData>>() {
             @Override
@@ -1368,26 +1435,43 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         Config.closeDialog(getParent(), mDialog);
                     if (response.code() == 200) {
 
-                        slotsData = response.body();
-                        ArrayList<AvailableSlotsData> activeSlotsList = new ArrayList<>();
+                        if (response.body() != null) {
+                            slotsData = response.body();
 
-                        for (int i=0;i<slotsData.size();i++){
-                            ArrayList<AvailableSlotsData> availableSlotsList = new ArrayList<>();
-                            availableSlotsList = slotsData.get(i).getAvailableSlots();
+                            activeSlotsList.clear();
+                            for (int i = 0; i < slotsData.size(); i++) {
+                                ArrayList<AvailableSlotsData> availableSlotsList = new ArrayList<>();
+                                availableSlotsList = slotsData.get(i).getAvailableSlots();
 
-                            for (int j=0;j<availableSlotsList.size();j++){
-                                if (availableSlotsList.get(j).getNoOfAvailableSlots()!=0 && availableSlotsList.get(j).isActive()){
+                                for (int j = 0; j < availableSlotsList.size(); j++) {
+                                    if (availableSlotsList.get(j).getNoOfAvailableSlots() != 0 && availableSlotsList.get(j).isActive()) {
 
-                                    activeSlotsList.get(j).setScheduleId(slotsData.get(i).getScheduleId());
-                                    String displayTime = getDisplayTime(availableSlotsList.get(j).getSlotTime());
-                                    activeSlotsList.get(j).setDisplayTime(displayTime);
-                                    activeSlotsList.add(availableSlotsList.get(j));
-
+                                        availableSlotsList.get(j).setScheduleId(slotsData.get(i).getScheduleId());
+                                        String displayTime = getDisplayTime(availableSlotsList.get(j).getSlotTime());
+                                        availableSlotsList.get(j).setDisplayTime(displayTime);
+                                        activeSlotsList.add(availableSlotsList.get(j));
+                                    }
                                 }
+                            }
 
+                            if (activeSlotsList != null) {
+                                if (activeSlotsList.size() > 0) {
+
+                                    txtnocheckin.setVisibility(View.GONE);
+                                    earliestAvailable.setText("Earliest available\n" + activeSlotsList.get(0).getDisplayTime());
+                                    RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(Appointment.this, 3);
+                                    rvSlots.setLayoutManager(mLayoutManager);
+                                    sAdapter = new TimeSlotsAdapter(activeSlotsList, iSelectSlotInterface);
+                                    rvSlots.setAdapter(sAdapter);
+                                }
+                                else {
+                                    cvSlots.setVisibility(View.GONE);
+                                    txtnocheckin.setVisibility(View.VISIBLE);
+                                    txtnocheckin.setText("Appointment for this service is not available at the moment. Please try for a different date");
+                                    earliestAvailable.setText("Timeslots not available");
+                                }
                             }
                         }
-
 
                     } else {
                     }
@@ -1395,6 +1479,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<SlotsData>> call, Throwable t) {
                 // Log error here since request failed
@@ -1408,16 +1493,17 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     private String getDisplayTime(String slotTime) {
 
         String displayTime = slotTime.split("-")[0];
+        String sTime = "";
 
         try {
             final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
             final Date dateObj = sdf.parse(displayTime);
-            System.out.println(dateObj);
-            System.out.println(new SimpleDateFormat("K:mm").format(dateObj));
+            SimpleDateFormat time = new SimpleDateFormat("K:mm aa");
+            sTime = time.format(dateObj);
         } catch (final ParseException e) {
             e.printStackTrace();
         }
-        return "";
+        return sTime;
     }
 
     public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
@@ -1631,61 +1717,23 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
     static String mDate;
 
+    @Override
+    public void sendSelectedTime(String time, String displayTime, int scheduleId) {
 
-    public static class MyDatePickerDialog extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            Config.logV("Date selected----------------------Selected" + selectedDateFormat);
-
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-            String tomorrowdate = year + "-" + month + "-" + day;
-            DatePickerDialog da;
-            if (selectedDateFormat.equalsIgnoreCase(tomorrowdate)) {
-                da = new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
-            } else {
-                Date date = null;
-                try {
-                    DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
-                    date = selecteddateParse.parse(selectedDateFormat);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
-                da = new DatePickerDialog(getActivity(), dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-            }
-
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.DAY_OF_YEAR, 1);
-            // da.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-            da.getDatePicker().setMinDate(cal.getTimeInMillis());
-
-            return da;
+        if (cvSlots.getVisibility() == View.VISIBLE) {
+            cvSlots.startAnimation(slideRight);
+            cvSlots.setVisibility(View.GONE);
         }
 
-        private DatePickerDialog.OnDateSetListener dateSetListener =
-                new DatePickerDialog.OnDateSetListener() {
-                    public void onDateSet(DatePicker view, int year, int month, int day) {
+        earliestAvailable.setText("Selected time slot\n"+ time);
+        selectedTimeSlot = time;
+        selectedShcdId = scheduleId;
+        timeSlot = displayTime;
+        cvSlots.setVisibility(View.GONE);
 
-                        SimpleDateFormat simpledateformat = new SimpleDateFormat("EEEE");
-                        Date date = new Date(year, month, day - 1);
-                        String dayOfWeek = simpledateformat.format(date);
-                        Config.logV("Day-------------" + dayOfWeek);
-
-                        mDate = dayOfWeek + ", " + view.getDayOfMonth() +
-                                "/" + (view.getMonth() + 1) +
-                                "/" + view.getYear();
-                        txt_date.setText(mDate);
-
-                        selectedDateFormat = view.getYear() + "-" + (view.getMonth() + 1) + "-" + view.getDayOfMonth();
-                        UpdateDAte(selectedDateFormat);
-
-                    }
-                };
     }
+
+
 
     public static void UpdateDAte(String selectedDate) {
         Date selecteddate = null;
@@ -1693,26 +1741,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
         try {
             selecteddate = format.parse(dtStart);
-            //  System.out.println(selecteddate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Config.logV("Selected Date---&&&&&&&&&&&#%%%%%%%-------------" + selectedDate);
-        //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDate, String.valueOf(isShowToken));
 
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, 1);
-        Date tomorow = cal.getTime();
-        if (tomorow.before(selecteddate)) {
-            Config.logV("Date Enabled---------------");
-            ic_cal_minus.setEnabled(true);
-            ic_cal_minus.setImageResource(R.drawable.icon_minus_active);
-
-        } else {
-            Config.logV("Date Disabled---------------");
-            ic_cal_minus.setEnabled(false);
-            ic_cal_minus.setImageResource(R.drawable.icon_minus_disabled);
-        }
     }
 
     static int familyMEmID;
@@ -3805,7 +3837,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     }
 
 
-
     SearchTerminology mSearchTerminology;
 
     private void ApiSearchViewTerminology(String muniqueID) {
@@ -3914,7 +3945,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     }
 
 
-
     private void ApiGenerateHash(String ynwUUID, String amount, String accountID) {
 
 
@@ -4000,13 +4030,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         System.out.println("Current time => " + c);
         String formattedDate = null;
         if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
+//
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             formattedDate = df.format(c);
-        } else {
-            formattedDate = selectedDateFormat;
         }
-
 
         JSONObject qjsonObj = new JSONObject();
         JSONObject queueobj = new JSONObject();
@@ -4027,10 +4054,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             //   qjsonObj.put("id", queueId);
             if (txtWaitTime.getText().toString().contains("Today") || txtWaitTime.getText().toString().equalsIgnoreCase(formattedDate)) {
                 queueobj.put("appmtDate", formattedDate);
-                sjsonobj.put("id", schedResponse.get(i).getId());
+                sjsonobj.put("id", activeSlotsList.get(0).getScheduleId());
             } else {
-                queueobj.put("appmtDate", txtWaitTime.getText().toString());
-                sjsonobj.put("id", schdId);
+                queueobj.put("appmtDate", pickedDate);
+                sjsonobj.put("id", selectedShcdId);
             }
             queueobj.put("consumerNote", txt_addnote);
             queueobj.put("phonenumber", phoneNumber);
@@ -4111,16 +4138,16 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                 if (earliestAvailable.getText().toString().contains("Earliest available")) {
 
-                    if (timeslots.size() > 0) {
-                        waitobj.put("apptTime", timeslots.get(0));
+                    if (activeSlotsList.size() > 0) {
+                        waitobj.put("apptTime", activeSlotsList.get(0).getSlotTime());
                     }
-                } else if (dateTime != null && dateTime.trim().length() == 0) {
+                } else if (timeSlot != null && timeSlot.trim().length() != 0) {
 
+                    waitobj.put("apptTime", timeSlot);
+
+                } else {
                     Toast.makeText(Appointment.this, "Please select time slot", Toast.LENGTH_SHORT).show();
                     return;
-                } else {
-
-                    waitobj.put("apptTime", dateTime);
                 }
             }
             waitlistArray.put(waitobj);
@@ -4834,19 +4861,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         }
     }
 
-    @Override
-    protected void onResume() {
-
-        changedDate = SharedPreference.getInstance(Appointment.this).getStringValue("selectedDate", "");
-        if (changedDate != null) {
-            if (!changedDate.equalsIgnoreCase("")) {
-
-                ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), changedDate, modifyAccountID);
-            }
-        }
-        SharedPreference.getInstance(Appointment.this).setValue("selectedDate", "");
-        super.onResume();
-    }
 }
 
 
