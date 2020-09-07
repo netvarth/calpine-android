@@ -26,6 +26,7 @@ public class CouponFirstAdapter  extends ArrayAdapter<CoupnResponse> {
     String endDate;
     SimpleDateFormat dateformats = null;
     CardView cardView;
+
     public CouponFirstAdapter(@NonNull Context context, int resource, List<CoupnResponse> coupanList) {
         super(context, resource, coupanList);
 

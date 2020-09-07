@@ -1002,6 +1002,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             @Override
             public void onClick(View view) {
                 Intent iCouponsFirst = new Intent(view.getContext(), CouponFirstActivity.class);
+                iCouponsFirst.putExtra("uniqueID",searchdetailList.getUniqueid());
                 context.startActivity(iCouponsFirst);
 
             }
@@ -1029,6 +1030,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             @Override
             public void onClick(View v) {
                 Intent iCoupons = new Intent(v.getContext(), CouponActivity.class);
+                iCoupons.putExtra("uniqueID",searchdetailList.getUniqueid());
                 context.startActivity(iCoupons);
 //                mAdapterCallback.onMethodCoupn(searchdetailList.getUniqueid());
 

@@ -3,9 +3,22 @@
     android:id="@+id/serviceList"
     android:orientation="vertical"
     android:background="@color/spinnerbg"
-
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_icon"
+        android:layout_width="@dimen/padding25"
+        android:layout_height="@dimen/dimen_25dp"
+        android:layout_marginStart="@dimen/padding5"
+        android:layout_gravity="center"
+        android:visibility="gone">
+
+    </ImageView>
     <TextView
         android:background="@color/spinnerbg"
         android:id="@+id/tv_service"
@@ -14,6 +27,9 @@
         android:drawablePadding="@dimen/padding5"
         android:textColor="@color/title_grey"
         android:padding="@dimen/padding7"/>
+
+    </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

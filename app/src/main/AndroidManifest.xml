@@ -38,6 +38,7 @@
         <activity android:name=".activities.LinkRedirectionActivity"></activity>
         <activity android:name=".activities.NotificationActivity"></activity>
         <activity android:name=".activities.CouponFirstActivity"></activity>
+        <activity android:name=".activities.CouponActivity"></activity>
         <activity
             android:name=".activities.Splash"
             android:launchMode="singleTask"

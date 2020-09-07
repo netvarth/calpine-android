@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.Fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ public class CouponFirstFragment extends RootFragment  {
     ListView coupon_listview;
     String uniqueid;
     private CouponFirstAdapter mAdapter;
+    private OnFragmentInteractionListener mListener;
 
 
     public CouponFirstFragment() {
@@ -136,4 +138,27 @@ public class CouponFirstFragment extends RootFragment  {
 
 
     }
+
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
+//    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
+
 }

@@ -1681,7 +1681,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 .check();
     }
 
-    //
     public static float getImageSize(Context context, Uri uri) {
         Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
         if (cursor != null) {

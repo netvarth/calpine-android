@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -53,12 +54,14 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_service;
+        ImageView ivIcon;
         LinearLayout serviceList;
 
         public MyViewHolder(View view) {
             super(view);
             tv_service = (TextView) view.findViewById(R.id.tv_service);
             serviceList = (LinearLayout) view.findViewById(R.id.serviceList);
+            ivIcon = view.findViewById(R.id.iv_icon);
 
         }
     }
@@ -103,15 +106,19 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
                 myViewHolder.tv_service.setText(serviceName);
                 try {
                     if (serviceList.getServiceType().equalsIgnoreCase("virtualservice")) {
+                        myViewHolder.ivIcon.setVisibility(View.VISIBLE);
                         if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
-                            myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom, 0, 0, 0);
+                            myViewHolder.ivIcon.setImageResource(R.drawable.zoom);
                         } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                            myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet, 0, 0, 0);
+                            myViewHolder.ivIcon.setImageResource(R.drawable.google_meet);
                         } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                            myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                            myViewHolder.ivIcon.setImageResource(R.drawable.whatsapp);
                         } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
-                            myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneicon_sized, 0, 0, 0);
+                            myViewHolder.ivIcon.setImageResource(R.drawable.phoneicon_sized);
                         }
+                    }
+                    else {
+                        myViewHolder.ivIcon.setVisibility(View.GONE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
