@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -82,6 +83,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
         LinearLayout layout_btnpay;
         Button btn_pay;
         LinearLayout layout_activeAppointment;
+        ImageView icon_service;
 
 
         public MyViewHolder(View view) {
@@ -100,6 +102,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
             tv_check_in = (TextView) view.findViewById(R.id.txt_check_in);
             tv_queueTime = (TextView) view.findViewById(R.id.txt_queuetime);
             layout_activeAppointment = (LinearLayout) view.findViewById(R.id.activecheckin);
+            icon_service =(ImageView) view.findViewById(R.id.serviceicon);
         }
     }
 
@@ -223,25 +226,28 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
             myViewHolder.tv_service.setText(spannable);
             try{
             if(activelist.getService().getServiceType().equalsIgnoreCase("virtualService")){
+                 myViewHolder.icon_service.setVisibility(View.VISIBLE);
+                 myViewHolder.icon_service.setY(6);
 
                 if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
-                    myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
-                    myViewHolder.tv_service.setCompoundDrawablePadding(10);
+                    myViewHolder.icon_service.setImageResource(R.drawable.zoomicon_sized);
                 }
                 else if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")){
-                    myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized,0,0,0);
-                    myViewHolder.tv_service.setCompoundDrawablePadding(10);
+                    myViewHolder.icon_service.setImageResource(R.drawable.googlemeet_sized);
                 }
                 else if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
-                    myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized,0,0,0);
-                    myViewHolder.tv_service.setCompoundDrawablePadding(10);
+                    myViewHolder.icon_service.setImageResource(R.drawable.whatsappicon_sized);
+
                 }
                 else if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){
-                    myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
-                    myViewHolder.tv_service.setCompoundDrawablePadding(10);
+                    myViewHolder.icon_service.setImageResource(R.drawable.phoneiconsized_small);
                 }
 
-            } }
+            }
+            else{
+                myViewHolder.icon_service.setVisibility(View.GONE);
+            }
+            }
             catch(Exception e){
                 e.printStackTrace();
             }

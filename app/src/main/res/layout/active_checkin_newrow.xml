@@ -71,15 +71,28 @@
         </LinearLayout>
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="@dimen/dimen_2dp">
+        <ImageView
+            android:id ="@+id/serviceicon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dimen_5dp"
+            android:visibility="gone"
+
+            />
         <TextView
             android:id="@+id/txt_service"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/padding2"
             android:gravity="left"
             android:text=""
             android:textColor="@color/cardview_dark_background"
             android:textSize="@dimen/txtsize_12" />
+    </LinearLayout>
 
         <TextView
             android:id="@+id/txt_queuetime"

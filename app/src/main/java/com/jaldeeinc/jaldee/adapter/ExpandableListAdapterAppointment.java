@@ -28,6 +28,7 @@ import android.view.Window;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -327,6 +328,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         CardView cvZoomDetails = view.findViewById(R.id.cv_ZoommeetDetails);
         CardView cvWhatsppDetails = view.findViewById(R.id.cv_whatsppDetails);
         CardView cvPhoneDetails = view.findViewById(R.id.cv_phoneMeetDetails);
+        ImageView icon_service = view.findViewById(R.id.serviceicon);
         cvGmeetDetails.setVisibility(View.GONE);
         cvZoomDetails.setVisibility(View.GONE);
         cvWhatsppDetails.setVisibility(View.GONE);
@@ -804,26 +806,28 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length() + secondWord.length(), firstWord.length() + secondWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             tv_service.setText(spannable);
             try{
-            if(activelist.getService().getServiceType().equalsIgnoreCase("virtualService")){
+                if(activelist.getService().getServiceType().equalsIgnoreCase("virtualService")){
+                    icon_service.setVisibility(View.VISIBLE);
+                    icon_service.setY(6);
 
-                if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
-                    tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
-                    tv_service.setCompoundDrawablePadding(10);
-                }
-                else if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")){
-                    tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized,0,0,0);
-                    tv_service.setCompoundDrawablePadding(10);
-                }
-                else if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
-                    tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized,0,0,0);
-                    tv_service.setCompoundDrawablePadding(10);
-                }
-                else if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){
-                    tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
-                    tv_service.setCompoundDrawablePadding(10);
-                }
+                    if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
+                        icon_service.setImageResource(R.drawable.zoomicon_sized);
+                    }
+                    else if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")){
+                        icon_service.setImageResource(R.drawable.googlemeet_sized);
+                    }
+                    else if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
+                        icon_service.setImageResource(R.drawable.whatsappicon_sized);
 
-            }
+                    }
+                    else if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){
+                        icon_service.setImageResource(R.drawable.phoneiconsized_small);
+                    }
+
+                }
+                else{
+                    icon_service.setVisibility(View.GONE);
+                }
             }
             catch(Exception e){
                 e.printStackTrace();
