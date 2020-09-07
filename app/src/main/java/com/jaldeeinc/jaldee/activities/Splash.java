@@ -86,7 +86,7 @@ public class Splash extends AppCompatActivity {
             Log.i("DeepLink", "path : " + path);
             Log.i("DeepLink", "scheme : " + scheme);
 
-            if (host.equals("test.jaldee.com")) {
+            if (host.equals("scale.jaldee.com")) {
                 Log.i("retert","ertert");
                 Intent intent = new Intent(this, LinkRedirectionActivity.class);
                 intent.putExtra("detail_id", (param));  // URL query values as string, you need to parse string to long.
@@ -116,7 +116,7 @@ public class Splash extends AppCompatActivity {
             Log.i("DeepLink", "param : " + host);
             Log.i("DeepLink", "param : " + param);
 
-            if (host.equals("test.jaldee.com")) {
+            if (host.equals("scale.jaldee.com")) {
 
                 Intent iLogin = new Intent(this, Register.class);
                 iLogin.putExtra("detail_id", (param));

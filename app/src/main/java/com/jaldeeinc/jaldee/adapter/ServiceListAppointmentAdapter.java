@@ -35,6 +35,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import androidx.recyclerview.widget.RecyclerView;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,6 +49,7 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
     Context mContext;
     ArrayList<String> servicesList = new ArrayList<>();
     AppointmentServiceInfoDialog appointmentServiceInfoDialog;
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_service;
@@ -56,10 +58,11 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
         public MyViewHolder(View view) {
             super(view);
             tv_service = (TextView) view.findViewById(R.id.tv_service);
-            serviceList=(LinearLayout)view.findViewById(R.id.serviceList);
+            serviceList = (LinearLayout) view.findViewById(R.id.serviceList);
 
         }
     }
+
     ArrayList<SearchAppointmentDepartmentServices> mServiceList;
     String from;
     String title;
@@ -70,11 +73,11 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
     public ServiceListAppointmentAdapter(ArrayList<SearchAppointmentDepartmentServices> mServiceList, Context mContext, String from, String title, String uniqueID, Activity mActivity, ArrayList<SearchDepartment> departmentList) {
         this.mContext = mContext;
         this.mServiceList = mServiceList;
-        Config.logV("ServiceList--------------"+mServiceList.size());
-        this.from=from;
-        this.title=title;
-        this.uniqueID=uniqueID;
-        activity=mActivity;
+        Config.logV("ServiceList--------------" + mServiceList.size());
+        this.from = from;
+        this.title = title;
+        this.uniqueID = uniqueID;
+        activity = mActivity;
         this.mSearchDepartmentList = departmentList;
     }
 
@@ -90,7 +93,7 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
     public void onBindViewHolder(final ServiceListAppointmentAdapter.MyViewHolder myViewHolder, final int position) {
         final SearchAppointmentDepartmentServices serviceList = mServiceList.get(position);
 
-        if (serviceList.getServices() != null){
+        if (serviceList.getServices() != null) {
             for (int i = 0; i < serviceList.getServices().size(); i++) {
                 String serviceName = serviceList.getServices().get(i).getName();
                 if (serviceList.getDepartmentId() != 0) {
@@ -98,22 +101,19 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
                     serviceName = serviceName.concat(" (").concat(deptName).concat(")");
                 }
                 myViewHolder.tv_service.setText(serviceName);
-                try{
-                if(serviceList.getServiceType().equalsIgnoreCase("virtualservice")){
-                    if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
-                        myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom,0,0,0);
+                try {
+                    if (serviceList.getServiceType().equalsIgnoreCase("virtualservice")) {
+                        if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                            myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom, 0, 0, 0);
+                        } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                            myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet, 0, 0, 0);
+                        } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                            myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                        } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                            myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneicon_sized, 0, 0, 0);
+                        }
                     }
-                    else if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")){
-                        myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet,0,0,0);
-                    }
-                    else if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
-                        myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp,0,0,0);
-                    }
-                    else if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){
-                        myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneicon_sized,0,0,0);
-                    }
-                } }
-                catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -148,7 +148,7 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
 //                            iService.putExtra("MinPrePaymentAmount", minPrepayment);
 //                            iService.putExtra("from","appt");
 //                            mContext.startActivity(iService)
-                            appointmentServiceInfoDialog = new AppointmentServiceInfoDialog(v.getContext(),appointmentServices);
+                            appointmentServiceInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), appointmentServices);
                             appointmentServiceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                             appointmentServiceInfoDialog.show();
                             DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
@@ -164,34 +164,28 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
                 });
 
             }
-    }
-    else{
+        } else {
             String serviceName = serviceList.getName();
 //            if (serviceList.getDepartmentId() != 0) {
 //                String deptName = getDepartmentName(serviceList.getDepartmentId());
 //                serviceName = serviceName.concat(" (").concat(deptName).concat(")");
 //            }
             myViewHolder.tv_service.setText(serviceName);
-            try{
-            if(serviceList.getServiceType().equalsIgnoreCase("virtualservice")){
-                if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
-                    myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom,0,0,0);
+            try {
+                if (serviceList.getServiceType().equalsIgnoreCase("virtualservice")) {
+                    if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                        myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom, 0, 0, 0);
+                    } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                        myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet, 0, 0, 0);
+                    } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                        myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                    } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                        myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneicon_sized, 0, 0, 0);
+                    }
                 }
-                else if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")){
-                    myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet,0,0,0);
-                }
-                else if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
-                    myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp,0,0,0);
-                }
-                else if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){
-                    myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneicon_sized,0,0,0);
-                }
-            }
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-
 
 
             myViewHolder.serviceList.setOnClickListener(new View.OnClickListener() {
@@ -221,7 +215,7 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
 //                        iService.putExtra("from","appt");
 //                        mContext.startActivity(iService);
 
-                        appointmentServiceInfoDialog = new AppointmentServiceInfoDialog(v.getContext(),serviceList);
+                        appointmentServiceInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), serviceList);
                         appointmentServiceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         appointmentServiceInfoDialog.show();
                         DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
@@ -239,7 +233,8 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
         }
 
     }
-    private void ApiService(String uniqueID , final String serviceName, final String title) {
+
+    private void ApiService(String uniqueID, final String serviceName, final String title) {
 
 
         ApiInterface apiService =
@@ -273,12 +268,12 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
                     if (response.code() == 200) {
 
                         SearchService service1 = null;
-                        ArrayList<SearchService> service=new ArrayList<>();
-                        service=response.body();
-                        for(int i=0;i<service.size();i++){
+                        ArrayList<SearchService> service = new ArrayList<>();
+                        service = response.body();
+                        for (int i = 0; i < service.size(); i++) {
                             Config.logV("Response--serviceid-------------------------" + serviceName);
 
-                            if(service.get(i).getName().toLowerCase().equalsIgnoreCase(serviceName.toLowerCase())){
+                            if (service.get(i).getName().toLowerCase().equalsIgnoreCase(serviceName.toLowerCase())) {
                                 Intent iService = new Intent(mContext, SearchServiceActivity.class);
                                 iService.putExtra("name", service.get(i).getName());
                                 iService.putExtra("duration", service.get(i).getServiceDuration());
@@ -314,15 +309,17 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
 
 
     }
+
     public String getDepartmentName(int department) {
-       // Log.i("departments", new Gson().toJson(mSearchDepartmentList));
-        for(int i=0;i<mServiceList.size();i++){
-            if(mServiceList.get(i).getDepartmentId()==department) {
+        // Log.i("departments", new Gson().toJson(mSearchDepartmentList));
+        for (int i = 0; i < mServiceList.size(); i++) {
+            if (mServiceList.get(i).getDepartmentId() == department) {
                 return mServiceList.get(i).getDepartmentName();
             }
         }
         return "";
     }
+
     @Override
     public int getItemCount() {
         return mServiceList.size();
