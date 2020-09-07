@@ -23,6 +23,7 @@ import com.jaldeeinc.jaldee.response.JaldeeWaitlistDistanceTime;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.SearchModel;
+import com.jaldeeinc.jaldee.response.ProviderDetails;
 import com.jaldeeinc.jaldee.response.ServiceDetails;
 import com.jaldeeinc.jaldee.response.VirtualServiceDetails;
 
@@ -433,7 +434,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "showToken TEXT,"
                 + "consumer TEXT,"
                 + "service TEXT,"
-                + "virtualService TEXT)";
+                + "virtualService TEXT,"
+                + "provider TEXT)";
 
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_checkin) + tblFields;
@@ -481,7 +483,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "showToken TEXT,"
                 + "consumer TEXT,"
                 + "service TEXT,"
-                + "virtualService TEXT)";
+                + "virtualService TEXT,"
+                + "provider TEXT)";
 
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_mycheckin) + tblFields;
@@ -533,6 +536,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("consumer",(new Gson().toJson(activeCheckIn.getConsumer())));
                 values.put("service",(new Gson().toJson(activeCheckIn.getService())));
                 values.put("virtualService",(new Gson().toJson(activeCheckIn.getVirtualService())));
+                values.put("provider", (new Gson().toJson((activeCheckIn.getProvider()))));
 
                 db.insert(mContext.getString(R.string.db_table_checkin), null, values);
             }
@@ -557,7 +561,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime","queueEndTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating","checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack","showToken","consumer", "service", "virtualService"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime","queueEndTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating","checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack","showToken","consumer", "service", "virtualService", "provider"};
 
         db.beginTransaction();
 
@@ -608,6 +612,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setConsumer(new Gson().fromJson(cursor.getString(36), ConsumerDetails.class));
                 activeModel.setService(new Gson().fromJson(cursor.getString(37), ServiceDetails.class));
                 activeModel.setVirtualService(new Gson().fromJson(cursor.getString(38), VirtualServiceDetails.class));
+                activeModel.setProvider(new Gson().fromJson(cursor.getString(39), ProviderDetails.class));
 
 
 
@@ -669,6 +674,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("consumer", new Gson().toJson(activeCheckIn.getConsumer()));
                 values.put("service", new Gson().toJson(activeCheckIn.getService()));
                 values.put("virtualService", new Gson().toJson(activeCheckIn.getVirtualService()));
+                values.put("provider", new Gson().toJson(activeCheckIn.getProvider()));
                 db.insert(mContext.getString(R.string.db_table_mycheckin), null, values);
             }
 
@@ -690,7 +696,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String table = mContext.getString(R.string.db_table_mycheckin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime", "distance", "jaldeeStartTimeType", "rating", "queueEndTime", "checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack","showToken","consumer","service", "virtualService"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime", "distance", "jaldeeStartTimeType", "rating", "queueEndTime", "checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack","showToken","consumer","service", "virtualService", "provider"};
         String selection = "";
         String[] selectionArgs = null;
         selectionArgs = new String[]{Config.getTodaysDateString()};
@@ -748,6 +754,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setConsumer(new Gson().fromJson(cursor.getString(36), ConsumerDetails.class));
                 activeModel.setService(new Gson().fromJson(cursor.getString(37),  ServiceDetails.class));
                 activeModel.setVirtualService(new Gson().fromJson(cursor.getString(38),  VirtualServiceDetails.class));
+                activeModel.setProvider(new Gson().fromJson(cursor.getString(39), ProviderDetails.class));
 
                 checkin.add(activeModel);
             } while (cursor.moveToNext());
