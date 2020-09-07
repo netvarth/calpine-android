@@ -649,7 +649,30 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             UpdateMainUI(mBusinessDataList);
                         }
 
-                        apiSearchGallery(uniqueID);
+                        if(from_user){
+                            tv_mImageViewTextnew.setVisibility(View.GONE);
+                            if (searchdetailList.getSearchViewDetail().getLogo() != null) {
+                                Picasso.with(context).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+                                mImgeProfile.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        ArrayList<String> mGalleryList = new ArrayList<>();
+                                        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
+                                            mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
+                                        }
+                                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                                        if (mValue) {
+                                            Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                                            intent.putExtra("pos", 0);
+                                            startActivity(intent);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                        else{
+                            apiSearchGallery(uniqueID);
+                        }
 //                        if(homeUniqueId==null){
 
 //                        }else{
@@ -1245,92 +1268,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         }
     }
 
-    public void UpdateUserGallery(final ArrayList<SearchViewDetail> mGallery, final DepartmentUserSearchModel searchdetailList) {
-        Config.logV("Gallery--------------333-----" + mGallery.size());
-        try {
-            if (mGallery.size() > 0 || searchdetailList.getSearchViewDetail().getLogo() != null) {
-                Config.logV("Gallery------------------------------" + mGallery.size());
-                mImgeProfile.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ArrayList<String> mGalleryList = new ArrayList<>();
-                        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-                            mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
-                        }
-                        for (int i = 0; i < mGallery.size(); i++) {
-                            mGalleryList.add(mGallery.get(i).getUrl());
-                        }
-                        mGallery.clear();
-                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, context);
-                        if (mValue) {
-                            Intent intent = new Intent(context, SwipeGalleryImage.class);
-                            intent.putExtra("pos", 0);
-                            context.startActivity(intent);
-                        }
-                    }
-                });
-                mImgthumbProfile.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Config.logV("Gallery------------------------------" + mGallery.size());
-                        ArrayList<String> mGalleryList = new ArrayList<>();
-                        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-                            mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
-                        }
-                        for (int i = 0; i < mGallery.size(); i++) {
-                            mGalleryList.add(mGallery.get(i).getUrl());
-                        }
-                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                        if (mValue) {
-                            Intent intent = new Intent(context, SwipeGalleryImage.class);
-                            intent.putExtra("pos", 1);
-                            v.getContext().startActivity(intent);
-                        }
-                    }
-                });
-                mImgthumbProfile1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Config.logV("Gallery------------------------------" + mGallery.size());
-                        ArrayList<String> mGalleryList = new ArrayList<>();
-                        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-                            mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
-                        }
-                        for (int i = 0; i < mGallery.size(); i++) {
-                            mGalleryList.add(mGallery.get(i).getUrl());
-                        }
-                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                        if (mValue) {
-                            Intent intent = new Intent(context, SwipeGalleryImage.class);
-                            intent.putExtra("pos", 2);
-                            v.getContext().startActivity(intent);
-                        }
-                    }
-                });
-            }
-            if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-                Picasso.with(context).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
 
-            } else {
-                Picasso.with(context).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
-            }
-            if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-                if (mGallery.size() > 0) {
-                    tv_mImageViewTextnew.setVisibility(View.VISIBLE);
-                    tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
-                }
-            } else if (searchdetailList.getSearchViewDetail().getLogo() == null) {
-                if (mGallery.size() > 0) {
-                    tv_mImageViewTextnew.setVisibility(View.VISIBLE);
-                    tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
-                } else {
-                    tv_mImageViewTextnew.setVisibility(View.GONE);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     /*  ArrayList<SearchViewDetail> emails = new ArrayList<>();
@@ -2151,29 +2089,17 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     Config.logV("Response--code-----gallery--------------------" + response.code());
                     if (response.code() == 200) {
                         mSearchGallery = response.body();
-                        if (from_user) {
-                            UpdateUserGallery(mSearchGallery, searchdetailList);
-                        } else {
-                            UpdateGallery(mSearchGallery);
-                        }
+                        UpdateGallery(mSearchGallery);
+
                     } else {
                         tv_mImageViewTextnew.setVisibility(View.GONE);
-                        if (from_user) {
-                            if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-                                // Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
-                                UpdateUserGallery(mSearchGallery, searchdetailList);
-                            } else {
-                                tv_mImageViewTextnew.setVisibility(View.GONE);
-                            }
-                        } else {
-
-                            if (mBusinessDataList.getLogo() != null) {
+                        if (mBusinessDataList.getLogo() != null) {
                                 // Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
                                 UpdateGallery(mSearchGallery);
                             } else {
                                 tv_mImageViewTextnew.setVisibility(View.GONE);
                             }
-                        }
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

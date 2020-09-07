@@ -1372,16 +1372,26 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         });
         if (searchdetailList.getSearchViewDetail().getLogo() != null) {
             builder.build().load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
+            myViewHolder.profile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Config.logV("Unique Id List", searchdetailList.getUniqueid());
+                    // ApiSearchGallery(searchdetailList.getParentSearchViewDetail().getUniqueId(), searchdetailList);
+                    ArrayList<String> mGalleryList = new ArrayList<>();
+                    if (searchdetailList.getSearchViewDetail().getLogo() != null) {
+                        mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
+                    }
+                    boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, context);
+                    if (mValue) {
+                        Intent intent = new Intent(context, SwipeGalleryImage.class);
+                        intent.putExtra("pos", 0);
+                        context.startActivity(intent);
+                    }
+                }
+
+
+            });
         }
-        myViewHolder.profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Config.logV("Unique Id List", searchdetailList.getUniqueid());
-                ApiSearchGallery(searchdetailList.getParentSearchViewDetail().getUniqueId(), searchdetailList);
-            }
-
-
-        });
 
 //        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
 //            if (searchdetailList.getGallery_thumb_nails().size() > 0) {
@@ -1396,134 +1406,134 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
     }
 
-    private void ApiSearchGallery(final String muniqueID, final DepartmentUserSearchModel searchdetailList) {
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(context).create(ApiInterface.class);
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<ArrayList<SearchViewDetail>> call = apiService.getSearchGallery(Integer.parseInt(muniqueID), sdf.format(currentTime));
-        call.enqueue(new Callback<ArrayList<SearchViewDetail>>() {
-            @Override
-            public void onResponse(Call<ArrayList<SearchViewDetail>> call, Response<ArrayList<SearchViewDetail>> response) {
-                try {
-                    Config.logV("URL------100000---------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-----gallery--------------------" + response.code());
-                    if (response.code() == 200) {
-                        mSearchGallery = response.body();
-                        UpdateGallery(mSearchGallery, searchdetailList);
-                    } else {
-                        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-                            ArrayList<String> mGalleryList = new ArrayList<>();
-                            mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
-                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, activity);
-                            if (mValue) {
-                                Intent intent = new Intent(context, SwipeGalleryImage.class);
-                                intent.putExtra("pos", 0);
-                                activity.startActivity(intent);
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+//    private void ApiSearchGallery(final String muniqueID, final DepartmentUserSearchModel searchdetailList) {
+//        ApiInterface apiService =
+//                ApiClient.getClientS3Cloud(context).create(ApiInterface.class);
+//        Date currentTime = new Date();
+//        final SimpleDateFormat sdf = new SimpleDateFormat(
+//                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+//        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        System.out.println("UTC time: " + sdf.format(currentTime));
+//        Call<ArrayList<SearchViewDetail>> call = apiService.getSearchGallery(Integer.parseInt(muniqueID), sdf.format(currentTime));
+//        call.enqueue(new Callback<ArrayList<SearchViewDetail>>() {
+//            @Override
+//            public void onResponse(Call<ArrayList<SearchViewDetail>> call, Response<ArrayList<SearchViewDetail>> response) {
+//                try {
+//                    Config.logV("URL------100000---------" + response.raw().request().url().toString().trim());
+//                    Config.logV("Response--code-----gallery--------------------" + response.code());
+//                    if (response.code() == 200) {
+//                        mSearchGallery = response.body();
+//                        UpdateGallery(mSearchGallery, searchdetailList);
+//                    } else {
+//                        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
+//                            ArrayList<String> mGalleryList = new ArrayList<>();
+//                            mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
+//                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, activity);
+//                            if (mValue) {
+//                                Intent intent = new Intent(context, SwipeGalleryImage.class);
+//                                intent.putExtra("pos", 0);
+//                                activity.startActivity(intent);
+//                            }
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ArrayList<SearchViewDetail>> call, Throwable t) {
+//                // Log error here since request failed
+//                Config.logV("Fail---------------" + t.toString());
+//            }
+//        });
+//    }
 
-            @Override
-            public void onFailure(Call<ArrayList<SearchViewDetail>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-            }
-        });
-    }
-
-    ImageView profile1, profile2, profile3;
-
-    public void UpdateGallery(final ArrayList<SearchViewDetail> mGallery, final DepartmentUserSearchModel searchdetailList) {
-        Config.logV("Gallery--------------333-----" + mGallery.size());
-        try {
-            if (mGallery.size() > 0 || searchdetailList.getSearchViewDetail().getLogo() != null) {
-                Config.logV("Gallery------------------------------" + mGallery.size());
-                ArrayList<String> mGalleryList = new ArrayList<>();
-                if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-                    mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
-                }
-                for (int i = 0; i < mGallery.size(); i++) {
-                    mGalleryList.add(mGallery.get(i).getUrl());
-                }
-                mGallery.clear();
-                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, context);
-                if (mValue) {
-                    Intent intent = new Intent(context, SwipeGalleryImage.class);
-                    intent.putExtra("pos", 0);
-                    context.startActivity(intent);
-                }
-                profile2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Config.logV("Gallery------------------------------" + mGallery.size());
-                        ArrayList<String> mGalleryList = new ArrayList<>();
-                        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-                            mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
-                        }
-                        for (int i = 0; i < mGallery.size(); i++) {
-                            mGalleryList.add(mGallery.get(i).getUrl());
-                        }
-                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                        if (mValue) {
-                            Intent intent = new Intent(context, SwipeGalleryImage.class);
-                            intent.putExtra("pos", 1);
-                            v.getContext().startActivity(intent);
-                        }
-                    }
-                });
-                profile3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Config.logV("Gallery------------------------------" + mGallery.size());
-                        ArrayList<String> mGalleryList = new ArrayList<>();
-                        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-                            mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
-                        }
-                        for (int i = 0; i < mGallery.size(); i++) {
-                            mGalleryList.add(mGallery.get(i).getUrl());
-                        }
-                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                        if (mValue) {
-                            Intent intent = new Intent(context, SwipeGalleryImage.class);
-                            intent.putExtra("pos", 2);
-                            v.getContext().startActivity(intent);
-                        }
-                    }
-                });
-            }
-            if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-                Picasso.with(context).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile1);
-
-            } else {
-                Picasso.with(context).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile1);
-            }
-            if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-                if (mGallery.size() > 0) {
-                    mImageViewText.setVisibility(View.VISIBLE);
-                    mImageViewText.setText(" +" + String.valueOf(mGallery.size()));
-                }
-            } else if (searchdetailList.getSearchViewDetail().getLogo() == null) {
-                if (mGallery.size() > 0) {
-                    mImageViewText.setVisibility(View.VISIBLE);
-                    mImageViewText.setText(" +" + String.valueOf(mGallery.size()));
-                } else {
-                    mImageViewText.setVisibility(View.GONE);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
+//    ImageView profile1, profile2, profile3;
+//
+//    public void UpdateGallery(final ArrayList<SearchViewDetail> mGallery, final DepartmentUserSearchModel searchdetailList) {
+//        Config.logV("Gallery--------------333-----" + mGallery.size());
+//        try {
+//            if (mGallery.size() > 0 || searchdetailList.getSearchViewDetail().getLogo() != null) {
+//                Config.logV("Gallery------------------------------" + mGallery.size());
+//                ArrayList<String> mGalleryList = new ArrayList<>();
+//                if (searchdetailList.getSearchViewDetail().getLogo() != null) {
+//                    mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
+//                }
+//                for (int i = 0; i < mGallery.size(); i++) {
+//                    mGalleryList.add(mGallery.get(i).getUrl());
+//                }
+//                mGallery.clear();
+//                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, context);
+//                if (mValue) {
+//                    Intent intent = new Intent(context, SwipeGalleryImage.class);
+//                    intent.putExtra("pos", 0);
+//                    context.startActivity(intent);
+//                }
+//                profile2.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Config.logV("Gallery------------------------------" + mGallery.size());
+//                        ArrayList<String> mGalleryList = new ArrayList<>();
+//                        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
+//                            mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
+//                        }
+//                        for (int i = 0; i < mGallery.size(); i++) {
+//                            mGalleryList.add(mGallery.get(i).getUrl());
+//                        }
+//                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+//                        if (mValue) {
+//                            Intent intent = new Intent(context, SwipeGalleryImage.class);
+//                            intent.putExtra("pos", 1);
+//                            v.getContext().startActivity(intent);
+//                        }
+//                    }
+//                });
+//                profile3.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Config.logV("Gallery------------------------------" + mGallery.size());
+//                        ArrayList<String> mGalleryList = new ArrayList<>();
+//                        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
+//                            mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
+//                        }
+//                        for (int i = 0; i < mGallery.size(); i++) {
+//                            mGalleryList.add(mGallery.get(i).getUrl());
+//                        }
+//                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+//                        if (mValue) {
+//                            Intent intent = new Intent(context, SwipeGalleryImage.class);
+//                            intent.putExtra("pos", 2);
+//                            v.getContext().startActivity(intent);
+//                        }
+//                    }
+//                });
+//            }
+//            if (searchdetailList.getSearchViewDetail().getLogo() != null) {
+//                Picasso.with(context).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile1);
+//
+//            } else {
+//                Picasso.with(context).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile1);
+//            }
+//            if (searchdetailList.getSearchViewDetail().getLogo() != null) {
+//                if (mGallery.size() > 0) {
+//                    mImageViewText.setVisibility(View.VISIBLE);
+//                    mImageViewText.setText(" +" + String.valueOf(mGallery.size()));
+//                }
+//            } else if (searchdetailList.getSearchViewDetail().getLogo() == null) {
+//                if (mGallery.size() > 0) {
+//                    mImageViewText.setVisibility(View.VISIBLE);
+//                    mImageViewText.setText(" +" + String.valueOf(mGallery.size()));
+//                } else {
+//                    mImageViewText.setVisibility(View.GONE);
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//
     @Override
     public int getItemCount() {
         if (searchList != null) {
