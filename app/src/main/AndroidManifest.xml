@@ -54,7 +54,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="test.jaldee.com"
+                    android:host="scale.jaldee.com"
                     android:scheme="https" />
             </intent-filter>
             <meta-data

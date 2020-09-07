@@ -56,12 +56,6 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
 
                 row_index = position;
                 notifyDataSetChanged();
-//                if (previousSelectedItem!=null) {
-//                    previousSelectedItem.setBackgroundResource(R.drawable.rounded_popularsearch);
-//                }
-//                previousSelectedItem=v;
-//                v.setBackgroundResource(R.drawable.rounded_popularsearch_green);
-
 
                 new Handler().postDelayed(() -> {
 

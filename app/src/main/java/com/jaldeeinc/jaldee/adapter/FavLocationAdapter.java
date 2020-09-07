@@ -593,7 +593,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 
     }
     public void enableCheckinButton(FavLocationAdapter.MyViewHolder myViewHolder) {
-        myViewHolder.btn_checkin.setBackgroundColor(mContext.getResources().getColor(R.color.green));
+        myViewHolder.btn_checkin.setBackgroundColor(mContext.getResources().getColor(R.color.dark_blue));
         myViewHolder.btn_checkin.setTextColor(mContext.getResources().getColor(R.color.white));
         myViewHolder.btn_checkin.setEnabled(true);
         myViewHolder.btn_checkin.setVisibility(View.VISIBLE);

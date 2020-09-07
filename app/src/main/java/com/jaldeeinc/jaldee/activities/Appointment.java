@@ -1457,6 +1457,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             if (activeSlotsList != null) {
                                 if (activeSlotsList.size() > 0) {
 
+                                    selectedShcdId = activeSlotsList.get(0).getScheduleId();
                                     txtnocheckin.setVisibility(View.GONE);
                                     earliestAvailable.setText("Earliest available\n" + activeSlotsList.get(0).getDisplayTime());
                                     RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(Appointment.this, 3);
