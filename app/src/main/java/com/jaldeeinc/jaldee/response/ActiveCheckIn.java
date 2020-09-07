@@ -66,6 +66,19 @@ public class ActiveCheckIn {
     private VirtualServiceDetails virtualService;
 
 
+    public ProviderDetails getProvider() {
+        return provider;
+    }
+
+    public void setProvider(ProviderDetails provider) {
+        this.provider = provider;
+    }
+
+    @SerializedName("provider")
+    private ProviderDetails provider;
+
+
+
     public ArrayList<ServiceDetails> getVirtualCallingModes() {
         return virtualCallingModes;
     }
@@ -88,6 +101,7 @@ public class ActiveCheckIn {
     String consumerNote;
     String recalculatedTime;
     int appxWaitingTime;
+
 
     public int getAppxWaitingTime() {
         return appxWaitingTime;

@@ -1811,8 +1811,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.green));
         }
         if (activelist.getWaitlistStatus().equalsIgnoreCase("arrived")) {
+            if(activelist.getService().getServiceType().equalsIgnoreCase("virtualService")){
+                tv_statusSmall.setText("");
+            }
+            else if(activelist.getService().getServiceType().equalsIgnoreCase("physicalService")){
+                tv_statusSmall.setText("Arrived");
+
+            }
+            else {
+                tv_statusSmall.setText("Arrived");
+            }
             tv_status.setText("Arrived");
-            tv_statusSmall.setText("Arrived");
             tv_status.setVisibility(View.GONE);
             tv_statusSmall.setVisibility(View.VISIBLE);
             tv_status.setTextColor(mContext.getResources().getColor(R.color.arrived_green));

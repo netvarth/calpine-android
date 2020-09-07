@@ -383,18 +383,19 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             myViewHolder.btn_pay.setVisibility(View.GONE);
             myViewHolder.tv_makepay.setVisibility(View.GONE);
         }
-        if ((activelist.getBillViewStatus()!=null) ) {
-            if(activelist.getBillViewStatus().equalsIgnoreCase("Show") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+        if (activelist.getBillViewStatus() != null && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+            if (activelist.getBillViewStatus().equalsIgnoreCase("Show")) {
                 myViewHolder.icon_bill.setVisibility(View.VISIBLE);
-            }else{
-                if(!activelist.getPaymentStatus().equalsIgnoreCase("NotPaid")){
-                    myViewHolder.icon_bill.setVisibility(View.VISIBLE);
-                }
-                else{
-                    myViewHolder.icon_bill.setVisibility(View.GONE);}
+            } else {
+                myViewHolder.icon_bill.setVisibility(View.GONE);
             }
         } else {
-            myViewHolder.icon_bill.setVisibility(View.GONE);
+            if(!activelist.getPaymentStatus().equalsIgnoreCase("NotPaid")){
+                myViewHolder.icon_bill.setVisibility(View.VISIBLE);
+            }
+            else{
+                myViewHolder.icon_bill.setVisibility(View.GONE);
+            }
         }
         myViewHolder.btn_pay.setOnClickListener(new View.OnClickListener() {
             @Override

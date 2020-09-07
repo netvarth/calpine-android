@@ -1058,6 +1058,17 @@ public class ActiveAppointment {
     @SerializedName("virtualCallingModes")
     private ArrayList<AppointmentCallingModes> virtualCallingModes;
 
+    public ProviderDetails getProvider() {
+        return provider;
+    }
+
+    public void setProvider(ProviderDetails provider) {
+        this.provider = provider;
+    }
+
+    @SerializedName("provider")
+    private ProviderDetails provider;
+
 
 
 }
