@@ -215,7 +215,11 @@ public class HomeTabFragment extends Fragment {
         adapter = new ViewPagerAdapter(getChildFragmentManager());
         homeFragment = new DashboardFragment();
 
+
         tab1Fragment = new Tab1Fragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("message",message);
+        tab1Fragment.setArguments(bundle);
         // checkinFragment = new CheckinsFragmentCopy();
         favFragment = new FavouriteFragment();
         inboxFragment = new InboxFragment();

@@ -166,7 +166,11 @@ public class Home extends AppCompatActivity {
             mHomeTab = new HomeTabFragment();
             Bundle bundle = new Bundle();
             bundle.putString("tab", "1");
-            bundle.putString("message", message);
+            if (message != null) {
+                bundle.putString("message", message);
+            }else {
+                bundle.putString("message", intent.getStringExtra("message"));
+            }
             mHomeTab.setArguments(bundle);
             final FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()

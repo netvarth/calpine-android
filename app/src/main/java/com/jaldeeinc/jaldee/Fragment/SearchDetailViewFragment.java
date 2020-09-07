@@ -3035,8 +3035,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "false");
         mBusinessDataList = new SearchViewDetail();
         mSearchGallery = new ArrayList<>();
-        mSearchLocList = new ArrayList<>();
-        mSearchSettings = new SearchSetting();
+//        mSearchLocList = new ArrayList<>();
+//        mSearchSettings = new SearchSetting();
         mSearchTerminology = new SearchTerminology();
         mSearchQueueList = new ArrayList<>();
         mServicesList = new ArrayList<>();
