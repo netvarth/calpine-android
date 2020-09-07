@@ -130,25 +130,17 @@ public class ActiveCheckIn {
     String phoneNo;
     String email;
     String ynwUuid;
-    @SerializedName("rating")
-    private ActiveCheckIn rating;
-    String stars;
 
-    public ActiveCheckIn getRating() {
+    public RatingResponse getRating() {
         return rating;
     }
 
-    public void setRating(ActiveCheckIn rating) {
+    public void setRating(RatingResponse rating) {
         this.rating = rating;
     }
 
-    public String getStars() {
-        return stars;
-    }
-
-    public void setStars(String stars) {
-        this.stars = stars;
-    }
+    @SerializedName("rating")
+    private RatingResponse rating;
 
     String paymentStatus;
     String billStatus;

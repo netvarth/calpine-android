@@ -688,7 +688,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 iAppointment.putExtra("userId",Integer.parseInt(searchdetailList.getScheduleList().getProvider().getId()));
                 iAppointment.putExtra("userName",searchdetailList.getSearchViewDetail().getBusinessName());
                 iAppointment.putExtra("departmentId",String.valueOf(searchdetailList.getDepartmentId()));
-                iAppointment.putExtra("virtualServices",String.valueOf(searchdetailList.getSearchViewDetail().isVirtualServices()));
+                iAppointment.putExtra("virtualservices",searchdetailList.getSearchViewDetail().isVirtualServices());
 //                iAppointment.putExtra("isshowtoken", searchdetailList.getQueueList().isShowToken());
 //                iAppointment.putExtra("getAvail_date", searchdetailList.getScheduleList().getAvailableSchedule().);
                 v.getContext().startActivity(iAppointment);

@@ -361,17 +361,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         CardView cvWhatsppDetails = view.findViewById(R.id.cv_whatsppDetails);
         CardView cvPhoneDetails = view.findViewById(R.id.cv_phoneMeetDetails);
         ImageView icon_service = view.findViewById(R.id.serviceicon);
+        LinearLayout llprovider = view.findViewById(R.id.ll_providerName);
+        TextView tvProviderName = view.findViewById(R.id.tv_providerName);
         cvGmeetDetails.setVisibility(View.GONE);
         cvZoomDetails.setVisibility(View.GONE);
         cvWhatsppDetails.setVisibility(View.GONE);
         cvPhoneDetails.setVisibility(View.GONE);
-
-//        if(activelist.getWaitlistStatus().equalsIgnoreCase("failed")){
-//            layout_checkin.setVisibility(View.GONE);
-//        }
-//        else{
-//            layout_checkin.setVisibility(View.VISIBLE);
-//        }
 
         if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().equals("checkedIn") && header.equals("today")) {
 
@@ -764,6 +759,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         });
 
         tv_businessname.setText(Config.toTitleCase(activelist.getBusinessName()));
+        if (activelist.getProvider() != null) {
+            llprovider.setVisibility(View.VISIBLE);
+            tvProviderName.setText(activelist.getProvider().getFirstName() + activelist.getProvider().getLastName());
+        }
+        else {
+            llprovider.setVisibility(View.GONE);
+        }
 
         icon_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -2017,7 +2019,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
         icon_rate.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_star_line, 0, 0);
         if (activelist.getRating() != null) {
-            if (Integer.parseInt(activelist.getRating().getStars()) > 0) {
+            if (activelist.getRating().getStars() > 0) {
 
                 icon_rate.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.star_full, 0, 0);
             } else {

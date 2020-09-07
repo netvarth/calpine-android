@@ -24,6 +24,7 @@ import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.response.ProviderDetails;
+import com.jaldeeinc.jaldee.response.RatingResponse;
 import com.jaldeeinc.jaldee.response.ServiceDetails;
 import com.jaldeeinc.jaldee.response.VirtualServiceDetails;
 
@@ -598,7 +599,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setStatusUpdatedTime(cursor.getString(22));
                 activeModel.setJaldeeWaitlistDistanceTime(new Gson().fromJson(cursor.getString(23), JaldeeWaitlistDistanceTime.class));
                 activeModel.setJaldeeStartTimeType(cursor.getString(24));
-                activeModel.setRating(new Gson().fromJson(cursor.getString(25), ActiveCheckIn.class));
+                activeModel.setRating(new Gson().fromJson(cursor.getString(25), RatingResponse.class));
                 activeModel.setCheckInTime(cursor.getString(26));
                 activeModel.setToken(cursor.getInt(27));
                 activeModel.setBatchName(cursor.getString(28));
@@ -739,7 +740,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setStatusUpdatedTime(cursor.getString(21));
                 activeModel.setJaldeeWaitlistDistanceTime(new Gson().fromJson(cursor.getString(22), JaldeeWaitlistDistanceTime.class));
                 activeModel.setJaldeeStartTimeType(cursor.getString(23));
-                activeModel.setRating(new Gson().fromJson(cursor.getString(24), ActiveCheckIn.class));
+                activeModel.setRating(new Gson().fromJson(cursor.getString(24), RatingResponse.class));
                 activeModel.setQueueEndTime(cursor.getString(25));
                 activeModel.setCheckInTime(cursor.getString(26));
                 activeModel.setToken(cursor.getInt(27));

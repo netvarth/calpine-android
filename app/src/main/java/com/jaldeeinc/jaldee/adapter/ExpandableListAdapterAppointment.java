@@ -329,6 +329,8 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         CardView cvWhatsppDetails = view.findViewById(R.id.cv_whatsppDetails);
         CardView cvPhoneDetails = view.findViewById(R.id.cv_phoneMeetDetails);
         ImageView icon_service = view.findViewById(R.id.serviceicon);
+        LinearLayout llprovider = view.findViewById(R.id.ll_providerName);
+        TextView tvProviderName = view.findViewById(R.id.tv_providerName);
         cvGmeetDetails.setVisibility(View.GONE);
         cvZoomDetails.setVisibility(View.GONE);
         cvWhatsppDetails.setVisibility(View.GONE);
@@ -722,7 +724,13 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
 
 
         tv_businessname.setText(Config.toTitleCase(activelist.getProviderAccount().getBusinessName()));
-
+        if (activelist.getProvider() != null) {
+            llprovider.setVisibility(View.VISIBLE);
+            tvProviderName.setText(activelist.getProvider().getFirstName() + activelist.getProvider().getLastName());
+        }
+        else {
+            llprovider.setVisibility(View.GONE);
+        }
 
         icon_cancel.setOnClickListener(new View.OnClickListener() {
             @Override

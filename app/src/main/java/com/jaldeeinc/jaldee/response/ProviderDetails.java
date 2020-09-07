@@ -1,6 +1,8 @@
 package com.jaldeeinc.jaldee.response;
 
-public class ProviderDetails {
+import java.io.Serializable;
+
+public class ProviderDetails implements Serializable {
     public String getFirstName() {
         return firstName;
     }
