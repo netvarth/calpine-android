@@ -331,6 +331,9 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             int width = (int) (metrics.widthPixels * 1);
             notificationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
 
+            if (bundle != null) {
+                bundle.remove("message");
+            }
         }
 
         return row;

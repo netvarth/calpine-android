@@ -761,7 +761,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         tv_businessname.setText(Config.toTitleCase(activelist.getBusinessName()));
         if (activelist.getProvider() != null) {
             llprovider.setVisibility(View.VISIBLE);
-            tvProviderName.setText(activelist.getProvider().getFirstName() + activelist.getProvider().getLastName());
+            tvProviderName.setText(activelist.getProvider().getFirstName() +" "+ activelist.getProvider().getLastName());
         }
         else {
             llprovider.setVisibility(View.GONE);

@@ -576,6 +576,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 terminology = extras.getString("terminology", "");
                 isShowToken = extras.getString("isShowToken", "");
                 getAvail_date = extras.getString("getAvail_date", "");
+                googlemap = extras.getString("googlemap", "");
                 ApiSearchViewDetail(uniqueID);
             } else {
                 locationId = extras.getInt("serviceId");
@@ -645,9 +646,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
         if (mFrom.equalsIgnoreCase("multiusercheckin")) {
             tv_titlename.setText(userName);
-        } else if (mFrom.equalsIgnoreCase("searchdetail_checkin")) {
-            tv_titlename.setText(title);
-
+        } else  {
+            if (title != null) {
+                tv_titlename.setText(title);
+            }
         }
 
         btn_checkin.setOnClickListener(new View.OnClickListener() {

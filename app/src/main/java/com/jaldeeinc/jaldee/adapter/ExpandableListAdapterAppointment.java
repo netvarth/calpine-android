@@ -726,7 +726,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         tv_businessname.setText(Config.toTitleCase(activelist.getProviderAccount().getBusinessName()));
         if (activelist.getProvider() != null) {
             llprovider.setVisibility(View.VISIBLE);
-            tvProviderName.setText(activelist.getProvider().getFirstName() + activelist.getProvider().getLastName());
+            tvProviderName.setText(activelist.getProvider().getFirstName() +" "+ activelist.getProvider().getLastName());
         }
         else {
             llprovider.setVisibility(View.GONE);

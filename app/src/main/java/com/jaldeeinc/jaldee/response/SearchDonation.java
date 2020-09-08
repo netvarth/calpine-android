@@ -28,8 +28,8 @@ public class SearchDonation implements Serializable {
     String instructions;
     String callingMode;
     String value;
-    int maxDonationAmount;
-    int minDonationAmount;
+    String maxDonationAmount;
+    String minDonationAmount;
     String url;
     String thumbUrl;
 
@@ -209,20 +209,7 @@ public class SearchDonation implements Serializable {
     public void setPrePayment(boolean prePayment) {
         isPrePayment = prePayment;
     }
-    public int getMaxDonationAmount() {
-        return maxDonationAmount;
-    }
 
-    public void setMaxDonationAmount(int maxDonationAmount) {
-        this.maxDonationAmount = maxDonationAmount;
-    }
-    public int getMinDonationAmount() {
-        return minDonationAmount;
-    }
-
-    public void setMinDonationAmount(int minDonationAmount) {
-        this.minDonationAmount = minDonationAmount;
-    }
 
 
     public String getUrl() {
@@ -240,5 +227,20 @@ public class SearchDonation implements Serializable {
         this.thumbUrl = thumbUrl;
     }
 
+    public String getMaxDonationAmount() {
+        return maxDonationAmount;
+    }
+
+    public void setMaxDonationAmount(String maxDonationAmount) {
+        this.maxDonationAmount = maxDonationAmount;
+    }
+
+    public String getMinDonationAmount() {
+        return minDonationAmount;
+    }
+
+    public void setMinDonationAmount(String minDonationAmount) {
+        this.minDonationAmount = minDonationAmount;
+    }
 }
 

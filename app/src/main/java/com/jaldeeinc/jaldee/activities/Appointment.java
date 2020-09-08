@@ -652,6 +652,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 terminology = extras.getString("terminology", "");
                 isShowToken = extras.getString("isShowToken", "");
                 getAvail_date = extras.getString("getAvail_date", "");
+                googlemap = extras.getString("googlemap", "");
                 ApiSearchViewDetail(uniqueID);
             } else {
 
@@ -722,7 +723,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
         if (mFrom.equalsIgnoreCase("multiusercheckin")) {
             tv_titlename.setText(userName);
-        } else if (mFrom.equalsIgnoreCase("searchdetail_checkin")) {
+        } else  {
             tv_titlename.setText(title);
 
         }
@@ -1460,6 +1461,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                     selectedShcdId = activeSlotsList.get(0).getScheduleId();
                                     txtnocheckin.setVisibility(View.GONE);
                                     earliestAvailable.setText("Earliest available\n" + activeSlotsList.get(0).getDisplayTime());
+                                    llCoupons.setVisibility(View.VISIBLE);
+                                    btn_checkin.setVisibility(View.VISIBLE);
                                     RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(Appointment.this, 3);
                                     rvSlots.setLayoutManager(mLayoutManager);
                                     sAdapter = new TimeSlotsAdapter(activeSlotsList, iSelectSlotInterface);
@@ -1467,6 +1470,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                 }
                                 else {
                                     cvSlots.setVisibility(View.GONE);
+                                    llCoupons.setVisibility(View.GONE);
+                                    btn_checkin.setVisibility(View.GONE);
                                     txtnocheckin.setVisibility(View.VISIBLE);
                                     txtnocheckin.setText("Appointment for this service is not available at the moment. Please try for a different date");
                                     earliestAvailable.setText("Timeslots not available");

@@ -663,6 +663,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                                 Config.logV("SEARCH TXT--------------88252-" + mSearchtxt);
                             }
+                            else {
+                                mSearchtxt = "";
+                            }
 
 
                             ImageView searchIcon = (ImageView) mSearchView.findViewById(androidx.appcompat.R.id.search_mag_icon);

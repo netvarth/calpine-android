@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -25,18 +26,27 @@ import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.activities.Donation;
 import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.connection.ApiClient;
+import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.ScheduleList;
+import com.jaldeeinc.jaldee.response.SearchLocation;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.jaldeeinc.jaldee.adapter.SearchLocationAdapter.getWaitingTime;
 
@@ -50,6 +60,8 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
     private List<ScheduleList> mScheduleList;
     private List<FavouriteModel> mFavList;
     Context mContext;
+    ArrayList<SearchLocation> mSearchLocList = new ArrayList<>();
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -94,6 +106,8 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 
     }
 
+
+
     @Override
     public FavLocationAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -118,7 +132,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         final ScheduleList scheduleList = mScheduleList.get(position);
 
 
-
+        ApiSearchViewLocation(uniqueId);
 
         if(position==mQueueList.size()-1){
             myViewHolder.divider.setVisibility(View.GONE);
@@ -163,9 +177,9 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             @Override
             public void onClick(View v) {
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
-               if(queueList.getNextAvailableQueue()!=null){
-                   iCheckIn.putExtra("serviceId", Integer.parseInt(String.valueOf(queueList.getNextAvailableQueue().getLocation().getId())));
-               }
+                if(queueList.getNextAvailableQueue()!=null){
+                    iCheckIn.putExtra("serviceId", Integer.parseInt(String.valueOf(queueList.getNextAvailableQueue().getLocation().getId())));
+                }
                 iCheckIn.putExtra("uniqueID", uniqueId);
                 iCheckIn.putExtra("accountID",queueList.getProvider().getId());
                 iCheckIn.putExtra("from", "favourites_date");
@@ -176,6 +190,10 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                     iCheckIn.putExtra("getAvail_date",mQueueList.get(position).getNextAvailableQueue().getAvailableDate());}
                 if(queueList.getNextAvailableQueue()!=null){
                     iCheckIn.putExtra("isshowtoken", queueList.getNextAvailableQueue().isShowToken());
+                }
+                if(mSearchLocList.get(0).getGoogleMapUrl()!=null)
+                {
+                    iCheckIn.putExtra("googlemap",mSearchLocList.get(0).getGoogleMapUrl());
                 }
 
 
@@ -364,6 +382,10 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                         iAppoinment.putExtra("title", title);
                         iAppoinment.putExtra("terminology",terminologys);
                         iAppoinment.putExtra("place", myViewHolder.tv_loc.getText().toString());
+                        if(mSearchLocList.get(0).getGoogleMapUrl()!=null)
+                        {
+                            iAppoinment.putExtra("googlemap",mSearchLocList.get(0).getGoogleMapUrl());
+                        }
                         mContext.startActivity(iAppoinment);
 
 
@@ -371,12 +393,12 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                     }
                 });
 
-               if(mFavList.get(i).getOnlinePresence().equals("true") && mFavList.get(i).getDonationServiceStatus().equals("true")){
-                   myViewHolder.donationLayouts.setVisibility(View.VISIBLE);
-               }
-               else{
-                   myViewHolder.donationLayouts.setVisibility(View.GONE);
-               }
+                if(mFavList.get(i).getOnlinePresence().equals("true") && mFavList.get(i).getDonationServiceStatus().equals("true")){
+                    myViewHolder.donationLayouts.setVisibility(View.VISIBLE);
+                }
+                else{
+                    myViewHolder.donationLayouts.setVisibility(View.GONE);
+                }
 
 
                 final int finalI = i;
@@ -399,7 +421,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 });
 
                 if(mFavList.get(i).isFutureCheckin()){
-                   // myViewHolder.tv_date.setVisibility(View.VISIBLE);
+                    // myViewHolder.tv_date.setVisibility(View.VISIBLE);
                 }else{
                     myViewHolder.tv_date.setVisibility(View.GONE);
                 }
@@ -429,7 +451,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             myViewHolder.tv_Open.setVisibility(View.GONE); // Management asked to hide open now
             Config.logV("Open Now----------------");
         }else{
-           // Config.logV("Open Now-------3333---------"+queueList.getNextAvailableQueue().isOpenNow());
+            // Config.logV("Open Now-------3333---------"+queueList.getNextAvailableQueue().isOpenNow());
             myViewHolder.tv_Open.setVisibility(View.GONE);
         }
 
@@ -606,4 +628,43 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
     public int getItemCount() {
         return mQueueList.size();
     }
+
+    private void ApiSearchViewLocation(final String muniqueID) {
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(activity).create(ApiInterface.class);
+//        final Dialog mDialog = Config.getProgressDialog(, mContext.getResources().getString(R.string.dialog_log_in));
+//        mDialog.show();
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        Call<ArrayList<SearchLocation>> call = apiService.getSearchViewLoc(Integer.parseInt(muniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<ArrayList<SearchLocation>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SearchLocation>> call, Response<ArrayList<SearchLocation>> response) {
+                try {
+//                    if (mDialog.isShowing())
+//                        Config.closeDialog(activity, mDialog);
+                    Config.logV("URL---3333------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code--Location-----------------------" + response.code());
+                    mSearchLocList.clear();
+                    if (response.code() == 200) {
+                        mSearchLocList = response.body();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<SearchLocation>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+//                if (mDialog.isShowing())
+//                    Config.closeDialog(activity, mDialog);
+            }
+        });
+    }
+
 }

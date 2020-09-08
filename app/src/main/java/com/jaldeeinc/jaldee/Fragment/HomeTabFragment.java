@@ -81,7 +81,13 @@ public class HomeTabFragment extends Fragment {
 
         if (bundle != null){
 
-            message = bundle.getString("message");
+            String content = bundle.getString("message");
+            if (content != null){
+                if (content.length() > 40){
+
+                    message = content;
+                }
+            }
 
         }
 
@@ -218,8 +224,10 @@ public class HomeTabFragment extends Fragment {
 
         tab1Fragment = new Tab1Fragment();
         Bundle bundle = new Bundle();
-        bundle.putString("message",message);
-        tab1Fragment.setArguments(bundle);
+        if (message != null) {
+            bundle.putString("message", message);
+            tab1Fragment.setArguments(bundle);
+        }
         // checkinFragment = new CheckinsFragmentCopy();
         favFragment = new FavouriteFragment();
         inboxFragment = new InboxFragment();

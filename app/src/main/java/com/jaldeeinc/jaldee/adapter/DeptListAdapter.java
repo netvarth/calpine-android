@@ -858,6 +858,15 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 v.getContext().startActivity(iCheckIn);
             }
         });
+
+        myViewHolder.tv_WaitTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // Do nothing..
+            }
+        });
+
         myViewHolder.tv_Futuredate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
