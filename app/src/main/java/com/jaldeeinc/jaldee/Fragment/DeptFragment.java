@@ -90,6 +90,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     Boolean fromDoctors = false;
     ArrayList<ProviderUserModel> usersList;
     ArrayList<SearchLocation> mSearchLocList;
+    String userTerminology;
     ArrayList<SearchAppointmentDepartmentServices> userAppointmentServices = new ArrayList<>();
     ArrayList<SearchService> individualUserAppointmentServices = new ArrayList<>();
 
@@ -97,7 +98,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     }
 
 
-    public DeptFragment(SearchDepartmentServices departmentServices, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataListParent, Boolean firstCouponAvailable, Boolean couponAvailable, ArrayList<SearchLocation> searchLocation, SearchSetting mSearchSettings) {
+    public DeptFragment(SearchDepartmentServices departmentServices, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataListParent, Boolean firstCouponAvailable, Boolean couponAvailable, ArrayList<SearchLocation> searchLocation, SearchSetting mSearchSettings,String terminology) {
         this.departmentServices = departmentServices;
         this.searchDetailViewFragment = searchDetailViewFragment;
         this.businessName = businessName;
@@ -106,10 +107,11 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         this.firstCouponAvailable = firstCouponAvailable;
         this.mSearchLocList = searchLocation;
         this.mSearchSettings = mSearchSettings;
+        this.userTerminology = terminology;
 
     }
 
-    public DeptFragment(ArrayList<ProviderUserModel> usersList, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataList, Boolean firstCouponAvailable, Boolean couponAvailable, ArrayList<SearchLocation> searchLocation, SearchSetting mSearchSettings, Boolean fromDoctors) {
+    public DeptFragment(ArrayList<ProviderUserModel> usersList, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataList, Boolean firstCouponAvailable, Boolean couponAvailable, ArrayList<SearchLocation> searchLocation, SearchSetting mSearchSettings, Boolean fromDoctors,String terminology) {
         this.usersList = usersList;
         this.searchDetailViewFragment = searchDetailViewFragment;
         this.businessName = businessName;
@@ -119,6 +121,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         this.mSearchLocList = searchLocation;
         this.mSearchSettings = mSearchSettings;
         this.fromDoctors = fromDoctors;
+        this.userTerminology = terminology;
     }
 
     @Nullable
@@ -159,7 +162,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                 tv_departmentName.setText(departmentServices.getDepartmentName());
                 if (departmentServices.getUsers().size() > 0) {
                     tv_doctors.setVisibility(View.VISIBLE);
-                    tv_doctors.setText("Doctors : " + departmentServices.getUsers().size());
+                    tv_doctors.setText(userTerminology+ " : " + departmentServices.getUsers().size());
                     tv_services.setVisibility(View.GONE);
                 } else {
                     tv_doctors.setVisibility(View.GONE);

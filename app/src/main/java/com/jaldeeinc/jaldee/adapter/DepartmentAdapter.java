@@ -3,13 +3,12 @@ package com.jaldeeinc.jaldee.adapter;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 
@@ -30,18 +29,20 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.My
     String businessName;
     ArrayList<SearchService> mServicesList;
     int department;
+    String userTerminology;
     public DepartmentAdapter(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
-    public void setFields(ArrayList<SearchDepartmentServices> mSearchDepartmentServices, String businessName) {
+    public void setFields(ArrayList<SearchDepartmentServices> mSearchDepartmentServices, String businessName, String userTerminology) {
         this.mSearchDepartmentServices = mSearchDepartmentServices;
         this.businessName = businessName;
+        this.userTerminology = userTerminology;
 
     }
 
     public interface OnItemClickListener {
-        void departmentClicked(SearchDepartmentServices searchDepartment, String businessName);
+        void departmentClicked(SearchDepartmentServices searchDepartment, String businessName, String userTerminology);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -65,13 +66,13 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.My
         final SearchDepartmentServices searchDepartmentServices = mSearchDepartmentServices.get(position);
         int count = mSearchDepartmentServices.get(position).getUsers().size();
         if(count == 0){
-            holder.deptName.setText(searchDepartmentServices.getDepartmentName() + " " + "(" + "No Service Providers" + ")" );
+            holder.deptName.setText(searchDepartmentServices.getDepartmentName() + " " + "("+"No " + userTerminology + ")" );
         }
         else if(count == 1) {
-            holder.deptName.setText(searchDepartmentServices.getDepartmentName() + " " + "(" + count + " Service Providers" + ")");
+            holder.deptName.setText(searchDepartmentServices.getDepartmentName() + " " + "(" + count + userTerminology + ")");
         }
         else{
-            holder.deptName.setText(searchDepartmentServices.getDepartmentName() + " " + "(" + count + " Service Providers" + ")");
+            holder.deptName.setText(searchDepartmentServices.getDepartmentName() + " " + "(" + count + userTerminology+"s" + ")");
         }
         if (searchDepartmentServices.getDepartmentName() == null) {
         holder.deptName.setVisibility(View.GONE);
@@ -80,7 +81,7 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.My
             @Override
             public void onClick(View view) {
             if (searchDepartmentServices.getDepartmentName() != null) {
-                onItemClickListener.departmentClicked(searchDepartmentServices, businessName );
+                onItemClickListener.departmentClicked(searchDepartmentServices, businessName,userTerminology);
             }
             }
         });

@@ -788,7 +788,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="110dp"
-                                    android:text="Our Service Providers"
+                                    android:text=""
                                     android:textStyle="bold"
                                     android:layout_centerInParent="true"
                                     android:textSize="@dimen/dimen_16sp"

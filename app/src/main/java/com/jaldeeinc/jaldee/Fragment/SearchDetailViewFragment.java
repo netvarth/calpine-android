@@ -32,7 +32,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -194,6 +193,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     private boolean isLastPage = false;
     int total_foundcount = 0;
     String terminology;
+    String userTerminology;
     ArrayList<SearchDepartmentServices> mSearchDepartmentList;
     TextView departmentHeading;
     HashMap<String, List<SearchListModel>> departmentMap;
@@ -208,7 +208,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<ProviderUserModel> usersList = new ArrayList<ProviderUserModel>();
     private CardView cvUsers;
     private boolean throughLink = false;
-    TextView tvNoRatings;
+    TextView tvNoRatings,tvterminology;
     private LinearLayout llMDetails;
 
     @Override
@@ -233,6 +233,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_jdn = (ImageView) row.findViewById(R.id.txtjdn);
         tv_coupon = (TextView) row.findViewById(R.id.txtcoupon);
         cvUsers = row.findViewById(R.id.cv_users);
+        tvterminology = row.findViewById(R.id.sp_title);
         tv_first_ccoupon = (TextView) row.findViewById(R.id.txtFirstCoupon);
         specialSeeAll = (TextView) row.findViewById(R.id.specialSeeAll);
         departmentHeading = (TextView) row.findViewById(R.id.departmentHeading);
@@ -649,7 +650,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             UpdateMainUI(mBusinessDataList);
                         }
 
-                        if(from_user){
+                        if (from_user) {
                             tv_mImageViewTextnew.setVisibility(View.GONE);
                             if (searchdetailList.getSearchViewDetail().getLogo() != null) {
                                 Picasso.with(context).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
@@ -669,8 +670,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     }
                                 });
                             }
-                        }
-                        else{
+                        } else {
                             apiSearchGallery(uniqueID);
                         }
 //                        if(homeUniqueId==null){
@@ -912,7 +912,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
                                 mRecycleDepartment.setVisibility(View.VISIBLE);
                                 mRecycleDepartment.setLayoutManager(mDepartmentLayout);
-                                mDepartmentAdapter.setFields(deptMergedList, mBusinessDataList.getBusinessName());
+                                mDepartmentAdapter.setFields(deptMergedList, mBusinessDataList.getBusinessName(), userTerminology);
                                 mRecycleDepartment.setAdapter(mDepartmentAdapter);
                                 mDepartmentAdapter.notifyDataSetChanged();
                             }
@@ -951,27 +951,36 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             usersList.clear();
                             usersList = response.body();
                             if (usersList.size() > 0) {
+                                String name = userTerminology;
+                                name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
                                 if (from_user) {
                                     mRecycleDepartment.setVisibility(View.GONE);
                                 } else {
                                     if (usersList != null) {
+
                                         if (usersList.size() == 1) {
                                             departmentHeading.setVisibility(View.VISIBLE);
-                                            departmentHeading.setText("Service Providers (1)");
+                                            if (userTerminology != null) {
+                                                departmentHeading.setText(name + "(1)");
+                                            }
                                         } else if (usersList.size() > 1) {
                                             departmentHeading.setVisibility(View.VISIBLE);
-                                            departmentHeading.setText("Service Providers " + "(" + usersList.size() + ")");
+                                            if (userTerminology != null) {
+                                                departmentHeading.setText(name + "(" + usersList.size() + ")");
+                                            }
                                         }
                                     } else {
                                         departmentHeading.setVisibility(View.GONE);
                                     }
+
+                                    tvterminology.setText("Our "+name +"s");
 
                                     cvUsers.setVisibility(View.VISIBLE);
                                     cvUsers.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
 
-                                            onMethodUsersClick(usersList, mBusinessDataList.getBusinessName());
+                                            onMethodUsersClick(usersList, mBusinessDataList.getBusinessName(), userTerminology);
                                         }
                                     });
 //                                    RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
@@ -1267,8 +1276,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             e.printStackTrace();
         }
     }
-
-
 
 
     /*  ArrayList<SearchViewDetail> emails = new ArrayList<>();
@@ -2094,11 +2101,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     } else {
                         tv_mImageViewTextnew.setVisibility(View.GONE);
                         if (mBusinessDataList.getLogo() != null) {
-                                // Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
-                                UpdateGallery(mSearchGallery);
-                            } else {
-                                tv_mImageViewTextnew.setVisibility(View.GONE);
-                            }
+                            // Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+                            UpdateGallery(mSearchGallery);
+                        } else {
+                            tv_mImageViewTextnew.setVisibility(View.GONE);
+                        }
 
                     }
                 } catch (Exception e) {
@@ -2743,6 +2750,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (response.code() == 200) {
                         mSearchTerminology = response.body();
                         terminology = mSearchTerminology.getWaitlist();
+                        userTerminology = mSearchTerminology.getProvider();
 
                     }
                 } catch (Exception e) {
@@ -2804,20 +2812,20 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.replace(R.id.mainlayout, cffFragment).commit();
     }
 
-    public void onMethodDepartment(SearchDepartmentServices departmentCode, String businessName) {
+    public void onMethodDepartment(SearchDepartmentServices departmentCode, String businessName, String providerTerminology) {
         Log.i("qweqweq", "qweqweqwe");
 
-        DeptFragment deptFragment = new DeptFragment(departmentCode, this, businessName, mBusinessDataList, firstCouponAvailable, couponAvailable, mSearchLocList, mSearchSettings);
+        DeptFragment deptFragment = new DeptFragment(departmentCode, this, businessName, mBusinessDataList, firstCouponAvailable, couponAvailable, mSearchLocList, mSearchSettings, providerTerminology);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
         transaction.add(R.id.mainlayout, deptFragment).commit();
     }
 
-    private void onMethodUsersClick(ArrayList<ProviderUserModel> usersList, String businessName) {
+    private void onMethodUsersClick(ArrayList<ProviderUserModel> usersList, String businessName, String providerTerminology) {
 
         boolean fromDoctors = true;
-        DeptFragment deptFragment = new DeptFragment(usersList, this, businessName, mBusinessDataList, firstCouponAvailable, couponAvailable, mSearchLocList, mSearchSettings, fromDoctors);
+        DeptFragment deptFragment = new DeptFragment(usersList, this, businessName, mBusinessDataList, firstCouponAvailable, couponAvailable, mSearchLocList, mSearchSettings, fromDoctors,providerTerminology);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
@@ -3804,13 +3812,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     }
 
     @Override
-    public void departmentClicked(SearchDepartmentServices searchDepartment, String businessName) {
-        onMethodDepartment(searchDepartment, businessName);
+    public void departmentClicked(SearchDepartmentServices searchDepartment, String businessName, String providerTerminology) {
+        onMethodDepartment(searchDepartment, businessName, providerTerminology);
     }
 
     @Override
     public void usersClick(ArrayList<ProviderUserModel> usersList, String businessName) {
-        onMethodUsersClick(usersList, businessName);
+        onMethodUsersClick(usersList, businessName, userTerminology);
     }
 
     @Override
