@@ -1253,6 +1253,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             mSpinnerService.setVisibility(View.GONE);
                             btn_checkin.setVisibility(View.GONE);
                             txt_chooseservice.setVisibility(View.GONE);
+                            llCheckinLayout.setVisibility(View.GONE);
+                            llCoupons.setVisibility(View.GONE);
                             Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
                         } else {
                             CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
@@ -1263,7 +1265,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             mSpinnerService.setVisibility(View.VISIBLE);
                             txt_chooseservice.setVisibility(View.VISIBLE);
                             btn_checkin.setVisibility(View.VISIBLE);
-
+                            llCheckinLayout.setVisibility(View.VISIBLE);
+                            llCoupons.setVisibility(View.VISIBLE);
                         }
                         if (userSelected.equalsIgnoreCase("Global")) {
                             userSpinnertext = 0;
@@ -1292,15 +1295,27 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         userSpinnertext = 0;
                         LServicesList.clear();
                         LServicesList.addAll(globalServList);
-                        mSpinnerService.setVisibility(View.VISIBLE);
-                        txt_chooseservice.setVisibility(View.VISIBLE);
+                        if (LServicesList.size() == 0){
 
-                        Config.logV("mServicesList" + LServicesList.size());
-                        CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        mSpinnerService.setAdapter(adapter);
-                        if (LServicesList.size() != 0) {
-                            mSpinnertext = LServicesList.get(0).getId();
+                            mSpinnerService.setVisibility(View.GONE);
+                            txt_chooseservice.setVisibility(View.GONE);
+                            llCheckinLayout.setVisibility(View.GONE);
+                            btn_checkin.setVisibility(View.GONE);
+                            llCoupons.setVisibility(View.GONE);
+                        }
+                        else {
+                            mSpinnerService.setVisibility(View.VISIBLE);
+                            txt_chooseservice.setVisibility(View.VISIBLE);
+                            llCheckinLayout.setVisibility(View.VISIBLE);
+                            btn_checkin.setVisibility(View.VISIBLE);
+                            llCoupons.setVisibility(View.VISIBLE);
+                            Config.logV("mServicesList" + LServicesList.size());
+                            CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            mSpinnerService.setAdapter(adapter);
+                            if (LServicesList.size() != 0) {
+                                mSpinnertext = LServicesList.get(0).getId();
+                            }
                         }
                     }
                 }
@@ -3183,6 +3198,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             }
                         }
                     }
+                    else {
+
+                        Toast.makeText(Appointment.this,"Unable to fetch providers at this time..please try after some time",Toast.LENGTH_SHORT).show();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -3833,6 +3852,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             if (LServicesList.size() > 0) {
                                 mSpinnerService.setVisibility(View.VISIBLE);
                                 txt_chooseservice.setVisibility(View.VISIBLE);
+                                llCheckinLayout.setVisibility(View.VISIBLE);
+                                llCoupons.setVisibility(View.VISIBLE);
                                 Config.logV("mServicesList" + LServicesList.size());
                                 CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -3844,6 +3865,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                 mSpinnerService.setVisibility(View.GONE);
                                 txt_chooseservice.setVisibility(View.GONE);
                                 btn_checkin.setVisibility(View.GONE);
+                                llCheckinLayout.setVisibility(View.GONE);
                                 llCoupons.setVisibility(View.GONE);
                                 if (LServicesList.size() == 1) {
                                     // String firstWord = "Check-in for ";
@@ -4125,7 +4147,11 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             //   qjsonObj.put("id", queueId);
             if (txtWaitTime.getText().toString().contains("Today") || txtWaitTime.getText().toString().equalsIgnoreCase(formattedDate)) {
                 queueobj.put("appmtDate", formattedDate);
-                sjsonobj.put("id", activeSlotsList.get(0).getScheduleId());
+                if (activeSlotsList != null) {
+                    if (activeSlotsList.size()!= 0) {
+                        sjsonobj.put("id", activeSlotsList.get(0).getScheduleId());
+                    }
+                }
             } else {
                 queueobj.put("appmtDate", pickedDate);
                 sjsonobj.put("id", selectedShcdId);

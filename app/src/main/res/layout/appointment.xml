@@ -254,7 +254,7 @@
                                         android:layout_height="wrap_content"
                                         android:textColor="@color/black"
                                         android:layout_marginStart="@dimen/dimen_10dp"
-                                        android:textSize="@dimen/dimen_14sp"
+                                        android:textSize="@dimen/txtsize_12"
                                         android:theme="@android:style/Theme.Holo.Light" />
                                     <ImageView
                                         android:id="@+id/edit_icon"
