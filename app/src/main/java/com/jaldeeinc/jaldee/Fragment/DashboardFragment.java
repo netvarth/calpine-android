@@ -163,6 +163,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     String subdomainquery, subdomainName;
     private boolean fromBusinessId = false;
+    private boolean fromBusinessName = false;
 
     public void funPopulateSearchList(final ArrayList<SearchModel> mPopularSearchList) {
         if (mPopularSearchList.size() > 0) {
@@ -662,8 +663,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                 mSearchtxt = query;
 
                                 Config.logV("SEARCH TXT--------------88252-" + mSearchtxt);
-                            }
-                            else {
+                            } else {
 //                                mSearchtxt = "";
                             }
 
@@ -898,6 +898,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                 if (cell.getCategory().equalsIgnoreCase("Business Name as")) {
                     fromBusinessId = false;
+                    fromBusinessName = true;
                     String name = cell.getName();
                     if (name.contains("'")) {
                         Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + name);
@@ -910,7 +911,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         querycreate = "title " + "'" + name + "'";
                     } else {
                         sub = "title " + "'" + name + "'";
-                        querycreate = "sector " + "'" + mSector + "'" + " " + sub;
+                        querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
                     }
                 }
 
@@ -926,6 +927,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                     querycreate = "(or custom_id:" + "'" + name + "' enc_uid:" + "'" + name + "')";
                     fromBusinessId = true;
+                    fromBusinessName = false;
 
                 }
 
@@ -948,11 +950,15 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 bundle.putString("subdomainName", subdomainName);
                 if (fromBusinessId) {
                     bundle.putString("query", querycreate);
+                } else if (fromBusinessName) {
+
+                    String qparam = "(and location1:" + locationRange + "(or (prefix field=" + querycreate + ") (phrase field=" + querycreate + ")))";
+                    bundle.putString("query", qparam);
+
                 } else {
 
-                    String qparam = "(and location1:"+ locationRange +"(or (prefix field="+ querycreate +") (phrase field="+ querycreate +")))";
+                    bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
 
-                    bundle.putString("query",qparam);
                 }
                 bundle.putString("url", pass);
 
