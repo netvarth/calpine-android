@@ -2373,7 +2373,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                 if (mFrom.equalsIgnoreCase("multiusercheckin")) {
                                     selectedDepartment = Integer.parseInt(departmentId);
                                 } else {
-                                    selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
+                                 //   selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
                                 }
                                 departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
                                 departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
