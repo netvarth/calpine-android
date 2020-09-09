@@ -1204,7 +1204,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     if (LServicesList.size() != 0) {
                         mSpinnertext = LServicesList.get(0).getId();
                     } else {
-
+                        LservicePrepay.setVisibility(View.GONE);
+                        llCheckinLayout.setVisibility(View.GONE);
+                        btn_checkin.setVisibility(View.GONE);
                         mSpinnerService.setVisibility(View.GONE);
                         txt_chooseservice.setVisibility(View.GONE);
                     }
@@ -3747,7 +3749,14 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                 ArrayList<SearchAppoinment> serviceList = new ArrayList<>();
                                 ArrayList<Integer> serviceIds = depResponse.getDepartments().get(0).getServiceIds();
                                 if (mFrom.equalsIgnoreCase("multiusercheckin")) {
-                                    selectedDepartment = Integer.parseInt(departmentId);
+
+                                    if (selectedDepartment == Integer.parseInt(departmentId)){
+
+                                        selectedDepartment = Integer.parseInt(departmentId);
+                                    }
+                                    else {
+
+                                    }
                                 } else {
                                    // selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
                                 }

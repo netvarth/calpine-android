@@ -116,6 +116,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     private boolean isLoading = false;
     private boolean isLastPage = false;
     private boolean fromBusinessId = false;
+    private boolean fromBusinessname = false;
     // limiting to 5 for this tutorial, since total pages in actual API is very large. Feel free to modify.
     private int TOTAL_PAGES = 0;
     private int currentPage = PAGE_START;
@@ -1029,6 +1030,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                 if (cell.getCategory().equalsIgnoreCase("Business Name as")) {
                     fromBusinessId = false;
+                    fromBusinessname = true;
                     String name = cell.getName();
                     if (name.contains("'")) {
                         Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + name);
@@ -1042,7 +1044,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                         querycreate = "title " + "'" + name + "'";
                     } else {
                         sub = "title " + "'" + name + "'";
-                        querycreate = "sector " + "'" + mSector + "'" + " " + sub;
+                        querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
                     }
                 }
 
@@ -1058,6 +1060,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                     querycreate = "(or custom_id:" + "'" + name + "' enc_uid:" +  "'" + name + "')";
                     fromBusinessId = true;
+                    fromBusinessname= false;
 
 
                 }
@@ -1100,9 +1103,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 if(fromBusinessId){
                     query1 = querycreate;
                }
-               else{
-
+                else if (fromBusinessname){
                     query1 = "(and location1:"+ locationRange +"(or (prefix field="+ querycreate +") (phrase field="+ querycreate +")))";
+                }
+               else{
+                    query1 = "(and location1:" + locationRange + querycreate + ")";
 
 //                 query1 = "(and location1:" + locationRange +"(or (prefix field=title"+ querycreate + ")(phrase field=title"+querycreate+")))");
                }
