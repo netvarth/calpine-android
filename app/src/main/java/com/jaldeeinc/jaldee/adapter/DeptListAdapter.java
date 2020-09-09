@@ -609,7 +609,8 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                         iService.putExtra("isPrePayment", searchdetailList.getServices().get(i).isPrePayment());
                                         iService.putExtra("MinPrePaymentAmount", searchdetailList.getServices().get(i).getMinPrePaymentAmount());
                                         iService.putExtra("serviceType", searchdetailList.getServices().get(i).getServiceType());
-                                        iService.putExtra("callingMode", searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode());
+                                        if(searchdetailList.getServices().get(i).getVirtualCallingModes()!=null){
+                                        iService.putExtra("callingMode", searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode());}
                                         activity.startActivity(iService);
 
                                     }

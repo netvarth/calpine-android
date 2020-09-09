@@ -40,8 +40,10 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -63,6 +65,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
+import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
@@ -204,7 +207,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     String serviceSelected;
     String departmentSelected;
     String userSelected;
-    TextView tv_addnote, txtprepayamount;
+    TextView tv_addnote, txtprepayamount,tvEmail;
     static TextView txtnocheckin;
     TextView tv_title;
     String txt_message = "";
@@ -251,6 +254,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     ArrayList<ProviderUserModel> usersList = new ArrayList<ProviderUserModel>();
     String virtualserviceStatus;
     BottomSheetDialog dialogPayment;
+    ImageView editIcon;
+    private EmailEditWindow emailEditWindow;
+    ProfileModel profileDetails;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -310,6 +316,20 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         et_virtualId = findViewById(R.id.virtual_id);
         tvselectedHint = findViewById(R.id.txt_selectedHint);
         tvSelectedProvider = findViewById(R.id.tv_selectedProvider);
+        tvEmail = findViewById(R.id.emailValue);
+        editIcon = findViewById(R.id.edit_icon);
+
+        editIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                emailEditWindow = new EmailEditWindow(mContext,profileDetails);
+                emailEditWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                emailEditWindow.show();
+                DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                int width = (int) (metrics.widthPixels * 1);
+                emailEditWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+            }
+        });
 
         tv_addnote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -2577,8 +2597,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
+                        profileDetails = response.body();
                         phoneNumberValue.setText(response.body().getUserprofile().getPrimaryMobileNo());
                         phoneNumber = phoneNumberValue.getText().toString();
+                        tvEmail.setText(response.body().getUserprofile().getEmail());
 //                        Config.logV("Response--BODY-------------------------" + new Gson().toJson(response));
                         Config.logV("Response--mob-------------------------" + response.body().getUserprofile().getPrimaryMobileNo());
                     } else {
