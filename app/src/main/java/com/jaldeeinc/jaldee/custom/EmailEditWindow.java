@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -18,10 +20,6 @@ import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -36,11 +34,14 @@ public class EmailEditWindow extends Dialog {
     Button btnsave;
     DatabaseHandler db;
     ProfileModel profileDetails;
+    TextView tvErrorMessage;
+    private IMailSubmit iMailSubmit;
 
-    public EmailEditWindow(Context mContext, ProfileModel profileDetails){
+    public EmailEditWindow(Context mContext, ProfileModel profileDetails, IMailSubmit iMailSubmit){
         super(mContext);
         this.context = mContext;
         this.profileDetails = profileDetails;
+        this.iMailSubmit = iMailSubmit;
     }
 
     public void onCreate(Bundle savedInstanceState){
@@ -48,13 +49,46 @@ public class EmailEditWindow extends Dialog {
         setContentView(R.layout.email_info);
         email = findViewById(R.id.email);
         btnsave = findViewById(R.id.btnSave);
+        tvErrorMessage = findViewById(R.id.error_mesg);
+
+
 
         btnsave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               ApiEditProfileDetail();
+
+                checkMail();
             }
         });
+    }
+
+    boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email)
+                .matches();
+    }
+    private void checkMail() {
+
+        String mailid = email.getText().toString();
+
+        if (mailid.trim().length()>0){
+
+            if (isEmailValid(mailid)) {
+
+                ApiEditProfileDetail();
+            }
+            else {
+
+                tvErrorMessage.setVisibility(View.VISIBLE);
+                tvErrorMessage.setText("Enter valid mail Id");
+            }
+
+        }
+        else {
+
+            tvErrorMessage.setVisibility(View.VISIBLE);
+            tvErrorMessage.setText("This field is required");
+        }
+
     }
 
 
@@ -128,6 +162,9 @@ public class EmailEditWindow extends Dialog {
                             SharedPreference.getInstance(context).setValue("email", email.getText().toString());
 
                             Toast.makeText(context, "Email has been updated successfully ", Toast.LENGTH_LONG).show();
+                            iMailSubmit.mailUpdated();
+                            dismiss();
+
                            // getFragmentManager().popBackStackImmediate();
                            /* ProfileFragment pfFragment = new ProfileFragment();
                             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();

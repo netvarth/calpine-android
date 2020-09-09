@@ -664,7 +664,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                 Config.logV("SEARCH TXT--------------88252-" + mSearchtxt);
                             }
                             else {
-                                mSearchtxt = "";
+//                                mSearchtxt = "";
                             }
 
 
@@ -897,8 +897,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 }
 
                 if (cell.getCategory().equalsIgnoreCase("Business Name as")) {
-
-
+                    fromBusinessId = false;
                     String name = cell.getName();
                     if (name.contains("'")) {
                         Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + name);
@@ -908,10 +907,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
 
                     if (mSector.equalsIgnoreCase("All")) {
-                        querycreate = "title:" + "'" + name + "'";
+                        querycreate = "title " + "'" + name + "'";
                     } else {
-                        sub = "title:" + "'" + name + "'";
-                        querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
+                        sub = "title " + "'" + name + "'";
+                        querycreate = "sector " + "'" + mSector + "'" + " " + sub;
                     }
                 }
 
@@ -950,7 +949,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 if (fromBusinessId) {
                     bundle.putString("query", querycreate);
                 } else {
-                    bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
+
+                    String qparam = "(and location1:"+ locationRange +"(or (prefix field="+ querycreate +") (phrase field="+ querycreate +")))";
+
+                    bundle.putString("query",qparam);
                 }
                 bundle.putString("url", pass);
 

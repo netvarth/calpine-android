@@ -55,10 +55,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
 import com.jaldeeinc.jaldee.adapter.CustomSpinnerAdapter;
-import com.jaldeeinc.jaldee.adapter.CustomSpinnerAdapterAppointment;
 import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.adapter.MultipleFamilyMemberAdapter;
 import com.jaldeeinc.jaldee.common.Config;
@@ -76,7 +76,6 @@ import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
-import com.jaldeeinc.jaldee.response.SearchAppoinment;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
@@ -139,7 +138,7 @@ import retrofit2.Response;
  * Created by sharmila on 6/8/18.
  */
 
-public class CheckIn extends AppCompatActivity implements PaymentResultWithDataListener {
+public class CheckIn extends AppCompatActivity implements PaymentResultWithDataListener, IMailSubmit {
     ArrayList<String> couponArraylist = new ArrayList<String>();
     String phoneNumber;
     int providerId;
@@ -230,6 +229,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     private int GALLERY = 1, CAMERA = 2;
     RecyclerView recycle_image_attachment;
 
+    private IMailSubmit iMailSubmit;
     String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
     ArrayList<String> imagePathList = new ArrayList<>();
@@ -278,6 +278,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         applycouponbtn = findViewById(R.id.applybtn);
         LcouponCheckin = findViewById(R.id.couponCheckin);
         mActivity = this;
+        iMailSubmit = this;
         recycle_family = findViewById(R.id.recycle_family);
         btn_checkin = findViewById(R.id.btn_checkin);
         editpartysize = findViewById(R.id.editpartysize);
@@ -322,7 +323,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         editIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                emailEditWindow = new EmailEditWindow(mContext,profileDetails);
+                emailEditWindow = new EmailEditWindow(mContext,profileDetails, iMailSubmit);
                 emailEditWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 emailEditWindow.show();
                 DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
@@ -1392,6 +1393,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     }
 
     static String mDate;
+
+    @Override
+    public void mailUpdated() {
+
+        ApiGetProfileDetail();
+    }
 
 
     public static class MyDatePickerDialog extends DialogFragment {

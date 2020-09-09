@@ -59,6 +59,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
@@ -149,7 +150,7 @@ import retrofit2.Response;
  * Created by sharmila on 6/8/18.
  */
 
-public class Appointment extends AppCompatActivity implements PaymentResultWithDataListener, ISelectSlotInterface {
+public class Appointment extends AppCompatActivity implements PaymentResultWithDataListener, ISelectSlotInterface, IMailSubmit {
 
     ArrayList<String> couponArraylist = new ArrayList<>();
 
@@ -301,6 +302,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     ImageView editIcon;
     private EmailEditWindow emailEditWindow;
     ProfileModel profileDetails;
+    private IMailSubmit iMailSubmit;
 
 
     @Override
@@ -325,6 +327,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         LcouponCheckin = findViewById(R.id.couponCheckin);
         mActivity = this;
         iSelectSlotInterface = this;
+        iMailSubmit = this;
         recycle_family = findViewById(R.id.recycle_family);
         btn_checkin = findViewById(R.id.btn_checkin);
         editpartysize = findViewById(R.id.editpartysize);
@@ -381,7 +384,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         editIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                emailEditWindow = new EmailEditWindow(mContext,profileDetails);
+                emailEditWindow = new EmailEditWindow(mContext,profileDetails,iMailSubmit);
                 emailEditWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 emailEditWindow.show();
                 DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
@@ -4920,6 +4923,11 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         }
     }
 
+    @Override
+    public void mailUpdated() {
+
+        ApiGetProfileDetail();
+    }
 }
 
 
