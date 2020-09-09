@@ -2371,9 +2371,15 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                 ArrayList<SearchService> serviceList = new ArrayList<>();
                                 ArrayList<Integer> serviceIds = depResponse.getDepartments().get(0).getServiceIds();
                                 if (mFrom.equalsIgnoreCase("multiusercheckin")) {
-                                    selectedDepartment = Integer.parseInt(departmentId);
+                                    if (selectedDepartment == Integer.parseInt(departmentId)){
+
+                                        selectedDepartment = Integer.parseInt(departmentId);
+                                    }
+                                    else {
+
+                                    }
                                 } else {
-                                    selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
+                                 //   selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
                                 }
                                 departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
                                 departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
