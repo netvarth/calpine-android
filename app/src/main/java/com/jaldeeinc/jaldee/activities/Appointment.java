@@ -293,6 +293,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     String pickedDate = "";
     String timeSlot = "";
     int selectedShcdId;
+    LinearLayout llCheckinLayout;
 
 
     @Override
@@ -363,6 +364,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         llCalender = findViewById(R.id.ll_calender);
         slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
         slideRight = AnimationUtils.loadAnimation(this, R.anim.slide_out_right);
+        llCheckinLayout = findViewById(R.id.checkinlayout);
 
 
         // to Empty previous selected date in pref's
@@ -954,6 +956,12 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         }
 
                     }
+                    else {
+
+
+                        llCoupons.setVisibility(View.GONE);
+                        btn_checkin.setVisibility(View.GONE);
+                    }
 
                 } catch (Resources.NotFoundException e) {
                     e.printStackTrace();
@@ -1005,6 +1013,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     if (LServicesList.size() == 0) {
                         mSpinnerService.setVisibility(View.GONE);
                         btn_checkin.setVisibility(View.GONE);
+                        llCoupons.setVisibility(View.GONE);
                         txt_chooseservice.setVisibility(View.GONE);
                         Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
                     } else {
@@ -1014,39 +1023,40 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         mSpinnertext = ((SearchAppoinment) LServicesList.get(0)).getId();
                         livetrack = LServicesList.get(0).getLivetrack();
                         mSpinnerService.setVisibility(View.VISIBLE);
+                        llCoupons.setVisibility(View.VISIBLE);
                         txt_chooseservice.setVisibility(View.VISIBLE);
                         btn_checkin.setVisibility(View.VISIBLE);
 
                     }
                     ApiSearchUsers(selectedDepartment);
-                    if (doctResponse.size() > 0) {
-                        LUsersList.clear();
-                        LUsersList.addAll(doctResponse);
-                        if (LUsersList.size() == 0) {
-                            mSpinnerDoctor.setVisibility(View.GONE);
-                            //  btn_checkin.setVisibility(View.GONE);
-                            txt_choosedoctor.setVisibility(View.GONE);
-                            //  Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
-                        } else {
-                            ArrayAdapter<SearchUsers> adapter = new ArrayAdapter<SearchUsers>(mActivity, android.R.layout.simple_spinner_dropdown_item, LUsersList);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            mSpinnerDoctor.setAdapter(adapter);
-//                    if(mFrom.equalsIgnoreCase("multiusercheckin")){
-//                        userSpinnertext = userId;
+//                    if (doctResponse.size() > 0) {
+//                        LUsersList.clear();
+//                        LUsersList.addAll(doctResponse);
+//                        if (LUsersList.size() == 0) {
+//                            mSpinnerDoctor.setVisibility(View.GONE);
+//                            //  btn_checkin.setVisibility(View.GONE);
+//                            txt_choosedoctor.setVisibility(View.GONE);
+//                            //  Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
+//                        } else {
+//                            ArrayAdapter<SearchUsers> adapter = new ArrayAdapter<SearchUsers>(mActivity, android.R.layout.simple_spinner_dropdown_item, LUsersList);
+//                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                            mSpinnerDoctor.setAdapter(adapter);
+////                    if(mFrom.equalsIgnoreCase("multiusercheckin")){
+////                        userSpinnertext = userId;
+////                    }
+////                    else{
+//                            userSpinnertext = ((SearchUsers) LUsersList.get(0)).getId();
+//
+////                }
+//                            //  livetrack = LServicesList.get(0).getLivetrack();
+//                            mSpinnerDoctor.setVisibility(View.VISIBLE);
+//                            txt_choosedoctor.setVisibility(View.VISIBLE);
+//                            //   btn_checkin.setVisibility(View.VISIBLE);
+//
+//                        }
+//                    } else {
+//                        userSpinnertext = 0;
 //                    }
-//                    else{
-                            userSpinnertext = ((SearchUsers) LUsersList.get(0)).getId();
-
-//                }
-                            //  livetrack = LServicesList.get(0).getLivetrack();
-                            mSpinnerDoctor.setVisibility(View.VISIBLE);
-                            txt_choosedoctor.setVisibility(View.VISIBLE);
-                            //   btn_checkin.setVisibility(View.VISIBLE);
-
-                        }
-                    } else {
-                        userSpinnertext = 0;
-                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1092,6 +1102,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     if (LServicesList.size() == 0) {
                         mSpinnerService.setVisibility(View.GONE);
                         btn_checkin.setVisibility(View.GONE);
+                        llCoupons.setVisibility(View.GONE);
+                        llCheckinLayout.setVisibility(View.GONE);
+                        LservicePrepay.setVisibility(View.GONE);
                         txt_chooseservice.setVisibility(View.GONE);
                         Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
                     } else {
@@ -1100,8 +1113,11 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         mSpinnerService.setAdapter(adapter);
                         mSpinnertext = ((SearchAppoinment) LServicesList.get(0)).getId();
                         livetrack = LServicesList.get(0).getLivetrack();
+                        llCheckinLayout.setVisibility(View.VISIBLE);
+                        LservicePrepay.setVisibility(View.VISIBLE);
                         mSpinnerService.setVisibility(View.VISIBLE);
                         txt_chooseservice.setVisibility(View.VISIBLE);
+                        llCoupons.setVisibility(View.VISIBLE);
                         btn_checkin.setVisibility(View.VISIBLE);
 
                     }
@@ -1117,6 +1133,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         if (globalServiceList.size() == 0) {
                             mSpinnerService.setVisibility(View.GONE);
                             btn_checkin.setVisibility(View.GONE);
+                            llCoupons.setVisibility(View.GONE);
+                            llCheckinLayout.setVisibility(View.GONE);
+                            LservicePrepay.setVisibility(View.GONE);
                             txt_chooseservice.setVisibility(View.GONE);
                             Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
                         } else {
@@ -1125,8 +1144,11 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             mSpinnerService.setAdapter(adapter);
                             mSpinnertext = ((SearchAppoinment) globalServiceList.get(0)).getId();
                             livetrack = globalServiceList.get(0).getLivetrack();
+                            LservicePrepay.setVisibility(View.VISIBLE);
+                            llCheckinLayout.setVisibility(View.VISIBLE);
                             mSpinnerService.setVisibility(View.VISIBLE);
                             txt_chooseservice.setVisibility(View.VISIBLE);
+                            llCoupons.setVisibility(View.GONE);
                             btn_checkin.setVisibility(View.VISIBLE);
 
                         }
@@ -1150,6 +1172,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     LServicesList.addAll(globalServiceList);
                     mSpinnerService.setVisibility(View.VISIBLE);
                     txt_chooseservice.setVisibility(View.VISIBLE);
+                    LservicePrepay.setVisibility(View.VISIBLE);
+                    llCheckinLayout.setVisibility(View.VISIBLE);
                     btn_checkin.setVisibility(View.VISIBLE);
                     Config.logV("mServicesList" + LServicesList.size());
                     CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
@@ -3128,6 +3152,11 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 mSpinnerService.setAdapter(adapter);
                             }
+                            else {
+
+                                llCoupons.setVisibility(View.GONE);
+                                btn_checkin.setVisibility(View.GONE);
+                            }
                         }
                     }
                 } catch (Exception e) {
@@ -3783,6 +3812,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                                 mSpinnerService.setVisibility(View.GONE);
                                 txt_chooseservice.setVisibility(View.GONE);
+                                btn_checkin.setVisibility(View.GONE);
+                                llCoupons.setVisibility(View.GONE);
                                 if (LServicesList.size() == 1) {
                                     // String firstWord = "Check-in for ";
                                     String firstWord = Word_Change;
@@ -3795,6 +3826,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     tv_checkin_service.setText(spannable);
+                                    btn_checkin.setVisibility(View.VISIBLE);
+                                    llCoupons.setVisibility(View.VISIBLE);
                                     mSpinnertext = LServicesList.get(0).getId();
                                     livetrack = LServicesList.get(0).getLivetrack();
                                     serviceSelected = LServicesList.get(0).getName();
@@ -4034,11 +4067,11 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         Date c = Calendar.getInstance().getTime();
         System.out.println("Current time => " + c);
         String formattedDate = null;
-        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
+//        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 //
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             formattedDate = df.format(c);
-        }
+//        }
 
         JSONObject qjsonObj = new JSONObject();
         JSONObject queueobj = new JSONObject();

@@ -51,60 +51,66 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             >
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/ll_depName"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:orientation="vertical">
+                android:orientation="horizontal">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Department"
+                    android:text="Department Name :  "
                     android:textSize="@dimen/dimen_16sp"
-                    android:id="@+id/txtdepartment"
                     android:textColor="@color/black"
                     android:textStyle="bold"/>
 
-<!--                <TextView-->
-<!--                    android:id="@+id/txtdepartment"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="@dimen/padding5"-->
-<!--                    android:fontFamily="@font/customfont"-->
-<!--                    android:text="Department"-->
-<!--                    android:textColor="@color/title_grey"-->
-<!--                    android:textSize="@dimen/txtsize_12"-->
-<!--                    android:textStyle="bold" />-->
+                <TextView
+                    android:id="@+id/txtdepartment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textSize="@dimen/txtsize_14"
+                    android:textStyle="bold"
+                    android:textColor="@color/dark_blue">
+
+                </TextView>
+
+
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/LDeptCode"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:orientation="vertical">
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:orientation="horizontal">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Department Code"
+                    android:text="Department Code : "
                     android:textSize="@dimen/dimen_16sp"
-                    android:id="@+id/txtdeptCode"
                     android:textColor="@color/black"
                     android:textStyle="bold"/>
 
-<!--                <TextView-->
-<!--                    android:id="@+id/txtdeptCode"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="@dimen/padding5"-->
-<!--                    android:fontFamily="@font/customfont"-->
-<!--                    android:text="Code"-->
-<!--                    android:textColor="@color/title_grey"-->
-<!--                    android:textSize="@dimen/txtsize_12"-->
-<!--                    android:textStyle="bold" />-->
+                <TextView
+                    android:id="@+id/txtdeptCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/dark_blue"
+                    android:textSize="@dimen/txtsize_14">
+
+                </TextView>
+
             </LinearLayout>
         </LinearLayout>
 <!--        <View-->
@@ -112,16 +118,31 @@
 <!--            android:layout_height="2dp"-->
 <!--            android:background="@color/opaque_title_grey"/>-->
 
-        <TextView
-            android:id="@+id/txt_doctors"
+        <LinearLayout
+            android:id="@+id/ll_DeptDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Doctors:"
-            android:textSize="@dimen/dimen_16sp"
-            android:textColor="@color/black"
-            android:layout_marginTop="10dp"
-            android:textStyle="bold"
-            />
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Department Description : "
+                android:textSize="@dimen/dimen_16sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/txt_doctors"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="@dimen/dimen_16sp"
+                android:textColor="@color/dark_blue"
+                />
+
+        </LinearLayout>
+
 
     </LinearLayout>
     <TextView

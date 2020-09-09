@@ -1028,7 +1028,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 }
 
                 if (cell.getCategory().equalsIgnoreCase("Business Name as")) {
-
+                    fromBusinessId = false;
                     String name = cell.getName();
                     if (name.contains("'")) {
                         Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + name);
@@ -1039,10 +1039,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                     if (mSector.equalsIgnoreCase("All")) {
-                        querycreate = "title:" + "'" + name + "'";
+                        querycreate = "title " + "'" + name + "'";
                     } else {
-                        sub = "title:" + "'" + name + "'";
-                        querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
+                        sub = "title " + "'" + name + "'";
+                        querycreate = "sector " + "'" + mSector + "'" + " " + sub;
                     }
                 }
 
@@ -1101,7 +1101,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     query1 = querycreate;
                }
                else{
-                 query1 = "(and location1:" + locationRange + querycreate + ")";}
+
+                    query1 = "(and location1:"+ locationRange +"(or (prefix field="+ querycreate +") (phrase field="+ querycreate +")))";
+
+//                 query1 = "(and location1:" + locationRange +"(or (prefix field=title"+ querycreate + ")(phrase field=title"+querycreate+")))");
+               }
                 //  final String pass1 = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
                 final String pass1 = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
 
@@ -1401,6 +1405,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         params.put("size", "10");
         params.put("q.parser", "structured");
+        params.put("q.options","");
         params.put("sort", sort);
         params.put("expr.distance", mPass);
         params.put("return", "_all_fields,distance");

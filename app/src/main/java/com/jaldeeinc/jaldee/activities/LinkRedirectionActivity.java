@@ -19,8 +19,6 @@ public class LinkRedirectionActivity extends AppCompatActivity {
     String path;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,8 +28,8 @@ public class LinkRedirectionActivity extends AppCompatActivity {
         if (extras != null) {
             keyWord = extras.getString("detail_id", "");
             path = extras.getString("path", "");
-            Log.i("detailsofDetail",keyWord);
-            Log.i("detailsofDetail",path);
+            Log.i("detailsofDetail", keyWord);
+            Log.i("detailsofDetail", path);
         }
 
         if (keyWord != null) {
@@ -41,22 +39,26 @@ public class LinkRedirectionActivity extends AppCompatActivity {
             bundle.putString("home", "home");
             searchDetailViewFragment.setArguments(bundle);
             final FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container, searchDetailViewFragment).commit();
-        }
-        else {
+            fragmentManager.beginTransaction().replace(R.id.mainlayout, searchDetailViewFragment).commit();
+        } else {
 
-            Intent homeIntent = new Intent(LinkRedirectionActivity.this,Home.class);
+            Intent homeIntent = new Intent(LinkRedirectionActivity.this, Home.class);
             startActivity(homeIntent);
             finish();
         }
     }
 
+
     @Override
     public void onBackPressed() {
-
-        Intent homeIntent = new Intent(LinkRedirectionActivity.this,Home.class);
-        startActivity(homeIntent);
-        finish();
+//        if (getFragmentManager().getBackStackEntryCount() > 0) {
+//            getFragmentManager().popBackStack();
+//        } else {
+            Intent homeIntent = new Intent(LinkRedirectionActivity.this, Home.class);
+            startActivity(homeIntent);
+            finish();
+//        }
     }
+
 
 }

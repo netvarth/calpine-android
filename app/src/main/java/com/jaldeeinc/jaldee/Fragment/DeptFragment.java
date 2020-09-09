@@ -86,6 +86,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     List<DepartmentUserSearchModel> usersSearchList = new ArrayList<>();
     Dialog mDialog;
     DepartmentUserSearchModel userSearch;
+    LinearLayout llDeptName,llDeptCode,llDeptDesc;
     Boolean firstCouponAvailable, couponAvailable;
     Boolean fromDoctors = false;
     ArrayList<ProviderUserModel> usersList;
@@ -133,6 +134,9 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         mservice_searchresult = (RecyclerView) row.findViewById(R.id.service_searchresult);
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
         tv_services = row.findViewById(R.id.txt_services);
+        llDeptCode = row.findViewById(R.id.LDeptCode);
+        llDeptName = row.findViewById(R.id.ll_depName);
+        llDeptDesc = row.findViewById(R.id.ll_DeptDesc);
         tv_departmentName = row.findViewById(R.id.txtdepartment);
         tv_departmentCode = row.findViewById(R.id.txtdeptCode);
         tv_doctors = row.findViewById(R.id.txt_doctors);
@@ -152,22 +156,34 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         tv_title.setText(businessName);
 
         if (fromDoctors) {
+            llDeptDesc.setVisibility(View.GONE);
+            llDeptName.setVisibility(View.GONE);
+            llDeptCode.setVisibility(View.GONE);
             tv_departmentName.setVisibility(View.GONE);
             tv_departmentCode.setVisibility(View.GONE);
             tv_services.setVisibility(View.GONE);
             tv_doctors.setVisibility(View.GONE);
         } else {
             if (departmentServices != null) {
-                tv_departmentCode.setText(departmentServices.getDepartmentCode());
-                tv_departmentName.setText(departmentServices.getDepartmentName());
-                if (departmentServices.getUsers().size() > 0) {
-                    tv_doctors.setVisibility(View.VISIBLE);
-                    tv_doctors.setText(userTerminology+ " : " + departmentServices.getUsers().size());
-                    tv_services.setVisibility(View.GONE);
-                } else {
-                    tv_doctors.setVisibility(View.GONE);
-                    tv_services.setVisibility(View.VISIBLE);
-                    tv_services.setText("Services >");
+                llDeptDesc.setVisibility(View.VISIBLE);
+                llDeptName.setVisibility(View.VISIBLE);
+                llDeptCode.setVisibility(View.VISIBLE);
+                if (departmentServices.getDepartmentCode() != null) {
+                    tv_departmentCode.setText(departmentServices.getDepartmentCode());
+                }
+                if (departmentServices.getDepartmentName() != null) {
+                    tv_departmentName.setText(departmentServices.getDepartmentName());
+                }
+                if (departmentServices.getUsers() != null) {
+                    if (departmentServices.getUsers().size() > 0) {
+                        tv_doctors.setVisibility(View.VISIBLE);
+                        tv_doctors.setText(departmentServices.getUsers().size() + userTerminology);
+                        tv_services.setVisibility(View.GONE);
+                    } else {
+                        tv_doctors.setVisibility(View.GONE);
+                        tv_services.setVisibility(View.VISIBLE);
+                        tv_services.setText("Services >");
+                    }
                 }
                 tv_services.setOnClickListener(new View.OnClickListener() {
                     @Override
