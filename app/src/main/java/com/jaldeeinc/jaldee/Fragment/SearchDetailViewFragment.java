@@ -1036,6 +1036,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     else if(response.code() == 403){
                         Toast.makeText(mContext,"Please complete the details of profile name,location and working hours to continue",Toast.LENGTH_LONG).show();
                     }
+                    else if(response.code() == 404){
+                        Toast.makeText(mContext, "The account doesn't exist", Toast.LENGTH_SHORT).show();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
