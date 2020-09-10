@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
@@ -302,11 +303,14 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                             }
                         }
                     }
-//                    else if (response.code() == 404){
-//
+                    else if (response.code() == 404){
+
+                        if (mDialog.isShowing())
+                            Config.closeDialog(getActivity(), mDialog);
+                        Toast.makeText(mContext,"Unable to load providers at this moment..Try again later.",Toast.LENGTH_SHORT).show();
 //                        loadBusinessProfile(idAppts, mSearchScheduleList, mSearchQueueList, (sIndex + 1));
-//
-//                    }
+
+                    }
                 } catch (Exception e) {
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);

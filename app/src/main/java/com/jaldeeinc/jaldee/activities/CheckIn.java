@@ -3327,7 +3327,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 //            Log.i("Success1111",  new Gson().toJson(paymentData));
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
             new PaymentGateway(this.mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
-            Toast.makeText(this.mContext, "Payment Successful. Payment Id:" + razorpayPaymentID, Toast.LENGTH_LONG).show();
+            Toast.makeText(this.mContext, "Payment Successful", Toast.LENGTH_LONG).show();
             paymentFinished();
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentSuccess", e);

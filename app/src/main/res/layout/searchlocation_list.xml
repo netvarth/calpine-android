@@ -692,6 +692,7 @@
                 android:layout_marginLeft="@dimen/dimen_2dp"
                 android:layout_marginRight="@dimen/dimen_2dp"
                 android:background="@color/white"
+                android:layout_marginTop="@dimen/padding5"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/dimen_5dp"
                 android:paddingRight="@dimen/dimen_5dp"
@@ -845,6 +846,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_2dp"
                 android:layout_marginRight="@dimen/dimen_2dp"
+                android:layout_marginTop="@dimen/padding5"
                 android:background="@color/white"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/dimen_5dp"
@@ -919,7 +921,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/padding5"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -983,7 +985,6 @@
                     android:layout_weight="0.5"
                     android:background="@color/dark_blue"
                     android:gravity="center"
-                    android:layout_marginTop="@dimen/padding5"
                     android:paddingLeft="@dimen/padding3"
                     android:paddingRight="@dimen/padding3"
                     android:text="Donate"

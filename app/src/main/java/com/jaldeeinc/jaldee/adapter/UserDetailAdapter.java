@@ -129,7 +129,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
         holder.btn_donations.setTypeface(tyface);
 
         for (int i = 0; i < mCheckInMessage.size(); i++) {
-            holder.tv_checkin.setVisibility(View.VISIBLE);
+            holder.tv_checkin.setVisibility(View.GONE);
             //  myViewHolder.tv_checkin.setText("You have "+mCheckInMessage.get(i).getmAllSearch_checkIn().size()+" Check-In at this location");
 //                Config.logV("Locationttt-----kkkk###########@@@@@@" + searchLoclist.getId());
             Config.logV("Locationttt-----aaaa###########@@@@@@" + mCheckInMessage.get(i).getmAllSearch_checkIn().size());
