@@ -81,7 +81,7 @@ public class RazorpayPayment{
         razorMap.put("razorpay_signature", razorpayModel.getRazorpay_signature());
         razorMap.put("status", razorpayModel.getStatus());
         razorMap.put("txnid", razorpayModel.getTxnid());
-        Toast.makeText(mContext, "Payment Successful", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(mContext, "Payment Successful", Toast.LENGTH_SHORT).show();
 //        Call<String> call = apiService.verifyRazorpayPayment(razorMap);
 //        call.enqueue(new Callback<String>() {
 //            @Override
@@ -106,7 +106,7 @@ public class RazorpayPayment{
 //                Toast.makeText(mContext, "Error in payment: " + t.getMessage(), Toast.LENGTH_LONG);
 //            }
 //        });
-        Toast.makeText(mContext, "Payment Successful", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(mContext, "Payment Successful", Toast.LENGTH_SHORT).show();
        // Call<String> call = apiService.verifyRazorpayPayment(razorMap);
 //        call.enqueue(new Callback<String>() {
 //            @Override
