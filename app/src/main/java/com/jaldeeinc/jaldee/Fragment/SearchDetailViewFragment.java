@@ -1033,6 +1033,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
                         mBottomDialog.dismiss();
                     }
+                    else if(response.code() == 403){
+                        Toast.makeText(mContext,"Please complete the details of profile name,location and working hours to continue",Toast.LENGTH_LONG).show();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
