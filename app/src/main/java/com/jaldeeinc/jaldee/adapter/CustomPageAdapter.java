@@ -52,9 +52,11 @@ public class CustomPageAdapter extends PagerAdapter {
             url = url.replaceAll(" ", "%20");
         }
 
-        final String finalUrl = url;
+        String link =  url.replace("http:", "https:");
 
-        Picasso.with(mContext).load(url).fit().centerInside().into(imageView, new Callback() {
+        final String finalUrl = link;
+
+        Picasso.with(mContext).load(link).fit().centerInside().into(imageView, new Callback() {
             @Override
             public void onSuccess() {
 
