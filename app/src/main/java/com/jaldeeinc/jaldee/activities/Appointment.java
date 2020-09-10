@@ -1128,7 +1128,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         llCheckinLayout.setVisibility(View.GONE);
                         LservicePrepay.setVisibility(View.GONE);
                         txt_chooseservice.setVisibility(View.GONE);
-                        Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Appointment.this, "The selected provider doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
                     } else {
                         CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -1255,7 +1255,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             txt_chooseservice.setVisibility(View.GONE);
                             llCheckinLayout.setVisibility(View.GONE);
                             llCoupons.setVisibility(View.GONE);
-                            Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Appointment.this, "The selected provider doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
                         } else {
                             CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -4365,11 +4365,14 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                 try {
                                     dialog = new BottomSheetDialog(mContext);
                                     dialog.setContentView(R.layout.prepayment);
+                                    dialog.setCancelable(false);
                                     dialog.show();
 
 
                                     Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
                                     Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
+                                    ImageView ivClose = dialog.findViewById(R.id.iv_close);
+                                    ivClose.setVisibility(View.VISIBLE);
                                     if (showPaytmWallet) {
                                         btn_paytm.setVisibility(View.VISIBLE);
                                     } else {
@@ -4392,6 +4395,13 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     txtamt.setTypeface(tyface1);
+                                    ivClose.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            finish();
+                                        }
+                                    });
                                     btn_payu.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
