@@ -1158,190 +1158,67 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             e.printStackTrace();
         }
 
+        try {
+            if (mScheduleList != null) {
+                if (online_presence) {
+                    if (mScheduleList.get(position).isCheckinAllowed()) {
+                        myViewHolder.LAppointment.setVisibility(View.VISIBLE);
 
-        if (mScheduleList != null) {
-            if (online_presence) {
-                if (mScheduleList.get(position).isCheckinAllowed()) {
-                    myViewHolder.LAppointment.setVisibility(View.VISIBLE);
-
-                    if (mScheduleList.get(position).getAvailableSchedule().isOpenNow()) {
-                        myViewHolder.tvAvailDate.setText("Available Today");
+//                        if (mScheduleList.get(position).getAvailableSchedule().isOpenNow()) {
+//                            myViewHolder.tvAvailDate.setText("Available Today");
+//                        } else {
+//                            myViewHolder.tvAvailDate.setText("Available on " + "\n" + mScheduleList.get(position).getAvailableSchedule().getAvailableDate());
+//                        }
+                        myViewHolder.tvAvailDate.setVisibility(View.GONE);
+                        myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
+                        myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
                     } else {
-                        myViewHolder.tvAvailDate.setText("Available on " + "\n" + mScheduleList.get(position).getAvailableSchedule().getAvailableDate());
+                        myViewHolder.LAppointment.setVisibility(View.GONE);
+                        myViewHolder.LApp_Services.setVisibility(View.GONE);
+                        myViewHolder.tvAvailDate.setVisibility(View.GONE);
+                        myViewHolder.txt_apptservices.setVisibility(View.GONE);
+                        myViewHolder.txtapptSeeAll.setVisibility(View.GONE);
                     }
-                    myViewHolder.tvAvailDate.setVisibility(View.GONE);
-                    myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
-                    myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
                 } else {
                     myViewHolder.LAppointment.setVisibility(View.GONE);
                     myViewHolder.LApp_Services.setVisibility(View.GONE);
-                    myViewHolder.tvAvailDate.setVisibility(View.GONE);
                     myViewHolder.txt_apptservices.setVisibility(View.GONE);
                     myViewHolder.txtapptSeeAll.setVisibility(View.GONE);
+                    myViewHolder.tvAvailDate.setVisibility(View.GONE);
                 }
-            } else {
-                myViewHolder.LAppointment.setVisibility(View.GONE);
-                myViewHolder.LApp_Services.setVisibility(View.GONE);
-                myViewHolder.txt_apptservices.setVisibility(View.GONE);
-                myViewHolder.txtapptSeeAll.setVisibility(View.GONE);
-                myViewHolder.tvAvailDate.setVisibility(View.GONE);
-            }
 
-            ArrayList<SearchAppointmentDepartmentServices> apptServicesList = new ArrayList<>();
-            for (int i = 0; i < aServicesList.size(); i++) {
-                if (aServicesList.get(i).getServices() != null) {
-                    apptServicesList.addAll(aServicesList.get(i).getServices());
-                } else {
-
-                    SearchAppointmentDepartmentServices objApptService = new SearchAppointmentDepartmentServices();
-                    objApptService.setName(aServicesList.get(i).getName());
-                    objApptService.setServiceDuration(aServicesList.get(i).getServiceDuration());
-                    objApptService.setTotalAmount(aServicesList.get(i).getTotalAmount());
-                    objApptService.setDescription(aServicesList.get(i).getDescription());
-                    objApptService.setServicegallery(aServicesList.get(i).getServicegallery());
-                    objApptService.setTaxable(aServicesList.get(i).isTaxable());
-                    objApptService.setPrePayment(aServicesList.get(i).isPrePayment());
-                    objApptService.setMinPrePaymentAmount(aServicesList.get(i).getMinPrePaymentAmount());
-                    objApptService.setDepartmentName(aServicesList.get(i).getDepartmentName());
-                    objApptService.setServiceType(aServicesList.get(i).getServiceType());
-                    apptServicesList.add(objApptService);
-                }
-            }
-
-            if (apptServicesList.size() > 0) {
-                if (apptServicesList.size() == 1) {
-
-                    myViewHolder.tvAppService1.setVisibility(View.VISIBLE);
-                    myViewHolder.tvAppService2.setVisibility(View.GONE);
-                    myViewHolder.tvAppSeeAll.setVisibility(View.GONE);
-                    String name = apptServicesList.get(0).getName();
-                    name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-                    myViewHolder.tvAppService1.setText(name);
-                    try {
-                        if (apptServicesList.get(0).getServiceType() != null) {
-                            if (apptServicesList.get(0).getServiceType().equalsIgnoreCase("virtualservice")) {
-                                if (apptServicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
-                                    myViewHolder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
-                                    myViewHolder.tvAppService1.setCompoundDrawablePadding(10);
-                                } else if (apptServicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                                    myViewHolder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
-                                    myViewHolder.tvAppService1.setCompoundDrawablePadding(10);
-                                } else if (apptServicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                    myViewHolder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
-                                    myViewHolder.tvAppService1.setCompoundDrawablePadding(10);
-                                } else if (apptServicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
-                                    myViewHolder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
-                                    myViewHolder.tvAppService1.setCompoundDrawablePadding(10);
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    myViewHolder.tvAppService1.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            appServInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), apptServicesList.get(0));
-                            appServInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            appServInfoDialog.show();
-                            DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
-                            int width = (int) (metrics.widthPixels * 1);
-                            appServInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-                        }
-                    });
-
-
-                } else if (apptServicesList.size() >= 2 && apptServicesList.get(0).getName().length() <= 20 && apptServicesList.get(1).getName().length() <= 20) {
-
-                    if (apptServicesList.size() == 2) {
-                        myViewHolder.tvAppService1.setVisibility(View.VISIBLE);
-                        myViewHolder.tvAppService2.setVisibility(View.VISIBLE);
-                        myViewHolder.tvAppSeeAll.setVisibility(View.GONE);
-                        String name1 = apptServicesList.get(0).getName();
-                        name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
-                        myViewHolder.tvAppService1.setText(name1 + ",");
-                        try {
-                            if (apptServicesList.get(0).getServiceType() != null) {
-                                if (apptServicesList.get(0).getServiceType().equalsIgnoreCase("virtualservice")) {
-                                    if (apptServicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
-                                        myViewHolder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
-                                        myViewHolder.tvAppService1.setCompoundDrawablePadding(10);
-                                    } else if (apptServicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                                        myViewHolder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
-                                        myViewHolder.tvAppService1.setCompoundDrawablePadding(10);
-                                    } else if (apptServicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                        myViewHolder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
-                                        myViewHolder.tvAppService1.setCompoundDrawablePadding(10);
-                                    } else if (apptServicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
-                                        myViewHolder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
-                                        myViewHolder.tvAppService1.setCompoundDrawablePadding(10);
-                                    }
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        String name2 = apptServicesList.get(1).getName();
-                        name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
-                        myViewHolder.tvAppService2.setText(name2);
-                        try {
-                            if (apptServicesList.get(1).getServiceType() != null) {
-                                if (apptServicesList.get(1).getServiceType().equalsIgnoreCase("virtualservice")) {
-                                    if (apptServicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
-                                        myViewHolder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
-                                        myViewHolder.tvAppService2.setCompoundDrawablePadding(10);
-                                    } else if (apptServicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                                        myViewHolder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
-                                        myViewHolder.tvAppService2.setCompoundDrawablePadding(10);
-                                    } else if (apptServicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                        myViewHolder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
-                                        myViewHolder.tvAppService2.setCompoundDrawablePadding(10);
-                                    } else if (apptServicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
-                                        myViewHolder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
-                                        myViewHolder.tvAppService2.setCompoundDrawablePadding(10);
-                                    }
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        myViewHolder.tvAppService1.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                appServInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), apptServicesList.get(0));
-                                appServInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                appServInfoDialog.show();
-                                DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
-                                int width = (int) (metrics.widthPixels * 1);
-                                appServInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            }
-                        });
-
-                        myViewHolder.tvAppService2.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                appServInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), apptServicesList.get(1));
-                                appServInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                appServInfoDialog.show();
-                                DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
-                                int width = (int) (metrics.widthPixels * 1);
-                                appServInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-                            }
-                        });
-
+                ArrayList<SearchAppointmentDepartmentServices> apptServicesList = new ArrayList<>();
+                for (int i = 0; i < aServicesList.size(); i++) {
+                    if (aServicesList.get(i).getServices() != null) {
+                        apptServicesList.addAll(aServicesList.get(i).getServices());
                     } else {
+
+                        SearchAppointmentDepartmentServices objApptService = new SearchAppointmentDepartmentServices();
+                        objApptService.setName(aServicesList.get(i).getName());
+                        objApptService.setServiceDuration(aServicesList.get(i).getServiceDuration());
+                        objApptService.setTotalAmount(aServicesList.get(i).getTotalAmount());
+                        objApptService.setDescription(aServicesList.get(i).getDescription());
+                        objApptService.setServicegallery(aServicesList.get(i).getServicegallery());
+                        objApptService.setTaxable(aServicesList.get(i).isTaxable());
+                        objApptService.setPrePayment(aServicesList.get(i).isPrePayment());
+                        objApptService.setMinPrePaymentAmount(aServicesList.get(i).getMinPrePaymentAmount());
+                        objApptService.setDepartmentName(aServicesList.get(i).getDepartmentName());
+                        objApptService.setServiceType(aServicesList.get(i).getServiceType());
+                        apptServicesList.add(objApptService);
+                    }
+                }
+
+                if (apptServicesList.size() > 0) {
+                    if (apptServicesList.size() == 1) {
+
                         myViewHolder.tvAppService1.setVisibility(View.VISIBLE);
-                        myViewHolder.tvAppService2.setVisibility(View.VISIBLE);
-                        myViewHolder.tvAppSeeAll.setVisibility(View.VISIBLE);
-                        String name1 = apptServicesList.get(0).getName();
-                        name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
-                        myViewHolder.tvAppService1.setText(name1 + ",");
+                        myViewHolder.tvAppService2.setVisibility(View.GONE);
+                        myViewHolder.tvAppSeeAll.setVisibility(View.GONE);
+                        String name = apptServicesList.get(0).getName();
+                        name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                        myViewHolder.tvAppService1.setText(name);
                         try {
                             if (apptServicesList.get(0).getServiceType() != null) {
-
                                 if (apptServicesList.get(0).getServiceType().equalsIgnoreCase("virtualservice")) {
                                     if (apptServicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
                                         myViewHolder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
@@ -1361,69 +1238,27 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        String name2 = apptServicesList.get(1).getName();
-                        name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
-                        myViewHolder.tvAppService2.setText(name2 + ",");
-                        myViewHolder.tvAppService2.setText(name2);
-                        try {
-                            if (apptServicesList.get(1).getServiceType() != null) {
-                                if (apptServicesList.get(1).getServiceType().equalsIgnoreCase("virtualservice")) {
-                                    if (apptServicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
-                                        myViewHolder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
-                                        myViewHolder.tvAppService2.setCompoundDrawablePadding(10);
-                                    } else if (apptServicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                                        myViewHolder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
-                                        myViewHolder.tvAppService2.setCompoundDrawablePadding(10);
-                                    } else if (apptServicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                        myViewHolder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
-                                        myViewHolder.tvAppService2.setCompoundDrawablePadding(10);
-                                    } else if (apptServicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
-                                        myViewHolder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
-                                        myViewHolder.tvAppService2.setCompoundDrawablePadding(10);
-                                    }
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                         myViewHolder.tvAppService1.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+
                                 appServInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), apptServicesList.get(0));
                                 appServInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 appServInfoDialog.show();
                                 DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
                                 int width = (int) (metrics.widthPixels * 1);
                                 appServInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            }
-                        });
-
-                        myViewHolder.tvAppService2.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                appServInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), apptServicesList.get(1));
-                                appServInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                appServInfoDialog.show();
-                                DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
-                                int width = (int) (metrics.widthPixels * 1);
-                                appServInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
 
                             }
                         });
-                        myViewHolder.tvAppSeeAll.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                adaptercallback.onMethodServiceCallbackAppointment(apptServicesList, mTitle, mSearchDepartmentList);
-                            }
-                        });
-                    }
-                } else {
 
-                    for (int i = 0; i < apptServicesList.size(); i++) {
 
-                        if (i == 0) {
+                    } else if (apptServicesList.size() >= 2 && apptServicesList.get(0).getName().length() <= 20 && apptServicesList.get(1).getName().length() <= 20) {
+
+                        if (apptServicesList.size() == 2) {
                             myViewHolder.tvAppService1.setVisibility(View.VISIBLE);
-                            myViewHolder.tvAppService2.setVisibility(View.GONE);
+                            myViewHolder.tvAppService2.setVisibility(View.VISIBLE);
+                            myViewHolder.tvAppSeeAll.setVisibility(View.GONE);
                             String name1 = apptServicesList.get(0).getName();
                             name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
                             myViewHolder.tvAppService1.setText(name1 + ",");
@@ -1448,6 +1283,30 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                            String name2 = apptServicesList.get(1).getName();
+                            name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
+                            myViewHolder.tvAppService2.setText(name2);
+                            try {
+                                if (apptServicesList.get(1).getServiceType() != null) {
+                                    if (apptServicesList.get(1).getServiceType().equalsIgnoreCase("virtualservice")) {
+                                        if (apptServicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                                            myViewHolder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
+                                            myViewHolder.tvAppService2.setCompoundDrawablePadding(10);
+                                        } else if (apptServicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                                            myViewHolder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
+                                            myViewHolder.tvAppService2.setCompoundDrawablePadding(10);
+                                        } else if (apptServicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                                            myViewHolder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                            myViewHolder.tvAppService2.setCompoundDrawablePadding(10);
+                                        } else if (apptServicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                                            myViewHolder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
+                                            myViewHolder.tvAppService2.setCompoundDrawablePadding(10);
+                                        }
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             myViewHolder.tvAppService1.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -1457,27 +1316,168 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
                                     int width = (int) (metrics.widthPixels * 1);
                                     appServInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                }
+                            });
+
+                            myViewHolder.tvAppService2.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    appServInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), apptServicesList.get(1));
+                                    appServInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    appServInfoDialog.show();
+                                    DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                                    int width = (int) (metrics.widthPixels * 1);
+                                    appServInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
 
                                 }
                             });
+
+                        } else {
+                            myViewHolder.tvAppService1.setVisibility(View.VISIBLE);
+                            myViewHolder.tvAppService2.setVisibility(View.VISIBLE);
                             myViewHolder.tvAppSeeAll.setVisibility(View.VISIBLE);
+                            String name1 = apptServicesList.get(0).getName();
+                            name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
+                            myViewHolder.tvAppService1.setText(name1 + ",");
+                            try {
+                                if (apptServicesList.get(0).getServiceType() != null) {
+
+                                    if (apptServicesList.get(0).getServiceType().equalsIgnoreCase("virtualservice")) {
+                                        if (apptServicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                                            myViewHolder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
+                                            myViewHolder.tvAppService1.setCompoundDrawablePadding(10);
+                                        } else if (apptServicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                                            myViewHolder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
+                                            myViewHolder.tvAppService1.setCompoundDrawablePadding(10);
+                                        } else if (apptServicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                                            myViewHolder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                            myViewHolder.tvAppService1.setCompoundDrawablePadding(10);
+                                        } else if (apptServicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                                            myViewHolder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
+                                            myViewHolder.tvAppService1.setCompoundDrawablePadding(10);
+                                        }
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            String name2 = apptServicesList.get(1).getName();
+                            name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
+                            myViewHolder.tvAppService2.setText(name2 + ",");
+                            myViewHolder.tvAppService2.setText(name2);
+                            try {
+                                if (apptServicesList.get(1).getServiceType() != null) {
+                                    if (apptServicesList.get(1).getServiceType().equalsIgnoreCase("virtualservice")) {
+                                        if (apptServicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                                            myViewHolder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
+                                            myViewHolder.tvAppService2.setCompoundDrawablePadding(10);
+                                        } else if (apptServicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                                            myViewHolder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
+                                            myViewHolder.tvAppService2.setCompoundDrawablePadding(10);
+                                        } else if (apptServicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                                            myViewHolder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                            myViewHolder.tvAppService2.setCompoundDrawablePadding(10);
+                                        } else if (apptServicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                                            myViewHolder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
+                                            myViewHolder.tvAppService2.setCompoundDrawablePadding(10);
+                                        }
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            myViewHolder.tvAppService1.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    appServInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), apptServicesList.get(0));
+                                    appServInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    appServInfoDialog.show();
+                                    DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                                    int width = (int) (metrics.widthPixels * 1);
+                                    appServInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                }
+                            });
+
+                            myViewHolder.tvAppService2.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    appServInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), apptServicesList.get(1));
+                                    appServInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    appServInfoDialog.show();
+                                    DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                                    int width = (int) (metrics.widthPixels * 1);
+                                    appServInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                                }
+                            });
                             myViewHolder.tvAppSeeAll.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-
                                     adaptercallback.onMethodServiceCallbackAppointment(apptServicesList, mTitle, mSearchDepartmentList);
-
                                 }
                             });
-//                                    Toast.makeText(mContext, "set single line and see more", Toast.LENGTH_SHORT).show();
-                            break;
-                        } else {
+                        }
+                    } else {
 
-                            myViewHolder.txt_apptservices.setVisibility(View.GONE);
-                            myViewHolder.LApp_Services.setVisibility(View.GONE);
+                        for (int i = 0; i < apptServicesList.size(); i++) {
+
+                            if (i == 0) {
+                                myViewHolder.tvAppService1.setVisibility(View.VISIBLE);
+                                myViewHolder.tvAppService2.setVisibility(View.GONE);
+                                String name1 = apptServicesList.get(0).getName();
+                                name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
+                                myViewHolder.tvAppService1.setText(name1 + ",");
+                                try {
+                                    if (apptServicesList.get(0).getServiceType() != null) {
+                                        if (apptServicesList.get(0).getServiceType().equalsIgnoreCase("virtualservice")) {
+                                            if (apptServicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                                                myViewHolder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
+                                                myViewHolder.tvAppService1.setCompoundDrawablePadding(10);
+                                            } else if (apptServicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                                                myViewHolder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
+                                                myViewHolder.tvAppService1.setCompoundDrawablePadding(10);
+                                            } else if (apptServicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                                                myViewHolder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                                myViewHolder.tvAppService1.setCompoundDrawablePadding(10);
+                                            } else if (apptServicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                                                myViewHolder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
+                                                myViewHolder.tvAppService1.setCompoundDrawablePadding(10);
+                                            }
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                myViewHolder.tvAppService1.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        appServInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), apptServicesList.get(0));
+                                        appServInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                        appServInfoDialog.show();
+                                        DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                                        int width = (int) (metrics.widthPixels * 1);
+                                        appServInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                                    }
+                                });
+                                myViewHolder.tvAppSeeAll.setVisibility(View.VISIBLE);
+                                myViewHolder.tvAppSeeAll.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        adaptercallback.onMethodServiceCallbackAppointment(apptServicesList, mTitle, mSearchDepartmentList);
+
+                                    }
+                                });
+//                                    Toast.makeText(mContext, "set single line and see more", Toast.LENGTH_SHORT).show();
+                                break;
+                            } else {
+
+                                myViewHolder.txt_apptservices.setVisibility(View.GONE);
+                                myViewHolder.LApp_Services.setVisibility(View.GONE);
+                            }
                         }
                     }
-                }
 //        for (int m = 0; m < aServicesList.size(); m++) {
 //            if (aServicesList.get(m).getServices() != null) {
 //                if (aServicesList.size() > 0) {
@@ -1653,9 +1653,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 //            }
 //        }
 
+                }
             }
-        }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         try {

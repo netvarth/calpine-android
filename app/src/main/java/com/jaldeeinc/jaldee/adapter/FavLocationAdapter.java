@@ -376,6 +376,9 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                         if(scheduleList.getAvailableSchedule()!=null){
                             iAppoinment.putExtra("serviceId", Integer.parseInt(String.valueOf(scheduleList.getAvailableSchedule().getLocation().getId())));
                         }
+                        else {
+                            iAppoinment.putExtra("serviceId", mFavList.get(finalI1).getLocations().get(position).getId());
+                        }
                         iAppoinment.putExtra("uniqueID", uniqueId);
                         iAppoinment.putExtra("accountID",mScheduleList.get(position).getProvider().getId());
                         iAppoinment.putExtra("from", "favourites");

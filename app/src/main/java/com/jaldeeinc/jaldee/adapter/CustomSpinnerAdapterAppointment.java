@@ -40,20 +40,24 @@ public class CustomSpinnerAdapterAppointment extends ArrayAdapter {
                 .findViewById(android.R.id.text1);
 
 
-
-        if(mService.get(position).getVirtualCallingModes()!=null){
-            if (mService.get(position).getVirtualCallingModes().size()>0) {
-                if (mService.get(position).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
-                    tvService.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_phone_iphone_black_24dps, 0, 0, 0);
-                } else if (mService.get(position).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                    tvService.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
-                } else if (mService.get(position).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                    tvService.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet, 0, 0, 0);
-                } else if (mService.get(position).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
-                    tvService.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom, 0, 0, 0);
+        try {
+            if(mService.get(position).getVirtualCallingModes()!=null){
+                if (mService.get(position).getVirtualCallingModes().size()>0) {
+                    if (mService.get(position).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                        tvService.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_phone_iphone_black_24dps, 0, 0, 0);
+                    } else if (mService.get(position).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                        tvService.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                    } else if (mService.get(position).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                        tvService.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet, 0, 0, 0);
+                    } else if (mService.get(position).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                        tvService.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom, 0, 0, 0);
+                    }
                 }
+
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         SearchAppoinment mSericeList = mService.get(position);
 // Setting the text using the array
