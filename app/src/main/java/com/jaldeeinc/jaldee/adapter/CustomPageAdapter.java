@@ -1,13 +1,16 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
+
 import androidx.viewpager.widget.PagerAdapter;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.widgets.TouchImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -54,7 +57,7 @@ public class CustomPageAdapter extends PagerAdapter {
 
         final String finalUrl = url;
 
-        Picasso.with(mContext).load(url).fit().centerInside().into(imageView, new Callback() {
+        PicassoTrustAll.getInstance(mContext).load(url).fit().centerInside().into(imageView, new Callback() {
             @Override
             public void onSuccess() {
 
@@ -63,7 +66,7 @@ public class CustomPageAdapter extends PagerAdapter {
             @Override
             public void onError() {
 
-                Picasso.with(mContext).load(finalUrl).placeholder(R.drawable.icon_noimage).into(imageView);
+                PicassoTrustAll.getInstance(mContext).load(finalUrl).placeholder(R.drawable.icon_noimage).into(imageView);
             }
         });
 

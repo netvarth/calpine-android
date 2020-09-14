@@ -795,7 +795,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         });
 
 //                Toast.makeText(mContext, "set single line", Toast.LENGTH_SHORT).show();
-                    } else if (checkInServicesList.size() >= 2 && checkInServicesList.get(0).getName().length() <= 20 && checkInServicesList.get(1).getName().length() <= 20) {
+                    } else if (checkInServicesList.size() >= 2 && checkInServicesList.get(0).getName().length() <= 15 && checkInServicesList.get(1).getName().length() <= 15) {
 
                         if (checkInServicesList.size() == 2) {
 

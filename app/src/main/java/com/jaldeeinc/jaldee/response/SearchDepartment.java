@@ -83,6 +83,7 @@ public class SearchDepartment implements Serializable {
     int departmentId;
 
     ArrayList<Integer> serviceIds;
+    ArrayList<Integer> userIds;
 
     @Override
     public String toString() {
@@ -104,5 +105,13 @@ public class SearchDepartment implements Serializable {
 
     public void setIsSelected(String isSelected) {
         this.isSelected = isSelected;
+    }
+
+    public ArrayList<Integer> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(ArrayList<Integer> userIds) {
+        this.userIds = userIds;
     }
 }

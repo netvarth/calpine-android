@@ -35,11 +35,11 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.LinkRedirectionActivity"></activity>
-        <activity android:name=".activities.NotificationActivity"></activity>
-        <activity android:name=".activities.CouponFirstActivity"></activity>
-        <activity android:name=".activities.CouponActivity"></activity>
-
+        <activity android:name=".activities.ActiveListing"></activity>
+        <activity android:name=".activities.LinkRedirectionActivity" />
+        <activity android:name=".activities.NotificationActivity" />
+        <activity android:name=".activities.CouponFirstActivity" />
+        <activity android:name=".activities.CouponActivity" />
         <activity
             android:name=".activities.Splash"
             android:launchMode="singleTask"
@@ -49,20 +49,21 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.VIEW" />-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.VIEW" /> -->
 
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--                <category android:name="android.intent.category.BROWSABLE" />-->
 
-<!--                <data-->
-<!--                    android:host="scale.jaldee.com"-->
-<!--                    android:scheme="https" />-->
-<!--            </intent-filter>-->
+            <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+            <!-- <category android:name="android.intent.category.BROWSABLE" /> -->
+
+
+            <!-- <data -->
+            <!-- android:host="scale.jaldee.com" -->
+            <!-- android:scheme="https" /> -->
+            <!-- </intent-filter> -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.Home"/>
-
+                android:value=".activities.Home" />
         </activity>
         <activity
             android:name=".activities.Register"
@@ -87,7 +88,7 @@
             android:name=".activities.Home"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:hardwareAccelerated="true"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="unspecified"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
@@ -170,8 +171,8 @@
             android:name=".activities.BillActivity"
             android:screenOrientation="unspecified" />
 
-
-        <service android:name=".service.FirebaseService"
+        <service
+            android:name=".service.FirebaseService"
             android:enabled="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

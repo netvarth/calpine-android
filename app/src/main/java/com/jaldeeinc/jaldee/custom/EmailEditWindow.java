@@ -36,12 +36,14 @@ public class EmailEditWindow extends Dialog {
     ProfileModel profileDetails;
     TextView tvErrorMessage;
     private IMailSubmit iMailSubmit;
+    String currentMailId;
 
-    public EmailEditWindow(Context mContext, ProfileModel profileDetails, IMailSubmit iMailSubmit){
+    public EmailEditWindow(Context mContext, ProfileModel profileDetails, IMailSubmit iMailSubmit, String mailId){
         super(mContext);
         this.context = mContext;
         this.profileDetails = profileDetails;
         this.iMailSubmit = iMailSubmit;
+        currentMailId = mailId;
     }
 
     public void onCreate(Bundle savedInstanceState){
@@ -51,7 +53,11 @@ public class EmailEditWindow extends Dialog {
         btnsave = findViewById(R.id.btnSave);
         tvErrorMessage = findViewById(R.id.error_mesg);
 
+        if (currentMailId != null){
 
+            email.setText(currentMailId);
+
+        }
 
         btnsave.setOnClickListener(new View.OnClickListener() {
             @Override

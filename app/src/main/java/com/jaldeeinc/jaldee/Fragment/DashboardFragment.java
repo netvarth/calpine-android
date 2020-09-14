@@ -48,9 +48,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.ActiveListing;
 import com.jaldeeinc.jaldee.activities.BillActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.FilterActivity;
@@ -2012,5 +2012,29 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             }
         }
         startActivity(i);
+    }
+
+    @Override
+    public void onActiveBookingClick(String showToken) {
+
+        if (showToken.equalsIgnoreCase("true")){
+
+            Intent activeIntent = new Intent(mContext, ActiveListing.class);
+            activeIntent.putExtra("takeTo",Constants.TOKEN);
+            startActivity(activeIntent);
+        }
+        else if (showToken.equalsIgnoreCase("Appointment")){
+
+            Intent activeIntent = new Intent(mContext, ActiveListing.class);
+            activeIntent.putExtra("takeTo",Constants.APPOINTMENT);
+            startActivity(activeIntent);
+        }
+        else {
+            Intent activeIntent = new Intent(mContext, ActiveListing.class);
+            activeIntent.putExtra("takeTo",Constants.CHECKIN);
+            startActivity(activeIntent);
+        }
+
+
     }
 }

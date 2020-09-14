@@ -69,7 +69,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
@@ -90,7 +89,6 @@ import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.RatingResponse;
-import com.jaldeeinc.jaldee.utils.AppPreferences;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -127,8 +125,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static androidx.core.content.ContextCompat.getSystemService;
 
 
 /**
@@ -983,6 +979,11 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         i.putExtra("amountDue", amountDue);
         i.putExtra("purpose", Constants.PURPOSE_PREPAYMENT);
         startActivity(i);
+    }
+
+    @Override
+    public void onActiveBookingClick(String showToken) {
+
     }
 
     @Override

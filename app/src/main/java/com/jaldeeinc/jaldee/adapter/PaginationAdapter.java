@@ -44,6 +44,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CircleTransform;
+import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueList;
@@ -221,24 +222,30 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
                 /////////////////////////////////////////////////////////
                 setSpecializations(myViewHolder, searchdetailList);
-                Config.logV("LOGO @@@@" + searchdetailList.getLogo() + searchdetailList.getTitle());
-                Picasso.Builder builder = new Picasso.Builder(context);
-                builder.listener(new Picasso.Listener() {
-                    @Override
-                    public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                        exception.printStackTrace();
-                    }
-                });
-                builder.build().load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
-                myViewHolder.profile.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Config.logV("Unique Id List", searchdetailList.getUniqueid());
-                        ApiSearchGallery(searchdetailList.getUniqueid(), searchdetailList);
-                    }
 
+                if (searchdetailList.getLogo() != null) {
+                    Config.logV("LOGO @@@@" + searchdetailList.getLogo() + searchdetailList.getTitle());
 
-                });
+//                    Picasso.Builder builder = new Picasso.Builder(context);
+//                    builder.listener(new Picasso.Listener() {
+//                        @Override
+//                        public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+//                            exception.printStackTrace();
+//                        }
+//                    });
+                    PicassoTrustAll.getInstance(context).load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
+                    myViewHolder.profile.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Config.logV("Unique Id List", searchdetailList.getUniqueid());
+                            ApiSearchGallery(searchdetailList.getUniqueid(), searchdetailList);
+                        }
+                    });
+                }
+                else {
+
+                    PicassoTrustAll.getInstance(context).load(R.drawable.icon_noimage).fit().into(myViewHolder.profile);
+                }
                 if (searchdetailList.getGallery_thumb_nails() != null) {
                     if (searchdetailList.getGallery_thumb_nails().size() > 0) {
                         myViewHolder.mImageViewText.setVisibility(View.VISIBLE);
@@ -1948,10 +1955,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
             }
             if (searchdetailList.getLogo() != null) {
-                Picasso.with(context).load(searchdetailList.getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile1);
+                PicassoTrustAll.getInstance(context).load(searchdetailList.getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile1);
 
             } else {
-                Picasso.with(context).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile1);
+                PicassoTrustAll.getInstance(context).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile1);
             }
         } catch (Exception e) {
             e.printStackTrace();

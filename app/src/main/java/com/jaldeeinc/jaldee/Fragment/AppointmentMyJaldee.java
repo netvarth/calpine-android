@@ -49,7 +49,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
@@ -749,6 +748,12 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         i.putExtra("purpose", Constants.PURPOSE_PREPAYMENT);
         startActivity(i);
     }
+
+    @Override
+    public void onActiveBookingClick(String showToken) {
+
+    }
+
     @Override
     public void onMethodAddFavourite(int value, boolean todayFlag, boolean futFlag, boolean oldFlag) {
         mOldFlag = oldFlag;

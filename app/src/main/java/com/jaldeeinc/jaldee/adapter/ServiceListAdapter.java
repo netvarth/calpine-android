@@ -89,10 +89,10 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
     public void onBindViewHolder(final ServiceListAdapter.MyViewHolder myViewHolder, final int position) {
         final SearchService serviceList = mServiceList.get(position);
         String serviceName = serviceList.getName();
-        if (serviceList.getDepartment() != 0 && mSearchDepartmentList != null) {
-            String deptName = getDepartmentName(serviceList.getDepartment());
-            serviceName = serviceName.concat(" (").concat(deptName).concat(")");
-        }
+//        if (serviceList.getDepartment() != 0 && mSearchDepartmentList != null) {
+//            String deptName = getDepartmentName(serviceList.getDepartment());
+//            serviceName = serviceName.concat(" (").concat(deptName).concat(")");
+//        }
         myViewHolder.tv_service.setText(serviceName);
         try{
         if(serviceList.getServiceType().equalsIgnoreCase("virtualservice")){

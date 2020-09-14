@@ -57,6 +57,7 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
+import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.ResizableCustomView;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.ContactModel;
@@ -653,7 +654,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         if (from_user) {
                             tv_mImageViewTextnew.setVisibility(View.GONE);
                             if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-                                Picasso.with(context).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+                                PicassoTrustAll.getInstance(context).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
                                 mImgeProfile.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -1260,7 +1261,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }*/
             Config.logV("Bussiness logo @@@@@@@@@@" + mBusinessDataList.getLogo());
             if (mBusinessDataList.getLogo() != null) {
-                Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+                PicassoTrustAll.getInstance(context).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
             } else {
                 //Toast.makeText(mContext, "There is no Profile Pic", Toast.LENGTH_SHORT).show();
                 // Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);

@@ -54,7 +54,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
@@ -774,6 +773,11 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
         i.putExtra("amountDue", amountDue);
         i.putExtra("purpose", Constants.PURPOSE_PREPAYMENT);
         startActivity(i);
+    }
+
+    @Override
+    public void onActiveBookingClick(String showToken) {
+
     }
 
     @Override

@@ -232,6 +232,12 @@
                                 android:visibility="visible"/>
 
                             <LinearLayout
+                                android:id="@+id/ll_noServices"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                            <LinearLayout
                                 android:id="@+id/familymember"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -373,6 +379,7 @@
 
                                 </LinearLayout>
                                 <LinearLayout
+                                    android:id="@+id/ll_mailEdit"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/dimen_5dp"
@@ -393,6 +400,7 @@
                                         android:textColor="@color/black"
                                         android:layout_marginStart="@dimen/dimen_10dp"
                                         android:textSize="@dimen/txtsize_12"
+                                        android:hint="Enter your Mail Id"
                                         android:theme="@android:style/Theme.Holo.Light" />
                                     <ImageView
                                         android:id="@+id/edit_icon"
@@ -403,6 +411,19 @@
                                         android:src="@drawable/edit_icon" />
                                 </LinearLayout>
 
+                                <TextView
+                                    android:id="@+id/tv_emailError"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="*  Email Id is manditory"
+                                    android:textColor="@color/red"
+                                    android:textStyle="italic"
+                                    android:visibility="gone"
+                                    android:layout_marginStart="@dimen/dimen_20dp"
+                                    android:layout_marginTop="@dimen/padding5"
+                                    android:textSize="@dimen/txtsize_12">
+
+                                </TextView>
 
                                 <View
                                     android:layout_width="match_parent"
@@ -938,6 +959,20 @@
                                     android:textStyle="bold" />
                             </LinearLayout>
 
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tv_noServices"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Selected provider doesn't contain any services at the moment"
+                                android:textSize="14sp"
+                                android:visibility="gone"
+                                android:textColor="@color/red"
+                                android:layout_marginStart="@dimen/padding15"
+                                android:layout_marginEnd="@dimen/padding15">
+
+                            </TextView>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
                 </FrameLayout>

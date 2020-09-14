@@ -29,7 +29,7 @@
             android:paddingStart="@dimen/txtsize_10"
             android:theme="@android:style/Theme.Holo.Light"
             android:textSize="@dimen/dimen_15sp"
-            android:hint="Enter your Email"
+            android:hint="Enter your Mail Id"
             android:textColor="@color/title_grey"/>
 
 

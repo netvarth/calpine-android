@@ -7,7 +7,9 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.CountDownTimer;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Spannable;
@@ -22,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
+import com.jaldeeinc.jaldee.Interface.IActiveBookings;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
 import com.jaldeeinc.jaldee.common.Config;
@@ -74,6 +78,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         LinearLayout layout_btnpay,layout_activeCheckin;
         Button btn_pay;
         ImageView icon_service;
+        CardView cvCard;
         public MyViewHolder(View view) {
             super(view);
             tv_businessname = (TextView) view.findViewById(R.id.txt_businessname);
@@ -92,6 +97,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             layout_activeCheckin = (LinearLayout) view.findViewById(R.id.activecheckin);
             tv_token = (TextView) view.findViewById(R.id.txt_token);
             icon_service =(ImageView) view.findViewById(R.id.serviceicon);
+            cvCard = view.findViewById(R.id.card);
         }
     }
     Activity activity;
@@ -107,6 +113,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
     public ActiveCheckInAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.active_checkin_newrow, parent, false);
+
         return new ActiveCheckInAdapter.MyViewHolder(itemView);
     }
     static SimpleDateFormat inputParser = new SimpleDateFormat("HH:mm", Locale.US);
@@ -292,6 +299,15 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 }
             }
         });
+
+        myViewHolder.cvCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                callback.onActiveBookingClick(activelist.getShowToken());
+            }
+        });
+
         if(activelist.getCheckInTime()!=null){
             Log.i("checkinTimeActivelist",activelist.getCheckInTime());
         }

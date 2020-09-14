@@ -61,10 +61,56 @@ public class ProviderUserModel implements Serializable {
     String deptId;
     String email;
     int id;
+    String businessName;
+    String profilePicture;
+    boolean queues;
+    boolean schedules;
+    boolean available;
 
     @Override
     public String toString() {
-        return this.firstName + " " + lastName; // Value to be displayed in the Spinner
+        return this.businessName == null ? this.firstName + " " + this.lastName : this.businessName; // Value to be displayed in the Spinner
     }
 
+
+    public String getBusinessName() {
+        return businessName;
+    }
+
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+
+    public boolean isQueues() {
+        return queues;
+    }
+
+    public void setQueues(boolean queues) {
+        this.queues = queues;
+    }
+
+    public boolean isSchedules() {
+        return schedules;
+    }
+
+    public void setSchedules(boolean schedules) {
+        this.schedules = schedules;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
 }

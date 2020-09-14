@@ -11,4 +11,5 @@ public interface ActiveAdapterOnCallback {
     void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID,double amountDue,int customerId) ;
 
 
+    void onActiveBookingClick(String showToken);
 }

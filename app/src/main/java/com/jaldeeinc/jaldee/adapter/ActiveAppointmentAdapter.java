@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.CountDownTimer;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -84,6 +85,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
         Button btn_pay;
         LinearLayout layout_activeAppointment;
         ImageView icon_service;
+        CardView cvCard;
 
 
         public MyViewHolder(View view) {
@@ -103,6 +105,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
             tv_queueTime = (TextView) view.findViewById(R.id.txt_queuetime);
             layout_activeAppointment = (LinearLayout) view.findViewById(R.id.activecheckin);
             icon_service =(ImageView) view.findViewById(R.id.serviceicon);
+            cvCard = view.findViewById(R.id.card);
         }
     }
 
@@ -424,7 +427,13 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
             }
         });
 
+        myViewHolder.cvCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                callback.onActiveBookingClick("Appointment");
+            }
+        });
 
 
 
