@@ -559,6 +559,13 @@
 
                             </LinearLayout>
 
+                            <LinearLayout
+                                android:id="@+id/ll_noServices"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:visibility="visible">
+
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -898,18 +905,6 @@
                                     android:layout_margin="@dimen/padding7"
                                     android:background="#1A000000" />
 
-                                <TextView
-                                    android:id="@+id/tv_noServiceMessage"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="20dp"
-                                    android:layout_marginEnd="15dp"
-                                    android:text="Appointment for this service is not available at the moment. Please try for a different date"
-                                    android:textSize="@dimen/txtsize_12"
-                                    android:visibility="gone">
-
-                                </TextView>
-
 
                                 <LinearLayout
                                     android:id="@+id/ll_coupouns"
@@ -1089,6 +1084,21 @@
                                     android:textSize="@dimen/txtsize_subtitle"
                                     android:textStyle="bold" />
                             </LinearLayout>
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tv_noServiceMessage"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="20dp"
+                                android:layout_marginEnd="15dp"
+                                android:textColor="@color/red"
+                                android:text="Appointment for this service is not available at the moment. Please try for a different date"
+                                android:textSize="@dimen/txtsize_12"
+                                android:visibility="gone">
+
+                            </TextView>
 
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>

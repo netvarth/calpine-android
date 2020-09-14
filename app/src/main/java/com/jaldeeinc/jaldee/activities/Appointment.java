@@ -307,7 +307,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     private EmailEditWindow emailEditWindow;
     ProfileModel profileDetails;
     private IMailSubmit iMailSubmit;
-    private LinearLayout llEmail;
+    private LinearLayout llEmail,llNoServices;
     private TextView tvErrorMail;
     ArrayList<SearchDepartment> availableDepartments = new ArrayList<>();
 
@@ -386,6 +386,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         editIcon = findViewById(R.id.edit_icon);
         llEmail = findViewById(R.id.ll_email);
         tvErrorMail = findViewById(R.id.tv_emailError);
+        llNoServices = findViewById(R.id.ll_noServices);
 
         // to Empty previous selected date in pref's
         SharedPreference.getInstance(Appointment.this).setValue("selectedDate", "");
@@ -1068,6 +1069,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         btn_checkin.setVisibility(View.GONE);
                         llCoupons.setVisibility(View.GONE);
                         txt_chooseservice.setVisibility(View.GONE);
+                        llNoServices.setVisibility(View.GONE);
                         tvNoServiceMessage.setVisibility(View.VISIBLE);
                         txtnocheckin.setVisibility(View.GONE);
                         tvNoServiceMessage.setText("Selected department doesn't contain any providers or services at the moment");
@@ -1078,6 +1080,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         mSpinnerService.setAdapter(adapter);
                         mSpinnertext = ((SearchAppoinment) LServicesList.get(0)).getId();
                         livetrack = LServicesList.get(0).getLivetrack();
+                        llNoServices.setVisibility(View.VISIBLE);
                         mSpinnerService.setVisibility(View.VISIBLE);
                         llCoupons.setVisibility(View.VISIBLE);
                         txt_chooseservice.setVisibility(View.VISIBLE);
@@ -1165,6 +1168,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         LservicePrepay.setVisibility(View.GONE);
                         txt_chooseservice.setVisibility(View.GONE);
                         txtnocheckin.setVisibility(View.GONE);
+                        llNoServices.setVisibility(View.GONE);
                         tvNoServiceMessage.setVisibility(View.VISIBLE);
                         tvNoServiceMessage.setText("Selected provider doesn't contain any services at the moment");
                         Toast.makeText(Appointment.this, "The selected provider doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
@@ -1174,6 +1178,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         mSpinnerService.setAdapter(adapter);
                         mSpinnertext = ((SearchAppoinment) LServicesList.get(0)).getId();
                         livetrack = LServicesList.get(0).getLivetrack();
+                        llNoServices.setVisibility(View.VISIBLE);
                         llCheckinLayout.setVisibility(View.VISIBLE);
                         LservicePrepay.setVisibility(View.VISIBLE);
                         mSpinnerService.setVisibility(View.VISIBLE);
@@ -1200,6 +1205,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             LservicePrepay.setVisibility(View.GONE);
                             txt_chooseservice.setVisibility(View.GONE);
                             txtnocheckin.setVisibility(View.GONE);
+                            llNoServices.setVisibility(View.GONE);
                             tvNoServiceMessage.setVisibility(View.VISIBLE);
                             tvNoServiceMessage.setText("Selected provider doesn't contain any services at the moment");
                             Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
@@ -1209,6 +1215,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             mSpinnerService.setAdapter(adapter);
                             mSpinnertext = ((SearchAppoinment) globalServiceList.get(0)).getId();
                             livetrack = globalServiceList.get(0).getLivetrack();
+                            llNoServices.setVisibility(View.VISIBLE);
                             LservicePrepay.setVisibility(View.VISIBLE);
                             llCheckinLayout.setVisibility(View.VISIBLE);
                             mSpinnerService.setVisibility(View.VISIBLE);
@@ -1236,6 +1243,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                     LServicesList.clear();
                     LServicesList.addAll(globalServiceList);
+                    llNoServices.setVisibility(View.VISIBLE);
                     mSpinnerService.setVisibility(View.VISIBLE);
                     txt_chooseservice.setVisibility(View.VISIBLE);
                     LservicePrepay.setVisibility(View.VISIBLE);
@@ -1254,6 +1262,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         btn_checkin.setVisibility(View.GONE);
                         mSpinnerService.setVisibility(View.GONE);
                         txt_chooseservice.setVisibility(View.GONE);
+                        llNoServices.setVisibility(View.GONE);
                         tvNoServiceMessage.setVisibility(View.VISIBLE);
                         txtnocheckin.setVisibility(View.GONE);
                         tvNoServiceMessage.setText("Selected provider doesn't contain any services at the moment");
@@ -1304,6 +1313,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             txt_chooseservice.setVisibility(View.GONE);
                             llCheckinLayout.setVisibility(View.GONE);
                             llCoupons.setVisibility(View.GONE);
+                            llNoServices.setVisibility(View.GONE);
                             tvNoServiceMessage.setVisibility(View.VISIBLE);
                             txtnocheckin.setVisibility(View.GONE);
                             tvNoServiceMessage.setText("Selected provider doesn't contain any  services at the moment");
@@ -1314,6 +1324,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             mSpinnerService.setAdapter(adapter);
                             mSpinnertext = ((SearchAppoinment) LServicesList.get(0)).getId();
                             livetrack = LServicesList.get(0).getLivetrack();
+                            llNoServices.setVisibility(View.VISIBLE);
                             mSpinnerService.setVisibility(View.VISIBLE);
                             txt_chooseservice.setVisibility(View.VISIBLE);
                             btn_checkin.setVisibility(View.VISIBLE);
@@ -1327,6 +1338,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             if (globalServsList.size() == 0) {
                                 mSpinnerService.setVisibility(View.GONE);
                                 btn_checkin.setVisibility(View.GONE);
+                                llNoServices.setVisibility(View.GONE);
                                 txt_chooseservice.setVisibility(View.GONE);
                                 tvNoServiceMessage.setVisibility(View.VISIBLE);
                                 txtnocheckin.setVisibility(View.GONE);
@@ -1338,6 +1350,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                 mSpinnerService.setAdapter(adapter);
                                 mSpinnertext = ((SearchAppoinment) globalServsList.get(0)).getId();
                                 livetrack = globalServsList.get(0).getLivetrack();
+                                llNoServices.setVisibility(View.VISIBLE);
                                 mSpinnerService.setVisibility(View.VISIBLE);
                                 txt_chooseservice.setVisibility(View.VISIBLE);
                                 btn_checkin.setVisibility(View.VISIBLE);
@@ -1358,6 +1371,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             txt_chooseservice.setVisibility(View.GONE);
                             llCheckinLayout.setVisibility(View.GONE);
                             btn_checkin.setVisibility(View.GONE);
+                            llNoServices.setVisibility(View.GONE);
                             llCoupons.setVisibility(View.GONE);
                             tvNoServiceMessage.setVisibility(View.VISIBLE);
                             txtnocheckin.setVisibility(View.GONE);
@@ -1368,6 +1382,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             llCheckinLayout.setVisibility(View.VISIBLE);
                             btn_checkin.setVisibility(View.VISIBLE);
                             llCoupons.setVisibility(View.VISIBLE);
+                            llNoServices.setVisibility(View.VISIBLE);
                             tvNoServiceMessage.setVisibility(View.GONE);
                             Config.logV("mServicesList" + LServicesList.size());
                             CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
@@ -2837,8 +2852,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             @Override
             public void onResponse(Call<ArrayList<SearchAppoinment>> call, Response<ArrayList<SearchAppoinment>> response) {
                 try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
+
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
@@ -2898,6 +2912,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             @Override
                             public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
                                 try {
+                                    if (mDialog.isShowing())
+                                        Config.closeDialog(getParent(), mDialog);
                                     if (response.code() == 200) {
 
                                         Config.logV("URL123---------------" + response.raw().request().url().toString().trim());
@@ -3151,6 +3167,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             @Override
                             public void onFailure
                                     (Call<SearchDepartment> call, Throwable t) {
+                                if (mDialog.isShowing())
+                                    Config.closeDialog(getParent(), mDialog);
                                 Config.logV("Fail---------------" + t.toString());
                             }
                         });
@@ -3167,7 +3185,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             }
 
             @Override
-
             public void onFailure(Call<ArrayList<SearchAppoinment>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());

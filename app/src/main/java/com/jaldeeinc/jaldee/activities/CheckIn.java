@@ -2006,8 +2006,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             @Override
             public void onResponse(Call<ArrayList<SearchService>> call, Response<ArrayList<SearchService>> response) {
                 try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
+
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
@@ -2062,6 +2061,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                 @Override
                                 public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
                                     try {
+                                        if (mDialog.isShowing())
+                                            Config.closeDialog(getParent(), mDialog);
                                         if (response.code() == 200) {
                                             Config.logV("URL123---------------" + response.raw().request().url().toString().trim());
                                             depResponse = response.body();
@@ -2293,12 +2294,15 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                 @Override
                                 public void onFailure(Call<SearchDepartment> call, Throwable t) {
                                     Config.logV("Fail---------------" + t.toString());
+                                    if (mDialog.isShowing())
+                                        Config.closeDialog(getParent(), mDialog);
                                 }
                             });
                             // Department Ends Here
                         }
                     }
                 } catch (Exception e) {
+
                     e.printStackTrace();
                 }
 
