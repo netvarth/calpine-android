@@ -95,6 +95,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1293,6 +1294,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     //  boolean expand =false;
     public void UpdateMainUI(final SearchViewDetail getBussinessData) {
+
+        try {
+            getBussinessData.getSpecialization().removeAll(Collections.singleton(null));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         if (getBussinessData.getSpecialization() != null) {
             for (int i = 0; i < getBussinessData.getSpecialization().size(); i++) {
                 if (getBussinessData.getSpecialization().get(i).equals("Not Applicabale") || getBussinessData.getSpecialization().get(i).equals("Not Applicable")) {

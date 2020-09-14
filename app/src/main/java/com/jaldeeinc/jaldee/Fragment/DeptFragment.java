@@ -95,6 +95,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     String userTerminology;
     ArrayList<SearchAppointmentDepartmentServices> userAppointmentServices = new ArrayList<>();
     ArrayList<SearchService> individualUserAppointmentServices = new ArrayList<>();
+    private TextView tvDocHint;
 
     public DeptFragment() {
     }
@@ -143,6 +144,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         tv_doctors = row.findViewById(R.id.txt_doctors);
         LServices = row.findViewById(R.id.Lservice);
         tv_service = row.findViewById(R.id.txtservice);
+        tvDocHint = row.findViewById(R.id.tv_docHint);
 //        mBusinessDataList = new SearchViewDetail();
 
         ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
@@ -177,10 +179,17 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                 }
                 if (departmentServices.getUsers() != null) {
                     if (departmentServices.getUsers().size() > 0) {
+                        tvDocHint.setVisibility(View.VISIBLE);
                         tv_doctors.setVisibility(View.VISIBLE);
-                        tv_doctors.setText(departmentServices.getUsers().size() + userTerminology);
+                        if (departmentServices.getUsers().size() == 1){
+                            tv_doctors.setText(departmentServices.getUsers().size() + " "+ userTerminology);
+                        }
+                        else {
+                            tv_doctors.setText(departmentServices.getUsers().size() +" "+ userTerminology +"s");
+                        }
                         tv_services.setVisibility(View.GONE);
                     } else {
+                        tvDocHint.setVisibility(View.GONE);
                         tv_doctors.setVisibility(View.GONE);
                         tv_services.setVisibility(View.VISIBLE);
                         tv_services.setText("Services >");
