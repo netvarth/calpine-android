@@ -238,7 +238,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 }
 
                 if(queueList.getNextAvailableQueue()!=null && mFavList.get(i).getOnlinePresence()!=null) {
-                    if (mFavList.get(i).getOnlinePresence().equals("true") && queueList.getNextAvailableQueue().isWaitlistEnabled()) {
+                    if (mFavList.get(i).getOnlinePresence().equals("true") && queueList.isWaitlistEnabled()) {
                         disableCheckinFeature(myViewHolder);
                         if (queueList.getNextAvailableQueue().isShowToken()) {
                             myViewHolder.btn_checkin.setText("GET TOKEN");
@@ -355,7 +355,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 if(mScheduleList.size()>0){
 
                     if(mFavList.get(i).getOnlinePresence().equals("true")){
-                        if(scheduleList.isCheckinAllowed()){
+                        if(scheduleList.isApptEnabled()){
                             myViewHolder.appoinmentLayouts.setVisibility(View.VISIBLE);
                         }else{
                             myViewHolder.appoinmentLayouts.setVisibility(View.GONE);

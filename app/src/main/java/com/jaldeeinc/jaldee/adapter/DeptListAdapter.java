@@ -766,7 +766,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                if (searchdetailList.getParentSearchViewDetail().isOnlinePresence() && searchdetailList.getQueueList().getNextAvailableQueue().isWaitlistEnabled()) {
+                if (searchdetailList.getParentSearchViewDetail().isOnlinePresence() && searchdetailList.getQueueList().isWaitlistEnabled()) {
                     enableCheckinButton(myViewHolder);
                     if (searchdetailList.getQueueList().getNextAvailableQueue().isShowToken()) {
                         myViewHolder.btncheckin.setText("GET TOKEN");

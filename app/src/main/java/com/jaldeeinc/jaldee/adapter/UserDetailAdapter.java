@@ -204,7 +204,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
         }
 
         if (userDetails.get(position).getQueueList().getNextAvailableQueue() != null) {
-            if (userDetails.get(position).getSearchViewDetail().isOnlinePresence() && userDetails.get(position).getQueueList().getNextAvailableQueue().isWaitlistEnabled()) {
+            if (userDetails.get(position).getSearchViewDetail().isOnlinePresence() && userDetails.get(position).getQueueList().isWaitlistEnabled()) {
                 if (userDetails.get(position).getQueueList().getNextAvailableQueue() != null && userDetails.get(position).getQueueList().getNextAvailableQueue().getAvailableDate() != null && userDetails.get(position).getSettings().isFutureDateWaitlist()) {
 //                        myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
 //                        myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
@@ -800,7 +800,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
         if (userDetails.get(position).getScheduleList() != null) {
             if (userDetails.get(position).getSearchViewDetail().isOnlinePresence()) {
-                if (userDetails.get(position).getScheduleList().isCheckinAllowed()) {
+                if (userDetails.get(position).getScheduleList().isApptEnabled()) {
                     holder.LAppointment.setVisibility(View.VISIBLE);
                     holder.LApp_Services.setVisibility(View.VISIBLE);
                     holder.txt_apptservices.setVisibility(View.VISIBLE);
@@ -898,7 +898,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     }
                 }
             }
-            if (userDetails.get(position).getSearchViewDetail().isOnlinePresence() && userDetails.get(position).getQueueList().getNextAvailableQueue().isWaitlistEnabled()) {
+            if (userDetails.get(position).getSearchViewDetail().isOnlinePresence() && userDetails.get(position).getQueueList().isWaitlistEnabled()) {
                 disableCheckinFeature(holder);
                 if (userDetails.get(position).getQueueList().getNextAvailableQueue().isShowToken()) {
                     holder.btn_checkin.setText("GET TOKEN");

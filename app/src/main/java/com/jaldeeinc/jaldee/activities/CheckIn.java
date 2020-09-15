@@ -168,9 +168,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     static ArrayList<QueueTimeSlotModel> mQueueTimeSlotList = new ArrayList<>();
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
     static String modifyAccountID;
-    boolean isPrepayment;
+    static boolean isPrepayment;
     TextView tv_amount;
-    String sAmountPay;
+    static String sAmountPay;
+    static String totalAmountPay;
     static TextView tv_name;
     String mFirstName, mLastName;
     int consumerID;
@@ -182,7 +183,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     static String mFrom;
     String title, place, terminology, calcMode;
     static String isShowToken;
-    TextView tv_titlename, tv_place, tv_checkin_service, txtprepay;
+    TextView tv_titlename;
+    TextView tv_place;
+    TextView tv_checkin_service;
+    static TextView txtprepay;
     static ImageView ic_left, ic_right;
     static TextView tv_queuetime;
     //    static TextView tv_queuename;
@@ -210,14 +214,17 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     String serviceSelected;
     String departmentSelected;
     String userSelected;
-    TextView tv_addnote, txtprepayamount;
+    TextView tv_addnote;
+    static TextView txtprepayamount;
     TextView tvEmail;
     static TextView txtnocheckin;
     TextView tv_title;
     String txt_message = "";
     String googlemap;
     String sector, subsector;
-    LinearLayout layout_party, LservicePrepay, LcouponCheckin;
+    LinearLayout layout_party;
+    static LinearLayout LservicePrepay;
+    LinearLayout LcouponCheckin;
     EditText editpartysize;
     int maxPartysize;
     static RecyclerView recycle_family;
@@ -268,6 +275,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     ArrayList<ProviderUserModel> deptProvidersList = new ArrayList<ProviderUserModel>();
     ArrayList<ProviderUserModel> selectedDeptProviders = new ArrayList<ProviderUserModel>();
     ArrayList<SearchDepartment> availableDepartments = new ArrayList<>();
+    static TextView txtamt;
+    static ArrayList<FamilyArrayModel> MultiplefamilyList = new ArrayList<>();
 
 
     @Override
@@ -335,6 +344,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         tvErroMail = findViewById(R.id.tv_emailError);
         llNoServices = findViewById(R.id.ll_noServices);
         tvNoServices = findViewById(R.id.tv_noServices);
+
+        MultiplefamilyList.clear();
 
         llMailEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -832,7 +843,13 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     isPrepayment = ((SearchService) mSpinnerService.getSelectedItem()).isPrePayment();
                     Config.logV("Payment------------" + isPrepayment);
                     if (isPrepayment) {
+//                        if(MultiplefamilyList.size()>1){
+//                            sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
+//                            totalAmountPay = String.valueOf(Double.parseDouble(sAmountPay) * MultiplefamilyList.size());
+//                        }
+//                        else{
                         sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
+                   //     }
                         Config.logV("Payment----sAmountPay--------" + sAmountPay);
                         APIPayment(modifyAccountID);
                     } else {
@@ -1737,7 +1754,13 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             txtprepay.setTypeface(tyface);
                             txtprepayamount.setTypeface(tyface);
                             String firstWord = "Prepayment Amount: ";
-                            String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(sAmountPay));
+                            String secondWord;
+//                            if(MultiplefamilyList.size()>1){
+//                                 secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
+//                            }
+//                            else{
+                             secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(sAmountPay));
+                        //}
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -3214,7 +3237,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     Config.logV("Response--code-------------------------" + response.body());
+//                //   if(!isPrepayment){
                     MultiplefamilyList.clear();
+                //   }
                     if (response.code() == 200) {
                         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "true");
                         txt_message = "";
@@ -3258,14 +3283,19 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                         btn_payu.setVisibility(View.GONE);
                                     }
                                     final EditText edt_message = (EditText) dialogPayment.findViewById(R.id.edt_message);
-                                    TextView txtamt = (TextView) dialogPayment.findViewById(R.id.txtamount);
+                                     txtamt = (TextView) dialogPayment.findViewById(R.id.txtamount);
 
                                     TextView txtprepayment = (TextView) dialogPayment.findViewById(R.id.txtprepayment);
 
                                     txtprepayment.setText("Prepayment Amount ");
 
 //                                    DecimalFormat format = new DecimalFormat("0.00");
-                                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(sAmountPay))));
+//                                    if(MultiplefamilyList.size()>1){
+//                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(totalAmountPay))));
+//                                    }
+//                                    else {
+                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(sAmountPay))));
+                                //    }
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     txtamt.setTypeface(tyface1);
@@ -3453,12 +3483,26 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         alertDialog.show();
     }
 
-    static ArrayList<FamilyArrayModel> MultiplefamilyList = new ArrayList<>();
+
 
     public static void refreshMultipleMEmList(ArrayList<FamilyArrayModel> familyList) {
         MultiplefamilyList.clear();
         MultiplefamilyList.addAll(familyList);
         recycle_family.setVisibility(View.VISIBLE);
+//        if(isPrepayment) {
+//            totalAmountPay = String.valueOf(Double.parseDouble(sAmountPay) * MultiplefamilyList.size());
+//            LservicePrepay.setVisibility(View.VISIBLE);
+////        Typeface tyface = Typeface.createFromAsset(getAssets(),
+////                "fonts/Montserrat_Bold.otf");
+////        txtprepay.setTypeface(tyface);
+////        txtprepayamount.setTypeface(tyface);
+//            String firstWord = "Prepayment Amount: ";
+//            String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
+//            Spannable spannable = new SpannableString(firstWord + secondWord);
+//            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
+//                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            txtprepayamount.setText(spannable);
+//        }
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         recycle_family.setLayoutManager(mLayoutManager);
         MultipleFamilyMemberAdapter mFamilyAdpater = new MultipleFamilyMemberAdapter(familyList, mContext, mActivity);
