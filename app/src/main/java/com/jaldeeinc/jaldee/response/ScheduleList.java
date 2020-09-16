@@ -17,6 +17,16 @@ public class ScheduleList implements Serializable {
 
     boolean isCheckinAllowed;
 
+    public boolean isApptEnabled() {
+        return apptEnabled;
+    }
+
+    public void setApptEnabled(boolean apptEnabled) {
+        this.apptEnabled = apptEnabled;
+    }
+
+    boolean apptEnabled;
+
     public NextAvailableSchedule getAvailableSchedule() {
         return availableSchedule;
     }

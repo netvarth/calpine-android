@@ -339,7 +339,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 //            }
 
             if (mQueueList.get(i).getNextAvailableQueue() != null) {
-                if (online_presence && mQueueList.get(i).getNextAvailableQueue().isWaitlistEnabled()) {
+                if (online_presence && mQueueList.get(i).isWaitlistEnabled()) {
                     if (mQueueList.get(i).getNextAvailableQueue() != null && mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null && mSearchSetting.isFutureDateWaitlist()) {
 //                        myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
 //                        myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
@@ -1158,7 +1158,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         try {
             if (mScheduleList != null) {
                 if (online_presence) {
-                    if (mScheduleList.get(position).isCheckinAllowed()) {
+                    if (mScheduleList.get(position).isApptEnabled()) {
                         myViewHolder.LAppointment.setVisibility(View.VISIBLE);
 
 //                        if (mScheduleList.get(position).getAvailableSchedule().isOpenNow()) {
@@ -2001,7 +2001,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 }
                             }
                         }
-                        if (online_presence && mQueueList.get(i).getNextAvailableQueue().isWaitlistEnabled()) {
+                        if (online_presence && mQueueList.get(i).isWaitlistEnabled()) {
                             disableCheckinFeature(myViewHolder);
                             if (mQueueList.get(i).getNextAvailableQueue().isShowToken()) {
                                 myViewHolder.btn_checkin.setText("GET TOKEN");

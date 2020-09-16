@@ -27,6 +27,16 @@ public class SearchListModel implements Serializable {
     private String claimable;
     boolean isCheckinAllowed;
 
+    public boolean isApptEnabled() {
+        return apptEnabled;
+    }
+
+    public void setApptEnabled(boolean apptEnabled) {
+        this.apptEnabled = apptEnabled;
+    }
+
+    boolean apptEnabled;
+
     public String getDonation_status() {
         return donation_status;
     }

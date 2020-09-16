@@ -24,8 +24,7 @@ import java.util.List;
  * Created by sharmila on 8/8/18.
  */
 
-public class
-CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckIn_FamilyMemberListAdapter.MyViewHolder> {
+public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckIn_FamilyMemberListAdapter.MyViewHolder> {
 
     private List<FamilyArrayModel> familyList;
     Context mContext;

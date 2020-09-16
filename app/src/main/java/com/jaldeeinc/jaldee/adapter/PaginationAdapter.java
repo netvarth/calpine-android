@@ -1548,9 +1548,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         }
         if (searchdetailList.getOnline_profile() != null) {
-            if (searchdetailList.isCheckinAllowed() && searchdetailList.getOnline_profile().equals("1")) {
-                //   myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
-                //    myViewHolder.L_appointments.setVisibility(View.VISIBLE);
+
+            if (searchdetailList.isApptEnabled() && searchdetailList.getOnline_profile().equals("1")) {
+             //   myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
+            //    myViewHolder.L_appointments.setVisibility(View.VISIBLE);
 
                 appts_flag.add(position, true);
             } else {

@@ -1846,7 +1846,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                             searchList.setQueueWaitingTime(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());
                                             searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
                                             searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
-                                            searchList.setWaitlistEnabled(mQueueList.get(i).getNextAvailableQueue().isWaitlistEnabled());
+                                            searchList.setWaitlistEnabled(mQueueList.get(i).isWaitlistEnabled());
                                             searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
                                             searchList.setShowToken(mQueueList.get(i).getNextAvailableQueue().isShowToken());
                                             if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
@@ -1855,11 +1855,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                         }
                                     }
                                     if (mScheduleList != null && mScheduleList.size()>0) {
-                                        if(mScheduleList.get(i).isCheckinAllowed()){
+                                        if(mScheduleList.get(i).isApptEnabled()){
                                             searchList.setCheckinAllowed(true);
+                                            searchList.setApptEnabled(true);
                                         }
                                         else{
                                             searchList.setCheckinAllowed(false);
+                                            searchList.setApptEnabled(false);
                                         }
                                         //  searchList.setCheckinAllowed(mScheduleList.get(i).isCheckinAllowed());
                                         if(mScheduleList.get(i).getAvailableSchedule()!=null) {
@@ -2021,7 +2023,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                             searchList.setQueueWaitingTime(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());
                                             searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
                                             searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
-                                            searchList.setWaitlistEnabled(mQueueList.get(i).getNextAvailableQueue().isWaitlistEnabled());
+                                            searchList.setWaitlistEnabled(mQueueList.get(i).isWaitlistEnabled());
                                             searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
                                             searchList.setShowToken(mQueueList.get(i).getNextAvailableQueue().isShowToken());
                                             if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
@@ -2030,11 +2032,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                         }
                                     }
                                     if (mScheduleList != null && mScheduleList.size()>0 ) {
-                                        if(mScheduleList.get(i).isCheckinAllowed()){
+                                        if(mScheduleList.get(i).isApptEnabled()){
                                             searchList.setCheckinAllowed(true);
+                                            searchList.setApptEnabled(true);
                                         }
                                         else{
                                             searchList.setCheckinAllowed(false);
+                                            searchList.setApptEnabled(true);
                                         }
                                         //searchList.setCheckinAllowed(mScheduleList.get(i).isCheckinAllowed());
                                         if(mScheduleList.get(i).getAvailableSchedule()!=null) {
