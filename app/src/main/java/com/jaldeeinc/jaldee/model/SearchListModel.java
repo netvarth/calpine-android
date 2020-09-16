@@ -117,6 +117,25 @@ public class SearchListModel implements Serializable {
     private ArrayList donation_services;
     private ArrayList providers;
 
+    public String getAvailableDate() {
+        return availableDate;
+    }
+
+    public void setAvailableDate(String availableDate) {
+        this.availableDate = availableDate;
+    }
+
+    public String getAvailableTime() {
+        return availableTime;
+    }
+
+    public void setAvailableTime(String availableTime) {
+        this.availableTime = availableTime;
+    }
+
+    private String availableDate;
+    private String availableTime;
+
     public String getLocation_id1() {
         return location_id1;
     }

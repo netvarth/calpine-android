@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.DeptListAdapter;
 import com.jaldeeinc.jaldee.adapter.ServicesListAdapter;
@@ -87,7 +86,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     List<DepartmentUserSearchModel> usersSearchList = new ArrayList<>();
     Dialog mDialog;
     DepartmentUserSearchModel userSearch;
-    LinearLayout llDeptName,llDeptCode,llDeptDesc;
+    LinearLayout llDeptName, llDeptCode, llDeptDesc;
     Boolean firstCouponAvailable, couponAvailable;
     Boolean fromDoctors = false;
     ArrayList<ProviderUserModel> usersList;
@@ -96,12 +95,14 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     ArrayList<SearchAppointmentDepartmentServices> userAppointmentServices = new ArrayList<>();
     ArrayList<SearchService> individualUserAppointmentServices = new ArrayList<>();
     private TextView tvDocHint;
+    ArrayList<SearchAppointmentDepartmentServices> list;
+
 
     public DeptFragment() {
     }
 
 
-    public DeptFragment(SearchDepartmentServices departmentServices, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataListParent, Boolean firstCouponAvailable, Boolean couponAvailable, ArrayList<SearchLocation> searchLocation, SearchSetting mSearchSettings,String terminology) {
+    public DeptFragment(SearchDepartmentServices departmentServices, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataListParent, Boolean firstCouponAvailable, Boolean couponAvailable, ArrayList<SearchLocation> searchLocation, SearchSetting mSearchSettings, String terminology) {
         this.departmentServices = departmentServices;
         this.searchDetailViewFragment = searchDetailViewFragment;
         this.businessName = businessName;
@@ -114,7 +115,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
 
     }
 
-    public DeptFragment(ArrayList<ProviderUserModel> usersList, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataList, Boolean firstCouponAvailable, Boolean couponAvailable, ArrayList<SearchLocation> searchLocation, SearchSetting mSearchSettings, Boolean fromDoctors,String terminology) {
+    public DeptFragment(ArrayList<ProviderUserModel> usersList, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataList, Boolean firstCouponAvailable, Boolean couponAvailable, ArrayList<SearchLocation> searchLocation, SearchSetting mSearchSettings, Boolean fromDoctors, String terminology) {
         this.usersList = usersList;
         this.searchDetailViewFragment = searchDetailViewFragment;
         this.businessName = businessName;
@@ -181,11 +182,10 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                     if (departmentServices.getUsers().size() > 0) {
                         tvDocHint.setVisibility(View.VISIBLE);
                         tv_doctors.setVisibility(View.VISIBLE);
-                        if (departmentServices.getUsers().size() == 1){
-                            tv_doctors.setText(departmentServices.getUsers().size() + " "+ userTerminology);
-                        }
-                        else {
-                            tv_doctors.setText(departmentServices.getUsers().size() +" "+ userTerminology +"s");
+                        if (departmentServices.getUsers().size() == 1) {
+                            tv_doctors.setText(departmentServices.getUsers().size() + " " + userTerminology);
+                        } else {
+                            tv_doctors.setText(departmentServices.getUsers().size() + " " + userTerminology + "s");
                         }
                         tv_services.setVisibility(View.GONE);
                     } else {
@@ -243,8 +243,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     private void ApiLoadQsAndSchedulesList(final ArrayList<String> idsCheckin, final ArrayList<String> idsAppt, List<SearchViewDetail> mBusinessDataLists) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-//        mDialog.show();
+//       final Dialog dilg = Config.getProgressDialog(getActivity(), mContext.getResources().getString(R.string.dialog_log_in));
+//        dilg.show();
         String idPass = "";
         for (int i = 0; i < idsAppt.size(); i++) {
             idPass += idsAppt.get(i) + ",";
@@ -256,8 +256,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                 @Override
                 public void onResponse(Call<ArrayList<ScheduleList>> call, Response<ArrayList<ScheduleList>> response) {
                     try {
-//                        if (mDialog.isShowing())
-//                            Config.closeDialog(getActivity(), mDialog);
+//                        if (dilg.isShowing())
+//                            Config.closeDialog(getActivity(), dilg);
                         Config.logV("URL---66666----SEARCH--------" + response.raw().request().url().toString().trim());
                         Config.logV("Response--code-----SearchViewID--------------------" + response.code());
 //                        Config.logV("Response--code-----SearchViewID12--------------------" + new Gson().toJson(response.body()));
@@ -283,6 +283,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     private void loadBusinessProfile(ArrayList<String> idAppts, ArrayList<ScheduleList> mSearchScheduleList, ArrayList<QueueList> mSearchQueueList, int sIndex) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(getActivity().getApplicationContext()).create(ApiInterface.class);
+//        final Dialog dilg = Config.getProgressDialog(getActivity(), mContext.getResources().getString(R.string.dialog_log_in));
+//        dilg.show();
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -296,6 +298,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                 try {
                     Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code------Setting-------------------" + response.code());
+//                    if (dilg.isShowing())
+//                        Config.closeDialog(getActivity(), dilg);
                     if (response.code() == 200) {
                         SearchViewDetail businessProfile = response.body();
                         mBusinessDataLists.add(businessProfile);
@@ -303,26 +307,25 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                             loadBusinessProfile(idAppts, mSearchScheduleList, mSearchQueueList, (sIndex + 1));
                         } else {
                             if (fromDoctors) {
-                                loadIndividualUserAppointmentServices(idAppts,0);
+                                loadIndividualUserAppointmentServices(idAppts, 0);
                                 loadIndividualUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, 0);
 
                             } else {
-                                loadUserAppointmentServices(idAppts,0);
-                                loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, 0);
+                                loadUserAppointmentServices(idAppts, 0,mSearchScheduleList,mSearchQueueList);
+//                                loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, 0);
                             }
                         }
-                    }
-                    else if (response.code() == 404){
+                    } else if (response.code() == 404) {
 
-                        if (mDialog.isShowing())
-                            Config.closeDialog(getActivity(), mDialog);
-                        Toast.makeText(mContext,"Unable to load providers at this moment..Try again later.",Toast.LENGTH_SHORT).show();
+//                        if (dilg.isShowing())
+//                            Config.closeDialog(getActivity(), dilg);
+                        Toast.makeText(mContext, "Unable to load providers at this moment..Try again later.", Toast.LENGTH_SHORT).show();
 //                        loadBusinessProfile(idAppts, mSearchScheduleList, mSearchQueueList, (sIndex + 1));
 
                     }
                 } catch (Exception e) {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getActivity(), mDialog);
+//                    if (dilg.isShowing())
+//                        Config.closeDialog(getActivity(), dilg);
                     e.printStackTrace();
                 }
             }
@@ -338,6 +341,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     private void loadUserServices(ArrayList<String> idAppts, ArrayList<ScheduleList> mSearchScheduleList, ArrayList<QueueList> mSearchQueueList, List<SearchViewDetail> mBusinessDataLists, int sIndex) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(getActivity().getApplicationContext()).create(ApiInterface.class);
+//        final Dialog dilg = Config.getProgressDialog(getActivity(), mContext.getResources().getString(R.string.dialog_log_in));
+//        dilg.show();
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -348,6 +353,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         calluser.enqueue(new Callback<ArrayList<SearchDepartmentServices>>() {
             @Override
             public void onResponse(Call<ArrayList<SearchDepartmentServices>> call, Response<ArrayList<SearchDepartmentServices>> response) {
+//                if (dilg.isShowing())
+//                    Config.closeDialog(getActivity(), dilg);
                 userSearch = new DepartmentUserSearchModel();
                 QueueList queuelist = mSearchQueueList.get(sIndex);
                 ScheduleList schedulelist = mSearchScheduleList.get(sIndex);
@@ -363,38 +370,46 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                     Config.logV("Response--code------Setting-------------------" + response.code());
                     if (response.code() == 200) {
                         ArrayList<SearchDepartmentServices> serviceList = response.body();
-                        if (serviceList.size() > 0) {
+                        if (serviceList != null) {
+                            if (serviceList.size() > 0) {
 
-                            for (int i = 0; i<serviceList.size();i++){
+                                for (int i = 0; i < serviceList.size(); i++) {
 
-                                if (tv_departmentCode.getText().toString().equalsIgnoreCase(serviceList.get(i).getDepartmentCode())){
+                                    if (tv_departmentCode.getText().toString().equalsIgnoreCase(serviceList.get(i).getDepartmentCode())) {
 
-                                    userSearch.setServices(serviceList.get(i).getServices());
-                                    userSearch.setDepartmentId(serviceList.get(i).getDepartmentId());
+                                        userSearch.setServices(serviceList.get(i).getServices());
+                                        userSearch.setDepartmentId(serviceList.get(i).getDepartmentId());
 
+                                    }
+                                }
+                            } else {
+                                userSearch.setServices(null);
+                            }
+                        }
+                        if (userAppointmentServices.size() > 0) {
+
+                            for (int i = 0; i < userAppointmentServices.size(); i++) {
+
+                                if (tv_departmentCode.getText().toString().equalsIgnoreCase(userAppointmentServices.get(i).getDepartmentCode())) {
+
+                                    if (userAppointmentServices.get(i).getServices().size() > 0) {
+                                        Log.e("SUCCESS_OF_APPOINTMENT", String.valueOf(userAppointmentServices.get(i).getServices().size()));
+
+
+                                        userSearch.setAppointmentServices(userAppointmentServices.get(i).getServices());
+                                    }
                                 }
                             }
+
                         } else {
-                            userSearch.setServices(null);
-                        }
-                        if(userAppointmentServices.size()>0){
+                            Log.e("FAILURE OF APPOINTMENT", "NULL");
 
-                            for (int i = 0; i<userAppointmentServices.size();i++){
-
-                                if (tv_departmentCode.getText().toString().equalsIgnoreCase(userAppointmentServices.get(i).getDepartmentCode())){
-
-                                    userSearch.setAppointmentServices(userAppointmentServices.get(i).getServices());
-                                }
-                            }
-
-                        }
-                        else{
                             userSearch.setAppointmentServices(null);
                         }
                         usersSearchList.add(userSearch);
                         if ((sIndex + 1) < idAppts.size()) {
-                            loadUserAppointmentServices(idAppts,sIndex + 1);
-                            loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
+                             loadUserAppointmentServices(idAppts, sIndex + 1, mSearchScheduleList, mSearchQueueList);
+//                            loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
                         } else {
                             loadUsersList();
                         }
@@ -406,8 +421,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                     userSearch.setServices(null);
                     usersSearchList.add(userSearch);
                     if ((sIndex + 1) < idAppts.size()) {
-                        loadUserAppointmentServices(idAppts,sIndex + 1);
-                        loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
+                        loadUserAppointmentServices(idAppts, sIndex + 1, mSearchScheduleList, mSearchQueueList);
+//                        loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
                     } else {
                         loadUsersList();
                     }
@@ -424,9 +439,11 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     }
 
 
-    private void loadUserAppointmentServices(ArrayList<String> idAppts,int sIndex) {
+    private void loadUserAppointmentServices(ArrayList<String> idAppts, int sIndex, ArrayList<ScheduleList> mSearchScheduleList, ArrayList<QueueList> mSearchQueueList) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(getActivity().getApplicationContext()).create(ApiInterface.class);
+//        final Dialog dialog = Config.getProgressDialog(getActivity(), mContext.getResources().getString(R.string.dialog_log_in));
+//        dialog.show();
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -434,6 +451,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         String accountId = idAppts.get(sIndex).split("-")[0];
         String userId = idAppts.get(sIndex).split("-")[2];
         Call<ArrayList<SearchAppointmentDepartmentServices>> calluser = apiService.getAppointmentServices(Integer.parseInt(searchDetailViewFragment.uniqueID), Integer.parseInt(userId), sdf.format(currentTime));
+
+
         calluser.enqueue(new Callback<ArrayList<SearchAppointmentDepartmentServices>>() {
             @Override
             public void onResponse(Call<ArrayList<SearchAppointmentDepartmentServices>> call, Response<ArrayList<SearchAppointmentDepartmentServices>> response) {
@@ -441,8 +460,17 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                 try {
                     Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code------Setting-------------------" + response.code());
+//                    if (dialog.isShowing())
+//                        Config.closeDialog(getActivity(), dialog);
                     if (response.code() == 200) {
                         userAppointmentServices = response.body();
+
+                        loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, sIndex);
+
+                        if (userAppointmentServices == null){
+
+                            Toast.makeText(mContext,"Null Reported",Toast.LENGTH_SHORT).show();
+                        }
 
                     }
                 } catch (Exception e) {
@@ -456,11 +484,16 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                 Config.logV("Fail---------------" + t.toString());
             }
         });
+
     }
 
-    private void loadIndividualUserAppointmentServices(ArrayList<String> idAppts,int sIndex) {
+
+
+    private void loadIndividualUserAppointmentServices(ArrayList<String> idAppts, int sIndex) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(getActivity().getApplicationContext()).create(ApiInterface.class);
+//        final Dialog dialog = Config.getProgressDialog(getActivity(), mContext.getResources().getString(R.string.dialog_log_in));
+//        dialog.show();
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -475,8 +508,10 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                 try {
                     Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code------Setting-------------------" + response.code());
+//                    if (dialog.isShowing())
+//                        Config.closeDialog(getActivity(), dialog);
                     if (response.code() == 200) {
-                       individualUserAppointmentServices = response.body();
+                        individualUserAppointmentServices = response.body();
 
                     }
                 } catch (Exception e) {
@@ -505,6 +540,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     private void loadNextAvailableQs(final ArrayList<String> idAppts, ArrayList<String> idCheckins, final ArrayList<ScheduleList> mSearchScheduleList, int sIndex) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
+//        final Dialog dialog = Config.getProgressDialog(getActivity(), mContext.getResources().getString(R.string.dialog_log_in));
+//        dialog.show();
 //        String idPass = "";
 //        for (int i = 0; i < idCheckins.size(); i++) {
 //            idPass += idCheckins.get(i) + ",";
@@ -520,6 +557,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                 try {
                     Config.logV("URL---66666----SEARCH--------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-----SearchViewID--------------------" + response.code());
+//                    if (dialog.isShowing())
+//                        Config.closeDialog(getActivity(), dialog);
 //                        Config.logV("Response--code-----SearchViewID12--------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
                         mSearchQueueList = response.body();
@@ -539,6 +578,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
             public void onFailure(Call<ArrayList<QueueList>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
+//                if (dialog.isShowing())
+//                    Config.closeDialog(getActivity(), dialog);
             }
         });
 //        }
@@ -557,6 +598,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     private void loadIndividualUserServices(ArrayList<String> idAppts, ArrayList<ScheduleList> mSearchScheduleList, ArrayList<QueueList> mSearchQueueList, List<SearchViewDetail> mBusinessDataLists, int sIndex) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(getActivity().getApplicationContext()).create(ApiInterface.class);
+//        final Dialog dialog = Config.getProgressDialog(getActivity(), mContext.getResources().getString(R.string.dialog_log_in));
+//        dialog.show();
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -567,6 +610,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         calluser.enqueue(new Callback<ArrayList<SearchService>>() {
             @Override
             public void onResponse(Call<ArrayList<SearchService>> call, Response<ArrayList<SearchService>> response) {
+//                if (dialog.isShowing())
+//                    Config.closeDialog(getActivity(), dialog);
                 userSearch = new DepartmentUserSearchModel();
                 QueueList queuelist = mSearchQueueList.get(sIndex);
                 ScheduleList schedulelist = mSearchScheduleList.get(sIndex);
@@ -587,16 +632,15 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                         } else {
                             userSearch.setServices(null);
                         }
-                        if(individualUserAppointmentServices.size()>0){
+                        if (individualUserAppointmentServices.size() > 0) {
                             userSearch.setUserAppointmentServices(individualUserAppointmentServices);
-                        }
-                        else{
+                        } else {
                             userSearch.setUserAppointmentServices(null);
                         }
 
                         usersSearchList.add(userSearch);
                         if ((sIndex + 1) < idAppts.size()) {
-                            loadIndividualUserAppointmentServices(idAppts,(sIndex+1));
+                            loadIndividualUserAppointmentServices(idAppts, (sIndex + 1));
                             loadIndividualUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
                         } else {
                             loadUsersList();
@@ -610,7 +654,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                     usersSearchList.add(userSearch);
                     if ((sIndex + 1) < idAppts.size()) {
                         loadIndividualUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
-                        loadIndividualUserAppointmentServices(idAppts,(sIndex+1));
+                        loadIndividualUserAppointmentServices(idAppts, (sIndex + 1));
                     } else {
                         loadUsersList();
                     }
@@ -622,6 +666,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
             public void onFailure(Call<ArrayList<SearchService>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
+//                if (dialog.isShowing())
+//                    Config.closeDialog(getActivity(), dialog);
             }
         });
     }

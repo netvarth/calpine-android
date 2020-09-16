@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +66,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tv_loc,tv_date,tv_waittime,tv_Open,tv_qmessage;
+        TextView tv_loc,tv_date,tv_waittime,tv_Open,tv_qmessage,tvAvailDate;
         Button btn_checkin,btnappointments,btndonations;
         View divider;
         RecyclerView recycleview_contact;
@@ -75,6 +76,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 
             tv_loc=(TextView)view.findViewById(R.id.txt_loc);
             tv_date=(TextView)view.findViewById(R.id.txt_date);
+            tvAvailDate = view.findViewById(R.id.txtavaildate);
             tv_waittime=(TextView)view.findViewById(R.id.txt_time);
             tv_Open=(TextView)view.findViewById(R.id.txtOpen);
             btn_checkin=(Button) view.findViewById(R.id.btn_checkin);
@@ -356,6 +358,31 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 
                     if(mFavList.get(i).getOnlinePresence().equals("true")){
                         if(scheduleList.isCheckinAllowed()){
+
+                            if (mScheduleList.get(position).getAvailableSchedule() != null) {
+                                if (mScheduleList.get(position).getSlotsData() != null) {
+                                    String avlDate = mScheduleList.get(position).getAvailableSchedule().getAvailableDate();
+                                    Date date = null;
+                                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                                    try {
+                                        date = format.parse(avlDate);
+                                        System.out.println(date);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    String timeSlot = convertSlotTime(mScheduleList.get(position).getSlotsData().getAvailableSlots().get(0).getSlotTime().split("-")[0]);
+
+                                    if (date != null) {
+                                        if (DateUtils.isToday(date.getTime())) {
+                                            myViewHolder.tvAvailDate.setText("Next Available time " + "\n" + "Today,  " + timeSlot);
+
+                                        } else {
+                                            String availableDate = formatDate(mScheduleList.get(position).getAvailableSchedule().getAvailableDate());
+                                            myViewHolder.tvAvailDate.setText("Next Available time " + "\n" + availableDate + ",  " + timeSlot);
+                                        }
+                                    }
+                                }
+                            }
                             myViewHolder.appoinmentLayouts.setVisibility(View.VISIBLE);
                         }else{
                             myViewHolder.appoinmentLayouts.setVisibility(View.GONE);
@@ -385,6 +412,9 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                         iAppoinment.putExtra("title", title);
                         iAppoinment.putExtra("terminology",terminologys);
                         iAppoinment.putExtra("place", myViewHolder.tv_loc.getText().toString());
+                        if (mScheduleList.get(position).getAvailableSchedule() != null) {
+                            iAppoinment.putExtra("availableDate", mScheduleList.get(position).getAvailableSchedule().getAvailableDate());
+                        }
                         if(mSearchLocList.get(0).getGoogleMapUrl()!=null)
                         {
                             iAppoinment.putExtra("googlemap",mSearchLocList.get(0).getGoogleMapUrl());
@@ -669,5 +699,41 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             }
         });
     }
+
+    public String convertSlotTime(String date) {
+        final String OLD_FORMAT = "HH:mm";
+        final String NEW_FORMAT = "hh:mm aa";
+
+        String slotTime = "";
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(OLD_FORMAT);
+            Date d = sdf.parse(date);
+            sdf.applyPattern(NEW_FORMAT);
+            slotTime = sdf.format(d);
+        } catch (ParseException e) {
+            // TODO: handle exception
+        }
+        String str = slotTime.replace("am", "AM").replace("pm","PM");
+        return str;
+    }
+
+
+    private String formatDate(String availableDate) {
+
+        String dtStart = availableDate;
+        Date dateParse = null;
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            dateParse = format1.parse(dtStart);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat df = new SimpleDateFormat("MMM dd");
+        String nAvailDate = df.format(dateParse);
+
+        return nAvailDate;
+    }
+
 
 }

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -342,13 +343,18 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 iAppointment.putExtra("place", userDetails.get(position).getLocation().getPlace());
                 iAppointment.putExtra("googlemap", userDetails.get(position).getLocation().getGoogleMapUrl());
                 iAppointment.putExtra("sector", Domain);
-                iAppointment.putExtra("subsector", domainList.getDisplayname());
+                if (domainList != null) {
+                    iAppointment.putExtra("subsector", domainList.getDisplayname());
+                }
                 iAppointment.putExtra("terminology", terminology);
                 iAppointment.putExtra("userId", Integer.parseInt(userDetails.get(position).getScheduleList().getProvider().getId()));
                 iAppointment.putExtra("userName", userDetails.get(position).getSearchViewDetail().getBusinessName());
                 if (userDetails.get(position).getServices().size() != 0) {
                     iAppointment.putExtra("departmentId", String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));
                 }
+//                if (userDetails.get(position).getScheduleList().getAvailableSchedule()!= null){
+//                    iAppointment.putExtra("availableDate", userDetails.get(position).getScheduleList().getAvailableSchedule().getAvailableDate());
+//                }
                 iAppointment.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
                 context.startActivity(iAppointment);
             }
@@ -801,6 +807,32 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
         if (userDetails.get(position).getScheduleList() != null) {
             if (userDetails.get(position).getSearchViewDetail().isOnlinePresence()) {
                 if (userDetails.get(position).getScheduleList().isCheckinAllowed()) {
+
+                    if (userDetails.get(position).getScheduleList().getAvailableSchedule() != null) {
+                        if (userDetails.get(position).getScheduleList().getSlotsData()!= null) {
+                            String avlDate = userDetails.get(position).getScheduleList().getAvailableSchedule().getAvailableDate();
+                            Date date = null;
+                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                            try {
+                                date = format.parse(avlDate);
+                                System.out.println(date);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            String timeSlot = convertSlotTime(userDetails.get(position).getScheduleList().getSlotsData().getAvailableSlots().get(0).getSlotTime().split("-")[0]);
+
+                            if (date != null) {
+                                if (DateUtils.isToday(date.getTime())) {
+                                    holder.tvAvailDate.setText("Next Available time " + "\n" + "Today,  " + timeSlot);
+
+                                } else {
+                                    String availableDate = formatDate(userDetails.get(position).getScheduleList().getAvailableSchedule().getAvailableDate());
+                                    holder.tvAvailDate.setText("Next Available time " + "\n" + availableDate + ",  " + timeSlot);
+                                }
+                            }
+                        }
+                    }
+
                     holder.LAppointment.setVisibility(View.VISIBLE);
                     holder.LApp_Services.setVisibility(View.VISIBLE);
                     holder.txt_apptservices.setVisibility(View.VISIBLE);
@@ -1755,7 +1787,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
             LDepartment_2 = (LinearLayout) view.findViewById(R.id.LDepartment_2);
             txt_msg = (TextView) view.findViewById(R.id.txt_msg);
             txt_peopleahead = (TextView) view.findViewById(R.id.txt_PeopleAhead);
-            LAppointment = view.findViewById(R.id.appoinmentLayouts);
+            LAppointment = view.findViewById(R.id.appointmentLayout);
             btn_appointments = view.findViewById(R.id.btnappointments);
             LApp_Services = view.findViewById(R.id.appointmentList);
             txt_apptservices = view.findViewById(R.id.txtapptservices);
@@ -1770,6 +1802,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
             tvAppService1 = view.findViewById(R.id.tv_appService1);
             tvAppService2 = view.findViewById(R.id.tv_appservice2);
             tvAppSeeAll = view.findViewById(R.id.tv_appSeeAll);
+            tvAvailDate = view.findViewById(R.id.txtavaildate);
         }
     }
 
@@ -1942,5 +1975,41 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
         appServices.addAll(services);
         return apptList;
     }
+
+    public String convertSlotTime(String date) {
+        final String OLD_FORMAT = "HH:mm";
+        final String NEW_FORMAT = "hh:mm aa";
+
+        String slotTime = "";
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(OLD_FORMAT);
+            Date d = sdf.parse(date);
+            sdf.applyPattern(NEW_FORMAT);
+            slotTime = sdf.format(d);
+        } catch (ParseException e) {
+            // TODO: handle exception
+        }
+        String str = slotTime.replace("am", "AM").replace("pm","PM");
+        return str;
+    }
+
+
+    private String formatDate(String availableDate) {
+
+        String dtStart = availableDate;
+        Date dateParse = null;
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            dateParse = format1.parse(dtStart);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat df = new SimpleDateFormat("MMM dd");
+        String nAvailDate = df.format(dateParse);
+
+        return nAvailDate;
+    }
+
 }
 

@@ -749,10 +749,10 @@
                 android:gravity="center"
                 android:paddingLeft="@dimen/padding3"
                 android:paddingRight="@dimen/padding3"
-                android:text="Est WaitTime"
+                android:text=""
                 android:textColor="@color/dark_blue"
                 android:textSize="@dimen/txtsize_12"
-                android:visibility="gone" />
+                android:visibility="visible" />
             <Button
                 android:id="@+id/btnappointments"
                 style="?android:attr/borderlessButtonStyle"

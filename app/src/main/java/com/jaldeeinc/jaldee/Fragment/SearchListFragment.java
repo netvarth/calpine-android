@@ -104,7 +104,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     // SearchDetailAdapter adapter;
     List<SearchAWsResponse> mSearchResp = new ArrayList<>();
     List<QueueList> mQueueList = new ArrayList<>();
-    List<ScheduleList> mScheduleList = new ArrayList<>();
+    ArrayList<ScheduleList> mScheduleList = new ArrayList<>();
 
     List<SearchListModel> mSearchListModel = new ArrayList<>();
     ProgressBar progressBar;
@@ -1677,7 +1677,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
      * @param mSearchRespPass Cloud response
      * @param mCheck          first/next
      */
-    private void ApiQueueList(ArrayList<String> queuelist, final List<SearchAWsResponse> mSearchRespPass, final String mCheck, final List<ScheduleList> mScheduleList) {
+    private void ApiQueueList(ArrayList<String> queuelist, final List<SearchAWsResponse> mSearchRespPass, final String mCheck, final ArrayList<ScheduleList> mScheduleList) {
         ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
         Config.logV("QUEUELIST @@@@@@@@@@@@@@@@@@@@@@");
@@ -1866,11 +1866,18 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                             if (mScheduleList.get(i).getAvailableSchedule().getLocation() != null) {
                                                 searchList.setaLoc(String.valueOf(mScheduleList.get(i).getAvailableSchedule().getLocation().getId()));
                                             }
+                                            searchList.setAvailableDate(mScheduleList.get(i).getAvailableSchedule().getAvailableDate());
+                                        }
+
+                                        if (mScheduleList.get(i).getSlotsData()!= null) {
+                                            searchList.setAvailableTime(mScheduleList.get(i).getSlotsData().getAvailableSlots().get(0).getSlotTime());
                                         }
                                     }
+
                                     mSearchListModel.add(searchList);
 //                                    Log.i("mSearchListModel12", new Gson().toJson(mSearchListModel));
                                 }
+
                                 List<SearchListModel> results = mSearchListModel;
                                 pageadapter.addAll(results);
                                 boolean isLoading = true;
@@ -2034,6 +2041,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                             if (mScheduleList.get(i).getAvailableSchedule().getLocation() != null) {
                                                 searchList.setaLoc(String.valueOf(mScheduleList.get(i).getAvailableSchedule().getLocation().getId()));
                                             }
+                                            searchList.setAvailableDate(mScheduleList.get(i).getAvailableSchedule().getAvailableDate());
+                                        }
+                                        if (mScheduleList.get(i).getSlotsData()!= null) {
+                                            searchList.setAvailableTime(mScheduleList.get(i).getSlotsData().getAvailableSlots().get(0).getSlotTime());
                                         }
                                     }
                                     mSearchListModel.add(searchList);
@@ -2072,7 +2083,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         }
     }
 
-    private void ApiSheduleList(final ArrayList<String> queuelist, final List<SearchAWsResponse> mSearchRespPass, final String mCheck, final List<ScheduleList> mScheduleList) {
+    private void ApiSheduleList(final ArrayList<String> queuelist, final List<SearchAWsResponse> mSearchRespPass, final String mCheck, final ArrayList<ScheduleList> mScheduleList) {
         ApiInterface apiService = ApiClient.getClient(getActivity()).create(ApiInterface.class);
         StringBuilder csvBuilder = new StringBuilder();
         for (String data : queuelist) {
@@ -2082,10 +2093,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         String csv = csvBuilder.toString();
         System.out.println(csv);
         if (csv != "" && csv != null) {
-            Call<List<ScheduleList>> call = apiService.getScheduleCheckReponse(csv);
-            call.enqueue(new Callback<List<ScheduleList>>() {
+            Call<ArrayList<ScheduleList>> call = apiService.getScheduleCheckReponse(csv);
+            call.enqueue(new Callback<ArrayList<ScheduleList>>() {
                 @Override
-                public void onResponse(Call<List<ScheduleList>> call, Response<List<ScheduleList>> response) {
+                public void onResponse(Call<ArrayList<ScheduleList>> call, Response<ArrayList<ScheduleList>> response) {
                     try {
                         mScheduleList.clear();
 //                        Log.i("SearchScheduleResp", new Gson().toJson(response.body()));
@@ -2104,7 +2115,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     }
                 }
                 @Override
-                public void onFailure(Call<List<ScheduleList>> call, Throwable t) {
+                public void onFailure(Call<ArrayList<ScheduleList>> call, Throwable t) {
                     // Log error here since request failed
                     Config.logV("Fail---------------" + t.toString());
                /* if (mDialog.isShowing())

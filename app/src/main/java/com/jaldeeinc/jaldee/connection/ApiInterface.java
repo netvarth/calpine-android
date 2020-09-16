@@ -325,7 +325,7 @@ public interface ApiInterface {
     Call<List<QueueList>> getQueueCheckReponse(@Path("queueId") String id);
 
     @GET(" provider/appointment/schedule/nextAvailableSchedule/{queueId}")
-    Call<List<ScheduleList>> getScheduleCheckReponse(@Path("queueId") String id);
+    Call<ArrayList<ScheduleList>> getScheduleCheckReponse(@Path("queueId") String id);
 
 
     @GET("provider/search/suggester/location")

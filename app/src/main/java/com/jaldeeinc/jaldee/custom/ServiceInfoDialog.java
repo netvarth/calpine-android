@@ -168,8 +168,8 @@ public class ServiceInfoDialog extends Dialog {
             if (searchService.getServicegallery().size() > 0) {
                 i_servicegallery.setVisibility(View.VISIBLE);
                 try {
-                    Picasso.with(context).setLoggingEnabled(true);
-                    Picasso.with(context).load(searchService.getServicegallery().get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+                    PicassoTrustAll.getInstance(context).setLoggingEnabled(true);
+                    PicassoTrustAll.getInstance(context).load(searchService.getServicegallery().get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

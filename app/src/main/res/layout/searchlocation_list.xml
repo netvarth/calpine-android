@@ -789,15 +789,15 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="@color/blue"
-                    android:gravity="center"
+                    android:background="@color/spinnerbg"
                     android:justificationMode="inter_word"
                     android:letterSpacing="0.03"
+                    android:gravity="center"
                     android:lineSpacingExtra="@dimen/padding3"
                     android:paddingLeft="@dimen/padding3"
                     android:paddingRight="@dimen/padding3"
-                    android:text="Available on"
-                    android:textColor="@color/white"
+                    android:text=""
+                    android:textColor="@color/dark_blue"
                     android:textSize="@dimen/txtsize_12"
                     android:textStyle="bold"
                     android:visibility="gone" />
@@ -818,7 +818,6 @@
                     android:textSize="@dimen/txtsize_12"
                     android:textStyle="bold" />
 
-                <!--  android:textSize="@dimen/txtsize_subtitle" />-->
             </LinearLayout>
 
 
@@ -922,7 +921,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/padding5"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:visibility="gone">
 
             <LinearLayout
@@ -977,11 +976,28 @@
 
             </LinearLayout>
 
+                <TextView
+                    android:id="@+id/tv_donationAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:background="@color/spinnerbg"
+                    android:justificationMode="inter_word"
+                    android:letterSpacing="0.03"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/padding3"
+                    android:paddingLeft="@dimen/padding3"
+                    android:paddingRight="@dimen/padding3"
+                    android:text="Upto \n 50,000 Rs"
+                    android:textColor="@color/dark_blue"
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold"
+                    />
+
                 <Button
                     android:id="@+id/btndonations"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
                     android:layout_weight="0.5"
                     android:background="@color/dark_blue"
                     android:gravity="center"

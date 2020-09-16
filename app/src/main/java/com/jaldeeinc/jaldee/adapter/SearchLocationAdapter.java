@@ -12,11 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.text.style.ForegroundColorSpan;
+import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +24,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.activities.Donation;
-import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.AppointmentServiceInfoDialog;
@@ -41,16 +37,13 @@ import com.jaldeeinc.jaldee.custom.DonationServiceDialog;
 import com.jaldeeinc.jaldee.custom.LocationAmenitiesDialog;
 import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
 
-import com.jaldeeinc.jaldee.custom.UserAppServicesDialog;
 import com.jaldeeinc.jaldee.model.NextAvailableQModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueList;
-import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
-import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchLocation;
@@ -98,7 +91,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         TextView txt_earliestAvailable, txt_apptservices, txt_dontservices, txtapptSeeAll, txtdntSeeAll;
         Button btn_appointments, btn_donations;
         TextView tvAppService1, tvAppService2, tvAppSeeAll, tvAvailDate;
-        TextView tvDntService1, tvDntService2, tvDntSeeAll;
+        TextView tvDntService1, tvDntService2, tvDntSeeAll,tvDonationAmount;
 
         ArrayList<WorkingModel> workingModelArrayList = new ArrayList<>();
         String txtdataMon = "";
@@ -161,6 +154,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             tvDntService1 = view.findViewById(R.id.tv_dntService1);
             tvDntService2 = view.findViewById(R.id.tv_dntService2);
             tvDntSeeAll = view.findViewById(R.id.tv_dntSeeAll);
+            tvDonationAmount = view.findViewById(R.id.tv_donationAmount);
         }
     }
 
@@ -464,6 +458,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iAppointment.putExtra("sector", sector);
                 iAppointment.putExtra("subsector", subsector);
                 iAppointment.putExtra("terminology", terminology);
+                if (mScheduleList.get(position).getAvailableSchedule() != null) {
+                    iAppointment.putExtra("availableDate", mScheduleList.get(position).getAvailableSchedule().getAvailableDate());
+                }
                 iAppointment.putExtra("virtualservices", virtualServices);
                 mContext.startActivity(iAppointment);
             }
@@ -1169,7 +1166,30 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 //                        } else {
 //                            myViewHolder.tvAvailDate.setText("Available on " + "\n" + mScheduleList.get(position).getAvailableSchedule().getAvailableDate());
 //                        }
-                        myViewHolder.tvAvailDate.setVisibility(View.GONE);
+
+
+
+                        String avlDate = mScheduleList.get(position).getAvailableSchedule().getAvailableDate();
+                        Date date = null;
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        try {
+                            date = format.parse(avlDate);
+                            System.out.println(date);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        String timeSlot = convertSlotTime(mScheduleList.get(position).getSlotsData().getAvailableSlots().get(0).getSlotTime().split("-")[0]);
+
+                        if (date != null) {
+                            if (DateUtils.isToday(date.getTime())) {
+                                myViewHolder.tvAvailDate.setText("Next Available time " + "\n" + "Today,  " + timeSlot);
+
+                            } else {
+                                String availableDate = formatDate(mScheduleList.get(position).getAvailableSchedule().getAvailableDate());
+                                myViewHolder.tvAvailDate.setText("Next Available time " + "\n" + availableDate + ",  " + timeSlot);
+                            }
+                        }
+                        myViewHolder.tvAvailDate.setVisibility(View.VISIBLE);
                         myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
                         myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
                     } else {
@@ -1666,6 +1686,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 if (donationFundRaising) {
 
                     if (gServicesList.size() > 0) {
+                        myViewHolder.tvDonationAmount.setText("Upto\n"+ "₹ "+ gServicesList.get(0).getMaxDonationAmount());
                         myViewHolder.LDonation.setVisibility(View.VISIBLE);
                         myViewHolder.LDont_Services.setVisibility(View.VISIBLE);
                         myViewHolder.txt_dontservices.setVisibility(View.VISIBLE);
@@ -2074,6 +2095,42 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             }
 
         }
+    }
+
+
+    public String convertSlotTime(String date) {
+        final String OLD_FORMAT = "HH:mm";
+        final String NEW_FORMAT = "hh:mm aa";
+
+        String slotTime = "";
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(OLD_FORMAT);
+            Date d = sdf.parse(date);
+            sdf.applyPattern(NEW_FORMAT);
+            slotTime = sdf.format(d);
+        } catch (ParseException e) {
+            // TODO: handle exception
+        }
+        String str = slotTime.replace("am", "AM").replace("pm","PM");
+        return str;
+    }
+
+
+    private String formatDate(String availableDate) {
+
+        String dtStart = availableDate;
+        Date dateParse = null;
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            dateParse = format1.parse(dtStart);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat df = new SimpleDateFormat("MMM dd");
+        String nAvailDate = df.format(dateParse);
+
+        return nAvailDate;
     }
 
     public static String getWaitingTime(NextAvailableQModel queue) {

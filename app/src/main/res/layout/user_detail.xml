@@ -781,18 +781,33 @@
 
 
             <LinearLayout
-                android:id="@+id/appoinmentLayouts"
+                android:id="@+id/appointmentLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/padding5"
                 android:orientation="horizontal"
                 android:visibility="gone">
 
+                <TextView
+                    android:id="@+id/txtavaildate"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@color/spinnerbg"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/padding3"
+                    android:paddingRight="@dimen/padding3"
+                    android:text=""
+                    android:textColor="@color/dark_blue"
+                    android:textSize="@dimen/txtsize_12"
+                    android:visibility="visible" />
                 <Button
                     android:id="@+id/btnappointments"
+                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/dimen_50dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="@color/dark_blue"
@@ -802,8 +817,7 @@
                     android:text="Appointment"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/txtsize_12"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/txtsize_12" />
 
                 <!--  android:textSize="@dimen/txtsize_subtitle" />-->
             </LinearLayout>

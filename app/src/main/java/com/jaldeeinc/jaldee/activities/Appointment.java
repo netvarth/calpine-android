@@ -41,6 +41,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.format.DateUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -307,7 +308,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     private EmailEditWindow emailEditWindow;
     ProfileModel profileDetails;
     private IMailSubmit iMailSubmit;
-    private LinearLayout llEmail,llNoServices;
+    private LinearLayout llEmail, llNoServices;
     private TextView tvErrorMail;
     ArrayList<SearchDepartment> availableDepartments = new ArrayList<>();
 
@@ -691,7 +692,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 place = extras.getString("place", "");
                 terminology = extras.getString("terminology", "");
                 isShowToken = extras.getString("isShowToken", "");
-                getAvail_date = extras.getString("getAvail_date", "");
+                getAvail_date = extras.getString("availableDate", "");
                 googlemap = extras.getString("googlemap", "");
                 ApiSearchViewDetail(uniqueID);
             } else {
@@ -719,7 +720,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 subsector = extras.getString("subsector", "");
                 terminology = extras.getString("terminology", "");
                 isShowToken = extras.getString("isShowToken", "");
-                getAvail_date = extras.getString("getAvail_date", "");
+                getAvail_date = extras.getString("availableDate", "");
                 virtualServices = extras.getBoolean("virtualservices");
                 virtualserviceStatus = extras.getString("virtualservice");
 
@@ -795,8 +796,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                                 tvErrorMail.setVisibility(View.VISIBLE);
                             }
-                        }
-                        else {
+                        } else {
 
                             ApiAppointment(txt_message);
                         }
@@ -839,11 +839,31 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         });
 
 
-        final Date currentTimess = new Date();
-        final SimpleDateFormat sdfs = new SimpleDateFormat(
-                "yyyy-MM-dd");
-        System.out.println("UTC time: " + sdfs.format(currentTimess));
-        txtWaitTime.setText("Today\n" + sdfs.format(currentTimess));
+        Date selectedDate = null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            selectedDate = format.parse(getAvail_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (selectedDate != null) {
+
+            // to set date with day of week if default date is not current date
+            if (!DateUtils.isToday(selectedDate.getTime())) {
+                final SimpleDateFormat sdfs = new SimpleDateFormat("EEEE dd-MM-yyyy");
+                txtWaitTime.setText(sdfs.format(selectedDate));
+            } else {
+                // to set Today
+                final SimpleDateFormat sdfs = new SimpleDateFormat("dd-MM-yyyy");
+                txtWaitTime.setText("Today\n" + sdfs.format(selectedDate));
+            }
+        } else {
+
+            final Date currentDate = new Date();
+            final SimpleDateFormat sdfs = new SimpleDateFormat("dd-MM-yyyy");
+            System.out.println("UTC time: " + sdfs.format(currentDate));
+            txtWaitTime.setText("Today\n" + sdfs.format(currentDate));
+        }
 
 
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -910,7 +930,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         serviceSelected = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getName();
                         selectedService = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
                         isPrepay = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getIsPrePayment();
-
 
 
                         if (selectedServiceType.equalsIgnoreCase("virtualService")) {

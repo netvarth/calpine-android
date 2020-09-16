@@ -16,6 +16,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -94,7 +95,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
     boolean from_user = false;
 
 
-    public DeptListAdapter(FragmentActivity activity, List<DepartmentUserSearchModel> msearchList, SearchDetailViewFragment searchDetailViewFragment, Boolean firstCouponAvailable, Boolean couponAvailable,AdapterCallback mAdapterCallback) {
+    public DeptListAdapter(FragmentActivity activity, List<DepartmentUserSearchModel> msearchList, SearchDetailViewFragment searchDetailViewFragment, Boolean firstCouponAvailable, Boolean couponAvailable, AdapterCallback mAdapterCallback) {
         this.searchList = msearchList;
         this.searchDetailViewFragment = searchDetailViewFragment;
         this.activity = activity;
@@ -112,7 +113,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         ImageView ic_jaldeeverifiedIcon;
         ImageView profile;
         RatingBar rating;
-        TextView tv_claimable, tv_distance, tv_branch_name, tvSpecializations;
+        TextView tv_claimable, tv_distance, tv_branch_name, tvSpecializations, tvAppWaitTime;
         Button btncheckin, btnappointment;
         LinearLayout layout_row;
         LinearLayout layout_type;
@@ -152,6 +153,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             layout_type = view.findViewById(R.id.layout_type);
             tv_jdn = view.findViewById(R.id.txtjdn);
             tv_enquiry = view.findViewById(R.id.txt_enquiry);
+            tvAppWaitTime = view.findViewById(R.id.txtApptWaitTime);
 
         }
     }
@@ -443,7 +445,6 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         }
 
 
-
     }
 
     private void handleCoupons(MyViewHolder myViewHolder, DepartmentUserSearchModel searchdetailList, LinearLayout parent, LinearLayout.LayoutParams params1) {
@@ -556,29 +557,25 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                             "fonts/Montserrat_Regular.otf");
                     dynaText.setTypeface(tyface);
                     dynaText.setText(searchdetailList.getServices().get(i).getName());
-                    try{
-                    if(searchdetailList.getServices().get(i).getServiceType().equalsIgnoreCase("virtualService")){
+                    try {
+                        if (searchdetailList.getServices().get(i).getServiceType().equalsIgnoreCase("virtualService")) {
 
-                        if(searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
-                            dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
-                            dynaText.setCompoundDrawablePadding(10);
-                        }
-                        else if(searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")){
-                            dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized,0,0,0);
-                            dynaText.setCompoundDrawablePadding(10);
-                        }
-                        else if(searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
-                            dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized,0,0,0);
-                            dynaText.setCompoundDrawablePadding(10);
-                        }
-                        else if(searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){
-                            dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
-                            dynaText.setCompoundDrawablePadding(10);
-                        }
+                            if (searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                                dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
+                                dynaText.setCompoundDrawablePadding(10);
+                            } else if (searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                                dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
+                                dynaText.setCompoundDrawablePadding(10);
+                            } else if (searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                                dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                dynaText.setCompoundDrawablePadding(10);
+                            } else if (searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                                dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
+                                dynaText.setCompoundDrawablePadding(10);
+                            }
 
-                    }
-                    }
-                    catch(Exception e){
+                        }
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     dynaText.setTextSize(11);
@@ -609,8 +606,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                         iService.putExtra("isPrePayment", searchdetailList.getServices().get(i).isPrePayment());
                                         iService.putExtra("MinPrePaymentAmount", searchdetailList.getServices().get(i).getMinPrePaymentAmount());
                                         iService.putExtra("serviceType", searchdetailList.getServices().get(i).getServiceType());
-                                        if(searchdetailList.getServices().get(i).getVirtualCallingModes()!=null){
-                                        iService.putExtra("callingMode", searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode());}
+                                        if (searchdetailList.getServices().get(i).getVirtualCallingModes() != null) {
+                                            iService.putExtra("callingMode", searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode());
+                                        }
                                         activity.startActivity(iService);
 
                                     }
@@ -669,43 +667,77 @@ public class DeptListAdapter extends RecyclerView.Adapter {
     }
 
     private void handleAppointmentInfo(MyViewHolder myViewHolder, DepartmentUserSearchModel searchdetailList) {
-        Typeface tyface_confm = Typeface.createFromAsset(context.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        myViewHolder.btnappointment.setTypeface(tyface_confm);
-        myViewHolder.btnappointment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent iAppointment = new Intent(v.getContext(), Appointment.class);
-                iAppointment.putExtra("serviceId", searchdetailList.getLocation().getId());
-                iAppointment.putExtra("uniqueID", String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()));
-                iAppointment.putExtra("accountID", String.valueOf(searchdetailList.getParentSearchViewDetail().getId()));
-                iAppointment.putExtra("googlemap", searchdetailList.getLocation().getGoogleMapUrl());
-                iAppointment.putExtra("from", "multiusercheckin");
-                iAppointment.putExtra("title", searchdetailList.getParentSearchViewDetail().getBusinessName());
-                iAppointment.putExtra("place", searchdetailList.getLocation().getPlace());
-                iAppointment.putExtra("sector", searchdetailList.getParentSearchViewDetail().getServiceSector().getDomain());
-                iAppointment.putExtra("subsector", searchdetailList.getParentSearchViewDetail().getServiceSubSector().getSubDomain());
-                iAppointment.putExtra("terminology", termilogy);
-                iAppointment.putExtra("userId",Integer.parseInt(searchdetailList.getScheduleList().getProvider().getId()));
-                iAppointment.putExtra("userName",searchdetailList.getSearchViewDetail().getBusinessName());
-                iAppointment.putExtra("departmentId",String.valueOf(searchdetailList.getDepartmentId()));
-                iAppointment.putExtra("virtualservices",searchdetailList.getSearchViewDetail().isVirtualServices());
+
+        try {
+            Typeface tyface_confm = Typeface.createFromAsset(context.getAssets(),
+                    "fonts/Montserrat_Bold.otf");
+            myViewHolder.btnappointment.setTypeface(tyface_confm);
+            myViewHolder.btnappointment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent iAppointment = new Intent(v.getContext(), Appointment.class);
+                    iAppointment.putExtra("serviceId", searchdetailList.getLocation().getId());
+                    iAppointment.putExtra("uniqueID", String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()));
+                    iAppointment.putExtra("accountID", String.valueOf(searchdetailList.getParentSearchViewDetail().getId()));
+                    iAppointment.putExtra("googlemap", searchdetailList.getLocation().getGoogleMapUrl());
+                    iAppointment.putExtra("from", "multiusercheckin");
+                    iAppointment.putExtra("title", searchdetailList.getParentSearchViewDetail().getBusinessName());
+                    iAppointment.putExtra("place", searchdetailList.getLocation().getPlace());
+                    iAppointment.putExtra("sector", searchdetailList.getParentSearchViewDetail().getServiceSector().getDomain());
+                    iAppointment.putExtra("subsector", searchdetailList.getParentSearchViewDetail().getServiceSubSector().getSubDomain());
+                    iAppointment.putExtra("terminology", termilogy);
+                    iAppointment.putExtra("userId", Integer.parseInt(searchdetailList.getScheduleList().getProvider().getId()));
+                    iAppointment.putExtra("userName", searchdetailList.getSearchViewDetail().getBusinessName());
+                    iAppointment.putExtra("departmentId", String.valueOf(searchdetailList.getDepartmentId()));
+                    if (searchdetailList.getScheduleList().getAvailableSchedule() != null) {
+                        iAppointment.putExtra("availableDate", searchdetailList.getScheduleList().getAvailableSchedule().getAvailableDate());
+                    }
+                    iAppointment.putExtra("virtualservices", searchdetailList.getSearchViewDetail().isVirtualServices());
 //                iAppointment.putExtra("isshowtoken", searchdetailList.getQueueList().isShowToken());
 //                iAppointment.putExtra("getAvail_date", searchdetailList.getScheduleList().getAvailableSchedule().);
-                v.getContext().startActivity(iAppointment);
-            }
-        });
-        if (searchdetailList.getParentSearchViewDetail().isOnlinePresence()) {
-            if (searchdetailList.getScheduleList().getAvailableSchedule() != null &&
-                    (searchdetailList.getScheduleList().getAvailableSchedule().isTodayAppt() ||
-                            searchdetailList.getScheduleList().getAvailableSchedule().isFutureAppt())) {
-                myViewHolder.L_appointments.setVisibility(View.VISIBLE);
+                    v.getContext().startActivity(iAppointment);
+                }
+            });
+            if (searchdetailList.getParentSearchViewDetail().isOnlinePresence()) {
+                if (searchdetailList.getScheduleList().getAvailableSchedule() != null &&
+                        (searchdetailList.getScheduleList().getAvailableSchedule().isTodayAppt() ||
+                                searchdetailList.getScheduleList().getAvailableSchedule().isFutureAppt())) {
+
+                    if (searchdetailList.getScheduleList().getSlotsData() != null) {
+                        String avlDate = searchdetailList.getScheduleList().getAvailableSchedule().getAvailableDate();
+                        Date date = null;
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        try {
+                            date = format.parse(avlDate);
+                            System.out.println(date);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        String timeSlot = convertSlotTime(searchdetailList.getScheduleList().getSlotsData().getAvailableSlots().get(0).getSlotTime().split("-")[0]);
+
+                        if (date != null) {
+                            if (DateUtils.isToday(date.getTime())) {
+                                myViewHolder.tvAppWaitTime.setText("Next Available time " + "\n" + "Today,  " + timeSlot);
+
+                            } else {
+                                String availableDate = formatDate(searchdetailList.getScheduleList().getAvailableSchedule().getAvailableDate());
+                                myViewHolder.tvAppWaitTime.setText("Next Available time " + "\n" + availableDate + ",  " + timeSlot);
+                            }
+                        }
+                    }
+
+
+                    myViewHolder.L_appointments.setVisibility(View.VISIBLE);
+                } else {
+                    myViewHolder.L_appointments.setVisibility(View.GONE);
+                }
             } else {
                 myViewHolder.L_appointments.setVisibility(View.GONE);
             }
-        } else {
-            myViewHolder.L_appointments.setVisibility(View.GONE);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     public void disableCheckinFeature(MyViewHolder myViewHolder) {
@@ -803,7 +835,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                 myViewHolder.tv_peopleahead.setText(message);
                             }
                         } else {
-                          //  disableCheckinButton(myViewHolder);
+                            //  disableCheckinButton(myViewHolder);
                         }
                         if (date2 != null && date1.compareTo(date2) < 0) {
                             myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
@@ -816,7 +848,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                         }
                         //Future Checkin
                         if (searchdetailList.getSettings().isFutureDateWaitlist() && searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate() != null) {
-                          //  myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
+                            //  myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
                             if (searchdetailList.getQueueList().getNextAvailableQueue().isShowToken()) {
                                 myViewHolder.tv_Futuredate.setText("Do you want to Get Token for another day?");
                             } else {
@@ -849,11 +881,11 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 iCheckIn.putExtra("terminology", termilogy);
                 iCheckIn.putExtra("isshowtoken", searchdetailList.getQueueList().getNextAvailableQueue().isShowToken());
                 iCheckIn.putExtra("getAvail_date", searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate());
-                iCheckIn.putExtra("userId",Integer.parseInt(searchdetailList.getQueueList().getProvider().getId()));
-                iCheckIn.putExtra("userName",searchdetailList.getSearchViewDetail().getBusinessName());
-                iCheckIn.putExtra("departmentId",String.valueOf(searchdetailList.getDepartmentId()));
-                iCheckIn.putExtra("virtualservices",searchdetailList.getSearchViewDetail().isVirtualServices());
-                if (searchdetailList.getQueueList().getNextAvailableQueue()!=null) {
+                iCheckIn.putExtra("userId", Integer.parseInt(searchdetailList.getQueueList().getProvider().getId()));
+                iCheckIn.putExtra("userName", searchdetailList.getSearchViewDetail().getBusinessName());
+                iCheckIn.putExtra("departmentId", String.valueOf(searchdetailList.getDepartmentId()));
+                iCheckIn.putExtra("virtualservices", searchdetailList.getSearchViewDetail().isVirtualServices());
+                if (searchdetailList.getQueueList().getNextAvailableQueue() != null) {
                     iCheckIn.putExtra("getAvail_date", searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate());
                 }
                 v.getContext().startActivity(iCheckIn);
@@ -888,11 +920,11 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 iCheckIn.putExtra("terminology", termilogy);
                 iCheckIn.putExtra("isshowtoken", searchdetailList.getQueueList().getNextAvailableQueue().isShowToken());
                 iCheckIn.putExtra("getAvail_date", searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate());
-                iCheckIn.putExtra("userId",Integer.parseInt(searchdetailList.getQueueList().getProvider().getId()));
-                iCheckIn.putExtra("userName",searchdetailList.getSearchViewDetail().getBusinessName());
-                iCheckIn.putExtra("departmentId",String.valueOf(searchdetailList.getDepartmentId()));
-                iCheckIn.putExtra("virtualServices",String.valueOf(searchdetailList.getSearchViewDetail().isVirtualServices()));
-                if (searchdetailList.getQueueList().getNextAvailableQueue()!=null) {
+                iCheckIn.putExtra("userId", Integer.parseInt(searchdetailList.getQueueList().getProvider().getId()));
+                iCheckIn.putExtra("userName", searchdetailList.getSearchViewDetail().getBusinessName());
+                iCheckIn.putExtra("departmentId", String.valueOf(searchdetailList.getDepartmentId()));
+                iCheckIn.putExtra("virtualServices", String.valueOf(searchdetailList.getSearchViewDetail().isVirtualServices()));
+                if (searchdetailList.getQueueList().getNextAvailableQueue() != null) {
                     iCheckIn.putExtra("getAvail_date", searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate());
                 }
                 v.getContext().startActivity(iCheckIn);
@@ -1459,7 +1491,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 //        });
 //    }
 
-//    ImageView profile1, profile2, profile3;
+    //    ImageView profile1, profile2, profile3;
 //
 //    public void UpdateGallery(final ArrayList<SearchViewDetail> mGallery, final DepartmentUserSearchModel searchdetailList) {
 //        Config.logV("Gallery--------------333-----" + mGallery.size());
@@ -1662,5 +1694,39 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         });
     }
 
+    public String convertSlotTime(String date) {
+        final String OLD_FORMAT = "HH:mm";
+        final String NEW_FORMAT = "hh:mm aa";
+
+        String slotTime = "";
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(OLD_FORMAT);
+            Date d = sdf.parse(date);
+            sdf.applyPattern(NEW_FORMAT);
+            slotTime = sdf.format(d);
+        } catch (ParseException e) {
+            // TODO: handle exception
+        }
+        String str = slotTime.replace("am", "AM").replace("pm", "PM");
+        return str;
+    }
+
+
+    private String formatDate(String availableDate) {
+
+        String dtStart = availableDate;
+        Date dateParse = null;
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            dateParse = format1.parse(dtStart);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat df = new SimpleDateFormat("MMM dd");
+        String nAvailDate = df.format(dateParse);
+
+        return nAvailDate;
+    }
 
 }

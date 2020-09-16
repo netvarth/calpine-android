@@ -59,6 +59,17 @@ public class ScheduleList implements Serializable {
     @SerializedName("provider")
     private ScheduleList provider;
 
+    public SlotsData getSlotsData() {
+        return slotsData;
+    }
+
+    public void setSlotsData(SlotsData slotsData) {
+        this.slotsData = slotsData;
+    }
+
+    @SerializedName("availableSlots")
+    private SlotsData slotsData;
+
     public String getId() {
         return id;
     }
