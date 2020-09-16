@@ -457,9 +457,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 handleCheckins(myViewHolder, searchdetailList, position);
                 handleAppointments(myViewHolder, searchdetailList, position);
                 handleDonations(myViewHolder, searchdetailList, position);
-                if (searchdetailList.getRating() != null) {
-                    myViewHolder.rating.setRating(Float.valueOf(searchdetailList.getRating()));
-                }
+//                if (searchdetailList.getRating() != null) {
+//                    myViewHolder.rating.setRating(Float.valueOf(searchdetailList.getRating()));
+//                }
 
                 try {
                     String rating = searchdetailList.getRating();
@@ -502,6 +502,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (appts_flag.get(position).equals(true) && checkins_flag.get(position).equals(false) && dnts_flag.get(position).equals(false)) {
 
                     if (searchdetailList.getAvailableDate() != null) {
+                        myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
+                        myViewHolder.btnbookservice.setVisibility(View.GONE);
+                        myViewHolder.L_donation.setVisibility(View.GONE);
                         if (searchdetailList.getAvailableTime() != null) {
                             String avlDate = searchdetailList.getAvailableDate();
                             Date date = null;
@@ -525,24 +528,25 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 }
                             }
                         }
+                    } else {
+
+                        myViewHolder.btnbookservice.setVisibility(View.VISIBLE);
+                        myViewHolder.btnbookservice.setText("Appointment");
                     }
-                    myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
-                    myViewHolder.btnbookservice.setVisibility(View.GONE);
-                    myViewHolder.L_donation.setVisibility(View.GONE);
+
 //                    myViewHolder.btnbookservice.setVisibility(View.VISIBLE);
 //                    myViewHolder.btnbookservice.setText("Appointment");
                 }
                 if (dnts_flag.get(position).equals(true) && appts_flag.get(position).equals(false) && checkins_flag.get(position).equals(false)) {
-                    if (serviceNamesDonationsMax.size()>0) {
-                        if (serviceNamesDonationsMax.size()>position) {
+                    if (serviceNamesDonationsMax.size() > 0) {
+                        if (serviceNamesDonationsMax.size() > position) {
                             myViewHolder.L_donation.setVisibility(View.GONE);
                             myViewHolder.tvDonationAmount.setText("Upto\n" + "₹ " + serviceNamesDonationsMax.get(position));
                             myViewHolder.btnbookservice.setVisibility(View.VISIBLE);
                             myViewHolder.btnbookservice.setText("Donate");
                             myViewHolder.L_appoinment.setVisibility(View.GONE);
                         }
-                    }
-                    else {
+                    } else {
                     }
                 }
 
@@ -570,7 +574,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             context.startActivity(iCheckIn);
                         } else if (appts_flag.get(position).equals(true) && checkins_flag.get(position).equals(false) && dnts_flag.get(position).equals(false)) {
                             Intent iAppointment = new Intent(v.getContext(), Appointment.class);
-                            iAppointment.putExtra("serviceId", Integer.parseInt(searchdetailList.getaLoc()));
+                            if (searchdetailList.getaLoc() != null) {
+                                iAppointment.putExtra("serviceId", Integer.parseInt(searchdetailList.getaLoc()));
+                            } else {
+                                iAppointment.putExtra("serviceId", Integer.parseInt(searchdetailList.getLocation_id1()));
+                            }
                             iAppointment.putExtra("uniqueID", searchdetailList.getUniqueid());
                             iAppointment.putExtra("accountID", searchdetailList.getId());
                             iAppointment.putExtra("googlemap", searchdetailList.getLocation1());
@@ -1457,7 +1465,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             @Override
             public void onClick(View v) {
                 Intent iAppointment = new Intent(v.getContext(), Appointment.class);
-                iAppointment.putExtra("serviceId", Integer.parseInt(searchdetailList.getaLoc()));
+                if (searchdetailList.getaLoc() != null) {
+                    iAppointment.putExtra("serviceId", Integer.parseInt(searchdetailList.getaLoc()));
+                } else {
+                    iAppointment.putExtra("serviceId", Integer.parseInt(searchdetailList.getLocation_id1()));
+                }
                 iAppointment.putExtra("uniqueID", searchdetailList.getUniqueid());
                 iAppointment.putExtra("accountID", searchdetailList.getId());
                 iAppointment.putExtra("googlemap", searchdetailList.getLocation1());
@@ -1550,8 +1562,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (searchdetailList.getOnline_profile() != null) {
 
             if (searchdetailList.isApptEnabled() && searchdetailList.getOnline_profile().equals("1")) {
-             //   myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
-            //    myViewHolder.L_appointments.setVisibility(View.VISIBLE);
+                //   myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
+                //    myViewHolder.L_appointments.setVisibility(View.VISIBLE);
 
                 appts_flag.add(position, true);
             } else {
@@ -1902,7 +1914,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView tv_claimable, tv_distance, tv_branch_name;
         Button btncheckin, btnappointments, btndonations, btnbookservice;
         LinearLayout layout_row;
-        TextView mImageViewText, tv_useWeb, tvSpecializations, tvAvailDate,tvDonationAmount;
+        TextView mImageViewText, tv_useWeb, tvSpecializations, tvAvailDate, tvDonationAmount;
         LinearLayout layout_type;
         ImageView jdn_icon;
 

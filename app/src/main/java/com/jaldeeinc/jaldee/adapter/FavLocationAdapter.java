@@ -360,6 +360,8 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                         if(scheduleList.isApptEnabled()){
 
                             if (mScheduleList.get(position).getAvailableSchedule() != null) {
+                                myViewHolder.appoinmentLayouts.setVisibility(View.VISIBLE);
+
                                 if (mScheduleList.get(position).getSlotsData() != null) {
                                     String avlDate = mScheduleList.get(position).getAvailableSchedule().getAvailableDate();
                                     Date date = null;
@@ -383,7 +385,9 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                                     }
                                 }
                             }
-                            myViewHolder.appoinmentLayouts.setVisibility(View.VISIBLE);
+                            else {
+                                myViewHolder.appoinmentLayouts.setVisibility(View.GONE);
+                            }
                         }else{
                             myViewHolder.appoinmentLayouts.setVisibility(View.GONE);
                         }

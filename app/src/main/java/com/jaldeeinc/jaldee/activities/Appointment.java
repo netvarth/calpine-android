@@ -5378,7 +5378,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     @Override
     public void onPaymentError(int code, String response, PaymentData paymentData) {
         try {
-            if (response.contains("Payment failed")) {
+//            if (response.contains("Payment failed")) {
                 AlertDialog alertDialog = new AlertDialog.Builder(Appointment.this).create();
                 alertDialog.setTitle("Payment Failed");
                 alertDialog.setMessage("Unable to process your request.Please try again after some time");
@@ -5395,10 +5395,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             }
                         });
                 alertDialog.show();
-            } else {
-                Toast.makeText(this.mContext, "Payment failed", Toast.LENGTH_SHORT).show();
-                dialog.show();
-            }
+//            } else {
+//                Toast.makeText(this.mContext, "Payment failed", Toast.LENGTH_SHORT).show();
+//                dialog.show();
+//            }
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
         }

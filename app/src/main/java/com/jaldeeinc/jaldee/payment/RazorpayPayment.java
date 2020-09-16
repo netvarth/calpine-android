@@ -54,6 +54,11 @@ public class RazorpayPayment{
             options.put("retry",order.isRetry());
             options.put("order_id", order.getOrderId());
             options.put("retry",order.isRetry());
+            if (order.isRetry()){
+
+            }else {
+                options.put("timeout",480);
+            }
 //            options.put("key", order.getRazorpayId());
             JSONObject preFill = new JSONObject();
             preFill.put("email", order.getConsumerEmail());

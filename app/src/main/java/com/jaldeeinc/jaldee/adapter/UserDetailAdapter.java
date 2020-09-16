@@ -809,6 +809,10 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 if (userDetails.get(position).getScheduleList().isApptEnabled()) {
 
                     if (userDetails.get(position).getScheduleList().getAvailableSchedule() != null) {
+                        holder.LAppointment.setVisibility(View.VISIBLE);
+                        holder.LApp_Services.setVisibility(View.VISIBLE);
+                        holder.txt_apptservices.setVisibility(View.VISIBLE);
+                        holder.rlAppServices.setVisibility(View.VISIBLE);
                         if (userDetails.get(position).getScheduleList().getSlotsData()!= null) {
                             String avlDate = userDetails.get(position).getScheduleList().getAvailableSchedule().getAvailableDate();
                             Date date = null;
@@ -832,12 +836,12 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                             }
                         }
                     }
-
-                    holder.LAppointment.setVisibility(View.VISIBLE);
-                    holder.LApp_Services.setVisibility(View.VISIBLE);
-                    holder.txt_apptservices.setVisibility(View.VISIBLE);
-                    holder.rlAppServices.setVisibility(View.VISIBLE);
-
+                    else {
+                        holder.LAppointment.setVisibility(View.GONE);
+                        holder.LApp_Services.setVisibility(View.GONE);
+                        holder.txt_apptservices.setVisibility(View.GONE);
+                        holder.rlAppServices.setVisibility(View.GONE);
+                    }
                 } else {
                     holder.LAppointment.setVisibility(View.GONE);
                     holder.LApp_Services.setVisibility(View.GONE);

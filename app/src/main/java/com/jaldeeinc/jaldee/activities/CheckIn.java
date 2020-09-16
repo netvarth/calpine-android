@@ -3769,7 +3769,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     @Override
     public void onPaymentError(int code, String response, PaymentData paymentData) {
         try {
-            if (response.contains("Payment failed")) {
+//            if (response.contains("Payment failed")) {
 
                 AlertDialog alertDialog = new AlertDialog.Builder(CheckIn.this).create();
                 alertDialog.setTitle("Payment Failed");
@@ -3786,11 +3786,11 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             }
                         });
                 alertDialog.show();
-            } else {
-
-                Toast.makeText(this.mContext, "Payment failed", Toast.LENGTH_SHORT).show();
-                dialogPayment.show();
-            }
+//            } else {
+//
+//                Toast.makeText(this.mContext, "Payment failed", Toast.LENGTH_SHORT).show();
+//                dialogPayment.show();
+//            }
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
         }

@@ -1864,12 +1864,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                             searchList.setApptEnabled(false);
                                         }
                                         //  searchList.setCheckinAllowed(mScheduleList.get(i).isCheckinAllowed());
-                                        if(mScheduleList.get(i).getAvailableSchedule()!=null) {
+//                                        if(mScheduleList.get(i).getAvailableSchedule()!=null) {
                                             if (mScheduleList.get(i).getAvailableSchedule().getLocation() != null) {
                                                 searchList.setaLoc(String.valueOf(mScheduleList.get(i).getAvailableSchedule().getLocation().getId()));
                                             }
                                             searchList.setAvailableDate(mScheduleList.get(i).getAvailableSchedule().getAvailableDate());
-                                        }
+//                                        }
 
                                         if (mScheduleList.get(i).getSlotsData()!= null) {
                                             searchList.setAvailableTime(mScheduleList.get(i).getSlotsData().getAvailableSlots().get(0).getSlotTime());
@@ -2038,7 +2038,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                         }
                                         else{
                                             searchList.setCheckinAllowed(false);
-                                            searchList.setApptEnabled(true);
+                                            searchList.setApptEnabled(false);
                                         }
                                         //searchList.setCheckinAllowed(mScheduleList.get(i).isCheckinAllowed());
                                         if(mScheduleList.get(i).getAvailableSchedule()!=null) {

@@ -1653,13 +1653,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         try {
 
-            int rate = Math.round(searchdetailList.getSearchViewDetail().getAvgRating());
-            if (rate < 4) {
-                rating.setVisibility(View.GONE);
-            } else {
-                rating.setVisibility(View.VISIBLE);
-                rating.setRating(searchdetailList.getSearchViewDetail().getAvgRating());
-            }
+                int rate = Math.round(getBussinessData.getAvgRating());
+                if (rate < 4) {
+                    rating.setVisibility(View.GONE);
+                } else {
+                    rating.setVisibility(View.VISIBLE);
+                    rating.setRating(getBussinessData.getAvgRating());
+                }
+
         } catch (Exception e) {
 
         }

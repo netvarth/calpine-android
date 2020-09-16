@@ -1159,39 +1159,41 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             if (mScheduleList != null) {
                 if (online_presence) {
                     if (mScheduleList.get(position).isApptEnabled()) {
-                        myViewHolder.LAppointment.setVisibility(View.VISIBLE);
 
-//                        if (mScheduleList.get(position).getAvailableSchedule().isOpenNow()) {
-//                            myViewHolder.tvAvailDate.setText("Available Today");
-//                        } else {
-//                            myViewHolder.tvAvailDate.setText("Available on " + "\n" + mScheduleList.get(position).getAvailableSchedule().getAvailableDate());
-//                        }
+                        if (mScheduleList.get(position).getAvailableSchedule() != null) {
+                            myViewHolder.LAppointment.setVisibility(View.VISIBLE);
+                            myViewHolder.tvAvailDate.setVisibility(View.VISIBLE);
+                            myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
+                            myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
+                            String avlDate = mScheduleList.get(position).getAvailableSchedule().getAvailableDate();
+                            Date date = null;
+                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                            try {
+                                date = format.parse(avlDate);
+                                System.out.println(date);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            String timeSlot = convertSlotTime(mScheduleList.get(position).getSlotsData().getAvailableSlots().get(0).getSlotTime().split("-")[0]);
 
+                            if (date != null) {
+                                if (DateUtils.isToday(date.getTime())) {
+                                    myViewHolder.tvAvailDate.setText("Next Available time " + "\n" + "Today,  " + timeSlot);
 
-
-                        String avlDate = mScheduleList.get(position).getAvailableSchedule().getAvailableDate();
-                        Date date = null;
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                        try {
-                            date = format.parse(avlDate);
-                            System.out.println(date);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        String timeSlot = convertSlotTime(mScheduleList.get(position).getSlotsData().getAvailableSlots().get(0).getSlotTime().split("-")[0]);
-
-                        if (date != null) {
-                            if (DateUtils.isToday(date.getTime())) {
-                                myViewHolder.tvAvailDate.setText("Next Available time " + "\n" + "Today,  " + timeSlot);
-
-                            } else {
-                                String availableDate = formatDate(mScheduleList.get(position).getAvailableSchedule().getAvailableDate());
-                                myViewHolder.tvAvailDate.setText("Next Available time " + "\n" + availableDate + ",  " + timeSlot);
+                                } else {
+                                    String availableDate = formatDate(mScheduleList.get(position).getAvailableSchedule().getAvailableDate());
+                                    myViewHolder.tvAvailDate.setText("Next Available time " + "\n" + availableDate + ",  " + timeSlot);
+                                }
                             }
                         }
-                        myViewHolder.tvAvailDate.setVisibility(View.VISIBLE);
-                        myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
-                        myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
+                        else {
+
+                            myViewHolder.LAppointment.setVisibility(View.VISIBLE);
+                            myViewHolder.tvAvailDate.setVisibility(View.GONE);
+                            myViewHolder.LApp_Services.setVisibility(View.GONE);
+                            myViewHolder.txt_apptservices.setVisibility(View.GONE);
+                        }
+
                     } else {
                         myViewHolder.LAppointment.setVisibility(View.GONE);
                         myViewHolder.LApp_Services.setVisibility(View.GONE);

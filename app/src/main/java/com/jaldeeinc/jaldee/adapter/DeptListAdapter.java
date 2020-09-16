@@ -42,6 +42,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CircleTransform;
+import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
@@ -426,7 +427,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
 
         DatabaseHandler db = new DatabaseHandler(context);
-        domainList = db.getSubDomainsByFilter(searchdetailList.getSearchViewDetail().getServiceSector().getDisplayName(), searchdetailList.getSearchViewDetail().getUserSubdomain());
+        domainList = db.getSubDomainsByFilter(searchdetailList.getSearchViewDetail().getServiceSector().getDomain(), searchdetailList.getSearchViewDetail().getUserSubdomain());
         if (domainList != null) {
 
             myViewHolder.tv_domain.setText(domainList.getDisplayname());
@@ -1383,7 +1384,22 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.tv_name.setTypeface(tyface_confm);
         myViewHolder.tv_name.setText(getBusinessData.getBusinessName());
-        myViewHolder.rating.setRating(getBusinessData.getAvgRating());
+
+//        myViewHolder.rating.setRating(getBusinessData.getAvgRating());
+
+        try {
+
+                int rate = Math.round(getBusinessData.getAvgRating());
+                if (rate < 4) {
+                    myViewHolder.rating.setVisibility(View.GONE);
+                } else {
+                    myViewHolder.rating.setVisibility(View.VISIBLE);
+                    myViewHolder.rating.setRating(rate);
+                }
+
+        } catch (Exception e) {
+
+        }
 //        if (getBusinessData.getServiceSector().getDisplayName() != null && getBusinessData.getServiceSubSector().getDisplayName() != null) {
 //            myViewHolder.tv_domain.setText(getBusinessData.getServiceSector().getDisplayName() + " " + "(" + getBusinessData.getServiceSubSector().getDisplayName() + ")");
 //        }
@@ -1413,7 +1429,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             }
         });
         if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-            builder.build().load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
+           PicassoTrustAll.getInstance(context).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
             myViewHolder.profile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
