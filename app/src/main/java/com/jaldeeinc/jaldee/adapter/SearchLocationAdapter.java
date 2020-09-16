@@ -1688,6 +1688,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     if (gServicesList.size() > 0) {
                         myViewHolder.tvDonationAmount.setText("Upto\n"+ "₹ "+ gServicesList.get(0).getMaxDonationAmount());
                         myViewHolder.LDonation.setVisibility(View.VISIBLE);
+                        myViewHolder.tvDonationAmount.setVisibility(View.GONE);
                         myViewHolder.LDont_Services.setVisibility(View.VISIBLE);
                         myViewHolder.txt_dontservices.setVisibility(View.VISIBLE);
 

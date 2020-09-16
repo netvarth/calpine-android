@@ -535,9 +535,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (dnts_flag.get(position).equals(true) && appts_flag.get(position).equals(false) && checkins_flag.get(position).equals(false)) {
                     if (serviceNamesDonationsMax.size()>0) {
                         if (serviceNamesDonationsMax.size()>position) {
-                            myViewHolder.L_donation.setVisibility(View.VISIBLE);
+                            myViewHolder.L_donation.setVisibility(View.GONE);
                             myViewHolder.tvDonationAmount.setText("Upto\n" + "₹ " + serviceNamesDonationsMax.get(position));
-                            myViewHolder.btnbookservice.setVisibility(View.GONE);
+                            myViewHolder.btnbookservice.setVisibility(View.VISIBLE);
+                            myViewHolder.btnbookservice.setText("Donate");
                             myViewHolder.L_appoinment.setVisibility(View.GONE);
                         }
                     }
