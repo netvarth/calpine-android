@@ -601,6 +601,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                         iService.putExtra("duration", searchdetailList.getServices().get(i).getServiceDuration());
                                         iService.putExtra("price", searchdetailList.getServices().get(i).getTotalAmount());
                                         iService.putExtra("desc", searchdetailList.getServices().get(i).getDescription());
+                                        iService.putExtra("from","multiuser");
                                         iService.putExtra("servicegallery", searchdetailList.getServices().get(i).getServicegallery());
                                         iService.putExtra("taxable", searchdetailList.getServices().get(i).isTaxable());
                                         iService.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
@@ -1451,147 +1452,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             });
         }
 
-//        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-//            if (searchdetailList.getGallery_thumb_nails().size() > 0) {
-//                myViewHolder.mImageViewText.setVisibility(View.VISIBLE);
-//                myViewHolder.mImageViewText.setText("+" + searchdetailList.getGallery_thumb_nails().size());
-//            } else {
-//                myViewHolder.mImageViewText.setVisibility(View.GONE);
-//            }
-//        } else {
-//            myViewHolder.mImageViewText.setVisibility(View.GONE);
-//        }
-
     }
 
-//    private void ApiSearchGallery(final String muniqueID, final DepartmentUserSearchModel searchdetailList) {
-//        ApiInterface apiService =
-//                ApiClient.getClientS3Cloud(context).create(ApiInterface.class);
-//        Date currentTime = new Date();
-//        final SimpleDateFormat sdf = new SimpleDateFormat(
-//                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-//        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-//        System.out.println("UTC time: " + sdf.format(currentTime));
-//        Call<ArrayList<SearchViewDetail>> call = apiService.getSearchGallery(Integer.parseInt(muniqueID), sdf.format(currentTime));
-//        call.enqueue(new Callback<ArrayList<SearchViewDetail>>() {
-//            @Override
-//            public void onResponse(Call<ArrayList<SearchViewDetail>> call, Response<ArrayList<SearchViewDetail>> response) {
-//                try {
-//                    Config.logV("URL------100000---------" + response.raw().request().url().toString().trim());
-//                    Config.logV("Response--code-----gallery--------------------" + response.code());
-//                    if (response.code() == 200) {
-//                        mSearchGallery = response.body();
-//                        UpdateGallery(mSearchGallery, searchdetailList);
-//                    } else {
-//                        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-//                            ArrayList<String> mGalleryList = new ArrayList<>();
-//                            mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
-//                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, activity);
-//                            if (mValue) {
-//                                Intent intent = new Intent(context, SwipeGalleryImage.class);
-//                                intent.putExtra("pos", 0);
-//                                activity.startActivity(intent);
-//                            }
-//                        }
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ArrayList<SearchViewDetail>> call, Throwable t) {
-//                // Log error here since request failed
-//                Config.logV("Fail---------------" + t.toString());
-//            }
-//        });
-//    }
 
-    //    ImageView profile1, profile2, profile3;
-//
-//    public void UpdateGallery(final ArrayList<SearchViewDetail> mGallery, final DepartmentUserSearchModel searchdetailList) {
-//        Config.logV("Gallery--------------333-----" + mGallery.size());
-//        try {
-//            if (mGallery.size() > 0 || searchdetailList.getSearchViewDetail().getLogo() != null) {
-//                Config.logV("Gallery------------------------------" + mGallery.size());
-//                ArrayList<String> mGalleryList = new ArrayList<>();
-//                if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-//                    mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
-//                }
-//                for (int i = 0; i < mGallery.size(); i++) {
-//                    mGalleryList.add(mGallery.get(i).getUrl());
-//                }
-//                mGallery.clear();
-//                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, context);
-//                if (mValue) {
-//                    Intent intent = new Intent(context, SwipeGalleryImage.class);
-//                    intent.putExtra("pos", 0);
-//                    context.startActivity(intent);
-//                }
-//                profile2.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Config.logV("Gallery------------------------------" + mGallery.size());
-//                        ArrayList<String> mGalleryList = new ArrayList<>();
-//                        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-//                            mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
-//                        }
-//                        for (int i = 0; i < mGallery.size(); i++) {
-//                            mGalleryList.add(mGallery.get(i).getUrl());
-//                        }
-//                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-//                        if (mValue) {
-//                            Intent intent = new Intent(context, SwipeGalleryImage.class);
-//                            intent.putExtra("pos", 1);
-//                            v.getContext().startActivity(intent);
-//                        }
-//                    }
-//                });
-//                profile3.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Config.logV("Gallery------------------------------" + mGallery.size());
-//                        ArrayList<String> mGalleryList = new ArrayList<>();
-//                        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-//                            mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
-//                        }
-//                        for (int i = 0; i < mGallery.size(); i++) {
-//                            mGalleryList.add(mGallery.get(i).getUrl());
-//                        }
-//                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-//                        if (mValue) {
-//                            Intent intent = new Intent(context, SwipeGalleryImage.class);
-//                            intent.putExtra("pos", 2);
-//                            v.getContext().startActivity(intent);
-//                        }
-//                    }
-//                });
-//            }
-//            if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-//                Picasso.with(context).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile1);
-//
-//            } else {
-//                Picasso.with(context).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile1);
-//            }
-//            if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-//                if (mGallery.size() > 0) {
-//                    mImageViewText.setVisibility(View.VISIBLE);
-//                    mImageViewText.setText(" +" + String.valueOf(mGallery.size()));
-//                }
-//            } else if (searchdetailList.getSearchViewDetail().getLogo() == null) {
-//                if (mGallery.size() > 0) {
-//                    mImageViewText.setVisibility(View.VISIBLE);
-//                    mImageViewText.setText(" +" + String.valueOf(mGallery.size()));
-//                } else {
-//                    mImageViewText.setVisibility(View.GONE);
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//
     @Override
     public int getItemCount() {
         if (searchList != null) {
@@ -1601,70 +1464,6 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
     }
 
-//    private void ApiService(String uniqueID, final String serviceName, final String title) {
-//
-//        ApiInterface apiService =
-//                ApiClient.getClientS3Cloud(activity).create(ApiInterface.class);
-//
-//        final Dialog mDialog = Config.getProgressDialog(activity, context.getResources().getString(R.string.dialog_log_in));
-//        mDialog.show();
-//
-//        Date currentTime = new Date();
-//        final SimpleDateFormat sdf = new SimpleDateFormat(
-//                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-//        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-//        System.out.println("UTC time: " + sdf.format(currentTime));
-//
-//        Call<ArrayList<SearchService>> call = apiService.getService(Integer.parseInt(uniqueID), sdf.format(currentTime));
-//        call.enqueue(new Callback<ArrayList<SearchService>>() {
-//            @Override
-//            public void onResponse(Call<ArrayList<SearchService>> call, Response<ArrayList<SearchService>> response) {
-//
-//                try {
-//
-//                    if (mDialog.isShowing())
-//                        Config.closeDialog(activity, mDialog);
-//
-//                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-//                    Config.logV("Response--code-------------------------" + response.code());
-//
-//                    if (response.code() == 200) {
-//
-//                        SearchService service1 = null;
-//                        ArrayList<SearchService> service = new ArrayList<>();
-//                        service = response.body();
-//                        for (int i = 0; i < service.size(); i++) {
-//                            Config.logV("Response--serviceid-------------------------" + serviceName);
-//
-//                            if (service.get(i).getName().toLowerCase().equalsIgnoreCase(serviceName.toLowerCase())) {
-//                                Intent iService = new Intent(activity, SearchServiceActivity.class);
-//                                iService.putExtra("name", service.get(i).getName());
-//                                iService.putExtra("duration", service.get(i).getServiceDuration());
-//                                iService.putExtra("price", service.get(i).getTotalAmount());
-//                                iService.putExtra("desc", service.get(i).getDescription());
-//                                iService.putExtra("servicegallery", service.get(i).getServicegallery());
-//                                iService.putExtra("taxable", service.get(i).isTaxable());
-//                                iService.putExtra("title", title);
-//                                iService.putExtra("isPrePayment", service.get(i).isPrePayment());
-//                                iService.putExtra("MinPrePaymentAmount", service.get(i).getMinPrePaymentAmount());
-//                                activity.startActivity(iService);
-//                            }
-//                        }
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ArrayList<SearchService>> call, Throwable t) {
-//                // Log error here since request failed
-//                Config.logV("Fail---------------" + t.toString());
-//                if (mDialog.isShowing())
-//                    Config.closeDialog(activity, mDialog);
-//            }
-//        });
-//    }
 
     private void apiJDN(String uniqueID) {
         ApiInterface apiService =

@@ -204,7 +204,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
                                 iService.putExtra("price", service.get(i).getTotalAmount());
                                 iService.putExtra("desc", service.get(i).getDescription());
                                 iService.putExtra("servicegallery", service.get(i).getServicegallery());
-
+                                iService.putExtra("from","multiuser");
                                 iService.putExtra("isPrePayment", service.get(i).isPrePayment());
                                 iService.putExtra("MinPrePaymentAmount", service.get(i).getMinPrePaymentAmount());
                                 iService.putExtra("title", title);

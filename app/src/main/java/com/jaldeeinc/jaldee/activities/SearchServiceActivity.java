@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
@@ -230,8 +231,8 @@ public class SearchServiceActivity extends AppCompatActivity {
                     if (dGallery.size() > 0) {
                         i_servicegallery.setVisibility(View.VISIBLE);
                         try {
-                            Picasso.with(this).setLoggingEnabled(true);
-                            Picasso.with(this).load(dGallery.get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+                            PicassoTrustAll.getInstance(this).setLoggingEnabled(true);
+                            PicassoTrustAll.getInstance(this).load(dGallery.get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -243,8 +244,8 @@ public class SearchServiceActivity extends AppCompatActivity {
                     if(aGallery.size()>0){
                     i_servicegallery.setVisibility(View.VISIBLE);
                     try {
-                        Picasso.with(this).setLoggingEnabled(true);
-                        Picasso.with(this).load(aGallery.get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+                        PicassoTrustAll.getInstance(this).setLoggingEnabled(true);
+                        PicassoTrustAll.getInstance(this).load(aGallery.get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }}}
@@ -255,8 +256,8 @@ public class SearchServiceActivity extends AppCompatActivity {
                             Config.logV("SERVICE GALLERY" + mGallery.get(0).getUrl());
                             i_servicegallery.setVisibility(View.VISIBLE);
                             try {
-                                Picasso.with(this).setLoggingEnabled(true);
-                                Picasso.with(this).load(mGallery.get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+                                PicassoTrustAll.getInstance(this).setLoggingEnabled(true);
+                                PicassoTrustAll.getInstance(this).load(mGallery.get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
