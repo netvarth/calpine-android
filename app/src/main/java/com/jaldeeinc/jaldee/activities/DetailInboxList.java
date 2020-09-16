@@ -525,7 +525,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
                         if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
-                            Toast.makeText(mContext, "Please enter note", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "Please enter message", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } catch (Exception e) {
@@ -557,7 +557,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 recycle_image_attachment.setAdapter(mDetailFileAdapter);
                 mDetailFileAdapter.notifyDataSetChanged();
                 if (imagePathList.size() > 0 && edt_message.getText().toString().equals("")) {
-                    Toast.makeText(mContext, "Please enter note", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Please enter message", Toast.LENGTH_SHORT).show();
                 }
             }
         }

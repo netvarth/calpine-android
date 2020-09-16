@@ -1843,7 +1843,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         }
         tv_busName.setText(this.searchdetailList.getSearchViewDetail().getBusinessName());
         DatabaseHandler db = new DatabaseHandler(context);
-        domainList = db.getSubDomainsByFilter(searchdetailList.getSearchViewDetail().getServiceSector().getDisplayName(), searchdetailList.getSearchViewDetail().getUserSubdomain());
+        domainList = db.getSubDomainsByFilter(searchdetailList.getSearchViewDetail().getServiceSector().getDomain(), searchdetailList.getSearchViewDetail().getUserSubdomain());
 
         if (domainList.getDisplayname().equalsIgnoreCase("Other / Miscellaneous")) {
             tv_domain.setVisibility(View.GONE);
