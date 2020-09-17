@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -726,6 +727,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
             }
         }
+        // to get providers of departments
+        ApiGetdepartmentproviders();
+
         if (sector != null && subsector != null) {
             APISector(sector, subsector);
         }
@@ -805,11 +809,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             }
         });
 
-
         ApiSearchViewSetting(uniqueID);
         ApiSearchViewTerminology(uniqueID);
         ApiGetProfileDetail();
-        ApiGetdepartmentproviders();
         mFirstName = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
         mLastName = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
         consumerID = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
@@ -850,11 +852,11 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             // to set date with day of week if default date is not current date
             if (!DateUtils.isToday(selectedDate.getTime())) {
                 final SimpleDateFormat sdfs = new SimpleDateFormat("dd-MM-yyyy");
-                        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
                 String dayOfTheWeek = sdf.format(selectedDate); // to get Day of week based on Date
                 String availDate = sdfs.format(selectedDate);
 
-                txtWaitTime.setText(dayOfTheWeek +"\n"+availDate);
+                txtWaitTime.setText(dayOfTheWeek + "\n" + availDate);
             } else {
                 // to set Today
                 final SimpleDateFormat sdfs = new SimpleDateFormat("dd-MM-yyyy");
@@ -865,7 +867,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
             final Date currentDate = new Date();
             final SimpleDateFormat sdfs = new SimpleDateFormat(
-                    "yyyy-MM-dd");
+                    "dd-MM-yyyy");
             System.out.println("UTC time: " + sdfs.format(currentDate));
             txtWaitTime.setText("Today\n" + sdfs.format(currentDate));
         }
@@ -990,7 +992,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                         Date date = null;
                         String selectDate = null;
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        SimpleDateFormat newformat = new SimpleDateFormat("dd-MM-yyyy");
                         String selectedDate = "";
                         try {
                             if (txtWaitTime.getText().toString().contains("Today")) {
@@ -1003,7 +1005,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                                 selectedDate = dateFormat.format(d);
                             }
-                            date = format.parse(selectedDate);
+                            date = newformat.parse(selectedDate);
                             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                             //to convert Date to String, use format method of SimpleDateFormat class.
                             selectDate = dateFormat.format(date);
@@ -1121,7 +1123,17 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         tvNoServiceMessage.setVisibility(View.GONE);
 
                     }
-                    setProviders();
+
+                    final Handler handler = new Handler(Looper.getMainLooper());
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Do something after 100ms
+                            setProviders();
+
+                        }
+                    }, 600);
+
 //                    ApiSearchUsers(selectedDepartment);
 //                    if (doctResponse.size() > 0) {
 //                        LUsersList.clear();
@@ -3955,8 +3967,12 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         }
 
 
+                    } else {
+
                     }
                 } catch (Exception e) {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
                     e.printStackTrace();
                 }
             }
@@ -3974,8 +3990,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
     private void setProviders() {
 
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
         try {
-
             ArrayList<ProviderUserModel> providers = new ArrayList<ProviderUserModel>();
 
             if (deptProvidersList.size() > 0) {
@@ -4154,8 +4171,12 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 }
             }
 
+            if (mDialog.isShowing())
+                Config.closeDialog(getParent(), mDialog);
         } catch (
                 Exception e) {
+            if (mDialog.isShowing())
+                Config.closeDialog(getParent(), mDialog);
             e.printStackTrace();
         }
     }

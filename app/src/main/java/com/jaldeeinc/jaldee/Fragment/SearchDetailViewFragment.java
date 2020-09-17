@@ -210,7 +210,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<ProviderUserModel> usersList = new ArrayList<ProviderUserModel>();
     private CardView cvUsers;
     private boolean throughLink = false;
-    TextView tvNoRatings,tvterminology;
+    TextView tvNoRatings, tvterminology;
     private LinearLayout llMDetails;
 
     @Override
@@ -881,9 +881,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     }
                                 }
                             }
-                        }else {
+                        } else {
 
-                            if (deptProviders!= null && deptProviders.size()>0) {
+                            if (deptProviders != null && deptProviders.size() > 0) {
                                 deptMergedList.clear();
                                 deptMergedList.addAll(deptProviders);
                             }
@@ -981,7 +981,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                         departmentHeading.setVisibility(View.GONE);
                                     }
 
-                                    tvterminology.setText("Our "+name +"s");
+                                    tvterminology.setText("Our " + name + "s");
 
                                     cvUsers.setVisibility(View.VISIBLE);
                                     cvUsers.setOnClickListener(new View.OnClickListener() {
@@ -1040,11 +1040,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (response.code() == 200) {
                         Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
                         mBottomDialog.dismiss();
-                    }
-                    else if(response.code() == 403){
-                        Toast.makeText(mContext,"Please complete the details of profile name,location and working hours to continue",Toast.LENGTH_LONG).show();
-                    }
-                    else if(response.code() == 404){
+                    } else if (response.code() == 403) {
+                        Toast.makeText(mContext, "Please complete the details of profile name,location and working hours to continue", Toast.LENGTH_LONG).show();
+                    } else if (response.code() == 404) {
                         Toast.makeText(mContext, "The account doesn't exist", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
@@ -1659,13 +1657,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         try {
 
-                int rate = Math.round(getBussinessData.getAvgRating());
-                if (rate < 4) {
-                    rating.setVisibility(View.GONE);
-                } else {
-                    rating.setVisibility(View.VISIBLE);
-                    rating.setRating(getBussinessData.getAvgRating());
-                }
+            int rate = Math.round(getBussinessData.getAvgRating());
+            if (rate < 4) {
+                rating.setVisibility(View.GONE);
+            } else {
+                rating.setVisibility(View.VISIBLE);
+                rating.setRating(getBussinessData.getAvgRating());
+            }
 
         } catch (Exception e) {
 
@@ -2848,7 +2846,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     private void onMethodUsersClick(ArrayList<ProviderUserModel> usersList, String businessName, String providerTerminology) {
 
         boolean fromDoctors = true;
-        DeptFragment deptFragment = new DeptFragment(usersList, this, businessName, mBusinessDataList, firstCouponAvailable, couponAvailable, mSearchLocList, mSearchSettings, fromDoctors,providerTerminology);
+        DeptFragment deptFragment = new DeptFragment(usersList, this, businessName, mBusinessDataList, firstCouponAvailable, couponAvailable, mSearchLocList, mSearchSettings, fromDoctors, providerTerminology);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);

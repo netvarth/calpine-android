@@ -18,6 +18,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -270,7 +272,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     private EmailEditWindow emailEditWindow;
     ProfileModel profileDetails;
     private LinearLayout llMailEdit;
-    private TextView tvErroMail,tvNoServices;
+    private TextView tvErroMail, tvNoServices;
     private LinearLayout llNoServices;
     ArrayList<ProviderUserModel> deptProvidersList = new ArrayList<ProviderUserModel>();
     ArrayList<ProviderUserModel> selectedDeptProviders = new ArrayList<ProviderUserModel>();
@@ -588,6 +590,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             }
         });
 
+
         ImageView iBackPress = findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -662,6 +665,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
             }
         }
+
+        // to get providers of departments
+        ApiGetdepartmentproviders();
+
         if (sector != null && subsector != null) {
             APISector(sector, subsector);
         }
@@ -734,8 +741,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                                 tvErroMail.setVisibility(View.VISIBLE);
                             }
-                        }
-                        else {
+                        } else {
 
                             ApiCheckin(txt_message);
 
@@ -747,7 +753,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         ApiSearchViewSetting(uniqueID);
         ApiSearchViewTerminology(uniqueID);
         ApiGetProfileDetail();
-        ApiGetdepartmentproviders();
         mFirstName = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
         mLastName = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
         consumerID = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
@@ -849,7 +854,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 //                        }
 //                        else{
                         sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
-                   //     }
+                        //     }
                         Config.logV("Payment----sAmountPay--------" + sAmountPay);
                         APIPayment(modifyAccountID);
                     } else {
@@ -898,8 +903,15 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     btn_checkin.setVisibility(View.VISIBLE);
                 }
 //                ApiSearchUsers(selectedDepartment);
-                setProviders();
+                final Handler handler = new Handler(Looper.getMainLooper());
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Do something after 100ms
+                        setProviders();
 
+                    }
+                }, 600);
 //                if (doctResponse.size() > 0) {
 //                    LUsersList.clear();
 //                    LUsersList.addAll(doctResponse);
@@ -1759,8 +1771,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 //                                 secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
 //                            }
 //                            else{
-                             secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(sAmountPay));
-                        //}
+                            secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(sAmountPay));
+                            //}
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -2412,6 +2424,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
@@ -2421,6 +2435,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             @Override
             public void onResponse(Call<ArrayList<ProviderUserModel>> call, Response<ArrayList<ProviderUserModel>> response) {
                 try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
                     Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code------Setting-------------------" + response.code());
                     if (response.code() == 200) {
@@ -2497,8 +2513,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                 mSpinnerService.setAdapter(adapter);
                             }
                         }
-                    }
-                    else if (response.code() == 404){
+                    } else if (response.code() == 404) {
 
                         if (mFrom.equalsIgnoreCase("searchdetail_checkin")) {
                             if (LUsersList.size() == 0) {
@@ -2545,6 +2560,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         }
                     }
                 } catch (Exception e) {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
                     e.printStackTrace();
                 }
             }
@@ -2553,13 +2570,16 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             public void onFailure(Call<ArrayList<ProviderUserModel>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
             }
         });
 
     }
 
     private void setProviders() {
-
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
         try {
 
             ArrayList<ProviderUserModel> providers = new ArrayList<ProviderUserModel>();
@@ -2738,13 +2758,16 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             }
 
 
-
+            if (mDialog.isShowing())
+                Config.closeDialog(getParent(), mDialog);
         } catch (
                 Exception e) {
+
+            if (mDialog.isShowing())
+                Config.closeDialog(getParent(), mDialog);
             e.printStackTrace();
         }
     }
-
 
 
     private void ApiSearchUsers(int deptId) {
@@ -3239,7 +3262,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     Config.logV("Response--code-------------------------" + response.body());
 //                //   if(!isPrepayment){
                     MultiplefamilyList.clear();
-                //   }
+                    //   }
                     if (response.code() == 200) {
                         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "true");
                         txt_message = "";
@@ -3283,7 +3306,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                         btn_payu.setVisibility(View.GONE);
                                     }
                                     final EditText edt_message = (EditText) dialogPayment.findViewById(R.id.edt_message);
-                                     txtamt = (TextView) dialogPayment.findViewById(R.id.txtamount);
+                                    txtamt = (TextView) dialogPayment.findViewById(R.id.txtamount);
 
                                     TextView txtprepayment = (TextView) dialogPayment.findViewById(R.id.txtprepayment);
 
@@ -3294,8 +3317,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 //                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(totalAmountPay))));
 //                                    }
 //                                    else {
-                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(sAmountPay))));
-                                //    }
+                                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(sAmountPay))));
+                                    //    }
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     txtamt.setTypeface(tyface1);
@@ -3482,7 +3505,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         });
         alertDialog.show();
     }
-
 
 
     public static void refreshMultipleMEmList(ArrayList<FamilyArrayModel> familyList) {
@@ -3771,21 +3793,21 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         try {
 //            if (response.contains("Payment failed")) {
 
-                AlertDialog alertDialog = new AlertDialog.Builder(CheckIn.this).create();
-                alertDialog.setTitle("Payment Failed");
-                alertDialog.setMessage("Unable to process your request.Please try again after some time");
-                alertDialog.setCancelable(false);
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                Intent homeIntent = new Intent(CheckIn.this, Home.class);
-                                startActivity(homeIntent);
-                                finish();
+            AlertDialog alertDialog = new AlertDialog.Builder(CheckIn.this).create();
+            alertDialog.setTitle("Payment Failed");
+            alertDialog.setMessage("Unable to process your request.Please try again after some time");
+            alertDialog.setCancelable(false);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            Intent homeIntent = new Intent(CheckIn.this, Home.class);
+                            startActivity(homeIntent);
+                            finish();
 
-                            }
-                        });
-                alertDialog.show();
+                        }
+                    });
+            alertDialog.show();
 //            } else {
 //
 //                Toast.makeText(this.mContext, "Payment failed", Toast.LENGTH_SHORT).show();
