@@ -35,6 +35,7 @@ import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
+import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.payumoney.core.PayUmoneyConfig;
@@ -49,6 +50,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,6 +93,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     String displayNotes;
     TextView tv_billnotes, tv_notes;
     int customerId;
+    ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +180,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             }
         }
         ApiBill(ynwUUID);
+      //  ApiJaldeegetS3Coupons(accountID);
 
 
         Typeface tyface1 = Typeface.createFromAsset(this.getAssets(),
@@ -696,7 +701,42 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         });
 
     }
-
+//    private void ApiJaldeegetS3Coupons(String uniqueID) {
+//        ApiInterface apiService =
+//                ApiClient.getClientS3Cloud(mActivity).create(ApiInterface.class);
+//        Date currentTime = new Date();
+//        final SimpleDateFormat sdf = new SimpleDateFormat(
+//                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+//        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        System.out.println("UTC time: " + sdf.format(currentTime));
+//        Call<ArrayList<CoupnResponse>> call = apiService.getCoupanList(Integer.parseInt(uniqueID), sdf.format(currentTime));
+//        call.enqueue(new Callback<ArrayList<CoupnResponse>>() {
+//            @Override
+//            public void onResponse(Call<ArrayList<CoupnResponse>> call, Response<ArrayList<CoupnResponse>> response) {
+//                try {
+//                    Config.logV("Response---------------------------" + response.body().toString());
+//                    Config.logV("URL-response--------------" + response.raw().request().url().toString().trim());
+//                    Config.logV("Response--code-------------------------" + response.code());
+//                    if (response.code() == 200) {
+//                        s3couponList.clear();
+//                        s3couponList = response.body();
+//                        Log.i("CouponResponse", s3couponList.toString());
+//
+//
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ArrayList<CoupnResponse>> call, Throwable t) {
+//                // Log error here since request failed
+//                Config.logV("Fail---------------" + t.toString());
+//
+//            }
+//        });
+//    }
 
     private void ApigetBill(final String couponss, String ynwuuid, String acccount) {
 
