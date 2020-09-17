@@ -71,6 +71,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     String businessName, uniqueID;
     SearchListModel searchdetailList;
     ArrayList<SearchService> mServicesList;
+    ArrayList<SearchDepartmentServices> mDepartmentServicesList;
     int department;
     LinearLayout LServices;
     TextView tv_service;
@@ -158,6 +159,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         });
 
         tv_title.setText(businessName);
+   //     apiShowDepartmentsOrServices()
 
         if (fromDoctors) {
             llDeptDesc.setVisibility(View.GONE);
@@ -672,6 +674,40 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         });
     }
 
+
+
+    private void apiShowDepartmentsOrServices(final String uniqueID) {
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Call<ArrayList<SearchDepartmentServices>> call = apiService.getDepartmentServices(Integer.parseInt(uniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<ArrayList<SearchDepartmentServices>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SearchDepartmentServices>> call, Response<ArrayList<SearchDepartmentServices>> response) {
+                try {
+                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Setting-------------------" + response.code());
+                    if (response.code() == 200) {
+                        // Department Section Starts
+//                        Log.i("DepartmentProviders", new Gson().toJson(response.body()));
+                        mDepartmentServicesList = response.body();
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<SearchDepartmentServices>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+    }
 
     private void ApiSearchViewServiceID(final int department) {
         ApiInterface apiService =

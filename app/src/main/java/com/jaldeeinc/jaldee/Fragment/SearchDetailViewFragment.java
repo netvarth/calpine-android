@@ -1668,7 +1668,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             if (getBussinessData.getServiceSector().getDisplayName().equalsIgnoreCase("Other / Miscellaneous")) {
                 tv_domain.setVisibility(View.GONE);
             } else {
-                tv_domain.setText(getBussinessData.getServiceSector().getDisplayName()); //+ " " + "(" + getBussinessData.getServiceSubSector().getDisplayName() + ")");
+               // tv_domain.setText(getBussinessData.getServiceSector().getDisplayName()); //+ " " + "(" + getBussinessData.getServiceSubSector().getDisplayName() + ")");
+                  tv_domain.setText(getBussinessData.getServiceSubSector().getDisplayName());
             }
         }
         if (getBussinessData.getBusinessDesc() != null) {
@@ -1848,7 +1849,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         if (domainList.getDisplayname().equalsIgnoreCase("Other / Miscellaneous")) {
             tv_domain.setVisibility(View.GONE);
         } else {
-           // tv_domain.setText(domainList.getDisplayname());
+            tv_domain.setText(domainList.getDisplayname());
         }
 
         if (searchdetailList.getSearchViewDetail().getSocialMedia() != null) {
