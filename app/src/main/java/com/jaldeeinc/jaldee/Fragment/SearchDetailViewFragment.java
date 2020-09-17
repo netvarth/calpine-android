@@ -881,6 +881,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     }
                                 }
                             }
+                        }else {
+
+                            if (deptProviders!= null && deptProviders.size()>0) {
+                                deptMergedList.clear();
+                                deptMergedList.addAll(deptProviders);
+                            }
                         }
                         Log.i("deptMergedList", new Gson().toJson(deptMergedList));
                         if (deptMergedList.size() > 0) {
