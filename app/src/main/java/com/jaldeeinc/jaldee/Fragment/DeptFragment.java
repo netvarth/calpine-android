@@ -200,10 +200,12 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                     public void onClick(View view) {
                         linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
                         mServicesList = departmentServices.getServices();
-                        servicesListAdapter = new ServicesListAdapter(getActivity(), mServicesList, departmentServices);
-                        mservice_searchresult.setAdapter(servicesListAdapter);
-                        mservice_searchresult.setLayoutManager(linearLayoutManager);
-                        servicesListAdapter.notifyDataSetChanged();
+                        if (mServicesList != null) {
+                            servicesListAdapter = new ServicesListAdapter(getActivity(), mServicesList, departmentServices);
+                            mservice_searchresult.setAdapter(servicesListAdapter);
+                            mservice_searchresult.setLayoutManager(linearLayoutManager);
+                            servicesListAdapter.notifyDataSetChanged();
+                        }
                     }
 
                 });

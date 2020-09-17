@@ -805,7 +805,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
         }
 
         if (userDetails.get(position).getScheduleList() != null) {
-            if (userDetails.get(position).getSearchViewDetail().isOnlinePresence()) {
+            if (userDetails.get(position).getParentSearchViewDetail().isOnlinePresence()) {
                 if (userDetails.get(position).getScheduleList().isApptEnabled()) {
 
                     if (userDetails.get(position).getScheduleList().getAvailableSchedule() != null) {

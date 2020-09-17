@@ -881,6 +881,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     }
                                 }
                             }
+                        }else {
+
+                            if (deptProviders!= null && deptProviders.size()>0) {
+                                deptMergedList.clear();
+                                deptMergedList.addAll(deptProviders);
+                            }
                         }
                         Log.i("deptMergedList", new Gson().toJson(deptMergedList));
                         if (deptMergedList.size() > 0) {
@@ -1848,7 +1854,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         if (domainList.getDisplayname().equalsIgnoreCase("Other / Miscellaneous")) {
             tv_domain.setVisibility(View.GONE);
         } else {
-           // tv_domain.setText(domainList.getDisplayname());
+            tv_domain.setText(domainList.getDisplayname());
         }
 
         if (searchdetailList.getSearchViewDetail().getSocialMedia() != null) {

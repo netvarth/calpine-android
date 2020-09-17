@@ -308,7 +308,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     private EmailEditWindow emailEditWindow;
     ProfileModel profileDetails;
     private IMailSubmit iMailSubmit;
-    private LinearLayout llEmail,llNoServices;
+    private LinearLayout llEmail, llNoServices;
     private TextView tvErrorMail;
     ArrayList<SearchDepartment> availableDepartments = new ArrayList<>();
 
@@ -796,8 +796,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                                 tvErrorMail.setVisibility(View.VISIBLE);
                             }
-                        }
-                        else {
+                        } else {
 
                             ApiAppointment(txt_message);
                         }
@@ -848,14 +847,23 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             e.printStackTrace();
         }
         if (selectedDate != null) {
-            final SimpleDateFormat sdfs = new SimpleDateFormat(
-                    "yyyy-MM-dd");
-            System.out.println("UTC time: " + sdfs.format(selectedDate));
-            txtWaitTime.setText("Today\n" + sdfs.format(selectedDate));
-        }
-        else {
+            // to set date with day of week if default date is not current date
+            if (!DateUtils.isToday(selectedDate.getTime())) {
+                final SimpleDateFormat sdfs = new SimpleDateFormat("dd-MM-yyyy");
+                        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+                String dayOfTheWeek = sdf.format(selectedDate); // to get Day of week based on Date
+                String availDate = sdfs.format(selectedDate);
 
-            final  Date currentDate = new Date();
+                txtWaitTime.setText(dayOfTheWeek +"\n"+availDate);
+            } else {
+                // to set Today
+                final SimpleDateFormat sdfs = new SimpleDateFormat("dd-MM-yyyy");
+                txtWaitTime.setText("Today\n" + sdfs.format(selectedDate));
+            }
+
+        } else {
+
+            final Date currentDate = new Date();
             final SimpleDateFormat sdfs = new SimpleDateFormat(
                     "yyyy-MM-dd");
             System.out.println("UTC time: " + sdfs.format(currentDate));
@@ -936,7 +944,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         serviceSelected = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getName();
                         selectedService = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
                         isPrepay = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getIsPrePayment();
-
 
 
                         if (selectedServiceType.equalsIgnoreCase("virtualService")) {
@@ -5379,22 +5386,22 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     public void onPaymentError(int code, String response, PaymentData paymentData) {
         try {
 //            if (response.contains("Payment failed")) {
-                AlertDialog alertDialog = new AlertDialog.Builder(Appointment.this).create();
-                alertDialog.setTitle("Payment Failed");
-                alertDialog.setMessage("Unable to process your request.Please try again after some time");
-                alertDialog.setCancelable(false);
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
+            AlertDialog alertDialog = new AlertDialog.Builder(Appointment.this).create();
+            alertDialog.setTitle("Payment Failed");
+            alertDialog.setMessage("Unable to process your request.Please try again after some time");
+            alertDialog.setCancelable(false);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
 
-                                Intent homeIntent = new Intent(Appointment.this, Home.class);
-                                startActivity(homeIntent);
-                                finish();
+                            Intent homeIntent = new Intent(Appointment.this, Home.class);
+                            startActivity(homeIntent);
+                            finish();
 
-                            }
-                        });
-                alertDialog.show();
+                        }
+                    });
+            alertDialog.show();
 //            } else {
 //                Toast.makeText(this.mContext, "Payment failed", Toast.LENGTH_SHORT).show();
 //                dialog.show();
