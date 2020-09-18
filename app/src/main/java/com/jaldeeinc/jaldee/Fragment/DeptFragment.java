@@ -730,6 +730,22 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     }
 
     @Override
+    public void onMethodServiceCallbackUser(ArrayList<SearchService> services, String value, String uniqueID) {
+        ServiceListFragment pfFragment = new ServiceListFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("servicelist", services);
+        bundle.putString("title", value);
+        bundle.putString("from", "searchdetail");
+        bundle.putString("uniqueID", uniqueID);
+        pfFragment.setArguments(bundle);
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.add(R.id.mainlayout, pfFragment).commit();
+
+    }
+
+    @Override
     public void onMethodOpenMap(String location) {
 
     }

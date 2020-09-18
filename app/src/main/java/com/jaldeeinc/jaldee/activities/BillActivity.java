@@ -93,6 +93,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     String displayNotes;
     TextView tv_billnotes, tv_notes;
     int customerId;
+    String uniqueId;
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
 
     @Override
@@ -164,6 +165,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             consumer = extras.getString("consumer");
             purpose = extras.getString("purpose");
             customerId = extras.getInt("customerId");
+            uniqueId = extras.getString("uniqueId");
         }
 
 
@@ -180,7 +182,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             }
         }
         ApiBill(ynwUUID);
-      //  ApiJaldeegetS3Coupons(accountID);
+        ApiJaldeegetS3Coupons(uniqueId);
 
 
         Typeface tyface1 = Typeface.createFromAsset(this.getAssets(),
@@ -203,7 +205,19 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                     Toast.makeText(BillActivity.this, "Enter a coupon", Toast.LENGTH_SHORT).show();
                 } else {
                     coupon_entered = mbill_coupon_edit.getText().toString();
-                    ApigetBill(coupon_entered, ynwUUID, accountID);
+                    boolean found = false;
+                    for (int i = 0; i < s3couponList.size(); i++) {
+                        if (s3couponList.get(i).getJaldeeCouponCode().equals(coupon_entered)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(found) {
+                        ApigetBill(coupon_entered, ynwUUID, accountID);
+                    }
+                    else{
+                        Toast.makeText(BillActivity.this, "Coupon Invalid", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
             }
@@ -701,42 +715,42 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         });
 
     }
-//    private void ApiJaldeegetS3Coupons(String uniqueID) {
-//        ApiInterface apiService =
-//                ApiClient.getClientS3Cloud(mActivity).create(ApiInterface.class);
-//        Date currentTime = new Date();
-//        final SimpleDateFormat sdf = new SimpleDateFormat(
-//                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-//        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-//        System.out.println("UTC time: " + sdf.format(currentTime));
-//        Call<ArrayList<CoupnResponse>> call = apiService.getCoupanList(Integer.parseInt(uniqueID), sdf.format(currentTime));
-//        call.enqueue(new Callback<ArrayList<CoupnResponse>>() {
-//            @Override
-//            public void onResponse(Call<ArrayList<CoupnResponse>> call, Response<ArrayList<CoupnResponse>> response) {
-//                try {
-//                    Config.logV("Response---------------------------" + response.body().toString());
-//                    Config.logV("URL-response--------------" + response.raw().request().url().toString().trim());
-//                    Config.logV("Response--code-------------------------" + response.code());
-//                    if (response.code() == 200) {
-//                        s3couponList.clear();
-//                        s3couponList = response.body();
-//                        Log.i("CouponResponse", s3couponList.toString());
-//
-//
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ArrayList<CoupnResponse>> call, Throwable t) {
-//                // Log error here since request failed
-//                Config.logV("Fail---------------" + t.toString());
-//
-//            }
-//        });
-//    }
+    private void ApiJaldeegetS3Coupons(String uniqueID) {
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mActivity).create(ApiInterface.class);
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        Call<ArrayList<CoupnResponse>> call = apiService.getCoupanList(Integer.parseInt(uniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<ArrayList<CoupnResponse>>() {
+            @Override
+            public void onResponse(Call<ArrayList<CoupnResponse>> call, Response<ArrayList<CoupnResponse>> response) {
+                try {
+                    Config.logV("Response---------------------------" + response.body().toString());
+                    Config.logV("URL-response--------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        s3couponList.clear();
+                        s3couponList = response.body();
+                        Log.i("CouponResponse", s3couponList.toString());
+
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<CoupnResponse>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+
+            }
+        });
+    }
 
     private void ApigetBill(final String couponss, String ynwuuid, String acccount) {
 

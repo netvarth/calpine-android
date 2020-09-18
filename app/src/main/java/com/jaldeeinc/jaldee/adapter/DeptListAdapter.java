@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.jaldeeinc.jaldee.Fragment.DeptFragment;
 import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Appointment;
@@ -547,10 +548,22 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 if (searchdetailList.getServices().size() == 1) {
                     size = 1;
                 } else {
-                    if (searchdetailList.getServices().size() == 2)
+                    if (searchdetailList.getServices().size() == 2) {
+                        if(searchdetailList.getServices().get(0).getName().length()<=15 && searchdetailList.getServices().get(1).getName().length()<=15 ){
                         size = 2;
-                    else
-                        size = 3;
+                        }
+                        else{
+                            size = 1;
+                        }
+
+                    } else {
+                        if(searchdetailList.getServices().get(0).getName().length()<=15 && searchdetailList.getServices().get(1).getName().length()<=15 ){
+                            size = 2;
+                        }
+                        else{
+                            size = 1;
+                        }
+                    }
                 }
                 for (int i = 0; i < size; i++) {
                     TextView dynaText = new TextView(context);
@@ -627,18 +640,23 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                     dynaText.setLayoutParams(params);
                     myViewHolder.L_services.addView(dynaText);
                 }
-                if (size > 3) {
-                    TextView dynaText = new TextView(context);
-                    dynaText.setOnClickListener(new View.OnClickListener() {
+                if (searchdetailList.getServices().size() >= 2) {
+                    TextView dynaTextMore = new TextView(context);
+                    int count = searchdetailList.getServices().size() - size;
+                    dynaTextMore.setText("+ " + count + " more");
+                    dynaTextMore.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getSearchViewDetail().getBusinessName(), String.valueOf(searchdetailList.getSearchViewDetail().getId()));
+                            mAdapterCallback.onMethodServiceCallbackUser((ArrayList) searchdetailList.getServices(), searchdetailList.getSearchViewDetail().getBusinessName(), String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()));
                         }
                     });
-                    dynaText.setGravity(Gravity.CENTER);
-                    dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
-                    dynaText.setText(" ... ");
-                    myViewHolder.L_services.addView(dynaText);
+                    dynaTextMore.setGravity(Gravity.LEFT);
+                    dynaTextMore.setTextColor(context.getResources().getColor(R.color.title_consu));
+                  //  dynaText.setText(" ... ");
+                    myViewHolder.L_services.addView(dynaTextMore);
+                    dynaTextMore.setTextSize(11);
+
+
                 }
             } else {
                 myViewHolder.L_services.setVisibility(View.GONE);

@@ -1000,7 +1000,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
     @Override
-    public void onMethodBillIconCallback(String payStatus, String value, String provider, String accountID, String CustomerName, int customerId) {
+    public void onMethodBillIconCallback(String payStatus, String value, String provider, String accountID, String CustomerName, int customerId,String uniqueId) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
@@ -1008,6 +1008,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         iBill.putExtra("payStatus", payStatus);
         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
         iBill.putExtra("consumer", CustomerName);
+        iBill.putExtra("uniqueId",uniqueId);
         startActivity(iBill);
     }
 
@@ -1055,7 +1056,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
     @Override
-    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer, int customerId) {
+    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer, int customerId,String uniqueId) {
         Log.i("Purpose: ", "billPayment");
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
@@ -1064,11 +1065,12 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         iBill.putExtra("payStatus", payStatus);
         iBill.putExtra("consumer", consumer);
         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
+        iBill.putExtra("uniqueId",uniqueId);
         startActivity(iBill);
     }
 
     @Override
-    public void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID, double amountDue, int customerID) {
+    public void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID, double amountDue, int customerID,String uniqueId) {
         Log.i("Purpose: ", "prePayment");
         // APIPayment(accountID, ynwUUID, amountDue);
         Intent i = new Intent(mContext, PaymentActivity.class);
@@ -1076,6 +1078,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         i.putExtra("accountID", accountID);
         i.putExtra("amountDue", amountDue);
         i.putExtra("purpose", Constants.PURPOSE_PREPAYMENT);
+        i.putExtra("uniqueId",uniqueId);
         startActivity(i);
     }
 

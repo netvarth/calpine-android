@@ -404,9 +404,9 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
             public void onClick(View v) {
                 String consumer = Config.toTitleCase(activelist.getAppmtFor().get(0).getFirstName() )+ " " + Config.toTitleCase(activelist.getAppmtFor().get(0).getLastName());
                 if (activelist.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
-                    callback.onMethodActivePayIconCallback(activelist.getPaymentStatus(), activelist.getUid(), activelist.getProviderAccount().getBusinessName(), String.valueOf(activelist.getProviderAccount().getId()),activelist.getAmountDue(),activelist.getConsumer().getId());
+                    callback.onMethodActivePayIconCallback(activelist.getPaymentStatus(), activelist.getUid(), activelist.getProviderAccount().getBusinessName(), String.valueOf(activelist.getProviderAccount().getId()),activelist.getAmountDue(),activelist.getConsumer().getId(),activelist.getProviderAccount().getUniqueId());
                 }else {
-                    callback.onMethodActiveBillIconCallback(activelist.getPaymentStatus(), activelist.getUid(), activelist.getProviderAccount().getBusinessName(), String.valueOf(activelist.getProviderAccount().getId()),consumer,activelist.getConsumer().getId());
+                    callback.onMethodActiveBillIconCallback(activelist.getPaymentStatus(), activelist.getUid(), activelist.getProviderAccount().getBusinessName(), String.valueOf(activelist.getProviderAccount().getId()),consumer,activelist.getConsumer().getId(),activelist.getProviderAccount().getUniqueId());
                 }
             }
         });
@@ -423,7 +423,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
             public void onClick(View v) {
                 String consumer = Config.toTitleCase(activelist.getAppmtFor().get(0).getFirstName() )+ " " + Config.toTitleCase(activelist.getAppmtFor().get(0).getLastName());
 
-                callback.onMethodActiveBillIconCallback(activelist.getPaymentStatus(), activelist.getUid(), activelist.getProviderAccount().getBusinessName(), String.valueOf(activelist.getProviderAccount().getId()),consumer,activelist.getConsumer().getId());
+                callback.onMethodActiveBillIconCallback(activelist.getPaymentStatus(), activelist.getUid(), activelist.getProviderAccount().getBusinessName(), String.valueOf(activelist.getProviderAccount().getId()),consumer,activelist.getConsumer().getId(),activelist.getProviderAccount().getUniqueId());
             }
         });
 

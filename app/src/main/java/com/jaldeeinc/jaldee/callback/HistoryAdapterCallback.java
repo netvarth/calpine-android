@@ -8,7 +8,7 @@ public interface
 HistoryAdapterCallback {
 
     void onMethodMessageCallback(String ynwuuid,String accountID,String provider,String from);
-    void onMethodBillIconCallback(String payStatus,String value,String provider,String accountID,String CustomerName,int customerId);
+    void onMethodBillIconCallback(String payStatus,String value,String provider,String accountID,String CustomerName,int customerId,String uniqueId);
 
     void onMethodDelecteCheckinCallback(String ynwuuid,int accountID,boolean todayflag,boolean futflag,boolean oldflag,String from);
     void onMethodActiveCallback(String value);
