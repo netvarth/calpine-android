@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="400dp"
+    android:layout_gravity="center"
+    android:background="#00ffffff"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_gravity="center"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="15dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_heading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Booking Confirmed"
+                    android:textStyle="bold"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/green"
+                    android:textSize="@dimen/dimen_18sp">
+
+                </TextView>
+
+                <LinearLayout
+                    android:id="@+id/ll_providerName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:layout_marginStart="@dimen/dimen_15dp"
+                    android:layout_below="@id/tv_heading">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Provider :   "
+                        android:textSize="@dimen/txtsize_14">
+
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/tv_providerName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Manavedhan Hospital of MultiSpeciality and Scanning"
+                        android:textSize="@dimen/txtsize_14"
+                        android:textColor="@color/active_text"
+                        android:textStyle="bold"
+                        android:singleLine="true"
+                        android:ellipsize="end">
+
+                    </TextView>
+
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:id="@+id/ll_serviceName"
+                    android:layout_below="@id/ll_providerName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding5">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginStart="@dimen/dimen_16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Service  :   "
+                            android:layout_gravity="center"
+                            android:letterSpacing="0.03"
+                            android:textSize="@dimen/txtsize_14">
+
+                        </TextView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tele Consultation"
+                            android:singleLine="true"
+                            android:textSize="@dimen/dimen_16sp"
+                            android:textColor="@color/active_text"
+                            android:textStyle="bold">
+
+                        </TextView>
+                    </LinearLayout>
+
+
+
+
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_time"
+                    android:layout_below="@id/ll_serviceName"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/padding5"
+                    android:layout_height="wrap_content">
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding25"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Token#"
+                            android:layout_gravity="center"
+                            android:textSize="@dimen/txtsize_12">
+
+                        </TextView>
+
+                        <TextView
+                            android:id="@+id/tv_tokenNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="101"
+                            android:textColor="@color/active_text"
+                            android:layout_marginTop="@dimen/padding3"
+                            android:textSize="@dimen/dimen_16sp"
+                            android:layout_gravity="center"
+                            android:textStyle="bold">
+
+                        </TextView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="vertical"
+                        android:layout_marginStart="@dimen/padding20"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Time Window"
+                            android:layout_gravity="center"
+                            android:textSize="@dimen/txtsize_12">
+
+                        </TextView>
+
+                        <TextView
+                            android:id="@+id/tv_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textColor="@color/active_text"
+                            android:textStyle="bold"
+                            android:layout_marginTop="@dimen/padding3"
+                            android:text="09:00 AM - 06:00 PM, 20/09/2020"
+                            android:textSize="@dimen/txtsize_12">
+
+                        </TextView>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/ll_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:layout_marginStart="@dimen/dimen_16dp"
+                    android:layout_marginTop="@dimen/padding5"
+                    android:layout_below="@id/ll_time">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_location_blue"
+                        android:tint="@color/dark_blue">
+
+                    </ImageView>
+
+                    <TextView
+                        android:id="@+id/tv_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textSize="@dimen/txtsize_14"
+                        android:textColor="@color/blue"
+                        android:text="Nanakaramguda,Hyderabad,500039,Telangana,Indiaaaa">
+
+                    </TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_confirmationNo"
+                    android:layout_below="@id/ll_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding5">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginStart="@dimen/dimen_16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Confirmation No  : "
+                            android:layout_gravity="center"
+                            android:letterSpacing="0.03"
+                            android:textSize="@dimen/txtsize_14">
+
+                        </TextView>
+
+                        <TextView
+                            android:id="@+id/tv_confrmNo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="c-5372-ixa1"
+                            android:singleLine="true"
+                            android:textSize="@dimen/dimen_16sp"
+                            android:textColor="@color/active_text"
+                            android:textStyle="bold">
+
+                        </TextView>
+                    </LinearLayout>
+
+
+
+
+
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/ll_divider"
+                    android:layout_below="@id/ll_confirmationNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/padding5"
+                    android:layout_marginStart="@dimen/dimen_16dp"
+                    android:layout_marginEnd="@dimen/dimen_16dp"
+                    android:background="#2F878487">
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/tv_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Current Status"
+                    android:textStyle="bold"
+                    android:layout_marginStart="@dimen/dimen_16dp"
+                    android:textColor="@color/dark_blue"
+                    android:layout_below="@id/ll_divider"
+                    android:layout_marginTop="@dimen/padding5">
+
+                </TextView>
+                
+
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/frmOk"
+        android:backgroundTint="@color/dark_blue"
+        android:background="@drawable/bg_circle"
+        android:layout_marginTop="175dp">
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:elevation="6dp"
+            android:text="OK"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+    </FrameLayout>
+</FrameLayout>

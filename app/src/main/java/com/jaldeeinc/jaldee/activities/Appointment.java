@@ -1083,46 +1083,46 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     selectedDepartment = availableDepartments.get(position).getDepartmentId();
                     departmentSelected = availableDepartments.get(position).getDepartmentName();
                     deptSpinnertext = availableDepartments.get(position).getDepartmentId();
-                    //}
+
                     ArrayList<Integer> serviceIds = availableDepartments.get(position).getServiceIds();
                     ArrayList<SearchAppoinment> serviceList = new ArrayList<>();
                     ArrayList<SearchUsers> userList = new ArrayList<>();
                     for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
 
                         for (int i = 0; i < gServiceList.size(); i++) {
-                            if (serviceIds.get(serviceIndex) == gServiceList.get(i).getId()) {
-                                serviceList.add(gServiceList.get(i));
-                                break;
-                            }
+                                if (serviceIds.get(serviceIndex) == gServiceList.get(i).getId()) {
+                                    serviceList.add(gServiceList.get(i));
+                                    break;
+                                }
                         }
 
                     }
                     LServicesList.clear();
                     LServicesList.addAll(serviceList);
-                    if (LServicesList.size() == 0) {
-                        mSpinnerService.setVisibility(View.GONE);
-                        btn_checkin.setVisibility(View.GONE);
-                        llCoupons.setVisibility(View.GONE);
-                        txt_chooseservice.setVisibility(View.GONE);
-                        llNoServices.setVisibility(View.GONE);
-                        tvNoServiceMessage.setVisibility(View.VISIBLE);
-                        txtnocheckin.setVisibility(View.GONE);
-                        tvNoServiceMessage.setText("Selected department doesn't contain any providers or services at the moment");
-                        Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
-                    } else {
-                        CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        mSpinnerService.setAdapter(adapter);
-                        mSpinnertext = ((SearchAppoinment) LServicesList.get(0)).getId();
-                        livetrack = LServicesList.get(0).getLivetrack();
-                        llNoServices.setVisibility(View.VISIBLE);
-                        mSpinnerService.setVisibility(View.VISIBLE);
-                        llCoupons.setVisibility(View.VISIBLE);
-                        txt_chooseservice.setVisibility(View.VISIBLE);
-                        btn_checkin.setVisibility(View.VISIBLE);
-                        tvNoServiceMessage.setVisibility(View.GONE);
-
-                    }
+//                    if (LServicesList.size() == 0) {
+//                        mSpinnerService.setVisibility(View.GONE);
+//                        btn_checkin.setVisibility(View.GONE);
+//                        llCoupons.setVisibility(View.GONE);
+//                        txt_chooseservice.setVisibility(View.GONE);
+//                        llNoServices.setVisibility(View.GONE);
+//                        tvNoServiceMessage.setVisibility(View.VISIBLE);
+//                        txtnocheckin.setVisibility(View.GONE);
+//                        tvNoServiceMessage.setText("Selected department doesn't contain any providers or services at the moment");
+//                        Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+//                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                        mSpinnerService.setAdapter(adapter);
+//                        mSpinnertext = ((SearchAppoinment) LServicesList.get(0)).getId();
+//                        livetrack = LServicesList.get(0).getLivetrack();
+//                        llNoServices.setVisibility(View.VISIBLE);
+//                        mSpinnerService.setVisibility(View.VISIBLE);
+//                        llCoupons.setVisibility(View.VISIBLE);
+//                        txt_chooseservice.setVisibility(View.VISIBLE);
+//                        btn_checkin.setVisibility(View.VISIBLE);
+//                        tvNoServiceMessage.setVisibility(View.GONE);
+//
+//                    }
 
                     final Handler handler = new Handler(Looper.getMainLooper());
                     handler.postDelayed(new Runnable() {
@@ -2918,6 +2918,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             mService.setValue(response.body().get(i).getValue());
                             mService.setProvider(response.body().get(i).getProvider());
                             mService.setDepartment(response.body().get(i).getDepartment());
+//                            mService.setStatus(response.body().get(i).getStatus());
                             LServicesList.add(mService);
                             if (mFrom.equalsIgnoreCase("favourites") || mFrom.equalsIgnoreCase("favourites_date")) {
                                 if (mBusinessDataList != null) {
@@ -3035,7 +3036,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 //                                                LServicesList.clear();
 //                                                LServicesList.addAll(serviceList);
 
-                                        } else {
+                                        }
+                                        else {
 
                                             // in case of individual sp's without departments
 
@@ -4100,9 +4102,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
 
                     for (int i = 0; i < gServiceList.size(); i++) {
-                        if (serviceIds.get(serviceIndex) == gServiceList.get(i).getId()) {
-                            serviceList.add(gServiceList.get(i));
-
+                        if (gServiceList.get(i).getProvider() == null) {
+                            if (serviceIds.get(serviceIndex) == gServiceList.get(i).getId()) {
+                                serviceList.add(gServiceList.get(i));
+                            }
                         }
                     }
                 }
@@ -4114,6 +4117,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 txt_chooseservice.setVisibility(View.VISIBLE);
                 llCheckinLayout.setVisibility(View.VISIBLE);
                 llCoupons.setVisibility(View.VISIBLE);
+                llNoServices.setVisibility(View.VISIBLE);
+                tvNoServiceMessage.setVisibility(View.GONE);
                 Config.logV("mServicesList" + LServicesList.size());
                 CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -4126,6 +4131,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 txt_chooseservice.setVisibility(View.GONE);
                 btn_checkin.setVisibility(View.GONE);
                 llCheckinLayout.setVisibility(View.GONE);
+                llNoServices.setVisibility(View.GONE);
+                tvNoServiceMessage.setVisibility(View.VISIBLE);
+                tvNoServiceMessage.setText("Selected department doesn't contain any  providers or services at the moment");
                 llCoupons.setVisibility(View.GONE);
                 if (LServicesList.size() == 1) {
                     // String firstWord = "Check-in for ";
@@ -4863,6 +4871,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             if (imagePathList.size() > 0) {
                                 ApiCommunicateAppointment(value, String.valueOf(accountID), txt_addnote, dialog);
                             }
+
                             Toast.makeText(mContext, toastMessage, Toast.LENGTH_LONG).show();
                             finish();
                         }

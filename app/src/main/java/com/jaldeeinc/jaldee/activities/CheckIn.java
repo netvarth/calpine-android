@@ -887,21 +887,21 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 }
                 LServicesList.clear();
                 LServicesList.addAll(serviceList);
-                if (LServicesList.size() == 0) {
-                    mSpinnerService.setVisibility(View.GONE);
-                    btn_checkin.setVisibility(View.GONE);
-                    txt_chooseservice.setVisibility(View.GONE);
-                    Toast.makeText(CheckIn.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
-                } else {
-                    CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
-                    adapter.setDropDownViewResource(R.layout.spinner_layout);
-                    mSpinnerService.setAdapter(adapter);
-                    mSpinnertext = ((SearchService) LServicesList.get(0)).getId();
-                    livetrack = LServicesList.get(0).isLivetrack();
-                    mSpinnerService.setVisibility(View.VISIBLE);
-                    txt_chooseservice.setVisibility(View.VISIBLE);
-                    btn_checkin.setVisibility(View.VISIBLE);
-                }
+//                if (LServicesList.size() == 0) {
+//                    mSpinnerService.setVisibility(View.GONE);
+//                    btn_checkin.setVisibility(View.GONE);
+//                    txt_chooseservice.setVisibility(View.GONE);
+//                    Toast.makeText(CheckIn.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+//                    adapter.setDropDownViewResource(R.layout.spinner_layout);
+//                    mSpinnerService.setAdapter(adapter);
+//                    mSpinnertext = ((SearchService) LServicesList.get(0)).getId();
+//                    livetrack = LServicesList.get(0).isLivetrack();
+//                    mSpinnerService.setVisibility(View.VISIBLE);
+//                    txt_chooseservice.setVisibility(View.VISIBLE);
+//                    btn_checkin.setVisibility(View.VISIBLE);
+//                }
 //                ApiSearchUsers(selectedDepartment);
                 final Handler handler = new Handler(Looper.getMainLooper());
                 handler.postDelayed(new Runnable() {
@@ -2686,9 +2686,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
 
                     for (int i = 0; i < gServiceList.size(); i++) {
-                        if (serviceIds.get(serviceIndex) == gServiceList.get(i).getId()) {
-                            serviceList.add(gServiceList.get(i));
-
+                        if (gServiceList.get(i).getProvider() == null) {
+                            if (serviceIds.get(serviceIndex) == gServiceList.get(i).getId()) {
+                                serviceList.add(gServiceList.get(i));
+                            }
                         }
                     }
 

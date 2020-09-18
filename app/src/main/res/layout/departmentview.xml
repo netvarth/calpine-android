@@ -51,20 +51,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/ll_depName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Department Name :  "
-                    android:textSize="@dimen/dimen_16sp"
-                    android:textColor="@color/black"
+                    android:text="Department Name"
+                    android:textSize="@dimen/dimen_8dp"
+                    android:textColor="@color/title_grey_light"
                     android:textStyle="bold"/>
 
                 <TextView
@@ -75,7 +74,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textSize="@dimen/txtsize_14"
+                    android:textSize="@dimen/dimen_16dp"
                     android:textStyle="bold"
                     android:textColor="@color/dark_blue">
 
