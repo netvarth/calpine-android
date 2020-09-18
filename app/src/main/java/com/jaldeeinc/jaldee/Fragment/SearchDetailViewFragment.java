@@ -553,9 +553,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
      * @param uniqueID
      */
     private void initSearchView(String uniqueID) {
+        apiSearchViewTerminology(uniqueID);
         apiJaldeeCoupon(uniqueID);
         apiJDN(uniqueID);
-        apiSearchViewTerminology(uniqueID);
         apiVirtualFields(uniqueID);
         apiSettings_Details(uniqueID, mSearchResp);
 
