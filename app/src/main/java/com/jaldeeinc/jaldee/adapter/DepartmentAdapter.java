@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +31,7 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.My
     ArrayList<SearchService> mServicesList;
     int department;
     String userTerminology;
+
     public DepartmentAdapter(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
@@ -47,6 +49,7 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.My
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView deptName;
+
         public MyViewHolder(View view) {
             super(view);
             deptName = (TextView) view.findViewById(R.id.deptName);
@@ -65,27 +68,35 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.My
     public void onBindViewHolder(@NonNull final DepartmentAdapter.MyViewHolder holder, final int position) {
         final SearchDepartmentServices searchDepartmentServices = mSearchDepartmentServices.get(position);
         int count = mSearchDepartmentServices.get(position).getUsers().size();
-        if(count == 0){
-            holder.deptName.setText(searchDepartmentServices.getDepartmentName() + " " + "("+"No " + userTerminology + ")" );
+        String terminology = "";
+        if (userTerminology != null) {
+
+            terminology = userTerminology;
+        } else {
+            terminology = "Provider";
         }
-        else if(count == 1) {
-            holder.deptName.setText(searchDepartmentServices.getDepartmentName() + " " + "(" + count + userTerminology + ")");
-        }
-        else{
-            holder.deptName.setText(searchDepartmentServices.getDepartmentName() + " " + "(" + count + userTerminology+"s" + ")");
+        String name = searchDepartmentServices.getDepartmentName();
+        name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+        if (count == 0) {
+            holder.deptName.setText(name + " " + "(" + "No " + terminology + ")");
+        } else if (count == 1) {
+            holder.deptName.setText(name + " " + "(" + count + " " + terminology + ")");
+        } else {
+            holder.deptName.setText(name + " " + "(" + count + " " + terminology + "s" + ")");
         }
         if (searchDepartmentServices.getDepartmentName() == null) {
-        holder.deptName.setVisibility(View.GONE);
+            holder.deptName.setVisibility(View.GONE);
         }
         holder.deptName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            if (searchDepartmentServices.getDepartmentName() != null) {
-                onItemClickListener.departmentClicked(searchDepartmentServices, businessName,userTerminology);
-            }
+                if (searchDepartmentServices.getDepartmentName() != null) {
+                    onItemClickListener.departmentClicked(searchDepartmentServices, businessName, userTerminology);
+                }
             }
         });
     }
+
     @Override
     public int getItemCount() {
         return mSearchDepartmentServices.size();

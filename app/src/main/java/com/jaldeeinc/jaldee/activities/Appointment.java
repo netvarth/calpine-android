@@ -73,6 +73,7 @@ import com.jaldeeinc.jaldee.adapter.TimeSlotsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.AppointmentConfirmationDialog;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
@@ -81,6 +82,7 @@ import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
+import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AppointmentSchedule;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
@@ -261,7 +263,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
     ArrayList<String> imagePathList = new ArrayList<>();
-   // ArrayList<String> imagePathLists = new ArrayList<>();
+    // ArrayList<String> imagePathLists = new ArrayList<>();
     private Uri mImageUri;
     File f;
     String path;
@@ -308,11 +310,13 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     LinearLayout llCheckinLayout;
     ImageView editIcon;
     private EmailEditWindow emailEditWindow;
+    private AppointmentConfirmationDialog appointmentConfirmationDialog;
     ProfileModel profileDetails;
     private IMailSubmit iMailSubmit;
     private LinearLayout llEmail, llNoServices;
     private TextView tvErrorMail;
     ArrayList<SearchDepartment> availableDepartments = new ArrayList<>();
+    ActiveCheckIn activeAppointment = new ActiveCheckIn();
 
 
     @Override
@@ -435,7 +439,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     @Override
                     public void onClick(View v) {
                         txt_message = edt_message.getText().toString();
-                     //   imagePathLists = imagePathList;
+                        //   imagePathLists = imagePathList;
                         dialog.dismiss();
 
                     }
@@ -566,7 +570,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     public void onClick(View v) {
                         //
                         txt_message = edt_message.getText().toString();
-                      //  imagePathLists = imagePathList;
+                        //  imagePathLists = imagePathList;
                         dialog.dismiss();
                     }
                 });
@@ -1100,10 +1104,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
 
                         for (int i = 0; i < gServiceList.size(); i++) {
-                                if (serviceIds.get(serviceIndex) == gServiceList.get(i).getId()) {
-                                    serviceList.add(gServiceList.get(i));
-                                    break;
-                                }
+                            if (serviceIds.get(serviceIndex) == gServiceList.get(i).getId()) {
+                                serviceList.add(gServiceList.get(i));
+                                break;
+                            }
                         }
 
                     }
@@ -3046,8 +3050,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 //                                                LServicesList.clear();
 //                                                LServicesList.addAll(serviceList);
 
-                                        }
-                                        else {
+                                        } else {
 
                                             // in case of individual sp's without departments
 
@@ -4882,6 +4885,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                 ApiCommunicateAppointment(value, String.valueOf(accountID), txt_addnote, dialog);
                             }
 
+//                            getConfirmationDetails();
+
                             Toast.makeText(mContext, toastMessage, Toast.LENGTH_LONG).show();
                             finish();
                         }
@@ -4961,6 +4966,42 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             }
         });
 
+
+    }
+
+    private void getConfirmationDetails() {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<ActiveCheckIn> call = apiService.getActiveAppointmentUUID(uuid, accountID);
+        call.enqueue(new Callback<ActiveCheckIn>() {
+            @Override
+            public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
+                try {
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        activeAppointment = response.body();
+                        if (activeAppointment != null) {
+                            appointmentConfirmationDialog = new AppointmentConfirmationDialog(mContext, activeAppointment);
+                            appointmentConfirmationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            appointmentConfirmationDialog.show();
+                            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            appointmentConfirmationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        }
+
+                    }
+                } catch (Exception e) {
+                    Log.i("mnbbnmmnbbnm", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
+            }
+        });
 
     }
 

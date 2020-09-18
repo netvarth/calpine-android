@@ -157,7 +157,11 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
             }
         });
 
-        tv_title.setText(businessName);
+        if (businessName != null) {
+            String name = businessName;
+            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+            tv_title.setText(name);
+        }
 
         if (fromDoctors) {
             llDeptDesc.setVisibility(View.GONE);
@@ -176,7 +180,9 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                     tv_departmentCode.setText(departmentServices.getDepartmentCode());
                 }
                 if (departmentServices.getDepartmentName() != null) {
-                    tv_departmentName.setText(departmentServices.getDepartmentName());
+                    String name = departmentServices.getDepartmentName();
+                    name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                    tv_departmentName.setText(name);
                 }
                 if (departmentServices.getUsers() != null) {
                     if (departmentServices.getUsers().size() > 0) {

@@ -934,7 +934,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     }
                 }
             }
-            if (userDetails.get(position).getSearchViewDetail().isOnlinePresence() && userDetails.get(position).getQueueList().isWaitlistEnabled()) {
+            if (userDetails.get(position).getParentSearchViewDetail().isOnlinePresence() && userDetails.get(position).getQueueList().isWaitlistEnabled()) {
                 disableCheckinFeature(holder);
                 if (userDetails.get(position).getQueueList().getNextAvailableQueue().isShowToken()) {
                     holder.btn_checkin.setText("GET TOKEN");
@@ -1367,7 +1367,6 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                 adaptercallback.onMethodServiceCallbackAppointment(tempList, userDetails.get(position).getSearchViewDetail().getBusinessName(), mSearchDepartmentList);
                             }
                         });
-                        Toast.makeText(context, "set single line and see more", Toast.LENGTH_SHORT).show();
                         break;
                     }
 
@@ -1679,7 +1678,6 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                 }
                             }
                         });
-                        Toast.makeText(context, "set single line and see more", Toast.LENGTH_SHORT).show();
                         break;
                     }
                 }
