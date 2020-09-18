@@ -640,9 +640,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                     dynaText.setLayoutParams(params);
                     myViewHolder.L_services.addView(dynaText);
                 }
-                if (searchdetailList.getServices().size() >= 2) {
+                int count = searchdetailList.getServices().size() - size;
+                if (searchdetailList.getServices().size() > 2 && count > 0) {
                     TextView dynaTextMore = new TextView(context);
-                    int count = searchdetailList.getServices().size() - size;
                     dynaTextMore.setText("+ " + count + " more");
                     dynaTextMore.setOnClickListener(new View.OnClickListener() {
                         @Override
