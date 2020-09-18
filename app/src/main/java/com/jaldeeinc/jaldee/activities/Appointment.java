@@ -261,6 +261,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
     ArrayList<String> imagePathList = new ArrayList<>();
+   // ArrayList<String> imagePathLists = new ArrayList<>();
     private Uri mImageUri;
     File f;
     String path;
@@ -434,6 +435,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     @Override
                     public void onClick(View v) {
                         txt_message = edt_message.getText().toString();
+                     //   imagePathLists = imagePathList;
                         dialog.dismiss();
 
                     }
@@ -485,6 +487,13 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 tv_attach.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+//                        if(imagePathLists.size()>0){
+//                            DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathLists, mContext);
+//                            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(v.getContext(), 3);
+//                            recycle_image_attachment.setLayoutManager(mLayoutManager);
+//                            recycle_image_attachment.setAdapter(mDetailFileAdapter);
+//                            mDetailFileAdapter.notifyDataSetChanged();
+//                        }
                         try {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -557,6 +566,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     public void onClick(View v) {
                         //
                         txt_message = edt_message.getText().toString();
+                      //  imagePathLists = imagePathList;
                         dialog.dismiss();
                     }
                 });

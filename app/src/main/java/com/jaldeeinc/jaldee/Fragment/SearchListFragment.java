@@ -63,6 +63,7 @@ import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.RefinedFilters;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
+import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.utils.EmptySubmitSearchView;
@@ -2190,6 +2191,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         // Store the Fragment in stack
         transaction.addToBackStack(null);
         transaction.add(R.id.mainlayout, pfFragment).commit();
+    }
+
+    @Override
+    public void onMethodServiceCallbackUser(ArrayList<SearchService> services, String value, String uniqueID) {
+
     }
 
     @Override

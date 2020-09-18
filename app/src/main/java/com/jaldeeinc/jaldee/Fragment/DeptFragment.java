@@ -675,6 +675,9 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     }
 
 
+
+
+
     private void ApiSearchViewServiceID(final int department) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -723,6 +726,22 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
 
     @Override
     public void onMethodServiceCallback(ArrayList services, String value, String uniqueID) {
+
+    }
+
+    @Override
+    public void onMethodServiceCallbackUser(ArrayList<SearchService> services, String value, String uniqueID) {
+        ServiceListFragment pfFragment = new ServiceListFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("servicelist", services);
+        bundle.putString("title", value);
+        bundle.putString("from", "searchdetail");
+        bundle.putString("uniqueID", uniqueID);
+        pfFragment.setArguments(bundle);
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.add(R.id.mainlayout, pfFragment).commit();
 
     }
 

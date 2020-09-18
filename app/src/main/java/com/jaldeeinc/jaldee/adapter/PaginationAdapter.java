@@ -319,6 +319,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
                 if (searchdetailList.getServices() != null) {
                     final ArrayList serviceNames = new ArrayList();
+                    final ArrayList serviceTypes = new ArrayList();
 
 
                     serviceNames.clear();
@@ -332,7 +333,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             for (int i = 0; i < jsonArray1.length(); i++) {
                                 JSONObject jsonObject = jsonArray1.getJSONObject(i);
                                 String name = jsonObject.optString("name");
+                                String serviceType = jsonObject.optString("serviceType");
                                 serviceNames.add(i, name);
+                                serviceTypes.add(i, serviceType);
                                 Log.i("sar", serviceNames.toString());
                             }
                         } catch (JSONException e) {

@@ -1672,7 +1672,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             if (getBussinessData.getServiceSector().getDisplayName().equalsIgnoreCase("Other / Miscellaneous")) {
                 tv_domain.setVisibility(View.GONE);
             } else {
-                tv_domain.setText(getBussinessData.getServiceSector().getDisplayName()); //+ " " + "(" + getBussinessData.getServiceSubSector().getDisplayName() + ")");
+               // tv_domain.setText(getBussinessData.getServiceSector().getDisplayName()); //+ " " + "(" + getBussinessData.getServiceSubSector().getDisplayName() + ")");
+                  tv_domain.setText(getBussinessData.getServiceSubSector().getDisplayName());
             }
         }
         if (getBussinessData.getBusinessDesc() != null) {
