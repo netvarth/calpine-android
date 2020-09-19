@@ -592,6 +592,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     myViewHolder.L_appoinment.setVisibility(View.GONE);
                     myViewHolder.btnbookservice.setVisibility(View.GONE);
                     myViewHolder.L_donation.setVisibility(View.GONE);
+                    if(!searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc")){
+                    myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+                    }
                 }
                 if (appts_flag.get(position).equals(true) && checkins_flag.get(position).equals(false) && dnts_flag.get(position).equals(false)) {
 
@@ -1452,6 +1455,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     myViewHolder.btncheckin.setText("GET TOKEN");
                                     if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1")) { // Conventional
                                         showWaitingTime(myViewHolder, searchdetailList, null);
+                                        String waitTime = myViewHolder.tv_WaitTime.getText().toString();
+                                        String waitTimes = waitTime.replace("\n"," ");
+                                        myViewHolder.tv_peopleahead.setText(waitTimes);
+                                        String message = Config.getPersonsAheadText(searchdetailList.getPersonAhead());
+                                        myViewHolder.tv_WaitTime.setText(message);
                                     } else {  // NoCalc without show waiting time
                                         String message = Config.getPersonsAheadText(searchdetailList.getPersonAhead());
                                         myViewHolder.tv_WaitTime.setText(message);
@@ -1465,7 +1473,24 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 enableCheckinButton(myViewHolder);
                             }
                             if (date2 != null && date1.compareTo(date2) < 0) {
-                                showWaitingTime(myViewHolder, searchdetailList, "future");
+                                if (searchdetailList.isShowToken()) {
+                                    if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1")) {
+                                        showWaitingTime(myViewHolder, searchdetailList, "future");
+                                        String waitTime = myViewHolder.tv_WaitTime.getText().toString();
+                                        String waitTimes = waitTime.replace("\n"," ");
+                                        myViewHolder.tv_peopleahead.setText(waitTimes);
+                                        String message = Config.getPersonsAheadText(searchdetailList.getPersonAhead());
+                                        myViewHolder.tv_WaitTime.setText(message);
+                                    }
+                                    else{
+                                        String message = Config.getPersonsAheadText(searchdetailList.getPersonAhead());
+                                        myViewHolder.tv_WaitTime.setText(message);
+                                        myViewHolder.tv_peopleahead.setVisibility(View.GONE);
+                                    }
+                                }
+                                else {
+                                    showWaitingTime(myViewHolder, searchdetailList, "future");
+                                }
                             }
 
                             //Future Checkin
@@ -1850,7 +1875,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 String monthString = (String) DateFormat.format("MMM", date);
                 Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                         "fonts/Montserrat_Bold.otf");
-                secondWord = "\n" + monthString + " " + day + ", " + searchdetailList.getServiceTime();
+                secondWord = "\n " + monthString + " " + day + ", " + searchdetailList.getServiceTime();
             } else {
                 secondWord = "\nToday, " + searchdetailList.getServiceTime();
             }
@@ -1860,7 +1885,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             //   myViewHolder.tv_WaitTime.setVisibility(View.GONE);
             String firstWord = "Est wait time";
-            String secondWord = "\n" + Config.getTimeinHourMinutes(searchdetailList.getQueueWaitingTime());
+            String secondWord = "\n " + Config.getTimeinHourMinutes(searchdetailList.getQueueWaitingTime());
             myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
         }
         // myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);

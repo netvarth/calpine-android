@@ -842,7 +842,11 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 //                                    myViewHolder.tv_WaitTime.setText(spannable);
                                     myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
                                     String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
-                                    myViewHolder.tv_peopleahead.setText(message);
+                                  //  myViewHolder.tv_peopleahead.setText(message);
+                                    String waitTime = myViewHolder.tv_WaitTime.getText().toString();
+                                    String waitTimes = waitTime.replace("\n"," ");
+                                    myViewHolder.tv_peopleahead.setText(waitTimes);
+                                    myViewHolder.tv_WaitTime.setText(message);
                                 }
                             } else { // Conventional/Fixed
                                 myViewHolder.btncheckin.setText("Check-in".toUpperCase());
@@ -858,13 +862,35 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                             //  disableCheckinButton(myViewHolder);
                         }
                         if (date2 != null && date1.compareTo(date2) < 0) {
-                            myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-                            showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(), "future");
+                            if (searchdetailList.getQueueList().getNextAvailableQueue().isShowToken()) {
+                                myViewHolder.btncheckin.setText("GET TOKEN");
+                                if (searchdetailList.getQueueList().getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc")) { // NoCalc without show waiting time
+                                    String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
+                                    myViewHolder.tv_WaitTime.setText(message);
+                                    myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+                                    myViewHolder.tv_peopleahead.setVisibility(View.GONE);
+                                } else { // Conventional (Token with Waiting time)
+                                    myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+                                    showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(), null);
+//                                    myViewHolder.tv_WaitTime.setText(spannable);
+                                    myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+                                    String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
+                                    //  myViewHolder.tv_peopleahead.setText(message);
+                                    String waitTime = myViewHolder.tv_WaitTime.getText().toString();
+                                    String waitTimes = waitTime.replace("\n", " ");
+                                    myViewHolder.tv_peopleahead.setText(waitTimes);
+                                    myViewHolder.tv_WaitTime.setText(message);
+                                }
+                            }
+                            else {
+                                myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+                                showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(), "future");
 //                            String spannable = getWaitingTime(searchdetailList.getQueueList().getNextAvailableQueue());
 //                            myViewHolder.tv_WaitTime.setText(spannable);
-                            myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
-                            String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
-                            myViewHolder.tv_peopleahead.setText(message);
+                                myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+                                String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
+                                myViewHolder.tv_peopleahead.setText(message);
+                            }
                         }
                         //Future Checkin
                         if (searchdetailList.getSettings().isFutureDateWaitlist() && searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate() != null) {

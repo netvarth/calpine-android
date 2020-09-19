@@ -493,7 +493,7 @@
                 android:layout_marginLeft="@dimen/padding5"
                 android:layout_marginTop="@dimen/default_padding"
                 android:layout_marginRight="@dimen/padding5"
-                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_5dp"
                 android:gravity="left"
                 android:orientation="horizontal"
                 android:textColor="@color/title_consu"
@@ -575,13 +575,13 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimen_5dp"
             android:layout_marginTop="@dimen/padding2"
-            android:layout_marginBottom="@dimen/padding2"
+            android:layout_marginBottom="@dimen/dimen_5dp"
             android:gravity="left"
             android:text=""
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_12"
             android:textStyle="bold"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
 
         <Button
             android:id="@+id/btnbook_service"
@@ -607,6 +607,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dimen_5dp"
             android:orientation="horizontal"
             >
 
