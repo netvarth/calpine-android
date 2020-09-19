@@ -8,6 +8,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
+import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -38,10 +40,13 @@ import retrofit2.Response;
 public class PaytmPayment {
 
     Context context;
+    private IPaymentResponse iPaymentResponse;
     public PaytmPayment(Context mContext) {
         context = mContext;
 
+
     }
+
 
     public void generateCheckSum(String txtamt) {
 

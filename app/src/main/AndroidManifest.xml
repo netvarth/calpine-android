@@ -35,7 +35,11 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.ActiveListing"></activity>
+        <activity android:name=".activities.AppointmentConfirmation"
+            android:hardwareAccelerated="true"></activity>
+        <activity android:name=".activities.CheckInConfirmation"
+            android:hardwareAccelerated="true"/>
+        <activity android:name=".activities.ActiveListing" />
         <activity android:name=".activities.LinkRedirectionActivity" />
         <activity android:name=".activities.NotificationActivity" />
         <activity android:name=".activities.CouponFirstActivity" />

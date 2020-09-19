@@ -58,10 +58,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
+import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
 import com.jaldeeinc.jaldee.adapter.CustomSpinnerAdapter;
-import com.jaldeeinc.jaldee.adapter.CustomSpinnerAdapterAppointment;
 import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.adapter.MultipleFamilyMemberAdapter;
 import com.jaldeeinc.jaldee.common.Config;
@@ -74,12 +74,12 @@ import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
+import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
-import com.jaldeeinc.jaldee.response.SearchAppoinment;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchService;
@@ -143,7 +143,7 @@ import retrofit2.Response;
  * Created by sharmila on 6/8/18.
  */
 
-public class CheckIn extends AppCompatActivity implements PaymentResultWithDataListener, IMailSubmit {
+public class CheckIn extends AppCompatActivity implements PaymentResultWithDataListener, IMailSubmit , IPaymentResponse {
     ArrayList<String> couponArraylist = new ArrayList<String>();
     String phoneNumber;
     int providerId;
@@ -279,6 +279,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     ArrayList<SearchDepartment> availableDepartments = new ArrayList<>();
     static TextView txtamt;
     static ArrayList<FamilyArrayModel> MultiplefamilyList = new ArrayList<>();
+    ActiveCheckIn activeAppointment = new ActiveCheckIn();
+    private IPaymentResponse paymentResponse;
 
 
     @Override
@@ -302,6 +304,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         LcouponCheckin = findViewById(R.id.couponCheckin);
         mActivity = this;
         iMailSubmit = this;
+        paymentResponse = this;
         recycle_family = findViewById(R.id.recycle_family);
         btn_checkin = findViewById(R.id.btn_checkin);
         editpartysize = findViewById(R.id.editpartysize);
@@ -1471,13 +1474,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         return cal.getTime();
     }
 
-    /**
-     * subtract days to date in java
-     *
-     * @param date
-     * @param days
-     * @return
-     */
+
     public Date subtractDays(Date date, int days) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -1492,6 +1489,15 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     public void mailUpdated() {
 
         ApiGetProfileDetail();
+    }
+
+    @Override
+    public void sendPaymentResponse() {
+
+        Toast.makeText(CheckIn.this, "Paymenttttttt Successful", Toast.LENGTH_LONG).show();
+
+        getConfirmationDetails();
+
     }
 
 
@@ -3367,8 +3373,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                 ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialogPayment);
                             }
 
-                            Toast.makeText(mContext, toastMessage, Toast.LENGTH_LONG).show();
-                            finish();
+                            getConfirmationDetails();
+//                            Toast.makeText(mContext, toastMessage, Toast.LENGTH_LONG).show();
+//                            finish();
                         }
 
                         if (livetrack) {
@@ -3441,6 +3448,42 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             }
         });
     }
+
+    private void getConfirmationDetails() {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(value, accountID);
+        call.enqueue(new Callback<ActiveCheckIn>() {
+            @Override
+            public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
+                try {
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        activeAppointment = response.body();
+
+                        if (activeAppointment != null) {
+
+                            Intent checkin = new Intent(CheckIn.this,CheckInConfirmation.class);
+                            checkin.putExtra("BookingDetails",activeAppointment);
+                            startActivity(checkin);
+                        }
+
+                    }
+                } catch (Exception e) {
+                    Log.i("mnbbnmmnbbnm", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
+            }
+        });
+
+    }
+
 
     // Dialog mDialog1 = null;
     public static void launchPaymentFlow(String amount, CheckSumModel checksumModel) {
@@ -3772,7 +3815,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     }
 
     public void paymentFinished() {
-        finish();
+
+        getConfirmationDetails();
     }
 
     @Override

@@ -2,6 +2,11 @@ package com.jaldeeinc.jaldee.activities;
 
 public class Constants {
 
+
+    // Must change based on release type
+    public static final String URL = "https://scale.jaldee.com/status/";
+
+
     // Testing Payment Gateway
     public static final String MONEY_HASH = "https://debajyotibasak.000webhostapp.com/PayUMoneyHash.php";
     public static final String SURL = "https://www.payumoney.com/mobileapp/payumoney/success.php";

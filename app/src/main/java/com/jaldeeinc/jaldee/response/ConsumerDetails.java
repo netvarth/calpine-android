@@ -1,6 +1,8 @@
 package com.jaldeeinc.jaldee.response;
 
-public class ConsumerDetails {
+import java.io.Serializable;
+
+public class ConsumerDetails implements Serializable {
 
     public int getId() {
         return id;

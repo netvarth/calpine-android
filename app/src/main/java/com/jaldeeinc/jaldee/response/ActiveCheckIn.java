@@ -2,17 +2,28 @@ package com.jaldeeinc.jaldee.response;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by sharmila on 13/7/18.
  */
 
-public class ActiveCheckIn {
+public class ActiveCheckIn implements Serializable {
 
 
     int token;
     String checkinEncId;
+
+    public String getAppointmentEncId() {
+        return appointmentEncId;
+    }
+
+    public void setAppointmentEncId(String appointmentEncId) {
+        this.appointmentEncId = appointmentEncId;
+    }
+
+    String appointmentEncId;
     String date;
     @SerializedName("providerAccount")
     private ActiveCheckIn providerAccount;
@@ -101,6 +112,8 @@ public class ActiveCheckIn {
     String consumerNote;
     String recalculatedTime;
     int appxWaitingTime;
+    String appmtDate;
+    String appmtTime;
 
 
     public int getAppxWaitingTime() {
@@ -742,4 +755,19 @@ public class ActiveCheckIn {
         this.showToken = showToken;
     }
 
+    public String getAppmtDate() {
+        return appmtDate;
+    }
+
+    public void setAppmtDate(String appmtDate) {
+        this.appmtDate = appmtDate;
+    }
+
+    public String getAppmtTime() {
+        return appmtTime;
+    }
+
+    public void setAppmtTime(String appmtTime) {
+        this.appmtTime = appmtTime;
+    }
 }
