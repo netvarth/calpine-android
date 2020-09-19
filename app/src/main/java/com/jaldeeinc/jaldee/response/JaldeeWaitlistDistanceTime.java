@@ -2,7 +2,9 @@ package com.jaldeeinc.jaldee.response;
 
 import com.google.gson.annotations.SerializedName;
 
-public class JaldeeWaitlistDistanceTime {
+import java.io.Serializable;
+
+public class JaldeeWaitlistDistanceTime implements Serializable {
 
     public String getPollingTime() {
         return pollingTime;

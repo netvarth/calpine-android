@@ -1,6 +1,8 @@
 package com.jaldeeinc.jaldee.response;
 
-public class VirtualServiceDetails {
+import java.io.Serializable;
+
+public class VirtualServiceDetails implements Serializable {
 
 
     public String getPhone() {

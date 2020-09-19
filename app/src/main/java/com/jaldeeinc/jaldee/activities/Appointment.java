@@ -61,7 +61,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
 import com.jaldeeinc.jaldee.R;
@@ -73,10 +72,8 @@ import com.jaldeeinc.jaldee.adapter.TimeSlotsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.AppointmentConfirmationDialog;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.custom.EmailEditWindow;
-import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
@@ -310,7 +307,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     LinearLayout llCheckinLayout;
     ImageView editIcon;
     private EmailEditWindow emailEditWindow;
-    private AppointmentConfirmationDialog appointmentConfirmationDialog;
     ProfileModel profileDetails;
     private IMailSubmit iMailSubmit;
     private LinearLayout llEmail, llNoServices;
@@ -4885,10 +4881,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                 ApiCommunicateAppointment(value, String.valueOf(accountID), txt_addnote, dialog);
                             }
 
-//                            getConfirmationDetails();
+                            getConfirmationDetails();
 
-                            Toast.makeText(mContext, toastMessage, Toast.LENGTH_LONG).show();
-                            finish();
+//                            Toast.makeText(mContext, toastMessage, Toast.LENGTH_LONG).show();
+//                            finish();
                         }
 
 
@@ -4973,7 +4969,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-        Call<ActiveCheckIn> call = apiService.getActiveAppointmentUUID(uuid, accountID);
+        Call<ActiveCheckIn> call = apiService.getActiveAppointmentUUID(value, accountID);
         call.enqueue(new Callback<ActiveCheckIn>() {
             @Override
             public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
@@ -4983,12 +4979,12 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     if (response.code() == 200) {
                         activeAppointment = response.body();
                         if (activeAppointment != null) {
-                            appointmentConfirmationDialog = new AppointmentConfirmationDialog(mContext, activeAppointment);
-                            appointmentConfirmationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            appointmentConfirmationDialog.show();
-                            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-                            int width = (int) (metrics.widthPixels * 1);
-                            appointmentConfirmationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                            Bundle b = new Bundle();
+                            b.putSerializable("BookingDetails", activeAppointment);
+                            Intent checkin = new Intent(Appointment.this,AppointmentConfirmation.class);
+                            checkin.putExtras(b);
+                            startActivity(checkin);
                         }
 
                     }

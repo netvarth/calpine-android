@@ -1,12 +1,13 @@
 package com.jaldeeinc.jaldee.response;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by sharmila on 7/11/18.
  */
 
-public class RatingResponse {
+public class RatingResponse implements Serializable {
 
     int stars;
 

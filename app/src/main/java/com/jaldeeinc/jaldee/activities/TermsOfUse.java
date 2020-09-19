@@ -50,6 +50,7 @@ public class TermsOfUse extends AppCompatActivity {
         //WebView loading start
         WebSettings settings = webview.getSettings();
         settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
         settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         webview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
