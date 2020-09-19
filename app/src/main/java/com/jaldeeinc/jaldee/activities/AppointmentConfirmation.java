@@ -18,6 +18,13 @@ public class AppointmentConfirmation extends AppCompatActivity {
     private TextView tvProviderName, tvServiceName, tvTimeWindow, tvLocation, tvConfirmationNumber, tvStatusLink,tvPreInfoTitle,tvPreInfo,tvPostInfo,tvPostInfoTitle;
 
     @Override
+    public void onBackPressed() {
+        Intent home = new Intent(AppointmentConfirmation.this,Home.class);
+        startActivity(home);
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment_confirmation);

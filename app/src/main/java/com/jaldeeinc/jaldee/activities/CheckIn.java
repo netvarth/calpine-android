@@ -58,6 +58,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
+import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
 import com.jaldeeinc.jaldee.adapter.CustomSpinnerAdapter;
@@ -142,7 +143,7 @@ import retrofit2.Response;
  * Created by sharmila on 6/8/18.
  */
 
-public class CheckIn extends AppCompatActivity implements PaymentResultWithDataListener, IMailSubmit {
+public class CheckIn extends AppCompatActivity implements PaymentResultWithDataListener, IMailSubmit , IPaymentResponse {
     ArrayList<String> couponArraylist = new ArrayList<String>();
     String phoneNumber;
     int providerId;
@@ -279,6 +280,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     static TextView txtamt;
     static ArrayList<FamilyArrayModel> MultiplefamilyList = new ArrayList<>();
     ActiveCheckIn activeAppointment = new ActiveCheckIn();
+    private IPaymentResponse paymentResponse;
 
 
     @Override
@@ -302,6 +304,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         LcouponCheckin = findViewById(R.id.couponCheckin);
         mActivity = this;
         iMailSubmit = this;
+        paymentResponse = this;
         recycle_family = findViewById(R.id.recycle_family);
         btn_checkin = findViewById(R.id.btn_checkin);
         editpartysize = findViewById(R.id.editpartysize);
@@ -1471,13 +1474,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         return cal.getTime();
     }
 
-    /**
-     * subtract days to date in java
-     *
-     * @param date
-     * @param days
-     * @return
-     */
+
     public Date subtractDays(Date date, int days) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -1492,6 +1489,15 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     public void mailUpdated() {
 
         ApiGetProfileDetail();
+    }
+
+    @Override
+    public void sendPaymentResponse() {
+
+        Toast.makeText(CheckIn.this, "Paymenttttttt Successful", Toast.LENGTH_LONG).show();
+
+        getConfirmationDetails();
+
     }
 
 
@@ -3809,7 +3815,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     }
 
     public void paymentFinished() {
-        finish();
+
+        getConfirmationDetails();
     }
 
     @Override

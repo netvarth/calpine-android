@@ -5442,7 +5442,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     }
 
     public void paymentFinished(RazorpayModel razorpayModel) {
-        finish();
+
+        getConfirmationDetails();
     }
 
     @Override

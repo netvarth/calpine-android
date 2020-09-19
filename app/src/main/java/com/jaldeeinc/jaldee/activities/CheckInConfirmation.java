@@ -149,4 +149,11 @@ public class CheckInConfirmation extends AppCompatActivity {
         llwaitTime = findViewById(R.id.ll_waitTime);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent home = new Intent(CheckInConfirmation.this,Home.class);
+        startActivity(home);
+        super.onBackPressed();
+    }
+
 }
