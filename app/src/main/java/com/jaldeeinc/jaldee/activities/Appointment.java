@@ -260,7 +260,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
     ArrayList<String> imagePathList = new ArrayList<>();
-    // ArrayList<String> imagePathLists = new ArrayList<>();
+  //  ArrayList<String> imagePathLists = new ArrayList<>();
     private Uri mImageUri;
     File f;
     String path;
@@ -435,7 +435,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     @Override
                     public void onClick(View v) {
                         txt_message = edt_message.getText().toString();
-                        //   imagePathLists = imagePathList;
+                     //   imagePathLists = imagePathList;
                         dialog.dismiss();
 
                     }
@@ -444,6 +444,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                      //  imagePathList.clear();
                         dialog.dismiss();
                     }
                 });
@@ -566,7 +567,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     public void onClick(View v) {
                         //
                         txt_message = edt_message.getText().toString();
-                        //  imagePathLists = imagePathList;
+                       // imagePathLists = imagePathList;
                         dialog.dismiss();
                     }
                 });
