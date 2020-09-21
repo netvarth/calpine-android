@@ -105,8 +105,57 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:layout_marginStart="@dimen/dimen_16dp"
+                    android:layout_marginTop="@dimen/padding5"
+                    android:orientation="vertical"
+                    android:layout_below="@id/ll_providerName">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Location"
+                        android:textSize="13sp">
+
+                    </TextView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding3"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/icon_location_blue"
+                            android:tint="@color/dark_blue">
+
+                        </ImageView>
+
+                        <TextView
+                            android:id="@+id/tv_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:text=""
+                            android:layout_gravity="center"
+                            android:textSize="@dimen/txtsize_12"
+                            android:textColor="@color/blue">
+
+                        </TextView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
                     android:id="@+id/ll_serviceName"
-                    android:layout_below="@id/ll_providerName"
+                    android:layout_below="@id/ll_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding5">
@@ -188,6 +237,7 @@
 
 
                     <LinearLayout
+                        android:id="@+id/ll_token"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/padding25"
@@ -223,41 +273,10 @@
                 </LinearLayout>
 
 
-                <LinearLayout
-                    android:id="@+id/ll_location"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginEnd="@dimen/dimen_10dp"
-                    android:layout_marginStart="@dimen/dimen_16dp"
-                    android:layout_marginTop="@dimen/padding5"
-                    android:layout_below="@id/ll_time">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/icon_location_blue"
-                        android:tint="@color/dark_blue">
-
-                    </ImageView>
-
-                    <TextView
-                        android:id="@+id/tv_location"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:layout_gravity="center"
-                        android:textSize="@dimen/txtsize_12"
-                        android:textColor="@color/blue"
-                        android:text="">
-
-                    </TextView>
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/ll_confirmationNo"
-                    android:layout_below="@id/ll_location"
+                    android:layout_below="@id/ll_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding5">

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.BIllDiscountAdapter;
 import com.jaldeeinc.jaldee.adapter.BillCouponAdapter;
@@ -61,7 +62,7 @@ import retrofit2.Response;
  * Created by sharmila on 1/10/18.
  */
 
-public class BillActivity extends AppCompatActivity implements PaymentResultWithDataListener {
+public class BillActivity extends AppCompatActivity implements PaymentResultWithDataListener, IPaymentResponse {
 
     static Context mCOntext;
     static Activity mActivity;
@@ -95,6 +96,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     int customerId;
     String uniqueId;
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
+    private IPaymentResponse paymentResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +104,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         setContentView(R.layout.bill);
         mCOntext = this;
         mActivity = this;
-
+        paymentResponse = this;
         mbill_applybtn = findViewById(R.id.bill_applybtn);
         mbill_coupon_edit = findViewById(R.id.bill_coupon_edit);
         paidlayout = findViewById(R.id.paidlayout);
@@ -270,7 +272,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             @Override
                             public void onClick(View v) {
 
-                                PaytmPayment payment = new PaytmPayment(mCOntext);
+                                PaytmPayment payment = new PaytmPayment(mCOntext, paymentResponse);
                                 payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, purpose, mCOntext, mActivity, "",customerId);
                                 dialog.dismiss();
                             }
@@ -849,5 +851,13 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
         }
+    }
+
+    @Override
+    public void sendPaymentResponse() {
+
+        //Paytm
+        Toast.makeText(BillActivity.this, "Payment Successful", Toast.LENGTH_LONG).show();
+
     }
 }
