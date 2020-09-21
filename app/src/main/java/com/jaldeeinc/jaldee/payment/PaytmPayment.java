@@ -7,10 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
-import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -41,8 +40,9 @@ public class PaytmPayment {
 
     Context context;
     private IPaymentResponse iPaymentResponse;
-    public PaytmPayment(Context mContext) {
+    public PaytmPayment(Context mContext, IPaymentResponse paymentResponse) {
         context = mContext;
+        iPaymentResponse = paymentResponse;
 
 
     }
@@ -191,7 +191,7 @@ public class PaytmPayment {
                             Config.logV("Response--Sucess----PAytm-CALLBACK_URL--------------------" + response_data.getCALLBACK_URL());
                             map.put("CALLBACK_URL", response_data.getCALLBACK_URL());
                             map.put("CHECKSUMHASH", response_data.getChecksum());
-                            PaytmPay(map, from, response_data.getPaymentEnv());
+                            PaytmPay(map, from, response_data.getPaymentEnv(),purpose);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -227,7 +227,7 @@ public class PaytmPayment {
 
     }
 
-    public void PaytmPay(Map<String, String> paramMap, final String from, String paymentEnv) {
+    public void PaytmPay(Map<String, String> paramMap, final String from, String paymentEnv, String purpose) {
         PaytmPGService Service = null;
         // Service = PaytmPGService.getStagingService();
         if (paymentEnv.equalsIgnoreCase("production")) {
@@ -249,7 +249,13 @@ public class PaytmPayment {
             public void onTransactionResponse(Bundle inResponse) {
                 Log.d("LOG", "Payment Transaction : " + inResponse);
                 if(inResponse.toString().contains("TXN_SUCCESS")){
-                    Toast.makeText(context, "Payment Successful", Toast.LENGTH_LONG).show();
+
+                    if (purpose.equalsIgnoreCase(Constants.PURPOSE_PREPAYMENT)){
+                        iPaymentResponse.sendPaymentResponse();
+                    }
+                    else {
+                        Toast.makeText(context, "Payment Successful", Toast.LENGTH_LONG).show();
+                    }
                 }else {
                     Toast.makeText(context, "Payment Failed ", Toast.LENGTH_LONG).show();
                 }

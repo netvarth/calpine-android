@@ -37,10 +37,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -143,7 +145,7 @@ import retrofit2.Response;
  * Created by sharmila on 6/8/18.
  */
 
-public class CheckIn extends AppCompatActivity implements PaymentResultWithDataListener, IMailSubmit , IPaymentResponse {
+public class CheckIn extends AppCompatActivity implements PaymentResultWithDataListener, IMailSubmit, IPaymentResponse {
     ArrayList<String> couponArraylist = new ArrayList<String>();
     String phoneNumber;
     int providerId;
@@ -281,6 +283,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     static ArrayList<FamilyArrayModel> MultiplefamilyList = new ArrayList<>();
     ActiveCheckIn activeAppointment = new ActiveCheckIn();
     private IPaymentResponse paymentResponse;
+    private LinearLayout llPreInfo;
+    private TextView tvPreInfoTitle, tvPreInfoText;
 
 
     @Override
@@ -349,6 +353,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         tvErroMail = findViewById(R.id.tv_emailError);
         llNoServices = findViewById(R.id.ll_noServices);
         tvNoServices = findViewById(R.id.tv_noServices);
+        tvPreInfoText = findViewById(R.id.tv_preInfo);
+        tvPreInfoTitle = findViewById(R.id.tv_preInfoTitle);
+        llPreInfo = findViewById(R.id.ll_preinfo);
 
         MultiplefamilyList.clear();
 
@@ -798,28 +805,58 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             valueNumber = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
                             if (callingMode.equalsIgnoreCase("WhatsApp")) {
                                 serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                                tv_enterInstructions.setVisibility(View.VISIBLE);
-                                tv_enterInstructions.setText(serviceInstructions);
+                                if (serviceInstructions != null && !serviceInstructions.equalsIgnoreCase("")) {
+                                    tv_enterInstructions.setVisibility(View.VISIBLE);
+                                    tv_enterInstructions.setText(serviceInstructions);
+                                } else {
+                                    tv_enterInstructions.setVisibility(View.GONE);
+                                }
                                 et_virtualId.setText(phoneNumber);
                                 et_virtualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
                                 et_virtualId.setVisibility(View.VISIBLE);
                             } else if (callingMode.equalsIgnoreCase("Phone")) {
                                 serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                                tv_enterInstructions.setVisibility(View.VISIBLE);
-                                tv_enterInstructions.setText(serviceInstructions);
+                                if (serviceInstructions != null && !serviceInstructions.equalsIgnoreCase("")) {
+                                    tv_enterInstructions.setVisibility(View.VISIBLE);
+                                    tv_enterInstructions.setText(serviceInstructions);
+                                } else {
+                                    tv_enterInstructions.setVisibility(View.GONE);
+                                }
+
                                 et_virtualId.setText(phoneNumber);
                                 et_virtualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_phone_iphone_black_24dps, 0, 0, 0);
                                 et_virtualId.setVisibility(View.VISIBLE);
                             } else {
                                 serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                                tv_enterInstructions.setVisibility(View.VISIBLE);
-                                tv_enterInstructions.setText(serviceInstructions);
+                                if (serviceInstructions != null && !serviceInstructions.equalsIgnoreCase("")) {
+                                    tv_enterInstructions.setVisibility(View.VISIBLE);
+                                    tv_enterInstructions.setText(serviceInstructions);
+                                } else {
+                                    tv_enterInstructions.setVisibility(View.GONE);
+                                }
                                 et_virtualId.setVisibility(View.GONE);
                             }
                         }
                     } else {
                         tv_enterInstructions.setVisibility(View.GONE);
                         et_virtualId.setVisibility(View.GONE);
+                    }
+
+                    try {
+
+                        if (((SearchService) mSpinnerService.getSelectedItem()).isPreInfoEnabled()) {
+
+                            llPreInfo.setVisibility(View.VISIBLE);
+                            tvPreInfoTitle.setText(((SearchService) mSpinnerService.getSelectedItem()).getPreInfoTitle());
+                            tvPreInfoText.setText(Html.fromHtml(((SearchService) mSpinnerService.getSelectedItem()).getPreInfoText()));
+
+
+                        } else {
+
+                            llPreInfo.setVisibility(View.GONE);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                     // String firstWord = "Check-in for ";
@@ -1491,15 +1528,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         ApiGetProfileDetail();
     }
 
-    @Override
-    public void sendPaymentResponse() {
-
-        Toast.makeText(CheckIn.this, "Paymenttttttt Successful", Toast.LENGTH_LONG).show();
-
-        getConfirmationDetails();
-
-    }
-
 
     public static class MyDatePickerDialog extends DialogFragment {
         @Override
@@ -2065,6 +2093,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             mService.setVirtualCallingModes(response.body().get(i).getVirtualCallingModes());
                             mService.setProvider(response.body().get(i).getProvider());
                             mService.setDepartment(response.body().get(i).getDepartment());
+                            mService.setPreInfoEnabled(response.body().get(i).isPreInfoEnabled());
+                            mService.setPreInfoTitle(response.body().get(i).getPreInfoTitle());
+                            mService.setPreInfoText(response.body().get(i).getPreInfoText());
                             LServicesList.add(mService);
 
                             if (mFrom.equalsIgnoreCase("favourites") || mFrom.equalsIgnoreCase("favourites_date")) {
@@ -3351,7 +3382,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
 
                                             Config.logV("Account ID --------Paytm------" + modifyAccountID);
-                                            PaytmPayment payment = new PaytmPayment(mContext);
+                                            PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
                                             payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID);
                                             //payment.generateCheckSum(sAmountPay);
                                             dialogPayment.dismiss();
@@ -3465,8 +3496,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                         if (activeAppointment != null) {
 
-                            Intent checkin = new Intent(CheckIn.this,CheckInConfirmation.class);
-                            checkin.putExtra("BookingDetails",activeAppointment);
+                            Intent checkin = new Intent(CheckIn.this, CheckInConfirmation.class);
+                            checkin.putExtra("BookingDetails", activeAppointment);
                             startActivity(checkin);
                         }
 
@@ -3862,4 +3893,13 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             Log.e("TAG", "Exception in onPaymentError..", e);
         }
     }
+
+    @Override
+    public void sendPaymentResponse() {
+
+        // Paytm
+        getConfirmationDetails();
+
+    }
+
 }

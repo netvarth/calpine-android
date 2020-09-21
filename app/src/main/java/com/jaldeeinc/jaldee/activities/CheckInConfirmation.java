@@ -17,7 +17,7 @@ public class CheckInConfirmation extends AppCompatActivity {
 
     ActiveCheckIn activeCheckInInfo = new ActiveCheckIn();
     private TextView tvProviderName, tvServiceName, tvTokenNumber, tvTimeWindow, tvLocation, tvConfirmationNumber, tvPeopleAhead, tvEstWaitTime, tvStatusLink,tvPreInfoTitle,tvPreInfo,tvPostInfo,tvPostInfoTitle;
-    private LinearLayout llwaitTime;
+    private LinearLayout llwaitTime,llToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +45,16 @@ public class CheckInConfirmation extends AppCompatActivity {
 
             }
 
-            if (activeCheckInInfo.getToken() != 0) {
+            if (activeCheckInInfo.getShowToken().equalsIgnoreCase("true")) {
+                if (activeCheckInInfo.getToken() != 0) {
 
-                tvTokenNumber.setText("#"+String.valueOf(activeCheckInInfo.getToken()));
+                    llToken.setVisibility(View.VISIBLE);
+                    tvTokenNumber.setText("#" + String.valueOf(activeCheckInInfo.getToken()));
+                }
+            }
+            else {
+
+                llToken.setVisibility(View.GONE);
             }
 
             if (activeCheckInInfo.getCheckInTime() != null) {
@@ -114,6 +121,8 @@ public class CheckInConfirmation extends AppCompatActivity {
 
                 if (activeCheckInInfo.getService().isPreInfoEnabled()){
 
+                    tvPreInfo.setVisibility(View.GONE);
+                    tvPreInfoTitle.setVisibility(View.GONE);
                     tvPreInfoTitle.setText(activeCheckInInfo.getService().getPreInfoTitle());
                     tvPreInfo.setText(Html.fromHtml(activeCheckInInfo.getService().getPreInfoText()));
                 }
@@ -147,6 +156,7 @@ public class CheckInConfirmation extends AppCompatActivity {
         tvPostInfo = findViewById(R.id.tv_postInfo);
         tvPostInfoTitle = findViewById(R.id.tv_postInfoTitle);
         llwaitTime = findViewById(R.id.ll_waitTime);
+        llToken = findViewById(R.id.ll_token);
     }
 
     @Override

@@ -27,6 +27,12 @@ public class SearchAppoinment {
     String instructions;
     String callingMode;
     String value;
+    boolean preInfoEnabled;
+    String preInfoTitle;
+    String preInfoText;
+    boolean postInfoEnabled;
+    String postInfoTitle;
+    String postInfoText;
     @SerializedName("provider")
     private SearchAppoinment provider;
 
@@ -204,4 +210,51 @@ public class SearchAppoinment {
         this.provider = provider;
     }
 
+    public boolean isPreInfoEnabled() {
+        return preInfoEnabled;
+    }
+
+    public void setPreInfoEnabled(boolean preInfoEnabled) {
+        this.preInfoEnabled = preInfoEnabled;
+    }
+
+    public String getPreInfoTitle() {
+        return preInfoTitle;
+    }
+
+    public void setPreInfoTitle(String preInfoTitle) {
+        this.preInfoTitle = preInfoTitle;
+    }
+
+    public String getPreInfoText() {
+        return preInfoText;
+    }
+
+    public void setPreInfoText(String preInfoText) {
+        this.preInfoText = preInfoText;
+    }
+
+    public boolean isPostInfoEnabled() {
+        return postInfoEnabled;
+    }
+
+    public void setPostInfoEnabled(boolean postInfoEnabled) {
+        this.postInfoEnabled = postInfoEnabled;
+    }
+
+    public String getPostInfoTitle() {
+        return postInfoTitle;
+    }
+
+    public void setPostInfoTitle(String postInfoTitle) {
+        this.postInfoTitle = postInfoTitle;
+    }
+
+    public String getPostInfoText() {
+        return postInfoText;
+    }
+
+    public void setPostInfoText(String postInfoText) {
+        this.postInfoText = postInfoText;
+    }
 }

@@ -38,11 +38,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -62,6 +64,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
+import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
@@ -92,6 +95,7 @@ import com.jaldeeinc.jaldee.response.SearchAppoinment;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
+import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchUsers;
@@ -153,7 +157,7 @@ import retrofit2.Response;
  * Created by sharmila on 6/8/18.
  */
 
-public class Appointment extends AppCompatActivity implements PaymentResultWithDataListener, ISelectSlotInterface, IMailSubmit {
+public class Appointment extends AppCompatActivity implements PaymentResultWithDataListener, ISelectSlotInterface, IMailSubmit, IPaymentResponse {
 
     ArrayList<String> couponArraylist = new ArrayList<>();
 
@@ -313,6 +317,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     private TextView tvErrorMail;
     ArrayList<SearchDepartment> availableDepartments = new ArrayList<>();
     ActiveCheckIn activeAppointment = new ActiveCheckIn();
+    private IPaymentResponse paymentResponse;
+    private LinearLayout llPreInfo;
+    private TextView tvPreInfoTitle, tvPreInfoText;
 
 
     @Override
@@ -338,6 +345,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         mActivity = this;
         iSelectSlotInterface = this;
         iMailSubmit = this;
+        paymentResponse = this;
         recycle_family = findViewById(R.id.recycle_family);
         btn_checkin = findViewById(R.id.btn_checkin);
         editpartysize = findViewById(R.id.editpartysize);
@@ -390,6 +398,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         llEmail = findViewById(R.id.ll_email);
         tvErrorMail = findViewById(R.id.tv_emailError);
         llNoServices = findViewById(R.id.ll_noServices);
+        tvPreInfoText = findViewById(R.id.tv_preInfo);
+        tvPreInfoTitle = findViewById(R.id.tv_preInfoTitle);
+        llPreInfo = findViewById(R.id.ll_preinfo);
 
         // to Empty previous selected date in pref's
         SharedPreference.getInstance(Appointment.this).setValue("selectedDate", "");
@@ -964,22 +975,37 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                 valueNumber = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
                                 if (callingMode.equalsIgnoreCase("WhatsApp")) {
                                     serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                                    tv_enterInstructions.setVisibility(View.VISIBLE);
-                                    tv_enterInstructions.setText(serviceInstructions);
+                                    if (serviceInstructions != null && !serviceInstructions.equalsIgnoreCase("")) {
+                                        tv_enterInstructions.setVisibility(View.VISIBLE);
+                                        tv_enterInstructions.setText(serviceInstructions);
+                                    } else {
+
+                                        tv_enterInstructions.setVisibility(View.GONE);
+                                    }
                                     et_vitualId.setText(phoneNumber);
                                     et_vitualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
                                     et_vitualId.setVisibility(View.VISIBLE);
                                 } else if (callingMode.equalsIgnoreCase("Phone")) {
                                     serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                                    tv_enterInstructions.setVisibility(View.VISIBLE);
-                                    tv_enterInstructions.setText(serviceInstructions);
+                                    if (serviceInstructions != null && !serviceInstructions.equalsIgnoreCase("")) {
+                                        tv_enterInstructions.setVisibility(View.VISIBLE);
+                                        tv_enterInstructions.setText(serviceInstructions);
+                                    } else {
+
+                                        tv_enterInstructions.setVisibility(View.GONE);
+                                    }
                                     et_vitualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_phone_iphone_black_24dps, 0, 0, 0);
                                     et_vitualId.setText(phoneNumber);
                                     et_vitualId.setVisibility(View.VISIBLE);
                                 } else {
                                     serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                                    tv_enterInstructions.setVisibility(View.VISIBLE);
-                                    tv_enterInstructions.setText(serviceInstructions);
+                                    if (serviceInstructions != null && !serviceInstructions.equalsIgnoreCase("")) {
+                                        tv_enterInstructions.setVisibility(View.VISIBLE);
+                                        tv_enterInstructions.setText(serviceInstructions);
+                                    } else {
+
+                                        tv_enterInstructions.setVisibility(View.GONE);
+                                    }
                                     et_vitualId.setVisibility(View.GONE);
                                 }
                             }
@@ -987,6 +1013,23 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             tv_enterInstructions.setVisibility(View.GONE);
                             et_vitualId.setVisibility(View.GONE);
                         }
+
+                        try {
+
+                            if (((SearchAppoinment) mSpinnerService.getSelectedItem()).isPreInfoEnabled()) {
+
+                                llPreInfo.setVisibility(View.VISIBLE);
+                                tvPreInfoTitle.setText(((SearchAppoinment) mSpinnerService.getSelectedItem()).getPreInfoTitle());
+                                tvPreInfoText.setText(Html.fromHtml(((SearchAppoinment) mSpinnerService.getSelectedItem()).getPreInfoText()));
+
+                            } else {
+
+                                llPreInfo.setVisibility(View.GONE);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
                         //  selectedServiceType =((SearchAppoinment)  mSpinnerService.getSelectedItem()).getServiceType();
 
                         // String firstWord = "Check-in for ";
@@ -2928,7 +2971,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             mService.setValue(response.body().get(i).getValue());
                             mService.setProvider(response.body().get(i).getProvider());
                             mService.setDepartment(response.body().get(i).getDepartment());
-//                            mService.setStatus(response.body().get(i).getStatus());
+                            mService.setPreInfoEnabled(response.body().get(i).isPreInfoEnabled());
+                            mService.setPreInfoTitle(response.body().get(i).getPreInfoTitle());
+                            mService.setPreInfoText(response.body().get(i).getPreInfoText());
                             LServicesList.add(mService);
                             if (mFrom.equalsIgnoreCase("favourites") || mFrom.equalsIgnoreCase("favourites_date")) {
                                 if (mBusinessDataList != null) {
@@ -4858,7 +4903,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
 
                                             Config.logV("Account ID --------Paytm------" + modifyAccountID);
-                                            PaytmPayment payment = new PaytmPayment(mContext);
+                                            PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
                                             payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID);
                                             //payment.generateCheckSum(sAmountPay);
                                             dialog.dismiss();
@@ -4982,7 +5027,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                             Bundle b = new Bundle();
                             b.putSerializable("BookingDetails", activeAppointment);
-                            Intent checkin = new Intent(Appointment.this,AppointmentConfirmation.class);
+                            Intent checkin = new Intent(Appointment.this, AppointmentConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);
                         }
@@ -5359,7 +5404,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         });
     }
 
-    //
+
     private void ApiCommunicateAppointment(String waitListId, String accountID, String message,
                                            final BottomSheetDialog dialog) {
 
@@ -5493,6 +5538,12 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     public void mailUpdated() {
 
         ApiGetProfileDetail();
+    }
+
+    @Override
+    public void sendPaymentResponse() {
+
+        getConfirmationDetails();
     }
 }
 

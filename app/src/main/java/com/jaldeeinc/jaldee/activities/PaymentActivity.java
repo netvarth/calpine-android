@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -45,7 +47,7 @@ import retrofit2.Response;
  * Created by sharmila on 11/9/18.
  */
 
-public class PaymentActivity extends AppCompatActivity {
+public class PaymentActivity extends AppCompatActivity implements IPaymentResponse {
 
     static Context mContext;
     static Activity mActivity;
@@ -58,6 +60,7 @@ public class PaymentActivity extends AppCompatActivity {
     Button btn_payu;
     String displayNotes;
     int customerId;
+    private IPaymentResponse paymentResponse;
 
 
     @Override
@@ -66,6 +69,7 @@ public class PaymentActivity extends AppCompatActivity {
         setContentView(R.layout.prepayment_layout);
         mContext = this;
         mActivity = this;
+        paymentResponse = this;
         TextView tv_title = findViewById(R.id.toolbartitle);
         tv_title.setText("Payment");
 
@@ -236,7 +240,7 @@ public class PaymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-               new PaymentGateway(mContext, mActivity).ApiGenerateHash1(ynwUUID, String.valueOf(amountDue), accountID, purpose, "dashboard",customerId,Constants.SOURCE_PAYMENT);
+                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(ynwUUID, String.valueOf(amountDue), accountID, purpose, "dashboard", customerId, Constants.SOURCE_PAYMENT);
 
             }
         });
@@ -245,8 +249,8 @@ public class PaymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                PaytmPayment payment = new PaytmPayment(mContext);
-                payment.ApiGenerateHashPaytm(ynwUUID, String.valueOf(amountDue), accountID, purpose,  mContext, mActivity, "home",customerId);
+                PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
+                payment.ApiGenerateHashPaytm(ynwUUID, String.valueOf(amountDue), accountID, purpose, mContext, mActivity, "home", customerId);
             }
         });
 
@@ -298,5 +302,12 @@ public class PaymentActivity extends AppCompatActivity {
 
             // mTxvBuy.setEnabled(true);
         }
+    }
+
+    @Override
+    public void sendPaymentResponse() {
+
+        Toast.makeText(PaymentActivity.this, "Payment Successful", Toast.LENGTH_LONG).show();
+
     }
 }

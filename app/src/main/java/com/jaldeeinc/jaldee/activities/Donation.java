@@ -21,7 +21,6 @@ import android.provider.MediaStore;
 import androidx.annotation.RequiresApi;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -43,7 +42,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
 import com.jaldeeinc.jaldee.adapter.MultipleFamilyMemberAdapter;
@@ -121,7 +120,7 @@ import retrofit2.Response;
  * Created by sharmila on 6/8/18.
  */
 
-public class Donation extends AppCompatActivity implements PaymentResultWithDataListener {
+public class Donation extends AppCompatActivity implements PaymentResultWithDataListener, IPaymentResponse {
 
     ArrayList<String> couponArraylist = new ArrayList<>();
 
@@ -238,6 +237,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
     File file;
     BottomSheetDialog dialog;
     static TextView tv_don_amount, tv_don_instr;
+    private IPaymentResponse paymentResponse;
 
 
     @Override
@@ -261,6 +261,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
 //        applycouponbtn = findViewById(R.id.applybtn);
 //        LcouponCheckin = findViewById(R.id.couponCheckin);
         mActivity = this;
+        paymentResponse = this;
         recycle_family = findViewById(R.id.recycle_family);
         btn_checkin = findViewById(R.id.btn_checkin);
 //        editpartysize = findViewById(R.id.editpartysize);
@@ -3593,7 +3594,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
 
 
                                             Config.logV("Account ID --------Paytm------" + modifyAccountID);
-                                            PaytmPayment payment = new PaytmPayment(mContext);
+                                            PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
                                             payment.ApiGenerateHashPaytm(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_DONATIONPAYMENT, mContext, mActivity, "",familyMEmID);
                                             //payment.generateCheckSum(sAmountPay);
                                             dialog.dismiss();
@@ -4035,6 +4036,11 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
         }
+    }
+
+    @Override
+    public void sendPaymentResponse() {
+
     }
     //
 //    private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {

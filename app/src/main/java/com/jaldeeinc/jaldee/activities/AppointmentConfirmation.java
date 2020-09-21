@@ -96,10 +96,10 @@ public class AppointmentConfirmation extends AppCompatActivity {
 
             if (activeCheckInInfo.getService() != null){
 
-                if (activeCheckInInfo.getService().isPreInfoEnabled()){
+                if (activeCheckInInfo.getService().isPostInfoEnabled()){
 
-                    tvPreInfoTitle.setText(activeCheckInInfo.getService().getPreInfoTitle());
-                    tvPreInfo.setText(Html.fromHtml(activeCheckInInfo.getService().getPreInfoText()));
+                    tvPostInfoTitle.setText(activeCheckInInfo.getService().getPostInfoTitle());
+                    tvPostInfo.setText(Html.fromHtml(activeCheckInInfo.getService().getPostInfoText()));
                 }
             }
 
