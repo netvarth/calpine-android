@@ -1172,7 +1172,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                     String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
                                     //  myViewHolder.tv_peopleahead.setText(message);
                                     String waitTime = myViewHolder.tv_WaitTime.getText().toString();
-                                    String waitTimes = waitTime.replace("\n", " ");
+                                    String waitTimes = waitTime.replace("\n","-");
                                     myViewHolder.tv_peopleahead.setText(waitTimes);
                                     myViewHolder.tv_WaitTime.setText(message);
                                 }
@@ -1331,7 +1331,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         } else {
             //   myViewHolder.tv_WaitTime.setVisibility(View.GONE);
             String firstWord = "Est wait time";
-            String secondWord = "\n" + Config.getTimeinHourMinutes(searchdetailList.getQueueWaitingTime());
+            String secondWord = " \n " + Config.getTimeinHourMinutes(searchdetailList.getQueueWaitingTime());
             myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
         }
         myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);

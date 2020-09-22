@@ -963,7 +963,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                 holder.tv_waittime.setVisibility(View.VISIBLE);
                                 holder.txtwaittime_expand.setVisibility(View.VISIBLE);
                                 String spannable = getWaitingTime(userDetails.get(position).getQueueList().getNextAvailableQueue());
-                                String waitTime = spannable.replace("\n"," ");
+                                String waitTime = spannable.replace("\n","-");
                                 holder.txt_peopleahead.setText(waitTime);
                                 holder.txt_peopleahead.setVisibility(View.VISIBLE);
                                 String message = Config.getPersonsAheadText(userDetails.get(position).getQueueList().getNextAvailableQueue().getPersonAhead());
