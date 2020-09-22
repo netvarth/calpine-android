@@ -61,12 +61,13 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
     }
 
     ArrayList<SearchService> mServiceList;
+    ArrayList<SearchService> lisofServiceIds;
     String from;
     String title;
     String uniqueID;
     Activity activity;
 
-    public ServiceListAdapter(ArrayList<SearchService> mServiceList, Context mContext, String from, String title, String uniqueID, Activity mActivity, ArrayList<SearchDepartmentServices> departmentList) {
+    public ServiceListAdapter(ArrayList<SearchService> mServiceList, Context mContext, String from, String title, String uniqueID, Activity mActivity, ArrayList<SearchDepartmentServices> departmentList, ArrayList<SearchService> listofserviceIds) {
         this.mContext = mContext;
         this.mServiceList = mServiceList;
         Config.logV("ServiceList--------------" + mServiceList.size());
@@ -75,6 +76,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
         this.uniqueID = uniqueID;
         activity = mActivity;
         this.mSearchDepartmentList = departmentList;
+        this.lisofServiceIds = listofserviceIds;
     }
 
     @Override
@@ -150,7 +152,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
                 } else {
 
                     Config.logV("Service ID pass------------" + serviceList.getName());
-                    ApiService(uniqueID, serviceList.getName(), title);
+                    ApiService(uniqueID, serviceList.getName(), title,serviceList.getId());
                 }
             }
         });
@@ -158,7 +160,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
 
     }
 
-    private void ApiService(String uniqueID, final String serviceName, final String title) {
+    private void ApiService(String uniqueID, final String serviceName, final String title, int serviceId) {
 
 
         ApiInterface apiService =
@@ -197,7 +199,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
                         for (int i = 0; i < service.size(); i++) {
                             Config.logV("Response--serviceid-------------------------" + serviceName);
 
-                            if (service.get(i).getName().toLowerCase().equalsIgnoreCase(serviceName.toLowerCase())) {
+                            if (service.get(i).getId()== serviceId) {
                                 Intent iService = new Intent(mContext, SearchServiceActivity.class);
                                 iService.putExtra("name", service.get(i).getName());
                                 iService.putExtra("duration", service.get(i).getServiceDuration());

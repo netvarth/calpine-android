@@ -17,11 +17,13 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,6 +46,7 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
+import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
@@ -119,6 +122,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         Button btncheckin, btnappointment;
         LinearLayout layout_row;
         LinearLayout layout_type;
+        TextView txtservice1, txtservice2, txtSeeAll;
+        TextView tvAppService1, tvAppService2, tvAppSeeAll;
+        TextView tvDntService1, tvDntService2, tvDntSeeAll;
 
 
         public MyViewHolder(View view) {
@@ -156,6 +162,15 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             tv_jdn = view.findViewById(R.id.txtjdn);
             tv_enquiry = view.findViewById(R.id.txt_enquiry);
             tvAppWaitTime = view.findViewById(R.id.txtApptWaitTime);
+            txtservice1 = (TextView) view.findViewById(R.id.txtservice1);
+            txtservice2 = (TextView) view.findViewById(R.id.txtservice2);
+            txtSeeAll = (TextView) view.findViewById(R.id.txtSeeAll);
+            tvAppService1 = view.findViewById(R.id.tv_appService1);
+            tvAppService2 = view.findViewById(R.id.tv_appservice2);
+            tvAppSeeAll = view.findViewById(R.id.tv_appSeeAll);
+            tvDntService1 = view.findViewById(R.id.tv_dntService1);
+            tvDntService2 = view.findViewById(R.id.tv_dntService2);
+            tvDntSeeAll = view.findViewById(R.id.tv_dntSeeAll);
 
         }
     }
@@ -543,119 +558,432 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             }
             if (searchdetailList.getServices().size() > 0) {
                 myViewHolder.L_services.setVisibility(View.VISIBLE);
-                myViewHolder.L_services.removeAllViews();
-                int size = 0;
+
+//                myViewHolder.L_services.removeAllViews();
+//                int size = 0;
+//                if (searchdetailList.getServices().size() == 1) {
+//                    size = 1;
+//                } else {
+//                    if (searchdetailList.getServices().size() == 2) {
+//                        if(searchdetailList.getServices().get(0).getName().length()<=15 && searchdetailList.getServices().get(1).getName().length()<=15 ){
+//                        size = 2;
+//                        }
+//                        else{
+//                            size = 1;
+//                        }
+//
+//                    } else {
+//                        if(searchdetailList.getServices().get(0).getName().length()<=15 && searchdetailList.getServices().get(1).getName().length()<=15 ){
+//                            size = 2;
+//                        }
+//                        else{
+//                            size = 1;
+//                        }
+//                    }
+//                }
+//                for (int i = 0; i < size; i++) {
+//                    TextView dynaText = new TextView(context);
+//                    Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+//                            "fonts/Montserrat_Regular.otf");
+//                    dynaText.setTypeface(tyface);
+//                    dynaText.setText(searchdetailList.getServices().get(i).getName());
+//                    try {
+//                        if (searchdetailList.getServices().get(i).getServiceType().equalsIgnoreCase("virtualService")) {
+//
+//                            if (searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+//                                dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
+//                                dynaText.setCompoundDrawablePadding(10);
+//                            } else if (searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+//                                dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
+//                                dynaText.setCompoundDrawablePadding(10);
+//                            } else if (searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+//                                dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+//                                dynaText.setCompoundDrawablePadding(10);
+//                            } else if (searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+//                                dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
+//                                dynaText.setCompoundDrawablePadding(10);
+//                            }
+//
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    dynaText.setTextSize(11);
+//                    dynaText.setPadding(5, 0, 5, 0);
+//                    dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
+//                    dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+//                    dynaText.setMaxLines(1);
+//                    if (size > 2) {
+//                        dynaText.setEllipsize(TextUtils.TruncateAt.END);
+//                        dynaText.setMaxEms(10);
+//                    }
+//                    final int finalI = i;
+//                    dynaText.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            try {
+//                                //  ApiService(String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()), searchdetailList.getServices().get(finalI).getName(), searchdetailList.getSearchViewDetail().getBusinessName());
+//                                for (int i = 0; i < searchdetailList.getServices().size(); i++) {
+//                                    if (searchdetailList.getServices().get(i).getName().toLowerCase().toString().equalsIgnoreCase(searchdetailList.getServices().get(finalI).getName())) {
+//                                        Intent iService = new Intent(activity, SearchServiceActivity.class);
+//                                        iService.putExtra("name", searchdetailList.getServices().get(i).getName());
+//                                        iService.putExtra("duration", searchdetailList.getServices().get(i).getServiceDuration());
+//                                        iService.putExtra("price", searchdetailList.getServices().get(i).getTotalAmount());
+//                                        iService.putExtra("desc", searchdetailList.getServices().get(i).getDescription());
+//                                        iService.putExtra("from","multiuser");
+//                                        iService.putExtra("servicegallery", searchdetailList.getServices().get(i).getServicegallery());
+//                                        iService.putExtra("taxable", searchdetailList.getServices().get(i).isTaxable());
+//                                        iService.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
+//                                        iService.putExtra("isPrePayment", searchdetailList.getServices().get(i).isPrePayment());
+//                                        iService.putExtra("MinPrePaymentAmount", searchdetailList.getServices().get(i).getMinPrePaymentAmount());
+//                                        iService.putExtra("serviceType", searchdetailList.getServices().get(i).getServiceType());
+//                                        if (searchdetailList.getServices().get(i).getVirtualCallingModes() != null) {
+//                                            iService.putExtra("callingMode", searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode());
+//                                        }
+//                                        activity.startActivity(iService);
+//
+//                                    }
+//                                }
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//
+//                        }
+//                    });
+//                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                    params.setMargins(0, 0, 20, 0);
+//
+//                    dynaText.setLayoutParams(params);
+//                    myViewHolder.L_services.addView(dynaText);
+//                }
+//                int count = searchdetailList.getServices().size() - size;
+//                if (searchdetailList.getServices().size() > 2 && count > 0) {
+//                    TextView dynaTextMore = new TextView(context);
+//                    dynaTextMore.setText("+ " + count + " more");
+//                    dynaTextMore.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            mAdapterCallback.onMethodServiceCallbackUser((ArrayList) searchdetailList.getServices(), searchdetailList.getSearchViewDetail().getBusinessName(), String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()));
+//                        }
+//                    });
+//                    dynaTextMore.setGravity(Gravity.LEFT);
+//                    dynaTextMore.setTextColor(context.getResources().getColor(R.color.title_consu));
+//                  //  dynaText.setText(" ... ");
+//                    myViewHolder.L_services.addView(dynaTextMore);
+//                    dynaTextMore.setTextSize(11);
+//
+//
+//                }
+
                 if (searchdetailList.getServices().size() == 1) {
-                    size = 1;
-                } else {
-                    if (searchdetailList.getServices().size() == 2) {
-                        if(searchdetailList.getServices().get(0).getName().length()<=15 && searchdetailList.getServices().get(1).getName().length()<=15 ){
-                        size = 2;
-                        }
-                        else{
-                            size = 1;
-                        }
 
-                    } else {
-                        if(searchdetailList.getServices().get(0).getName().length()<=15 && searchdetailList.getServices().get(1).getName().length()<=15 ){
-                            size = 2;
-                        }
-                        else{
-                            size = 1;
-                        }
-                    }
-                }
-                for (int i = 0; i < size; i++) {
-                    TextView dynaText = new TextView(context);
-                    Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                            "fonts/Montserrat_Regular.otf");
-                    dynaText.setTypeface(tyface);
-                    dynaText.setText(searchdetailList.getServices().get(i).getName());
+                    myViewHolder.txtservice1.setVisibility(View.VISIBLE);
+                    myViewHolder.txtservice2.setVisibility(View.GONE);
+                    myViewHolder.txtSeeAll.setVisibility(View.GONE);
+                    String name = searchdetailList.getServices().get(0).getName();
+                    name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                    myViewHolder.txtservice1.setText(name);
                     try {
-                        if (searchdetailList.getServices().get(i).getServiceType().equalsIgnoreCase("virtualService")) {
-
-                            if (searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
-                                dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
-                                dynaText.setCompoundDrawablePadding(10);
-                            } else if (searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                                dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
-                                dynaText.setCompoundDrawablePadding(10);
-                            } else if (searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
-                                dynaText.setCompoundDrawablePadding(10);
-                            } else if (searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
-                                dynaText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
-                                dynaText.setCompoundDrawablePadding(10);
+                        if (searchdetailList.getServices().get(0).getServiceType().equalsIgnoreCase("virtualservice")) {
+                            if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                                myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
+                                myViewHolder.txtservice1.setCompoundDrawablePadding(10);
+                            } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                                myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
+                                myViewHolder.txtservice1.setCompoundDrawablePadding(10);
+                            } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                                myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                myViewHolder.txtservice1.setCompoundDrawablePadding(10);
+                            } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                                myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
+                                myViewHolder.txtservice1.setCompoundDrawablePadding(10);
                             }
-
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    dynaText.setTextSize(11);
-                    dynaText.setPadding(5, 0, 5, 0);
-                    dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
-                    dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                    dynaText.setMaxLines(1);
-                    if (size > 2) {
-                        dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                        dynaText.setMaxEms(10);
-                    }
-                    final int finalI = i;
-                    dynaText.setOnClickListener(new View.OnClickListener() {
+                    myViewHolder.txtservice1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
+                            Intent iService = new Intent(activity, SearchServiceActivity.class);
+                            iService.putExtra("name", searchdetailList.getServices().get(0).getName());
+                            iService.putExtra("duration", searchdetailList.getServices().get(0).getServiceDuration());
+                            iService.putExtra("price", searchdetailList.getServices().get(0).getTotalAmount());
+                            iService.putExtra("desc", searchdetailList.getServices().get(0).getDescription());
+                            iService.putExtra("from", "multiuser");
+                            iService.putExtra("servicegallery", searchdetailList.getServices().get(0).getServicegallery());
+                            iService.putExtra("taxable", searchdetailList.getServices().get(0).isTaxable());
+                            iService.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
+                            iService.putExtra("isPrePayment", searchdetailList.getServices().get(0).isPrePayment());
+                            iService.putExtra("MinPrePaymentAmount", searchdetailList.getServices().get(0).getMinPrePaymentAmount());
+                            iService.putExtra("serviceType", searchdetailList.getServices().get(0).getServiceType());
+                            if (searchdetailList.getServices().get(0).getVirtualCallingModes() != null) {
+                                iService.putExtra("callingMode", searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode());
+                            }
+                            activity.startActivity(iService);
+                        }
+                    });
+
+                } else if (searchdetailList.getServices().size() >= 2 && searchdetailList.getServices().get(0).getName().length() <= 15 && searchdetailList.getServices().get(1).getName().length() <= 15) {
+
+                    if (searchdetailList.getServices().size() == 2) {
+
+                        myViewHolder.txtservice1.setVisibility(View.VISIBLE);
+                        myViewHolder.txtservice2.setVisibility(View.VISIBLE);
+                        myViewHolder.txtSeeAll.setVisibility(View.GONE);
+                        String name1 = searchdetailList.getServices().get(0).getName();
+                        name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
+                        myViewHolder.txtservice1.setText(name1 + ",");
+                        try {
+                            if (searchdetailList.getServices().get(0).getServiceType().equalsIgnoreCase("virtualservice")) {
+                                if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                                    myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
+                                    myViewHolder.txtservice1.setCompoundDrawablePadding(10);
+                                } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                                    myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
+                                    myViewHolder.txtservice1.setCompoundDrawablePadding(10);
+                                } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                                    myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    myViewHolder.txtservice1.setCompoundDrawablePadding(10);
+                                } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                                    myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
+                                    myViewHolder.txtservice1.setCompoundDrawablePadding(10);
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        String name2 = searchdetailList.getServices().get(1).getName();
+                        name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
+                        myViewHolder.txtservice2.setText(name2);
+                        try {
+                            if (searchdetailList.getServices().get(1).getServiceType().equalsIgnoreCase("virtualservice")) {
+                                if (searchdetailList.getServices().get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                                    myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
+                                    myViewHolder.txtservice2.setCompoundDrawablePadding(10);
+                                } else if (searchdetailList.getServices().get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                                    myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
+                                    myViewHolder.txtservice2.setCompoundDrawablePadding(10);
+                                } else if (searchdetailList.getServices().get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                                    myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    myViewHolder.txtservice2.setCompoundDrawablePadding(10);
+                                } else if (searchdetailList.getServices().get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                                    myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
+                                    myViewHolder.txtservice2.setCompoundDrawablePadding(10);
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        myViewHolder.txtservice1.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent iService = new Intent(activity, SearchServiceActivity.class);
+                                iService.putExtra("name", searchdetailList.getServices().get(0).getName());
+                                iService.putExtra("duration", searchdetailList.getServices().get(0).getServiceDuration());
+                                iService.putExtra("price", searchdetailList.getServices().get(0).getTotalAmount());
+                                iService.putExtra("desc", searchdetailList.getServices().get(0).getDescription());
+                                iService.putExtra("from", "multiuser");
+                                iService.putExtra("servicegallery", searchdetailList.getServices().get(0).getServicegallery());
+                                iService.putExtra("taxable", searchdetailList.getServices().get(0).isTaxable());
+                                iService.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
+                                iService.putExtra("isPrePayment", searchdetailList.getServices().get(0).isPrePayment());
+                                iService.putExtra("MinPrePaymentAmount", searchdetailList.getServices().get(0).getMinPrePaymentAmount());
+                                iService.putExtra("serviceType", searchdetailList.getServices().get(0).getServiceType());
+                                if (searchdetailList.getServices().get(0).getVirtualCallingModes() != null) {
+                                    iService.putExtra("callingMode", searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode());
+                                }
+                                activity.startActivity(iService);
+                            }
+                        });
+
+                        myViewHolder.txtservice2.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent iService = new Intent(activity, SearchServiceActivity.class);
+                                iService.putExtra("name", searchdetailList.getServices().get(1).getName());
+                                iService.putExtra("duration", searchdetailList.getServices().get(1).getServiceDuration());
+                                iService.putExtra("price", searchdetailList.getServices().get(1).getTotalAmount());
+                                iService.putExtra("desc", searchdetailList.getServices().get(1).getDescription());
+                                iService.putExtra("from", "multiuser");
+                                iService.putExtra("servicegallery", searchdetailList.getServices().get(1).getServicegallery());
+                                iService.putExtra("taxable", searchdetailList.getServices().get(1).isTaxable());
+                                iService.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
+                                iService.putExtra("isPrePayment", searchdetailList.getServices().get(1).isPrePayment());
+                                iService.putExtra("MinPrePaymentAmount", searchdetailList.getServices().get(1).getMinPrePaymentAmount());
+                                iService.putExtra("serviceType", searchdetailList.getServices().get(1).getServiceType());
+                                if (searchdetailList.getServices().get(1).getVirtualCallingModes() != null) {
+                                    iService.putExtra("callingMode", searchdetailList.getServices().get(1).getVirtualCallingModes().get(0).getCallingMode());
+                                }
+                                activity.startActivity(iService);
+                            }
+                        });
+
+                    } else {
+                        myViewHolder.txtservice1.setVisibility(View.VISIBLE);
+                        myViewHolder.txtservice2.setVisibility(View.VISIBLE);
+                        myViewHolder.txtSeeAll.setVisibility(View.VISIBLE);
+                        String name1 = searchdetailList.getServices().get(0).getName();
+                        name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
+                        myViewHolder.txtservice1.setText(name1 + ",");
+                        try {
+                            if (searchdetailList.getServices().get(0).getServiceType().equalsIgnoreCase("virtualservice")) {
+                                if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                                    myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
+                                    myViewHolder.txtservice1.setCompoundDrawablePadding(10);
+                                } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                                    myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
+                                    myViewHolder.txtservice1.setCompoundDrawablePadding(10);
+                                } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                                    myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    myViewHolder.txtservice1.setCompoundDrawablePadding(10);
+                                } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                                    myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
+                                    myViewHolder.txtservice1.setCompoundDrawablePadding(10);
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        String name2 = searchdetailList.getServices().get(1).getName();
+                        name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
+                        myViewHolder.txtservice2.setText(name2 + ",");
+                        try {
+                            if (searchdetailList.getServices().get(1).getServiceType().equalsIgnoreCase("virtualservice")) {
+                                if (searchdetailList.getServices().get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                                    myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
+                                    myViewHolder.txtservice2.setCompoundDrawablePadding(10);
+                                } else if (searchdetailList.getServices().get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                                    myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
+                                    myViewHolder.txtservice2.setCompoundDrawablePadding(10);
+                                } else if (searchdetailList.getServices().get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                                    myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    myViewHolder.txtservice2.setCompoundDrawablePadding(10);
+                                } else if (searchdetailList.getServices().get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                                    myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
+                                    myViewHolder.txtservice2.setCompoundDrawablePadding(10);
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        myViewHolder.txtservice1.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent iService = new Intent(activity, SearchServiceActivity.class);
+                                iService.putExtra("name", searchdetailList.getServices().get(0).getName());
+                                iService.putExtra("duration", searchdetailList.getServices().get(0).getServiceDuration());
+                                iService.putExtra("price", searchdetailList.getServices().get(0).getTotalAmount());
+                                iService.putExtra("desc", searchdetailList.getServices().get(0).getDescription());
+                                iService.putExtra("from", "multiuser");
+                                iService.putExtra("servicegallery", searchdetailList.getServices().get(0).getServicegallery());
+                                iService.putExtra("taxable", searchdetailList.getServices().get(0).isTaxable());
+                                iService.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
+                                iService.putExtra("isPrePayment", searchdetailList.getServices().get(0).isPrePayment());
+                                iService.putExtra("MinPrePaymentAmount", searchdetailList.getServices().get(0).getMinPrePaymentAmount());
+                                iService.putExtra("serviceType", searchdetailList.getServices().get(0).getServiceType());
+                                if (searchdetailList.getServices().get(0).getVirtualCallingModes() != null) {
+                                    iService.putExtra("callingMode", searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode());
+                                }
+                                activity.startActivity(iService);
+                            }
+                        });
+
+                        myViewHolder.txtservice2.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent iService = new Intent(activity, SearchServiceActivity.class);
+                                iService.putExtra("name", searchdetailList.getServices().get(1).getName());
+                                iService.putExtra("duration", searchdetailList.getServices().get(1).getServiceDuration());
+                                iService.putExtra("price", searchdetailList.getServices().get(1).getTotalAmount());
+                                iService.putExtra("desc", searchdetailList.getServices().get(1).getDescription());
+                                iService.putExtra("from", "multiuser");
+                                iService.putExtra("servicegallery", searchdetailList.getServices().get(1).getServicegallery());
+                                iService.putExtra("taxable", searchdetailList.getServices().get(1).isTaxable());
+                                iService.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
+                                iService.putExtra("isPrePayment", searchdetailList.getServices().get(1).isPrePayment());
+                                iService.putExtra("MinPrePaymentAmount", searchdetailList.getServices().get(1).getMinPrePaymentAmount());
+                                iService.putExtra("serviceType", searchdetailList.getServices().get(1).getServiceType());
+                                if (searchdetailList.getServices().get(1).getVirtualCallingModes() != null) {
+                                    iService.putExtra("callingMode", searchdetailList.getServices().get(1).getVirtualCallingModes().get(0).getCallingMode());
+                                }
+                                activity.startActivity(iService);
+                            }
+                        });
+                        myViewHolder.txtSeeAll.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mAdapterCallback.onMethodServiceCallbackUser((ArrayList) searchdetailList.getServices(), searchdetailList.getSearchViewDetail().getBusinessName(), String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()));
+                            }
+                        });
+                        //  Toast.makeText(mContext, "set text with comma seperated with seemore", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+
+                    for (int i = 0; i < searchdetailList.getServices().size(); i++) {
+
+                        if (i == 0) {
+
+                            myViewHolder.txtservice1.setVisibility(View.VISIBLE);
+                            myViewHolder.txtservice2.setVisibility(View.GONE);
+                            String name1 = searchdetailList.getServices().get(0).getName();
+                            name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
+                            myViewHolder.txtservice1.setText(name1 + ",");
                             try {
-                                //  ApiService(String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()), searchdetailList.getServices().get(finalI).getName(), searchdetailList.getSearchViewDetail().getBusinessName());
-                                for (int i = 0; i < searchdetailList.getServices().size(); i++) {
-                                    if (searchdetailList.getServices().get(i).getName().toLowerCase().toString().equalsIgnoreCase(searchdetailList.getServices().get(finalI).getName())) {
-                                        Intent iService = new Intent(activity, SearchServiceActivity.class);
-                                        iService.putExtra("name", searchdetailList.getServices().get(i).getName());
-                                        iService.putExtra("duration", searchdetailList.getServices().get(i).getServiceDuration());
-                                        iService.putExtra("price", searchdetailList.getServices().get(i).getTotalAmount());
-                                        iService.putExtra("desc", searchdetailList.getServices().get(i).getDescription());
-                                        iService.putExtra("from","multiuser");
-                                        iService.putExtra("servicegallery", searchdetailList.getServices().get(i).getServicegallery());
-                                        iService.putExtra("taxable", searchdetailList.getServices().get(i).isTaxable());
-                                        iService.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
-                                        iService.putExtra("isPrePayment", searchdetailList.getServices().get(i).isPrePayment());
-                                        iService.putExtra("MinPrePaymentAmount", searchdetailList.getServices().get(i).getMinPrePaymentAmount());
-                                        iService.putExtra("serviceType", searchdetailList.getServices().get(i).getServiceType());
-                                        if (searchdetailList.getServices().get(i).getVirtualCallingModes() != null) {
-                                            iService.putExtra("callingMode", searchdetailList.getServices().get(i).getVirtualCallingModes().get(0).getCallingMode());
-                                        }
-                                        activity.startActivity(iService);
+                                if (searchdetailList.getServices().get(0).getServiceType().equalsIgnoreCase("virtualservice")) {
+                                    if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                                        myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized, 0, 0, 0);
+                                        myViewHolder.txtservice1.setCompoundDrawablePadding(10);
+                                    } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                                        myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
+                                    } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                                        myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                        myViewHolder.txtservice1.setCompoundDrawablePadding(10);
+                                    } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                                        myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
+                                        myViewHolder.txtservice1.setCompoundDrawablePadding(10);
 
                                     }
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                            myViewHolder.txtservice1.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
+                                    Intent iService = new Intent(activity, SearchServiceActivity.class);
+                                    iService.putExtra("name", searchdetailList.getServices().get(0).getName());
+                                    iService.putExtra("duration", searchdetailList.getServices().get(0).getServiceDuration());
+                                    iService.putExtra("price", searchdetailList.getServices().get(0).getTotalAmount());
+                                    iService.putExtra("desc", searchdetailList.getServices().get(0).getDescription());
+                                    iService.putExtra("from", "multiuser");
+                                    iService.putExtra("servicegallery", searchdetailList.getServices().get(0).getServicegallery());
+                                    iService.putExtra("taxable", searchdetailList.getServices().get(0).isTaxable());
+                                    iService.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
+                                    iService.putExtra("isPrePayment", searchdetailList.getServices().get(0).isPrePayment());
+                                    iService.putExtra("MinPrePaymentAmount", searchdetailList.getServices().get(0).getMinPrePaymentAmount());
+                                    iService.putExtra("serviceType", searchdetailList.getServices().get(0).getServiceType());
+                                    if (searchdetailList.getServices().get(0).getVirtualCallingModes() != null) {
+                                        iService.putExtra("callingMode", searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode());
+                                    }
+                                    activity.startActivity(iService);
+                                }
+                            });
+                            myViewHolder.txtSeeAll.setVisibility(View.VISIBLE);
+                            myViewHolder.txtSeeAll.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    mAdapterCallback.onMethodServiceCallbackUser((ArrayList) searchdetailList.getServices(), searchdetailList.getSearchViewDetail().getBusinessName(), String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()));
+
+                                }
+                            });
+
+                            break;
                         }
-                    });
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    params.setMargins(0, 0, 20, 0);
-
-                    dynaText.setLayoutParams(params);
-                    myViewHolder.L_services.addView(dynaText);
-                }
-                int count = searchdetailList.getServices().size() - size;
-                if (searchdetailList.getServices().size() > 2 && count > 0) {
-                    TextView dynaTextMore = new TextView(context);
-                    dynaTextMore.setText("+ " + count + " more");
-                    dynaTextMore.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mAdapterCallback.onMethodServiceCallbackUser((ArrayList) searchdetailList.getServices(), searchdetailList.getSearchViewDetail().getBusinessName(), String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()));
-                        }
-                    });
-                    dynaTextMore.setGravity(Gravity.LEFT);
-                    dynaTextMore.setTextColor(context.getResources().getColor(R.color.title_consu));
-                  //  dynaText.setText(" ... ");
-                    myViewHolder.L_services.addView(dynaTextMore);
-                    dynaTextMore.setTextSize(11);
-
+                    }
 
                 }
             } else {
@@ -842,9 +1170,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 //                                    myViewHolder.tv_WaitTime.setText(spannable);
                                     myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
                                     String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
-                                  //  myViewHolder.tv_peopleahead.setText(message);
+                                    //  myViewHolder.tv_peopleahead.setText(message);
                                     String waitTime = myViewHolder.tv_WaitTime.getText().toString();
-                                    String waitTimes = waitTime.replace("\n"," ");
+                                    String waitTimes = waitTime.replace("\n", " ");
                                     myViewHolder.tv_peopleahead.setText(waitTimes);
                                     myViewHolder.tv_WaitTime.setText(message);
                                 }
@@ -881,8 +1209,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                     myViewHolder.tv_peopleahead.setText(waitTimes);
                                     myViewHolder.tv_WaitTime.setText(message);
                                 }
-                            }
-                            else {
+                            } else {
                                 myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
                                 showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(), "future");
 //                            String spannable = getWaitingTime(searchdetailList.getQueueList().getNextAvailableQueue());
@@ -1357,13 +1684,13 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
         try {
 
-                int rate = Math.round(getBusinessData.getAvgRating());
-                if (rate < 4) {
-                    myViewHolder.rating.setVisibility(View.GONE);
-                } else {
-                    myViewHolder.rating.setVisibility(View.VISIBLE);
-                    myViewHolder.rating.setRating(rate);
-                }
+            int rate = Math.round(getBusinessData.getAvgRating());
+            if (rate < 4) {
+                myViewHolder.rating.setVisibility(View.GONE);
+            } else {
+                myViewHolder.rating.setVisibility(View.VISIBLE);
+                myViewHolder.rating.setRating(rate);
+            }
 
         } catch (Exception e) {
 
@@ -1397,7 +1724,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             }
         });
         if (searchdetailList.getSearchViewDetail().getLogo() != null) {
-           PicassoTrustAll.getInstance(context).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
+            PicassoTrustAll.getInstance(context).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
             myViewHolder.profile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

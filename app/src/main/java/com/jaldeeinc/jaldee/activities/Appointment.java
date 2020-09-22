@@ -969,6 +969,14 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         selectedService = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
                         isPrepay = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getIsPrePayment();
 
+                        if (((SearchAppoinment) mSpinnerService.getSelectedItem()).getConsumerNoteTitle() != null){
+
+                            tv_addnote.setText(((SearchAppoinment) mSpinnerService.getSelectedItem()).getConsumerNoteTitle());
+                        }
+                        else {
+
+                            tv_addnote.setText("Add Note");
+                        }
 
                         if (selectedServiceType.equalsIgnoreCase("virtualService")) {
                             if (((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().size() > 0) {
@@ -2975,6 +2983,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             mService.setPreInfoEnabled(response.body().get(i).isPreInfoEnabled());
                             mService.setPreInfoTitle(response.body().get(i).getPreInfoTitle());
                             mService.setPreInfoText(response.body().get(i).getPreInfoText());
+                            mService.setConsumerNoteTitle(response.body().get(i).getConsumerNoteTitle());
                             LServicesList.add(mService);
                             if (mFrom.equalsIgnoreCase("favourites") || mFrom.equalsIgnoreCase("favourites_date")) {
                                 if (mBusinessDataList != null) {
@@ -5028,6 +5037,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                             Bundle b = new Bundle();
                             b.putSerializable("BookingDetails", activeAppointment);
+                            b.putString("terminology",mSearchTerminology.getProvider());
                             Intent checkin = new Intent(Appointment.this, AppointmentConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);

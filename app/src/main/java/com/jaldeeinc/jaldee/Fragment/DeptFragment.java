@@ -731,7 +731,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     }
 
     @Override
-    public void onMethodServiceCallback(ArrayList services, String value, String uniqueID) {
+    public void onMethodServiceCallback(ArrayList services, String value, String uniqueID, ArrayList serviceIds) {
 
     }
 

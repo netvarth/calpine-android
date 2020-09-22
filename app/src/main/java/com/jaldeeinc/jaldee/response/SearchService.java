@@ -40,6 +40,7 @@ public class SearchService implements Serializable {
     boolean postInfoEnabled;
     String postInfoTitle;
     String postInfoText;
+    String consumerNoteTitle;
     @SerializedName("provider")
     private SearchService provider;
 
@@ -302,5 +303,13 @@ public class SearchService implements Serializable {
 
     public void setPostInfoText(String postInfoText) {
         this.postInfoText = postInfoText;
+    }
+
+    public String getConsumerNoteTitle() {
+        return consumerNoteTitle;
+    }
+
+    public void setConsumerNoteTitle(String consumerNoteTitle) {
+        this.consumerNoteTitle = consumerNoteTitle;
     }
 }

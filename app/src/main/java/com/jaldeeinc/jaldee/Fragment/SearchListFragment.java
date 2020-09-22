@@ -2176,16 +2176,18 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
     @Override
-    public void onMethodServiceCallback(ArrayList services, String value, String uniqueid) {
+    public void onMethodServiceCallback(ArrayList services, String value, String uniqueid, ArrayList serviceIds) {
         ServiceListFragment pfFragment = new ServiceListFragment();
         refreshQuery();
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
+
         bundle.putSerializable("servicelist", services);
         bundle.putString("title", value);
         bundle.putString("from", "searchlist");
         bundle.putString("uniqueID", uniqueid);
+        bundle.putSerializable("serviceIds",serviceIds);
         pfFragment.setArguments(bundle);
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         // Store the Fragment in stack
