@@ -1091,6 +1091,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     LServicesList.clear();
                     LServicesList.addAll(globalServiceList);
                     llNoServices.setVisibility(View.VISIBLE);
+                    btn_checkin.setVisibility(View.VISIBLE);
                     tvNoServices.setVisibility(View.GONE);
                     mSpinnerService.setVisibility(View.VISIBLE);
                     txt_chooseservice.setVisibility(View.VISIBLE);
