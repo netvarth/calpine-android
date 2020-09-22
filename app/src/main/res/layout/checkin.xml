@@ -824,19 +824,17 @@
 
 
                                     <LinearLayout
-                                        android:layout_marginLeft="@dimen/default_padding"
+                                        android:layout_marginStart="19dp"
                                         android:layout_marginRight="@dimen/default_padding"
-                                        android:weightSum="1"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:orientation="horizontal">
+                                        android:orientation="vertical">
 
                                         <TextView
                                             android:layout_weight="0.5"
                                             android:id="@+id/coupon_link"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:layout_marginLeft="@dimen/default_padding"
                                             android:gravity="left"
                                             android:paddingRight="@dimen/padding5"
                                             android:text="Apply Coupon Code"
@@ -847,20 +845,7 @@
                                             android:visibility="visible" />
 
 
-                                        <TextView
-                                            android:layout_marginRight="@dimen/default_padding"
-                                            android:gravity="right"
-                                            android:textColor="#AAA"
-                                            android:textSize="@dimen/txtsize_12"
-                                            android:textStyle="bold"
-                                            android:layout_weight="0.5"
-                                            android:id="@+id/txtaddnote"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:drawableRight="@drawable/ic_attach_file_black_24dp"
-                                            android:layout_alignParentRight="true"
-                                            android:text="@string/addnote"
-                                          />
+
 
                                     </LinearLayout>
 
@@ -900,6 +885,26 @@
                                             android:textStyle="bold" />
 
                                     </LinearLayout>
+
+                                    <TextView
+                                        android:layout_marginEnd="@dimen/default_padding"
+                                        android:gravity="left|center"
+                                        android:textColor="#AAA"
+                                        android:textSize="@dimen/txtsize_12"
+                                        android:textStyle="bold"
+                                        android:layout_marginStart="@dimen/dimen_16dp"
+                                        android:id="@+id/txtaddnote"
+                                        android:paddingStart="@dimen/padding5"
+                                        android:paddingEnd="@dimen/padding5"
+                                        android:paddingTop="@dimen/padding3"
+                                        android:paddingBottom="@dimen/padding3"
+                                        android:background="@drawable/custom_smalledittext"
+                                        android:layout_width="match_parent"
+                                        android:layout_marginTop="@dimen/padding5"
+                                        android:layout_height="wrap_content"
+                                        android:drawableRight="@drawable/ic_attach_file_black_24dp"
+                                        android:text="Notes"
+                                        />
 
 
                                     <RelativeLayout

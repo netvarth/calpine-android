@@ -32,4 +32,14 @@ public class ProviderDetails implements Serializable {
     }
 
     int id;
+
+    public String getBusinessName() {
+        return businessName;
+    }
+
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
+    }
+
+    String businessName;
 }

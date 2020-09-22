@@ -33,6 +33,7 @@ public class SearchAppoinment {
     boolean postInfoEnabled;
     String postInfoTitle;
     String postInfoText;
+    String consumerNoteTitle;
     @SerializedName("provider")
     private SearchAppoinment provider;
 
@@ -256,5 +257,13 @@ public class SearchAppoinment {
 
     public void setPostInfoText(String postInfoText) {
         this.postInfoText = postInfoText;
+    }
+
+    public String getConsumerNoteTitle() {
+        return consumerNoteTitle;
+    }
+
+    public void setConsumerNoteTitle(String consumerNoteTitle) {
+        this.consumerNoteTitle = consumerNoteTitle;
     }
 }

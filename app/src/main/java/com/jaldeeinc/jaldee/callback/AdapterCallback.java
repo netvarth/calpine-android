@@ -2,7 +2,6 @@ package com.jaldeeinc.jaldee.callback;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.SearchService;
 
@@ -16,7 +15,7 @@ public interface AdapterCallback {
     void onMethodCallback(String value, String claimable);
     void onMethodWorkingCallback(ArrayList<WorkingModel> workingModel,String value,String UniqueID);
 
-    void onMethodServiceCallback(ArrayList services,String value,String uniqueID);
+    void onMethodServiceCallback(ArrayList services, String value, String uniqueID, ArrayList serviceIds);
     void onMethodServiceCallbackUser(ArrayList<SearchService> services, String value, String uniqueID);
 
 

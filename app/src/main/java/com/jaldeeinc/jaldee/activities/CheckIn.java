@@ -802,6 +802,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     Log.i("vbnvbnvbn", String.valueOf(mSpinnertext));
                     Log.i("lkjjkllkjjkl", String.valueOf(livetrack));
 
+                    if (((SearchService) mSpinnerService.getSelectedItem()).getConsumerNoteTitle() != null) {
+                        tv_addnote.setText(((SearchService) mSpinnerService.getSelectedItem()).getConsumerNoteTitle());
+                    } else {
+                        tv_addnote.setText("Add Note");
+                    }
+
                     serviceSelected = ((SearchService) mSpinnerService.getSelectedItem()).getName();
                     selectedService = ((SearchService) mSpinnerService.getSelectedItem()).getId();
                     isPrePay = ((SearchService) mSpinnerService.getSelectedItem()).isPrePayment();
@@ -2105,6 +2111,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             mService.setPreInfoEnabled(response.body().get(i).isPreInfoEnabled());
                             mService.setPreInfoTitle(response.body().get(i).getPreInfoTitle());
                             mService.setPreInfoText(response.body().get(i).getPreInfoText());
+                            mService.setConsumerNoteTitle(response.body().get(i).getConsumerNoteTitle());
                             LServicesList.add(mService);
 
                             if (mFrom.equalsIgnoreCase("favourites") || mFrom.equalsIgnoreCase("favourites_date")) {
@@ -3507,6 +3514,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                             Intent checkin = new Intent(CheckIn.this, CheckInConfirmation.class);
                             checkin.putExtra("BookingDetails", activeAppointment);
+                            checkin.putExtra("terminology", mSearchTerminology.getProvider());
                             startActivity(checkin);
                         }
 

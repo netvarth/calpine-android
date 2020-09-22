@@ -35,7 +35,9 @@ public class ServiceListFragment extends RootFragment {
     Context mContext;
     String title,uniqueid;
     ArrayList serviceList;
+    ArrayList serviceIds;
     ArrayList<SearchService> serviceList_Detail;
+    ArrayList<SearchService> listofserviceIds;
     TextView tv_subtitle;
     RecyclerView mrecycle_service;
     ServiceListAdapter mAdapter;
@@ -59,12 +61,20 @@ public class ServiceListFragment extends RootFragment {
                 Config.logV("Service List-----11111----------"+serviceList_Detail.size());
             }else{
                 serviceList = (ArrayList)getArguments().getSerializable("servicelist");
+                serviceIds = (ArrayList)getArguments().getSerializable("serviceIds");
                 departmentList = (ArrayList)getArguments().getSerializable("departmentlist");
-                for(int i=0;i<serviceList.size();i++){
-                    SearchService data=new SearchService();
-                    data.setName(serviceList.get(i).toString());
-                    serviceList_Detail.add(data);
+
+                try {
+                    for(int i=0;i<serviceList.size();i++){
+                        SearchService data=new SearchService();
+                        data.setName(serviceList.get(i).toString());
+                        data.setId(Integer.parseInt(serviceIds.get(i).toString()));
+                        serviceList_Detail.add(data);
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
                 }
+
             }
 
             uniqueid=bundle.getString("uniqueID", "");
@@ -109,7 +119,7 @@ public class ServiceListFragment extends RootFragment {
         });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         mrecycle_service.setLayoutManager(mLayoutManager);
-        mAdapter = new ServiceListAdapter(serviceList_Detail, mContext,from,title,uniqueid,getActivity(), departmentList);
+        mAdapter = new ServiceListAdapter(serviceList_Detail, mContext,from,title,uniqueid,getActivity(), departmentList,listofserviceIds);
         mrecycle_service.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
 

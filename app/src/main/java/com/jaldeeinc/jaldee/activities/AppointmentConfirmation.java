@@ -1,26 +1,36 @@
 package com.jaldeeinc.jaldee.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class AppointmentConfirmation extends AppCompatActivity {
 
     ActiveCheckIn activeCheckInInfo = new ActiveCheckIn();
-    private TextView tvProviderName, tvServiceName, tvTimeWindow, tvLocation, tvConfirmationNumber, tvStatusLink,tvPreInfoTitle,tvPreInfo,tvPostInfo,tvPostInfoTitle;
+    private TextView tvProviderName, tvServiceName, tvTimeWindow, tvProvider, tvConfirmationNumber, tvStatusLink, tvPreInfoTitle, tvPreInfo, tvPostInfo, tvPostInfoTitle, tvTerm;
+    private LinearLayout llProvider;
+    CardView cvOk;
+    private String terminology;
 
     @Override
     public void onBackPressed() {
-        Intent home = new Intent(AppointmentConfirmation.this,Home.class);
+        Intent home = new Intent(AppointmentConfirmation.this, Home.class);
         startActivity(home);
+        finish();
         super.onBackPressed();
     }
 
@@ -29,9 +39,10 @@ public class AppointmentConfirmation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment_confirmation);
         Bundle extras = getIntent().getExtras();
-        if (extras != null){
+        if (extras != null) {
 
             activeCheckInInfo = (ActiveCheckIn) extras.getSerializable("BookingDetails");
+            terminology = extras.getString("terminology");
         }
 
         initializations();
@@ -41,40 +52,78 @@ public class AppointmentConfirmation extends AppCompatActivity {
 
             if (activeCheckInInfo.getProviderAccount() != null) {
 
-                tvProviderName.setText(activeCheckInInfo.getProviderAccount().getBusinessName());
+                String name = activeCheckInInfo.getProviderAccount().getBusinessName();
+                name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                tvProviderName.setText(name);
+            }
+
+            if (terminology != null) {
+
+                String term = terminology;
+                term = term.substring(0, 1).toUpperCase() + term.substring(1).toLowerCase();
+                tvTerm.setText(term);
             }
 
             if (activeCheckInInfo.getService() != null) {
                 if (activeCheckInInfo.getService().getName() != null) {
 
-                    tvServiceName.setText(activeCheckInInfo.getService().getName());
+                    String name2 = activeCheckInInfo.getService().getName();
+                    name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
+                    tvServiceName.setText(name2);
                 }
 
             }
 
             if (activeCheckInInfo.getAppmtTime() != null) {
 
-                tvTimeWindow.setText(activeCheckInInfo.getAppmtDate()+" " + activeCheckInInfo.getAppmtTime().split("-")[0]);
+                // to format time
+                String formattedTime = "";
+                String time = activeCheckInInfo.getAppmtTime().split("-")[0];
+                try {
+                    final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                    final Date dateObj = sdf.parse(time);
+                    time = new SimpleDateFormat("hh:mm aa").format(dateObj);
+                    formattedTime = time.replace("am", "AM").replace("pm", "PM");
+
+                } catch (final ParseException e) {
+                    e.printStackTrace();
+                }
+
+                // to format date
+                String date;
+                SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd");
+                Date newDate = null;
+                try {
+                    newDate = spf.parse(activeCheckInInfo.getAppmtDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                spf = new SimpleDateFormat("dd, MMM yyyy");
+                date = spf.format(newDate);
+                tvTimeWindow.setText(date + "  " + formattedTime);
             }
 
-            if (activeCheckInInfo.getLocation() != null) {
 
-                if (activeCheckInInfo.getLocation().getPlace() != null) {
+            if (activeCheckInInfo.getProvider() != null) {
 
-                    tvLocation.setText(activeCheckInInfo.getLocation().getPlace());
+                if (terminology != null) {
 
-                    tvLocation.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (activeCheckInInfo.getLocation().getGoogleMapUrl() != null) {
-                                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                                        Uri.parse(activeCheckInInfo.getLocation().getGoogleMapUrl()));
-                                startActivity(intent);
-                            }
-                        }
-                    });
-
+                    String term = terminology;
+                    term = term.substring(0, 1).toUpperCase() + term.substring(1).toLowerCase();
+                    tvTerm.setText(term+"  :  ");
                 }
+
+                if (activeCheckInInfo.getProvider().getFirstName() != null) {
+
+                    llProvider.setVisibility(View.VISIBLE);
+                    tvProvider.setText(activeCheckInInfo.getProvider().getFirstName() + " " + activeCheckInInfo.getProvider().getLastName());
+                } else {
+                    llProvider.setVisibility(View.GONE);
+                }
+
+            } else {
+
+                llProvider.setVisibility(View.GONE);
             }
 
             if (activeCheckInInfo.getAppointmentEncId() != null) {
@@ -94,14 +143,25 @@ public class AppointmentConfirmation extends AppCompatActivity {
                 });
             }
 
-            if (activeCheckInInfo.getService() != null){
+            if (activeCheckInInfo.getService() != null) {
 
-                if (activeCheckInInfo.getService().isPostInfoEnabled()){
+                if (activeCheckInInfo.getService().isPostInfoEnabled()) {
 
                     tvPostInfoTitle.setText(activeCheckInInfo.getService().getPostInfoTitle());
                     tvPostInfo.setText(Html.fromHtml(activeCheckInInfo.getService().getPostInfoText()));
                 }
             }
+
+            cvOk.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent home = new Intent(AppointmentConfirmation.this, Home.class);
+                    startActivity(home);
+                    finish();
+
+                }
+            });
 
 
         }
@@ -113,13 +173,17 @@ public class AppointmentConfirmation extends AppCompatActivity {
         tvProviderName = findViewById(R.id.tv_providerName);
         tvServiceName = findViewById(R.id.tv_serviceName);
         tvTimeWindow = findViewById(R.id.tv_timeWindow);
-        tvLocation = findViewById(R.id.tv_location);
+        tvProvider = findViewById(R.id.tv_provider);
         tvConfirmationNumber = findViewById(R.id.tv_confrmNo);
         tvStatusLink = findViewById(R.id.tv_currentStatusLink);
         tvPreInfo = findViewById(R.id.tv_preInfo);
         tvPreInfoTitle = findViewById(R.id.tv_preInfoTitle);
         tvPostInfo = findViewById(R.id.tv_postInfo);
         tvPostInfoTitle = findViewById(R.id.tv_postInfoTitle);
+        llProvider = findViewById(R.id.ll_provider);
+        cvOk = findViewById(R.id.cv_ok);
+        tvTerm = findViewById(R.id.tv_term);
+
     }
 
 }
