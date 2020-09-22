@@ -298,7 +298,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                                     } else { // Conventional (Token with Waiting time)
                                         myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
                                         String spannable = getWaitingTime(queueList.getNextAvailableQueue());
-                                        String waitTime = spannable.replace("\n", " ");
+                                        String waitTime = spannable.replace("\n", "-");
                                         myViewHolder.txt_peopleahead.setText(waitTime);
                                         myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
                                         String message = Config.getPersonsAheadText(queueList.getNextAvailableQueue().getPersonAhead());

@@ -1456,7 +1456,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1")) { // Conventional
                                         showWaitingTime(myViewHolder, searchdetailList, null);
                                         String waitTime = myViewHolder.tv_WaitTime.getText().toString();
-                                        String waitTimes = waitTime.replace("\n"," ");
+                                        String waitTimes = waitTime.replace("\n","-");
                                         myViewHolder.tv_peopleahead.setText(waitTimes);
                                         String message = Config.getPersonsAheadText(searchdetailList.getPersonAhead());
                                         myViewHolder.tv_WaitTime.setText(message);
@@ -1885,7 +1885,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             //   myViewHolder.tv_WaitTime.setVisibility(View.GONE);
             String firstWord = "Est wait time";
-            String secondWord = "\n " + Config.getTimeinHourMinutes(searchdetailList.getQueueWaitingTime());
+            String secondWord = " \n " + Config.getTimeinHourMinutes(searchdetailList.getQueueWaitingTime());
             myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
         }
         // myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
