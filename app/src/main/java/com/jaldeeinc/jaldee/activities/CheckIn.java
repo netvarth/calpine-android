@@ -3275,6 +3275,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 for (int i = 0; i < MultiplefamilyList.size(); i++) {
                     JSONObject waitobj1 = new JSONObject();
                     waitobj1.put("id", MultiplefamilyList.get(i).getId());
+//                    waitobj1.put("firstName",MultiplefamilyList.get(i).getFirstName());
+//                    waitobj1.put("lastName",MultiplefamilyList.get(i).getLastName());
                     waitlistArray.put(waitobj1);
                 }
             } else {

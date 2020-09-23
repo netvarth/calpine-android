@@ -238,6 +238,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
     BottomSheetDialog dialog;
     static TextView tv_don_amount, tv_don_instr;
     private IPaymentResponse paymentResponse;
+    private TextView tvDonorError;
 
 
     @Override
@@ -293,254 +294,10 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
         mSpinnerService = findViewById(R.id.spinnerservice);
         mSpinnerDepartment = findViewById(R.id.spinnerdepartment);
         tv_don_amount = findViewById(R.id.donation_amount);
-//        txtWaitTime = findViewById(R.id.txtWaitTime);
-//        earliestAvailable = findViewById(R.id.earliestAvailable);
         txt_choosedoctor = findViewById(R.id.txt_choosedoctor);
         mSpinnerDoctor = findViewById(R.id.spinnerdoctor);
         tv_don_instr = findViewById(R.id.dnt_instructions);
-//        tv_enterInstructions = findViewById(R.id.txt_enterinstructions);
-//        et_vitualId = findViewById(R.id.virtual_id);
-
-
-
-//        tv_addnote.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
-//                dialog.setContentView(R.layout.reply);
-//                dialog.show();
-//
-//                final Button btn_send = dialog.findViewById(R.id.btn_send);
-//                Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
-//                final EditText edt_message = dialog.findViewById(R.id.edt_message);
-//                TextView txtsendmsg = dialog.findViewById(R.id.txtsendmsg);
-//                txtsendmsg.setVisibility(View.GONE);
-//                btn_send.setText("ADD");
-//
-//                if (!txtsendmsg.equals("")) {
-//                    edt_message.setText(txt_message);
-//                }
-//
-//
-//                btn_send.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        txt_message = edt_message.getText().toString();
-//                        dialog.dismiss();
-//
-//                    }
-//                });
-//
-//                btn_cancel.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        dialog.dismiss();
-//                    }
-//                });
-//
-//                edt_message.addTextChangedListener(new TextWatcher() {
-//                    @Override
-//                    public void afterTextChanged(Editable arg0) {
-//                        if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
-//                            btn_send.setEnabled(true);
-//                            btn_send.setClickable(true);
-//                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
-//                        } else {
-//                            btn_send.setEnabled(true);
-//                            btn_send.setClickable(true);
-//                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
-//                            //  btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                    }
-//
-//                    @Override
-//                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                    }
-//                });
-////                imagePathList.clear();
-////                tv_attach = dialog.findViewById(R.id.btn);
-////                tv_camera = dialog.findViewById(R.id.camera);
-////                recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
-////                //  imageview = dialog.findViewById(R.id.iv);
-////                // RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
-////
-////
-////                requestMultiplePermissions();
-////                tv_attach.setVisibility(View.VISIBLE);
-////                tv_camera.setVisibility(View.VISIBLE);
-////
-////
-////                tv_attach.setOnClickListener(new View.OnClickListener() {
-////                    @Override
-////                    public void onClick(View v) {
-////                        try {
-////                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-////                                if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-////
-////
-////                                    requestPermissions(new String[]{
-////                                            Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
-////
-////                                    return;
-////                                } else {
-////                                    Intent intent = new Intent();
-////                                    intent.setType("*/*");
-////                                    intent.setAction(Intent.ACTION_GET_CONTENT);
-////                                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
-////                                }
-////                            } else {
-////
-////                                Intent intent = new Intent();
-////                                intent.setType("*/*");
-////                                intent.setAction(Intent.ACTION_GET_CONTENT);
-////                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
-////                            }
-////                        } catch (Exception ex) {
-////                            ex.printStackTrace();
-////                        }
-////                    }
-////
-////                });
-////
-////
-////                tv_camera.setOnClickListener(new View.OnClickListener() {
-////                    @Override
-////                    public void onClick(View v) {
-////                        try {
-////                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-////                                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-////
-////
-////                                    requestPermissions(new String[]{
-////                                            Manifest.permission.CAMERA}, CAMERA);
-////
-////                                    return;
-////                                } else {
-////                                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-////                                    Intent cameraIntent = new Intent();
-////                                    cameraIntent.setType("image/*");
-////                                    cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-////                                    cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
-////                                    startActivityForResult(intent, CAMERA);
-////                                }
-////                            } else {
-////
-////                                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-////                                Intent cameraIntent = new Intent();
-////                                cameraIntent.setType("image/*");
-////                                cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-////                                cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
-////                                startActivityForResult(intent, CAMERA);
-////                            }
-////                        } catch (Exception ex) {
-////                            ex.printStackTrace();
-////                        }
-////                    }
-////
-////                });
-////
-////
-////                btn_send.setOnClickListener(new View.OnClickListener() {
-////                    @Override
-////                    public void onClick(View v) {
-////                        //
-////                    }
-////                });
-////
-////                btn_cancel.setOnClickListener(new View.OnClickListener() {
-////                    @Override
-////                    public void onClick(View v) {
-////                        imagePathList.clear();
-////                        dialog.dismiss();
-////                    }
-////                });
-////
-////                edt_message.addTextChangedListener(new TextWatcher() {
-////                    @Override
-////                    public void afterTextChanged(Editable arg0) {
-////                        if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
-////                            btn_send.setEnabled(true);
-////                            btn_send.setClickable(true);
-////                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
-////                        } else {
-////                            btn_send.setEnabled(false);
-////                            btn_send.setClickable(false);
-////                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
-////                        }
-////                    }
-////
-////                    @Override
-////                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-////                    }
-////
-////                    @Override
-////                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-////                    }
-////                });
-//            }
-//        });
-
-
-
-//        ic_left = findViewById(R.id.ic_left);
-//        ic_right = findViewById(R.id.ic_right);
-//        ic_cal_minus = findViewById(R.id.ic_cal_minus);
-//        ic_cal_add = findViewById(R.id.ic_cal_add);
-//
-//        ic_cal_add.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String dtStart = txt_date.getText().toString();
-//                Config.logV("Date----------------" + dtStart);
-//                Date date = null;
-//                SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
-//                try {
-//                    date = format.parse(dtStart);
-//
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
-//                Date added_date = addDays(date, 1);
-//                DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
-//                //to convert Date to String, use format method of SimpleDateFormat class.
-//                String strDate = dateFormat.format(added_date);
-//                txt_date.setText(strDate);
-//
-//                DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
-//                selectedDateFormat = selecteddateParse.format(added_date);
-//                UpdateDAte(selectedDateFormat);
-//            }
-//        });
-//
-//        ic_cal_minus.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String dtStart = txt_date.getText().toString();
-//                Config.logV("Date----------------" + dtStart);
-//                Date date = null;
-//                SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
-//                try {
-//                    date = format.parse(dtStart);
-//
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                Date added_date = subtractDays(date, 1);
-//                DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
-//                //to convert Date to String, use format method of SimpleDateFormat class.
-//                String strDate = dateFormat.format(added_date);
-//                txt_date.setText(strDate);
-//                DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
-//                selectedDateFormat = selecteddateParse.format(added_date);
-//                UpdateDAte(selectedDateFormat);
-//                //  UpdateDAte(strDate);
-//            }
-//        });
+        tvDonorError = findViewById(R.id.tv_error_donor);
 
         ImageView iBackPress = findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
@@ -645,6 +402,14 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
         tv_place.setText(place);
 
         tv_titlename.setText(title);
+
+        tv_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                tvDonorError.setVisibility(View.GONE);
+            }
+        });
 
 
         btn_checkin.setOnClickListener(new View.OnClickListener() {
@@ -3419,6 +3184,16 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         //  mDialog.show();
+
+        if (tv_name.getText().toString().trim().equalsIgnoreCase("")){
+
+            tvDonorError.setVisibility(View.VISIBLE);
+            return;
+        }
+        else {
+
+            tvDonorError.setVisibility(View.GONE);
+        }
 
         String uniqueID = UUID.randomUUID().toString();
         Date c = Calendar.getInstance().getTime();
