@@ -1704,7 +1704,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1")) {
                                         showWaitingTime(myViewHolder, searchdetailList, "future");
                                         String waitTime = myViewHolder.tv_WaitTime.getText().toString();
-                                        String waitTimes = waitTime.replace("\n", " ");
+                                        String waitTimes = waitTime.replace("\n", "-");
                                         myViewHolder.tv_peopleahead.setText(waitTimes);
                                         String message = Config.getPersonsAheadText(searchdetailList.getPersonAhead());
                                         myViewHolder.tv_WaitTime.setText(message);
@@ -2225,7 +2225,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         "fonts/Montserrat_Bold.otf");
                 secondWord = "\n " + monthString + " " + day + ", " + searchdetailList.getServiceTime();
             } else {
-                secondWord = "\nToday, " + searchdetailList.getServiceTime();
+                secondWord = "\n Today, " + searchdetailList.getServiceTime();
             }
             Spannable spannable = new SpannableString(firstWord + secondWord);
             // spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

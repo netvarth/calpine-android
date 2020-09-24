@@ -1205,7 +1205,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                     String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
                                     //  myViewHolder.tv_peopleahead.setText(message);
                                     String waitTime = myViewHolder.tv_WaitTime.getText().toString();
-                                    String waitTimes = waitTime.replace("\n", " ");
+                                    String waitTimes = waitTime.replace("\n", "-");
                                     myViewHolder.tv_peopleahead.setText(waitTimes);
                                     myViewHolder.tv_WaitTime.setText(message);
                                 }
@@ -1321,9 +1321,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 String monthString = (String) DateFormat.format("MMM", date);
                 Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                         "fonts/Montserrat_Bold.otf");
-                secondWord = "\n" + monthString + " " + day + ", " + searchdetailList.getServiceTime();
+                secondWord = "\n " + monthString + " " + day + ", " + searchdetailList.getServiceTime();
             } else {
-                secondWord = "\nToday, " + searchdetailList.getServiceTime();
+                secondWord = "\n Today, " + searchdetailList.getServiceTime();
             }
             Spannable spannable = new SpannableString(firstWord + secondWord);
             // spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

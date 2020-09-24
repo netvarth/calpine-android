@@ -1928,7 +1928,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                             myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
                                             myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
                                             String spannable = getWaitingTime(mQueueList.get(i).getNextAvailableQueue());
-                                            String waitTime = spannable.replace("\n", " ");
+                                            String waitTime = spannable.replace("\n", "-");
                                             myViewHolder.txt_peopleahead.setText(waitTime);
                                             myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
                                             String message = Config.getPersonsAheadText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
@@ -2049,12 +2049,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 String monthString = (String) DateFormat.format("MMM", date);
 //                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
 //                        "fonts/Montserrat_Bold.otf");
-                secondWord = "\n" + monthString + " " + day + ", " + queue.getServiceTime();
+                secondWord = "\n " + monthString + " " + day + ", " + queue.getServiceTime();
 //                String outputDateStr = outputFormat.format(datechange);
 //                String yourDate = Config.getFormatedDate(outputDateStr);
 //                secondWord = yourDate + ", " + queue.getServiceTime();
             } else {
-                secondWord = "\nToday, " + queue.getServiceTime();
+                secondWord = "\n Today, " + queue.getServiceTime();
             }
         } else {
             firstWord = "Est wait time";
