@@ -3329,7 +3329,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             String getJsonObj = (String) iteratorObj.next();
                             System.out.println("KEY: " + "------>" + getJsonObj);
                             value = reader.getString(getJsonObj);
-
+                            break;
 
                         }
 
