@@ -1199,7 +1199,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                     myViewHolder.tv_peopleahead.setVisibility(View.GONE);
                                 } else { // Conventional (Token with Waiting time)
                                     myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-                                    showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(), null);
+                                    showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(),"future");
 //                                    myViewHolder.tv_WaitTime.setText(spannable);
                                     myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
                                     String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
