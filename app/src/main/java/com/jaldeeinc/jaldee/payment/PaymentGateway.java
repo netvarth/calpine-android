@@ -62,9 +62,7 @@ public class PaymentGateway {
             jsonObj.put("uuid", ynwUUID);
             jsonObj.put("accountId", accountID);
             jsonObj.put("purpose", purpose);
-            if (purpose.equalsIgnoreCase(Constants.PURPOSE_DONATIONPAYMENT)) {
-                jsonObj.put("custId", customerId);
-            }
+            jsonObj.put("custId",customerId);
             jsonObj.put("source",source);
 
 

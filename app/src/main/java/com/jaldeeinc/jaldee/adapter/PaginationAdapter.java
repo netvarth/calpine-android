@@ -792,7 +792,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             iAppointment.putExtra("subsector", searchdetailList.getSub_sector());
                             iAppointment.putExtra("terminology", termilogy);
                             iAppointment.putExtra("isshowtoken", searchdetailList.isShowToken());
-                            iAppointment.putExtra("availableDate", searchdetailList.getAvail_date());
+                            iAppointment.putExtra("availableDate", searchdetailList.getAvailableDate());
                             iAppointment.putExtra("virtualservice", searchdetailList.getVirtual_service_status());
                             context.startActivity(iAppointment);
                         } else if (dnts_flag.get(position).equals(true) && appts_flag.get(position).equals(false) && checkins_flag.get(position).equals(false)) {
@@ -1824,7 +1824,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 iAppointment.putExtra("subsector", searchdetailList.getSub_sector());
                 iAppointment.putExtra("terminology", termilogy);
                 iAppointment.putExtra("isshowtoken", searchdetailList.isShowToken());
-                iAppointment.putExtra("availableDate", searchdetailList.getAvail_date());
+                iAppointment.putExtra("availableDate", searchdetailList.getAvailableDate());
                 context.startActivity(iAppointment);
             }
         });

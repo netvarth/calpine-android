@@ -1057,18 +1057,19 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         try {
                             if (txtWaitTime.getText().toString().contains("Today")) {
                                 selectedDate = txtWaitTime.getText().toString().replace("Today\n", "");
+                                date = newformat.parse(selectedDate);
+                                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                //to convert Date to String, use format method of SimpleDateFormat class.
+                                selectDate = dateFormat.format(date);
                             } else {
                                 String newDate = txtWaitTime.getText().toString().split("\n")[1];
                                 String deliveryDate = newDate;
                                 SimpleDateFormat dateFormatprev = new SimpleDateFormat("dd-MM-yyyy");
                                 Date d = dateFormatprev.parse(deliveryDate);
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                selectedDate = dateFormat.format(d);
+                                selectDate = dateFormat.format(d);
                             }
-                            date = newformat.parse(selectedDate);
-                            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                            //to convert Date to String, use format method of SimpleDateFormat class.
-                            selectDate = dateFormat.format(date);
+
 
                         } catch (ParseException e) {
                             e.printStackTrace();
