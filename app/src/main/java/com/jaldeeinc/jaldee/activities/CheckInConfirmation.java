@@ -21,9 +21,9 @@ import java.util.Date;
 public class CheckInConfirmation extends AppCompatActivity {
 
     ActiveCheckIn activeCheckInInfo = new ActiveCheckIn();
-    private TextView tvProviderName, tvServiceName, tvTokenNumber, tvTimeWindow, tvProvider, tvConfirmationNumber, tvPeopleAhead, tvEstWaitTime, tvStatusLink, tvPreInfoTitle, tvPreInfo, tvPostInfo, tvPostInfoTitle,tvTerm;
+    private TextView tvProviderName, tvServiceName, tvTokenNumber, tvTimeWindow, tvProvider, tvConfirmationNumber, tvPeopleAhead, tvEstWaitTime, tvStatusLink, tvPreInfoTitle, tvPreInfo, tvPostInfo, tvPostInfoTitle, tvTerm;
     private LinearLayout llwaitTime, llToken, llProvider;
-    private CardView cvPeople,cvOk;
+    private CardView cvPeople, cvOk;
     String terminology;
 
     @Override
@@ -48,13 +48,13 @@ public class CheckInConfirmation extends AppCompatActivity {
             }
 
 
-
             if (activeCheckInInfo.getService() != null) {
                 if (activeCheckInInfo.getService().getName() != null) {
 
                     String name2 = activeCheckInInfo.getService().getName();
                     name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
-                    tvServiceName.setText(name2);                }
+                    tvServiceName.setText(name2);
+                }
 
             }
 
@@ -88,11 +88,11 @@ public class CheckInConfirmation extends AppCompatActivity {
 
             if (activeCheckInInfo.getProvider() != null) {
 
-                if (terminology != null){
+                if (terminology != null) {
 
                     String term = terminology;
                     term = term.substring(0, 1).toUpperCase() + term.substring(1).toLowerCase();
-                    tvTerm.setText(term+"  :  ");
+                    tvTerm.setText(term + "  :  ");
                 }
 
                 if (activeCheckInInfo.getProvider().getFirstName() != null) {
@@ -103,8 +103,7 @@ public class CheckInConfirmation extends AppCompatActivity {
                     llProvider.setVisibility(View.GONE);
                 }
 
-            }
-            else {
+            } else {
                 llProvider.setVisibility(View.GONE);
             }
 

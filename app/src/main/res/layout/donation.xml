@@ -131,6 +131,7 @@
                                         android:textColor="@color/title_grey"
                                         android:textSize="@dimen/txtsize_12"
                                         android:maxLength="175"
+                                        android:inputType="text"
                                         android:layout_centerVertical="true"
                                         android:theme="@android:style/Theme.Holo.Light"
                                         />
@@ -158,6 +159,19 @@
                                 <!--                                    android:layout_margin="@dimen/padding7"-->
                                 <!--                                    android:background="#1A000000" />-->
                             </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tv_error_donor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="* Donor name is manidtory"
+                                android:textSize="@dimen/txtsize_12"
+                                android:textColor="@color/red"
+                                android:visibility="gone"
+                                android:layout_marginTop="@dimen/padding5"
+                                android:layout_marginStart="@dimen/dimen_16dp">
+
+                            </TextView>
 
 
                             <LinearLayout
