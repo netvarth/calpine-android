@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 
 public interface AdapterCallback {
-    void onMethodCallback(String value, String claimable);
+    void onMethodCallback(String value, String claimable, String location_id1);
     void onMethodWorkingCallback(ArrayList<WorkingModel> workingModel,String value,String UniqueID);
 
     void onMethodServiceCallback(ArrayList services, String value, String uniqueID, ArrayList serviceIds);

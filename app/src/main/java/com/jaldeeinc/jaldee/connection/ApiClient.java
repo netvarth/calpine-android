@@ -47,6 +47,7 @@ public class ApiClient {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                     .client(OkttpClient(context))
                     .build();
 
@@ -64,6 +65,7 @@ public class ApiClient {
             retrofitTest = new Retrofit.Builder()
                     .baseUrl("http://stage.bookmyconsult.com/test/")
                     .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                     .client(OkttpClientTest(context))
                     .build();
         }
@@ -83,6 +85,7 @@ public class ApiClient {
             retrofitAWS = new Retrofit.Builder()
                     .baseUrl(url)
                     .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                     .client(OkttpClient(context))
                     .build();
         }
@@ -98,6 +101,7 @@ public class ApiClient {
             retrofitCloud = new Retrofit.Builder()
                     .baseUrl(url)
                     .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                     .client(OkttpClient(context))
                     .build();
         }

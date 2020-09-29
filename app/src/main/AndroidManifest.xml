@@ -35,7 +35,16 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.ProviderDetailActivity"></activity>
+        <activity android:name=".activities.MoreInfoActivity"
+            android:theme="@style/MyMaterialTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activities.UserDetailActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ProviderDetailActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AppointmentConfirmation"
             android:hardwareAccelerated="true" />

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Locations"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/dimen_15dp"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:textColor="@color/location_theme">
+
+    </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewLight
+        android:id="@+id/hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding5"
+        android:layout_marginStart="@dimen/txtsize_10"
+        android:text="Choose a location you wish to change"
+        android:layout_below="@id/tv_title">
+
+    </com.jaldeeinc.jaldee.custom.CustomTextViewLight>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/txtsize_10"
+        android:layout_marginTop="@dimen/dimen_12dp"
+        android:layout_below="@id/hint">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/rv_list"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginBottom="@dimen/padding30"
+        android:layout_alignParentEnd="true">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/padding15"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginEnd="@dimen/padding20"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            app:cardBackgroundColor="@color/spinnerbg"
+            app:cardElevation="@dimen/padding3">
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:layout_gravity="center"
+                android:textSize="@dimen/txtsize_14"
+                android:layout_marginStart="@dimen/txtsize_10"
+                android:layout_marginTop="@dimen/padding5"
+                android:layout_marginEnd="@dimen/txtsize_10"
+                android:layout_marginBottom="@dimen/padding5"
+                android:textColor="@color/title_color">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/padding15"
+            android:layout_marginEnd="@dimen/dimen_40dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:clickable="false"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            app:cardBackgroundColor="@color/spinnerbg"
+            app:cardElevation="@dimen/padding3">
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:layout_marginStart="@dimen/txtsize_10"
+                android:layout_marginTop="@dimen/padding5"
+                android:layout_marginEnd="@dimen/txtsize_10"
+                android:layout_marginBottom="@dimen/padding5"
+                android:paddingBottom="@dimen/dimen_1dp"
+                android:textSize="@dimen/txtsize_14"
+                android:textColor="@color/white">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+</RelativeLayout>
+

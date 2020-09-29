@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+        android:id="@+id/tv_depName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding5"
+        android:text="Department name"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginTop="@dimen/padding5"
+        android:layout_marginBottom="@dimen/padding5"
+        android:textColor="@color/location_theme"
+        android:textSize="@dimen/txtsize_14">
+
+    </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+</LinearLayout>

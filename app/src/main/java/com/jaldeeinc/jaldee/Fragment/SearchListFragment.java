@@ -44,6 +44,7 @@ import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.FilterActivity;
+import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
 import com.jaldeeinc.jaldee.adapter.MoreFilterAdapter;
 import com.jaldeeinc.jaldee.adapter.PaginationAdapter;
@@ -2142,18 +2143,24 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
     @Override
-    public void onMethodCallback(String value, String claimable) {
-        Bundle bundle = new Bundle();
-        SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
-        refreshQuery();
-        bundle.putString("uniqueID", value);
-        bundle.putString("claimable", claimable);
-        pfFragment.setArguments(bundle);
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-        // Store the Fragment in stack
-        transaction.addToBackStack(null);
-        transaction.add(R.id.mainlayout, pfFragment).commit();
+    public void onMethodCallback(String value, String claimable, String locationId) {
+//        Bundle bundle = new Bundle();
+//        SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
+//        refreshQuery();
+//        bundle.putString("uniqueID", value);
+//        bundle.putString("claimable", claimable);
+//        pfFragment.setArguments(bundle);
+//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+//        // Store the Fragment in stack
+//        transaction.addToBackStack(null);
+//        transaction.add(R.id.mainlayout, pfFragment).commit();
+
+        Intent intent = new Intent(mContext, ProviderDetailActivity.class);
+        intent.putExtra("uniqueID",value);
+        intent.putExtra("claimable",claimable);
+        intent.putExtra("locationId",Integer.parseInt(locationId));
+        startActivity(intent);
 
     }
 

@@ -195,7 +195,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View v) {
                         mSearchView.setQuery("", false);
-                        mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid(), searchdetailList.getClaimable());
+                        mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid(), searchdetailList.getClaimable(),searchdetailList.getLocation_id1());
                     }
                 });
                 showUserInfo(myViewHolder, searchdetailList);
@@ -812,7 +812,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             context.startActivity(iDonation);
 
                         } else {
-                            mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid(), searchdetailList.getClaimable());
+                            mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid(), searchdetailList.getClaimable(), searchdetailList.getLocation_id1());
                         }
                     }
                 });

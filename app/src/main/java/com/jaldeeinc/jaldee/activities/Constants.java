@@ -29,6 +29,10 @@ public class Constants {
     public static final String APPOINTMENT = "Appointments";
     public static final String CHECKIN = "CheckIns";
     public static final String TOKEN = "Tokens";
+    public static final String DONATION = "Donation";
+    public static final String PROVIDER = "Provider";
+
+
 
 
 

@@ -1575,7 +1575,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             LsocialMedia.setVisibility(View.GONE);
             tv_SocialMedia.setVisibility(View.GONE);
         }
+
         contactDetail.clear();
+
         if (getBussinessData.getPhoneNumbers().size() > 0) {
             for (int i = 0; i < getBussinessData.getPhoneNumbers().size(); i++) {
                 Config.logV("Phone @@@@@@@@@@@@" + getBussinessData.getPhoneNumbers().get(i).getInstance());

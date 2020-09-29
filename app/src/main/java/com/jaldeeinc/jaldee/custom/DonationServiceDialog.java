@@ -40,7 +40,7 @@ public class DonationServiceDialog extends Dialog {
     TextView txtpreVal;
     String MinPrePaymentAmount, maxDonationAmount, minDonationAmount;
     SearchDonation donationInfo;
-    String minAmount,maxAmount,multiples;
+    String minAmount, maxAmount, multiples;
 
     public DonationServiceDialog(Context context, SearchDonation donationInfo) {
         super(context);
@@ -55,92 +55,100 @@ public class DonationServiceDialog extends Dialog {
 
         initializations();
 
-        minAmount = String.valueOf(donationInfo.getMinDonationAmount());
-        maxAmount = String.valueOf(donationInfo.getMaxDonationAmount());
-        multiples = String.valueOf(donationInfo.getMultiples());
+        try {
 
 
-        if (donationInfo.getName() != null) {
-            tv_toolbartitle.setVisibility(View.VISIBLE);
-            tv_toolbartitle.setText(donationInfo.getName());
-        } else {
-            tv_toolbartitle.setVisibility(View.GONE);
-        }
+            minAmount = String.valueOf(donationInfo.getMinDonationAmount());
+            maxAmount = String.valueOf(donationInfo.getMaxDonationAmount());
+            multiples = String.valueOf(donationInfo.getMultiples());
 
 
-        if(minAmount !=null){
-            tv_minvalue.setVisibility(View.VISIBLE);
-            tv_minvalue.setText("₹ " + minAmount);
-            LminAmountlayout.setVisibility(View.VISIBLE);
-        }else{
-            tv_minvalue.setVisibility(View.GONE);
-            LminAmountlayout.setVisibility(View.GONE);
-        }
-
-        if(maxAmount!=null){
-            tv_maxvalue.setVisibility(View.VISIBLE);
-            tv_maxvalue.setText("₹ " + maxAmount);
-            LmaxAmountlayout.setVisibility(View.VISIBLE);
-        }else{
-            tv_maxvalue.setVisibility(View.GONE);
-            LmaxAmountlayout.setVisibility(View.GONE);
-        }
-
-        if(multiples!=null){
-            tv_multiples.setVisibility(View.VISIBLE);
-            tv_multiples.setText(multiples);
-            Lmultilayout.setVisibility(View.VISIBLE);
-        }else{
-            tv_multiples.setVisibility(View.GONE);
-            Lmultilayout.setVisibility(View.GONE);
-        }
-
-        if (donationInfo.isPrePayment()) {
-            Lprepayment.setVisibility(View.VISIBLE);
-            txtpreVal.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(donationInfo.getMinPrePaymentAmount())));
-        } else {
-            Lprepayment.setVisibility(View.GONE);
-        }
-
-        if (donationInfo.getDescription() != null && donationInfo.getDescription().length() > 0 && !donationInfo.getDescription().equalsIgnoreCase("")) {
-            tv_descVal.setVisibility(View.VISIBLE);
-
-            tv_descVal.setText(donationInfo.getDescription());
-        } else {
-            tv_descVal.setVisibility(View.GONE);
-        }
-
-        if(donationInfo.getServicegallery()!=null) {
-            if (donationInfo.getServicegallery().size() > 0) {
-                i_servicegallery.setVisibility(View.VISIBLE);
-                try {
-                    PicassoTrustAll.getInstance(context).setLoggingEnabled(true);
-                    PicassoTrustAll.getInstance(context).load(donationInfo.getServicegallery().get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            if (donationInfo.getName() != null) {
+                tv_toolbartitle.setVisibility(View.VISIBLE);
+                String name = donationInfo.getName();
+                name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                tv_toolbartitle.setText(name);
+            } else {
+                tv_toolbartitle.setVisibility(View.GONE);
             }
-        }
 
-        i_servicegallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                if (donationInfo != null){
-                    ArrayList<String> mGalleryList = new ArrayList<>();
-                    for (int i = 0; i < donationInfo.getServicegallery().size(); i++) {
-                        mGalleryList.add(donationInfo.getServicegallery().get(i).getUrl());
-                    }
+            if (minAmount != null) {
+                tv_minvalue.setVisibility(View.VISIBLE);
+                tv_minvalue.setText("₹ " + minAmount);
+                LminAmountlayout.setVisibility(View.VISIBLE);
+            } else {
+                tv_minvalue.setVisibility(View.GONE);
+                LminAmountlayout.setVisibility(View.GONE);
+            }
 
-                    boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                    if (mValue) {
-                        Intent intent = new Intent(v.getContext(), SwipeGalleryImage.class);
-                        context.startActivity(intent);
+            if (maxAmount != null) {
+                tv_maxvalue.setVisibility(View.VISIBLE);
+                tv_maxvalue.setText("₹ " + maxAmount);
+                LmaxAmountlayout.setVisibility(View.VISIBLE);
+            } else {
+                tv_maxvalue.setVisibility(View.GONE);
+                LmaxAmountlayout.setVisibility(View.GONE);
+            }
+
+            if (multiples != null) {
+                tv_multiples.setVisibility(View.VISIBLE);
+                tv_multiples.setText(multiples);
+                Lmultilayout.setVisibility(View.VISIBLE);
+            } else {
+                tv_multiples.setVisibility(View.GONE);
+                Lmultilayout.setVisibility(View.GONE);
+            }
+
+            if (donationInfo.isPrePayment()) {
+                Lprepayment.setVisibility(View.VISIBLE);
+                txtpreVal.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(donationInfo.getMinPrePaymentAmount())));
+            } else {
+                Lprepayment.setVisibility(View.GONE);
+            }
+
+            if (donationInfo.getDescription() != null && donationInfo.getDescription().length() > 0 && !donationInfo.getDescription().equalsIgnoreCase("")) {
+                tv_descVal.setVisibility(View.VISIBLE);
+
+                tv_descVal.setText(donationInfo.getDescription());
+            } else {
+                tv_descVal.setVisibility(View.GONE);
+            }
+
+            if (donationInfo.getServicegallery() != null) {
+                if (donationInfo.getServicegallery().size() > 0) {
+                    i_servicegallery.setVisibility(View.VISIBLE);
+                    try {
+                        PicassoTrustAll.getInstance(context).setLoggingEnabled(true);
+                        PicassoTrustAll.getInstance(context).load(donationInfo.getServicegallery().get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             }
-        });
 
+            i_servicegallery.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (donationInfo != null) {
+                        ArrayList<String> mGalleryList = new ArrayList<>();
+                        for (int i = 0; i < donationInfo.getServicegallery().size(); i++) {
+                            mGalleryList.add(donationInfo.getServicegallery().get(i).getUrl());
+                        }
+
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        if (mValue) {
+                            Intent intent = new Intent(v.getContext(), SwipeGalleryImage.class);
+                            context.startActivity(intent);
+                        }
+                    }
+                }
+            });
+
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
 
     }
 

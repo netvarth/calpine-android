@@ -2,9 +2,10 @@ package com.jaldeeinc.jaldee.response;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class SearchAppoinment {
+public class SearchAppoinment implements Serializable {
 
     int id;
     String name;
@@ -21,6 +22,7 @@ public class SearchAppoinment {
     String serviceType;
     int multiples;
     String livetrack;
+    ArrayList<SearchService> servicegallery;
     String virtualServiceType;
     String minPrePaymentAmount;
     ArrayList<SearchAppoinment> virtualCallingModes;
@@ -37,6 +39,8 @@ public class SearchAppoinment {
     @SerializedName("provider")
     private SearchAppoinment provider;
 
+    @SerializedName("serviceAvailability")
+    private AppointServiceAvailability appointServiceAvailability;
 
     public int getId() {
         return id;
@@ -265,5 +269,21 @@ public class SearchAppoinment {
 
     public void setConsumerNoteTitle(String consumerNoteTitle) {
         this.consumerNoteTitle = consumerNoteTitle;
+    }
+
+    public AppointServiceAvailability getAppointServiceAvailability() {
+        return appointServiceAvailability;
+    }
+
+    public void setAppointServiceAvailability(AppointServiceAvailability appointServiceAvailability) {
+        this.appointServiceAvailability = appointServiceAvailability;
+    }
+
+    public ArrayList<SearchService> getServicegallery() {
+        return servicegallery;
+    }
+
+    public void setServicegallery(ArrayList<SearchService> servicegallery) {
+        this.servicegallery = servicegallery;
     }
 }

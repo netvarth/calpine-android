@@ -56,6 +56,7 @@ import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.FilterActivity;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.PaymentActivity;
+import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
 import com.jaldeeinc.jaldee.adapter.ActiveAppointmentAdapter;
 import com.jaldeeinc.jaldee.adapter.ActiveCheckInAdapter;
@@ -1968,15 +1969,19 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     @Override
     public void onMethodActiveCallback(String value) {
-        Bundle bundle = new Bundle();
-        SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
-        bundle.putString("uniqueID", value);
-        pfFragment.setArguments(bundle);
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-        // Store the Fragment in stack
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.mainlayout, pfFragment).commit();
+//        Bundle bundle = new Bundle();
+//        SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
+//        bundle.putString("uniqueID", value);
+//        pfFragment.setArguments(bundle);
+//        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+//        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+//        // Store the Fragment in stack
+//        transaction.addToBackStack(null);
+//        transaction.replace(R.id.mainlayout, pfFragment).commit();
+
+        Intent intent= new Intent(mContext, ProviderDetailActivity.class);
+        intent.putExtra("uniqueID",value);
+        startActivity(intent);
     }
 
     @Override

@@ -44,6 +44,9 @@ public class SearchService implements Serializable {
     @SerializedName("provider")
     private SearchService provider;
 
+    @SerializedName("serviceAvailability")
+    private CheckInServiceAvailability checkInServiceAvailability;
+
     public boolean isLivetrack() {
         return livetrack;
     }
@@ -311,5 +314,13 @@ public class SearchService implements Serializable {
 
     public void setConsumerNoteTitle(String consumerNoteTitle) {
         this.consumerNoteTitle = consumerNoteTitle;
+    }
+
+    public CheckInServiceAvailability getCheckInServiceAvailability() {
+        return checkInServiceAvailability;
+    }
+
+    public void setCheckInServiceAvailability(CheckInServiceAvailability checkInServiceAvailability) {
+        this.checkInServiceAvailability = checkInServiceAvailability;
     }
 }

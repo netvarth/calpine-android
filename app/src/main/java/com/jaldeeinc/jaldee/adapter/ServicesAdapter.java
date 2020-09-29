@@ -1,0 +1,478 @@
+package com.jaldeeinc.jaldee.adapter;
+
+import android.content.Context;
+import android.text.Html;
+import android.text.format.DateFormat;
+import android.text.format.DateUtils;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
+
+import com.jaldeeinc.jaldee.Interface.ISelectedService;
+import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.custom.AppointmentServiceDialog;
+import com.jaldeeinc.jaldee.custom.DonationServiceDialog;
+import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
+import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
+import com.jaldeeinc.jaldee.model.NextAvailableQModel;
+import com.jaldeeinc.jaldee.response.DepServiceInfo;
+import com.jaldeeinc.jaldee.response.DepartmentInfo;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
+
+import java.text.Format;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, DepServiceInfo, Parent, Child> {
+
+    Context context;
+    ArrayList<DepartmentInfo> departmentInfoList;
+    private boolean isLoading = false;
+    public static final int VIEW_TYPE_HEADER = 0;
+    private ISelectedService iSelectedService;
+    private ServiceInfoDialog serviceInfoDialog;
+    private AppointmentServiceDialog appointmentServiceDialog;
+    private DonationServiceDialog donationServiceDialog;
+
+
+    public ServicesAdapter(Context context, ArrayList<DepartmentInfo> sectionItemList, boolean isLoading, ISelectedService iSelectedService) {
+        super(context, sectionItemList);
+        this.context = context;
+        this.departmentInfoList = sectionItemList;
+        this.isLoading = isLoading;
+        this.iSelectedService = iSelectedService;
+
+    }
+
+    @Override
+    public Parent onCreateSectionViewHolder(ViewGroup sectionViewGroup, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.parent_layout, sectionViewGroup, false);
+        return new Parent(view);
+    }
+
+    @Override
+    public Child onCreateChildViewHolder(ViewGroup childViewGroup, int viewType) {
+
+        if (!isLoading) {
+            View view = LayoutInflater.from(context).inflate(R.layout.service_card, childViewGroup, false);
+            return new Child(view);
+        } else {
+            View view = LayoutInflater.from(context).inflate(R.layout.shimmer, childViewGroup, false);
+            return new Child(view);
+        }
+    }
+
+    @Override
+    public void onBindSectionViewHolder(Parent sectionViewHolder, int sectionPosition, DepartmentInfo section) {
+
+        String name = section.getDepartmentName();
+        name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+        sectionViewHolder.departmentName.setText(name);
+
+
+    }
+
+    @Override
+    public void onBindChildViewHolder(Child viewHolder, int sectionPosition, int childPosition, DepServiceInfo child) {
+
+        // to set name of service/provider
+        String name = child.getName();
+        name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+        viewHolder.tvName.setText(name);
+
+        // to set Provider image
+        if (child.getType().equalsIgnoreCase(Constants.PROVIDER)) {
+            viewHolder.cvImage.setVisibility(View.VISIBLE);
+            viewHolder.rlCommonLayout.setVisibility(View.GONE);
+            viewHolder.llTime.setVisibility(View.GONE);
+            viewHolder.llDonationRange.setVisibility(View.GONE);
+            viewHolder.llEstwaitTime.setVisibility(View.GONE);
+            viewHolder.tvServiceType.setVisibility(View.GONE);
+            viewHolder.tvMoreInfo.setVisibility(View.GONE);
+            if (child.getProviderImage() != null) {
+
+                PicassoTrustAll.getInstance(context).load(child.getProviderImage()).fit().placeholder(R.drawable.icon_noimage).into(viewHolder.ivImage);
+            } else {
+                viewHolder.ivImage.setImageResource(R.drawable.icon_noimage);
+            }
+        } else {
+            viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
+            viewHolder.llTime.setVisibility(View.VISIBLE);
+            viewHolder.llDonationRange.setVisibility(View.VISIBLE);
+            viewHolder.llEstwaitTime.setVisibility(View.VISIBLE);
+            viewHolder.tvServiceType.setVisibility(View.VISIBLE);
+            viewHolder.tvMoreInfo.setVisibility(View.VISIBLE);
+            viewHolder.cvImage.setVisibility(View.GONE);
+        }
+
+        // to set next available time if available
+        if (child.getNextAvailableDate() != null && child.getNextAvailableTime() != null) {
+
+            if (child.getType() != null && child.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
+                viewHolder.llDonationRange.setVisibility(View.GONE);
+                viewHolder.tvPeopleAhead.setVisibility(View.GONE);
+                viewHolder.llTime.setVisibility(View.VISIBLE);
+                viewHolder.llEstwaitTime.setVisibility(View.GONE);
+                String date = child.getNextAvailableDate();
+                String time = child.getNextAvailableTime();
+                viewHolder.tvNextAvailableTime.setText(convertDate(date) + "," + "  " + convertTime(time));
+            } else {
+                viewHolder.llTime.setVisibility(View.GONE);
+            }
+        }
+
+        // to set people waiting in line if available
+
+        if (child.getType() != null && child.getType().equalsIgnoreCase(Constants.CHECKIN)) {
+
+            if (child.isAvailability()) {
+                viewHolder.tvPeopleAhead.setVisibility(View.VISIBLE);
+                viewHolder.llDonationRange.setVisibility(View.GONE);
+                int number = child.getPeopleInLine();
+                if (number >= 1) {
+                    viewHolder.tvPeopleAhead.setText(child.getPeopleInLine() + "  people waiting in line");
+                } else {
+                    viewHolder.tvPeopleAhead.setText("Be the first in line");
+                }
+            } else {
+
+                viewHolder.llDonationRange.setVisibility(View.GONE);
+                viewHolder.tvPeopleAhead.setVisibility(View.GONE);
+                viewHolder.llEstwaitTime.setVisibility(View.GONE);
+            }
+
+        } else {
+            viewHolder.llDonationRange.setVisibility(View.GONE);
+            viewHolder.tvPeopleAhead.setVisibility(View.GONE);
+            viewHolder.llEstwaitTime.setVisibility(View.GONE);
+        }
+
+
+        if (child.getType().equalsIgnoreCase(Constants.CHECKIN)) {
+            if (child.getNextAvailableDate() != null) {
+                // to set est waitTime if available
+                viewHolder.llEstwaitTime.setVisibility(View.VISIBLE);
+                viewHolder.llDonationRange.setVisibility(View.GONE);
+                viewHolder.llTime.setVisibility(View.GONE);
+                String time = getWaitingTime(child.getNextAvailableDate(), child.getNextAvailableTime(), child.getEstTime());
+                viewHolder.tvEstWaitTime.setText(time.split("-")[1]);
+                viewHolder.tvTimeHint.setText(time.split("-")[0]);
+
+            } else {
+                viewHolder.llEstwaitTime.setVisibility(View.GONE);
+            }
+        }
+
+        // to set Donation range if available
+        if (child.getType() != null && child.getType().equalsIgnoreCase(Constants.DONATION)) {
+
+            if (child.getMinDonationAmount() != null && child.getMaxDonationAmount() != null) {
+
+                if (!child.getMinDonationAmount().equalsIgnoreCase("") && !child.getMaxDonationAmount().equalsIgnoreCase("")) {
+                    viewHolder.llDonationRange.setVisibility(View.VISIBLE);
+                    viewHolder.llTime.setVisibility(View.GONE);
+                    viewHolder.llEstwaitTime.setVisibility(View.GONE);
+                    viewHolder.tvMinAmount.setText(child.getMinDonationAmount());
+                    viewHolder.tvMaxAmount.setText(child.getMaxDonationAmount());
+                } else {
+                    viewHolder.llDonationRange.setVisibility(View.GONE);
+                }
+            } else {
+                viewHolder.llDonationRange.setVisibility(View.GONE);
+                viewHolder.llTime.setVisibility(View.GONE);
+                viewHolder.llEstwaitTime.setVisibility(View.GONE);
+                viewHolder.tvPeopleAhead.setVisibility(View.GONE);
+            }
+        }
+
+        // to set Service type
+        if (child.getType() != null && child.getType().equalsIgnoreCase(Constants.CHECKIN)) {
+
+            if (child.getChecinServiceInfo() != null) {
+
+                viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
+                viewHolder.llDonationRange.setVisibility(View.GONE);
+                viewHolder.tvServiceType.setVisibility(View.VISIBLE);
+                if (child.getChecinServiceInfo().getCheckInServiceAvailability().isShowToken()) {
+                    viewHolder.tvServiceType.setText("Get Token");
+                } else {
+                    viewHolder.tvServiceType.setText("Check In");
+                }
+                viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
+                viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
+            }
+
+        } else if (child.getType() != null && child.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
+
+            viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
+            viewHolder.llDonationRange.setVisibility(View.GONE);
+            viewHolder.tvServiceType.setText("Appointments");
+            viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
+            viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
+
+
+        } else if (child.getType() != null && child.getType().equalsIgnoreCase(Constants.DONATION)) {
+
+            viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
+            viewHolder.tvServiceType.setText("Donation");
+            viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.donation_theme));
+            viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.donation_theme));
+
+        } else if (child.getType() != null && child.getType().equalsIgnoreCase(Constants.PROVIDER)) {
+
+            viewHolder.rlCommonLayout.setVisibility(View.GONE);
+            viewHolder.llDonationRange.setVisibility(View.GONE);
+            viewHolder.tvPeopleAhead.setVisibility(View.GONE);
+            viewHolder.llEstwaitTime.setVisibility(View.GONE);
+            viewHolder.llTime.setVisibility(View.GONE);
+
+        }
+
+        // to set teleservice icon
+        if (child.getServiceMode().equalsIgnoreCase("virtualService")) {
+            viewHolder.ivTeleService.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.ivTeleService.setVisibility(View.GONE);
+        }
+
+        if (child.getType() != null) {
+
+            if (child.getType().equalsIgnoreCase(Constants.CHECKIN) || child.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
+
+                if (child.getServiceMode() != null && child.getServiceMode().equalsIgnoreCase("virtualService")) {
+
+                    if (child.getCallingMode() != null) {
+                        viewHolder.ivTeleService.setVisibility(View.VISIBLE);
+                        if (child.getCallingMode().equalsIgnoreCase("Zoom")) {
+
+                            viewHolder.ivTeleService.setImageResource(R.drawable.zoom);
+
+                        } else if (child.getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+
+                            viewHolder.ivTeleService.setImageResource(R.drawable.googlemeet);
+
+                        } else if (child.getCallingMode().equalsIgnoreCase("WhatsApp")) {
+
+                            viewHolder.ivTeleService.setImageResource(R.drawable.whatsapp_icon);
+
+                        } else if (child.getCallingMode().equalsIgnoreCase("phone")) {
+
+                            viewHolder.ivTeleService.setImageResource(R.drawable.phone_icon);
+
+                        }
+                    }
+
+                } else {
+
+                    viewHolder.ivTeleService.setVisibility(View.GONE);
+                }
+            } else {
+                viewHolder.ivTeleService.setVisibility(View.GONE);
+            }
+        }
+
+        viewHolder.cvCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (child.isAvailability()) {
+
+                    if (child.getType() != null) {
+
+                        if (child.getType().equalsIgnoreCase(Constants.CHECKIN)) {
+
+                            if (child.getChecinServiceInfo() != null) {
+                                iSelectedService.onCheckInSelected(child.getChecinServiceInfo());
+                            }
+
+                        } else if (child.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
+
+                            if (child.getAppointmentServiceInfo() != null) {
+                                iSelectedService.onAppointmentSelected(child.getAppointmentServiceInfo());
+                            }
+                        } else if (child.getType().equalsIgnoreCase(Constants.PROVIDER)) {
+
+                            if (child.getProviderInfo() != null) {
+                                iSelectedService.onProviderSelected(child.getProviderInfo());
+                            }
+                        } else if (child.getType().equalsIgnoreCase(Constants.DONATION)) {
+
+                            if (child.getDonationServiceInfo() != null) {
+                                iSelectedService.onDonationSelected(child.getDonationServiceInfo());
+                            }
+                        }
+                    }
+                } else {
+
+                    if (child.getType() != null) {
+
+                        if (child.getType().equalsIgnoreCase(Constants.CHECKIN) || child.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
+
+                            DynamicToast.make(context, "Selected Service is not available at the moment", AppCompatResources.getDrawable(
+                                    context, R.drawable.ic_info_black),
+                                    ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+            }
+        });
+
+        viewHolder.tvMoreInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (child.getType() != null) {
+
+                    if (child.getType().equalsIgnoreCase(Constants.CHECKIN)) {
+
+                        if (child.getChecinServiceInfo() != null) {
+                            serviceInfoDialog = new ServiceInfoDialog(context, child.getChecinServiceInfo());
+                            serviceInfoDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+                            serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            serviceInfoDialog.show();
+                            DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            serviceInfoDialog.setCancelable(true);
+                            serviceInfoDialog.getWindow().setGravity(Gravity.BOTTOM);
+                            serviceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        }
+                    } else if (child.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
+
+                        if (child.getAppointmentServiceInfo() != null) {
+                            appointmentServiceDialog = new AppointmentServiceDialog(context, child.getAppointmentServiceInfo());
+                            appointmentServiceDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+                            appointmentServiceDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            appointmentServiceDialog.show();
+                            DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            appointmentServiceDialog.setCancelable(true);
+                            appointmentServiceDialog.getWindow().setGravity(Gravity.BOTTOM);
+                            appointmentServiceDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        }
+                    } else if (child.getType().equalsIgnoreCase(Constants.DONATION)) {
+
+                        if (child.getDonationServiceInfo() != null) {
+                            donationServiceDialog = new DonationServiceDialog(context, child.getDonationServiceInfo());
+                            donationServiceDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+                            donationServiceDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            donationServiceDialog.show();
+                            DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            donationServiceDialog.setCancelable(true);
+                            donationServiceDialog.getWindow().setGravity(Gravity.BOTTOM);
+                            donationServiceDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        }
+                    }
+                }
+
+            }
+        });
+
+
+    }
+
+
+    public static String getWaitingTime(String nextAvailableDate, String nextAvailableTime, String estTime) {
+        String firstWord = "";
+        String secondWord = "";
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date c = Calendar.getInstance().getTime();
+        String formattedDate = df.format(c);
+        System.out.println("Current time => " + formattedDate);
+        Date date1 = null, date2 = null;
+        try {
+            date1 = df.parse(formattedDate);
+            if (nextAvailableDate != null)
+                date2 = df.parse(nextAvailableDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String type = null;
+        if (date2 != null && date1.compareTo(date2) < 0) {
+            type = "future";
+        }
+        if (nextAvailableTime != null) {
+            firstWord = "Next Available Time ";
+            if (type != null) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = null;
+                try {
+                    date = format.parse(nextAvailableDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String day = (String) DateFormat.format("dd", date);
+                String monthString = (String) DateFormat.format("MMM", date);
+//                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+//                        "fonts/Montserrat_Bold.otf");
+                secondWord = monthString + " " + day + ", " + nextAvailableTime;
+//                String outputDateStr = outputFormat.format(datechange);
+//                String yourDate = Config.getFormatedDate(outputDateStr);
+//                secondWord = yourDate + ", " + queue.getServiceTime();
+            } else {
+                secondWord = "Today, " + nextAvailableTime;
+            }
+        } else {
+            firstWord = "Est wait time";
+            secondWord = Config.getTimeinHourMinutes(Integer.parseInt(estTime));
+        }
+        // Spannable spannable = new SpannableString(firstWord + secondWord);
+//        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),"fonts/Montserrat_Bold.otf");
+//        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return firstWord + "-" + secondWord;
+    }
+
+
+    public static String convertDate(String date) {
+
+        String finalDate = "";
+        Date selectedDate = null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            selectedDate = format.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (DateUtils.isToday(selectedDate.getTime())) {
+            finalDate = "Today";
+        } else {
+            Format f = new SimpleDateFormat("MMM dd");
+            finalDate = f.format(selectedDate);
+        }
+
+        return finalDate;
+    }
+
+    public static String convertTime(String time) {
+
+        String formattedTime = "";
+        try {
+            final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            final Date dateObj = sdf.parse(time);
+            time = new SimpleDateFormat("hh:mm aa").format(dateObj);
+            formattedTime = time.replace("am", "AM").replace("pm", "PM");
+
+        } catch (final ParseException e) {
+            e.printStackTrace();
+        }
+        return formattedTime;
+    }
+
+
+}

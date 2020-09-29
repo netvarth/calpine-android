@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -614,11 +615,11 @@
                                     android:id="@+id/img_arrow"
                                     android:layout_width="@dimen/dimen_20dp"
                                     android:layout_height="@dimen/dimen_20dp"
-                                    android:tint="@color/title_grey_light"
                                     android:layout_gravity="center"
                                     android:layout_marginStart="@dimen/dimen_8dp"
                                     android:layout_marginRight="@dimen/dimen_5dp"
-                                    android:src="@drawable/ic_info_black" />
+                                    android:src="@drawable/ic_info_black"
+                                    card_view:tint="@color/title_grey_light" />
 
                                 <TextView
                                     android:textStyle="bold"

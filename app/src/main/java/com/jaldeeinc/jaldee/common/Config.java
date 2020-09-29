@@ -177,7 +177,7 @@ public class Config {
     public static String getTimeinHourMinutes(int minutes) {
         String hour_minutes = "";
         if (minutes == 0) {
-            return "0 minute";
+            return "0 minutes";
         }
         int hours = minutes / 60; //since both are ints, you get an int
         int mins = minutes % 60;

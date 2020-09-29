@@ -13,6 +13,8 @@ import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
+import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 
 import org.json.JSONArray;
@@ -212,7 +214,7 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
     }
 
     public class VirtualFieldAdapterViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_head, tv_value;
+        CustomTextViewMedium tv_head, tv_value;
 
 
         public VirtualFieldAdapterViewHolder(View view) {

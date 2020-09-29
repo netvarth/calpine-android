@@ -721,7 +721,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     }
 
     @Override
-    public void onMethodCallback(String value, String claimable) {
+    public void onMethodCallback(String value, String claimable, String location_id1) {
 
     }
 

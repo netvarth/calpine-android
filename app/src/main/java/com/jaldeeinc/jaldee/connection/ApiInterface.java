@@ -53,6 +53,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -95,6 +96,10 @@ public interface ApiInterface {
     @Headers({"Accept: application/json","User-Agent: android"})
     @POST("consumer/login")
     Call<LoginResponse> LoginResponse(@Body RequestBody jsonObj);
+
+    @Headers({"Accept: application/json","User-Agent: android"})
+    @POST("consumer/login")
+    Single<LoginResponse> login(@Body RequestBody jsonObj);
 
 
     @POST("consumer/login/reset/{loginId}")
@@ -467,6 +472,10 @@ public interface ApiInterface {
     Call<SearchVirtualFields> getVirtualFields(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
 
+    @GET("{consumerID}/{userId}/providerVirtualFields.json")
+    Call<SearchVirtualFields> getProviderVirtualFields(@Path("consumerID") int consumerid, @Path("userId") int userId, @Query("modifiedDate") String mDate);
+
+
     @GET("{consumerID}/coupon.json")
     Call<ArrayList<CoupnResponse>> getCoupanList(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
@@ -494,6 +503,36 @@ public interface ApiInterface {
 
     @GET("consumer/appointment/schedule/date/{date}/location/{location}/service/{service}")
     Call<ArrayList<SlotsData>> getSlotsOnDate(@Path("date") String date, @Path("location") int location, @Path("service") int service, @Query("account") int accountId);
+
+    //RxJava calls
+
+    @GET("{uniqueId}/services.json")
+    Observable<ArrayList<SearchDepartmentServices>> getDeptCheckInServices(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
+
+    @GET("consumer/waitlist/services/{id}")
+    Observable<ArrayList<SearchService>> getCheckInServices(@Path("id") int id);
+
+    @GET("{consumerID}/apptServices.json")
+    Observable<ArrayList<SearchAppointmentDepartmentServices>> getDeptAppointServices(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+
+    @GET("consumer/appointment/service/{id}")
+    Observable<ArrayList<SearchAppoinment>> getAppointmentServices(@Path("id") int id);
+
+    @GET("{uniqueId}/donationServices.json")
+    Observable<ArrayList<SearchDonation>> getDonationServices(@Path("uniqueId") int consumerid, @Query("modifiedDate") String mDate);
+
+    @GET("{uniqueId}/departmentProviders.json")
+    Observable<ArrayList<SearchDepartmentServices>> getDepartmentProviders(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
+
+    // to get only users when there are no departments
+    @GET("{uniqueId}/departmentProviders.json")
+    Observable<ArrayList<ProviderUserModel>> getProviders(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
+
+    @GET("provider/appointment/schedule/nextAvailableSchedule/{id}")
+    Observable<ArrayList<ScheduleList>> getAppointmentSchedule(@Path("id") String id);
+
+    @GET("provider/waitlist/queues/waitingTime/{id}")
+    Observable<ArrayList<QueueList>> getCheckInsSchedule(@Path("id") String id);
 
 
 }

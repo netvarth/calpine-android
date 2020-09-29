@@ -86,12 +86,12 @@ public class ResizableCustomView {
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
 
                         tv.invalidate();
-                        doResizeTextView(context,tv, 3, "..more", true);
+                        doResizeTextView(context,tv, 3, "View more", true);
                     }
 
                 }
             }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length(), 0);
-            ssb.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.title_consu)), str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ssb.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.location_theme)), str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         return ssb;
 

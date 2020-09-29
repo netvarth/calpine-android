@@ -24,7 +24,7 @@
             android:paddingLeft="@dimen/default_padding"
             android:src="@drawable/icon_back" />
 
-        <TextView
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
             android:id="@+id/txt_toolbartitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
              android:layout_marginTop="@dimen/default_padding"
              android:layout_height="50dp" />-->
 
-        <TextView
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
             android:id="@+id/txtservice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
             android:textSize="@dimen/txtsize_subtitle"
             android:textStyle="bold" />
 
-        <TextView
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
             android:id="@+id/txtdescVal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -128,12 +128,12 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginStart="10dp"
-                        android:tint="@color/dark_blue"
-                        android:src="@drawable/indian_currency">
+                        android:src="@drawable/indian_currency"
+                        app:tint="@color/dark_blue">
 
                     </ImageView>
 
-                    <TextView
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                         android:id="@+id/txtprice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -148,7 +148,7 @@
 
                 </LinearLayout>
 
-                <TextView
+                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                     android:id="@+id/tv_isTax"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -158,7 +158,7 @@
                     android:layout_marginStart="@dimen/dimen_5dp"
                     android:layout_gravity="end">
 
-                </TextView>
+                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
 
             </LinearLayout>
@@ -194,7 +194,7 @@
 
                     </ImageView>
 
-                    <TextView
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                         android:id="@+id/txtduration"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -227,7 +227,7 @@
                 android:layout_weight="0.5"
                 android:orientation="vertical">
 
-                <TextView
+                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Min Amount "
@@ -236,7 +236,7 @@
 
                     android:textStyle="bold" />
 
-                <TextView
+                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                     android:id="@+id/txtminValue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -256,7 +256,7 @@
                 android:layout_weight="0.5"
                 android:orientation="vertical">
 
-                <TextView
+                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -265,7 +265,7 @@
                     android:textSize="@dimen/txtsize_hint"
                     android:textStyle="bold" />
 
-                <TextView
+                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                     android:id="@+id/txtmaxvalue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -287,7 +287,7 @@
             android:layout_marginTop="@dimen/dimen_10dp"
             android:orientation="vertical">
 
-            <TextView
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Multiples "
@@ -295,7 +295,7 @@
                 android:textSize="@dimen/txtsize_hint"
                 android:textStyle="bold" />
 
-            <TextView
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                 android:id="@+id/txtmultiples"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -317,14 +317,14 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <TextView
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Prepayment Amount"
                 android:textColor="@color/opaque_title_grey"
                 android:textSize="@dimen/txtsize_hint" />
 
-            <TextView
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                 android:id="@+id/txtpreVal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

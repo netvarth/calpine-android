@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cv_location"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/padding3"
+    android:layout_marginStart="@dimen/padding5"
+    android:layout_marginEnd="@dimen/padding5"
+    android:layout_marginTop="@dimen/padding5"
+    android:layout_marginBottom="@dimen/padding5"
+    android:padding="@dimen/padding3">
+
+    <LinearLayout
+        android:id="@+id/ll_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding3"
+        android:layout_marginTop="@dimen/padding3"
+        android:layout_marginBottom="@dimen/padding3">
+
+        <ImageView
+            android:id="@+id/iv_locationIcon"
+            android:layout_width="@dimen/padding25"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/new_location"
+            app:tint="@color/location_theme">
+
+        </ImageView>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            android:id="@+id/tv_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding3"
+            android:layout_marginEnd="@dimen/padding3"
+            android:text=""
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textColor="@color/title_color"
+            android:textSize="@dimen/txtsize_12">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
+
+
