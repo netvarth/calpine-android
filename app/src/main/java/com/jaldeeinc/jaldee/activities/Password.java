@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -458,7 +459,7 @@ public class Password extends AppCompatActivity {
         Config.logV("JSON--------------" + jsonObj);
         final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<LoginResponse> call = apiService.LoginResponse(body);
+        Call<LoginResponse> call = apiService.LoginResponse(getDeviceName(),body);
 
         call.enqueue(new Callback<LoginResponse>() {
             @Override
@@ -534,5 +535,13 @@ public class Password extends AppCompatActivity {
             }
         });
 
+    }
+    public static String getDeviceName() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.startsWith(manufacturer)) {
+            return model;
+        }
+        return manufacturer + " " + model;
     }
 }

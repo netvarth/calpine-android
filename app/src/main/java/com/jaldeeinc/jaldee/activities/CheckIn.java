@@ -903,13 +903,13 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     isPrepayment = ((SearchService) mSpinnerService.getSelectedItem()).isPrePayment();
                     Config.logV("Payment------------" + isPrepayment);
                     if (isPrepayment) {
-//                        if(MultiplefamilyList.size()>1){
-//                            sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
-//                            totalAmountPay = String.valueOf(Double.parseDouble(sAmountPay) * MultiplefamilyList.size());
-//                        }
-//                        else{
+                        if(MultiplefamilyList.size()>1){
+                            sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
+                            totalAmountPay = String.valueOf(Double.parseDouble(sAmountPay) * MultiplefamilyList.size());
+                        }
+                        else{
                         sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
-                        //     }
+                             }
                         Config.logV("Payment----sAmountPay--------" + sAmountPay);
                         APIPayment(modifyAccountID);
                     } else {
@@ -1540,8 +1540,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
     @Override
     public void mailUpdated() {
-
-        ApiGetProfileDetail();
+        String email = SharedPreference.getInstance(mContext).getStringValue("email","");
+        tvEmail.setText(email);
+      //  ApiGetProfileDetail();
     }
 
 
@@ -1817,12 +1818,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             txtprepayamount.setTypeface(tyface);
                             String firstWord = "Prepayment Amount: ";
                             String secondWord;
-//                            if(MultiplefamilyList.size()>1){
-//                                 secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
-//                            }
-//                            else{
+                            if(MultiplefamilyList.size()>1){
+                                 secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
+                            }
+                            else{
                             secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(sAmountPay));
-                            //}
+                            }
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -3317,9 +3318,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     Config.logV("Response--code-------------------------" + response.body());
-//                //   if(!isPrepayment){
+                    if(!isPrepayment){
                     MultiplefamilyList.clear();
-                    //   }
+                       }
                     if (response.code() == 200) {
                         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "true");
                         txt_message = "";
@@ -3370,12 +3371,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                     txtprepayment.setText("Prepayment Amount ");
 
 //                                    DecimalFormat format = new DecimalFormat("0.00");
-//                                    if(MultiplefamilyList.size()>1){
-//                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(totalAmountPay))));
-//                                    }
-//                                    else {
+                                    if(MultiplefamilyList.size()>1){
+                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(totalAmountPay))));
+                                    }
+                                    else {
                                     txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(sAmountPay))));
-                                    //    }
+                                       }
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     txtamt.setTypeface(tyface1);
@@ -3386,7 +3387,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                             // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
 
                                             Config.logV("Account ID --------------" + modifyAccountID);
-                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                            if(MultiplefamilyList.size()>1){
+                                                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, totalAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                            }
+                                            else {
+                                                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                            }
                                             dialogPayment.dismiss();
                                             if (imagePathList.size() > 0) {
                                                 ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialogPayment);
@@ -3402,7 +3408,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                                             Config.logV("Account ID --------Paytm------" + modifyAccountID);
                                             PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
-                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID);
+                                            if(MultiplefamilyList.size()>0){
+                                                payment.ApiGenerateHashPaytm(value, totalAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID);
+                                            }
+                                            else {
+                                                payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID);
+                                            }
                                             //payment.generateCheckSum(sAmountPay);
                                             dialogPayment.dismiss();
                                             //ApiGenerateHash(value, sAmountPay, accountID);
@@ -3423,7 +3434,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                 ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialogPayment);
                             }
 
-                            getConfirmationDetails();
+                            if(!livetrack) {
+                                getConfirmationDetails();
+                            }
 //                            Toast.makeText(mContext, toastMessage, Toast.LENGTH_LONG).show();
 //                            finish();
                         }
@@ -3606,20 +3619,20 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         MultiplefamilyList.clear();
         MultiplefamilyList.addAll(familyList);
         recycle_family.setVisibility(View.VISIBLE);
-//        if(isPrepayment) {
-//            totalAmountPay = String.valueOf(Double.parseDouble(sAmountPay) * MultiplefamilyList.size());
-//            LservicePrepay.setVisibility(View.VISIBLE);
-////        Typeface tyface = Typeface.createFromAsset(getAssets(),
-////                "fonts/Montserrat_Bold.otf");
-////        txtprepay.setTypeface(tyface);
-////        txtprepayamount.setTypeface(tyface);
-//            String firstWord = "Prepayment Amount: ";
-//            String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
-//            Spannable spannable = new SpannableString(firstWord + secondWord);
-//            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
-//                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            txtprepayamount.setText(spannable);
-//        }
+        if(isPrepayment) {
+            totalAmountPay = String.valueOf(Double.parseDouble(sAmountPay) * MultiplefamilyList.size());
+            LservicePrepay.setVisibility(View.VISIBLE);
+//        Typeface tyface = Typeface.createFromAsset(getAssets(),
+//                "fonts/Montserrat_Bold.otf");
+//        txtprepay.setTypeface(tyface);
+//        txtprepayamount.setTypeface(tyface);
+            String firstWord = "Prepayment Amount: ";
+            String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
+            Spannable spannable = new SpannableString(firstWord + secondWord);
+            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
+                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            txtprepayamount.setText(spannable);
+        }
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         recycle_family.setLayoutManager(mLayoutManager);
         MultipleFamilyMemberAdapter mFamilyAdpater = new MultipleFamilyMemberAdapter(familyList, mContext, mActivity);

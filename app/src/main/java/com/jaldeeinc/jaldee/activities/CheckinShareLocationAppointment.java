@@ -36,6 +36,7 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.ShareLocation;
 import com.jaldeeinc.jaldee.service.LocationUpdatesService;
@@ -90,7 +91,7 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
     ShareLocation shareLocation;
     View view1, view3;
     Button btn_send, btn_cancel;
-    ActiveCheckIn a;
+    ActiveAppointment a;
     TextView drivingIcon, walkingIcon;
     boolean isCar = true;
     boolean isWalk = false;
@@ -237,11 +238,11 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
             waitlistPhonenumber = extras.getString("waitlistPhonenumber");
             uuid = extras.getString("uuid");
             accountID = extras.getString("accountID");
-            title = extras.getString("title");
+         //   title = extras.getString("title");
             terminology = extras.getString("terminology");
             calcMode = extras.getString("calcMode");
-            queueStartTime = extras.getString("queueStartTime");
-            queueEndTime = extras.getString("queueEndTime");
+//            queueStartTime = extras.getString("queueStartTime");
+//            queueEndTime = extras.getString("queueEndTime");
             jaldeeDistance = extras.getString("jaldeeDistance");
             from = extras.getString("from");
             Log.i("calcmode",calcMode);
@@ -250,7 +251,7 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
 
 
         modeLabel.setVisibility(View.VISIBLE);
-        ApiActiveCheckIn();
+        ApiActiveAppointment();
         if(from!=null && from.equalsIgnoreCase("appt") ){
             checkinMessage.setText("Your appointment is successfull !!");
             checkinMessage.setVisibility(View.VISIBLE);
@@ -280,14 +281,31 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
          if(shareSwitch.isChecked()){
                 UpdateShareLiveLocation();
                 mService.removeLocationUpdates();
-                finish();}
+             if (a.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
+                 finish();
+             }
+             else {
+                 Intent checkin = new Intent(CheckinShareLocationAppointment.this, AppointmentConfirmation.class);
+                 checkin.putExtra("BookingDetails", a);
+                 checkin.putExtra("terminology", terminology);
+                 startActivity(checkin);
+             }
+         }
          else{
              shareSwitch.setChecked(false);
              locationStatus = false;
              UpdateShareLiveLocation();
              Toast.makeText(CheckinShareLocationAppointment.this, "Live tracking has been disabled", Toast.LENGTH_SHORT).show();
              mService.removeLocationUpdates();
-             finish();
+             if (a.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
+                 finish();
+             }
+             else {
+                 Intent checkin = new Intent(CheckinShareLocationAppointment.this, AppointmentConfirmation.class);
+                 checkin.putExtra("BookingDetails", a);
+                 checkin.putExtra("terminology", terminology);
+                 startActivity(checkin);
+             }
          }
             }
         });
@@ -297,14 +315,32 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                 if(shareSwitch.isChecked()){
                     UpdateShareLiveLocation();
                     mService.removeLocationUpdates();
-                    finish();}
+                    if (a.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
+                        finish();
+                    }
+                    else {
+                        Intent checkin = new Intent(CheckinShareLocationAppointment.this, AppointmentConfirmation.class);
+                        checkin.putExtra("BookingDetails", a);
+                        checkin.putExtra("terminology", terminology);
+                        startActivity(checkin);
+                    }
+                }
                 else{
                 shareSwitch.setChecked(false);
                 locationStatus = false;
                 UpdateShareLiveLocation();
                 Toast.makeText(CheckinShareLocationAppointment.this, "Live tracking has been disabled", Toast.LENGTH_SHORT).show();
                 mService.removeLocationUpdates();
-                finish();}
+                    if (a.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
+                        finish();
+                    }
+                    else {
+                        Intent checkin = new Intent(CheckinShareLocationAppointment.this, AppointmentConfirmation.class);
+                        checkin.putExtra("BookingDetails", a);
+                        checkin.putExtra("terminology", terminology);
+                        startActivity(checkin);
+                    }
+                }
             }
         });
         if(jaldeeDistance!=null){
@@ -496,13 +532,13 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
 
 
 
-    public void ApiActiveCheckIn() {
+    public void ApiActiveAppointment() {
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-        Call<ActiveCheckIn> call = apiService.getActiveAppointmentUUID(uuid,accountID);
-        call.enqueue(new Callback<ActiveCheckIn>() {
+        Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(uuid,accountID);
+        call.enqueue(new Callback<ActiveAppointment>() {
             @Override
-            public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
+            public void onResponse(Call<ActiveAppointment> call, Response<ActiveAppointment> response) {
                 try {
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
@@ -525,7 +561,7 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
 
                         checkinMessage.setText("Your appointment for " + response.body().getService().getName() + " with "+/* "( " + queueStartTime + "-"+queueEndTime+ " )" +*/ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
 
-                        if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+                        if (a.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
                             Laboutus.setVisibility(View.GONE);
                             checkinMessage.setVisibility(View.GONE);
                         } else {
@@ -547,7 +583,7 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                 }
             }
             @Override
-            public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
+            public void onFailure(Call<ActiveAppointment> call, Throwable t) {
             }
         });
     }
@@ -578,12 +614,6 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                         transportLayout.setVisibility(View.VISIBLE);
                         btn_send.setVisibility(View.VISIBLE);
                         btn_cancel.setVisibility(View.VISIBLE);
-
-
-
-
-
-
                         view3.setVisibility(View.VISIBLE);
                         firstCall = false;
                         if(response.body().getJaldeeDistanceTime()!= null) {
@@ -643,12 +673,6 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                         transportLayout.setVisibility(View.VISIBLE);
                         btn_send.setVisibility(View.VISIBLE);
                         btn_cancel.setVisibility(View.VISIBLE);
-
-
-
-
-
-
                         view3.setVisibility(View.VISIBLE);
                         if (response.body().getJaldeeDistanceTime() != null) {
 

@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 
 import java.text.ParseException;
@@ -20,7 +21,7 @@ import java.util.Date;
 
 public class AppointmentConfirmation extends AppCompatActivity {
 
-    ActiveCheckIn activeCheckInInfo = new ActiveCheckIn();
+    ActiveAppointment activeCheckInInfo = new ActiveAppointment();
     private TextView tvProviderName, tvServiceName, tvTimeWindow, tvProvider, tvConfirmationNumber, tvStatusLink, tvPreInfoTitle, tvPreInfo, tvPostInfo, tvPostInfoTitle, tvTerm;
     private LinearLayout llProvider;
     CardView cvOk;
@@ -41,7 +42,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
 
-            activeCheckInInfo = (ActiveCheckIn) extras.getSerializable("BookingDetails");
+            activeCheckInInfo = (ActiveAppointment) extras.getSerializable("BookingDetails");
             terminology = extras.getString("terminology");
         }
 

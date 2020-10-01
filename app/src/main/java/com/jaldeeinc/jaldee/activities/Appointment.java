@@ -82,6 +82,7 @@ import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
+import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AppointmentSchedule;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
@@ -316,10 +317,13 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     private LinearLayout llEmail, llNoServices;
     private TextView tvErrorMail;
     ArrayList<SearchDepartment> availableDepartments = new ArrayList<>();
-    ActiveCheckIn activeAppointment = new ActiveCheckIn();
+    ActiveAppointment activeAppointment = new ActiveAppointment();
     private IPaymentResponse paymentResponse;
     private LinearLayout llPreInfo;
     private TextView tvPreInfoTitle, tvPreInfoText;
+    TextView tv_user;
+    SearchTerminology mSearchTerminology;
+    String availableDate;
 
 
     @Override
@@ -401,6 +405,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         tvPreInfoText = findViewById(R.id.tv_preInfo);
         tvPreInfoTitle = findViewById(R.id.tv_preInfoTitle);
         llPreInfo = findViewById(R.id.ll_preinfo);
+        tv_user = findViewById(R.id.checkedinfor);
 
         // to Empty previous selected date in pref's
         SharedPreference.getInstance(Appointment.this).setValue("selectedDate", "");
@@ -860,7 +865,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             }
         });
 
-
         Date selectedDate = null;
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -872,9 +876,11 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             // to set date with day of week if default date is not current date
             if (!DateUtils.isToday(selectedDate.getTime())) {
                 final SimpleDateFormat sdfs = new SimpleDateFormat("dd-MM-yyyy");
+                final SimpleDateFormat sdff = new SimpleDateFormat("yyyy-MM-dd");
                 SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
                 String dayOfTheWeek = sdf.format(selectedDate); // to get Day of week based on Date
-                String availDate = sdfs.format(selectedDate);
+                String  availDate = sdfs.format(selectedDate);
+                availableDate = sdff.format(selectedDate);
 
                 txtWaitTime.setText(dayOfTheWeek + "\n" + availDate);
             } else {
@@ -1630,6 +1636,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             selectDate = extras.getString("selectedDate");
         }
 
+
     }
 
     private void updateSelectedDate(TextView tvSelecteDate, int year, int monthOfYear, int dayOfMonth) {
@@ -1642,7 +1649,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             String dayOfWeek = simpledateformat.format(date);
 
             String sMonth = "";
-            if (monthOfYear < 10) {
+            if (monthOfYear < 9) {
                 sMonth = "0" + String.valueOf(monthOfYear + 1);
             } else {
                 sMonth = String.valueOf(monthOfYear + 1);
@@ -4457,7 +4464,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     }
 
 
-    SearchTerminology mSearchTerminology;
+
 
     private void ApiSearchViewTerminology(String muniqueID) {
 
@@ -4493,6 +4500,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     if (response.code() == 200) {
 
                         mSearchTerminology = response.body();
+                        if(mSearchTerminology!=null && mSearchTerminology.getCustomer()!=null) {
+                            String user = mSearchTerminology.getCustomer().substring(0, 1).toUpperCase() + mSearchTerminology.getCustomer().substring(1).toLowerCase();
+                            tv_user.setText(user);
+                        }
                     }
 
 
@@ -4686,7 +4697,12 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     }
                 }
             } else {
+                if(!pickedDate.equalsIgnoreCase("")){
                 queueobj.put("appmtDate", pickedDate);
+                }
+                else {
+                    queueobj.put("appmtDate",availableDate);
+                }
                 sjsonobj.put("id", selectedShcdId);
             }
             queueobj.put("consumerNote", txt_addnote);
@@ -4935,7 +4951,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                 ApiCommunicateAppointment(value, String.valueOf(accountID), txt_addnote, dialog);
                             }
 
-                            getConfirmationDetails();
+                            if(!livetrack.equalsIgnoreCase("true")) {
+                                getConfirmationDetails();
+                            }
 
 //                            Toast.makeText(mContext, toastMessage, Toast.LENGTH_LONG).show();
 //                            finish();
@@ -4947,11 +4965,13 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
                             checkinShareLocations.putExtra("uuid", value);
                             checkinShareLocations.putExtra("accountID", modifyAccountID);
-                            checkinShareLocations.putExtra("title", title);
+                          //  checkinShareLocations.putExtra("title", title);
                             checkinShareLocations.putExtra("terminology", terminology);
                             checkinShareLocations.putExtra("calcMode", calcMode);
-                            checkinShareLocations.putExtra("queueStartTime", schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).getsTime());
-                            checkinShareLocations.putExtra("queueEndTime", schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).geteTime());
+//                            if(schedResponse.size()!=0){
+//                            checkinShareLocations.putExtra("queueStartTime", schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).getsTime());
+//                            checkinShareLocations.putExtra("queueEndTime", schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).geteTime());
+//                            }
                             checkinShareLocations.putExtra("from", "appt");
                             startActivity(checkinShareLocations);
                         }
@@ -5023,10 +5043,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-        Call<ActiveCheckIn> call = apiService.getActiveAppointmentUUID(value, accountID);
-        call.enqueue(new Callback<ActiveCheckIn>() {
+        Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(value, accountID);
+        call.enqueue(new Callback<ActiveAppointment>() {
             @Override
-            public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
+            public void onResponse(Call<ActiveAppointment> call, Response<ActiveAppointment> response) {
                 try {
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
@@ -5050,7 +5070,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             }
 
             @Override
-            public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
+            public void onFailure(Call<ActiveAppointment> call, Throwable t) {
             }
         });
 
@@ -5546,8 +5566,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
     @Override
     public void mailUpdated() {
-
-        ApiGetProfileDetail();
+        String email = SharedPreference.getInstance(mContext).getStringValue("email","");
+        tvEmail.setText(email);
+      //  ApiGetProfileDetail();
     }
 
     @Override

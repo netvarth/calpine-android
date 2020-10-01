@@ -60,10 +60,13 @@ public class CheckInConfirmation extends AppCompatActivity {
 
             if (activeCheckInInfo.getShowToken().equalsIgnoreCase("true")) {
                 if (activeCheckInInfo.getToken() != 0) {
-
                     llToken.setVisibility(View.VISIBLE);
-                    tvTokenNumber.setText("#" + String.valueOf(activeCheckInInfo.getToken()));
+                    tvTokenNumber.setText("#" + activeCheckInInfo.getToken());
                 }
+                else{
+                    llToken.setVisibility(View.GONE);
+                }
+
             } else {
 
                 llToken.setVisibility(View.GONE);
@@ -146,7 +149,7 @@ public class CheckInConfirmation extends AppCompatActivity {
 
             if (activeCheckInInfo.getAppxWaitingTime() != -1) {
 
-                tvEstWaitTime.setText(String.valueOf(activeCheckInInfo.getAppxWaitingTime()) + " " + "Minutes");
+                tvEstWaitTime.setText(activeCheckInInfo.getAppxWaitingTime() + " " + "Minutes");
             }
 
             if (activeCheckInInfo.getService() != null) {

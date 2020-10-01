@@ -1079,6 +1079,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         objApptService.setMinPrePaymentAmount(aServicesList.get(i).getMinPrePaymentAmount());
                         objApptService.setDepartmentName(aServicesList.get(i).getDepartmentName());
                         objApptService.setServiceType(aServicesList.get(i).getServiceType());
+                        objApptService.setVirtualCallingModes(aServicesList.get(i).getVirtualCallingModes());
                         apptServicesList.add(objApptService);
                     }
                 }

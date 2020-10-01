@@ -16,6 +16,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -283,11 +284,28 @@ public class CheckinShareLocation extends AppCompatActivity implements
                 if(shareSwitch.isChecked()){
                     UpdateShareLiveLocation();
                     mService.removeLocationUpdates();
-                    finish();}
+                    if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+                        finish();
+                    }
+                    else {
+                        Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
+                        checkin.putExtra("BookingDetails", a);
+                        checkin.putExtra("terminology", terminology);
+                        startActivity(checkin);
+                    }
+                }
                 else {
                     UpdateShareLiveLocation();
                     mService.removeLocationUpdates();
-                    finish();
+                    if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+                        finish();
+                    }
+                    else {
+                        Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
+                        checkin.putExtra("BookingDetails", a);
+                        checkin.putExtra("terminology", terminology);
+                        startActivity(checkin);
+                    }
                 }  }
         });
         btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -296,14 +314,32 @@ public class CheckinShareLocation extends AppCompatActivity implements
                 if(shareSwitch.isChecked()){
                     UpdateShareLiveLocation();
                     mService.removeLocationUpdates();
-                    finish();}
+                    if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+                        finish();
+                    }
+                    else {
+                        Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
+                        checkin.putExtra("BookingDetails",a);
+                        checkin.putExtra("terminology", terminology);
+                        startActivity(checkin);
+                    }
+                }
                 else{
                 shareSwitch.setChecked(false);
                 locationStatus = false;
                 UpdateShareLiveLocation();
                 Toast.makeText(CheckinShareLocation.this, "Live tracking has been disabled", Toast.LENGTH_SHORT).show();
                 mService.removeLocationUpdates();
-                finish();}
+                    if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+                        finish();
+                    }
+                    else {
+                        Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
+                        checkin.putExtra("BookingDetails", a);
+                        checkin.putExtra("terminology", terminology);
+                        startActivity(checkin);
+                    }
+                }
             }
         });
         if(jaldeeDistance!=null){
@@ -641,12 +677,6 @@ public class CheckinShareLocation extends AppCompatActivity implements
                         transportLayout.setVisibility(View.VISIBLE);
                         btn_send.setVisibility(View.VISIBLE);
                         btn_cancel.setVisibility(View.VISIBLE);
-
-
-
-
-
-
                         view3.setVisibility(View.VISIBLE);
                         if (response.body().getJaldeeDistanceTime() != null) {
 

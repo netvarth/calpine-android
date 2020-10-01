@@ -43,7 +43,7 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name, tv_waittime,txtservice,txttoken;
 
-        ImageView ic_delete;
+        ImageView ic_delete, ic_service;
         LinearLayout lfamily;
 
 
@@ -55,6 +55,7 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
             ic_delete = (ImageView) view.findViewById(R.id.delete);
             lfamily = (LinearLayout) view.findViewById(R.id.lfamily);
             txttoken= (TextView) view.findViewById(R.id.txttoken);
+            ic_service = view.findViewById(R.id.service_icon);
           //  tv_nocheckin=(TextView) view.findViewById(R.id.tv_nocheckin);
 
         }
@@ -88,6 +89,25 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
 
         myViewHolder.name.setText(checklist.getWaitlistingFor().get(0).getFirstName());
         myViewHolder.txtservice.setText(checklist.getService().getName());
+        try {
+            if (checklist.getService().getServiceType().equalsIgnoreCase("virtualservice")) {
+                myViewHolder.ic_service.setVisibility(View.VISIBLE);
+                myViewHolder.ic_service.setY(6);
+                if (checklist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                    myViewHolder.ic_service.setImageResource(R.drawable.zoomicon_sized);
+                } else if (checklist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                    myViewHolder.ic_service.setImageResource(R.drawable.googlemeet_sized);
+                } else if (checklist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                    myViewHolder.ic_service.setImageResource(R.drawable.whatsappicon_sized);
+                } else if (checklist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                    myViewHolder.ic_service.setImageResource(R.drawable.phoneiconsized_small);
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         if (checklist.getCalculationMode().equalsIgnoreCase("NoCalc")) {
             myViewHolder.txttoken.setVisibility(View.VISIBLE);
             myViewHolder.txttoken.setText(checklist.getToken());

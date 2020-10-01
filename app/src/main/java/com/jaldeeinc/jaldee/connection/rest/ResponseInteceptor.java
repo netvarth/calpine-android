@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.Register;
@@ -136,7 +137,7 @@ public class ResponseInteceptor implements Interceptor {
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Config.logV("JSON--------------" + jsonObj);
 
-        Call<LoginResponse> call = apiService.LoginResponse(body);
+        Call<LoginResponse> call = apiService.LoginResponse(getDeviceName(),body);
 
         call.enqueue(new Callback<LoginResponse>() {
             @Override
@@ -222,6 +223,14 @@ public class ResponseInteceptor implements Interceptor {
             }
         });
 
+    }
+    public static String getDeviceName() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.startsWith(manufacturer)) {
+            return model;
+        }
+        return manufacturer + " " + model;
     }
 
 }

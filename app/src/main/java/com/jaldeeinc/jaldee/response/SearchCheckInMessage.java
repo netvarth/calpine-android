@@ -18,7 +18,7 @@ public class SearchCheckInMessage {
     int locid;
     ArrayList<SearchCheckInMessage> mAllSearch_checkIn;
     String waitlistStatus;
-    SearchCheckInMessage service;
+    ServiceDetails service;
     String name;
     SearchCheckInMessage consumer;
     //String userProfile;
@@ -64,13 +64,14 @@ public class SearchCheckInMessage {
         this.waitlistStatus = waitlistStatus;
     }
 
-    public SearchCheckInMessage getService() {
+    public ServiceDetails getService() {
         return service;
     }
 
-    public void setService(SearchCheckInMessage service) {
+    public void setService(ServiceDetails service) {
         this.service = service;
     }
+
 
     public String getName() {
         return name;

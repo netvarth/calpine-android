@@ -106,7 +106,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/default_padding"
                                     android:layout_marginRight="@dimen/default_padding"
-                                    android:text="Patient "
+                                    android:text=" "
                                     android:textColor="@color/title_grey"
                                     android:textSize="@dimen/txtsize_12" />
 

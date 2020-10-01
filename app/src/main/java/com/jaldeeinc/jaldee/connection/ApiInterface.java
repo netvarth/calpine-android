@@ -62,6 +62,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -94,7 +95,7 @@ public interface ApiInterface {
 
     @Headers({"Accept: application/json","User-Agent: android"})
     @POST("consumer/login")
-    Call<LoginResponse> LoginResponse(@Body RequestBody jsonObj);
+    Call<LoginResponse> LoginResponse(@Header("device-name") String name, @Body RequestBody jsonObj);
 
 
     @POST("consumer/login/reset/{loginId}")
@@ -210,7 +211,7 @@ public interface ApiInterface {
     Call<ActiveCheckIn> getActiveCheckInUUID(@Path("uuid") String uuid,@Query("account") String account);
 
     @GET("consumer/appointment/{uuid}")
-    Call<ActiveCheckIn> getActiveAppointmentUUID(@Path("uuid") String uuid,@Query("account") String account);
+    Call<ActiveAppointment> getActiveAppointmentUUID(@Path("uuid") String uuid,@Query("account") String account);
 
 
     @GET("ynwConf/businessDomains")
