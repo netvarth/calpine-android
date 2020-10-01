@@ -111,6 +111,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo 
     int consumerID;
     private int uniqueId;
     private String providerName;
+    private int providerId;
     private int locationId;
     private int serviceId;
     private String serviceName;
@@ -137,7 +138,8 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo 
         uniqueId = intent.getIntExtra("uniqueID", 0);
         providerName = intent.getStringExtra("providerName");
         serviceInfo = (ServiceInfo) intent.getSerializableExtra("serviceInfo");
-        locationId = intent.getIntExtra("locationId",locationId);
+        locationId = intent.getIntExtra("locationId", locationId);
+        providerId = intent.getIntExtra("providerId", 0);
 
         if (providerName != null) {
             tvProviderName.setText(providerName);
@@ -196,14 +198,16 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo 
             @Override
             public void onClick(View v) {
 
-                slotsDialog = new SlotsDialog(AppointmentActivity.this,serviceInfo.getServiceId(),locationId,iSlotInfo);
-                slotsDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
-                slotsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                slotsDialog.show();
-                DisplayMetrics metrics = AppointmentActivity.this.getResources().getDisplayMetrics();
-                int width = (int) (metrics.widthPixels * 1);
-                slotsDialog.setCancelable(false);
-                slotsDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                if (serviceInfo.getAvailableDate() != null) {
+                    slotsDialog = new SlotsDialog(AppointmentActivity.this, serviceInfo.getServiceId(), locationId, iSlotInfo, providerId, serviceInfo.getAvailableDate());
+                    slotsDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+                    slotsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    slotsDialog.show();
+                    DisplayMetrics metrics = AppointmentActivity.this.getResources().getDisplayMetrics();
+                    int width = (int) (metrics.widthPixels * 1);
+                    slotsDialog.setCancelable(false);
+                    slotsDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                }
 
             }
         });
@@ -391,7 +395,6 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo 
 //    }
 
 
-
     public static String convertDate(String date) {
 
         String finalDate = "";
@@ -495,4 +498,9 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo 
         return sTime;
     }
 
+    @Override
+    public void sendSlotInfo(String time, String displayTime, int scheduleId) {
+
+        tvTime.setText(displayTime);
+    }
 }

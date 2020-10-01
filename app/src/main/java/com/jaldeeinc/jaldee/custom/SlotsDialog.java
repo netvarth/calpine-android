@@ -15,16 +15,20 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
+import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
 import com.jaldeeinc.jaldee.Interface.ISlotInfo;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.AppointmentActivity;
+import com.jaldeeinc.jaldee.adapter.TimeSlotsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.SlotsData;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,27 +38,35 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SlotsDialog extends Dialog {
+public class SlotsDialog extends Dialog implements ISelectSlotInterface {
 
     private Context context;
     private CustomTextViewBold tvDate;
     private CustomTextViewBold tvTime;
-    private ImageView ivMinus,ivPlus,cvCalender,ivClose;
+    private ImageView ivMinus, ivPlus, ivClose;
     private CustomTextViewSemiBold tvCalenderDate;
     private RecyclerView rvSlots;
     private CardView cvConfirm;
     private LinearLayout llNoSlots;
+    private NeomorphFrameLayout cvCalender;
     final Calendar myCalendar = Calendar.getInstance();
-    private int activeScheduleId,serviceId,locationId;
+    private int activeScheduleId, serviceId, locationId, providerId;
     private ISlotInfo iSlotInfo;
+    ArrayList<AvailableSlotsData> activeSlotsList = new ArrayList<>();
+    ArrayList<SlotsData> slotsData = new ArrayList<SlotsData>();
+    TimeSlotsAdapter sAdapter;
+    private ISelectSlotInterface iSelectSlotInterface;
+    private String defaultDate;
 
 
-    public SlotsDialog(Context context, int serviceId, int locationId, ISlotInfo iSlotInfo) {
+    public SlotsDialog(Context context, int serviceId, int locationId, ISlotInfo iSlotInfo, int providerId, String availableDate) {
         super(context);
         this.context = context;
         this.serviceId = serviceId;
         this.locationId = locationId;
         this.iSlotInfo = iSlotInfo;
+        this.providerId = providerId;
+        this.defaultDate = availableDate;
 
     }
 
@@ -64,6 +76,8 @@ public class SlotsDialog extends Dialog {
         setContentView(R.layout.slots_dialog);
 
         initializations();
+
+        getSlotsOnDate(serviceId, locationId, defaultDate, providerId);
 
         // click-actions
 
@@ -77,7 +91,7 @@ public class SlotsDialog extends Dialog {
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                updateSelectedDate(tvCalenderDate, year, monthOfYear, dayOfMonth);
+                updateSelectedDate(year, monthOfYear, dayOfMonth);
             }
         };
 
@@ -145,21 +159,21 @@ public class SlotsDialog extends Dialog {
             String apiFormat = "yyyy-MM-dd"; // your format
             SimpleDateFormat apiSdf = new SimpleDateFormat(apiFormat);
             String pickedDate = apiSdf.format(myCalendar.getTime());
-            getSlotsOnDate(serviceId, locationId, pickedDate, modifyAccountID);
+            getSlotsOnDate(serviceId, locationId, pickedDate, providerId);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    private void getSlotsOnDate(int serviceId, int mSpinnertext, String selectDate, String modifyAccountID) {
+    private void getSlotsOnDate(int serviceId, int mSpinnertext, String selectDate, int modifyAccountID) {
 
         ApiInterface apiService =
                 ApiClient.getClient(context).create(ApiInterface.class);
 
         final Dialog mDialog = Config.getProgressDialog(context, context.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ArrayList<SlotsData>> call = apiService.getSlotsOnDate(selectDate, serviceId, mSpinnertext, Integer.parseInt(modifyAccountID));
+        Call<ArrayList<SlotsData>> call = apiService.getSlotsOnDate(selectDate, serviceId, mSpinnertext, modifyAccountID);
 
         call.enqueue(new Callback<ArrayList<SlotsData>>() {
             @Override
@@ -191,22 +205,18 @@ public class SlotsDialog extends Dialog {
                             if (activeSlotsList != null) {
                                 if (activeSlotsList.size() > 0) {
 
-                                    selectedShcdId = activeSlotsList.get(0).getScheduleId();
-                                    txtnocheckin.setVisibility(View.GONE);
-                                    earliestAvailable.setText("Earliest available\n" + activeSlotsList.get(0).getDisplayTime());
-                                    llCoupons.setVisibility(View.VISIBLE);
-                                    btn_checkin.setVisibility(View.VISIBLE);
-                                    RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(Appointment.this, 3);
+                                    rvSlots.setVisibility(View.VISIBLE);
+                                    llNoSlots.setVisibility(View.GONE);
+                                    activeScheduleId = activeSlotsList.get(0).getScheduleId();
+                                    tvTime.setText(activeSlotsList.get(0).getDisplayTime());
+                                    RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 3);
                                     rvSlots.setLayoutManager(mLayoutManager);
-//                                    sAdapter = new TimeSlotsAdapter(activeSlotsList, iSelectSlotInterface);
-//                                    rvSlots.setAdapter(sAdapter);
+                                    sAdapter = new TimeSlotsAdapter(context, activeSlotsList, iSelectSlotInterface);
+                                    rvSlots.setAdapter(sAdapter);
                                 } else {
-                                    cvSlots.setVisibility(View.GONE);
-                                    llCoupons.setVisibility(View.GONE);
-                                    btn_checkin.setVisibility(View.GONE);
-                                    txtnocheckin.setVisibility(View.VISIBLE);
-                                    txtnocheckin.setText("Appointment for this service is not available at the moment. Please try for a different date");
-                                    earliestAvailable.setText("Timeslots not available");
+
+                                    rvSlots.setVisibility(View.GONE);
+                                    llNoSlots.setVisibility(View.VISIBLE);
                                 }
                             }
                         }
@@ -228,6 +238,26 @@ public class SlotsDialog extends Dialog {
         });
     }
 
+    private String getDisplayTime(String slotTime) {
+
+        String displayTime = slotTime.split("-")[0];
+        String sTime = "";
+
+        try {
+            final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
+            final Date dateObj = sdf.parse(displayTime);
+            SimpleDateFormat time = new SimpleDateFormat("K:mm aa");
+            sTime = time.format(dateObj);
+        } catch (final ParseException e) {
+            e.printStackTrace();
+        }
+        return sTime;
+    }
 
 
+    @Override
+    public void sendSelectedTime(String time, String displayTime, int scheduleId) {
+
+        iSlotInfo.sendSlotInfo(time, displayTime, scheduleId);
+    }
 }

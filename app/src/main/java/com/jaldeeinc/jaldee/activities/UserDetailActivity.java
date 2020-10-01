@@ -385,7 +385,6 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
                         if (providerDetails != null) {
 
                             onlinePresence = providerDetails.isOnlinePresence();
-                            providerDetails.getId()
                             UpdateMainUI(providerDetails);
                             apiGetProviders(uniqueId, providerId, locId);
 
