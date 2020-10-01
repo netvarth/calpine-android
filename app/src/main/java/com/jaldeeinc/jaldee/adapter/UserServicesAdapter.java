@@ -174,6 +174,7 @@ public class UserServicesAdapter  extends RecyclerView.Adapter<UserServicesAdapt
                     viewHolder.tvTimeHint.setText(time.split("-")[0]);
                 } else {
                     viewHolder.llEstwaitTime.setVisibility(View.GONE);
+                    viewHolder.llTime.setVisibility(View.GONE);
                 }
             }
 
@@ -285,34 +286,43 @@ public class UserServicesAdapter  extends RecyclerView.Adapter<UserServicesAdapt
                 @Override
                 public void onClick(View v) {
 
-                    if (servicesInfoList.get(position).isAvailability()) {
+                    if (servicesInfoList.get(position).isOnline()) { // checking if the provider is online in order to let user book the service
 
-                        if (servicesInfoList.get(position).getType() != null) {
-                            if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.CHECKIN)) {
+                        if (servicesInfoList.get(position).isAvailability()) { // checking service availability
 
-                                if (servicesInfoList.get(position).getChecinServiceInfo() != null) {
-                                    iSelectedService.onCheckInSelected(servicesInfoList.get(position).getChecinServiceInfo());
+                            if (servicesInfoList.get(position).getType() != null) {
+                                if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.CHECKIN)) {
+
+                                    if (servicesInfoList.get(position).getChecinServiceInfo() != null) {
+                                        iSelectedService.onCheckInSelected(servicesInfoList.get(position).getChecinServiceInfo());
+                                    }
+
+                                } else if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
+
+                                    if (servicesInfoList.get(position).getAppointmentServiceInfo() != null) {
+                                        iSelectedService.onAppointmentSelected(servicesInfoList.get(position).getAppointmentServiceInfo());
+                                    }
+
                                 }
+                            }
+                        } else {
 
-                            } else if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
+                            if (servicesInfoList.get(position).getType() != null) {
 
-                                if (servicesInfoList.get(position).getAppointmentServiceInfo() != null) {
-                                    iSelectedService.onAppointmentSelected(servicesInfoList.get(position).getAppointmentServiceInfo());
+                                if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.CHECKIN) || servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
+
+                                    DynamicToast.make(context, "Selected Service is not available at the moment", AppCompatResources.getDrawable(
+                                            context, R.drawable.ic_info_black),
+                                            ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
                                 }
-
                             }
                         }
-                    } else {
+                    }
+                    else {
 
-                        if (servicesInfoList.get(position).getType() != null) {
-
-                            if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.CHECKIN) || servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
-
-                                DynamicToast.make(context, "Selected Service is not available at the moment", AppCompatResources.getDrawable(
-                                        context, R.drawable.ic_info_black),
-                                        ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
-                            }
-                        }
+                        DynamicToast.make(context, "Provider is offline at the moment", AppCompatResources.getDrawable(
+                                context, R.drawable.ic_info_black),
+                                ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
                     }
                 }
             });

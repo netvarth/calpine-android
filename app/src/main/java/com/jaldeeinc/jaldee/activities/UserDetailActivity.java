@@ -605,6 +605,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
                                 serviceInfo.setName(checkInService.getName());
                                 serviceInfo.setType(Constants.CHECKIN);
                                 serviceInfo.setToken(isToken);
+                                serviceInfo.setOnline(onlinePresence);
                                 if (checkInService.getCheckInServiceAvailability() != null) {
                                     serviceInfo.setAvailability(true);
                                     if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
@@ -642,6 +643,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
                                 serviceInfo.setType(Constants.APPOINTMENT);
                                 serviceInfo.setEstTime("");
                                 serviceInfo.setPeopleInLine(0);
+                                serviceInfo.setOnline(onlinePresence);
                                 serviceInfo.setCalculationMode("");
                                 serviceInfo.setServiceMode(appt.getServiceType());
                                 if (appt.getVirtualCallingModes() != null) {

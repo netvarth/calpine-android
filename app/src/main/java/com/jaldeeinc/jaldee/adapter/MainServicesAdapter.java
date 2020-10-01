@@ -175,6 +175,8 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                     viewHolder.tvTimeHint.setText(time.split("-")[0]);
                 } else {
                     viewHolder.llEstwaitTime.setVisibility(View.GONE);
+                    viewHolder.llTime.setVisibility(View.GONE);
+
                 }
             }
 
@@ -286,19 +288,31 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                 @Override
                 public void onClick(View v) {
 
-                    if (servicesInfoList.get(position).isAvailability()) {
+
+                    if (servicesInfoList.get(position).isAvailability()) {   // checking service availability - for provider availability is set as true by default
 
                         if (servicesInfoList.get(position).getType() != null) {
                             if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.CHECKIN)) {
 
-                                if (servicesInfoList.get(position).getChecinServiceInfo() != null) {
-                                    iSelectedService.onCheckInSelected(servicesInfoList.get(position).getChecinServiceInfo());
+                                if (servicesInfoList.get(position).isOnline()) {  // checking if the provider is online in order to let user book the service
+
+                                    if (servicesInfoList.get(position).getChecinServiceInfo() != null) {
+                                        iSelectedService.onCheckInSelected(servicesInfoList.get(position).getChecinServiceInfo());
+                                    }
+                                } else {
+
+                                    showProviderUnavailable();
                                 }
 
                             } else if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
-                                if (servicesInfoList.get(position).getAppointmentServiceInfo() != null) {
-                                    iSelectedService.onAppointmentSelected(servicesInfoList.get(position).getAppointmentServiceInfo());
+                                if (servicesInfoList.get(position).isOnline()) {
+                                    if (servicesInfoList.get(position).getAppointmentServiceInfo() != null) {
+                                        iSelectedService.onAppointmentSelected(servicesInfoList.get(position).getAppointmentServiceInfo());
+                                    }
+                                } else {
+                                    showProviderUnavailable();
+
                                 }
 
                             } else if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.PROVIDER)) {
@@ -309,8 +323,13 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
 
                             } else if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.DONATION)) {
 
-                                if (servicesInfoList.get(position).getDonationServiceInfo() != null) {
-                                    iSelectedService.onDonationSelected(servicesInfoList.get(position).getDonationServiceInfo());
+                                if (servicesInfoList.get(position).isOnline()) {
+                                    if (servicesInfoList.get(position).getDonationServiceInfo() != null) {
+                                        iSelectedService.onDonationSelected(servicesInfoList.get(position).getDonationServiceInfo());
+                                    }
+                                } else {
+
+                                    showProviderUnavailable();
                                 }
 
                             }
@@ -362,8 +381,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                                 appointmentServiceDialog.getWindow().setGravity(Gravity.BOTTOM);
                                 appointmentServiceDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-                        }
-                        else if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.DONATION)) {
+                        } else if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.DONATION)) {
 
                             if (servicesInfoList.get(position).getDonationServiceInfo() != null) {
                                 donationServiceDialog = new DonationServiceDialog(context, servicesInfoList.get(position).getDonationServiceInfo());
@@ -393,6 +411,14 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
 
 
     }
+
+    private void showProviderUnavailable() {
+
+        DynamicToast.make(context, "Provider is offline at the moment", AppCompatResources.getDrawable(
+                context, R.drawable.ic_info_black),
+                ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
+    }
+
 
     public static String convertDate(String date) {
 

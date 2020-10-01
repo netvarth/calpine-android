@@ -32,6 +32,9 @@ public class Constants {
     public static final String DONATION = "Donation";
     public static final String PROVIDER = "Provider";
 
+    public static final String DEVICE_NAME = "deviceName";
+
+
 
 
 

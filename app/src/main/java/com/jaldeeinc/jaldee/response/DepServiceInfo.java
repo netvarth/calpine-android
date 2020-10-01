@@ -26,6 +26,7 @@ public class DepServiceInfo {
     SearchAppoinment appointmentServiceInfo;
     SearchDonation donationServiceInfo;
     ProviderUserModel providerInfo;
+    private boolean isOnline;
 
     public DepServiceInfo(){
 
@@ -221,5 +222,13 @@ public class DepServiceInfo {
 
     public void setToken(boolean token) {
         isToken = token;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(boolean online) {
+        isOnline = online;
     }
 }

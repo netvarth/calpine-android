@@ -20,7 +20,7 @@ public class Child extends RecyclerView.ViewHolder {
     CardView cvImage,cvCard;
     CustomTextViewBold tvName, tvEstWaitTime, tvMinAmount, tvMaxAmount, tvMoreInfo,tvNextAvailableTime;
     LinearLayout llTime, llEstwaitTime, llDonationRange;
-    CustomTextViewMedium tvNextAvailableText, tvPeopleAhead,tvTimeHint;
+    CustomTextViewMedium  tvPeopleAhead,tvTimeHint;
     CustomTextViewSemiBold tvServiceType;
     RelativeLayout rlCommonLayout;
 
@@ -38,7 +38,6 @@ public class Child extends RecyclerView.ViewHolder {
         llTime = itemView.findViewById(R.id.ll_time);
         llEstwaitTime = itemView.findViewById(R.id.ll_estWaitTime);
         llDonationRange = itemView.findViewById(R.id.ll_donationRange);
-        tvNextAvailableText = itemView.findViewById(R.id.tv_nextavailableText);
         tvNextAvailableTime = itemView.findViewById(R.id.tv_nextAvailableTime);
         tvPeopleAhead = itemView.findViewById(R.id.tv_peopleAhead);
         tvServiceType = itemView.findViewById(R.id.tv_serviceType);

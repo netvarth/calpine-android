@@ -1,6 +1,9 @@
 package com.jaldeeinc.jaldee.connection;
 
 
+import android.os.Build;
+
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
@@ -92,6 +95,7 @@ public interface ApiInterface {
     @Headers({"Accept: application/json","User-Agent: android"})
     @PUT("consumer/{otp}/activate")
     Call<ResponseBody> SetPassword(@Path("otp") String otp, @Body RequestBody jsonObj);
+
 
     @Headers({"Accept: application/json","User-Agent: android"})
     @POST("consumer/login")
@@ -534,5 +538,12 @@ public interface ApiInterface {
     @GET("provider/waitlist/queues/waitingTime/{id}")
     Observable<ArrayList<QueueList>> getCheckInsSchedule(@Path("id") String id);
 
-
+    public static String getDeviceName() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.startsWith(manufacturer)) {
+            return model;
+        }
+        return manufacturer + " " + model;
+    }
 }

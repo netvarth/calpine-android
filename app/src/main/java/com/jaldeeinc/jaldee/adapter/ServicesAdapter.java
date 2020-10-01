@@ -162,7 +162,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
 
         if (child.getType().equalsIgnoreCase(Constants.CHECKIN)) {
-            if (child.getNextAvailableDate() != null) {
+            if (child.getNextAvailableDate() != null && child.getNextAvailableTime() != null && child.getEstTime()!= null) {
                 // to set est waitTime if available
                 viewHolder.llEstwaitTime.setVisibility(View.VISIBLE);
                 viewHolder.llDonationRange.setVisibility(View.GONE);
@@ -173,6 +173,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
             } else {
                 viewHolder.llEstwaitTime.setVisibility(View.GONE);
+                viewHolder.llTime.setVisibility(View.GONE);
             }
         }
 
@@ -206,10 +207,12 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                 viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
                 viewHolder.llDonationRange.setVisibility(View.GONE);
                 viewHolder.tvServiceType.setVisibility(View.VISIBLE);
-                if (child.getChecinServiceInfo().getCheckInServiceAvailability().isShowToken()) {
-                    viewHolder.tvServiceType.setText("Get Token");
-                } else {
-                    viewHolder.tvServiceType.setText("Check In");
+                if (child.getChecinServiceInfo().getCheckInServiceAvailability() != null) {
+                    if (child.getChecinServiceInfo().getCheckInServiceAvailability().isShowToken()) {
+                        viewHolder.tvServiceType.setText("Get Token");
+                    } else {
+                        viewHolder.tvServiceType.setText("Check In");
+                    }
                 }
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
                 viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
@@ -288,20 +291,31 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
             @Override
             public void onClick(View v) {
 
-                if (child.isAvailability()) {
+                if (child.isAvailability()) { // checking service availability - for provider availability is set as true by default
 
                     if (child.getType() != null) {
 
                         if (child.getType().equalsIgnoreCase(Constants.CHECKIN)) {
 
-                            if (child.getChecinServiceInfo() != null) {
-                                iSelectedService.onCheckInSelected(child.getChecinServiceInfo());
+                            if (child.isOnline()) { // checking if the provider is online in order to let user book the service
+
+                                if (child.getChecinServiceInfo() != null) {
+                                    iSelectedService.onCheckInSelected(child.getChecinServiceInfo());
+                                }
+                            } else {
+                                showProviderUnavailable();
                             }
 
                         } else if (child.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
-                            if (child.getAppointmentServiceInfo() != null) {
-                                iSelectedService.onAppointmentSelected(child.getAppointmentServiceInfo());
+                            if (child.isOnline()) {
+
+                                if (child.getAppointmentServiceInfo() != null) {
+                                    iSelectedService.onAppointmentSelected(child.getAppointmentServiceInfo());
+                                }
+                            } else {
+
+                                showProviderUnavailable();
                             }
                         } else if (child.getType().equalsIgnoreCase(Constants.PROVIDER)) {
 
@@ -310,14 +324,20 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                             }
                         } else if (child.getType().equalsIgnoreCase(Constants.DONATION)) {
 
-                            if (child.getDonationServiceInfo() != null) {
-                                iSelectedService.onDonationSelected(child.getDonationServiceInfo());
+                            if (child.isOnline()) {
+
+                                if (child.getDonationServiceInfo() != null) {
+                                    iSelectedService.onDonationSelected(child.getDonationServiceInfo());
+                                }
+                            } else {
+
+                                showProviderUnavailable();
                             }
                         }
                     }
                 } else {
 
-                    if (child.getType() != null) {
+                    if (child.getType() != null) { // showing a message consumer when
 
                         if (child.getType().equalsIgnoreCase(Constants.CHECKIN) || child.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
@@ -383,6 +403,13 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
         });
 
 
+    }
+
+    private void showProviderUnavailable() {
+
+        DynamicToast.make(context, "Provider is offline at the moment", AppCompatResources.getDrawable(
+                context, R.drawable.ic_info_black),
+                ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
     }
 
 

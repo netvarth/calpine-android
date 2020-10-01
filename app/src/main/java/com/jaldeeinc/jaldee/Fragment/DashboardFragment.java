@@ -13,7 +13,9 @@ import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
@@ -29,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -1982,7 +1985,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         Intent intent= new Intent(mContext, ProviderDetailActivity.class);
         intent.putExtra("uniqueID",value);
         startActivity(intent);
+
+//        String deviceDetails = getDeviceName();
+//        Toast.makeText(mContext,deviceDetails,Toast.LENGTH_LONG).show();
+
     }
+
+
 
     @Override
     public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer, int customerId, String uniqueId) {

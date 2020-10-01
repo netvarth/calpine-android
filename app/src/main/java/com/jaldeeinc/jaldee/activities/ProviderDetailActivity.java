@@ -62,6 +62,7 @@ import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
+import com.jaldeeinc.jaldee.response.ServiceInfo;
 import com.jaldeeinc.jaldee.widgets.CustomDialog;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
@@ -1001,6 +1002,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         serviceInfo.setName(checkInService.getName());
                         serviceInfo.setType(Constants.CHECKIN);
                         serviceInfo.setToken(isToken);
+                        serviceInfo.setOnline(onlinePresence);
                         if (checkInService.getCheckInServiceAvailability() != null) {
                             serviceInfo.setAvailability(true);
                             if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
@@ -1035,6 +1037,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         serviceInfo.setEstTime("");
                         serviceInfo.setPeopleInLine(0);
                         serviceInfo.setCalculationMode("");
+                        serviceInfo.setOnline(onlinePresence);
                         serviceInfo.setAvailability(true);
                         serviceInfo.setServiceMode(appt.getServiceType());
                         if (appt.getVirtualCallingModes() != null) {
@@ -1066,6 +1069,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             serviceInfo.setPeopleInLine(0);
                             serviceInfo.setCalculationMode("");
                             serviceInfo.setServiceMode("");
+                            serviceInfo.setOnline(onlinePresence);
                             serviceInfo.setCallingMode("");
                             serviceInfo.setNextAvailableTime("");
                             serviceInfo.setAvailability(true);
@@ -1182,6 +1186,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             serviceInfo.setName(checkInService.getName());
                             serviceInfo.setType(Constants.CHECKIN);
                             serviceInfo.setToken(isToken);
+                            serviceInfo.setOnline(onlinePresence);
                             if (checkInService.getCheckInServiceAvailability() != null) {
                                 serviceInfo.setAvailability(true);
                                 if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
@@ -1217,6 +1222,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             serviceInfo.setName(appt.getName());
                             serviceInfo.setType(Constants.APPOINTMENT);
                             serviceInfo.setEstTime("");
+                            serviceInfo.setOnline(onlinePresence);
                             serviceInfo.setPeopleInLine(0);
                             serviceInfo.setCalculationMode("");
                             serviceInfo.setServiceMode(appt.getServiceType());
@@ -1264,7 +1270,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     }
 
                     // adding donations only when donations are accepted
-                    if (onlinePresence && mBusinessDataList.isDonationFundRaising()) {
+                    if (mBusinessDataList.isDonationFundRaising()) {
                         for (SearchDonation donation : donationServices) {
 
                             DepServiceInfo serviceInfo = new DepServiceInfo();
@@ -1278,6 +1284,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             serviceInfo.setCalculationMode("");
                             serviceInfo.setServiceMode("");
                             serviceInfo.setCallingMode("");
+                            serviceInfo.setOnline(onlinePresence);
                             serviceInfo.setAvailability(true);
                             serviceInfo.setNextAvailableTime("");
                             serviceInfo.setProviderImage("");
@@ -1399,6 +1406,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                     serviceInfo.setName(checkInService.getName());
                                     serviceInfo.setType(Constants.CHECKIN);
                                     serviceInfo.setToken(isToken);
+                                    serviceInfo.setOnline(onlinePresence);
                                     if (checkInService.getCheckInServiceAvailability() != null) {
                                         serviceInfo.setAvailability(true);
                                         if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
@@ -1437,6 +1445,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                     serviceInfo.setId(appt.getId());
                                     serviceInfo.setName(appt.getName());
                                     serviceInfo.setType(Constants.APPOINTMENT);
+                                    serviceInfo.setOnline(onlinePresence);
                                     serviceInfo.setEstTime("");
                                     serviceInfo.setPeopleInLine(0);
                                     serviceInfo.setCalculationMode("");
@@ -1497,7 +1506,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     }
 
                     // adding donations only when donations are accepted
-                    if (onlinePresence && mBusinessDataList.isDonationFundRaising()) {
+                    if (mBusinessDataList.isDonationFundRaising()) {
                         // to add donation services
                         DepartmentInfo donationDepartment = new DepartmentInfo();
                         ArrayList<DepServiceInfo> donationServicesList = new ArrayList<DepServiceInfo>();
@@ -1514,6 +1523,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             serviceInfo.setEstTime("");
                             serviceInfo.setPeopleInLine(0);
                             serviceInfo.setCalculationMode("");
+                            serviceInfo.setOnline(onlinePresence);
                             serviceInfo.setAvailability(true);
                             serviceInfo.setServiceMode("");
                             serviceInfo.setCallingMode("");
@@ -1659,7 +1669,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                             DynamicToast.make(context, "Added to Favourites", AppCompatResources.getDrawable(
                                     context, R.drawable.adt_ic_success),
-                                    ContextCompat.getColor(context,R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
+                                    ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
 
                             ApiFavList();
                         }
@@ -1731,7 +1741,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         return url;
     }
 
-
     @Override
     public void sendAddress(String address, int locId) {
 
@@ -1745,17 +1754,90 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @Override
     public void onCheckInSelected(SearchService checinServiceInfo) {
 
-//        Intent intent = new Intent(ProviderDetailActivity.this, CheckIn.class);
-//        intent.putExtra("uniqueID", uniqueId);
-//        startActivity(intent);
+        if (checinServiceInfo != null) {
+            Intent intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
+            intent.putExtra("uniqueID", uniqueId);
+            intent.putExtra("providerName", tvSpName.getText().toString());
+            ServiceInfo serviceInfo = new ServiceInfo();
+            serviceInfo.setServiceId(checinServiceInfo.getId());
+            serviceInfo.setServiceName(checinServiceInfo.getName());
+            serviceInfo.setDescription(checinServiceInfo.getDescription());
+            serviceInfo.setType(Constants.CHECKIN);
+            if (checinServiceInfo.getConsumerNoteTitle() != null) {
+                serviceInfo.setConsumerNoteTitle(checinServiceInfo.getConsumerNoteTitle());
+            }
+            serviceInfo.setIsPrePayment(String.valueOf(checinServiceInfo.isPrePayment()));
+            serviceInfo.setLivetrack(String.valueOf(checinServiceInfo.isLivetrack()));
+            if (checinServiceInfo.getMinPrePaymentAmount() != null) {
+                serviceInfo.setMinPrePaymentAmount(checinServiceInfo.getMinPrePaymentAmount());
+            }
+            serviceInfo.setPreInfoEnabled(checinServiceInfo.isPreInfoEnabled());
+            if (checinServiceInfo.getPreInfoText() != null) {
+                serviceInfo.setPreInfoText(checinServiceInfo.getPreInfoText());
+            }
+            if (checinServiceInfo.getServiceType() != null) {
+                serviceInfo.setServiceType(checinServiceInfo.getServiceType());
+            }
+            if (checinServiceInfo.getCallingMode() != null) {
+                serviceInfo.setCallingMode(checinServiceInfo.getCallingMode());
+            }
+            if (checinServiceInfo.getCheckInServiceAvailability() != null) {
+                serviceInfo.setToken(checinServiceInfo.getCheckInServiceAvailability().isShowToken());
+                serviceInfo.setPeopleWaitingInLine(checinServiceInfo.getCheckInServiceAvailability().getPersonAhead());
+                serviceInfo.setAvailableDate(checinServiceInfo.getCheckInServiceAvailability().getAvailableDate());
+                if (checinServiceInfo.getCheckInServiceAvailability().getServiceTime() != null) {
+                    serviceInfo.setTime(checinServiceInfo.getCheckInServiceAvailability().getServiceTime());
+                }
+                if (checinServiceInfo.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
+                    serviceInfo.setWaitingTime(checinServiceInfo.getCheckInServiceAvailability().getQueueWaitingTime());
+                }
+            }
+
+            intent.putExtra("serviceInfo", serviceInfo);
+            startActivity(intent);
+        }
     }
 
     @Override
     public void onAppointmentSelected(SearchAppoinment appointmentServiceInfo) {
 
-//        Intent intent = new Intent(ProviderDetailActivity.this, Appointment.class);
-//        intent.putExtra("uniqueID", uniqueId);
-//        startActivity(intent);
+        if (appointmentServiceInfo != null) {
+            Intent intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
+            intent.putExtra("uniqueID", uniqueId);
+            intent.putExtra("providerName", tvSpName.getText().toString());
+            ServiceInfo serviceInfo = new ServiceInfo();
+            serviceInfo.setServiceId(appointmentServiceInfo.getId());
+            serviceInfo.setServiceName(appointmentServiceInfo.getName());
+            serviceInfo.setDescription(appointmentServiceInfo.getDescription());
+            serviceInfo.setType(Constants.APPOINTMENT);
+            if (appointmentServiceInfo.getConsumerNoteTitle() != null) {
+                serviceInfo.setConsumerNoteTitle(appointmentServiceInfo.getConsumerNoteTitle());
+            }
+            serviceInfo.setIsPrePayment(appointmentServiceInfo.getIsPrePayment());
+            serviceInfo.setLivetrack(appointmentServiceInfo.getLivetrack());
+            if (appointmentServiceInfo.getMinPrePaymentAmount() != null) {
+                serviceInfo.setMinPrePaymentAmount(appointmentServiceInfo.getMinPrePaymentAmount());
+            }
+            serviceInfo.setPreInfoEnabled(appointmentServiceInfo.isPreInfoEnabled());
+            if (appointmentServiceInfo.getPreInfoText() != null) {
+                serviceInfo.setPreInfoText(appointmentServiceInfo.getPreInfoText());
+            }
+            if (appointmentServiceInfo.getServiceType() != null) {
+                serviceInfo.setServiceType(appointmentServiceInfo.getServiceType());
+            }
+            if (appointmentServiceInfo.getCallingMode() != null) {
+                serviceInfo.setCallingMode(appointmentServiceInfo.getCallingMode());
+            }
+            if (appointmentServiceInfo.getAppointServiceAvailability() != null){
+
+                serviceInfo.setAvailableDate(appointmentServiceInfo.getAppointServiceAvailability().getNextAvailableDate());
+                serviceInfo.setTime(appointmentServiceInfo.getAppointServiceAvailability().getNextAvailable());
+            }
+
+            intent.putExtra("serviceInfo", serviceInfo);
+
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -1766,7 +1848,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         providerIntent.putExtra("locationId", locationId);
         providerIntent.putExtra("providerInfo", providerInfo);
         providerIntent.putExtra("locationName", tvLocationName.getText().toString());
-        providerIntent.putExtra("isToken",isToken);
+        providerIntent.putExtra("isToken", isToken);
         startActivity(providerIntent);
 
     }
@@ -1774,8 +1856,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @Override
     public void onDonationSelected(SearchDonation donationServiceInfo) {
 
-//        Intent intent = new Intent(ProviderDetailActivity.this, Donation.class);
-//        intent.putExtra("uniqueID", uniqueId);
-//        startActivity(intent);
+        Intent intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
+        intent.putExtra("uniqueID", uniqueId);
+        intent.putExtra("providerName", tvSpName.getText().toString());
+        startActivity(intent);
     }
 }
