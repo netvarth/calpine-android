@@ -11,9 +11,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.widget.LinearLayout;
 
+import com.jaldeeinc.jaldee.Interface.ISlotInfo;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.TimeSlotsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
@@ -22,6 +26,8 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.custom.LocationsDialog;
+import com.jaldeeinc.jaldee.custom.SlotsDialog;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.SearchService;
@@ -45,7 +51,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AppointmentActivity extends AppCompatActivity {
+public class AppointmentActivity extends AppCompatActivity implements ISlotInfo {
 
     @BindView(R.id.tv_providerName)
     CustomTextViewSemiBold tvProviderName;
@@ -105,6 +111,7 @@ public class AppointmentActivity extends AppCompatActivity {
     int consumerID;
     private int uniqueId;
     private String providerName;
+    private int locationId;
     private int serviceId;
     private String serviceName;
     private String phoneNumber;
@@ -114,6 +121,8 @@ public class AppointmentActivity extends AppCompatActivity {
     ProfileModel profileDetails;
     ArrayList<SlotsData> slotsData = new ArrayList<SlotsData>();
     ArrayList<AvailableSlotsData> activeSlotsList = new ArrayList<>();
+    private SlotsDialog slotsDialog;
+    private ISlotInfo iSlotInfo;
 
 
     @Override
@@ -121,12 +130,14 @@ public class AppointmentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment);
         ButterKnife.bind(AppointmentActivity.this);
+        iSlotInfo = this;
 
         // getting necessary details from intent
         Intent intent = getIntent();
         uniqueId = intent.getIntExtra("uniqueID", 0);
         providerName = intent.getStringExtra("providerName");
         serviceInfo = (ServiceInfo) intent.getSerializableExtra("serviceInfo");
+        locationId = intent.getIntExtra("locationId",locationId);
 
         if (providerName != null) {
             tvProviderName.setText(providerName);
@@ -177,6 +188,22 @@ public class AppointmentActivity extends AppCompatActivity {
 
                 Intent familyIntent = new Intent(AppointmentActivity.this, CheckinFamilyMemberAppointment.class);
                 startActivity(familyIntent);
+
+            }
+        });
+
+        tvChangeTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                slotsDialog = new SlotsDialog(AppointmentActivity.this,serviceInfo.getServiceId(),locationId,iSlotInfo);
+                slotsDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+                slotsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                slotsDialog.show();
+                DisplayMetrics metrics = AppointmentActivity.this.getResources().getDisplayMetrics();
+                int width = (int) (metrics.widthPixels * 1);
+                slotsDialog.setCancelable(false);
+                slotsDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
 
             }
         });

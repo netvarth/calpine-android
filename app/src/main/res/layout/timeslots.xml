@@ -1,30 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:layout_marginTop="@dimen/dimen_2dp"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.chinodev.androidneomorphframelayout.NeomorphFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_margin="5dp"
-    android:background="@drawable/rounded_popularsearch"
-    android:layout_height="wrap_content">
+    android:layout_height="@dimen/padding50"
+    app:neomorph_background_color="#f4f4f4"
+    app:neomorph_corner_radius="10dp"
+    app:neomorph_elevation="1dp"
+    app:neomorph_highlight_color="@color/neomorph_highlight_color"
+    app:neomorph_layer_type="hardware"
+    app:neomorph_shadow_color="@color/neomorph_shadow_color"
+    app:neomorph_shadow_type="inner"
+    app:neomorph_view_type="rectangular"
+    android:id="@+id/fl_slotBackground">
 
 
-    <TextView
-        android:textColor="@color/black"
-        android:letterSpacing="0.03"
-        android:textStyle="bold"
-        android:justificationMode="inter_word"
-        android:lineSpacingExtra="@dimen/padding3"
-        android:text="timeslots"
-        android:id="@+id/special"
-        android:textSize="@dimen/txtsize_12"
+    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+        android:id="@+id/tv_timeSlot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/default_padding"
-        android:paddingRight="@dimen/default_padding"
-        android:paddingBottom="@dimen/padding5"
-        android:paddingTop="@dimen/padding5"
+        android:text="04:30 PM"
         android:layout_gravity="center"
-        android:gravity="center"
-        />
-</LinearLayout>
+        android:textColor="@color/location_theme"
+        android:textSize="@dimen/txtsize_14">
+
+    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+</com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>

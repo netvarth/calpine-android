@@ -1709,8 +1709,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                     btn_checkin.setVisibility(View.VISIBLE);
                                     RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(Appointment.this, 3);
                                     rvSlots.setLayoutManager(mLayoutManager);
-                                    sAdapter = new TimeSlotsAdapter(activeSlotsList, iSelectSlotInterface);
-                                    rvSlots.setAdapter(sAdapter);
+//                                    sAdapter = new TimeSlotsAdapter(activeSlotsList, iSelectSlotInterface);
+//                                    rvSlots.setAdapter(sAdapter);
                                 } else {
                                     cvSlots.setVisibility(View.GONE);
                                     llCoupons.setVisibility(View.GONE);

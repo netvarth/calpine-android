@@ -1758,6 +1758,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             Intent intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
+            intent.putExtra("locationId",locationId);
             ServiceInfo serviceInfo = new ServiceInfo();
             serviceInfo.setServiceId(checinServiceInfo.getId());
             serviceInfo.setServiceName(checinServiceInfo.getName());
@@ -1805,6 +1806,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             Intent intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
+            intent.putExtra("locationId",locationId);
             ServiceInfo serviceInfo = new ServiceInfo();
             serviceInfo.setServiceId(appointmentServiceInfo.getId());
             serviceInfo.setServiceName(appointmentServiceInfo.getName());

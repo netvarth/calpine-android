@@ -2,8 +2,10 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.annotation.SuppressLint;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -11,10 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.AppointmentDate;
+import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 
 import java.util.ArrayList;
@@ -27,9 +31,11 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
     String selectTimeslot = "";
     private ISelectSlotInterface iSelectSlotInterface;
     View previousSelectedItem;
+    private Context context;
 
 
-    public TimeSlotsAdapter(ArrayList timeSlots, ISelectSlotInterface iSelectSlotInterface) {
+    public TimeSlotsAdapter(Context context, ArrayList timeSlots, ISelectSlotInterface iSelectSlotInterface) {
+        this.context = context;
         this.timeSlots = timeSlots;
         this.iSelectSlotInterface = iSelectSlotInterface;
 
@@ -47,30 +53,26 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
     @Override
     public void onBindViewHolder(final TimeSlotsAdapterViewHolder myViewHolder, @SuppressLint("RecyclerView") final int position) {
         final AvailableSlotsData timeSlot = timeSlots.get(position);
-        myViewHolder.mSpecial.setText(timeSlots.get(position).getDisplayTime());
+        myViewHolder.tvTimeSlot.setText(timeSlots.get(position).getDisplayTime());
 
         myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myViewHolder.itemView.setBackgroundResource(R.drawable.rounded_popularsearch_green);
 
+                myViewHolder.flSlotBackground.setShadowOuter();
                 row_index = position;
                 notifyDataSetChanged();
-
-                new Handler().postDelayed(() -> {
-
-                    iSelectSlotInterface.sendSelectedTime(timeSlots.get(position).getDisplayTime(), timeSlots.get(position).getSlotTime(), timeSlots.get(position).getScheduleId());
-
-                }, 200);
-
-
+                iSelectSlotInterface.sendSelectedTime(timeSlots.get(position).getDisplayTime(), timeSlots.get(position).getSlotTime(), timeSlots.get(position).getScheduleId());
             }
         });
 
         if (row_index == position) {
-            myViewHolder.itemView.setBackgroundResource(R.drawable.rounded_popularsearch_green);
+            myViewHolder.flSlotBackground.setShadowInner();
+            myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.location_theme));
+//            myViewHolder.itemView.setBackgroundResource(R.drawable.rounded_popularsearch_green);
         } else {
-            myViewHolder.itemView.setBackgroundResource(R.drawable.rounded_popularsearch);
+            myViewHolder.flSlotBackground.setShadowOuter();
+//            myViewHolder.itemView.setBackgroundResource(R.drawable.rounded_popularsearch);
         }
 //        AppointmentDate.timeslot(selectTime);
     }
@@ -78,17 +80,20 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
 
     @Override
     public int getItemCount() {
-        return /*virtualFieldList.size();*/
-                timeSlots.size();
+        return timeSlots.size();
     }
 
     public class TimeSlotsAdapterViewHolder extends RecyclerView.ViewHolder {
-        TextView mSpecial;
+
+        NeomorphFrameLayout flSlotBackground;
+        CustomTextViewSemiBold tvTimeSlot;
 
 
         public TimeSlotsAdapterViewHolder(View view) {
             super(view);
-            mSpecial = view.findViewById(R.id.special);
+
+            tvTimeSlot = view.findViewById(R.id.tv_timeSlot);
+            flSlotBackground = view.findViewById(R.id.fl_slotBackground);
 
 
         }
