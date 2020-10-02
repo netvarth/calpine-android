@@ -27,6 +27,9 @@ public class ServiceInfo implements Serializable {
     String waitingTime;
     String type;
     boolean isToken;
+    int scheduleId;
+    String virtualCallingValue;
+    String calculationMode;
 
     public ServiceInfo(){
 
@@ -233,5 +236,29 @@ public class ServiceInfo implements Serializable {
 
     public void setToken(boolean token) {
         isToken = token;
+    }
+
+    public int getScheduleId() {
+        return scheduleId;
+    }
+
+    public void setScheduleId(int scheduleId) {
+        this.scheduleId = scheduleId;
+    }
+
+    public String getVirtualCallingValue() {
+        return virtualCallingValue;
+    }
+
+    public void setVirtualCallingValue(String virtualCallingValue) {
+        this.virtualCallingValue = virtualCallingValue;
+    }
+
+    public String getCalculationMode() {
+        return calculationMode;
+    }
+
+    public void setCalculationMode(String calculationMode) {
+        this.calculationMode = calculationMode;
     }
 }

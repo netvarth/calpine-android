@@ -27,35 +27,34 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
-public class EmailEditWindow extends Dialog {
+public class MobileNumberDialog extends Dialog {
     Context context;
-    EditText email;
+    EditText phone;
     Button btnsave;
     DatabaseHandler db;
     ProfileModel profileDetails;
     TextView tvErrorMessage;
     private IMailSubmit iMailSubmit;
-    String currentMailId;
+    String number;
 
-    public EmailEditWindow(Context mContext, ProfileModel profileDetails, IMailSubmit iMailSubmit, String mailId) {
+    public MobileNumberDialog(Context mContext, ProfileModel profileDetails, IMailSubmit iMailSubmit, String number) {
         super(mContext);
         this.context = mContext;
         this.profileDetails = profileDetails;
         this.iMailSubmit = iMailSubmit;
-        currentMailId = mailId;
+        number = number;
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.email_info);
-        email = findViewById(R.id.email);
+        phone = findViewById(R.id.et_phoneNumber);
         btnsave = findViewById(R.id.btnSave);
         tvErrorMessage = findViewById(R.id.error_mesg);
 
-        if (currentMailId != null) {
+        if (number != null) {
 
-            email.setText(currentMailId);
+            phone.setText(number);
 
         }
 
@@ -68,25 +67,14 @@ public class EmailEditWindow extends Dialog {
         });
     }
 
-    boolean isEmailValid(CharSequence email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email)
-                .matches();
-    }
 
     private void checkMail() {
 
-        String mailid = email.getText().toString();
+        String phoneNumber = phone.getText().toString();
 
-        if (mailid.trim().length() > 0) {
+        if (phoneNumber.trim().length() > 9) {
 
-            if (isEmailValid(mailid)) {
-
-                ApiEditProfileDetail();
-            } else {
-
-                tvErrorMessage.setVisibility(View.VISIBLE);
-                tvErrorMessage.setText("Enter valid mail Id");
-            }
+            ApiEditProfileDetail();
 
         } else {
 
@@ -109,12 +97,9 @@ public class EmailEditWindow extends Dialog {
             jsonObj.put("id", consumerId);
             jsonObj.put("firstName", profileDetails.getUserprofile().getFirstName());
             jsonObj.put("lastName", profileDetails.getUserprofile().getLastName());
-
-            jsonObj.put("email", email.getText().toString());
-
+            jsonObj.put("email", profileDetails.getUserprofile().getEmail());
+            jsonObj.put("phone",phone.getText().toString());
             jsonObj.put("gender", profileDetails.getUserprofile().getGender());
-
-
             jsonObj.put("dob", profileDetails.getUserprofile().getDob());
 
         } catch (JSONException e) {
@@ -136,9 +121,9 @@ public class EmailEditWindow extends Dialog {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
-                            SharedPreference.getInstance(context).setValue("email", email.getText().toString());
+                            SharedPreference.getInstance(context).setValue("mobile", phone.getText().toString());
 
-                            Toast.makeText(context, "Email has been updated successfully ", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "Mobile number has been updated successfully ", Toast.LENGTH_LONG).show();
                             iMailSubmit.mailUpdated();
                             dismiss();
 

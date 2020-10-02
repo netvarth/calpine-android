@@ -114,4 +114,5 @@ public class SearchDepartment implements Serializable {
     public void setUserIds(ArrayList<Integer> userIds) {
         this.userIds = userIds;
     }
+
 }

@@ -131,7 +131,7 @@ public class CheckinFamilyMemberAppointment extends AppCompatActivity {
 
                     }
                 } else {
-                    Appointment.refreshName(s_changename, memberid);
+                    AppointmentActivity.refreshName(s_changename, memberid);
                     finish();
                 }
 

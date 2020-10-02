@@ -55,11 +55,11 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
         final AvailableSlotsData timeSlot = timeSlots.get(position);
         myViewHolder.tvTimeSlot.setText(timeSlots.get(position).getDisplayTime());
 
-        myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+        myViewHolder.flSlotBackground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                myViewHolder.flSlotBackground.setShadowOuter();
+                myViewHolder.flSlotBackground.setShadowInner();
                 row_index = position;
                 notifyDataSetChanged();
                 iSelectSlotInterface.sendSelectedTime(timeSlots.get(position).getDisplayTime(), timeSlots.get(position).getSlotTime(), timeSlots.get(position).getScheduleId());
@@ -69,12 +69,12 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
         if (row_index == position) {
             myViewHolder.flSlotBackground.setShadowInner();
             myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.location_theme));
-//            myViewHolder.itemView.setBackgroundResource(R.drawable.rounded_popularsearch_green);
         } else {
             myViewHolder.flSlotBackground.setShadowOuter();
-//            myViewHolder.itemView.setBackgroundResource(R.drawable.rounded_popularsearch);
+            myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.inactive_text));
+
         }
-//        AppointmentDate.timeslot(selectTime);
+
     }
 
 

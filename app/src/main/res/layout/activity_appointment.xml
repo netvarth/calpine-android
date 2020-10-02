@@ -113,13 +113,14 @@
                     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/card"
                         android:layout_width="match_parent"
                         android:layout_height="180dp"
                         android:layout_below="@id/tv_description"
                         android:layout_marginStart="@dimen/padding5"
                         android:layout_marginTop="@dimen/padding15"
                         android:layout_marginEnd="@dimen/padding5"
-                        android:layout_marginBottom="@dimen/padding40"
+                        android:layout_marginBottom="@dimen/dimen_50dp"
                         app:cardCornerRadius="@dimen/padding5"
                         app:cardElevation="@dimen/dimen_10dp">
 
@@ -147,10 +148,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
-                                android:visibility="gone"
-                                android:orientation="vertical">
+                                android:orientation="vertical"
+                                android:visibility="gone">
 
                                 <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                                    android:id="@+id/tv_selectedDateHint"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
@@ -183,7 +185,6 @@
                                     android:textSize="@dimen/dimen_30sp">
 
                                 </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-                                
 
 
                             </LinearLayout>
@@ -192,10 +193,9 @@
                                 android:id="@+id/ll_checkIn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
                                 android:orientation="vertical"
-                                android:visibility="gone"
-                                android:layout_centerInParent="true">
-
+                                android:visibility="gone">
 
 
                                 <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
@@ -203,8 +203,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
-                                    android:text=""
                                     android:layout_marginTop="@dimen/padding5"
+                                    android:text=""
                                     android:textColor="@color/location_theme"
                                     android:textSize="@dimen/txtsize_10">
 
@@ -226,11 +226,11 @@
                                     android:id="@+id/tv_peopleInLine"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/padding3"
                                     android:layout_gravity="center"
+                                    android:layout_marginTop="@dimen/padding3"
                                     android:text=""
-                                    android:textSize="@dimen/dimen_16sp"
-                                    android:textColor="@color/checkin_theme">
+                                    android:textColor="@color/checkin_theme"
+                                    android:textSize="@dimen/dimen_16sp">
 
                                 </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
@@ -257,6 +257,35 @@
 
                     </androidx.cardview.widget.CardView>
 
+                    <LinearLayout
+                        android:id="@+id/ll_virtualNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:layout_marginTop="@dimen/padding5"
+                        android:layout_marginBottom="@dimen/padding5"
+                        android:visibility="gone">
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Contact for virtual service : "
+                            android:textSize="@dimen/txtsize_12">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                        <EditText
+                            android:id="@+id/et_virtualNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/padding3"
+                            android:text="5555000015"
+                            android:textSize="@dimen/txtsize_14">
+
+                        </EditText>
+
+                    </LinearLayout>
 
                 </RelativeLayout>
 
@@ -294,7 +323,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Edit Details"
+                        android:text="Change"
                         android:textAllCaps="true"
                         android:textColor="@color/location_theme"
                         android:textSize="@dimen/txtsize_12">
@@ -307,6 +336,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="@dimen/padding3"
                         android:src="@drawable/edit_icon"
+                        android:visibility="gone"
                         app:tint="@color/location_theme" />
 
                 </LinearLayout>
@@ -330,12 +360,25 @@
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycle_family"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding7"
+                    android:layout_marginRight="@dimen/default_padding"
+                    android:nestedScrollingEnabled="false"
+                    android:visibility="gone">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
                 <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                     android:id="@+id/tv_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding2"
-                    android:text="9876543210"
+                    android:drawableRight="@drawable/edit_icon_sized"
+                    android:drawablePadding="@dimen/padding5"
+                    android:text=""
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/txtsize_14">
 
@@ -346,7 +389,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding2"
-                    android:text="netvarth@jaldee.com"
+                    android:drawableRight="@drawable/edit_icon_sized"
+                    android:drawablePadding="@dimen/padding5"
+                    android:text=""
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/txtsize_14">
 
@@ -354,6 +399,68 @@
 
 
             </LinearLayout>
+
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                android:id="@+id/tv_applyCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding15"
+                android:layout_marginTop="@dimen/padding5"
+                android:layout_marginEnd="@dimen/padding15"
+                android:text="Apply Promocode"
+                android:textAllCaps="true"
+                android:textColor="@color/location_theme"
+                android:textSize="@dimen/txtsize_12"
+                android:visibility="visible">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+            <RelativeLayout
+                android:id="@+id/rl_coupon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding15"
+                android:layout_marginTop="@dimen/padding5"
+                android:background="@drawable/edittext"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:layout_marginEnd="@dimen/padding15">
+
+                <EditText
+                    android:id="@+id/et_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Coupon Code"
+                    android:paddingStart="@dimen/padding5"
+                    android:paddingTop="@dimen/padding5"
+                    android:paddingBottom="@dimen/padding5"
+                    android:textAllCaps="true"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/dimen_15sp" />
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                    android:id="@+id/tv_apply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Apply"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:layout_alignParentEnd="true"
+                    android:textColor="@color/location_theme"
+                    android:textSize="@dimen/txtsize_subtitle"
+                     />
+
+
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:visibility="gone" />
 
 
         </LinearLayout>
@@ -372,10 +479,10 @@
             android:id="@+id/cv_addNote"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:cardElevation="@dimen/padding2"
-            app:cardBackgroundColor="#F2F2F2"
             android:layout_margin="@dimen/padding5"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            app:cardBackgroundColor="#F2F2F2"
+            app:cardElevation="@dimen/padding2">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -393,8 +500,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Add Note"
                     android:layout_marginStart="@dimen/padding3"
+                    android:text="Add Note"
                     android:textAllCaps="true"
                     android:textColor="@color/location_theme"
                     android:textSize="@dimen/txtsize_12">
@@ -412,10 +519,10 @@
             android:id="@+id/cv_attachFile"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:cardElevation="@dimen/padding2"
-            app:cardBackgroundColor="#F2F2F2"
             android:layout_margin="@dimen/padding5"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            app:cardBackgroundColor="#F2F2F2"
+            app:cardElevation="@dimen/padding2">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -433,9 +540,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/padding3"
                     android:text="Attach File"
                     android:textAllCaps="true"
-                    android:layout_marginStart="@dimen/padding3"
                     android:textColor="@color/location_theme"
                     android:textSize="@dimen/txtsize_12">
 

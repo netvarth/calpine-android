@@ -1780,10 +1780,12 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             if (checinServiceInfo.getServiceType() != null) {
                 serviceInfo.setServiceType(checinServiceInfo.getServiceType());
             }
-            if (checinServiceInfo.getCallingMode() != null) {
-                serviceInfo.setCallingMode(checinServiceInfo.getCallingMode());
+            if (checinServiceInfo.getVirtualCallingModes()!= null) {
+                serviceInfo.setCallingMode(checinServiceInfo.getVirtualCallingModes().get(0).getCallingMode());
+                serviceInfo.setVirtualCallingValue(checinServiceInfo.getVirtualCallingModes().get(0).getValue());
             }
             if (checinServiceInfo.getCheckInServiceAvailability() != null) {
+                serviceInfo.setCalculationMode(checinServiceInfo.getCheckInServiceAvailability().getCalculationMode());
                 serviceInfo.setToken(checinServiceInfo.getCheckInServiceAvailability().isShowToken());
                 serviceInfo.setPeopleWaitingInLine(checinServiceInfo.getCheckInServiceAvailability().getPersonAhead());
                 serviceInfo.setAvailableDate(checinServiceInfo.getCheckInServiceAvailability().getAvailableDate());
@@ -1829,11 +1831,12 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             if (appointmentServiceInfo.getServiceType() != null) {
                 serviceInfo.setServiceType(appointmentServiceInfo.getServiceType());
             }
-            if (appointmentServiceInfo.getCallingMode() != null) {
-                serviceInfo.setCallingMode(appointmentServiceInfo.getCallingMode());
+            if (appointmentServiceInfo.getVirtualCallingModes() != null) {
+                serviceInfo.setCallingMode(appointmentServiceInfo.getVirtualCallingModes().get(0).getCallingMode());
+                serviceInfo.setVirtualCallingValue(appointmentServiceInfo.getVirtualCallingModes().get(0).getValue());
             }
             if (appointmentServiceInfo.getAppointServiceAvailability() != null){
-
+                serviceInfo.setScheduleId(appointmentServiceInfo.getAppointServiceAvailability().getId());
                 serviceInfo.setAvailableDate(appointmentServiceInfo.getAppointServiceAvailability().getNextAvailableDate());
                 serviceInfo.setTime(appointmentServiceInfo.getAppointServiceAvailability().getNextAvailable());
             }

@@ -57,6 +57,8 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
     TimeSlotsAdapter sAdapter;
     private ISelectSlotInterface iSelectSlotInterface;
     private String defaultDate;
+    private String displayTime = "",slotTime = "";
+    private int scheduleId;
 
 
     public SlotsDialog(Context context, int serviceId, int locationId, ISlotInfo iSlotInfo, int providerId, String availableDate) {
@@ -76,6 +78,7 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
         setContentView(R.layout.slots_dialog);
 
         initializations();
+        this.iSelectSlotInterface = this;
 
         getSlotsOnDate(serviceId, locationId, defaultDate, providerId);
 
@@ -117,6 +120,16 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
             }
         });
 
+        cvConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                iSlotInfo.sendSlotInfo(displayTime, slotTime, scheduleId,tvDate.getText().toString(),tvCalenderDate.getText().toString());
+                dismiss();
+
+            }
+        });
+
 
     }
 
@@ -140,18 +153,18 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
         try {
 
 
-            SimpleDateFormat simpledateformat = new SimpleDateFormat("EEEE");
+            SimpleDateFormat simpledateformat = new SimpleDateFormat("EEE");
             Date date = new Date(year, monthOfYear, dayOfMonth - 1);
             String dayOfWeek = simpledateformat.format(date);
 
             String sMonth = "";
-            if (monthOfYear < 10) {
+            if (monthOfYear < 9) {
                 sMonth = "0" + String.valueOf(monthOfYear + 1);
             } else {
                 sMonth = String.valueOf(monthOfYear + 1);
             }
 
-            String mDate = dayOfWeek + "\n" + dayOfMonth +
+            String mDate = dayOfWeek + ", " + dayOfMonth +
                     "/" + (sMonth) +
                     "/" + year;
             tvCalenderDate.setText(mDate);
@@ -159,6 +172,7 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
             String apiFormat = "yyyy-MM-dd"; // your format
             SimpleDateFormat apiSdf = new SimpleDateFormat(apiFormat);
             String pickedDate = apiSdf.format(myCalendar.getTime());
+            tvDate.setText(getCustomDateString(pickedDate));
             getSlotsOnDate(serviceId, locationId, pickedDate, providerId);
         } catch (Exception e) {
             e.printStackTrace();
@@ -173,7 +187,7 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
 
         final Dialog mDialog = Config.getProgressDialog(context, context.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ArrayList<SlotsData>> call = apiService.getSlotsOnDate(selectDate, serviceId, mSpinnertext, modifyAccountID);
+        Call<ArrayList<SlotsData>> call = apiService.getSlotsOnDate(selectDate, mSpinnertext, serviceId, modifyAccountID);
 
         call.enqueue(new Callback<ArrayList<SlotsData>>() {
             @Override
@@ -209,6 +223,8 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
                                     llNoSlots.setVisibility(View.GONE);
                                     activeScheduleId = activeSlotsList.get(0).getScheduleId();
                                     tvTime.setText(activeSlotsList.get(0).getDisplayTime());
+                                    tvDate.setText(getCustomDateString(slotsData.get(0).getDate()));
+                                    tvCalenderDate.setText(getCalenderDateFormat(slotsData.get(0).getDate()));
                                     RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 3);
                                     rvSlots.setLayoutManager(mLayoutManager);
                                     sAdapter = new TimeSlotsAdapter(context, activeSlotsList, iSelectSlotInterface);
@@ -254,10 +270,46 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
         return sTime;
     }
 
+    public static String getCustomDateString(String d) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date1 = format.parse(d);
+        String date = format.format(date1);
+
+        if (date.endsWith("1") && !date.endsWith("11"))
+            format = new SimpleDateFormat("d'st' MMM, yyyy");
+
+        else if (date.endsWith("2") && !date.endsWith("12"))
+            format = new SimpleDateFormat("d'nd' MMM, yyyy");
+
+        else if (date.endsWith("3") && !date.endsWith("13"))
+            format = new SimpleDateFormat("d'rd' MMM, yyyy");
+
+        else
+            format = new SimpleDateFormat("d'th' MMM, yyyy");
+
+        String yourDate = format.format(date1);
+
+        return yourDate;
+    }
+
+    public static String getCalenderDateFormat(String d) throws ParseException {
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date1 = format.parse(d);
+        format = new SimpleDateFormat("EEE, dd/MM/yyyy");
+        String yourDate = format.format(date1);
+
+        return yourDate;
+
+    }
 
     @Override
-    public void sendSelectedTime(String time, String displayTime, int scheduleId) {
+    public void sendSelectedTime(String dspTime,String sTime, int schdId) {
 
-        iSlotInfo.sendSlotInfo(time, displayTime, scheduleId);
+        // assigning
+        tvTime.setText(dspTime);
+        displayTime = dspTime;
+        slotTime = sTime;
+        scheduleId = schdId;
     }
 }

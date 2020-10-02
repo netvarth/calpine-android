@@ -192,7 +192,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_slots"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="145dp"
         android:layout_marginTop="@dimen/dimen_10dp"
         android:visibility="visible"
         android:layout_marginStart="@dimen/dimen_15dp"
