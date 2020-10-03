@@ -261,7 +261,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             tvServiceName.setText(serviceInfo.getServiceName());
             tvDescription.setText(serviceInfo.getDescription());
             if (serviceInfo.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
-                tvDate.setText(convertDate(serviceInfo.getAvailableDate()));
+                if (serviceInfo.getAvailableDate() != null) {
+                    tvDate.setText(convertDate(serviceInfo.getAvailableDate()));
+                }
                 if (serviceInfo.getTime() != null) {
                     apiDate = serviceInfo.getAvailableDate();
                     scheduleId = serviceInfo.getScheduleId();

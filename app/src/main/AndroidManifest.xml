@@ -35,7 +35,8 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.CheckInActivity"></activity>
+        <activity android:name=".activities.CheckInActivity"
+            android:hardwareAccelerated="true"></activity>
         <activity
             android:name=".activities.AppointmentActivity"
             android:hardwareAccelerated="true"

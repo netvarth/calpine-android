@@ -1038,7 +1038,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         serviceInfo.setPeopleInLine(0);
                         serviceInfo.setCalculationMode("");
                         serviceInfo.setOnline(onlinePresence);
-                        serviceInfo.setAvailability(true);
                         serviceInfo.setServiceMode(appt.getServiceType());
                         if (appt.getVirtualCallingModes() != null) {
                             serviceInfo.setCallingMode(appt.getVirtualCallingModes().get(0).getCallingMode());
@@ -1755,12 +1754,13 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     public void onCheckInSelected(SearchService checkinServiceInfo) {
 
         if (checkinServiceInfo != null) {
-            Intent intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
+            Intent intent = new Intent(ProviderDetailActivity.this, CheckInActivity.class);
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
             intent.putExtra("providerId",providerId);
             intent.putExtra("locationId",locationId);
             intent.putExtra("checkInInfo", checkinServiceInfo);
+            intent.putExtra("fromUser",false);
             startActivity(intent);
         }
     }

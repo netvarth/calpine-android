@@ -731,8 +731,18 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
 
     // service item click action
     @Override
-    public void onCheckInSelected(SearchService checinServiceInfo) {
+    public void onCheckInSelected(SearchService checkinServiceInfo) {
 
+        if (checkinServiceInfo != null) {
+            Intent intent = new Intent(UserDetailActivity.this, CheckInActivity.class);
+            intent.putExtra("uniqueID", uniqueId);
+            intent.putExtra("providerName", tvSpName.getText().toString());
+            intent.putExtra("providerId",providerId);
+            intent.putExtra("locationId",locationId);
+            intent.putExtra("checkInInfo", checkinServiceInfo);
+            intent.putExtra("fromUser",true);
+            startActivity(intent);
+        }
     }
 
     @Override

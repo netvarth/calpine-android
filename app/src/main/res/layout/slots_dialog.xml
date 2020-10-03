@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:letterSpacing="0.1"
-            android:text="27th oct 2020"
+            android:text=""
             android:textColor="@color/appoint_theme"
             android:textSize="@dimen/dimen_30sp">
 
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:letterSpacing="0.1"
-            android:text="04:40 PM"
+            android:text=""
             android:textColor="@color/appoint_theme"
             android:textSize="@dimen/dimen_30sp">
 
@@ -126,7 +126,7 @@
                 android:id="@+id/tv_calenderDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mon,27/07/2020"
+                android:text=""
                 android:textSize="@dimen/txtsize_14"
                 android:textColor="@color/title_color"
                 android:layout_centerInParent="true">

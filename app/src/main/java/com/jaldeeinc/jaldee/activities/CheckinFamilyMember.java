@@ -129,7 +129,7 @@ public class CheckinFamilyMember extends AppCompatActivity {
 
                     }
                 } else {
-                    CheckIn.refreshName(s_changename, memberid);
+                    CheckInActivity.refreshName(s_changename, memberid);
                     finish();
                 }
 
