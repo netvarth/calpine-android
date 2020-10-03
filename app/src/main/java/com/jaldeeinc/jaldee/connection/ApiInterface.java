@@ -237,7 +237,7 @@ public interface ApiInterface {
 
 
     @GET("{consumerID}/businessProfile.json")
-    Call<SearchViewDetail> getSearchViewDetail(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+    Call<SearchViewDetail>  getSearchViewDetail(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
     @GET("{uniqueId}/{userId}/providerBusinessProfile.json")
     Call<SearchViewDetail> getUserBusinessProfile(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
