@@ -10,8 +10,11 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,7 +30,9 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.SlotsData;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,7 +49,7 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
     private CustomTextViewBold tvDate;
     private CustomTextViewBold tvTime;
     private ImageView ivMinus, ivPlus, ivClose;
-    private CustomTextViewSemiBold tvCalenderDate;
+    private static CustomTextViewSemiBold tvCalenderDate;
     private RecyclerView rvSlots;
     private CardView cvConfirm;
     private LinearLayout llNoSlots;
@@ -57,7 +62,7 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
     TimeSlotsAdapter sAdapter;
     private ISelectSlotInterface iSelectSlotInterface;
     private String defaultDate;
-    private String displayTime = "",slotTime = "";
+    private String displayTime = "", slotTime = "";
     private int scheduleId;
 
 
@@ -124,13 +129,98 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
             @Override
             public void onClick(View v) {
 
-                iSlotInfo.sendSlotInfo(displayTime, slotTime, scheduleId,tvDate.getText().toString(),tvCalenderDate.getText().toString());
-                dismiss();
+                if (displayTime != null && !displayTime.trim().equalsIgnoreCase("")) {
+                    iSlotInfo.sendSlotInfo(displayTime, slotTime, scheduleId, tvDate.getText().toString(), tvCalenderDate.getText().toString());
+                    dismiss();
+                }
+                else {
 
+                    DynamicToast.make(context, "Please select a time slot", AppCompatResources.getDrawable(
+                            context, R.drawable.ic_info_black),
+                            ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.arrived_green), Toast.LENGTH_SHORT).show();
+
+                }
             }
         });
 
+        ivPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String dtStart = tvCalenderDate.getText().toString();
+                Config.logV("Date----------------" + dtStart);
+                Date date = null;
+                SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
+                try {
+                    date = format.parse(dtStart);
 
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Date added_date = addDays(date, 1);
+                DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
+                //to convert Date to String, use format method of SimpleDateFormat class.
+                String strDate = dateFormat.format(added_date);
+                tvCalenderDate.setText(strDate);
+                DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
+                defaultDate = selecteddateParse.format(added_date);
+                UpdateDAte(defaultDate);
+            }
+        });
+
+        ivMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String dtStart = tvCalenderDate.getText().toString();
+                Config.logV("Date----------------" + dtStart);
+                Date date = null;
+                SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
+                try {
+                    date = format.parse(dtStart);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                Date added_date = subtractDays(date, 1);
+                DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
+                //to convert Date to String, use format method of SimpleDateFormat class.
+                String strDate = dateFormat.format(added_date);
+                tvCalenderDate.setText(strDate);
+                DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
+                defaultDate = selecteddateParse.format(added_date);
+                UpdateDAte(defaultDate);
+            }
+        });
+
+    }
+    public String UpdateDAte(String sDate) {
+        Date selecteddate = null;
+        String dtStart = tvCalenderDate.getText().toString();
+        SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
+        try {
+            selecteddate = format.parse(dtStart);
+            //  System.out.println(selecteddate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        getSlotsOnDate(serviceId, locationId, sDate, providerId);
+
+        Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        Date tomorow = cal.getTime();
+        if (today.before(selecteddate)) {
+            Config.logV("Date Enabled---------------");
+            ivMinus.setEnabled(true);
+            ivMinus.setColorFilter(ContextCompat.getColor(context, R.color.location_theme), android.graphics.PorterDuff.Mode.SRC_IN);
+
+        } else {
+            Config.logV("Date Disabled---------------");
+            ivMinus.setEnabled(false);
+            ivMinus.setColorFilter(ContextCompat.getColor(context, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+        }
+
+        return "";
     }
 
     private void initializations() {
@@ -173,6 +263,7 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
             SimpleDateFormat apiSdf = new SimpleDateFormat(apiFormat);
             String pickedDate = apiSdf.format(myCalendar.getTime());
             tvDate.setText(getCustomDateString(pickedDate));
+            UpdateDAte(mDate);
             getSlotsOnDate(serviceId, locationId, pickedDate, providerId);
         } catch (Exception e) {
             e.printStackTrace();
@@ -304,12 +395,28 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
     }
 
     @Override
-    public void sendSelectedTime(String dspTime,String sTime, int schdId) {
+    public void sendSelectedTime(String dspTime, String sTime, int schdId) {
 
         // assigning
         tvTime.setText(dspTime);
         displayTime = dspTime;
         slotTime = sTime;
         scheduleId = schdId;
+    }
+
+    public Date addDays(Date date, int days) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days);
+
+        return cal.getTime();
+    }
+
+    public Date subtractDays(Date date, int days) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, -days);
+
+        return cal.getTime();
     }
 }

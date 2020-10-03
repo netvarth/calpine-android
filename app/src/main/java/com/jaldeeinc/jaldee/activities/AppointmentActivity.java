@@ -1,5 +1,6 @@
 package com.jaldeeinc.jaldee.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
@@ -10,11 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -45,11 +50,13 @@ import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
 import com.jaldeeinc.jaldee.custom.SlotsDialog;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
+import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
+import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
@@ -57,6 +64,8 @@ import com.jaldeeinc.jaldee.response.ServiceInfo;
 import com.jaldeeinc.jaldee.response.SlotsData;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
+import com.razorpay.PaymentData;
+import com.razorpay.PaymentResultWithDataListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -85,7 +94,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AppointmentActivity extends AppCompatActivity implements ISlotInfo, IMailSubmit {
+public class AppointmentActivity extends AppCompatActivity implements PaymentResultWithDataListener, ISlotInfo, IMailSubmit {
 
     @BindView(R.id.tv_providerName)
     CustomTextViewSemiBold tvProviderName;
@@ -161,6 +170,18 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
     @BindView(R.id.tv_apply)
     CustomTextViewBold tvApply;
 
+    @BindView(R.id.txtprepay)
+    CustomTextViewMedium txtprepay;
+
+    @BindView(R.id.txtprepayamount)
+    CustomTextViewMedium txtprepayamount;
+
+    @BindView(R.id.LservicePrepay)
+    LinearLayout LservicePrepay;
+
+    @BindView(R.id.cv_back)
+    CardView cvBack;
+
     String mFirstName, mLastName;
     int consumerID;
     private int uniqueId;
@@ -199,6 +220,8 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
     static Activity mActivity;
     static Context mContext;
     String apiDate = "";
+    private int userId;
+    ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
 
 
     @Override
@@ -218,6 +241,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
         serviceInfo = (ServiceInfo) intent.getSerializableExtra("serviceInfo");
         locationId = intent.getIntExtra("locationId", 0);
         providerId = intent.getIntExtra("providerId", 0);
+        userId = intent.getIntExtra("userId", 0);
         tvConsumerName = findViewById(R.id.tv_consumerName);
         list = findViewById(R.id.list);
         recycle_family = findViewById(R.id.recycle_family);
@@ -280,6 +304,19 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
             } else {
                 llVirtualNumber.setVisibility(View.GONE);
             }
+
+            if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
+
+                if (serviceInfo.isUser()) {
+                    APIPayment(String.valueOf(userId));
+                } else {
+                    APIPayment(String.valueOf(providerId));
+
+                }
+            } else {
+
+                LservicePrepay.setVisibility(View.GONE);
+            }
         }
 
         mFirstName = SharedPreference.getInstance(AppointmentActivity.this).getStringValue("firstname", "");
@@ -293,6 +330,14 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
         ApiJaldeegetS3Coupons(uniqueId);
 
         // click actions
+
+        cvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                finish();
+            }
+        });
 
         tvEmail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -345,7 +390,13 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
             public void onClick(View v) {
 
                 if (serviceInfo.getAvailableDate() != null) {
-                    slotsDialog = new SlotsDialog(AppointmentActivity.this, serviceInfo.getServiceId(), locationId, iSlotInfo, providerId, serviceInfo.getAvailableDate());
+                    if (serviceInfo.isUser()) {
+                        slotsDialog = new SlotsDialog(AppointmentActivity.this, serviceInfo.getServiceId(), locationId, iSlotInfo, userId, apiDate);
+
+                    } else {
+                        slotsDialog = new SlotsDialog(AppointmentActivity.this, serviceInfo.getServiceId(), locationId, iSlotInfo, providerId, apiDate);
+
+                    }
                     slotsDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     slotsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     slotsDialog.show();
@@ -440,14 +491,23 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
                     if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
                         if (tvEmail.getText().toString() != null && tvEmail.getText().length() > 0) {
 
-                            ApiAppointment("message");
+                            if (serviceInfo.isUser()) {
+                                ApiAppointment("message", userId);
+                            } else {
+                                ApiAppointment("message", providerId);
+                            }
 
                         } else {
+
 
                         }
                     } else {
 
-                        ApiAppointment("message");
+                        if (serviceInfo.isUser()) {
+                            ApiAppointment("message", userId);
+                        } else {
+                            ApiAppointment("message", providerId);
+                        }
                     }
 //                    }
                 }
@@ -672,11 +732,89 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
     }
 
 
-
     boolean showPaytmWallet = false;
     boolean showPayU = false;
 
-    private void ApiAppointment(final String txt_addnote) {
+    private void APIPayment(String accountID) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
+
+        call.enqueue(new Callback<ArrayList<PaymentModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<PaymentModel>> call, Response<ArrayList<PaymentModel>> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL----%%%%%-----------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        mPaymentData = response.body();
+
+                        for (int i = 0; i < mPaymentData.size(); i++) {
+                            if (mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")) {
+                                showPaytmWallet = true;
+                            }
+
+                            if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
+                                showPayU = true;
+                            }
+                        }
+
+                        if ((showPayU) || showPaytmWallet) {
+                            Config.logV("URL----%%%%%---@@--");
+                            LservicePrepay.setVisibility(View.VISIBLE);
+                            Typeface tyface = Typeface.createFromAsset(getAssets(),
+                                    "fonts/Montserrat_Bold.otf");
+                            txtprepay.setTypeface(tyface);
+                            txtprepayamount.setTypeface(tyface);
+                            String firstWord = "Prepayment Amount: ";
+                            String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinPrePaymentAmount()));
+                            Spannable spannable = new SpannableString(firstWord + secondWord);
+                            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
+                                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            txtprepayamount.setText(spannable);
+                        }
+
+                    } else {
+                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<PaymentModel>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+
+            }
+        });
+
+
+    }
+
+
+    private void ApiAppointment(final String txt_addnote, int id) {
 
         phoneNumber = tvNumber.getText().toString();
         uuid = UUID.randomUUID().toString();
@@ -709,7 +847,11 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
             sjsonobj.put("id", scheduleId);
             queueobj.put("consumerNote", txt_addnote);
             queueobj.put("phonenumber", phoneNumber);
-            pjsonobj.put("id", locationId);
+            if (serviceInfo.isUser()) {
+                pjsonobj.put("id", providerId);
+            } else {
+                pjsonobj.put("id", 0);
+            }
 
             if (etVirtualNumber.getText().toString().trim().length() > 9) {
                 if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("whatsapp")) {
@@ -725,6 +867,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
                 DynamicToast.make(AppointmentActivity.this, "Virtual service number is invalid", AppCompatResources.getDrawable(
                         AppointmentActivity.this, R.drawable.ic_info_black),
                         ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+                return;
             }
 
             sejsonobj.put("id", serviceInfo.getServiceId());
@@ -791,8 +934,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
 
         Log.i("QueueObj Checkin", queueobj.toString());
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), queueobj.toString());
-        Call<ResponseBody> call = apiService.Appointment(String.valueOf(providerId), body);
-        //  Config.logV("JSON--------------" + new Gson().toJson(queueobj.toString()));
+        Call<ResponseBody> call = apiService.Appointment(String.valueOf(id), body);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -871,7 +1013,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
                                         @Override
                                         public void onClick(View v) {
 
-                                            new PaymentGateway(AppointmentActivity.this, AppointmentActivity.this).ApiGenerateHash1(value, serviceInfo.getMinPrePaymentAmount(), String.valueOf(locationId), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                            new PaymentGateway(AppointmentActivity.this, AppointmentActivity.this).ApiGenerateHash1(value, serviceInfo.getMinPrePaymentAmount(), String.valueOf(providerId), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
                                             dialog.dismiss();
 
 //                                            if (imagePathList.size() > 0) {
@@ -885,7 +1027,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
                                         public void onClick(View v) {
 
                                             PaytmPayment payment = new PaytmPayment(AppointmentActivity.this, paymentResponse);
-                                            payment.ApiGenerateHashPaytm(value, serviceInfo.getMinPrePaymentAmount(), String.valueOf(locationId), Constants.PURPOSE_PREPAYMENT, AppointmentActivity.this, AppointmentActivity.this, "", familyMEmID);
+                                            payment.ApiGenerateHashPaytm(value, serviceInfo.getMinPrePaymentAmount(), String.valueOf(providerId), Constants.PURPOSE_PREPAYMENT, AppointmentActivity.this, AppointmentActivity.this, "", familyMEmID);
                                             //payment.generateCheckSum(sAmountPay);
                                             dialog.dismiss();
 
@@ -906,7 +1048,13 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
 //                                ApiCommunicateAppointment(value, String.valueOf(accountID), txt_addnote, dialog);
 //                            }
 
-                            getConfirmationDetails();
+                            if (serviceInfo.isUser()) {
+                                getConfirmationDetails(userId);
+
+                            } else {
+                                getConfirmationDetails(providerId);
+
+                            }
                         }
 
 
@@ -985,11 +1133,11 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
 
     }
 
-    private void getConfirmationDetails() {
+    private void getConfirmationDetails(int userId) {
 
         final ApiInterface apiService =
                 ApiClient.getClient(AppointmentActivity.this).create(ApiInterface.class);
-        Call<ActiveCheckIn> call = apiService.getActiveAppointmentUUID(value, String.valueOf(locationId));
+        Call<ActiveCheckIn> call = apiService.getActiveAppointmentUUID(value, String.valueOf(userId));
         call.enqueue(new Callback<ActiveCheckIn>() {
             @Override
             public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
@@ -1002,7 +1150,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
 
                             Bundle b = new Bundle();
                             b.putSerializable("BookingDetails", activeAppointment);
-                            b.putString("terminology",mSearchTerminology.getProvider());
+                            b.putString("terminology", mSearchTerminology.getProvider());
                             Intent checkin = new Intent(AppointmentActivity.this, AppointmentConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);
@@ -1154,7 +1302,6 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
     }
 
 
-
     @Override
     public void mailUpdated() {
 
@@ -1183,5 +1330,55 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
         recycle_family.setAdapter(mFamilyAdpater);
         mFamilyAdpater.notifyDataSetChanged();
         tvConsumerName.setVisibility(View.GONE);
+    }
+
+    public void paymentFinished(RazorpayModel razorpayModel) {
+
+        if (serviceInfo.isUser()) {
+            getConfirmationDetails(userId);
+
+        } else {
+            getConfirmationDetails(providerId);
+
+        }
+    }
+
+
+    @Override
+    public void onPaymentSuccess(String s, PaymentData paymentData) {
+
+        try {
+            RazorpayModel razorpayModel = new RazorpayModel(paymentData);
+            new PaymentGateway(this.mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
+            Toast.makeText(this.mContext, "Payment Successful", Toast.LENGTH_LONG).show();
+            paymentFinished(razorpayModel);
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentSuccess", e);
+        }
+    }
+
+    @Override
+    public void onPaymentError(int i, String s, PaymentData paymentData) {
+
+        try {
+            AlertDialog alertDialog = new AlertDialog.Builder(AppointmentActivity.this).create();
+            alertDialog.setTitle("Payment Failed");
+            alertDialog.setMessage("Unable to process your request.Please try again after some time");
+            alertDialog.setCancelable(false);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+                            Intent homeIntent = new Intent(AppointmentActivity.this, Home.class);
+                            startActivity(homeIntent);
+                            finish();
+
+                        }
+                    });
+            alertDialog.show();
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentError..", e);
+        }
     }
 }

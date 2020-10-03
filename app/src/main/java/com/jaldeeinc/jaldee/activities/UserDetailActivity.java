@@ -53,6 +53,7 @@ import com.jaldeeinc.jaldee.response.SearchLocation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
+import com.jaldeeinc.jaldee.response.ServiceInfo;
 import com.jaldeeinc.jaldee.widgets.CustomDialog;
 
 import java.text.SimpleDateFormat;
@@ -138,6 +139,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
     private int uniqueId;
     private int providerId;
     private int locationId;
+    private int userId;
     private String locationName;
     boolean flag_more = false;
     private boolean isToken;
@@ -181,7 +183,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             providerId = providerInfo.getId();
             if (providerInfo.getProfilePicture() != null) {
                 String url = extractUrl(providerInfo.getProfilePicture());
-                PicassoTrustAll.getInstance(context).load(url).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(ivSpImage);
+                PicassoTrustAll.getInstance(mContext).load(url).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(ivSpImage);
 
             } else {
                 ivSpImage.setImageResource(R.drawable.icon_noimage);
@@ -384,6 +386,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
 
                         if (providerDetails != null) {
 
+                            userId = providerDetails.getId();
                             onlinePresence = providerDetails.isOnlinePresence();
                             UpdateMainUI(providerDetails);
                             apiGetProviders(uniqueId, providerId, locId);
@@ -734,6 +737,49 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
 
     @Override
     public void onAppointmentSelected(SearchAppoinment appointmentServiceInfo) {
+
+        if (appointmentServiceInfo != null) {
+            Intent intent = new Intent(UserDetailActivity.this, AppointmentActivity.class);
+            intent.putExtra("uniqueID", uniqueId);
+            intent.putExtra("providerName", tvSpName.getText().toString());
+            intent.putExtra("locationId",locationId);
+            intent.putExtra("providerId",providerId);
+            intent.putExtra("userId",userId);
+            ServiceInfo serviceInfo = new ServiceInfo();
+            serviceInfo.setServiceId(appointmentServiceInfo.getId());
+            serviceInfo.setServiceName(appointmentServiceInfo.getName());
+            serviceInfo.setDescription(appointmentServiceInfo.getDescription());
+            serviceInfo.setType(Constants.APPOINTMENT);
+            serviceInfo.setUser(true);
+            if (appointmentServiceInfo.getConsumerNoteTitle() != null) {
+                serviceInfo.setConsumerNoteTitle(appointmentServiceInfo.getConsumerNoteTitle());
+            }
+            serviceInfo.setIsPrePayment(appointmentServiceInfo.getIsPrePayment());
+            serviceInfo.setLivetrack(appointmentServiceInfo.getLivetrack());
+            if (appointmentServiceInfo.getMinPrePaymentAmount() != null) {
+                serviceInfo.setMinPrePaymentAmount(appointmentServiceInfo.getMinPrePaymentAmount());
+            }
+            serviceInfo.setPreInfoEnabled(appointmentServiceInfo.isPreInfoEnabled());
+            if (appointmentServiceInfo.getPreInfoText() != null) {
+                serviceInfo.setPreInfoText(appointmentServiceInfo.getPreInfoText());
+            }
+            if (appointmentServiceInfo.getServiceType() != null) {
+                serviceInfo.setServiceType(appointmentServiceInfo.getServiceType());
+            }
+            if (appointmentServiceInfo.getVirtualCallingModes() != null) {
+                serviceInfo.setCallingMode(appointmentServiceInfo.getVirtualCallingModes().get(0).getCallingMode());
+                serviceInfo.setVirtualCallingValue(appointmentServiceInfo.getVirtualCallingModes().get(0).getValue());
+            }
+            if (appointmentServiceInfo.getAppointServiceAvailability() != null){
+                serviceInfo.setScheduleId(appointmentServiceInfo.getAppointServiceAvailability().getId());
+                serviceInfo.setAvailableDate(appointmentServiceInfo.getAppointServiceAvailability().getNextAvailableDate());
+                serviceInfo.setTime(appointmentServiceInfo.getAppointServiceAvailability().getNextAvailable());
+            }
+
+            intent.putExtra("serviceInfo", serviceInfo);
+
+            startActivity(intent);
+        }
 
     }
 }

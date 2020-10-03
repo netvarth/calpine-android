@@ -35,26 +35,26 @@ public class MobileNumberDialog extends Dialog {
     ProfileModel profileDetails;
     TextView tvErrorMessage;
     private IMailSubmit iMailSubmit;
-    String number;
+    String phoneNumber;
 
     public MobileNumberDialog(Context mContext, ProfileModel profileDetails, IMailSubmit iMailSubmit, String number) {
         super(mContext);
         this.context = mContext;
         this.profileDetails = profileDetails;
         this.iMailSubmit = iMailSubmit;
-        number = number;
+        this.phoneNumber = number;
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.email_info);
+        setContentView(R.layout.mobile_number);
         phone = findViewById(R.id.et_phoneNumber);
         btnsave = findViewById(R.id.btnSave);
         tvErrorMessage = findViewById(R.id.error_mesg);
 
-        if (number != null) {
+        if (phoneNumber != null) {
 
-            phone.setText(number);
+            phone.setText(phoneNumber);
 
         }
 

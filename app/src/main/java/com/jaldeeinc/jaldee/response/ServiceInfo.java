@@ -30,6 +30,7 @@ public class ServiceInfo implements Serializable {
     int scheduleId;
     String virtualCallingValue;
     String calculationMode;
+    boolean isUser;
 
     public ServiceInfo(){
 
@@ -260,5 +261,13 @@ public class ServiceInfo implements Serializable {
 
     public void setCalculationMode(String calculationMode) {
         this.calculationMode = calculationMode;
+    }
+
+    public boolean isUser() {
+        return isUser;
+    }
+
+    public void setUser(boolean user) {
+        isUser = user;
     }
 }

@@ -8,17 +8,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/txtsize_12"
+            android:layout_marginTop="@dimen/padding30"
+            android:textColor="@color/title_color"
+            android:layout_marginStart="@dimen/padding15"
+            android:text="Details will be saved to your profile">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
 
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding30"
             android:layout_marginStart="@dimen/padding15"
             android:layout_marginEnd="@dimen/padding15"
             android:paddingStart="@dimen/txtsize_10"
+            android:layout_marginTop="@dimen/dimen_10dp"
             android:paddingTop="@dimen/padding5"
             android:paddingBottom="@dimen/padding3"
             android:textSize="@dimen/dimen_15sp"

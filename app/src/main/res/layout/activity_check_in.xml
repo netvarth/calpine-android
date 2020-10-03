@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context="com.jaldeeinc.jaldee.activities.AppointmentActivity">
+    tools:context="com.jaldeeinc.jaldee.activities.CheckInActivity">
 
 
     <LinearLayout
@@ -450,7 +450,7 @@
                     android:layout_alignParentEnd="true"
                     android:textColor="@color/location_theme"
                     android:textSize="@dimen/txtsize_subtitle"
-                     />
+                    />
 
 
             </RelativeLayout>

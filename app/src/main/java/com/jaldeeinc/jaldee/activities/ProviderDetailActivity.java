@@ -1752,52 +1752,15 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     // Click actions of selected items in grid
 
     @Override
-    public void onCheckInSelected(SearchService checinServiceInfo) {
+    public void onCheckInSelected(SearchService checkinServiceInfo) {
 
-        if (checinServiceInfo != null) {
+        if (checkinServiceInfo != null) {
             Intent intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
             intent.putExtra("providerId",providerId);
             intent.putExtra("locationId",locationId);
-            ServiceInfo serviceInfo = new ServiceInfo();
-            serviceInfo.setServiceId(checinServiceInfo.getId());
-            serviceInfo.setServiceName(checinServiceInfo.getName());
-            serviceInfo.setDescription(checinServiceInfo.getDescription());
-            serviceInfo.setType(Constants.CHECKIN);
-            if (checinServiceInfo.getConsumerNoteTitle() != null) {
-                serviceInfo.setConsumerNoteTitle(checinServiceInfo.getConsumerNoteTitle());
-            }
-            serviceInfo.setIsPrePayment(String.valueOf(checinServiceInfo.isPrePayment()));
-            serviceInfo.setLivetrack(String.valueOf(checinServiceInfo.isLivetrack()));
-            if (checinServiceInfo.getMinPrePaymentAmount() != null) {
-                serviceInfo.setMinPrePaymentAmount(checinServiceInfo.getMinPrePaymentAmount());
-            }
-            serviceInfo.setPreInfoEnabled(checinServiceInfo.isPreInfoEnabled());
-            if (checinServiceInfo.getPreInfoText() != null) {
-                serviceInfo.setPreInfoText(checinServiceInfo.getPreInfoText());
-            }
-            if (checinServiceInfo.getServiceType() != null) {
-                serviceInfo.setServiceType(checinServiceInfo.getServiceType());
-            }
-            if (checinServiceInfo.getVirtualCallingModes()!= null) {
-                serviceInfo.setCallingMode(checinServiceInfo.getVirtualCallingModes().get(0).getCallingMode());
-                serviceInfo.setVirtualCallingValue(checinServiceInfo.getVirtualCallingModes().get(0).getValue());
-            }
-            if (checinServiceInfo.getCheckInServiceAvailability() != null) {
-                serviceInfo.setCalculationMode(checinServiceInfo.getCheckInServiceAvailability().getCalculationMode());
-                serviceInfo.setToken(checinServiceInfo.getCheckInServiceAvailability().isShowToken());
-                serviceInfo.setPeopleWaitingInLine(checinServiceInfo.getCheckInServiceAvailability().getPersonAhead());
-                serviceInfo.setAvailableDate(checinServiceInfo.getCheckInServiceAvailability().getAvailableDate());
-                if (checinServiceInfo.getCheckInServiceAvailability().getServiceTime() != null) {
-                    serviceInfo.setTime(checinServiceInfo.getCheckInServiceAvailability().getServiceTime());
-                }
-                if (checinServiceInfo.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
-                    serviceInfo.setWaitingTime(checinServiceInfo.getCheckInServiceAvailability().getQueueWaitingTime());
-                }
-            }
-
-            intent.putExtra("serviceInfo", serviceInfo);
+            intent.putExtra("checkInInfo", checkinServiceInfo);
             startActivity(intent);
         }
     }
@@ -1816,6 +1779,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             serviceInfo.setServiceName(appointmentServiceInfo.getName());
             serviceInfo.setDescription(appointmentServiceInfo.getDescription());
             serviceInfo.setType(Constants.APPOINTMENT);
+            serviceInfo.setUser(false);
             if (appointmentServiceInfo.getConsumerNoteTitle() != null) {
                 serviceInfo.setConsumerNoteTitle(appointmentServiceInfo.getConsumerNoteTitle());
             }
