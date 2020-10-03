@@ -65,6 +65,7 @@ public class MobileNumberDialog extends Dialog {
                 checkMail();
             }
         });
+
     }
 
 
@@ -73,8 +74,11 @@ public class MobileNumberDialog extends Dialog {
         String phoneNumber = phone.getText().toString();
 
         if (phoneNumber.trim().length() > 9) {
-
-            ApiEditProfileDetail();
+            Toast.makeText(context, "Mobile number has been updated successfully ", Toast.LENGTH_LONG).show();
+            SharedPreference.getInstance(context).setValue("mobile", phone.getText().toString());
+            iMailSubmit.mailUpdated();
+            dismiss();
+          //  ApiEditProfileDetail();
 
         } else {
 

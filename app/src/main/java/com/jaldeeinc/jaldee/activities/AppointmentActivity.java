@@ -260,6 +260,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         if (serviceInfo != null) {
             tvServiceName.setText(serviceInfo.getServiceName());
             tvDescription.setText(serviceInfo.getDescription());
+            try{
             if (serviceInfo.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
                 if (serviceInfo.getAvailableDate() != null) {
                     tvDate.setText(convertDate(serviceInfo.getAvailableDate()));
@@ -289,6 +290,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     }
                 }
             }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
 
             if (serviceInfo.getServiceType() != null && serviceInfo.getServiceType().equalsIgnoreCase("virtualService")) {
 
@@ -391,21 +397,26 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             @Override
             public void onClick(View v) {
 
-                if (serviceInfo.getAvailableDate() != null) {
-                    if (serviceInfo.isUser()) {
-                        slotsDialog = new SlotsDialog(AppointmentActivity.this, serviceInfo.getServiceId(), locationId, iSlotInfo, userId, apiDate);
+                try {
+                    if (serviceInfo.getAvailableDate() != null) {
+                        if (serviceInfo.isUser()) {
+                            slotsDialog = new SlotsDialog(AppointmentActivity.this, serviceInfo.getServiceId(), locationId, iSlotInfo, userId, apiDate);
 
-                    } else {
-                        slotsDialog = new SlotsDialog(AppointmentActivity.this, serviceInfo.getServiceId(), locationId, iSlotInfo, providerId, apiDate);
+                        } else {
+                            slotsDialog = new SlotsDialog(AppointmentActivity.this, serviceInfo.getServiceId(), locationId, iSlotInfo, providerId, apiDate);
 
+                        }
+                        slotsDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+                        slotsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        slotsDialog.show();
+                        DisplayMetrics metrics = AppointmentActivity.this.getResources().getDisplayMetrics();
+                        int width = (int) (metrics.widthPixels * 1);
+                        slotsDialog.setCancelable(false);
+                        slotsDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                     }
-                    slotsDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
-                    slotsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    slotsDialog.show();
-                    DisplayMetrics metrics = AppointmentActivity.this.getResources().getDisplayMetrics();
-                    int width = (int) (metrics.widthPixels * 1);
-                    slotsDialog.setCancelable(false);
-                    slotsDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
                 }
 
             }
@@ -1306,8 +1317,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     @Override
     public void mailUpdated() {
-
-        ApiGetProfileDetail();
+     String phone = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+     String mail =  SharedPreference.getInstance(mContext).getStringValue("email", "");
+     tvEmail.setText(mail);
+     tvNumber.setText(phone);
+      //  ApiGetProfileDetail();
 
     }
 
