@@ -272,7 +272,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
                         } else if (child.getCallingMode().equalsIgnoreCase("GoogleMeet")) {
 
-                            viewHolder.ivTeleService.setImageResource(R.drawable.googlemeet);
+                            viewHolder.ivTeleService.setImageResource(R.drawable.new_gmeet);
 
                         } else if (child.getCallingMode().equalsIgnoreCase("WhatsApp")) {
 

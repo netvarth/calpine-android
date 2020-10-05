@@ -185,6 +185,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     @BindView(R.id.cv_back)
     CardView cvBack;
 
+    @BindView(R.id.iv_teleService)
+    ImageView ivteleService;
+
     String mFirstName, mLastName;
     int consumerID;
     private int uniqueId;
@@ -266,7 +269,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         }
 
         if (serviceInfo != null) {
-            tvServiceName.setText(serviceInfo.getServiceName());
+            String name = serviceInfo.getServiceName();
+            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+            tvServiceName.setText(name);
             tvDescription.setText(serviceInfo.getDescription());
             try {
                 if (serviceInfo.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
@@ -313,10 +318,33 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     } else {
                         llVirtualNumber.setVisibility(View.GONE);
                     }
+
+                    ivteleService.setVisibility(View.VISIBLE);
+                    if (serviceInfo.getCallingMode().equalsIgnoreCase("Zoom")) {
+
+                        ivteleService.setImageResource(R.drawable.zoom);
+
+                    } else if (serviceInfo.getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+
+                        ivteleService.setImageResource(R.drawable.googlemeet);
+
+                    } else if (serviceInfo.getCallingMode().equalsIgnoreCase("WhatsApp")) {
+
+                        ivteleService.setImageResource(R.drawable.whatsapp_icon);
+
+                    } else if (serviceInfo.getCallingMode().equalsIgnoreCase("Phone")) {
+
+                        ivteleService.setImageResource(R.drawable.phone_icon);
+
+                    } else {
+                        ivteleService.setVisibility(View.GONE);
+                    }
                 } else {
+                    ivteleService.setVisibility(View.GONE);
                     llVirtualNumber.setVisibility(View.GONE);
                 }
             } else {
+                ivteleService.setVisibility(View.GONE);
                 llVirtualNumber.setVisibility(View.GONE);
             }
 
