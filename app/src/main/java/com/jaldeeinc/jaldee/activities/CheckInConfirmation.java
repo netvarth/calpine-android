@@ -61,7 +61,7 @@ public class CheckInConfirmation extends AppCompatActivity {
                     try{
                         if(activeCheckInInfo.getService().getServiceType().equalsIgnoreCase("virtualService")){
                             icon_service.setVisibility(View.VISIBLE);
-                            icon_service.setY(6);
+                            icon_service.setY(15);
 
                             if(activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                                icon_service.setImageResource(R.drawable.zoomicon_sized);
