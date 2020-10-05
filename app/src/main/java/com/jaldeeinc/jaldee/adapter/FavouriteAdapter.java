@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.callback.FavAdapterOnCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
@@ -140,7 +142,11 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
         myViewHolder.tv_provider.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodSearchDetailCallback(favList.getUniqueId());
+                Intent detailIntent = new Intent(mContext, ProviderDetailActivity.class);
+                detailIntent.putExtra("uniqueID",favList.getUniqueId());
+                detailIntent.putExtra("from","fav");
+                mContext.startActivity(detailIntent);
+               // callback.onMethodSearchDetailCallback(favList.getUniqueId());
             }
 
 
@@ -211,7 +217,11 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
         myViewHolder.tv_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodSearchDetailCallback(favList.getUniqueId());
+                Intent detailIntent = new Intent(mContext, ProviderDetailActivity.class);
+                detailIntent.putExtra("uniqueID",favList.getUniqueId());
+                detailIntent.putExtra("from","fav");
+                mContext.startActivity(detailIntent);
+              //  callback.onMethodSearchDetailCallback(favList.getUniqueId());
             }
         });
 

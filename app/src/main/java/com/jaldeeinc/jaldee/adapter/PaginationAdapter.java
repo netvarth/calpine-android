@@ -36,6 +36,7 @@ import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.activities.CouponActivity;
 import com.jaldeeinc.jaldee.activities.CouponFirstActivity;
 import com.jaldeeinc.jaldee.activities.Donation;
+import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
@@ -758,7 +759,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View v) {
                         if (checkins_flag.get(position).equals(true) && appts_flag.get(position).equals(false) && dnts_flag.get(position).equals(false)) {
-                            Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
+                            Intent iCheckIn = new Intent(v.getContext(), ProviderDetailActivity.class);
                             iCheckIn.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
                             iCheckIn.putExtra("uniqueID", searchdetailList.getUniqueid());
                             iCheckIn.putExtra("accountID", searchdetailList.getId());
@@ -776,7 +777,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             iCheckIn.putExtra("virtualservice", searchdetailList.getVirtual_service_status());
                             context.startActivity(iCheckIn);
                         } else if (appts_flag.get(position).equals(true) && checkins_flag.get(position).equals(false) && dnts_flag.get(position).equals(false)) {
-                            Intent iAppointment = new Intent(v.getContext(), Appointment.class);
+                            Intent iAppointment = new Intent(v.getContext(), ProviderDetailActivity.class);
                             if (searchdetailList.getaLoc() != null) {
                                 iAppointment.putExtra("serviceId", Integer.parseInt(searchdetailList.getaLoc()));
                             } else {
@@ -796,7 +797,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             iAppointment.putExtra("virtualservice", searchdetailList.getVirtual_service_status());
                             context.startActivity(iAppointment);
                         } else if (dnts_flag.get(position).equals(true) && appts_flag.get(position).equals(false) && checkins_flag.get(position).equals(false)) {
-                            Intent iDonation = new Intent(v.getContext(), Donation.class);
+                            Intent iDonation = new Intent(v.getContext(), ProviderDetailActivity.class);
                             iDonation.putExtra("serviceId", Integer.parseInt(searchdetailList.getLocation_id1()));
                             iDonation.putExtra("uniqueID", searchdetailList.getUniqueid());
                             iDonation.putExtra("accountID", searchdetailList.getId());
@@ -967,7 +968,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         myViewHolder.btndonations.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iDonation = new Intent(v.getContext(), Donation.class);
+                Intent iDonation = new Intent(v.getContext(), ProviderDetailActivity.class);
                 iDonation.putExtra("serviceId", Integer.parseInt(searchdetailList.getLocation_id1()));
                 iDonation.putExtra("uniqueID", searchdetailList.getUniqueid());
                 iDonation.putExtra("accountID", searchdetailList.getId());
@@ -1756,7 +1757,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         myViewHolder.btncheckin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
+                Intent iCheckIn = new Intent(v.getContext(), ProviderDetailActivity.class);
                 iCheckIn.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
                 iCheckIn.putExtra("uniqueID", searchdetailList.getUniqueid());
                 iCheckIn.putExtra("accountID", searchdetailList.getId());
@@ -1778,7 +1779,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         myViewHolder.tv_Futuredate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
+                Intent iCheckIn = new Intent(v.getContext(), ProviderDetailActivity.class);
                 if (searchdetailList.getmLoc() != null) {
                     iCheckIn.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
                 }
@@ -1808,7 +1809,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         myViewHolder.btnappointments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iAppointment = new Intent(v.getContext(), Appointment.class);
+                Intent iAppointment = new Intent(v.getContext(), ProviderDetailActivity.class);
                 if (searchdetailList.getaLoc() != null) {
                     iAppointment.putExtra("serviceId", Integer.parseInt(searchdetailList.getaLoc()));
                 } else {

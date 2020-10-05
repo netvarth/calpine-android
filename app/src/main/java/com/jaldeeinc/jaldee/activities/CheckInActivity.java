@@ -951,8 +951,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             queueobj.put("waitlistPhonenumber", phoneNumber);
             if (isUser) {
                 pjsonobj.put("id", providerId);
-            } else {
-                pjsonobj.put("id", 0);
             }
             if (etVirtualNumber.getText().toString().trim().length() > 9) {
                 if (checkInInfo.getCallingMode() != null && checkInInfo.getCallingMode().equalsIgnoreCase("whatsapp")) {
@@ -1009,7 +1007,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             queueobj.putOpt("service", service);
             queueobj.putOpt("queue", qjsonObj);
             queueobj.putOpt("waitlistingFor", waitlistArray);
-            queueobj.putOpt("provider", pjsonobj);
+            if(isUser) {
+                queueobj.putOpt("provider", pjsonobj);
+            }
 
             if (checkInInfo.getServiceType() != null && checkInInfo.getServiceType().equalsIgnoreCase("virtualService")) {
                 queueobj.putOpt("virtualService", virtualService);
