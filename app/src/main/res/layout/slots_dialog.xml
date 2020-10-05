@@ -206,6 +206,8 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:visibility="gone"
+        android:layout_marginTop="@dimen/txtsize_10"
+        android:layout_marginBottom="@dimen/txtsize_10"
         android:orientation="vertical">
 
     <ImageView
@@ -213,8 +215,8 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/confused"
-        android:tint="#f2f2f2"
-        android:tintMode="multiply">
+        android:tintMode="multiply"
+        app:tint="#f2f2f2">
 
     </ImageView>
 

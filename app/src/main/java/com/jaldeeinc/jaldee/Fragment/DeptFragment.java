@@ -548,15 +548,6 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     private void loadNextAvailableQs(final ArrayList<String> idAppts, ArrayList<String> idCheckins, final ArrayList<ScheduleList> mSearchScheduleList, int sIndex) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-//        final Dialog dialog = Config.getProgressDialog(getActivity(), mContext.getResources().getString(R.string.dialog_log_in));
-//        dialog.show();
-//        String idPass = "";
-//        for (int i = 0; i < idCheckins.size(); i++) {
-//            idPass += idCheckins.get(i) + ",";
-//        }
-//        if (!idPass.equals("") && idPass != null) {
-//            Config.logV("IDS_--------------------" + idPass);
-//            Call<ArrayList<QueueList>> call = apiService.getProviderAvailableQTime(idPass);
         Call<ArrayList<QueueList>> call = apiService.getProviderAvailableQTime(idCheckins.get(sIndex));
         call.enqueue(new Callback<ArrayList<QueueList>>() {
             @Override

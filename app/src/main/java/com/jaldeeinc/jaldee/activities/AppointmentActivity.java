@@ -1020,7 +1020,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     virtualService.put("Phone", etVirtualNumber.getText());
                 }
             } else {
-                DynamicToast.make(AppointmentActivity.this, "Virtual service number is invalid", AppCompatResources.getDrawable(
+                DynamicToast.make(AppointmentActivity.this, "Invalid phone number", AppCompatResources.getDrawable(
                         AppointmentActivity.this, R.drawable.ic_info_black),
                         ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                 return;

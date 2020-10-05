@@ -312,6 +312,9 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
 
                                     rvSlots.setVisibility(View.VISIBLE);
                                     llNoSlots.setVisibility(View.GONE);
+                                    tvDate.setVisibility(View.VISIBLE);
+                                    tvTime.setVisibility(View.VISIBLE);
+                                    cvConfirm.setVisibility(View.VISIBLE);
                                     scheduleId = activeSlotsList.get(0).getScheduleId();
                                     slotTime = activeSlotsList.get(0).getSlotTime();
                                     tvTime.setText(activeSlotsList.get(0).getDisplayTime());
@@ -326,6 +329,9 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
 
                                     rvSlots.setVisibility(View.GONE);
                                     llNoSlots.setVisibility(View.VISIBLE);
+                                    tvDate.setVisibility(View.GONE);
+                                    tvTime.setVisibility(View.GONE);
+                                    cvConfirm.setVisibility(View.GONE);
                                 }
                             }
                         }
