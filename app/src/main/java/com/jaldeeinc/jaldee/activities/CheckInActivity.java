@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
+import com.jaldeeinc.jaldee.Interface.IMobileSubmit;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.Interface.ISelectQ;
 import com.jaldeeinc.jaldee.R;
@@ -96,7 +97,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CheckInActivity extends AppCompatActivity implements ISelectQ, PaymentResultWithDataListener, IPaymentResponse {
+public class CheckInActivity extends AppCompatActivity implements ISelectQ, PaymentResultWithDataListener, IPaymentResponse, IMobileSubmit,IMailSubmit {
 
     @BindView(R.id.tv_providerName)
     CustomTextViewSemiBold tvProviderName;
@@ -212,6 +213,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     private EmailEditWindow emailEditWindow;
     private MobileNumberDialog mobileNumberDialog;
     private IMailSubmit iMailSubmit;
+    private IMobileSubmit iMobileSubmit;
     ArrayList<String> couponArraylist = new ArrayList<>();
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     RecyclerView list;
@@ -243,6 +245,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         mActivity = this;
         mContext = this;
         iSelectQ = this;
+        iMailSubmit = this;
+        iMobileSubmit = this;
+
         // getting necessary details from intent
         Intent intent = getIntent();
         uniqueId = intent.getIntExtra("uniqueID", 0);
@@ -371,7 +376,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             public void onClick(View v) {
 
                 if (tvNumber.getText().toString() != null) {
-                    mobileNumberDialog = new MobileNumberDialog(CheckInActivity.this, profileDetails, iMailSubmit, tvNumber.getText().toString());
+                    mobileNumberDialog = new MobileNumberDialog(CheckInActivity.this, profileDetails, iMobileSubmit, tvNumber.getText().toString());
                     mobileNumberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     mobileNumberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     mobileNumberDialog.show();
@@ -1459,5 +1464,17 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             }
         }, 1000);
 
+    }
+
+    @Override
+    public void mailUpdated() {
+        String mail = SharedPreference.getInstance(mContext).getStringValue("email", "");
+        tvEmail.setText(mail);
+    }
+
+    @Override
+    public void mobileUpdated() {
+        String phone = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+        tvNumber.setText(phone);
     }
 }

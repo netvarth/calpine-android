@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
+import com.jaldeeinc.jaldee.Interface.IMobileSubmit;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.Interface.ISlotInfo;
 import com.jaldeeinc.jaldee.R;
@@ -96,7 +97,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AppointmentActivity extends AppCompatActivity implements PaymentResultWithDataListener, ISlotInfo, IMailSubmit, IPaymentResponse {
+public class AppointmentActivity extends AppCompatActivity implements PaymentResultWithDataListener, ISlotInfo, IMailSubmit, IPaymentResponse, IMobileSubmit {
 
     @BindView(R.id.tv_providerName)
     CustomTextViewSemiBold tvProviderName;
@@ -208,6 +209,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     private EmailEditWindow emailEditWindow;
     private MobileNumberDialog mobileNumberDialog;
     private IMailSubmit iMailSubmit;
+    private IMobileSubmit iMobileSubmit;
     ArrayList<String> couponArraylist = new ArrayList<>();
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     RecyclerView list;
@@ -238,6 +240,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         iMailSubmit = this;
         mActivity = this;
         mContext = this;
+        iMobileSubmit = this;
 
         // getting necessary details from intent
         Intent intent = getIntent();
@@ -376,7 +379,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             public void onClick(View v) {
 
                 if (tvNumber.getText().toString() != null) {
-                    mobileNumberDialog = new MobileNumberDialog(AppointmentActivity.this, profileDetails, iMailSubmit, tvNumber.getText().toString());
+                    mobileNumberDialog = new MobileNumberDialog(AppointmentActivity.this, profileDetails, iMobileSubmit, tvNumber.getText().toString());
                     mobileNumberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     mobileNumberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     mobileNumberDialog.show();
@@ -1438,10 +1441,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     @Override
     public void mailUpdated() {
-        String phone = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
         String mail = SharedPreference.getInstance(mContext).getStringValue("email", "");
         tvEmail.setText(mail);
-        tvNumber.setText(phone);
+
         //  ApiGetProfileDetail();
 
     }
@@ -1531,5 +1533,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             getConfirmationDetails(providerId);
 
         }
+    }
+
+    @Override
+    public void mobileUpdated() {
+        String phone = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+        tvNumber.setText(phone);
     }
 }

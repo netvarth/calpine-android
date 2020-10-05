@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
+import com.jaldeeinc.jaldee.Interface.IMobileSubmit;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -34,14 +35,14 @@ public class MobileNumberDialog extends Dialog {
     DatabaseHandler db;
     ProfileModel profileDetails;
     TextView tvErrorMessage;
-    private IMailSubmit iMailSubmit;
+    private IMobileSubmit iMobileSubmit;
     String phoneNumber;
 
-    public MobileNumberDialog(Context mContext, ProfileModel profileDetails, IMailSubmit iMailSubmit, String number) {
+    public MobileNumberDialog(Context mContext, ProfileModel profileDetails, IMobileSubmit iMobileSubmit, String number) {
         super(mContext);
         this.context = mContext;
         this.profileDetails = profileDetails;
-        this.iMailSubmit = iMailSubmit;
+        this.iMobileSubmit = iMobileSubmit;
         this.phoneNumber = number;
     }
 
@@ -76,7 +77,7 @@ public class MobileNumberDialog extends Dialog {
         if (phoneNumber.trim().length() > 9) {
             Toast.makeText(context, "Mobile number has been updated successfully ", Toast.LENGTH_LONG).show();
             SharedPreference.getInstance(context).setValue("mobile", phone.getText().toString());
-            iMailSubmit.mailUpdated();
+            iMobileSubmit.mobileUpdated();
             dismiss();
           //  ApiEditProfileDetail();
 
@@ -128,7 +129,7 @@ public class MobileNumberDialog extends Dialog {
                             SharedPreference.getInstance(context).setValue("mobile", phone.getText().toString());
 
                             Toast.makeText(context, "Mobile number has been updated successfully ", Toast.LENGTH_LONG).show();
-                            iMailSubmit.mailUpdated();
+                            iMobileSubmit.mobileUpdated();
                             dismiss();
 
 

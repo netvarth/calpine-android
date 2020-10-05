@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
     private LinearLayout llProvider;
     CardView cvOk;
     private String terminology;
+    ImageView icon_service;
 
     @Override
     public void onBackPressed() {
@@ -38,6 +40,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment_confirmation);
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
 
@@ -70,6 +73,34 @@ public class AppointmentConfirmation extends AppCompatActivity {
                     String name2 = activeCheckInInfo.getService().getName();
                     name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
                     tvServiceName.setText(name2);
+
+                    try{
+                        if(activeCheckInInfo.getService().getServiceType().equalsIgnoreCase("virtualService")){
+                            icon_service.setVisibility(View.VISIBLE);
+                            icon_service.setY(6);
+
+                            if(activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
+                                icon_service.setImageResource(R.drawable.zoomicon_sized);
+                            }
+                            else if(activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")){
+                                icon_service.setImageResource(R.drawable.googlemeet_sized);
+                            }
+                            else if(activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
+                                icon_service.setImageResource(R.drawable.whatsappicon_sized);
+
+                            }
+                            else if(activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){
+                                icon_service.setImageResource(R.drawable.phoneiconsized_small);
+                            }
+
+                        }
+                        else{
+                            icon_service.setVisibility(View.GONE);
+                        }
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
                 }
 
             }
@@ -183,6 +214,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
         llProvider = findViewById(R.id.ll_provider);
         cvOk = findViewById(R.id.cv_ok);
         tvTerm = findViewById(R.id.tv_term);
+        icon_service = findViewById(R.id.serviceicon);
 
     }
 
