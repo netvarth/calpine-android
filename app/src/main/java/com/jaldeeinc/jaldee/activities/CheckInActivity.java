@@ -1,16 +1,22 @@
 package com.jaldeeinc.jaldee.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.format.DateFormat;
@@ -20,18 +26,20 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.Interface.ISelectQ;
-import com.jaldeeinc.jaldee.Interface.ISlotInfo;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
+import com.jaldeeinc.jaldee.adapter.MultipleFamilyMemberAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -41,36 +49,54 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
-import com.jaldeeinc.jaldee.custom.SlotsDialog;
+import com.jaldeeinc.jaldee.model.FamilyArrayModel;
+import com.jaldeeinc.jaldee.model.RazorpayModel;
+import com.jaldeeinc.jaldee.payment.PaymentGateway;
+import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
+import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
-import com.jaldeeinc.jaldee.response.ServiceInfo;
 import com.jaldeeinc.jaldee.response.SlotsData;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
+import com.razorpay.PaymentData;
+import com.razorpay.PaymentResultWithDataListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CheckInActivity extends AppCompatActivity {
+public class CheckInActivity extends AppCompatActivity implements ISelectQ, PaymentResultWithDataListener, IPaymentResponse {
 
     @BindView(R.id.tv_providerName)
     CustomTextViewSemiBold tvProviderName;
@@ -180,7 +206,7 @@ public class CheckInActivity extends AppCompatActivity {
     String uuid;
     String value = null;
     String couponEntered;
-    private int scheduleId;
+    private int queueId;
     SearchViewDetail mBusinessDataList;
     private EmailEditWindow emailEditWindow;
     private MobileNumberDialog mobileNumberDialog;
@@ -199,7 +225,10 @@ public class CheckInActivity extends AppCompatActivity {
     String apiDate = "";
     private int userId;
     private boolean isUser;
+    QueueTimeSlotModel queueDetails = new QueueTimeSlotModel();
     int maxPartysize;
+    BottomSheetDialog dialogPayment;
+    static ArrayList<FamilyArrayModel> MultiplefamilyList = new ArrayList<>();
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
 
 
@@ -210,6 +239,7 @@ public class CheckInActivity extends AppCompatActivity {
         ButterKnife.bind(CheckInActivity.this);
         mActivity = this;
         mContext = this;
+        iSelectQ = this;
         // getting necessary details from intent
         Intent intent = getIntent();
         uniqueId = intent.getIntExtra("uniqueID", 0);
@@ -222,6 +252,10 @@ public class CheckInActivity extends AppCompatActivity {
         tvConsumerName = findViewById(R.id.tv_consumerName);
         list = findViewById(R.id.list);
         recycle_family = findViewById(R.id.recycle_family);
+
+        if (providerName != null) {
+            tvProviderName.setText(providerName);
+        }
 
         if (checkInInfo != null) {
             tvServiceName.setText(checkInInfo.getName());
@@ -245,7 +279,7 @@ public class CheckInActivity extends AppCompatActivity {
 
                 if (checkInInfo.getCheckInServiceAvailability().getAvailableDate() != null) {
                     apiDate = checkInInfo.getCheckInServiceAvailability().getAvailableDate();
-                    scheduleId = checkInInfo.getCheckInServiceAvailability().getId();
+                    queueId = checkInInfo.getCheckInServiceAvailability().getId();
                     if (checkInInfo.getCheckInServiceAvailability().getServiceTime() != null) {
                         tvTime.setText(checkInInfo.getCheckInServiceAvailability().getServiceTime());
                         slotTime = checkInInfo.getCheckInServiceAvailability().getServiceTime();
@@ -381,6 +415,49 @@ public class CheckInActivity extends AppCompatActivity {
 
             }
         });
+
+        cvSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // ApiGenerateHash();
+                if (tvNumber.length() < 10) {
+                    Toast.makeText(CheckInActivity.this, "Mobile number should have 10 digits" + "", Toast.LENGTH_SHORT).show();
+                } else {
+
+//                    if (enableparty) {
+//                        if (Integer.parseInt(editpartysize.getText().toString()) > maxPartysize) {
+//                            Toast.makeText(mContext, "Sorry, Max party size allowed is " + maxPartysize, Toast.LENGTH_LONG).show();
+//                        } else {
+//                            ApiAppointment(txt_message);
+//                        }
+//                    } else {
+
+                    if (checkInInfo.isPrePayment()) {
+                        if (tvEmail.getText().toString() != null && tvEmail.getText().length() > 0) {
+
+                            if (isUser) {
+                                ApiCheckin("message", userId);
+                            } else {
+                                ApiCheckin("message", providerId);
+                            }
+
+                        } else {
+
+
+                        }
+                    } else {
+
+                        if (isUser) {
+                            ApiCheckin("message", userId);
+                        } else {
+                            ApiCheckin("message", providerId);
+                        }
+                    }
+//                    }
+                }
+            }
+        });
+
 
         tvApplyCode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -845,6 +922,335 @@ public class CheckInActivity extends AppCompatActivity {
 
     }
 
+    private void ApiCheckin(final String txt_addnote, int id) {
+
+        phoneNumber = etVirtualNumber.getText().toString();
+        uuid = UUID.randomUUID().toString();
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        JSONObject qjsonObj = new JSONObject();
+        JSONObject queueobj = new JSONObject();
+        JSONObject waitobj = new JSONObject();
+        JSONObject service = new JSONObject();
+        JSONArray waitlistArray = new JSONArray();
+        JSONObject virtualService = new JSONObject();
+        JSONObject pjsonobj = new JSONObject();
+        try {
+
+            qjsonObj.put("id", queueId);
+            queueobj.put("date", apiDate);
+            queueobj.put("consumerNote", txt_addnote);
+            queueobj.put("waitlistPhonenumber", phoneNumber);
+            if (isUser) {
+                pjsonobj.put("id", providerId);
+            } else {
+                pjsonobj.put("id", 0);
+            }
+            if (etVirtualNumber.getText().toString().trim().length() > 9) {
+                if (checkInInfo.getCallingMode() != null && checkInInfo.getCallingMode().equalsIgnoreCase("whatsapp")) {
+                    virtualService.put("WhatsApp", etVirtualNumber.getText());
+                } else if (checkInInfo.getCallingMode() != null && checkInInfo.getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                    virtualService.put("GoogleMeet", checkInInfo.getVirtualCallingModes().get(0).getCallingMode());
+                } else if (checkInInfo.getCallingMode() != null && checkInInfo.getCallingMode().equalsIgnoreCase("Zoom")) {
+                    virtualService.put("Zoom", checkInInfo.getVirtualCallingModes().get(0).getCallingMode());
+                } else if (checkInInfo.getCallingMode() != null && checkInInfo.getCallingMode().equalsIgnoreCase("Phone")) {
+                    virtualService.put("Phone", etVirtualNumber.getText());
+                }
+            } else {
+                DynamicToast.make(CheckInActivity.this, "Virtual service number is invalid", AppCompatResources.getDrawable(
+                        CheckInActivity.this, R.drawable.ic_info_black),
+                        ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            JSONArray couponList = new JSONArray();
+
+            for (int i = 0; i < couponArraylist.size(); i++) {
+
+                couponList.put(couponArraylist.get(i));
+
+            }
+
+            Log.i("kooooooo", couponList.toString());
+
+            queueobj.put("coupons", couponList);
+
+
+            Log.i("couponList", couponList.toString());
+            service.put("id", checkInInfo.getId());
+            if (familyMEmID == 0) {
+                familyMEmID = consumerID;
+            }
+
+            if (MultiplefamilyList.size() > 0) {
+                for (int i = 0; i < MultiplefamilyList.size(); i++) {
+                    JSONObject waitobj1 = new JSONObject();
+                    waitobj1.put("id", MultiplefamilyList.get(i).getId());
+                    waitobj1.put("firstName",MultiplefamilyList.get(i).getFirstName());
+                    waitobj1.put("lastName",MultiplefamilyList.get(i).getLastName());
+                    waitlistArray.put(waitobj1);
+                }
+            } else {
+                if (familyMEmID == consumerID) {
+                    familyMEmID = 0;
+                }
+                waitobj.put("id", familyMEmID);
+                waitlistArray.put(waitobj);
+            }
+
+            queueobj.putOpt("service", service);
+            queueobj.putOpt("queue", qjsonObj);
+            queueobj.putOpt("waitlistingFor", waitlistArray);
+            queueobj.putOpt("provider", pjsonobj);
+
+            if (checkInInfo.getServiceType() != null && checkInInfo.getServiceType().equalsIgnoreCase("virtualService")) {
+                queueobj.putOpt("virtualService", virtualService);
+            }
+
+        } catch (
+                JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.i("QueueObj Checkin", queueobj.toString());
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), queueobj.toString());
+        Call<ResponseBody> call = apiService.Checkin(String.valueOf(id), body);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    Config.logV("Response--code-------------------------" + response.body());
+                    if (response.code() == 200) {
+                        MultiplefamilyList.clear();
+                        SharedPreference.getInstance(mContext).setValue("refreshcheckin", "true");
+                        JSONObject reader = new JSONObject(response.body().string());
+                        Iterator iteratorObj = reader.keys();
+                        while (iteratorObj.hasNext()) {
+                            String getJsonObj = (String) iteratorObj.next();
+                            System.out.println("KEY: " + "------>" + getJsonObj);
+                            value = reader.getString(getJsonObj);
+                            break;
+
+                        }
+
+
+                        System.out.println("VALUE: " + "------>" + value);
+                        // finish();
+                        dialogPayment = new BottomSheetDialog(mContext);
+
+                        if (checkInInfo.isPrePayment()) {
+                            if (!showPaytmWallet && !showPayU) {
+
+                                //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
+                            } else {
+                                try {
+
+                                    dialogPayment.setContentView(R.layout.prepayment);
+                                    dialogPayment.show();
+
+
+                                    Button btn_paytm = (Button) dialogPayment.findViewById(R.id.btn_paytm);
+                                    Button btn_payu = (Button) dialogPayment.findViewById(R.id.btn_payu);
+                                    if (showPaytmWallet) {
+                                        btn_paytm.setVisibility(View.VISIBLE);
+                                    } else {
+                                        btn_paytm.setVisibility(View.GONE);
+                                    }
+                                    if (showPayU) {
+                                        btn_payu.setVisibility(View.VISIBLE);
+                                    } else {
+                                        btn_payu.setVisibility(View.GONE);
+                                    }
+                                    final EditText edt_message = (EditText) dialogPayment.findViewById(R.id.edt_message);
+                                    TextView txtamt = (TextView) dialogPayment.findViewById(R.id.txtamount);
+
+                                    TextView txtprepayment = (TextView) dialogPayment.findViewById(R.id.txtprepayment);
+
+                                    txtprepayment.setText("Prepayment Amount ");
+
+                                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(checkInInfo.getMinPrePaymentAmount()))));
+
+                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                            "fonts/JosefinSans-SemiBold.ttf");
+                                    txtamt.setTypeface(tyface1);
+                                    btn_payu.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                            dialogPayment.dismiss();
+//                                            if (imagePathList.size() > 0) {
+//                                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialogPayment);
+//                                            }
+
+                                        }
+                                    });
+
+                                    btn_paytm.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
+                                            payment.ApiGenerateHashPaytm(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID);
+                                            dialogPayment.dismiss();
+//                                            if (imagePathList.size() > 0) {
+//                                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialogPayment);
+//                                            }
+
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+                        } else {
+//                            if (imagePathList.size() > 0) {
+//                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialogPayment);
+//                            }
+
+                            if (isUser) {
+                                getConfirmationDetails(userId);
+
+                            } else {
+                                getConfirmationDetails(providerId);
+
+                            }
+                        }
+
+                        if (checkInInfo.isLivetrack()) {
+                            Intent checkinShareLocations = new Intent(mContext, CheckinShareLocation.class);
+                            checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
+                            checkinShareLocations.putExtra("uuid", value);
+                            checkinShareLocations.putExtra("accountID", providerId);
+                            checkinShareLocations.putExtra("title", providerName);
+                            checkinShareLocations.putExtra("terminology", mSearchTerminology.getWaitlist());
+                            checkinShareLocations.putExtra("calcMode", calcMode);
+                            checkinShareLocations.putExtra("queueStartTime", "");
+                            checkinShareLocations.putExtra("queueEndTime", "");
+                            checkinShareLocations.putExtra("from", "checkin");
+                            startActivity(checkinShareLocations);
+                        }
+
+
+                    } else {
+                        if (response.code() == 422) {
+
+                            String errorString = response.errorBody().string();
+
+                            Config.logV("Error String-----------" + errorString);
+                            Map<String, String> tokens = new HashMap<String, String>();
+                            tokens.put("Customer", Config.toTitleCase(mSearchTerminology.getCustomer()));
+                            tokens.put("provider", mSearchTerminology.getProvider());
+                            tokens.put("arrived", mSearchTerminology.getArrived());
+                            tokens.put("waitlisted", mSearchTerminology.getWaitlist());
+
+                            tokens.put("start", mSearchTerminology.getStart());
+                            tokens.put("cancelled", mSearchTerminology.getCancelled());
+                            tokens.put("done", mSearchTerminology.getDone());
+
+
+                            StringBuffer sb = new StringBuffer();
+
+                            Pattern p3 = Pattern.compile("\\[(.*?)\\]");
+
+                            Matcher matcher = p3.matcher(errorString);
+                            while (matcher.find()) {
+                                System.out.println(matcher.group(1));
+                                matcher.appendReplacement(sb, tokens.get(matcher.group(1)));
+                            }
+                            matcher.appendTail(sb);
+
+                            System.out.println("SubString@@@@@@@@@@@@@" + sb.toString());
+
+
+                            Toast.makeText(mContext, sb.toString(), Toast.LENGTH_LONG).show();
+                        } else {
+                            String responseerror = response.errorBody().string();
+                            Config.logV("Response--error-------------------------" + responseerror);
+                            if (response.code() != 419)
+                                Toast.makeText(mContext, responseerror, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+
+            }
+        });
+    }
+
+    private void getConfirmationDetails(int id) {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(value, String.valueOf(id));
+        call.enqueue(new Callback<ActiveCheckIn>() {
+            @Override
+            public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
+                try {
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        activeAppointment = response.body();
+
+                        if (activeAppointment != null) {
+
+                            Intent checkin = new Intent(CheckInActivity.this, CheckInConfirmation.class);
+                            checkin.putExtra("BookingDetails", activeAppointment);
+                            checkin.putExtra("terminology", mSearchTerminology.getProvider());
+                            startActivity(checkin);
+                        }
+
+                    }
+                } catch (Exception e) {
+                    Log.i("mnbbnmmnbbnm", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
+            }
+        });
+
+    }
+
+
+    public static void refreshMultipleMEmList(ArrayList<FamilyArrayModel> familyList) {
+        MultiplefamilyList.clear();
+        MultiplefamilyList.addAll(familyList);
+        recycle_family.setVisibility(View.VISIBLE);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+        recycle_family.setLayoutManager(mLayoutManager);
+        MultipleFamilyMemberAdapter mFamilyAdpater = new MultipleFamilyMemberAdapter(familyList, mContext, mActivity);
+        recycle_family.setAdapter(mFamilyAdpater);
+        mFamilyAdpater.notifyDataSetChanged();
+        tvConsumerName.setVisibility(View.GONE);
+    }
+
 
     public static String getWaitingTime(String nextAvailableDate, String nextAvailableTime, String estTime) {
         String firstWord = "";
@@ -903,4 +1309,105 @@ public class CheckInActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void sendSelectedQueueInfo(String displayTime, int id, QueueTimeSlotModel queueDetails, String selectedDate) {
+
+        try {
+            String time = getWaitingTime(selectedDate, queueDetails.getServiceTime(), String.valueOf(queueDetails.getQueueWaitingTime()));
+            tvCheckInDate.setText(time.split("-")[1]);
+            tvHint.setText(time.split("-")[0]);
+            queueId = id;
+            apiDate = selectedDate;
+            if (queueDetails.getQueueSize() >= 0) {
+                if (queueDetails.getQueueSize() == 0) {
+                    tvPeopleInLine.setText("Be the first in line");
+                } else if (queueDetails.getQueueSize() == 1) {
+                    tvPeopleInLine.setText(queueDetails.getQueueSize() + "  person waiting in line");
+                } else {
+                    tvPeopleInLine.setText(queueDetails.getQueueSize() + "  people waiting in line");
+                }
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void paymentFinished(RazorpayModel razorpayModel) {
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Do something here
+                if (isUser) {
+                    getConfirmationDetails(userId);
+
+                } else {
+                    getConfirmationDetails(providerId);
+
+                }
+            }
+        }, 1000);
+    }
+
+    @Override
+    public void onPaymentSuccess(String s, PaymentData paymentData) {
+
+        try {
+            RazorpayModel razorpayModel = new RazorpayModel(paymentData);
+            new PaymentGateway(mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
+            Toast.makeText(mContext, "Payment Successful", Toast.LENGTH_LONG).show();
+            paymentFinished(razorpayModel);
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentSuccess", e);
+        }
+    }
+
+    @Override
+    public void onPaymentError(int i, String s, PaymentData paymentData) {
+
+        try {
+            AlertDialog alertDialog = new AlertDialog.Builder(CheckInActivity.this).create();
+            alertDialog.setTitle("Payment Failed");
+            alertDialog.setMessage("Unable to process your request.Please try again after some time");
+            alertDialog.setCancelable(false);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+                            Intent homeIntent = new Intent(CheckInActivity.this, Home.class);
+                            startActivity(homeIntent);
+                            finish();
+
+                        }
+                    });
+            alertDialog.show();
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentError..", e);
+        }
+    }
+
+    @Override
+    public void sendPaymentResponse() {
+
+        // Paytm
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Do something here
+                if (isUser) {
+                    getConfirmationDetails(userId);
+
+                } else {
+                    getConfirmationDetails(providerId);
+
+                }
+            }
+        }, 1000);
+
+    }
 }

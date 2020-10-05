@@ -11,6 +11,8 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
@@ -32,6 +34,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
     private ISelectSlotInterface iSelectSlotInterface;
     View previousSelectedItem;
     private Context context;
+    private int selectedPosition = 0;
 
 
     public TimeSlotsAdapter(Context context, ArrayList timeSlots, ISelectSlotInterface iSelectSlotInterface) {
@@ -55,25 +58,46 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
         final AvailableSlotsData timeSlot = timeSlots.get(position);
         myViewHolder.tvTimeSlot.setText(timeSlots.get(position).getDisplayTime());
 
-        myViewHolder.flSlotBackground.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                myViewHolder.flSlotBackground.setShadowInner();
-                row_index = position;
-                notifyDataSetChanged();
-                iSelectSlotInterface.sendSelectedTime(timeSlots.get(position).getDisplayTime(), timeSlots.get(position).getSlotTime(), timeSlots.get(position).getScheduleId());
-            }
-        });
-
-        if (row_index == position) {
+        if (position == selectedPosition) {
             myViewHolder.flSlotBackground.setShadowInner();
             myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.location_theme));
         } else {
             myViewHolder.flSlotBackground.setShadowOuter();
             myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.inactive_text));
-
         }
+        setAnimation(myViewHolder.flSlotBackground, position);
+
+        myViewHolder.flSlotBackground.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int currentPosition = myViewHolder.getLayoutPosition();
+                if (selectedPosition != currentPosition) {
+                    // Temporarily save the last selected position
+                    int lastSelectedPosition = selectedPosition;
+                    // Save the new selected position
+                    selectedPosition = currentPosition;
+                    // update the previous selected row
+                    notifyItemChanged(currentPosition);
+                    notifyItemChanged(lastSelectedPosition);
+                    // select the clicked row
+                    myViewHolder.flSlotBackground.setShadowInner();
+                    iSelectSlotInterface.sendSelectedTime(timeSlots.get(position).getDisplayTime(), timeSlots.get(position).getSlotTime(), timeSlots.get(position).getScheduleId());
+
+                }
+
+//                myViewHolder.flSlotBackground.setShadowInner();
+//                row_index = position;
+//                notifyDataSetChanged();
+//                iSelectSlotInterface.sendSelectedTime(timeSlots.get(position).getDisplayTime(), timeSlots.get(position).getSlotTime(), timeSlots.get(position).getScheduleId());
+            }
+        });
+
+//        if (selectedPosition == 0) {
+//            iSelectSlotInterface.sendSelectedTime(timeSlots.get(position).getDisplayTime(), timeSlots.get(position).getSlotTime(), timeSlots.get(position).getScheduleId());
+//        }
+
+
 
     }
 
@@ -96,6 +120,17 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
             flSlotBackground = view.findViewById(R.id.fl_slotBackground);
 
 
+        }
+    }
+
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > row_index)
+        {
+            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+            viewToAnimate.startAnimation(animation);
+            row_index = position;
         }
     }
 }

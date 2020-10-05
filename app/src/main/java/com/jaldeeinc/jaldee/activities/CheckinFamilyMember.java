@@ -123,7 +123,7 @@ public class CheckinFamilyMember extends AppCompatActivity {
 
                         if (i == data.size() - 1) {
                             Config.logV("family refresh-------@@@@---------" + familyList.size());
-                            CheckIn.refreshMultipleMEmList(familyList);
+                            CheckInActivity.refreshMultipleMEmList(familyList);
                             finish();
                         }
 
@@ -137,7 +137,7 @@ public class CheckinFamilyMember extends AppCompatActivity {
             }
         });
         Typeface tyface = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-Bold.ttf");
         btn_changemem.setTypeface(tyface);
         txt_toolbartitle.setTypeface(tyface);
 

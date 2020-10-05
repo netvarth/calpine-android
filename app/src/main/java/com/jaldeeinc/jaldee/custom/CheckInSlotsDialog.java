@@ -74,6 +74,8 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
     private int queueId;
     private LinearLayout llEstTime;
     private CustomTextViewMedium tvServiceTime;
+    private String selectedDate = "";
+    private QueueTimeSlotModel queueDetails = new QueueTimeSlotModel();
 
 
     public CheckInSlotsDialog(Context context, int serviceId, int locationId, ISelectQ iSelectQ, int providerId, String availableDate) {
@@ -139,8 +141,8 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
             @Override
             public void onClick(View v) {
 
-                if (displayTime != null && !displayTime.trim().equalsIgnoreCase("")) {
-//                    iSelectQ.sendSelectedQueueInfo(displayTime, slotTime, queueId, tvDate.getText().toString(), tvCalenderDate.getText().toString());
+                if (queueId > 0) {
+                    iSelectQ.sendSelectedQueueInfo(displayTime, queueId, queueDetails,selectedDate);
                     dismiss();
                 } else {
 
@@ -241,8 +243,11 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
                                 rvQueues.setVisibility(View.VISIBLE);
                                 llNoSlots.setVisibility(View.GONE);
                                 queueId = mQueueTimeSlotList.get(0).getId();
+                                queueDetails = mQueueTimeSlotList.get(0);
+                                selectedDate = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
                                 tvDate.setText(getCustomDateString(mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate()));
                                 tvTime.setText(mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime() + "-" + mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
+                                displayTime = mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime() + "-" + mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime();
                                 tvCalenderDate.setText(getCalenderDateFormat(mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate()));
 
                                 if (mQueueTimeSlotList.get(0).getQueueSize() >= 0) {
@@ -284,7 +289,6 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
                                     tvMinutes.setVisibility(View.GONE);
                                     tvSlash.setVisibility(View.GONE);
                                 }
-
 
                                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 2);
                                 rvQueues.setLayoutManager(mLayoutManager);
@@ -456,7 +460,9 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
 
         if (queue != null) {
             tvTime.setText(displayQueueTime);
+            displayTime = displayQueueTime;
             queueId = id; // get QueueId from selected queue
+            queueDetails = queue;  // get Queue details from adapter
 
             if (queue.getQueueSize() >= 0) {
                 if (queue.getQueueSize() == 1) {

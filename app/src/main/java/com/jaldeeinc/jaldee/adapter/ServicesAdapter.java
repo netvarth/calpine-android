@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -43,6 +45,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
     private boolean isLoading = false;
     public static final int VIEW_TYPE_HEADER = 0;
     private ISelectedService iSelectedService;
+    private int lastPosition = -1;
     private ServiceInfoDialog serviceInfoDialog;
     private AppointmentServiceDialog appointmentServiceDialog;
     private DonationServiceDialog donationServiceDialog;
@@ -92,6 +95,8 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
         String name = child.getName();
         name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
         viewHolder.tvName.setText(name);
+
+        setAnimation(viewHolder.cvCard, childPosition);
 
         // to set Provider image
         if (child.getType().equalsIgnoreCase(Constants.PROVIDER)) {
@@ -206,14 +211,13 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
                 viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
                 viewHolder.llDonationRange.setVisibility(View.GONE);
-                viewHolder.tvServiceType.setVisibility(View.VISIBLE);
-                if (child.getChecinServiceInfo().getCheckInServiceAvailability() != null) {
-                    if (child.getChecinServiceInfo().getCheckInServiceAvailability().isShowToken()) {
+                    if (child.isToken()) {
+                        viewHolder.tvServiceType.setVisibility(View.VISIBLE);
                         viewHolder.tvServiceType.setText("Get Token");
                     } else {
+                        viewHolder.tvServiceType.setVisibility(View.VISIBLE);
                         viewHolder.tvServiceType.setText("Check In");
                     }
-                }
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
                 viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
             }
@@ -222,6 +226,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
             viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
             viewHolder.llDonationRange.setVisibility(View.GONE);
+            viewHolder.tvServiceType.setVisibility(View.VISIBLE);
             viewHolder.tvServiceType.setText("Appointments");
             viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
             viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
@@ -230,6 +235,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
         } else if (child.getType() != null && child.getType().equalsIgnoreCase(Constants.DONATION)) {
 
             viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
+            viewHolder.tvServiceType.setVisibility(View.VISIBLE);
             viewHolder.tvServiceType.setText("Donation");
             viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.donation_theme));
             viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.donation_theme));
@@ -238,6 +244,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
             viewHolder.rlCommonLayout.setVisibility(View.GONE);
             viewHolder.llDonationRange.setVisibility(View.GONE);
+            viewHolder.tvServiceType.setVisibility(View.GONE);
             viewHolder.tvPeopleAhead.setVisibility(View.GONE);
             viewHolder.llEstwaitTime.setVisibility(View.GONE);
             viewHolder.llTime.setVisibility(View.GONE);
@@ -501,5 +508,15 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
         return formattedTime;
     }
 
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+    }
 
 }

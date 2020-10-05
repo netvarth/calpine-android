@@ -366,7 +366,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding7"
                     android:layout_marginRight="@dimen/default_padding"
-                    android:nestedScrollingEnabled="false"
+                    android:nestedScrollingEnabled="true"
                     android:visibility="gone">
 
                 </androidx.recyclerview.widget.RecyclerView>

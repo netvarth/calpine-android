@@ -133,6 +133,9 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
     @BindView(R.id.cv_enquiry)
     CardView cvEnquiry;
 
+    @BindView(R.id.ll_noSlots)
+    LinearLayout llNoSlots;
+
     private Context mContext;
     private boolean onlinePresence;
     String claimable;
@@ -685,10 +688,19 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
                                         @Override
                                         public void run() {
 
-                                            gridLayoutManager = new GridLayoutManager(UserDetailActivity.this, 2);
-                                            rvServices.setLayoutManager(gridLayoutManager);
-                                            userServicesAdapter = new UserServicesAdapter(servicesInfoList, UserDetailActivity.this, false, iSelectedService);
-                                            rvServices.setAdapter(userServicesAdapter);
+                                            if (servicesInfoList.size()>0) {
+
+                                                llNoSlots.setVisibility(View.GONE);
+                                                rvServices.setVisibility(View.VISIBLE);
+                                                gridLayoutManager = new GridLayoutManager(UserDetailActivity.this, 2);
+                                                rvServices.setLayoutManager(gridLayoutManager);
+                                                userServicesAdapter = new UserServicesAdapter(servicesInfoList, UserDetailActivity.this, false, iSelectedService);
+                                                rvServices.setAdapter(userServicesAdapter);
+                                            }else {
+
+                                                llNoSlots.setVisibility(View.VISIBLE);
+                                                rvServices.setVisibility(View.GONE);
+                                            }
 
                                         }
                                     });
@@ -740,6 +752,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             intent.putExtra("providerId",providerId);
             intent.putExtra("locationId",locationId);
             intent.putExtra("checkInInfo", checkinServiceInfo);
+            intent.putExtra("userId",userId);
             intent.putExtra("fromUser",true);
             startActivity(intent);
         }
@@ -755,6 +768,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             intent.putExtra("locationId",locationId);
             intent.putExtra("providerId",providerId);
             intent.putExtra("userId",userId);
+            intent.putExtra("fromUser",true);
             ServiceInfo serviceInfo = new ServiceInfo();
             serviceInfo.setServiceId(appointmentServiceInfo.getId());
             serviceInfo.setServiceName(appointmentServiceInfo.getName());

@@ -11,21 +11,21 @@
         android:layout_margin="@dimen/padding2"
         android:orientation="horizontal">
 
-        <TextView
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_12" />
 
-        <TextView
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
             android:id="@+id/txtaddmember"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
             android:text="CHANGE MEMBER"
             android:visibility="gone"
-            android:textColor="@color/title_consu"
+            android:textColor="@color/location_theme"
             android:textSize="@dimen/txtsize_12" />
 
     </LinearLayout>

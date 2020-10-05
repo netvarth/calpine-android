@@ -137,7 +137,7 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
 
                     DynamicToast.make(context, "Please select a time slot", AppCompatResources.getDrawable(
                             context, R.drawable.ic_info_black),
-                            ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.arrived_green), Toast.LENGTH_SHORT).show();
+                            ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -312,8 +312,10 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
 
                                     rvSlots.setVisibility(View.VISIBLE);
                                     llNoSlots.setVisibility(View.GONE);
-                                    activeScheduleId = activeSlotsList.get(0).getScheduleId();
+                                    scheduleId = activeSlotsList.get(0).getScheduleId();
+                                    slotTime = activeSlotsList.get(0).getSlotTime();
                                     tvTime.setText(activeSlotsList.get(0).getDisplayTime());
+                                    displayTime = activeSlotsList.get(0).getDisplayTime();
                                     tvDate.setText(getCustomDateString(slotsData.get(0).getDate()));
                                     tvCalenderDate.setText(getCalenderDateFormat(slotsData.get(0).getDate()));
                                     RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 3);
@@ -353,7 +355,7 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
         try {
             final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
             final Date dateObj = sdf.parse(displayTime);
-            SimpleDateFormat time = new SimpleDateFormat("K:mm aa");
+            SimpleDateFormat time = new SimpleDateFormat("hh:mm aa");
             sTime = time.format(dateObj);
         } catch (final ParseException e) {
             e.printStackTrace();

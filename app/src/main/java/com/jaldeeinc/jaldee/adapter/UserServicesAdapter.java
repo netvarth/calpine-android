@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -47,6 +49,7 @@ public class UserServicesAdapter  extends RecyclerView.Adapter<UserServicesAdapt
     ArrayList<DepServiceInfo> servicesInfoList;
     public Context context;
     private boolean isLoading = true;
+    private int lastPosition = -1;
     private ISelectedProviderService iSelectedService;
     private ServiceInfoDialog serviceInfoDialog;
     private AppointmentServiceDialog appointmentServiceDialog;
@@ -82,6 +85,8 @@ public class UserServicesAdapter  extends RecyclerView.Adapter<UserServicesAdapt
 
         if (!isLoading) {
             final DepServiceInfo depServiceInfo = servicesInfoList.get(position);
+
+            setAnimation(viewHolder.cvCard, position);
 
             // to set Provider image
             if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.PROVIDER)) {
@@ -523,4 +528,14 @@ public class UserServicesAdapter  extends RecyclerView.Adapter<UserServicesAdapt
         }
     }
 
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+    }
 }

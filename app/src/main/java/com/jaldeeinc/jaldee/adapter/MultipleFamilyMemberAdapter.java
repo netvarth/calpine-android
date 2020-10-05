@@ -12,6 +12,9 @@ import android.widget.TextView;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckinFamilyMember;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
+import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
@@ -28,13 +31,14 @@ public class MultipleFamilyMemberAdapter extends RecyclerView.Adapter<MultipleFa
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_name, txtaddmember;
+        public CustomTextViewBold tv_name;
+        public CustomTextViewMedium txtaddmember;
 
 
         public MyViewHolder(View view) {
             super(view);
-            tv_name = (TextView) view.findViewById(R.id.tv_name);
-            txtaddmember = (TextView) view.findViewById(R.id.txtaddmember);
+            tv_name = (CustomTextViewBold) view.findViewById(R.id.tv_name);
+            txtaddmember = (CustomTextViewMedium) view.findViewById(R.id.txtaddmember);
 
 
         }

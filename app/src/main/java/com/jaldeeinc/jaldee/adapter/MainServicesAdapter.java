@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -50,6 +52,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
     public Context context;
     private boolean isLoading = true;
     private ISelectedService iSelectedService;
+    private int lastPosition = -1;
     private ServiceInfoDialog serviceInfoDialog;
     private AppointmentServiceDialog appointmentServiceDialog;
     private DonationServiceDialog donationServiceDialog;
@@ -83,6 +86,8 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
 
         if (!isLoading) {
             final DepServiceInfo depServiceInfo = servicesInfoList.get(position);
+
+            setAnimation(viewHolder.cvCard, position);
 
             // to set Provider image
             if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.PROVIDER)) {
@@ -217,6 +222,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                 viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
                 viewHolder.llDonationRange.setVisibility(View.GONE);
                 viewHolder.tvServiceType.setText("Appointments");
+                viewHolder.tvServiceType.setVisibility(View.VISIBLE);
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
                 viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
 
@@ -224,6 +230,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
             } else if (servicesInfoList.get(position).getType() != null && servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.DONATION)) {
 
                 viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
+                viewHolder.tvServiceType.setVisibility(View.VISIBLE);
                 viewHolder.tvServiceType.setText("Donation");
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.donation_theme));
                 viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.donation_theme));
@@ -232,6 +239,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
 
                 viewHolder.rlCommonLayout.setVisibility(View.GONE);
                 viewHolder.llDonationRange.setVisibility(View.GONE);
+                viewHolder.tvServiceType.setVisibility(View.GONE);
                 viewHolder.tvPeopleAhead.setVisibility(View.GONE);
                 viewHolder.llEstwaitTime.setVisibility(View.GONE);
                 viewHolder.llTime.setVisibility(View.GONE);
@@ -533,12 +541,8 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                 }
                 String day = (String) DateFormat.format("dd", date);
                 String monthString = (String) DateFormat.format("MMM", date);
-//                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-//                        "fonts/Montserrat_Bold.otf");
                 secondWord = monthString + " " + day + ", " + nextAvailableTime;
-//                String outputDateStr = outputFormat.format(datechange);
-//                String yourDate = Config.getFormatedDate(outputDateStr);
-//                secondWord = yourDate + ", " + queue.getServiceTime();
+
             } else {
                 secondWord = "Today, " + nextAvailableTime;
             }
@@ -546,12 +550,18 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
             firstWord = "Est wait time";
             secondWord = Config.getTimeinHourMinutes(Integer.parseInt(estTime));
         }
-        // Spannable spannable = new SpannableString(firstWord + secondWord);
-//        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),"fonts/Montserrat_Bold.otf");
-//        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return firstWord + "-" + secondWord;
+    }
+
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
     }
 
 }

@@ -60,6 +60,8 @@ import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
+import com.jaldeeinc.jaldee.response.SearchViewDetail;
+import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.response.ServiceInfo;
 import com.jaldeeinc.jaldee.response.SlotsData;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
@@ -94,7 +96,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AppointmentActivity extends AppCompatActivity implements PaymentResultWithDataListener, ISlotInfo, IMailSubmit {
+public class AppointmentActivity extends AppCompatActivity implements PaymentResultWithDataListener, ISlotInfo, IMailSubmit, IPaymentResponse {
 
     @BindView(R.id.tv_providerName)
     CustomTextViewSemiBold tvProviderName;
@@ -221,6 +223,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     static Context mContext;
     String apiDate = "";
     private int userId;
+    String sector, subsector;
+    int maxPartysize;
+    SearchViewDetail mBusinessDataList;
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
 
 
@@ -260,40 +265,39 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         if (serviceInfo != null) {
             tvServiceName.setText(serviceInfo.getServiceName());
             tvDescription.setText(serviceInfo.getDescription());
-            try{
-            if (serviceInfo.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
-                if (serviceInfo.getAvailableDate() != null) {
-                    tvDate.setText(convertDate(serviceInfo.getAvailableDate()));
-                }
-                if (serviceInfo.getTime() != null) {
-                    apiDate = serviceInfo.getAvailableDate();
-                    scheduleId = serviceInfo.getScheduleId();
-                    tvTime.setText(convertTime(serviceInfo.getTime()));
-                    slotTime = serviceInfo.getTime();
-                }
-                llAppointment.setVisibility(View.VISIBLE);
-                llCheckIn.setVisibility(View.GONE);
-            } else if (serviceInfo.getType().equalsIgnoreCase(Constants.CHECKIN)) {
-                llCheckIn.setVisibility(View.VISIBLE);
-                llAppointment.setVisibility(View.GONE);
-                String time = getWaitingTime(serviceInfo.getAvailableDate(), serviceInfo.getTime(), serviceInfo.getWaitingTime());
-                tvCheckInDate.setText(time.split("-")[1]);
-                tvHint.setText(time.split("-")[0]);
+            try {
+                if (serviceInfo.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
+                    if (serviceInfo.getAvailableDate() != null) {
+                        tvDate.setText(convertDate(serviceInfo.getAvailableDate()));
+                    }
+                    if (serviceInfo.getTime() != null) {
+                        apiDate = serviceInfo.getAvailableDate();
+                        scheduleId = serviceInfo.getScheduleId();
+                        tvTime.setText(convertTime(serviceInfo.getTime()));
+                        slotTime = serviceInfo.getTime();
+                    }
+                    llAppointment.setVisibility(View.VISIBLE);
+                    llCheckIn.setVisibility(View.GONE);
+                } else if (serviceInfo.getType().equalsIgnoreCase(Constants.CHECKIN)) {
+                    llCheckIn.setVisibility(View.VISIBLE);
+                    llAppointment.setVisibility(View.GONE);
+                    String time = getWaitingTime(serviceInfo.getAvailableDate(), serviceInfo.getTime(), serviceInfo.getWaitingTime());
+                    tvCheckInDate.setText(time.split("-")[1]);
+                    tvHint.setText(time.split("-")[0]);
 
-                if (serviceInfo.getPeopleWaitingInLine() >= 0) {
-                    if (serviceInfo.getPeopleWaitingInLine() == 0) {
-                        tvPeopleInLine.setText("Be the first in line");
-                    } else if (serviceInfo.getPeopleWaitingInLine() == 1) {
-                        tvPeopleInLine.setText(serviceInfo.getPeopleWaitingInLine() + "  person waiting in line");
-                    } else {
-                        tvPeopleInLine.setText(serviceInfo.getPeopleWaitingInLine() + "  people waiting in line");
+                    if (serviceInfo.getPeopleWaitingInLine() >= 0) {
+                        if (serviceInfo.getPeopleWaitingInLine() == 0) {
+                            tvPeopleInLine.setText("Be the first in line");
+                        } else if (serviceInfo.getPeopleWaitingInLine() == 1) {
+                            tvPeopleInLine.setText(serviceInfo.getPeopleWaitingInLine() + "  person waiting in line");
+                        } else {
+                            tvPeopleInLine.setText(serviceInfo.getPeopleWaitingInLine() + "  people waiting in line");
+                        }
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
 
 
             if (serviceInfo.getServiceType() != null && serviceInfo.getServiceType().equalsIgnoreCase("virtualService")) {
@@ -335,6 +339,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         ApiSearchViewTerminology(uniqueId);
         ApiGetProfileDetail();
         ApiSearchViewSetting(uniqueId);
+        apiSearchViewDetail(uniqueId);
         ApiJaldeegetS3Coupons(uniqueId);
 
         // click actions
@@ -388,6 +393,12 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             public void onClick(View v) {
 
                 Intent familyIntent = new Intent(AppointmentActivity.this, CheckinFamilyMemberAppointment.class);
+                familyIntent.putExtra("firstname", mFirstName);
+                familyIntent.putExtra("lastname", mLastName);
+                familyIntent.putExtra("consumerID", consumerID);
+                familyIntent.putExtra("multiple", multiplemem);
+                familyIntent.putExtra("memberID", familyMEmID);
+                familyIntent.putExtra("update", 0);
                 startActivity(familyIntent);
 
             }
@@ -414,8 +425,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         slotsDialog.setCancelable(false);
                         slotsDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                     }
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -683,6 +693,111 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
             @Override
             public void onFailure(Call<SearchSetting> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+    }
+
+    private void apiSearchViewDetail(int id) {
+        ApiInterface apiService = ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        Call<SearchViewDetail> call = apiService.getSearchViewDetail(id, sdf.format(currentTime));
+        call.enqueue(new Callback<SearchViewDetail>() {
+            @Override
+            public void onResponse(Call<SearchViewDetail> call, final Response<SearchViewDetail> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(AppointmentActivity.this, mDialog);
+                    Config.logV("URL-----1111----------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-----detail--------------------" + response.code());
+                    if (response.code() == 200) {
+                        mBusinessDataList = response.body();
+
+                        if (mBusinessDataList != null) {
+
+                            sector = mBusinessDataList.getServiceSector().getDomain();
+                            subsector = mBusinessDataList.getServiceSubSector().getSubDomain();
+                            APISector(sector, subsector);
+                        }
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchViewDetail> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(AppointmentActivity.this, mDialog);
+            }
+        });
+    }
+
+
+    SectorCheckin checkin_sector = null;
+    int partySize = 0;
+    boolean enableparty = false;
+    boolean multiplemem = false;
+
+    private void APISector(String sector, String subsector) {
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        Call<SectorCheckin> call = apiService.getSector(sector, subsector);
+
+        call.enqueue(new Callback<SectorCheckin>() {
+            @Override
+            public void onResponse(Call<SectorCheckin> call, Response<SectorCheckin> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+                        checkin_sector = response.body();
+                        maxPartysize = 0;
+                        if (checkin_sector.isPartySize() && !checkin_sector.isPartySizeForCalculation()) {
+                            enableparty = true;
+                            maxPartysize = checkin_sector.getMaxPartySize();
+
+                        } else {
+                            enableparty = false;
+                        }
+                        if (checkin_sector.isPartySizeForCalculation()) {
+                            multiplemem = true;
+
+                        } else {
+                            multiplemem = false;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SectorCheckin> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
@@ -1026,7 +1141,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                         @Override
                                         public void onClick(View v) {
 
-                                            new PaymentGateway(AppointmentActivity.this, AppointmentActivity.this).ApiGenerateHash1(value, serviceInfo.getMinPrePaymentAmount(), String.valueOf(providerId), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                            new PaymentGateway(AppointmentActivity.this, AppointmentActivity.this).ApiGenerateHash1(value, serviceInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
                                             dialog.dismiss();
 
 //                                            if (imagePathList.size() > 0) {
@@ -1040,7 +1155,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                         public void onClick(View v) {
 
                                             PaytmPayment payment = new PaytmPayment(AppointmentActivity.this, paymentResponse);
-                                            payment.ApiGenerateHashPaytm(value, serviceInfo.getMinPrePaymentAmount(), String.valueOf(providerId), Constants.PURPOSE_PREPAYMENT, AppointmentActivity.this, AppointmentActivity.this, "", familyMEmID);
+                                            payment.ApiGenerateHashPaytm(value, serviceInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, AppointmentActivity.this, AppointmentActivity.this, "", familyMEmID);
                                             //payment.generateCheckSum(sAmountPay);
                                             dialog.dismiss();
 
@@ -1290,17 +1405,23 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     @Override
     public void sendSlotInfo(String displayTime, String selectedSlot, int schdId, String displayDate, String date) {
 
-        // getting data from dialog
-        tvTime.setText(displayTime);
-        tvDate.setText(displayDate);
-        tvSelectedDateHint.setText("Selected Time slot");
-        scheduleId = schdId;
-        slotTime = selectedSlot;
         try {
-            apiDate = getApiDateFormat(date);  // to convert selected date to api date format
-        } catch (ParseException e) {
+
+            // getting data from dialog
+            tvTime.setText(displayTime);
+            tvDate.setText(displayDate);
+            tvSelectedDateHint.setText("Selected Time slot");
+            scheduleId = schdId;
+            slotTime = selectedSlot;
+            try {
+                apiDate = getApiDateFormat(date);  // to convert selected date to api date format
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     public static String getApiDateFormat(String d) throws ParseException {
@@ -1317,11 +1438,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     @Override
     public void mailUpdated() {
-     String phone = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
-     String mail =  SharedPreference.getInstance(mContext).getStringValue("email", "");
-     tvEmail.setText(mail);
-     tvNumber.setText(phone);
-      //  ApiGetProfileDetail();
+        String phone = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+        String mail = SharedPreference.getInstance(mContext).getStringValue("email", "");
+        tvEmail.setText(mail);
+        tvNumber.setText(phone);
+        //  ApiGetProfileDetail();
 
     }
 
@@ -1395,6 +1516,20 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             alertDialog.show();
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
+        }
+    }
+
+    @Override
+    public void sendPaymentResponse() {
+
+        // Paytm
+        if (serviceInfo.isUser()) {
+
+            getConfirmationDetails(userId);
+
+        } else {
+            getConfirmationDetails(providerId);
+
         }
     }
 }

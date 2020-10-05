@@ -165,6 +165,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @BindView(R.id.iv_fav)
     ImageView ivfav;
 
+    @BindView(R.id.ll_noSlots)
+    LinearLayout llNoSlots;
+
     String claimable;
     private int uniqueId;
     private int providerId;
@@ -1103,10 +1106,19 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                         @Override
                                         public void run() {
 
-                                            gridLayoutManager = new GridLayoutManager(ProviderDetailActivity.this, 2);
-                                            rvServices.setLayoutManager(gridLayoutManager);
-                                            mainServicesAdapter = new MainServicesAdapter(servicesInfoList, ProviderDetailActivity.this, false, iSelectedService);
-                                            rvServices.setAdapter(mainServicesAdapter);
+                                            if (servicesInfoList.size() > 0) {
+                                                llNoSlots.setVisibility(View.GONE);
+                                                rvServices.setVisibility(View.VISIBLE);
+                                                gridLayoutManager = new GridLayoutManager(ProviderDetailActivity.this, 2);
+                                                rvServices.setLayoutManager(gridLayoutManager);
+                                                mainServicesAdapter = new MainServicesAdapter(servicesInfoList, ProviderDetailActivity.this, false, iSelectedService);
+                                                rvServices.setAdapter(mainServicesAdapter);
+                                            }
+                                            else {
+
+                                                llNoSlots.setVisibility(View.VISIBLE);
+                                                rvServices.setVisibility(View.GONE);
+                                            }
 
                                         }
                                     });
@@ -1317,10 +1329,18 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                         @Override
                                         public void run() {
 
-                                            gridLayoutManager = new GridLayoutManager(ProviderDetailActivity.this, 2);
-                                            rvServices.setLayoutManager(gridLayoutManager);
-                                            mainServicesAdapter = new MainServicesAdapter(servicesInfoList, ProviderDetailActivity.this, false, iSelectedService);
-                                            rvServices.setAdapter(mainServicesAdapter);
+                                            if (servicesInfoList.size()>0) {
+                                                llNoSlots.setVisibility(View.GONE);
+                                                rvServices.setVisibility(View.VISIBLE);
+                                                gridLayoutManager = new GridLayoutManager(ProviderDetailActivity.this, 2);
+                                                rvServices.setLayoutManager(gridLayoutManager);
+                                                mainServicesAdapter = new MainServicesAdapter(servicesInfoList, ProviderDetailActivity.this, false, iSelectedService);
+                                                rvServices.setAdapter(mainServicesAdapter);
+                                            }
+                                            else {
+                                                llNoSlots.setVisibility(View.VISIBLE);
+                                                rvServices.setVisibility(View.GONE);
+                                            }
 
                                         }
                                     });
@@ -1559,21 +1579,29 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                         @Override
                                         public void run() {
                                             // Stuff that updates the UI
-                                            GridLayoutManager glm = new GridLayoutManager(ProviderDetailActivity.this, 2);
-                                            glm.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                                                @Override
-                                                public int getSpanSize(int position) {
-                                                    switch (servicesAdapter.getItemViewType(position)) {
-                                                        case 1:
-                                                            return 2;
-                                                        default:
-                                                            return 1;
+
+                                            if (departmentsDataList.size()>0) {
+                                                llNoSlots.setVisibility(View.GONE);
+                                                rvServices.setVisibility(View.VISIBLE);
+                                                GridLayoutManager glm = new GridLayoutManager(ProviderDetailActivity.this, 2);
+                                                glm.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                                                    @Override
+                                                    public int getSpanSize(int position) {
+                                                        switch (servicesAdapter.getItemViewType(position)) {
+                                                            case 1:
+                                                                return 2;
+                                                            default:
+                                                                return 1;
+                                                        }
                                                     }
-                                                }
-                                            });
-                                            rvServices.setLayoutManager(glm);
-                                            servicesAdapter = new ServicesAdapter(ProviderDetailActivity.this, departmentsDataList, false, iSelectedService);
-                                            rvServices.setAdapter(servicesAdapter);
+                                                });
+                                                rvServices.setLayoutManager(glm);
+                                                servicesAdapter = new ServicesAdapter(ProviderDetailActivity.this, departmentsDataList, false, iSelectedService);
+                                                rvServices.setAdapter(servicesAdapter);
+                                            }else {
+                                                llNoSlots.setVisibility(View.VISIBLE);
+                                                rvServices.setVisibility(View.GONE);
+                                            }
 
                                         }
                                     });
@@ -1774,6 +1802,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             intent.putExtra("providerName", tvSpName.getText().toString());
             intent.putExtra("locationId",locationId);
             intent.putExtra("providerId",providerId);
+            intent.putExtra("fromUser",false);
             ServiceInfo serviceInfo = new ServiceInfo();
             serviceInfo.setServiceId(appointmentServiceInfo.getId());
             serviceInfo.setServiceName(appointmentServiceInfo.getName());
