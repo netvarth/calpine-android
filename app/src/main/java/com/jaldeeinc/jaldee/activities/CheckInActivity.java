@@ -183,11 +183,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     @BindView(R.id.txtprepay)
     CustomTextViewMedium txtprepay;
 
-    @BindView(R.id.txtprepayamount)
-    CustomTextViewMedium txtprepayamount;
+    static CustomTextViewMedium txtprepayamount;
 
-    @BindView(R.id.LservicePrepay)
-    LinearLayout LservicePrepay;
+    static LinearLayout LservicePrepay;
 
     @BindView(R.id.cv_back)
     CardView cvBack;
@@ -204,7 +202,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     private String serviceName;
     private String phoneNumber;
     private String serviceDescription;
-    private SearchService checkInInfo = new SearchService();
+    private static SearchService checkInInfo = new SearchService();
     SearchTerminology mSearchTerminology;
     ProfileModel profileDetails;
     ArrayList<SlotsData> slotsData = new ArrayList<SlotsData>();
@@ -239,6 +237,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     BottomSheetDialog dialogPayment;
     static ArrayList<FamilyArrayModel> MultiplefamilyList = new ArrayList<>();
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
+    static String totalAmountPay;
 
 
     @Override
@@ -260,8 +259,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         userId = intent.getIntExtra("userId", 0);
         isUser = intent.getBooleanExtra("fromUser", false);
         tvConsumerName = findViewById(R.id.tv_consumerName);
+        txtprepayamount = findViewById(R.id.txtprepayamount);
+        LservicePrepay = findViewById(R.id.LservicePrepay);
         list = findViewById(R.id.list);
         recycle_family = findViewById(R.id.recycle_family);
+
+        MultiplefamilyList.clear();
 
         if (providerName != null) {
             tvProviderName.setText(providerName);
@@ -934,7 +937,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             txtprepay.setTypeface(tyface);
                             txtprepayamount.setTypeface(tyface);
                             String firstWord = "Prepayment Amount: ";
-                            String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(checkInInfo.getMinPrePaymentAmount()));
+                            String secondWord;
+                            if(MultiplefamilyList.size()>1){
+                                secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
+                            }
+                            else{
+                                secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(checkInInfo.getMinPrePaymentAmount()));
+                            }
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1076,7 +1085,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     Config.logV("Response--code-------------------------" + response.code());
                     Config.logV("Response--code-------------------------" + response.body());
                     if (response.code() == 200) {
-                        MultiplefamilyList.clear();
+                        if(!checkInInfo.isPrePayment()) {
+                            MultiplefamilyList.clear();
+                        }
                         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "true");
                         JSONObject reader = new JSONObject(response.body().string());
                         Iterator iteratorObj = reader.keys();
@@ -1123,7 +1134,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                                     txtprepayment.setText("Prepayment Amount ");
 
-                                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(checkInInfo.getMinPrePaymentAmount()))));
+                                    if(MultiplefamilyList.size()>1){
+                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(totalAmountPay))));
+                                    }
+                                    else {
+                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(checkInInfo.getMinPrePaymentAmount()))));
+                                    }
+
 
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/JosefinSans-SemiBold.ttf");
@@ -1131,8 +1148,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                     btn_payu.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-
-                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                            if(MultiplefamilyList.size()>1){
+                                                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, totalAmountPay, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                            }
+                                            else {
+                                                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                            }
                                             dialogPayment.dismiss();
 //                                            if (imagePathList.size() > 0) {
 //                                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialogPayment);
@@ -1144,9 +1165,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                     btn_paytm.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-
                                             PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
-                                            payment.ApiGenerateHashPaytm(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID);
+                                            if(MultiplefamilyList.size()>0){
+                                                payment.ApiGenerateHashPaytm(value, totalAmountPay,String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID);
+                                            }
+                                            else {
+                                                payment.ApiGenerateHashPaytm(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID);
+                                            }
                                             dialogPayment.dismiss();
 //                                            if (imagePathList.size() > 0) {
 //                                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialogPayment);
@@ -1285,6 +1310,20 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         MultiplefamilyList.clear();
         MultiplefamilyList.addAll(familyList);
         recycle_family.setVisibility(View.VISIBLE);
+        if (checkInInfo.isPrePayment()) {
+            totalAmountPay = String.valueOf(Double.parseDouble( checkInInfo.getMinPrePaymentAmount()) * MultiplefamilyList.size());
+            LservicePrepay.setVisibility(View.VISIBLE);
+//        Typeface tyface = Typeface.createFromAsset(getAssets(),
+//                "fonts/Montserrat_Bold.otf");
+//        txtprepay.setTypeface(tyface);
+//        txtprepayamount.setTypeface(tyface);
+            String firstWord = "Prepayment Amount: ";
+            String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
+            Spannable spannable = new SpannableString(firstWord + secondWord);
+            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
+                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            txtprepayamount.setText(spannable);
+        }
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         recycle_family.setLayoutManager(mLayoutManager);
