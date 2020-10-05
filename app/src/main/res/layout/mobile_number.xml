@@ -32,6 +32,8 @@
             android:paddingTop="@dimen/padding5"
             android:paddingBottom="@dimen/padding3"
             android:textSize="@dimen/dimen_15sp"
+            android:maxLength="10"
+            android:inputType="number"
             android:background="@drawable/edittext"
             android:hint="Enter Mobile Number"
             android:textColor="@color/title_grey"/>

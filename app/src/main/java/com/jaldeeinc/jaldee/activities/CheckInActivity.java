@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -49,6 +50,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
+import com.jaldeeinc.jaldee.custom.MyLeadingMarginSpan2;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
@@ -96,7 +98,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CheckInActivity extends AppCompatActivity implements ISelectQ, PaymentResultWithDataListener, IPaymentResponse {
+public class CheckInActivity extends AppCompatActivity implements ISelectQ, PaymentResultWithDataListener, IPaymentResponse, IMailSubmit {
 
     @BindView(R.id.tv_providerName)
     CustomTextViewSemiBold tvProviderName;
@@ -165,6 +167,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
     @BindView(R.id.rl_coupon)
     RelativeLayout rlCoupon;
+
+    @BindView(R.id.iv_teleService)
+    ImageView ivteleService;
 
     @BindView(R.id.et_code)
     EditText etCode;
@@ -244,6 +249,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         mActivity = this;
         mContext = this;
         iSelectQ = this;
+        iMailSubmit = this;
         // getting necessary details from intent
         Intent intent = getIntent();
         uniqueId = intent.getIntExtra("uniqueID", 0);
@@ -262,7 +268,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         }
 
         if (checkInInfo != null) {
-            tvServiceName.setText(checkInInfo.getName());
+            String name = checkInInfo.getName();
+            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+            tvServiceName.setText(name);
             tvDescription.setText(checkInInfo.getDescription());
             llCheckIn.setVisibility(View.VISIBLE);
             llAppointment.setVisibility(View.GONE);
@@ -302,10 +310,34 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     } else {
                         llVirtualNumber.setVisibility(View.GONE);
                     }
+
+                    ivteleService.setVisibility(View.VISIBLE);
+                    if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+
+                        ivteleService.setImageResource(R.drawable.zoom);
+
+                    } else if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+
+                        ivteleService.setImageResource(R.drawable.googlemeet);
+
+                    } else if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+
+                        ivteleService.setImageResource(R.drawable.whatsapp_icon);
+
+                    } else if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Phone")) {
+
+                        ivteleService.setImageResource(R.drawable.phone_icon);
+
+                    } else {
+                        ivteleService.setVisibility(View.GONE);
+                    }
+
                 } else {
+                    ivteleService.setVisibility(View.GONE);
                     llVirtualNumber.setVisibility(View.GONE);
                 }
             } else {
+                ivteleService.setVisibility(View.GONE);
                 llVirtualNumber.setVisibility(View.GONE);
             }
 
@@ -944,7 +976,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
+//        mDialog.show();
 
 
         JSONObject qjsonObj = new JSONObject();
@@ -1018,7 +1050,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             queueobj.putOpt("service", service);
             queueobj.putOpt("queue", qjsonObj);
             queueobj.putOpt("waitlistingFor", waitlistArray);
-            if(isUser) {
+            if (isUser) {
                 queueobj.putOpt("provider", pjsonobj);
             }
 
@@ -1420,5 +1452,14 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             }
         }, 1000);
 
+    }
+
+    @Override
+    public void mailUpdated() {
+
+        String phone = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+        String mail = SharedPreference.getInstance(mContext).getStringValue("email", "");
+        tvEmail.setText(mail);
+        tvNumber.setText(phone);
     }
 }

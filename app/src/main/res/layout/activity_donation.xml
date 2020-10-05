@@ -45,7 +45,7 @@
             android:layout_alignRight="@id/cv_back"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/dimen_15dp"
-            android:text="Dr.Sreeraj Mahendra"
+            android:text=""
             android:textColor="@color/title_color"
             android:textSize="@dimen/dimen_16sp">
 
@@ -92,7 +92,7 @@
                         android:layout_marginEnd="@dimen/padding5"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:text="Uro Consultationnnnnnnnsnsnsnsnsnsnsnsnsnsn dssdssdds"
+                        android:text=""
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/dimen_26dp">
 
@@ -106,7 +106,6 @@
                         android:layout_marginStart="@dimen/padding5"
                         android:layout_marginTop="@dimen/padding5"
                         android:layout_marginEnd="@dimen/padding5"
-                        android:text="We are named for giving the best service to our customers as you know we have almost 25 years of expertise in this field"
                         android:textColor="@color/title_color">
 
                     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>

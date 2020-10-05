@@ -146,7 +146,9 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         try {
             if (serviceInfo != null) {
 
-                tvServiceName.setText(serviceInfo.getName());
+                String name = serviceInfo.getName();
+                name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                tvServiceName.setText(name);
                 tvDescription.setText(serviceInfo.getDescription());
                 tvAmountHint.setText("Amount must be in range between " + " ₹" + String.valueOf(serviceInfo.getMinDonationAmount()) +" and ₹" + String.valueOf(serviceInfo.getMaxDonationAmount()) + " (multiples of ₹" + String.valueOf(serviceInfo.getMultiples()) +")");
 
