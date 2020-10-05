@@ -1856,9 +1856,12 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @Override
     public void onDonationSelected(SearchDonation donationServiceInfo) {
 
-        Intent intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
+        Intent intent = new Intent(ProviderDetailActivity.this, DonationActivity.class);
         intent.putExtra("uniqueID", uniqueId);
+        intent.putExtra("locationId", locationId);
         intent.putExtra("providerName", tvSpName.getText().toString());
+        intent.putExtra("providerId",providerId);
+        intent.putExtra("donationInfo",donationServiceInfo);
         startActivity(intent);
     }
 }

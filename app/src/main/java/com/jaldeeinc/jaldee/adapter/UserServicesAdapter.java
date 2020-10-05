@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class UserServicesAdapter  extends RecyclerView.Adapter<UserServicesAdapter.ViewHolder> {
+public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapter.ViewHolder> {
 
     ArrayList<DepServiceInfo> servicesInfoList;
     public Context context;
@@ -54,7 +54,6 @@ public class UserServicesAdapter  extends RecyclerView.Adapter<UserServicesAdapt
     private ServiceInfoDialog serviceInfoDialog;
     private AppointmentServiceDialog appointmentServiceDialog;
     private DonationServiceDialog donationServiceDialog;
-
 
 
     public UserServicesAdapter(ArrayList<DepServiceInfo> servicesInfo, Context context, boolean isLoading, ISelectedProviderService iSelectedService) {
@@ -210,8 +209,13 @@ public class UserServicesAdapter  extends RecyclerView.Adapter<UserServicesAdapt
 
                 viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
                 viewHolder.llDonationRange.setVisibility(View.GONE);
-                viewHolder.tvServiceType.setVisibility(View.VISIBLE);
-                viewHolder.tvServiceType.setText("Check In");
+                if (servicesInfoList.get(position).isToken()) {
+                    viewHolder.tvServiceType.setVisibility(View.VISIBLE);
+                    viewHolder.tvServiceType.setText("Get Token");
+                } else {
+                    viewHolder.tvServiceType.setVisibility(View.VISIBLE);
+                    viewHolder.tvServiceType.setText("Check In");
+                }
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
                 viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
 
@@ -219,6 +223,7 @@ public class UserServicesAdapter  extends RecyclerView.Adapter<UserServicesAdapt
 
                 viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
                 viewHolder.llDonationRange.setVisibility(View.GONE);
+                viewHolder.tvServiceType.setVisibility(View.VISIBLE);
                 viewHolder.tvServiceType.setText("Appointments");
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
                 viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
@@ -227,6 +232,7 @@ public class UserServicesAdapter  extends RecyclerView.Adapter<UserServicesAdapt
             } else if (servicesInfoList.get(position).getType() != null && servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.DONATION)) {
 
                 viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
+                viewHolder.tvServiceType.setVisibility(View.VISIBLE);
                 viewHolder.tvServiceType.setText("Donation");
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.donation_theme));
                 viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.donation_theme));
@@ -236,6 +242,7 @@ public class UserServicesAdapter  extends RecyclerView.Adapter<UserServicesAdapt
                 viewHolder.rlCommonLayout.setVisibility(View.GONE);
                 viewHolder.llDonationRange.setVisibility(View.GONE);
                 viewHolder.tvPeopleAhead.setVisibility(View.GONE);
+                viewHolder.tvServiceType.setVisibility(View.GONE);
                 viewHolder.llEstwaitTime.setVisibility(View.GONE);
                 viewHolder.llTime.setVisibility(View.GONE);
 
@@ -322,8 +329,7 @@ public class UserServicesAdapter  extends RecyclerView.Adapter<UserServicesAdapt
                                 }
                             }
                         }
-                    }
-                    else {
+                    } else {
 
                         DynamicToast.make(context, "Provider is offline at the moment", AppCompatResources.getDrawable(
                                 context, R.drawable.ic_info_black),
@@ -364,8 +370,7 @@ public class UserServicesAdapter  extends RecyclerView.Adapter<UserServicesAdapt
                                 appointmentServiceDialog.getWindow().setGravity(Gravity.BOTTOM);
                                 appointmentServiceDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-                        }
-                        else if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.DONATION)) {
+                        } else if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.DONATION)) {
 
                             if (servicesInfoList.get(position).getDonationServiceInfo() != null) {
                                 donationServiceDialog = new DonationServiceDialog(context, servicesInfoList.get(position).getDonationServiceInfo());
@@ -385,7 +390,6 @@ public class UserServicesAdapter  extends RecyclerView.Adapter<UserServicesAdapt
             });
 
 
-
         } else {
 
             UserServicesAdapter.ViewHolder skeletonViewHolder = (ViewHolder) viewHolder;
@@ -397,7 +401,7 @@ public class UserServicesAdapter  extends RecyclerView.Adapter<UserServicesAdapt
 
     @Override
     public int getItemCount() {
-        return isLoading? 10 : servicesInfoList.size();
+        return isLoading ? 10 : servicesInfoList.size();
     }
 
     public static String convertDate(String date) {
@@ -528,11 +532,9 @@ public class UserServicesAdapter  extends RecyclerView.Adapter<UserServicesAdapt
         }
     }
 
-    private void setAnimation(View viewToAnimate, int position)
-    {
+    private void setAnimation(View viewToAnimate, int position) {
         // If the bound view wasn't previously displayed on screen, it's animated
-        if (position > lastPosition)
-        {
+        if (position > lastPosition) {
             Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;

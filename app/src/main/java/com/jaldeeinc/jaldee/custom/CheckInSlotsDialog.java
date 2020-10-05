@@ -60,7 +60,7 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
     private static CustomTextViewSemiBold tvCalenderDate;
     private RecyclerView rvQueues;
     private CardView cvConfirm;
-    private LinearLayout llNoSlots;
+    private LinearLayout llNoSlots,llWaiting;
     private NeomorphFrameLayout cvCalender;
     final Calendar myCalendar = Calendar.getInstance();
     private int activeScheduleId, serviceId, locationId, providerId;
@@ -242,6 +242,7 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
 
                                 rvQueues.setVisibility(View.VISIBLE);
                                 llNoSlots.setVisibility(View.GONE);
+                                llWaiting.setVisibility(View.VISIBLE);
                                 queueId = mQueueTimeSlotList.get(0).getId();
                                 queueDetails = mQueueTimeSlotList.get(0);
                                 selectedDate = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
@@ -298,6 +299,7 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
                             } else {
                                 rvQueues.setVisibility(View.GONE);
                                 llNoSlots.setVisibility(View.VISIBLE);
+                                llWaiting.setVisibility(View.GONE);
                             }
                         }
 
@@ -367,6 +369,7 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
         tvServiceTime = findViewById(R.id.tv_serviceTime);
         llEstTime = findViewById(R.id.ll_estTime);
         tvSlash = findViewById(R.id.tv_slash);
+        llWaiting = findViewById(R.id.ll_waiting);
 
 
     }

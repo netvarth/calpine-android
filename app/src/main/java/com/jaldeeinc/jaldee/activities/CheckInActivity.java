@@ -172,6 +172,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     @BindView(R.id.tv_apply)
     CustomTextViewBold tvApply;
 
+    @BindView(R.id.tv_buttonName)
+    CustomTextViewBold tvButtonName;
+
     @BindView(R.id.txtprepay)
     CustomTextViewMedium txtprepay;
 
@@ -227,6 +230,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     private boolean isUser;
     QueueTimeSlotModel queueDetails = new QueueTimeSlotModel();
     int maxPartysize;
+    private boolean isToken = false;
     BottomSheetDialog dialogPayment;
     static ArrayList<FamilyArrayModel> MultiplefamilyList = new ArrayList<>();
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
@@ -765,10 +769,17 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
-                        if (response.body().getCalculationMode() != null) {
+                        if (response.body() != null) {
+                            isToken = response.body().isShowTokenId();
 
-                            calcMode = response.body().getCalculationMode();
-
+                            if (isToken) {
+                                tvButtonName.setText("Confirm Token");
+                            } else {
+                                tvButtonName.setText("Confirm CheckIn");
+                            }
+                            if (response.body().getCalculationMode() != null) {
+                                calcMode = response.body().getCalculationMode();
+                            }
                         }
                     }
 
@@ -994,8 +1005,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 for (int i = 0; i < MultiplefamilyList.size(); i++) {
                     JSONObject waitobj1 = new JSONObject();
                     waitobj1.put("id", MultiplefamilyList.get(i).getId());
-                    waitobj1.put("firstName",MultiplefamilyList.get(i).getFirstName());
-                    waitobj1.put("lastName",MultiplefamilyList.get(i).getLastName());
+                    waitobj1.put("firstName", MultiplefamilyList.get(i).getFirstName());
+                    waitobj1.put("lastName", MultiplefamilyList.get(i).getLastName());
                     waitlistArray.put(waitobj1);
                 }
             } else {

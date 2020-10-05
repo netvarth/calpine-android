@@ -606,10 +606,11 @@
             android:layout_gravity="center">
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                android:id="@+id/tv_buttonName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Confirm Appointment"
+                android:text="Confirm "
                 android:textColor="@color/white"
                 android:textSize="@dimen/txtsize_14">
 

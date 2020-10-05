@@ -27,6 +27,7 @@ public class QueuesAdapter extends RecyclerView.Adapter<QueuesAdapter.QueuesAdap
     private ISelectedQueue iSelectedQueue;
     View previousSelectedItem;
     private Context context;
+    private int selectedPosition = 0;
 
 
     public QueuesAdapter(Context context, ArrayList<QueueTimeSlotModel> queuesList, ISelectedQueue iSelectedQueue) {
@@ -51,25 +52,36 @@ public class QueuesAdapter extends RecyclerView.Adapter<QueuesAdapter.QueuesAdap
         String displayQueueTime = queuesList.get(position).getQueueSchedule().getTimeSlots().get(0).getsTime() + "-" + queuesList.get(position).getQueueSchedule().getTimeSlots().get(0).geteTime();
         myViewHolder.tvTimeSlot.setText(displayQueueTime);
 
-        myViewHolder.flSlotBackground.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                myViewHolder.flSlotBackground.setShadowInner();
-                row_index = position;
-                notifyDataSetChanged();
-                iSelectedQueue.sendSelectedQueue(displayQueueTime, queue, queuesList.get(position).getId());
-            }
-        });
-
-        if (row_index == position) {
+        if (position == selectedPosition) {
             myViewHolder.flSlotBackground.setShadowInner();
             myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.location_theme));
         } else {
             myViewHolder.flSlotBackground.setShadowOuter();
             myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.inactive_text));
-
         }
+
+        myViewHolder.flSlotBackground.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                int currentPosition = myViewHolder.getLayoutPosition();
+                if (selectedPosition != currentPosition) {
+                    // Temporarily save the last selected position
+                    int lastSelectedPosition = selectedPosition;
+                    // Save the new selected position
+                    selectedPosition = currentPosition;
+                    // update the previous selected row
+                    notifyItemChanged(currentPosition);
+                    notifyItemChanged(lastSelectedPosition);
+                    // select the clicked row
+                    myViewHolder.flSlotBackground.setShadowInner();
+                    iSelectedQueue.sendSelectedQueue(displayQueueTime, queue, queuesList.get(position).getId());
+
+                }
+            }
+        });
+
 
     }
 
