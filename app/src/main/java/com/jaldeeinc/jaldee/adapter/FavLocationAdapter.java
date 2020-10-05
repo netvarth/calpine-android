@@ -25,6 +25,7 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.activities.Donation;
+import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -153,7 +154,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         myViewHolder.btn_checkin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
+                Intent iCheckIn = new Intent(v.getContext(), ProviderDetailActivity.class);
                 if(queueList.getNextAvailableQueue()!=null){
                     iCheckIn.putExtra("serviceId", Integer.parseInt(String.valueOf(queueList.getNextAvailableQueue().getLocation().getId())));
                 }
@@ -179,7 +180,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         myViewHolder.tv_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
+                Intent iCheckIn = new Intent(v.getContext(), ProviderDetailActivity.class);
                 if(queueList.getNextAvailableQueue()!=null){
                     iCheckIn.putExtra("serviceId", Integer.parseInt(String.valueOf(queueList.getNextAvailableQueue().getLocation().getId())));
                 }
@@ -428,7 +429,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 myViewHolder.btnappointments.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent iAppoinment = new Intent(v.getContext(), Appointment.class);
+                        Intent iAppoinment = new Intent(v.getContext(), ProviderDetailActivity.class);
                         if(scheduleList.getAvailableSchedule()!=null){
                             iAppoinment.putExtra("serviceId", Integer.parseInt(String.valueOf(scheduleList.getAvailableSchedule().getLocation().getId())));
                         }
@@ -467,7 +468,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 myViewHolder.btndonations.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent iDonation = new Intent(v.getContext(), Donation.class);
+                        Intent iDonation = new Intent(v.getContext(), ProviderDetailActivity.class);
                         iDonation.putExtra("serviceId", mFavList.get(finalI).getLocations().get(position).getId());
                         iDonation.putExtra("uniqueID", uniqueId);
                         iDonation.putExtra("accountID", String.valueOf(mFavList.get(finalI).getId()));

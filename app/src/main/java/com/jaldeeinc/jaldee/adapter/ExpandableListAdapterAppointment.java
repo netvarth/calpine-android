@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckinShareLocationAppointment;
+import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
 import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
 import com.jaldeeinc.jaldee.custom.MeetingInfo;
@@ -745,7 +746,10 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         tv_businessname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodActiveCallback(activelist.getProviderAccount().getUniqueId());
+                Intent detailIntent = new Intent(mContext, ProviderDetailActivity.class);
+                detailIntent.putExtra("uniqueID",activelist.getProviderAccount().getUniqueId());
+                mContext.startActivity(detailIntent);
+              //  callback.onMethodActiveCallback(activelist.getProviderAccount().getUniqueId());
             }
         });
 

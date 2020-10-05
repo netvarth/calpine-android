@@ -212,6 +212,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     private EnquiryDialog enquiryDialog;
     boolean favFlag = false;
     ArrayList<FavouriteModel> mFavList = new ArrayList<>();
+    String mFrom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,7 +227,13 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
         Intent intent = getIntent();
         if (intent != null) {
-            uniqueId = Integer.parseInt(intent.getStringExtra("uniqueID"));
+            mFrom = intent.getStringExtra("from");
+            if(mFrom!=null && mFrom.equalsIgnoreCase("fav")){
+                uniqueId = intent.getIntExtra("uniqueID",0);
+            }
+            else {
+                uniqueId = Integer.parseInt(intent.getStringExtra("uniqueID"));
+            }
             claimable = intent.getStringExtra("claimable");
             claimable = "0";
             locationId = intent.getIntExtra("locationId", 0);
