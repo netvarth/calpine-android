@@ -168,6 +168,15 @@
 
                                     </TextView>
 
+                                    <ImageView
+                                        android:id ="@+id/serviceicon"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginRight="@dimen/dimen_5dp"
+                                        android:visibility="gone"
+
+                                        />
+
                                     <TextView
                                         android:id="@+id/tv_serviceName"
                                         android:layout_width="wrap_content"
@@ -372,7 +381,7 @@
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:src="@drawable/ic_person_black_24dp"
-                                                android:tint="@color/dark_blue">
+                                                app:tint="@color/dark_blue">
 
                                             </ImageView>
 
@@ -437,7 +446,7 @@
                                                 android:layout_height="wrap_content"
                                                 android:layout_gravity="center"
                                                 android:src="@drawable/ic_access_time_black_24dp"
-                                                android:tint="@color/dark_blue">
+                                                app:tint="@color/dark_blue">
 
                                             </ImageView>
 

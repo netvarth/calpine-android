@@ -91,7 +91,8 @@
             android:gravity="left"
             android:text=""
             android:textColor="@color/cardview_dark_background"
-            android:textSize="@dimen/txtsize_12" />
+            android:textSize="@dimen/txtsize_12"
+            />
     </LinearLayout>
 
         <TextView
