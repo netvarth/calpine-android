@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <LinearLayout
@@ -41,17 +41,18 @@
 
     </LinearLayout>
 
-    <TextView
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:id="@+id/error_mesg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding5"
         android:layout_marginStart="@dimen/dimen_18dp"
         android:text="* This field is manditory"
         android:textSize="@dimen/txtsize_12"
         android:visibility="gone"
         android:textColor="@color/red">
 
-    </TextView>
+    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
     <Button
         android:id="@+id/btnSave"
@@ -59,7 +60,7 @@
         android:layout_height="@dimen/padding40"
         android:layout_marginTop="@dimen/padding20"
         android:layout_marginLeft="@dimen/dimen_10dp"
-        android:layout_marginBottom="@dimen/dimen_10dp"
+        android:layout_marginBottom="@dimen/dimen_25dp"
         android:textSize="@dimen/dimen_12sp"
         android:textColor="@color/white"
         android:text="Submit"

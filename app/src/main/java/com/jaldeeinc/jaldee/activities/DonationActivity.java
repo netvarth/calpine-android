@@ -14,8 +14,11 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -23,6 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.jaldeeinc.jaldee.Interface.IMailSubmit;
+import com.jaldeeinc.jaldee.Interface.IMobileSubmit;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
@@ -31,10 +36,13 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.custom.EmailEditWindow;
+import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.PaymentModel;
+import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.ServiceInfo;
@@ -45,6 +53,7 @@ import com.razorpay.PaymentResultWithDataListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,7 +75,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DonationActivity extends AppCompatActivity implements IPaymentResponse, PaymentResultWithDataListener {
+public class DonationActivity extends AppCompatActivity implements IPaymentResponse, PaymentResultWithDataListener, IMailSubmit, IMobileSubmit {
 
 
     @BindView(R.id.tv_providerName)
@@ -105,6 +114,12 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     @BindView(R.id.cv_back)
     CardView cvBack;
 
+    @BindView(R.id.tv_number)
+    CustomTextViewMedium tvNumber;
+
+    @BindView(R.id.tv_email)
+    CustomTextViewMedium tvEmail;
+
     private IPaymentResponse paymentResponse;
     private int locationId;
     private int uniqueId;
@@ -114,8 +129,14 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     static Context mContext;
     int familyMEmID;
     String value = null;
+    private String phoneNumber;
     private SearchDonation serviceInfo = new SearchDonation();
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
+    private EmailEditWindow emailEditWindow;
+    private MobileNumberDialog mobileNumberDialog;
+    private IMailSubmit iMailSubmit;
+    private IMobileSubmit iMobileSubmit;
+    ProfileModel profileDetails;
 
 
     @Override
@@ -126,6 +147,8 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         mActivity = this;
         mContext = this;
         paymentResponse = this;
+        iMailSubmit = this;
+        iMobileSubmit = this;
         Typeface tyface = Typeface.createFromAsset(DonationActivity.this.getAssets(),
                 "fonts/JosefinSans-SemiBold.ttf");
         etAmount.setTypeface(tyface);
@@ -150,7 +173,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
                 tvServiceName.setText(name);
                 tvDescription.setText(serviceInfo.getDescription());
-                tvAmountHint.setText("Amount must be in range between " + " ₹" + String.valueOf(serviceInfo.getMinDonationAmount()) +" and ₹" + String.valueOf(serviceInfo.getMaxDonationAmount()) + " (multiples of ₹" + String.valueOf(serviceInfo.getMultiples()) +")");
+                tvAmountHint.setText("Amount must be in range between " + " ₹" + String.valueOf(serviceInfo.getMinDonationAmount()) + " and ₹" + String.valueOf(serviceInfo.getMaxDonationAmount()) + " (multiples of ₹" + String.valueOf(serviceInfo.getMultiples()) + ")");
 
             }
         } catch (Exception e) {
@@ -173,6 +196,42 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
             }
         });
 
+        tvEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String mailId = "";
+                if (tvEmail.getText().toString() != null) {
+                    mailId = tvEmail.getText().toString();
+                }
+                emailEditWindow = new EmailEditWindow(DonationActivity.this, profileDetails, iMailSubmit, mailId);
+                emailEditWindow.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+                emailEditWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                emailEditWindow.show();
+                DisplayMetrics metrics = DonationActivity.this.getResources().getDisplayMetrics();
+                int width = (int) (metrics.widthPixels * 1);
+                emailEditWindow.getWindow().setGravity(Gravity.BOTTOM);
+                emailEditWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+            }
+        });
+
+        tvNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (tvNumber.getText().toString() != null) {
+                    mobileNumberDialog = new MobileNumberDialog(DonationActivity.this, profileDetails, iMobileSubmit, tvNumber.getText().toString());
+                    mobileNumberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+                    mobileNumberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    mobileNumberDialog.show();
+                    DisplayMetrics metrics = DonationActivity.this.getResources().getDisplayMetrics();
+                    int width = (int) (metrics.widthPixels * 1);
+                    mobileNumberDialog.getWindow().setGravity(Gravity.BOTTOM);
+                    mobileNumberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                }
+            }
+        });
+
 
         cvSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,14 +242,77 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                     tvErrorAmount.setVisibility(View.VISIBLE);
                 } else {
 
-                    ApiDonation("");
+                    if (tvNumber.getText().length() > 9) {
+
+                        ApiDonation("");
+                    } else {
+                        Toast.makeText(DonationActivity.this, "Mobile number should have 10 digits", Toast.LENGTH_SHORT).show();
+
+                    }
+
                 }
             }
         });
 
+        ApiGetProfileDetail();
         ApiSearchViewTerminology(uniqueId);
         APIPayment(providerId);
     }
+
+    private void ApiGetProfileDetail() {
+
+        ApiInterface apiService =
+                ApiClient.getClient(DonationActivity.this).create(ApiInterface.class);
+
+        final int consumerId = SharedPreference.getInstance(DonationActivity.this).getIntValue("consumerId", 0);
+
+        final Dialog mDialog = Config.getProgressDialog(DonationActivity.this, DonationActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ProfileModel> call = apiService.getProfileDetail(consumerId);
+
+        call.enqueue(new Callback<ProfileModel>() {
+            @Override
+            public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        profileDetails = response.body();
+                        if (profileDetails != null) {
+                            tvConsumerName.setText(profileDetails.getUserprofile().getFirstName() + " " + profileDetails.getUserprofile().getLastName());
+                            tvNumber.setText(profileDetails.getUserprofile().getPrimaryMobileNo());
+                            phoneNumber = tvNumber.getText().toString();
+                            if (profileDetails.getUserprofile().getEmail() != null) {
+                                tvEmail.setText(profileDetails.getUserprofile().getEmail());
+                            } else {
+                                tvEmail.setHint("Enter your Mail Id");
+                            }
+                        }
+                    } else {
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<ProfileModel> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+
+
+    }
+
 
     boolean showPaytmWallet = false;
     boolean showPayU = false;
@@ -323,10 +445,8 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
 
     private void ApiDonation(String txt_addnote) {
 
-//        phoneNumber = phoneNumberValue.getText().toString();
+        phoneNumber = tvNumber.getText().toString();
 //        uuid = UUID.randomUUID().toString();
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
 
@@ -579,4 +699,27 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
             Log.e("TAG", "Exception in onPaymentError..", e);
         }
     }
+
+    @Override
+    public void mailUpdated() {
+
+        String mail = SharedPreference.getInstance(mContext).getStringValue("email", "");
+        tvEmail.setText(mail);
+    }
+
+    @Override
+    public void mobileUpdated() {
+
+        String phone = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+        tvNumber.setText(phone);
+    }
+
+    public static String getMoneyFormat(String amount){
+
+        DecimalFormat formatter = new DecimalFormat("#,###,###");
+        String formattedAmount = formatter.format(amount);
+
+        return  formattedAmount;
+    }
+
 }

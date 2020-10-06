@@ -252,6 +252,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         iSelectQ = this;
         iMailSubmit = this;
         iMobileSubmit = this;
+        paymentResponse = this;
 
         // getting necessary details from intent
         Intent intent = getIntent();
@@ -1019,7 +1020,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     virtualService.put("Phone", etVirtualNumber.getText());
                 }
             } else {
-                DynamicToast.make(CheckInActivity.this, "Virtual service number is invalid", AppCompatResources.getDrawable(
+                DynamicToast.make(CheckInActivity.this, "Invalid phone number", AppCompatResources.getDrawable(
                         CheckInActivity.this, R.drawable.ic_info_black),
                         ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                 return;

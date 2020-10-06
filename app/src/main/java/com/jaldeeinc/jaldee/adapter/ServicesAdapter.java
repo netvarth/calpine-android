@@ -32,11 +32,13 @@ import com.jaldeeinc.jaldee.response.DepartmentInfo;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.text.Format;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, DepServiceInfo, Parent, Child> {
 
@@ -167,7 +169,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
 
         if (child.getType().equalsIgnoreCase(Constants.CHECKIN)) {
-            if (child.getNextAvailableDate() != null && child.getNextAvailableTime() != null && child.getEstTime()!= null) {
+            if (child.getNextAvailableDate() != null && child.getNextAvailableTime() != null && child.getEstTime() != null) {
                 // to set est waitTime if available
                 viewHolder.llEstwaitTime.setVisibility(View.VISIBLE);
                 viewHolder.llDonationRange.setVisibility(View.GONE);
@@ -191,8 +193,8 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                     viewHolder.llDonationRange.setVisibility(View.VISIBLE);
                     viewHolder.llTime.setVisibility(View.GONE);
                     viewHolder.llEstwaitTime.setVisibility(View.GONE);
-                    viewHolder.tvMinAmount.setText(child.getMinDonationAmount());
-                    viewHolder.tvMaxAmount.setText(child.getMaxDonationAmount());
+                    viewHolder.tvMinAmount.setText("₹" + getMoneyFormat(child.getMinDonationAmount()));
+                    viewHolder.tvMaxAmount.setText("₹" + getMoneyFormat(child.getMaxDonationAmount()));
                 } else {
                     viewHolder.llDonationRange.setVisibility(View.GONE);
                 }
@@ -211,13 +213,13 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
                 viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
                 viewHolder.llDonationRange.setVisibility(View.GONE);
-                    if (child.isToken()) {
-                        viewHolder.tvServiceType.setVisibility(View.VISIBLE);
-                        viewHolder.tvServiceType.setText("Get Token");
-                    } else {
-                        viewHolder.tvServiceType.setVisibility(View.VISIBLE);
-                        viewHolder.tvServiceType.setText("Check In");
-                    }
+                if (child.isToken()) {
+                    viewHolder.tvServiceType.setVisibility(View.VISIBLE);
+                    viewHolder.tvServiceType.setText("Get Token");
+                } else {
+                    viewHolder.tvServiceType.setVisibility(View.VISIBLE);
+                    viewHolder.tvServiceType.setText("Check In");
+                }
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
                 viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
             }
@@ -508,14 +510,22 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
         return formattedTime;
     }
 
-    private void setAnimation(View viewToAnimate, int position)
-    {
+    private void setAnimation(View viewToAnimate, int position) {
         // If the bound view wasn't previously displayed on screen, it's animated
-        if (position > lastPosition)
-        {
+        if (position > lastPosition) {
             Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
+        }
+    }
+
+    public static String getMoneyFormat(String number) {
+
+        if (!number.isEmpty()) {
+            double val = Double.parseDouble(number);
+            return NumberFormat.getNumberInstance(Locale.US).format(val);
+        } else {
+            return "0";
         }
     }
 

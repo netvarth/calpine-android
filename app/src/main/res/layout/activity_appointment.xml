@@ -298,7 +298,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/padding3"
-                            android:text="5555000015"
+                            android:text=""
+                            android:inputType="number"
+                            android:maxLength="10"
                             android:textSize="@dimen/txtsize_14">
 
                         </EditText>

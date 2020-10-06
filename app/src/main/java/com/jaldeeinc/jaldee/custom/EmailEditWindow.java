@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.custom;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.DonationActivity;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -34,7 +36,7 @@ public class EmailEditWindow extends Dialog {
     Button btnsave;
     DatabaseHandler db;
     ProfileModel profileDetails;
-    TextView tvErrorMessage;
+    CustomTextViewMedium tvErrorMessage;
     private IMailSubmit iMailSubmit;
     String currentMailId;
 
@@ -52,7 +54,10 @@ public class EmailEditWindow extends Dialog {
         email = findViewById(R.id.email);
         btnsave = findViewById(R.id.btnSave);
         tvErrorMessage = findViewById(R.id.error_mesg);
-
+        Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                "fonts/JosefinSans-SemiBold.ttf");
+        email.setTypeface(tyface);
+        btnsave.setTypeface(tyface);
         if (currentMailId != null) {
 
             email.setText(currentMailId);

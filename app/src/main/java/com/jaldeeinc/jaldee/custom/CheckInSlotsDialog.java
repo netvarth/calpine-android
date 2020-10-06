@@ -243,6 +243,9 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
                                 rvQueues.setVisibility(View.VISIBLE);
                                 llNoSlots.setVisibility(View.GONE);
                                 llWaiting.setVisibility(View.VISIBLE);
+                                tvDate.setVisibility(View.VISIBLE);
+                                tvTime.setVisibility(View.VISIBLE);
+                                cvConfirm.setVisibility(View.VISIBLE);
                                 queueId = mQueueTimeSlotList.get(0).getId();
                                 queueDetails = mQueueTimeSlotList.get(0);
                                 selectedDate = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
@@ -300,6 +303,9 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
                                 rvQueues.setVisibility(View.GONE);
                                 llNoSlots.setVisibility(View.VISIBLE);
                                 llWaiting.setVisibility(View.GONE);
+                                tvDate.setVisibility(View.GONE);
+                                tvTime.setVisibility(View.GONE);
+                                cvConfirm.setVisibility(View.GONE);
                             }
                         }
 
