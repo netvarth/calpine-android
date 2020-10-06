@@ -20,7 +20,9 @@ import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.squareup.picasso.Picasso;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class DonationServiceDialog extends Dialog {
 
@@ -75,7 +77,7 @@ public class DonationServiceDialog extends Dialog {
 
             if (minAmount != null) {
                 tv_minvalue.setVisibility(View.VISIBLE);
-                tv_minvalue.setText("₹ " + minAmount);
+                tv_minvalue.setText("₹ " + getMoneyFormat(minAmount));
                 LminAmountlayout.setVisibility(View.VISIBLE);
             } else {
                 tv_minvalue.setVisibility(View.GONE);
@@ -84,7 +86,7 @@ public class DonationServiceDialog extends Dialog {
 
             if (maxAmount != null) {
                 tv_maxvalue.setVisibility(View.VISIBLE);
-                tv_maxvalue.setText("₹ " + maxAmount);
+                tv_maxvalue.setText("₹ " + getMoneyFormat(maxAmount));
                 LmaxAmountlayout.setVisibility(View.VISIBLE);
             } else {
                 tv_maxvalue.setVisibility(View.GONE);
@@ -102,7 +104,7 @@ public class DonationServiceDialog extends Dialog {
 
             if (donationInfo.isPrePayment()) {
                 Lprepayment.setVisibility(View.VISIBLE);
-                txtpreVal.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(donationInfo.getMinPrePaymentAmount())));
+                txtpreVal.setText("₹ " + getMoneyFormat(Config.getAmountinTwoDecimalPoints(Double.parseDouble(donationInfo.getMinPrePaymentAmount()))));
             } else {
                 Lprepayment.setVisibility(View.GONE);
             }
@@ -180,4 +182,13 @@ public class DonationServiceDialog extends Dialog {
         tv_price.setTypeface(tyface);
     }
 
+    public static String getMoneyFormat(String number) {
+
+        if (!number.isEmpty()) {
+            double val = Double.parseDouble(number);
+            return NumberFormat.getNumberInstance(Locale.US).format(val);
+        } else {
+            return "0";
+        }
+    }
 }
