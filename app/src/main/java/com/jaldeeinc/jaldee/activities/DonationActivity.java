@@ -54,6 +54,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -173,7 +174,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
                 tvServiceName.setText(name);
                 tvDescription.setText(serviceInfo.getDescription());
-                tvAmountHint.setText("Amount must be in range between " + " ₹" + String.valueOf(serviceInfo.getMinDonationAmount()) + " and ₹" + String.valueOf(serviceInfo.getMaxDonationAmount()) + " (multiples of ₹" + String.valueOf(serviceInfo.getMultiples()) + ")");
+                tvAmountHint.setText("Amount must be in range between " + " ₹" + getMoneyFormat(serviceInfo.getMinDonationAmount()) + " and ₹" + getMoneyFormat(serviceInfo.getMaxDonationAmount()) + " (multiples of ₹" + String.valueOf(serviceInfo.getMultiples()) + ")");
 
             }
         } catch (Exception e) {
@@ -555,7 +556,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
 
                                 txtprepayment.setText("Donation Amount ");
 
-                                txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(etAmount.getText().toString()))));
+                                txtamt.setText("Rs." + getMoneyFormat(Config.getAmountinTwoDecimalPoints((Double.parseDouble(etAmount.getText().toString())))));
                                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                         "fonts/Montserrat_Bold.otf");
                                 txtamt.setTypeface(tyface1);
@@ -714,12 +715,14 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         tvNumber.setText(phone);
     }
 
-    public static String getMoneyFormat(String amount){
+    public static String getMoneyFormat(String number) {
 
-        DecimalFormat formatter = new DecimalFormat("#,###,###");
-        String formattedAmount = formatter.format(amount);
-
-        return  formattedAmount;
+        if (!number.isEmpty()) {
+            double val = Double.parseDouble(number);
+            return NumberFormat.getNumberInstance(Locale.US).format(val);
+        } else {
+            return "0";
+        }
     }
 
 }

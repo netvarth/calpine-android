@@ -153,10 +153,14 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                     viewHolder.tvPeopleAhead.setVisibility(View.VISIBLE);
                     viewHolder.llDonationRange.setVisibility(View.GONE);
                     int number = servicesInfoList.get(position).getPeopleInLine();
-                    if (number >= 1) {
-                        viewHolder.tvPeopleAhead.setText(servicesInfoList.get(position).getPeopleInLine() + "  people waiting in line");
-                    } else {
-                        viewHolder.tvPeopleAhead.setText("Be the first in line");
+                    if (number >= 0) {
+                        if (number == 0) {
+                            viewHolder.tvPeopleAhead.setText("Be the first in line");
+                        } else if (number == 1) {
+                            viewHolder.tvPeopleAhead.setText(servicesInfoList.get(position).getPeopleInLine() + "  person waiting in line");
+                        } else {
+                            viewHolder.tvPeopleAhead.setText(servicesInfoList.get(position).getPeopleInLine() + "  people waiting in line");
+                        }
                     }
                 } else {
 
@@ -197,8 +201,8 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                         viewHolder.llDonationRange.setVisibility(View.VISIBLE);
                         viewHolder.llTime.setVisibility(View.GONE);
                         viewHolder.llEstwaitTime.setVisibility(View.GONE);
-                        viewHolder.tvMinAmount.setText("₹"+getMoneyFormat(servicesInfoList.get(position).getMinDonationAmount()));
-                        viewHolder.tvMaxAmount.setText("₹"+getMoneyFormat(servicesInfoList.get(position).getMaxDonationAmount()));
+                        viewHolder.tvMinAmount.setText("₹" + getMoneyFormat(servicesInfoList.get(position).getMinDonationAmount()));
+                        viewHolder.tvMaxAmount.setText("₹" + getMoneyFormat(servicesInfoList.get(position).getMaxDonationAmount()));
                     } else {
                         viewHolder.llDonationRange.setVisibility(View.GONE);
                     }

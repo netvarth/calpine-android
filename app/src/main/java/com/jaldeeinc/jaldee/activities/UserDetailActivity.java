@@ -394,7 +394,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
                             userId = providerDetails.getId();
                             onlinePresence = providerDetails.isOnlinePresence();
                             UpdateMainUI(providerDetails);
-                            apiGetProviders(uniqueId, providerId, locId);
+                            apiGetProviders(uniqueId, providerId, locId,userId);
 
                         }
 
@@ -565,7 +565,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
         }
     }
 
-    private void apiGetProviders(int unqId, int provid, int locid) {
+    private void apiGetProviders(int unqId, int provid, int locid, int userId) {
 
         try {
 
@@ -580,8 +580,8 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             List<Observable<?>> requests = new ArrayList<>();
 
             // Make a collection of all requests you need to call at once, there can be any number of requests, not only 3. You can have 2 or 5, or 100.
-            requests.add(apiService.getCheckInsSchedule(provid + "-" + locid));
-            requests.add(apiService.getAppointmentSchedule(provid + "-" + locid));
+            requests.add(apiService.getProviderCheckInSchedule(provid + "-" + locid));
+            requests.add(apiService.getAppointmentSchedule(userId + "-" + locid+"-"+provid));
             requests.add(apiService.getCheckInServices(locid));
             requests.add(apiService.getAppointmentServices(locid));
 

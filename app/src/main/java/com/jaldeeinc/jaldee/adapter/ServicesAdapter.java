@@ -149,10 +149,14 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                 viewHolder.tvPeopleAhead.setVisibility(View.VISIBLE);
                 viewHolder.llDonationRange.setVisibility(View.GONE);
                 int number = child.getPeopleInLine();
-                if (number >= 1) {
-                    viewHolder.tvPeopleAhead.setText(child.getPeopleInLine() + "  people waiting in line");
-                } else {
-                    viewHolder.tvPeopleAhead.setText("Be the first in line");
+                if (number >= 0) {
+                    if (number == 0) {
+                        viewHolder.tvPeopleAhead.setText("Be the first in line");
+                    } else if (number == 1) {
+                        viewHolder.tvPeopleAhead.setText(child.getPeopleInLine() + "  person waiting in line");
+                    } else {
+                        viewHolder.tvPeopleAhead.setText(child.getPeopleInLine() + "  people waiting in line");
+                    }
                 }
             } else {
 

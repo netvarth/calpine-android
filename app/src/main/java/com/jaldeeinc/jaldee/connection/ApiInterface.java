@@ -538,6 +538,10 @@ public interface ApiInterface {
     @GET("provider/waitlist/queues/waitingTime/{id}")
     Observable<ArrayList<QueueList>> getCheckInsSchedule(@Path("id") String id);
 
+    @GET("provider/waitlist/queues/providerWaitingTime/{id}")
+    Observable<ArrayList<QueueList>> getProviderCheckInSchedule(@Path("id") String id);
+
+
     public static String getDeviceName() {
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;
