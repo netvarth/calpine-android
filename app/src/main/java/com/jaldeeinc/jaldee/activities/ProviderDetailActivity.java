@@ -1852,6 +1852,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             serviceInfo.setDescription(appointmentServiceInfo.getDescription());
             serviceInfo.setType(Constants.APPOINTMENT);
             serviceInfo.setUser(false);
+            serviceInfo.setNoteManidtory(appointmentServiceInfo.isConsumerNoteMandatory());
             if (appointmentServiceInfo.getConsumerNoteTitle() != null) {
                 serviceInfo.setConsumerNoteTitle(appointmentServiceInfo.getConsumerNoteTitle());
             }
@@ -1906,5 +1907,10 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         intent.putExtra("providerId", providerId);
         intent.putExtra("donationInfo", donationServiceInfo);
         startActivity(intent);
+    }
+
+    @Override
+    public void getMessage(String valueOf) {
+        // do nothing
     }
 }

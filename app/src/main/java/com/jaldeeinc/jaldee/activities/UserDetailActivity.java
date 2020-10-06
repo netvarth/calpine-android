@@ -788,6 +788,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             serviceInfo.setDescription(appointmentServiceInfo.getDescription());
             serviceInfo.setType(Constants.APPOINTMENT);
             serviceInfo.setUser(true);
+            serviceInfo.setNoteManidtory(appointmentServiceInfo.isConsumerNoteMandatory());
             if (appointmentServiceInfo.getConsumerNoteTitle() != null) {
                 serviceInfo.setConsumerNoteTitle(appointmentServiceInfo.getConsumerNoteTitle());
             }
@@ -818,5 +819,10 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             startActivity(intent);
         }
 
+    }
+
+    @Override
+    public void getMessage(String valueOf) {
+        // do nothing
     }
 }

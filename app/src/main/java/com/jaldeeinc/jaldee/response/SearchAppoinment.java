@@ -36,6 +36,7 @@ public class SearchAppoinment implements Serializable {
     String postInfoTitle;
     String postInfoText;
     String consumerNoteTitle;
+    boolean consumerNoteMandatory;
     @SerializedName("provider")
     private SearchAppoinment provider;
 
@@ -285,5 +286,13 @@ public class SearchAppoinment implements Serializable {
 
     public void setServicegallery(ArrayList<SearchService> servicegallery) {
         this.servicegallery = servicegallery;
+    }
+
+    public boolean isConsumerNoteMandatory() {
+        return consumerNoteMandatory;
+    }
+
+    public void setConsumerNoteMandatory(boolean consumerNoteMandatory) {
+        this.consumerNoteMandatory = consumerNoteMandatory;
     }
 }
