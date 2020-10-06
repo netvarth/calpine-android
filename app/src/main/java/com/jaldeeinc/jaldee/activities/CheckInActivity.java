@@ -252,6 +252,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         iSelectQ = this;
         iMailSubmit = this;
         iMobileSubmit = this;
+        paymentResponse = this;
 
         // getting necessary details from intent
         Intent intent = getIntent();

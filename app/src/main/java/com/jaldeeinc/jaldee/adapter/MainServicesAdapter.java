@@ -37,12 +37,15 @@ import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
 import com.jaldeeinc.jaldee.response.DepServiceInfo;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import java.text.DecimalFormat;
 import java.text.Format;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
@@ -194,8 +197,8 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                         viewHolder.llDonationRange.setVisibility(View.VISIBLE);
                         viewHolder.llTime.setVisibility(View.GONE);
                         viewHolder.llEstwaitTime.setVisibility(View.GONE);
-                        viewHolder.tvMinAmount.setText(servicesInfoList.get(position).getMinDonationAmount());
-                        viewHolder.tvMaxAmount.setText(servicesInfoList.get(position).getMaxDonationAmount());
+                        viewHolder.tvMinAmount.setText("₹"+getMoneyFormat(servicesInfoList.get(position).getMinDonationAmount()));
+                        viewHolder.tvMaxAmount.setText("₹"+getMoneyFormat(servicesInfoList.get(position).getMaxDonationAmount()));
                     } else {
                         viewHolder.llDonationRange.setVisibility(View.GONE);
                     }
@@ -553,15 +556,22 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
         return firstWord + "-" + secondWord;
     }
 
-    private void setAnimation(View viewToAnimate, int position)
-    {
+    private void setAnimation(View viewToAnimate, int position) {
         // If the bound view wasn't previously displayed on screen, it's animated
-        if (position > lastPosition)
-        {
+        if (position > lastPosition) {
             Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }
     }
 
+    public static String getMoneyFormat(String number) {
+
+        if (!number.isEmpty()) {
+            double val = Double.parseDouble(number);
+            return NumberFormat.getNumberInstance(Locale.US).format(val);
+        } else {
+            return "0";
+        }
+    }
 }

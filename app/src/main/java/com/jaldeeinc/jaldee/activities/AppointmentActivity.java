@@ -244,6 +244,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         mActivity = this;
         mContext = this;
         iMobileSubmit = this;
+        paymentResponse = this;
 
         // getting necessary details from intent
         Intent intent = getIntent();

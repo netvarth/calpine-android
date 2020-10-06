@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.custom;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.Interface.IMobileSubmit;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.DonationActivity;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -34,7 +36,7 @@ public class MobileNumberDialog extends Dialog {
     Button btnsave;
     DatabaseHandler db;
     ProfileModel profileDetails;
-    TextView tvErrorMessage;
+    CustomTextViewMedium tvErrorMessage;
     private IMobileSubmit iMobileSubmit;
     String phoneNumber;
 
@@ -52,6 +54,12 @@ public class MobileNumberDialog extends Dialog {
         phone = findViewById(R.id.et_phoneNumber);
         btnsave = findViewById(R.id.btnSave);
         tvErrorMessage = findViewById(R.id.error_mesg);
+
+        Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                "fonts/JosefinSans-SemiBold.ttf");
+
+        phone.setTypeface(tyface);
+        btnsave.setTypeface(tyface);
 
         if (phoneNumber != null) {
 
@@ -79,12 +87,15 @@ public class MobileNumberDialog extends Dialog {
             SharedPreference.getInstance(context).setValue("mobile", phone.getText().toString());
             iMobileSubmit.mobileUpdated();
             dismiss();
-          //  ApiEditProfileDetail();
 
-        } else {
+        } else if (phoneNumber.trim().equalsIgnoreCase("")) {
 
             tvErrorMessage.setVisibility(View.VISIBLE);
             tvErrorMessage.setText("This field is required");
+        }else {
+
+            tvErrorMessage.setVisibility(View.VISIBLE);
+            tvErrorMessage.setText("Invalid Mobile Number");
         }
 
     }
@@ -112,16 +123,11 @@ public class MobileNumberDialog extends Dialog {
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = apiService.getEditProfileDetail(body);
-//        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 try {
-
-//                    if (mDialog.isShowing())
-//                        Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
@@ -152,11 +158,7 @@ public class MobileNumberDialog extends Dialog {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-//                if (mDialog.isShowing())
-//                    Config.closeDialog(getActivity(), mDialog);
-
             }
         });
 

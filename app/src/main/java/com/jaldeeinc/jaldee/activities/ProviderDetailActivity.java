@@ -417,6 +417,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         }
                     } else {
                         llMore.setVisibility(View.GONE);
+                        tvMoreInfo.setVisibility(View.GONE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
