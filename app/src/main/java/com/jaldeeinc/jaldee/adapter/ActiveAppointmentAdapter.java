@@ -176,9 +176,14 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
 
 
         if (activelist.getApptStatus().equalsIgnoreCase("arrived")) {
-            myViewHolder.tv_status.setText("Arrived");
-            myViewHolder.tv_status.setVisibility(View.VISIBLE);
-            myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
+            if(activelist.getService()!=null && activelist.getService().getServiceType().equalsIgnoreCase("virtualService")){
+                myViewHolder.tv_status.setVisibility(View.GONE);
+            }
+            else {
+                myViewHolder.tv_status.setText("Arrived");
+                myViewHolder.tv_status.setVisibility(View.VISIBLE);
+                myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
+            }
         }
 
         if (activelist.getApptStatus().equalsIgnoreCase("Confirmed")) {

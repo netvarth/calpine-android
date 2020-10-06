@@ -98,6 +98,9 @@ public class CheckInConfirmation extends AppCompatActivity {
                     llToken.setVisibility(View.VISIBLE);
                     tvTokenNumber.setText("#" + String.valueOf(activeCheckInInfo.getToken()));
                 }
+                else{
+                   llToken.setVisibility(View.GONE);
+                }
             } else {
 
                 llToken.setVisibility(View.GONE);
