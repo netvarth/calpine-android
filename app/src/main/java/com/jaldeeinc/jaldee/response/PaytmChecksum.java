@@ -88,5 +88,15 @@ public class PaytmChecksum {
 
     String EMAIL;
 
+    public String getMERC_UNQ_REF() {
+        return MERC_UNQ_REF;
+    }
+
+    public void setMERC_UNQ_REF(String MERC_UNQ_REF) {
+        this.MERC_UNQ_REF = MERC_UNQ_REF;
+    }
+
+    String MERC_UNQ_REF;
+
 
 }

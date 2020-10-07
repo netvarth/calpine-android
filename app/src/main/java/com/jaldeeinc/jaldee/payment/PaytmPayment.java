@@ -95,6 +95,7 @@ public class PaytmPayment {
                         // map.put("EMAIL", jsonObj.getString("EMAIL"));
                         // map.put("MOBILE_NO", jsonObj.getString("MOBILE_NO"));
                         map.put("CHECKSUMHASH", response.body().get(0).getChecksum());
+                        map.put("MERC_UNQ_REF",response.body().get(0).getMERC_UNQ_REF());
 
 
                         //PaytmPay(map);
@@ -191,6 +192,7 @@ public class PaytmPayment {
                             Config.logV("Response--Sucess----PAytm-CALLBACK_URL--------------------" + response_data.getCALLBACK_URL());
                             map.put("CALLBACK_URL", response_data.getCALLBACK_URL());
                             map.put("CHECKSUMHASH", response_data.getChecksum());
+                            map.put("MERC_UNQ_REF",response_data.getMERC_UNQ_REF());
                             PaytmPay(map, from, response_data.getPaymentEnv(),purpose);
 
                         } catch (Exception e) {
