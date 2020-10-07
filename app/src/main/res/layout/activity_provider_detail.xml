@@ -47,11 +47,13 @@
                 app:cardElevation="@dimen/padding3">
 
                 <ImageView
+                    android:id="@+id/iv_share"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/padding20"
                     android:layout_gravity="center"
                     android:padding="1dp"
-                    android:src="@drawable/share_icon"
+                    android:visibility="visible"
+                    android:src="@drawable/new_share"
                     app:tint="@color/dark_blue">
 
                 </ImageView>

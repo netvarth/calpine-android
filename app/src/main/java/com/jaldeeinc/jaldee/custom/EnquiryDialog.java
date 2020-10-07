@@ -44,7 +44,7 @@ import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 public class EnquiryDialog extends Dialog {
 
     private Context context;
-    private CustomTextViewMedium tvTo;
+    private CustomTextViewSemiBold tvTo;
     private EditText etMessage;
     private Button btCancel, btSend;
     int uniqueId;

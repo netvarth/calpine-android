@@ -88,6 +88,16 @@ public class SearchViewDetail implements Serializable {
     String awardIssuedBy;
     String awardMonth;
 
+    public String getAccEncUid() {
+        return accEncUid;
+    }
+
+    public void setAccEncUid(String accEncUid) {
+        this.accEncUid = accEncUid;
+    }
+
+    String accEncUid;
+
     public void setBaseLocation(LocationModel baseLocation) {
         this.baseLocation = baseLocation;
     }

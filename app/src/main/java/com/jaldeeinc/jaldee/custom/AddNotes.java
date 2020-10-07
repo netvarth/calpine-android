@@ -34,7 +34,7 @@ import retrofit2.Response;
 public class AddNotes extends Dialog {
 
     private Context context;
-    private CustomTextViewMedium tvTo;
+    private CustomTextViewSemiBold tvTo;
     private EditText etMessage;
     private Button btCancel, btSend;
     String providerName;
