@@ -2,5 +2,5 @@ package com.jaldeeinc.jaldee.custom;
 
 public interface IGetSelectedLocation {
 
-    void sendAddress(String address, int id);
+    void sendAddress(String address, int id, String place);
 }

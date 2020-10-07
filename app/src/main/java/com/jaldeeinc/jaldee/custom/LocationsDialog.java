@@ -71,19 +71,33 @@ public class LocationsDialog extends Dialog implements ISelectLocation {
 
     }
 
-    @Override
-    public void sendSelectedAddress(String address, int id) {
+//    @Override
+//    public void sendSelectedAddress(String address, int id) {
+//
+//        cvSave.setClickable(true);
+//        cvSave.setBackgroundResource(R.drawable.curved_save);
+//        cvSave.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                iGetSelectedLocation.sendAddress(address,id);
+//                dismiss();
+//            }
+//        });
+//
+//    }
 
+    @Override
+    public void sendSelectedAddress(String address, int id, String place) {
         cvSave.setClickable(true);
         cvSave.setBackgroundResource(R.drawable.curved_save);
         cvSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                iGetSelectedLocation.sendAddress(address,id);
+                iGetSelectedLocation.sendAddress(address,id,place);
                 dismiss();
             }
         });
-
     }
 }

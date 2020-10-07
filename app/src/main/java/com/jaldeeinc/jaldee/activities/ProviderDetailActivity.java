@@ -12,13 +12,17 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -26,15 +30,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.ISelectedService;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.adapter.LocationCheckinAdapter;
 import com.jaldeeinc.jaldee.adapter.MainServicesAdapter;
 import com.jaldeeinc.jaldee.adapter.SectionRecyclerViewAdapter;
 import com.jaldeeinc.jaldee.adapter.ServicesAdapter;
 import com.jaldeeinc.jaldee.adapter.SpecialisationAdapter;
 import com.jaldeeinc.jaldee.adapter.VirtualFieldAdapter;
+import com.jaldeeinc.jaldee.callback.LocationCheckinCallback;
+import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -42,6 +50,7 @@ import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.custom.EnquiryDialog;
 import com.jaldeeinc.jaldee.custom.IGetSelectedLocation;
 import com.jaldeeinc.jaldee.custom.LocationsDialog;
@@ -57,11 +66,13 @@ import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchAppoinment;
 import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
+import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchLocation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
+import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 import com.jaldeeinc.jaldee.response.ServiceInfo;
@@ -72,8 +83,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 import butterknife.BindView;
@@ -170,6 +183,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @BindView(R.id.ll_noSlots)
     LinearLayout llNoSlots;
 
+    @BindView(R.id.checkinsList)
+    CustomTextViewMedium tv_checkinsList;
+
     String claimable;
     private int uniqueId;
     private int providerId;
@@ -217,6 +233,14 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     String mFrom;
     boolean isCheckInEnabled = false;
     boolean isApptEnabled = false;
+    ArrayList<SearchCheckInMessage> mSearchmCheckListShow = new ArrayList<>();
+    ArrayList<SearchCheckInMessage> mSearchmCheckMessageList = new ArrayList<>();
+    String location;
+    LocationCheckinCallback callback;
+    SearchTerminology mSearchTerminology;
+    String terminology;
+    String userTerminology;
+    private SearchLocationAdpterCallback adaptercallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -363,6 +387,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
         apiVirtualFields(uniqueId);
         ApiSearchViewLocation(uniqueId);
+        apiSearchViewTerminology(String.valueOf(uniqueId));
+
 
     }
 
@@ -465,6 +491,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                 rlLocation.setVisibility(View.GONE);
                             }
                             locationId = mSearchLocList.get(0).getId();
+                            location = mSearchLocList.get(0).getPlace();
                             apiSearchViewDetail(uniqueId);
 
                         } else {
@@ -517,7 +544,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             onlinePresence = mBusinessDataList.isOnlinePresence();
                             UpdateMainUI(mBusinessDataList);
                             apiSearchGallery(id);
-                            apiSettings_Details(id, providerId, locationId);
+                            apiSettings_Details(id, providerId, locationId,location);
                             // check if the provider is a favourite
                             ApiFavList();
 
@@ -830,7 +857,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         }
     }
 
-    private void apiSettings_Details(int uniqueId, int mProviderId, final int mlocationId) {
+    private void apiSettings_Details(int uniqueId, int mProviderId, final int mlocationId, String location) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
@@ -867,6 +894,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                                 getOnlyServices(uniqueId, mlocationId, mProviderId);
                             }
+                            ApiCheckInMessage(mlocationId,location);
                         }
 
                     }
@@ -1051,8 +1079,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                     if (schedulesList.get(0).isApptEnabled()){
                         for (SearchAppoinment appt : apptServicesList) {
-
-
                             DepServiceInfo serviceInfo = new DepServiceInfo();
                             serviceInfo.setDepartmentId(0);
                             serviceInfo.setDepartmentName("");
@@ -1794,6 +1820,158 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             }
         });
     }
+    BottomSheetDialog dialog;
+    private void ApiCheckInMessage(final int mLocid, final String loc) {
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+//        mDialog.show();
+        Map<String, String> query = new HashMap<>();
+        query.put("location-eq", String.valueOf(mLocid));
+        query.put("waitlistStatus-eq", "checkedIn,arrived");
+        Call<ArrayList<SearchCheckInMessage>> call = apiService.getSearchCheckInMessage(query);
+        Config.logV("Location-----###########@@@@@@" + query);
+        call.enqueue(new Callback<ArrayList<SearchCheckInMessage>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SearchCheckInMessage>> call, Response<ArrayList<SearchCheckInMessage>> response) {
+                try {
+//                    if (mDialog.isShowing())
+                      //  Config.closeDialog(this, mDialog);
+                    Config.logV("URL-----4444-----Location-----###########@@@@@@-----" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code--------Message-----------------" + response.code());
+                    if (response.code() == 200) {
+                        mSearchmCheckListShow.clear();
+                        mSearchmCheckMessageList.clear();
+                        if (response.body().size() > 0) {
+                            SearchCheckInMessage mCheckMessage = new SearchCheckInMessage();
+                            mCheckMessage.setmAllSearch_checkIn(response.body());
+                            mCheckMessage.setLocid(mLocid);
+                            mSearchmCheckMessageList.add(mCheckMessage);
+                            for (int i = 0; i < mSearchmCheckMessageList.size(); i++) {
+                            if ( mSearchLocList.get(i).getId() == mSearchmCheckMessageList.get(i).getLocid()) {
+                             if(mSearchmCheckMessageList.get(i).getmAllSearch_checkIn().size()>0) {
+                                 tv_checkinsList.setVisibility(View.VISIBLE);
+                             }
+                            //  myViewHolder.tv_checkin.setText("You have "+mCheckInMessage.get(i).getmAllSearch_checkIn().size()+" Check-In at this location");
+
+                            if (terminology != null) {
+                                String firstWord = "You have ";
+                                String secondWord = mSearchmCheckMessageList.get(i).getmAllSearch_checkIn().size() + " " + terminology;
+                                String thirdword = " at this location";
+                                Spannable spannable = new SpannableString(firstWord + secondWord + thirdword);
+                                Typeface tyface_edittext2 = Typeface.createFromAsset(mContext.getAssets(),
+                            "fonts/Montserrat_Bold.otf");
+                               spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                               tv_checkinsList.setText(spannable);
+
+                }
+            }
+        }
+                            tv_checkinsList.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog = new BottomSheetDialog(mContext);
+                                    dialog.setContentView(R.layout.checkin_loclist);
+                                    dialog.setCancelable(true);
+                                    dialog.show();
+                                    TextView tv_title = (TextView) dialog.findViewById(R.id.tv_title);
+                                    TextView tv_token = (TextView) dialog.findViewById(R.id.tv_token);
+                                    if (mSearchSettings.getCalculationMode().equalsIgnoreCase("NoCalc") && mSearchSettings.isShowTokenId()) {
+                                        tv_token.setVisibility(View.VISIBLE);
+                                    } else {
+                                        tv_token.setVisibility(View.GONE);
+                                    }
+                                    String firstWord = "Your " + terminology + " at ";
+                                    String secondWord = loc;
+                                    location = loc;
+                                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                                    Typeface tyface_edittext2 = Typeface.createFromAsset(mContext.getAssets(),
+                                            "fonts/Montserrat_Bold.otf");
+                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    tv_title.setText(spannable);
+                                    RecyclerView checkloclist = (RecyclerView) dialog.findViewById(R.id.checkloclist);
+                                    Button btn_close = (Button) dialog.findViewById(R.id.btn_close);
+                                    btn_close.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                            // refreshList();
+                                        }
+                                    });
+                                    mSearchmCheckListShow = response.body();
+                                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                                    checkloclist.setLayoutManager(mLayoutManager);
+                                    LocationCheckinAdapter checkAdapter = new LocationCheckinAdapter(callback, String.valueOf(providerId), mSearchmCheckListShow, mContext,ProviderDetailActivity.this);
+                                    checkloclist.setAdapter(checkAdapter);
+                                    checkAdapter.notifyDataSetChanged();
+                                }
+                            });
+
+
+
+                        }
+                        else {
+                            tv_checkinsList.setVisibility(View.GONE);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<SearchCheckInMessage>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
+//                if (mDialog.isShowing())
+//                    Config.closeDialog(getActivity(), mDialog);
+           }
+        });
+    }
+
+    private void apiSearchViewTerminology(String muniqueID) {
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+//        mDialog.show();
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        Call<SearchTerminology> call = apiService.getSearchViewTerminology(Integer.parseInt(muniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<SearchTerminology>() {
+            @Override
+            public void onResponse(Call<SearchTerminology> call, Response<SearchTerminology> response) {
+                try {
+//                    if (mDialog.isShowing())
+//                        Config.closeDialog(getActivity(), mDialog);
+                    Config.logV("URL-------9999--------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-----Terminl--------------------" + response.code());
+                    if (response.code() == 200) {
+                        mSearchTerminology = response.body();
+                        terminology = mSearchTerminology.getWaitlist();
+                        userTerminology = mSearchTerminology.getProvider();
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchTerminology> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+//                if (mDialog.isShowing())
+//                    Config.closeDialog(getActivity(), mDialog);
+            }
+        });
+    }
+
+
+
+
 
     private void openMapView(String latitude, String longitude, String locationName) {
         Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude + "?q=" + locationName);
@@ -1811,13 +1989,13 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         return url;
     }
 
-    @Override
-    public void sendAddress(String address, int locId) {
-
-        locationId = locId;
-        tvLocation.setText(address);
-        apiSettings_Details(uniqueId, providerId, locationId);
-    }
+//    @Override
+//    public void sendAddress(String address, int locId) {
+//
+//        locationId = locId;
+//        tvLocation.setText(address);
+//        apiSettings_Details(uniqueId, providerId, locationId);
+//    }
 
     // Click actions of selected items in grid
 
@@ -1906,5 +2084,15 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         intent.putExtra("providerId", providerId);
         intent.putExtra("donationInfo", donationServiceInfo);
         startActivity(intent);
+    }
+
+    @Override
+    public void sendAddress(String address, int id, String place) {
+        locationId = id;
+        tvLocation.setText(address);
+        location = place;
+     //   ApiCheckInMessage(locationId,place);
+        apiSettings_Details(uniqueId, providerId, locationId,location);
+
     }
 }

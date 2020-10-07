@@ -779,8 +779,8 @@
                                     android:layout_width="100dp"
                                     android:layout_height="100dp"
                                     android:padding="@dimen/dimen_10dp"
-                                    android:tint="@color/dark_blue"
-                                    android:src="@drawable/multiple_sp">
+                                    android:src="@drawable/multiple_sp"
+                                    card_view:tint="@color/dark_blue">
 
                                 </ImageView>
 
@@ -817,8 +817,8 @@
                                     android:src="@drawable/rightarrow"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerInParent="true"
-                                    android:tint="@color/dark_blue"
-                                    android:layout_marginEnd="@dimen/dimen_15dp">
+                                    android:layout_marginEnd="@dimen/dimen_15dp"
+                                    card_view:tint="@color/dark_blue">
 
                                 </ImageView>
 
