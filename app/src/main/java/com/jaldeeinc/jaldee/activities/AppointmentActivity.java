@@ -75,6 +75,7 @@ import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
+import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
@@ -111,6 +112,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -265,7 +267,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     BottomSheetDialog dialog;
     private IPaymentResponse paymentResponse;
     String calcMode;
-    ActiveCheckIn activeAppointment = new ActiveCheckIn();
+    ActiveAppointment activeAppointment = new ActiveAppointment();
     static Activity mActivity;
     static Context mContext;
     String apiDate = "";
@@ -1484,14 +1486,18 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                 if (imagePathList.size() > 0) {
                                     ApiCommunicateAppointment(value, String.valueOf(userId), txt_addnote, dialog);
                                 }
-                                getConfirmationDetails(userId);
+                                if (!serviceInfo.getLivetrack().equalsIgnoreCase("true")) {
+                                    getConfirmationDetails(userId);
+                                }
 
                             } else {
 
                                 if (imagePathList.size() > 0) {
                                     ApiCommunicateAppointment(value, String.valueOf(providerId), txt_addnote, dialog);
                                 }
-                                getConfirmationDetails(providerId);
+                                if (!serviceInfo.getLivetrack().equalsIgnoreCase("true")) {
+                                    getConfirmationDetails(providerId);
+                                }
 
                             }
                         }
@@ -1661,10 +1667,10 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
         final ApiInterface apiService =
                 ApiClient.getClient(AppointmentActivity.this).create(ApiInterface.class);
-        Call<ActiveCheckIn> call = apiService.getActiveAppointmentUUID(value, String.valueOf(userId));
-        call.enqueue(new Callback<ActiveCheckIn>() {
+        Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(value, String.valueOf(userId));
+        call.enqueue(new Callback<ActiveAppointment>() {
             @Override
-            public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
+            public void onResponse(Call<ActiveAppointment> call, Response<ActiveAppointment> response) {
                 try {
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
@@ -1673,7 +1679,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         if (activeAppointment != null) {
 
                             Bundle b = new Bundle();
-                            b.putSerializable("BookingDetails", activeAppointment);
+                            b.putSerializable("BookingDetails",  activeAppointment);
                             b.putString("terminology", mSearchTerminology.getProvider());
                             Intent checkin = new Intent(AppointmentActivity.this, AppointmentConfirmation.class);
                             checkin.putExtras(b);
@@ -1688,7 +1694,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             }
 
             @Override
-            public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
+            public void onFailure(Call<ActiveAppointment> call, Throwable t) {
             }
         });
 
@@ -2138,6 +2144,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
 
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
 
 

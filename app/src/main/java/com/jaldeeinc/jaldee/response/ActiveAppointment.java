@@ -2,13 +2,14 @@ package com.jaldeeinc.jaldee.response;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by sharmila on 13/7/18.
  */
 
-public class ActiveAppointment {
+public class ActiveAppointment implements Serializable {
 
     String appointmentEncId;
     String uid;
@@ -33,7 +34,7 @@ public class ActiveAppointment {
     boolean favourite;
     String SignedUp;
     @SerializedName("service")
-    private ActiveAppointment service;
+    private ServiceDetails service;
     String name;
     String description;
     String serviceDuration;
@@ -347,13 +348,14 @@ public class ActiveAppointment {
         SignedUp = signedUp;
     }
 
-    public ActiveAppointment getService() {
+    public ServiceDetails getService() {
         return service;
     }
 
-    public void setService(ActiveAppointment service) {
+    public void setService(ServiceDetails service) {
         this.service = service;
     }
+
 
     public String getName() {
         return name;

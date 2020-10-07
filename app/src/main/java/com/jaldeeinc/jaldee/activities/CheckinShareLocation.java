@@ -283,11 +283,28 @@ public class CheckinShareLocation extends AppCompatActivity implements
                 if(shareSwitch.isChecked()){
                     UpdateShareLiveLocation();
                     mService.removeLocationUpdates();
-                    finish();}
+                    if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+                        finish();
+                    }
+                    else {
+                        Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
+                        checkin.putExtra("BookingDetails", a);
+                        checkin.putExtra("terminology", terminology);
+                        startActivity(checkin);
+                    }
+                }
                 else {
                     UpdateShareLiveLocation();
                     mService.removeLocationUpdates();
-                    finish();
+                    if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+                        finish();
+                    }
+                    else {
+                        Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
+                        checkin.putExtra("BookingDetails", a);
+                        checkin.putExtra("terminology", terminology);
+                        startActivity(checkin);
+                    }
                 }  }
         });
         btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -296,14 +313,32 @@ public class CheckinShareLocation extends AppCompatActivity implements
                 if(shareSwitch.isChecked()){
                     UpdateShareLiveLocation();
                     mService.removeLocationUpdates();
-                    finish();}
+                    if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+                        finish();
+                    }
+                    else {
+                        Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
+                        checkin.putExtra("BookingDetails", a);
+                        checkin.putExtra("terminology", terminology);
+                        startActivity(checkin);
+                    }
+                }
                 else{
                 shareSwitch.setChecked(false);
                 locationStatus = false;
                 UpdateShareLiveLocation();
                 Toast.makeText(CheckinShareLocation.this, "Live tracking has been disabled", Toast.LENGTH_SHORT).show();
                 mService.removeLocationUpdates();
-                finish();}
+                    if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+                        finish();
+                    }
+                    else {
+                        Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
+                        checkin.putExtra("BookingDetails", a);
+                        checkin.putExtra("terminology", terminology);
+                        startActivity(checkin);
+                    }
+                }
             }
         });
         if(jaldeeDistance!=null){

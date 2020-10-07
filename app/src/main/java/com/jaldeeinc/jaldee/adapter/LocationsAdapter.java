@@ -63,7 +63,7 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.View
                     row_index = position;
                     notifyDataSetChanged();
 
-                        iSelectLocation.sendSelectedAddress(locationList.get(position).getAddress(),locationList.get(position).getId());
+                        iSelectLocation.sendSelectedAddress(locationList.get(position).getAddress(),locationList.get(position).getId(),locationList.get(position).getPlace());
 
                 }
             });

@@ -2,7 +2,9 @@ package com.jaldeeinc.jaldee.response;
 
 import com.google.gson.annotations.SerializedName;
 
-public class JaldeeDistanceTime {
+import java.io.Serializable;
+
+public class JaldeeDistanceTime implements Serializable {
 
 
     public JaldeeDistance getJaldeeDistance() {

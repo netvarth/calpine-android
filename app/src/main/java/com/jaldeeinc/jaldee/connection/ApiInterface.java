@@ -219,7 +219,7 @@ public interface ApiInterface {
     Call<ActiveCheckIn> getActiveCheckInUUID(@Path("uuid") String uuid,@Query("account") String account);
 
     @GET("consumer/appointment/{uuid}")
-    Call<ActiveCheckIn> getActiveAppointmentUUID(@Path("uuid") String uuid,@Query("account") String account);
+    Call<ActiveAppointment> getActiveAppointmentUUID(@Path("uuid") String uuid,@Query("account") String account);
 
 
     @GET("ynwConf/businessDomains")
