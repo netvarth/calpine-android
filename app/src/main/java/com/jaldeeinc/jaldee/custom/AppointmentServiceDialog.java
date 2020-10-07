@@ -43,6 +43,7 @@ public class AppointmentServiceDialog extends Dialog {
     String MinPrePaymentAmount, maxDonationAmount, minDonationAmount;
     SearchAppointmentDepartmentServices appointmentServices;
     String Name;
+    ImageView ivClose;
 
     public AppointmentServiceDialog(@NonNull Context context, SearchAppoinment searchService) {
         super(context);
@@ -56,6 +57,14 @@ public class AppointmentServiceDialog extends Dialog {
         setContentView(R.layout.service_new);
 
         initializations();
+
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dismiss();
+            }
+        });
 
         try {
 
@@ -176,7 +185,11 @@ public class AppointmentServiceDialog extends Dialog {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                } else {
+                    i_servicegallery.setVisibility(View.GONE);
                 }
+            } else {
+                i_servicegallery.setVisibility(View.GONE);
             }
 
 
@@ -227,6 +240,7 @@ public class AppointmentServiceDialog extends Dialog {
         tv_minvalue = findViewById(R.id.txtminValue);
         tv_maxvalue = findViewById(R.id.txtmaxvalue);
         tv_multiples = findViewById(R.id.txtmultiples);
+        ivClose = findViewById(R.id.iv_close);
 
     }
 }

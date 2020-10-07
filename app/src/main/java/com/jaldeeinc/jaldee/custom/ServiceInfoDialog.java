@@ -32,7 +32,7 @@ public class ServiceInfoDialog extends Dialog {
     ArrayList<SearchService> mGallery;
     ArrayList<SearchDonation> dGallery;
     ArrayList<SearchAppointmentDepartmentServices> aGallery;
-    ImageView i_servicegallery;
+    ImageView i_servicegallery, ivClose;
     String title, from;
     CustomTextViewBold tv_toolbartitle, tv_price, tv_duration;
     CustomTextViewSemiBold tv_service, tv_maxvalue, tv_minvalue, txtpreVal, tv_multiples;
@@ -56,6 +56,14 @@ public class ServiceInfoDialog extends Dialog {
         setContentView(R.layout.service_new);
 
         initializations();
+
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dismiss();
+            }
+        });
 
         try {
 
@@ -175,7 +183,11 @@ public class ServiceInfoDialog extends Dialog {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                } else {
+                    i_servicegallery.setVisibility(View.GONE);
                 }
+            } else {
+                i_servicegallery.setVisibility(View.GONE);
             }
 
 
@@ -227,6 +239,7 @@ public class ServiceInfoDialog extends Dialog {
         tv_minvalue = findViewById(R.id.txtminValue);
         tv_maxvalue = findViewById(R.id.txtmaxvalue);
         tv_multiples = findViewById(R.id.txtmultiples);
+        ivClose = findViewById(R.id.iv_close);
 
     }
 }

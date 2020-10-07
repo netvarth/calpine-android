@@ -33,7 +33,7 @@ public class DonationServiceDialog extends Dialog {
     ArrayList<SearchService> mGallery;
     ArrayList<SearchDonation> dGallery;
     ArrayList<SearchAppointmentDepartmentServices> aGallery;
-    ImageView i_servicegallery;
+    ImageView i_servicegallery,ivClose;
     String title, from;
     TextView tv_toolbartitle, tv_descVal;
     ImageView i_backpress;
@@ -56,6 +56,14 @@ public class DonationServiceDialog extends Dialog {
         setContentView(R.layout.service_new);
 
         initializations();
+
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dismiss();
+            }
+        });
 
         try {
 
@@ -127,6 +135,12 @@ public class DonationServiceDialog extends Dialog {
                         e.printStackTrace();
                     }
                 }
+                else {
+                    i_servicegallery.setVisibility(View.GONE);
+                }
+            }
+            else {
+                i_servicegallery.setVisibility(View.GONE);
             }
 
             i_servicegallery.setOnClickListener(new View.OnClickListener() {
@@ -174,6 +188,7 @@ public class DonationServiceDialog extends Dialog {
         tv_minvalue = findViewById(R.id.txtminValue);
         tv_maxvalue = findViewById(R.id.txtmaxvalue);
         tv_multiples = findViewById(R.id.txtmultiples);
+        ivClose = findViewById(R.id.iv_close);
 
         Typeface tyface = Typeface.createFromAsset(context.getAssets(),
                 "fonts/Montserrat_Bold.otf");
