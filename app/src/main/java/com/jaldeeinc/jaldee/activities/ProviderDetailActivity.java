@@ -2030,6 +2030,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             serviceInfo.setDescription(appointmentServiceInfo.getDescription());
             serviceInfo.setType(Constants.APPOINTMENT);
             serviceInfo.setUser(false);
+            serviceInfo.setNoteManidtory(appointmentServiceInfo.isConsumerNoteMandatory());
             if (appointmentServiceInfo.getConsumerNoteTitle() != null) {
                 serviceInfo.setConsumerNoteTitle(appointmentServiceInfo.getConsumerNoteTitle());
             }
@@ -2094,5 +2095,10 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
      //   ApiCheckInMessage(locationId,place);
         apiSettings_Details(uniqueId, providerId, locationId,location);
 
+    }
+
+    @Override
+    public void getMessage(String valueOf) {
+        // do nothing
     }
 }

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/app_background"
+    android:focusable="true"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_background"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            android:textColor="@color/black"
+            android:letterSpacing="0.03"
+            android:textStyle="bold"
+            android:justificationMode="inter_word"
+            android:lineSpacingExtra="@dimen/padding3"
+            android:id="@+id/txtsendmsg"
+            android:layout_marginStart="@dimen/padding5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:text="Attachments"
+            android:textSize="@dimen/txtsize_hint"
+            android:layout_weight="1.5"/>
+
+        <TextView
+            android:id="@+id/btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_weight="0.25"
+            android:layout_marginLeft="@dimen/dimen_2dp"
+            android:drawableBottom="@drawable/icon_attach"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/camera"
+            android:layout_gravity="left"
+            android:drawableBottom="@drawable/camera_icon"
+            android:visibility="gone"
+            android:layout_marginLeft="@dimen/dimen_2dp"
+            android:layout_weight="0.25"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/padding5"
+        android:layout_marginStart="@dimen/padding5"
+        android:background="@color/app_background"
+        android:orientation="horizontal">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="horizontal"
+            android:nestedScrollingEnabled="false"/>
+
+    </LinearLayout>
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+        android:id="@+id/tv_errorMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding5"
+        android:layout_marginStart="@dimen/padding5"
+        android:text="Attach atleast one file to save"
+        android:textColor="@color/red"
+        android:visibility="gone"
+        android:textSize="@dimen/txtsize_12">
+
+    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/app_background"
+        android:layout_marginStart="@dimen/padding5"
+        android:layout_marginEnd="@dimen/padding5"
+        android:layout_marginBottom="@dimen/padding5"
+        android:layout_marginTop="@dimen/padding5"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:background="@color/spinnerbg"
+            android:text="@string/cancel"
+            android:textColor="@color/title_color"
+            android:textSize="@dimen/txtsize_hint" />
+
+        <Button
+            android:id="@+id/btn_send"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:background="@color/location_theme"
+            android:text="Save"
+            android:textAllCaps="true"
+            android:textColor="@color/app_background"
+            android:textSize="@dimen/txtsize_hint" />
+
+    </LinearLayout>
+
+</LinearLayout>
+

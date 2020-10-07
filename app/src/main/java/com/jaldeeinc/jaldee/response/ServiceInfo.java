@@ -31,6 +31,7 @@ public class ServiceInfo implements Serializable {
     String virtualCallingValue;
     String calculationMode;
     boolean isUser;
+    boolean noteManidtory;
 
     public ServiceInfo(){
 
@@ -269,5 +270,13 @@ public class ServiceInfo implements Serializable {
 
     public void setUser(boolean user) {
         isUser = user;
+    }
+
+    public boolean isNoteManidtory() {
+        return noteManidtory;
+    }
+
+    public void setNoteManidtory(boolean noteManidtory) {
+        this.noteManidtory = noteManidtory;
     }
 }

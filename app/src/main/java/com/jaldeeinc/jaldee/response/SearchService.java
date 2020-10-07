@@ -41,6 +41,7 @@ public class SearchService implements Serializable {
     String postInfoTitle;
     String postInfoText;
     String consumerNoteTitle;
+    boolean consumerNoteMandatory;
     @SerializedName("provider")
     private SearchService provider;
 
@@ -322,5 +323,17 @@ public class SearchService implements Serializable {
 
     public void setCheckInServiceAvailability(CheckInServiceAvailability checkInServiceAvailability) {
         this.checkInServiceAvailability = checkInServiceAvailability;
+    }
+
+    public boolean isConsumerNoteMandatory() {
+        return consumerNoteMandatory;
+    }
+
+    public void setConsumerNoteMandatory(boolean consumerNoteMandatory) {
+        this.consumerNoteMandatory = consumerNoteMandatory;
+    }
+
+    public void setTaxable(boolean taxable) {
+        this.taxable = taxable;
     }
 }
