@@ -39,12 +39,14 @@ public class AddNotes extends Dialog {
     private Button btCancel, btSend;
     String providerName;
     private ISendMessage iSendMessage;
+    private String userMessage;
 
-    public AddNotes(@NonNull Context context, String businessName, ISendMessage iSendMessage) {
+    public AddNotes(@NonNull Context context, String businessName, ISendMessage iSendMessage, String userMessage) {
         super(context);
         this.context = context;
         this.providerName = businessName;
         this.iSendMessage = iSendMessage;
+        this.userMessage = userMessage;
     }
 
     @Override
@@ -58,6 +60,10 @@ public class AddNotes extends Dialog {
         btCancel = findViewById(R.id.btn_cancel);
         btSend = findViewById(R.id.btn_send);
 
+        if (userMessage != null){
+
+            etMessage.setText(userMessage);
+        }
 
         Typeface font_style = Typeface.createFromAsset(context.getAssets(), "fonts/JosefinSans-SemiBold.ttf");
         btSend.setTypeface(font_style);

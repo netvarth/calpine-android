@@ -669,7 +669,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             @Override
             public void onClick(View v) {
 
-                addNotes = new AddNotes(mContext, providerName, iSendMessage);
+                addNotes = new AddNotes(mContext, providerName, iSendMessage,userMessage);
                 addNotes.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                 addNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 addNotes.show();
@@ -731,6 +731,10 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (imagePathList != null && imagePathLists != null) {
+                            imagePathLists.clear();
+                            imagePathList.clear();
+                        }
                         dialog.dismiss();
                     }
                 });
@@ -817,7 +821,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                 });
 
-//
                 btn_send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -837,6 +840,10 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (imagePathList != null && imagePathLists != null) {
+                            imagePathLists.clear();
+                            imagePathList.clear();
+                        }
                         dialog.dismiss();
                     }
                 });
@@ -1494,7 +1501,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             Intent checkinShareLocations = new Intent(AppointmentActivity.this, CheckinShareLocationAppointment.class);
                             checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
                             checkinShareLocations.putExtra("uuid", value);
-                            checkinShareLocations.putExtra("accountID", locationId);
+                            if (serviceInfo.isUser()){
+                                checkinShareLocations.putExtra("accountID", String.valueOf(userId));
+                            }else {
+                                checkinShareLocations.putExtra("accountID", String.valueOf(providerId));
+                            }
                             checkinShareLocations.putExtra("title", providerName);
                             checkinShareLocations.putExtra("terminology", mSearchTerminology.getWaitlist());
                             checkinShareLocations.putExtra("calcMode", calcMode);
@@ -1922,7 +1933,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
         } else {
             if (imagePathList.size() > 0) {
-                ApiCommunicateAppointment(value, String.valueOf(userId), txt_message, dialog);
+                ApiCommunicateAppointment(value, String.valueOf(providerId), txt_message, dialog);
             }
             getConfirmationDetails(providerId);
 
@@ -2189,9 +2200,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
-                        if (imagePathList.size() > 0 && edt_message.getText().toString().equals("")) {
-                            Toast.makeText(mContext, "Please enter note", Toast.LENGTH_SHORT).show();
-                        }
+//                        if (imagePathList.size() > 0 && edt_message.getText().toString().equals("")) {
+//                            Toast.makeText(mContext, "Please enter note", Toast.LENGTH_SHORT).show();
+//                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
