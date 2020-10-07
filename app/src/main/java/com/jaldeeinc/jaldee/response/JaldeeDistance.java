@@ -1,6 +1,8 @@
 package com.jaldeeinc.jaldee.response;
 
-public class JaldeeDistance {
+import java.io.Serializable;
+
+public class JaldeeDistance implements Serializable {
 
 Integer distance;
 String unit;

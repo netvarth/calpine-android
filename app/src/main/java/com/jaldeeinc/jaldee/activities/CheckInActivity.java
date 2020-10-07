@@ -1464,13 +1464,17 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                 if (imagePathList.size() > 0) {
                                     ApiCommunicateCheckin(value, String.valueOf(userId), txt_addnote, dialog);
                                 }
-                                getConfirmationDetails(userId);
+                                if (!checkInInfo.isLivetrack()) {
+                                    getConfirmationDetails(userId);
+                                }
 
                             } else {
                                 if (imagePathList.size() > 0) {
                                     ApiCommunicateCheckin(value, String.valueOf(providerId), txt_addnote, dialog);
                                 }
-                                getConfirmationDetails(providerId);
+                                if (!checkInInfo.isLivetrack()) {
+                                    getConfirmationDetails(providerId);
+                                }
 
                             }
                         }
@@ -2053,6 +2057,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
 
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
 
 

@@ -1,6 +1,8 @@
 package com.jaldeeinc.jaldee.response;
 
-public class JaldeelTravelTime {
+import java.io.Serializable;
+
+public class JaldeelTravelTime implements Serializable {
 
     String travelMode;
     Integer travelTime;

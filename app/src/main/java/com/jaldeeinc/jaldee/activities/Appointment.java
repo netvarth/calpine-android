@@ -82,6 +82,7 @@ import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
+import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AppointmentSchedule;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
@@ -128,6 +129,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -316,7 +318,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     private LinearLayout llEmail, llNoServices;
     private TextView tvErrorMail;
     ArrayList<SearchDepartment> availableDepartments = new ArrayList<>();
-    ActiveCheckIn activeAppointment = new ActiveCheckIn();
+    ActiveAppointment activeAppointment = new ActiveAppointment();
     private IPaymentResponse paymentResponse;
     private LinearLayout llPreInfo;
     private TextView tvPreInfoTitle, tvPreInfoText;
@@ -5023,10 +5025,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-        Call<ActiveCheckIn> call = apiService.getActiveAppointmentUUID(value, accountID);
-        call.enqueue(new Callback<ActiveCheckIn>() {
+        Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(value, accountID);
+        call.enqueue(new Callback<ActiveAppointment>() {
             @Override
-            public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
+            public void onResponse(Call<ActiveAppointment> call, Response<ActiveAppointment> response) {
                 try {
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
@@ -5050,7 +5052,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             }
 
             @Override
-            public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
+            public void onFailure(Call<ActiveAppointment> call, Throwable t) {
             }
         });
 
@@ -5117,6 +5119,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
 
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
 
 
