@@ -4,7 +4,7 @@ public class Constants {
 
 
     // Must change based on release type
-    public static final String URL = "https://scale.jaldee.com/status/";
+    public static final String URL = "https://scale.jaldee.com/";
 
 
     // Testing Payment Gateway

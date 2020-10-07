@@ -148,7 +148,7 @@ public class CheckInConfirmation extends AppCompatActivity {
             if (activeCheckInInfo.getCheckinEncId() != null) {
 
                 tvConfirmationNumber.setText(activeCheckInInfo.getCheckinEncId());
-                String statusUrl = Constants.URL + activeCheckInInfo.getCheckinEncId();
+                String statusUrl = Constants.URL +"status/"+activeCheckInInfo.getCheckinEncId();
                 tvStatusLink.setText(statusUrl);
 
                 tvStatusLink.setOnClickListener(new View.OnClickListener() {

@@ -99,6 +99,29 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
 
         ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(serviceId), String.valueOf(providerId), defaultDate);
 
+        Date sDate = null;
+        String dtStart = defaultDate;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            sDate = format.parse(dtStart);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        Date tomorow = cal.getTime();
+        if (today.before(sDate)) {
+            Config.logV("Date Enabled---------------");
+            ivMinus.setEnabled(true);
+            ivMinus.setColorFilter(ContextCompat.getColor(context, R.color.location_theme), android.graphics.PorterDuff.Mode.SRC_IN);
+
+        } else {
+            Config.logV("Date Disabled---------------");
+            ivMinus.setEnabled(false);
+            ivMinus.setColorFilter(ContextCompat.getColor(context, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+        }
+
         // click-actions
 
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {

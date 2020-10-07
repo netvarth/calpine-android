@@ -161,7 +161,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
             if (activeCheckInInfo.getAppointmentEncId() != null) {
 
                 tvConfirmationNumber.setText(activeCheckInInfo.getAppointmentEncId());
-                String statusUrl = Constants.URL + activeCheckInInfo.getAppointmentEncId();
+                String statusUrl = Constants.URL +"status/"+activeCheckInInfo.getAppointmentEncId();
                 tvStatusLink.setText(statusUrl);
 
                 tvStatusLink.setOnClickListener(new View.OnClickListener() {

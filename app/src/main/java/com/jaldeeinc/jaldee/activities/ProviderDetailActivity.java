@@ -180,6 +180,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @BindView(R.id.iv_fav)
     ImageView ivfav;
 
+    @BindView(R.id.iv_share)
+    ImageView ivShare;
+
     @BindView(R.id.ll_noSlots)
     LinearLayout llNoSlots;
 
@@ -193,6 +196,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     String accountType = "";
     boolean flag_more = false;
     boolean isToken;
+    private String sharingId = "";
     private boolean onlinePresence = false;
     private List<SearchAWsResponse> mSearchRespPass;
     private ArrayList<SearchViewDetail> mSearchGallery;
@@ -315,6 +319,23 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
             }
         });
+
+
+        ivShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (sharingId != null) {
+                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    sharingIntent.setType("text/html");
+                    String shareBody = Constants.URL + sharingId;
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "ServiceProvider details");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                    startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                }
+            }
+        });
+
 
         tvMoreDetails.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -538,6 +559,13 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         if (mBusinessDataList != null) {
                             accountType = mBusinessDataList.getAccountType();
 
+                            if (mBusinessDataList.getAccEncUid() != null) {
+
+                                sharingId = mBusinessDataList.getAccEncUid();
+                            } else {
+                                sharingId = mBusinessDataList.getUniqueId();
+                            }
+
                             if (mBusinessDataList.getId() != 0) {
                                 providerId = mBusinessDataList.getId();
                             }
@@ -594,7 +622,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     } else {
                         tv_mImageViewTextnew.setVisibility(View.GONE);
                         if (mBusinessDataList.getLogo() != null) {
-                             PicassoTrustAll.getInstance(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(ivSpImage);
+                            PicassoTrustAll.getInstance(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(ivSpImage);
                             if (mSearchGallery != null) {
                                 UpdateGallery(mSearchGallery);
                             }
@@ -1077,7 +1105,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         }
                     }
 
-                    if (schedulesList.get(0).isApptEnabled()){
+                    if (schedulesList.get(0).isApptEnabled()) {
                         for (SearchAppoinment appt : apptServicesList) {
                             DepServiceInfo serviceInfo = new DepServiceInfo();
                             serviceInfo.setDepartmentId(0);
@@ -1623,7 +1651,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             donationServicesList.add(serviceInfo);
                         }
 
-                        if (donationServicesList.size()>0) {
+                        if (donationServicesList.size() > 0) {
                             donationDepartment.setDeptServicesList(donationServicesList);
                             departmentsList.add(donationDepartment);
                         }

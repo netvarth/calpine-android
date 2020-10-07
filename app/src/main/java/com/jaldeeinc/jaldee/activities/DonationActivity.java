@@ -646,10 +646,8 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     public void sendPaymentResponse() {
 
         AlertDialog alertDialog = new AlertDialog.Builder(this)
-                .setIcon(R.drawable.rupees)
                 .setCancelable(false)
-                .setTitle("Donation Successful")
-                .setMessage("\nThank you for Donating")
+                .setView(R.layout.successful_donation)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -663,10 +661,8 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     public void paymentFinished() {
 
         AlertDialog alertDialog = new AlertDialog.Builder(this)
-                .setIcon(R.drawable.rupees)
                 .setCancelable(false)
-                .setTitle("Donation Successful")
-                .setMessage("Thank you for Donating")
+                .setView(R.layout.successful_donation)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
