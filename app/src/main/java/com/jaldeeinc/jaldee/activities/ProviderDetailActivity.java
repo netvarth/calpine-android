@@ -321,7 +321,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         });
 
 
-        ivShare.setOnClickListener(new View.OnClickListener() {
+        cvShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -374,13 +374,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             public void onClick(View v) {
 
                 finish();
-            }
-        });
-
-        cvShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
 

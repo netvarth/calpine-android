@@ -36,7 +36,7 @@ public class AppointmentServiceInfoDialog extends Dialog {
     ImageView i_servicegallery;
     String title, from;
     TextView tv_toolbartitle, tv_descVal;
-    ImageView i_backpress;
+    ImageView i_backpress,ivClose;
     boolean isTaxable, isPrepayment;
     LinearLayout Lprepayment, LserviceLayout, LminAmountlayout, LmaxAmountlayout, Lmultilayout, Ldurationlayout;
     TextView txtpreVal;
@@ -56,6 +56,14 @@ public class AppointmentServiceInfoDialog extends Dialog {
         setContentView(R.layout.service_new);
 
         initializations();
+
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dismiss();
+            }
+        });
 
         if (appointmentServices.getName() != null) {
             tv_toolbartitle.setVisibility(View.VISIBLE);
@@ -215,6 +223,7 @@ public class AppointmentServiceInfoDialog extends Dialog {
         tv_maxvalue = findViewById(R.id.txtmaxvalue);
         tv_multiples = findViewById(R.id.txtmultiples);
         tvisTax = findViewById(R.id.tv_isTax);
+        ivClose = findViewById(R.id.iv_close);
 
         Typeface tyface = Typeface.createFromAsset(context.getAssets(),
                 "fonts/Montserrat_Bold.otf");

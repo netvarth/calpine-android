@@ -35,7 +35,7 @@ public class UserAppServicesDialog extends Dialog {
     ImageView i_servicegallery;
     String title, from;
     TextView tv_toolbartitle, tv_descVal;
-    ImageView i_backpress;
+    ImageView i_backpress,ivClose;
     boolean isTaxable, isPrepayment;
     LinearLayout Lprepayment, LserviceLayout, LminAmountlayout, LmaxAmountlayout, Lmultilayout, Ldurationlayout;
     TextView txtpreVal;
@@ -54,6 +54,14 @@ public class UserAppServicesDialog extends Dialog {
         setContentView(R.layout.service_new);
 
         initializations();
+
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dismiss();
+            }
+        });
 
         if (searchService.getName() != null) {
             tv_toolbartitle.setVisibility(View.VISIBLE);
@@ -186,6 +194,7 @@ public class UserAppServicesDialog extends Dialog {
         tv_minvalue = findViewById(R.id.txtminValue);
         tv_maxvalue = findViewById(R.id.txtmaxvalue);
         tv_multiples = findViewById(R.id.txtmultiples);
+        ivClose = findViewById(R.id.iv_close);
 
         Typeface tyface = Typeface.createFromAsset(context.getAssets(),
                 "fonts/Montserrat_Bold.otf");
