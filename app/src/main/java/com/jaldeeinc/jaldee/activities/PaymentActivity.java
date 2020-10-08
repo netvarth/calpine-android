@@ -61,6 +61,7 @@ public class PaymentActivity extends AppCompatActivity implements IPaymentRespon
     String displayNotes;
     int customerId;
     private IPaymentResponse paymentResponse;
+    String encId;
 
 
     @Override
@@ -93,6 +94,7 @@ public class PaymentActivity extends AppCompatActivity implements IPaymentRespon
             amountDue = extras.getDouble("amountDue");
             purpose = extras.getString("purpose");
             customerId = extras.getInt("customerId");
+            encId = extras.getString("encId");
 
 
         }
@@ -102,6 +104,7 @@ public class PaymentActivity extends AppCompatActivity implements IPaymentRespon
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
 
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
             TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
             ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
@@ -250,7 +253,7 @@ public class PaymentActivity extends AppCompatActivity implements IPaymentRespon
             public void onClick(View v) {
 
                 PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
-                payment.ApiGenerateHashPaytm(ynwUUID, String.valueOf(amountDue), accountID, purpose, mContext, mActivity, "home", customerId);
+                payment.ApiGenerateHashPaytm(ynwUUID, String.valueOf(amountDue), accountID, purpose, mContext, mActivity, "home", customerId,encId);
             }
         });
 

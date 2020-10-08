@@ -301,6 +301,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     private ISendMessage iSendMessage;
     private AddNotes addNotes;
     private String userMessage = "";
+    String checkEncId;
 
 
     @Override
@@ -1382,120 +1383,132 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                         }
 
+                        if (isUser) {
+                                    getConfirmationId(userId,txt_addnote,id);
+                                }
+                                else{
+                                    getConfirmationId(providerId,txt_addnote,id);
+                                }
 
                         System.out.println("VALUE: " + "------>" + value);
                         // finish();
-                        dialogPayment = new BottomSheetDialog(mContext);
-
-                        if (checkInInfo.isPrePayment()) {
-                            if (!showPaytmWallet && !showPayU) {
-
-                                //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
-                            } else {
-                                try {
-
-                                    dialogPayment.setContentView(R.layout.prepayment);
-                                    dialogPayment.show();
-
-
-                                    Button btn_paytm = (Button) dialogPayment.findViewById(R.id.btn_paytm);
-                                    Button btn_payu = (Button) dialogPayment.findViewById(R.id.btn_payu);
-                                    if (showPaytmWallet) {
-                                        btn_paytm.setVisibility(View.VISIBLE);
-                                    } else {
-                                        btn_paytm.setVisibility(View.GONE);
-                                    }
-                                    if (showPayU) {
-                                        btn_payu.setVisibility(View.VISIBLE);
-                                    } else {
-                                        btn_payu.setVisibility(View.GONE);
-                                    }
-                                    final EditText edt_message = (EditText) dialogPayment.findViewById(R.id.edt_message);
-                                    TextView txtamt = (TextView) dialogPayment.findViewById(R.id.txtamount);
-
-                                    TextView txtprepayment = (TextView) dialogPayment.findViewById(R.id.txtprepayment);
-
-                                    txtprepayment.setText("Prepayment Amount ");
-
-                                    if (MultiplefamilyList.size() > 1) {
-                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(totalAmountPay))));
-                                    } else {
-                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(checkInInfo.getMinPrePaymentAmount()))));
-                                    }
-
-
-                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                            "fonts/JosefinSans-SemiBold.ttf");
-                                    txtamt.setTypeface(tyface1);
-                                    btn_payu.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            if (MultiplefamilyList.size() > 1) {
-                                                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, totalAmountPay, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
-                                            } else {
-                                                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
-                                            }
-                                            dialogPayment.dismiss();
-                                        }
-                                    });
-
-                                    btn_paytm.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
-                                            if (MultiplefamilyList.size() > 0) {
-                                                payment.ApiGenerateHashPaytm(value, totalAmountPay, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID);
-                                            } else {
-                                                payment.ApiGenerateHashPaytm(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID);
-                                            }
-                                            dialogPayment.dismiss();
-
-                                        }
-                                    });
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-
-                        } else {
-
-                            if (isUser) {
-                                if (imagePathList.size() > 0) {
-                                    ApiCommunicateCheckin(value, String.valueOf(userId), txt_addnote, dialog);
-                                }
-                                if (!checkInInfo.isLivetrack()) {
-                                    getConfirmationDetails(userId);
-                                }
-
-                            } else {
-                                if (imagePathList.size() > 0) {
-                                    ApiCommunicateCheckin(value, String.valueOf(providerId), txt_addnote, dialog);
-                                }
-                                if (!checkInInfo.isLivetrack()) {
-                                    getConfirmationDetails(providerId);
-                                }
-
-                            }
-                        }
-
-                        if (checkInInfo.isLivetrack()) {
-                            Intent checkinShareLocations = new Intent(mContext, CheckinShareLocation.class);
-                            checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
-                            checkinShareLocations.putExtra("uuid", value);
-                            if (isUser){
-                                checkinShareLocations.putExtra("accountID", String.valueOf(userId));
-                            }else {
-                                checkinShareLocations.putExtra("accountID", String.valueOf(providerId));
-                            }
-                            checkinShareLocations.putExtra("title", providerName);
-                            checkinShareLocations.putExtra("terminology", mSearchTerminology.getWaitlist());
-                            checkinShareLocations.putExtra("calcMode", calcMode);
-                            checkinShareLocations.putExtra("queueStartTime", "");
-                            checkinShareLocations.putExtra("queueEndTime", "");
-                            checkinShareLocations.putExtra("from", "checkin");
-                            startActivity(checkinShareLocations);
-                        }
+//                        dialogPayment = new BottomSheetDialog(mContext);
+//
+//                        if (checkInInfo.isPrePayment()) {
+//                            if (!showPaytmWallet && !showPayU) {
+//
+//                                //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
+//                            } else {
+//                                if (isUser) {
+//                                    getConfirmationDetails(userId);
+//                                }
+//                                else{
+//                                    getConfirmationDetails(providerId);
+//                                }
+//                                try {
+//
+//                                    dialogPayment.setContentView(R.layout.prepayment);
+//                                    dialogPayment.show();
+//
+//
+//                                    Button btn_paytm = (Button) dialogPayment.findViewById(R.id.btn_paytm);
+//                                    Button btn_payu = (Button) dialogPayment.findViewById(R.id.btn_payu);
+//                                    if (showPaytmWallet) {
+//                                        btn_paytm.setVisibility(View.VISIBLE);
+//                                    } else {
+//                                        btn_paytm.setVisibility(View.GONE);
+//                                    }
+//                                    if (showPayU) {
+//                                        btn_payu.setVisibility(View.VISIBLE);
+//                                    } else {
+//                                        btn_payu.setVisibility(View.GONE);
+//                                    }
+//                                    final EditText edt_message = (EditText) dialogPayment.findViewById(R.id.edt_message);
+//                                    TextView txtamt = (TextView) dialogPayment.findViewById(R.id.txtamount);
+//
+//                                    TextView txtprepayment = (TextView) dialogPayment.findViewById(R.id.txtprepayment);
+//
+//                                    txtprepayment.setText("Prepayment Amount ");
+//
+//                                    if (MultiplefamilyList.size() > 1) {
+//                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(totalAmountPay))));
+//                                    } else {
+//                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(checkInInfo.getMinPrePaymentAmount()))));
+//                                    }
+//
+//
+//                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+//                                            "fonts/JosefinSans-SemiBold.ttf");
+//                                    txtamt.setTypeface(tyface1);
+//                                    btn_payu.setOnClickListener(new View.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(View v) {
+//                                            if (MultiplefamilyList.size() > 1) {
+//                                                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, totalAmountPay, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+//                                            } else {
+//                                                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+//                                            }
+//                                            dialogPayment.dismiss();
+//                                        }
+//                                    });
+//
+//                                    btn_paytm.setOnClickListener(new View.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(View v) {
+//                                            PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
+//                                            if (MultiplefamilyList.size() > 0) {
+//                                                payment.ApiGenerateHashPaytm(value, totalAmountPay, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID,checkEncId);
+//                                            } else {
+//                                                payment.ApiGenerateHashPaytm(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID,checkEncId);
+//                                            }
+//                                            dialogPayment.dismiss();
+//
+//                                        }
+//                                    });
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//
+//
+//                        } else {
+//
+//                            if (isUser) {
+//                                if (imagePathList.size() > 0) {
+//                                    ApiCommunicateCheckin(value, String.valueOf(userId), txt_addnote, dialog);
+//                                }
+//                                if (!checkInInfo.isLivetrack()) {
+//                                    getConfirmationDetails(userId);
+//                                }
+//
+//                            } else {
+//                                if (imagePathList.size() > 0) {
+//                                    ApiCommunicateCheckin(value, String.valueOf(providerId), txt_addnote, dialog);
+//                                }
+//                                if (!checkInInfo.isLivetrack()) {
+//                                    getConfirmationDetails(providerId);
+//                                }
+//
+//                            }
+//                        }
+//
+//                        if (checkInInfo.isLivetrack()) {
+//                            Intent checkinShareLocations = new Intent(mContext, CheckinShareLocation.class);
+//                            checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
+//                            checkinShareLocations.putExtra("uuid", value);
+//                            if (isUser){
+//                                checkinShareLocations.putExtra("accountID", String.valueOf(userId));
+//                            }else {
+//                                checkinShareLocations.putExtra("accountID", String.valueOf(providerId));
+//                            }
+//                            checkinShareLocations.putExtra("title", providerName);
+//                            checkinShareLocations.putExtra("terminology", mSearchTerminology.getWaitlist());
+//                            checkinShareLocations.putExtra("calcMode", calcMode);
+//                            checkinShareLocations.putExtra("queueStartTime", "");
+//                            checkinShareLocations.putExtra("queueEndTime", "");
+//                            checkinShareLocations.putExtra("from", "checkin");
+//                            startActivity(checkinShareLocations);
+//                        }
 
 
                     } else {
@@ -1628,11 +1641,158 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         activeAppointment = response.body();
 
                         if (activeAppointment != null) {
+                            checkEncId = activeAppointment.getCheckinEncId();
 
                             Intent checkin = new Intent(CheckInActivity.this, CheckInConfirmation.class);
                             checkin.putExtra("BookingDetails", activeAppointment);
                             checkin.putExtra("terminology", mSearchTerminology.getProvider());
                             startActivity(checkin);
+                        }
+
+                    }
+                } catch (Exception e) {
+                    Log.i("mnbbnmmnbbnm", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
+            }
+        });
+
+    }
+
+    private void getConfirmationId(int userId,String txt_addnote,int id) {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(value, String.valueOf(id));
+        call.enqueue(new Callback<ActiveCheckIn>() {
+            @Override
+            public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
+                try {
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        activeAppointment = response.body();
+
+                        if (activeAppointment != null) {
+                            checkEncId = activeAppointment.getCheckinEncId();
+                            dialogPayment = new BottomSheetDialog(mContext);
+
+                            if (checkInInfo.isPrePayment()) {
+                                if (!showPaytmWallet && !showPayU) {
+
+                                    //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
+                                } else {
+
+                                    try {
+
+                                        dialogPayment.setContentView(R.layout.prepayment);
+                                        dialogPayment.show();
+
+
+                                        Button btn_paytm = (Button) dialogPayment.findViewById(R.id.btn_paytm);
+                                        Button btn_payu = (Button) dialogPayment.findViewById(R.id.btn_payu);
+                                        if (showPaytmWallet) {
+                                            btn_paytm.setVisibility(View.VISIBLE);
+                                        } else {
+                                            btn_paytm.setVisibility(View.GONE);
+                                        }
+                                        if (showPayU) {
+                                            btn_payu.setVisibility(View.VISIBLE);
+                                        } else {
+                                            btn_payu.setVisibility(View.GONE);
+                                        }
+                                        final EditText edt_message = (EditText) dialogPayment.findViewById(R.id.edt_message);
+                                        TextView txtamt = (TextView) dialogPayment.findViewById(R.id.txtamount);
+
+                                        TextView txtprepayment = (TextView) dialogPayment.findViewById(R.id.txtprepayment);
+
+                                        txtprepayment.setText("Prepayment Amount ");
+
+                                        if (MultiplefamilyList.size() > 1) {
+                                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(totalAmountPay))));
+                                        } else {
+                                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(checkInInfo.getMinPrePaymentAmount()))));
+                                        }
+
+
+                                        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                                "fonts/JosefinSans-SemiBold.ttf");
+                                        txtamt.setTypeface(tyface1);
+                                        btn_payu.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                if (MultiplefamilyList.size() > 1) {
+                                                    new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, totalAmountPay, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                                } else {
+                                                    new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                                }
+                                                dialogPayment.dismiss();
+                                            }
+                                        });
+
+                                        btn_paytm.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
+                                                if (MultiplefamilyList.size() > 0) {
+                                                    payment.ApiGenerateHashPaytm(value, totalAmountPay, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID,checkEncId);
+                                                } else {
+                                                    payment.ApiGenerateHashPaytm(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID,checkEncId);
+                                                }
+                                                dialogPayment.dismiss();
+
+                                            }
+                                        });
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+
+                            } else {
+
+                                if (isUser) {
+                                    if (imagePathList.size() > 0) {
+                                        ApiCommunicateCheckin(value, String.valueOf(userId), txt_addnote, dialog);
+                                    }
+                                    if (!checkInInfo.isLivetrack()) {
+                                        getConfirmationDetails(userId);
+                                    }
+
+                                } else {
+                                    if (imagePathList.size() > 0) {
+                                        ApiCommunicateCheckin(value, String.valueOf(providerId), txt_addnote, dialog);
+                                    }
+                                    if (!checkInInfo.isLivetrack()) {
+                                        getConfirmationDetails(providerId);
+                                    }
+
+                                }
+                            }
+
+                            if (checkInInfo.isLivetrack()) {
+                                Intent checkinShareLocations = new Intent(mContext, CheckinShareLocation.class);
+                                checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
+                                checkinShareLocations.putExtra("uuid", value);
+                                if (isUser){
+                                    checkinShareLocations.putExtra("accountID", String.valueOf(userId));
+                                }else {
+                                    checkinShareLocations.putExtra("accountID", String.valueOf(providerId));
+                                }
+                                checkinShareLocations.putExtra("title", providerName);
+                                checkinShareLocations.putExtra("terminology", mSearchTerminology.getWaitlist());
+                                checkinShareLocations.putExtra("calcMode", calcMode);
+                                checkinShareLocations.putExtra("queueStartTime", "");
+                                checkinShareLocations.putExtra("queueEndTime", "");
+                                checkinShareLocations.putExtra("from", "checkin");
+                                startActivity(checkinShareLocations);
+                            }
+
+
                         }
 
                     }

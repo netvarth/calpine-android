@@ -13,6 +13,7 @@ import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.TestModel;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
+import com.jaldeeinc.jaldee.response.ActiveDonation;
 import com.jaldeeinc.jaldee.response.AppointmentSchedule;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
@@ -221,6 +222,9 @@ public interface ApiInterface {
     @GET("consumer/appointment/{uuid}")
     Call<ActiveAppointment> getActiveAppointmentUUID(@Path("uuid") String uuid,@Query("account") String account);
 
+
+    @GET("consumer/donation/{uuid}")
+    Call<ActiveDonation> getActiveDonationUUID(@Path("uuid") String uuid, @Query("account") String account);
 
     @GET("ynwConf/businessDomains")
     Call<ArrayList<Domain_Spinner>> getAllDomains();
@@ -542,12 +546,4 @@ public interface ApiInterface {
     Observable<ArrayList<QueueList>> getProviderCheckInSchedule(@Path("id") String id);
 
 
-    public static String getDeviceName() {
-        String manufacturer = Build.MANUFACTURER;
-        String model = Build.MODEL;
-        if (model.startsWith(manufacturer)) {
-            return model;
-        }
-        return manufacturer + " " + model;
-    }
 }

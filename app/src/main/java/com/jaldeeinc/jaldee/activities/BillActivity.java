@@ -97,6 +97,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     String uniqueId;
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     private IPaymentResponse paymentResponse;
+    String encId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,6 +169,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             purpose = extras.getString("purpose");
             customerId = extras.getInt("customerId");
             uniqueId = extras.getString("uniqueId");
+            encId = extras.getString("encId");
         }
 
 
@@ -273,7 +275,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             public void onClick(View v) {
 
                                 PaytmPayment payment = new PaytmPayment(mCOntext, paymentResponse);
-                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, purpose, mCOntext, mActivity, "",customerId);
+                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, purpose, mCOntext, mActivity, "",customerId,encId);
                                 dialog.dismiss();
                             }
                         });
@@ -407,6 +409,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
 
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
 
             TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
