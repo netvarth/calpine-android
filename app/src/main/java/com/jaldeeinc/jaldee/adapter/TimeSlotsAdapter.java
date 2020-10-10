@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.annotation.SuppressLint;
 
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
+import com.jaldeeinc.jaldee.Interface.OnBottomReachedListener;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.AppointmentDate;
@@ -35,14 +37,17 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
     View previousSelectedItem;
     private Context context;
     private int selectedPosition = 0;
+    OnBottomReachedListener onBottomReachedListener;
 
 
-    public TimeSlotsAdapter(Context context, ArrayList timeSlots, ISelectSlotInterface iSelectSlotInterface) {
+    public TimeSlotsAdapter(Context context, ArrayList timeSlots, ISelectSlotInterface iSelectSlotInterface, OnBottomReachedListener onBottomReachedListener) {
         this.context = context;
         this.timeSlots = timeSlots;
         this.iSelectSlotInterface = iSelectSlotInterface;
+        this.onBottomReachedListener = onBottomReachedListener;
 
     }
+
 
     @Override
     public TimeSlotsAdapter.TimeSlotsAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -55,49 +60,52 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(final TimeSlotsAdapterViewHolder myViewHolder, @SuppressLint("RecyclerView") final int position) {
-        final AvailableSlotsData timeSlot = timeSlots.get(position);
-        myViewHolder.tvTimeSlot.setText(timeSlots.get(position).getDisplayTime());
 
-        if (position == selectedPosition) {
-            myViewHolder.flSlotBackground.setShadowInner();
-            myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.location_theme));
-        } else {
-            myViewHolder.flSlotBackground.setShadowOuter();
-            myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.inactive_text));
-        }
-        setAnimation(myViewHolder.flSlotBackground, position);
+        if (timeSlots != null && timeSlots.size() > 0) {
+            final AvailableSlotsData timeSlot = timeSlots.get(position);
+            String convertedTime = timeSlots.get(position).getDisplayTime().replace("am", "AM").replace("pm", "PM");
 
-        myViewHolder.flSlotBackground.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            myViewHolder.tvTimeSlot.setText(convertedTime);
 
-                int currentPosition = myViewHolder.getLayoutPosition();
-                if (selectedPosition != currentPosition) {
-                    // Temporarily save the last selected position
-                    int lastSelectedPosition = selectedPosition;
-                    // Save the new selected position
-                    selectedPosition = currentPosition;
-                    // update the previous selected row
-                    notifyItemChanged(currentPosition);
-                    notifyItemChanged(lastSelectedPosition);
-                    // select the clicked row
-                    myViewHolder.flSlotBackground.setShadowInner();
-                    iSelectSlotInterface.sendSelectedTime(timeSlots.get(position).getDisplayTime(), timeSlots.get(position).getSlotTime(), timeSlots.get(position).getScheduleId());
+            if (position == timeSlots.size() - 1) {
+
+                onBottomReachedListener.onBottomReached(position);
+
+            }
+
+            if (position == selectedPosition) {
+
+                myViewHolder.flSlotBackground.setBackgroundResource(R.drawable.selected_slot);
+                myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.white));
+            } else {
+                myViewHolder.flSlotBackground.setBackgroundResource(R.drawable.unselected_slot);
+                myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.gray));
+            }
+            setAnimation(myViewHolder.flSlotBackground, position);
+
+            myViewHolder.flSlotBackground.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    int currentPosition = myViewHolder.getLayoutPosition();
+                    if (selectedPosition != currentPosition) {
+                        // Temporarily save the last selected position
+                        int lastSelectedPosition = selectedPosition;
+                        // Save the new selected position
+                        selectedPosition = currentPosition;
+                        // update the previous selected row
+                        notifyItemChanged(currentPosition);
+                        notifyItemChanged(lastSelectedPosition);
+                        // select the clicked row
+                        myViewHolder.flSlotBackground.setBackgroundResource(R.drawable.selected_slot);
+                        myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.white));
+                        iSelectSlotInterface.sendSelectedTime(timeSlots.get(position).getDisplayTime(), timeSlots.get(position).getSlotTime(), timeSlots.get(position).getScheduleId());
+
+                    }
 
                 }
-
-//                myViewHolder.flSlotBackground.setShadowInner();
-//                row_index = position;
-//                notifyDataSetChanged();
-//                iSelectSlotInterface.sendSelectedTime(timeSlots.get(position).getDisplayTime(), timeSlots.get(position).getSlotTime(), timeSlots.get(position).getScheduleId());
-            }
-        });
-
-//        if (selectedPosition == 0) {
-//            iSelectSlotInterface.sendSelectedTime(timeSlots.get(position).getDisplayTime(), timeSlots.get(position).getSlotTime(), timeSlots.get(position).getScheduleId());
-//        }
-
-
+            });
+        }
 
     }
 
@@ -109,7 +117,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
 
     public class TimeSlotsAdapterViewHolder extends RecyclerView.ViewHolder {
 
-        NeomorphFrameLayout flSlotBackground;
+        CardView flSlotBackground;
         CustomTextViewSemiBold tvTimeSlot;
 
 
@@ -123,11 +131,9 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
         }
     }
 
-    private void setAnimation(View viewToAnimate, int position)
-    {
+    private void setAnimation(View viewToAnimate, int position) {
         // If the bound view wasn't previously displayed on screen, it's animated
-        if (position > row_index)
-        {
+        if (position > row_index) {
             Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
             viewToAnimate.startAnimation(animation);
             row_index = position;

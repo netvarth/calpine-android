@@ -191,10 +191,15 @@ public class DonationServiceDialog extends Dialog {
         ivClose = findViewById(R.id.iv_close);
 
         Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-Bold.ttf");
+        Typeface tyRegular = Typeface.createFromAsset(context.getAssets(),
+                "fonts/JosefinSans-Regular.ttf");
         tv_service.setTypeface(tyface);
         tv_duration.setTypeface(tyface);
         tv_price.setTypeface(tyface);
+        tv_minvalue.setTypeface(tyface);
+        tv_maxvalue.setTypeface(tyface);
+
     }
 
     public static String getMoneyFormat(String number) {

@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.chinodev.androidneomorphframelayout.NeomorphFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/padding50"
-    app:neomorph_background_color="#F1F0F0"
-    app:neomorph_corner_radius="10dp"
-    app:neomorph_elevation="1dp"
-    app:neomorph_highlight_color="@color/neomorph_highlight_color"
-    app:neomorph_layer_type="hardware"
-    app:neomorph_shadow_color="@color/neomorph_shadow_color"
-    app:neomorph_shadow_type="inner"
-    app:neomorph_view_type="rectangular"
+    android:layout_height="@dimen/dimen_45dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/padding3"
+    app:cardCornerRadius="@dimen/padding5"
+    app:cardElevation="@dimen/padding3"
     android:id="@+id/fl_slotBackground">
 
 
@@ -18,11 +13,13 @@
         android:id="@+id/tv_timeSlot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="04:30 PM"
+        android:text=""
         android:layout_gravity="center"
+        android:paddingStart="@dimen/dimen_1dp"
+        android:paddingEnd="@dimen/dimen_1dp"
         android:textColor="@color/location_theme"
-        android:textSize="@dimen/txtsize_14">
+        android:textSize="14sp">
 
     </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
-</com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+</androidx.cardview.widget.CardView>

@@ -19,6 +19,7 @@
             android:text="Change Time"
             android:layout_centerVertical="true"
             android:textAllCaps="true"
+            android:visibility="gone"
             android:textColor="@color/title_color"
             android:textSize="@dimen/txtsize_14">
 
@@ -43,6 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:visibility="gone"
         android:layout_marginTop="@dimen/dimen_10dp"
         android:orientation="vertical">
 
@@ -76,7 +78,7 @@
     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Date Picker"
+        android:text="Choose you new date"
         android:textSize="@dimen/txtsize_14"
         android:textAllCaps="true"
         android:textColor="@color/title_color"
@@ -180,7 +182,7 @@
     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Time Windows"
+        android:text="Choose your Slot"
         android:textSize="@dimen/txtsize_14"
         android:textAllCaps="true"
         android:textColor="@color/title_color"
@@ -192,7 +194,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_slots"
         android:layout_width="match_parent"
-        android:layout_height="145dp"
+        android:layout_height="200dp"
         android:layout_marginTop="@dimen/dimen_10dp"
         android:visibility="visible"
         android:layout_marginStart="@dimen/dimen_15dp"
@@ -228,6 +230,35 @@
             android:text="No slots available for selected date">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_seeMoreHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding5"
+        android:layout_gravity="end"
+        android:visibility="gone"
+        android:layout_marginEnd="@dimen/padding25">
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scroll down to see more"
+            android:textSize="@dimen/txtsize_12"
+            android:layout_gravity="center"
+            android:textColor="@color/title_color">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+        <pl.droidsonroids.gif.GifImageView
+            android:layout_width="@dimen/padding20"
+            android:layout_height="@dimen/dimen_30dp"
+            android:src="@drawable/down_arrow"
+            android:layout_marginStart="@dimen/padding5">
+
+        </pl.droidsonroids.gif.GifImageView>
 
     </LinearLayout>
 

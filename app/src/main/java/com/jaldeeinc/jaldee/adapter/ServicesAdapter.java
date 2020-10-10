@@ -103,12 +103,11 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
         // to set Provider image
         if (child.getType().equalsIgnoreCase(Constants.PROVIDER)) {
             viewHolder.cvImage.setVisibility(View.VISIBLE);
-            viewHolder.rlCommonLayout.setVisibility(View.GONE);
             viewHolder.llTime.setVisibility(View.GONE);
             viewHolder.llDonationRange.setVisibility(View.GONE);
             viewHolder.llEstwaitTime.setVisibility(View.GONE);
             viewHolder.tvServiceType.setVisibility(View.GONE);
-            viewHolder.tvMoreInfo.setVisibility(View.GONE);
+            viewHolder.ivMore.setVisibility(View.GONE);
             if (child.getProviderImage() != null) {
 
                 PicassoTrustAll.getInstance(context).load(child.getProviderImage()).fit().placeholder(R.drawable.icon_noimage).into(viewHolder.ivImage);
@@ -116,12 +115,11 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                 viewHolder.ivImage.setImageResource(R.drawable.icon_noimage);
             }
         } else {
-            viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
             viewHolder.llTime.setVisibility(View.VISIBLE);
             viewHolder.llDonationRange.setVisibility(View.VISIBLE);
             viewHolder.llEstwaitTime.setVisibility(View.VISIBLE);
             viewHolder.tvServiceType.setVisibility(View.VISIBLE);
-            viewHolder.tvMoreInfo.setVisibility(View.VISIBLE);
+            viewHolder.ivMore.setVisibility(View.VISIBLE);
             viewHolder.cvImage.setVisibility(View.GONE);
         }
 
@@ -150,13 +148,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                 viewHolder.llDonationRange.setVisibility(View.GONE);
                 int number = child.getPeopleInLine();
                 if (number >= 0) {
-                    if (number == 0) {
-                        viewHolder.tvPeopleAhead.setText("Be the first in line");
-                    } else if (number == 1) {
-                        viewHolder.tvPeopleAhead.setText(child.getPeopleInLine() + "  person waiting in line");
-                    } else {
-                        viewHolder.tvPeopleAhead.setText(child.getPeopleInLine() + "  people waiting in line");
-                    }
+                    viewHolder.tvPeopleAhead.setText("People waiting in line : "+child.getPeopleInLine());
                 }
             } else {
 
@@ -215,7 +207,6 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
             if (child.getChecinServiceInfo() != null) {
 
-                viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
                 viewHolder.llDonationRange.setVisibility(View.GONE);
                 if (child.isToken()) {
                     viewHolder.tvServiceType.setVisibility(View.VISIBLE);
@@ -225,30 +216,24 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                     viewHolder.tvServiceType.setText("Check In");
                 }
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
-                viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
             }
 
         } else if (child.getType() != null && child.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
-            viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
             viewHolder.llDonationRange.setVisibility(View.GONE);
             viewHolder.tvServiceType.setVisibility(View.VISIBLE);
             viewHolder.tvServiceType.setText("Appointments");
             viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
-            viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
 
 
         } else if (child.getType() != null && child.getType().equalsIgnoreCase(Constants.DONATION)) {
 
-            viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
             viewHolder.tvServiceType.setVisibility(View.VISIBLE);
             viewHolder.tvServiceType.setText("Donation");
             viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.donation_theme));
-            viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.donation_theme));
 
         } else if (child.getType() != null && child.getType().equalsIgnoreCase(Constants.PROVIDER)) {
 
-            viewHolder.rlCommonLayout.setVisibility(View.GONE);
             viewHolder.llDonationRange.setVisibility(View.GONE);
             viewHolder.tvServiceType.setVisibility(View.GONE);
             viewHolder.tvPeopleAhead.setVisibility(View.GONE);
@@ -364,7 +349,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
             }
         });
 
-        viewHolder.tvMoreInfo.setOnClickListener(new View.OnClickListener() {
+        viewHolder.ivMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -467,7 +452,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                 secondWord = "Today, " + nextAvailableTime;
             }
         } else {
-            firstWord = "Est wait time";
+            firstWord = "Estimated wait time";
             secondWord = Config.getTimeinHourMinutes(Integer.parseInt(estTime));
         }
         // Spannable spannable = new SpannableString(firstWord + secondWord);

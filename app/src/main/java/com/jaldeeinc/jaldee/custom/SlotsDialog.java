@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
 import com.jaldeeinc.jaldee.Interface.ISlotInfo;
+import com.jaldeeinc.jaldee.Interface.OnBottomReachedListener;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.AppointmentActivity;
@@ -43,7 +44,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SlotsDialog extends Dialog implements ISelectSlotInterface {
+public class SlotsDialog extends Dialog implements ISelectSlotInterface,OnBottomReachedListener {
 
     private Context context;
     private CustomTextViewBold tvDate;
@@ -60,10 +61,12 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
     ArrayList<AvailableSlotsData> activeSlotsList = new ArrayList<>();
     ArrayList<SlotsData> slotsData = new ArrayList<SlotsData>();
     TimeSlotsAdapter sAdapter;
+    private LinearLayout llSeeMoreHint;
     private ISelectSlotInterface iSelectSlotInterface;
     private String defaultDate;
     private String displayTime = "", slotTime = "";
     private int scheduleId;
+    private OnBottomReachedListener onBottomReachedListener;
 
 
     public SlotsDialog(Context context, int serviceId, int locationId, ISlotInfo iSlotInfo, int providerId, String availableDate) {
@@ -84,6 +87,7 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
 
         initializations();
         this.iSelectSlotInterface = this;
+        this.onBottomReachedListener = this;
 
         getSlotsOnDate(serviceId, locationId, defaultDate, providerId);
 
@@ -258,6 +262,7 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
         cvConfirm = findViewById(R.id.cv_submit);
         llNoSlots = findViewById(R.id.ll_noSlots);
         ivClose = findViewById(R.id.iv_close);
+        llSeeMoreHint = findViewById(R.id.ll_seeMoreHint);
 
     }
 
@@ -338,6 +343,12 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
                                     tvDate.setVisibility(View.VISIBLE);
                                     tvTime.setVisibility(View.VISIBLE);
                                     cvConfirm.setVisibility(View.VISIBLE);
+                                    if (activeSlotsList.size()>15){
+                                        llSeeMoreHint.setVisibility(View.VISIBLE);
+                                    }
+                                    else {
+                                        llSeeMoreHint.setVisibility(View.GONE);
+                                    }
                                     scheduleId = activeSlotsList.get(0).getScheduleId();
                                     slotTime = activeSlotsList.get(0).getSlotTime();
                                     tvTime.setText(activeSlotsList.get(0).getDisplayTime());
@@ -346,7 +357,7 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
                                     tvCalenderDate.setText(getCalenderDateFormat(slotsData.get(0).getDate()));
                                     RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 3);
                                     rvSlots.setLayoutManager(mLayoutManager);
-                                    sAdapter = new TimeSlotsAdapter(context, activeSlotsList, iSelectSlotInterface);
+                                    sAdapter = new TimeSlotsAdapter(context, activeSlotsList, iSelectSlotInterface,onBottomReachedListener);
                                     rvSlots.setAdapter(sAdapter);
                                 } else {
 
@@ -449,5 +460,13 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface {
         cal.add(Calendar.DATE, -days);
 
         return cal.getTime();
+    }
+
+    @Override
+    public void onBottomReached(int position) {
+
+        //hide scroll hint when recyclerview reaches to last position
+
+        llSeeMoreHint.setVisibility(View.GONE);
     }
 }

@@ -16,13 +16,12 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 
 public class Child extends RecyclerView.ViewHolder {
 
-    ImageView ivImage, ivTeleService;
+    ImageView ivImage, ivTeleService,ivMore;
     CardView cvImage,cvCard;
-    CustomTextViewBold tvName, tvEstWaitTime, tvMinAmount, tvMaxAmount, tvMoreInfo,tvNextAvailableTime;
+    CustomTextViewBold tvName, tvEstWaitTime, tvMinAmount, tvMaxAmount,tvNextAvailableTime;
     LinearLayout llTime, llEstwaitTime, llDonationRange;
     CustomTextViewMedium  tvPeopleAhead,tvTimeHint;
     CustomTextViewSemiBold tvServiceType;
-    RelativeLayout rlCommonLayout;
 
     Child(View itemView) {
         super(itemView);
@@ -34,14 +33,13 @@ public class Child extends RecyclerView.ViewHolder {
         tvEstWaitTime = itemView.findViewById(R.id.tv_estWaitTime);
         tvMinAmount = itemView.findViewById(R.id.tv_minAmount);
         tvMaxAmount = itemView.findViewById(R.id.tv_maxAmount);
-        tvMoreInfo = itemView.findViewById(R.id.tv_moreInfo);
+        ivMore = itemView.findViewById(R.id.iv_info);
         llTime = itemView.findViewById(R.id.ll_time);
         llEstwaitTime = itemView.findViewById(R.id.ll_estWaitTime);
         llDonationRange = itemView.findViewById(R.id.ll_donationRange);
         tvNextAvailableTime = itemView.findViewById(R.id.tv_nextAvailableTime);
         tvPeopleAhead = itemView.findViewById(R.id.tv_peopleAhead);
         tvServiceType = itemView.findViewById(R.id.tv_serviceType);
-        rlCommonLayout = itemView.findViewById(R.id.rl_commonLayout);
         tvTimeHint = itemView.findViewById(R.id.tv_timeHint);
         cvCard = itemView.findViewById(R.id.cv_card);
 

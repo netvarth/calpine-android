@@ -70,9 +70,6 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
                 myViewHolder.tv_head.setVisibility(View.VISIBLE);
                 myViewHolder.tv_head.setText(name);
             }
-//            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-//                    "fonts/Montserrat_Bold.otf");
-//            myViewHolder.tv_head.setTypeface(tyface);
 
             if (dataType != null) {
                 if (dataType.equalsIgnoreCase("Enum") || dataType.equalsIgnoreCase("EnumList") || dataType.equalsIgnoreCase("DataGrid")) {
@@ -209,8 +206,7 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
 
     @Override
     public int getItemCount() {
-        return /*virtualFieldList.size();*/
-        mSizeshown;
+        return virtualFieldList.size();
     }
 
     public class VirtualFieldAdapterViewHolder extends RecyclerView.ViewHolder {

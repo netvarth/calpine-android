@@ -124,41 +124,31 @@
                 android:id="@+id/Lprice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dimen_20dp"
                 android:orientation="vertical"
+                android:layout_marginEnd="@dimen/padding40"
                 android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <TextView
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Price "
+                        android:text="Service Cost"
                         android:textColor="#3D3C44"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:textSize="@dimen/txtsize_hint"
                         android:textStyle="bold" />
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="10dp"
-                        android:src="@drawable/indian_currency"
-                        app:tint="@color/dark_blue">
-
-                    </ImageView>
-
                     <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                         android:id="@+id/txtprice"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimen_2dp"
-                        android:fontFamily="@font/customfont"
                         android:text="200"
-                        android:layout_marginStart="10dp"
+                        android:layout_gravity="center"
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_14"
                         android:textStyle="bold" />
@@ -191,26 +181,19 @@
                     android:id="@+id/Lduration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent">
 
-                    <TextView
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Duration "
+                        android:text="Service Duration "
                         android:textColor="#3D3C44"
                         android:textSize="@dimen/txtsize_hint"
-                        android:visibility="gone"
                         android:textStyle="bold" />
 
-                    <ImageView
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:src="@drawable/duration_icon">
-
-                    </ImageView>
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                         android:id="@+id/txtduration"
@@ -231,36 +214,36 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginStart="@dimen/padding5"
             android:layout_marginTop="@dimen/default_padding"
             android:layout_marginRight="@dimen/dimen_5dp"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/Lminvalue"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_10dp"
-                android:layout_weight="0.5"
+                android:layout_marginEnd="@dimen/padding40"
                 android:orientation="vertical">
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Min Amount "
+                    android:layout_gravity="center"
                     android:textColor="#3D3C44"
                     android:textSize="@dimen/txtsize_hint"
-
                     android:textStyle="bold" />
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                     android:id="@+id/txtminValue"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_2dp"
                     android:fontFamily="@font/customfont"
                     android:text="200"
+                    android:layout_gravity="center"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_12"
                     android:textStyle="bold" />
@@ -268,10 +251,9 @@
 
             <LinearLayout
                 android:id="@+id/Lmaxvalue"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_10dp"
-                android:layout_weight="0.5"
                 android:orientation="vertical">
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
@@ -308,7 +290,7 @@
             <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Multiples "
+                android:text="Multiples       "
                 android:textColor="#3D3C44"
                 android:textSize="@dimen/txtsize_hint"
                 android:textStyle="bold" />
@@ -320,6 +302,7 @@
                 android:layout_marginTop="@dimen/dimen_2dp"
                 android:fontFamily="@font/customfont"
                 android:text="2"
+                android:gravity="center"
                 android:textColor="@color/title_grey"
                 android:textSize="@dimen/txtsize_12"
                 android:textStyle="bold" />
@@ -327,11 +310,12 @@
 
         <LinearLayout
             android:id="@+id/Lprepayment"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimen_5dp"
             android:layout_marginTop="@dimen/default_padding"
             android:layout_marginRight="@dimen/dimen_5dp"
+            android:layout_marginBottom="@dimen/dimen_20dp"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -339,16 +323,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Prepayment Amount"
-                android:textColor="@color/opaque_title_grey"
+                android:textColor="#3d3c44"
                 android:textSize="@dimen/txtsize_hint" />
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                 android:id="@+id/txtpreVal"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding5"
-                android:fontFamily="@font/customfont"
                 android:text="200"
+                android:layout_gravity="center"
                 android:textColor="@color/title_grey"
                 android:textSize="@dimen/txtsize_12"
                 android:textStyle="bold" />

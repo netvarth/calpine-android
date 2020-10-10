@@ -95,12 +95,11 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
             // to set Provider image
             if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.PROVIDER)) {
                 viewHolder.cvImage.setVisibility(View.VISIBLE);
-                viewHolder.rlCommonLayout.setVisibility(View.GONE);
                 viewHolder.llTime.setVisibility(View.GONE);
                 viewHolder.llDonationRange.setVisibility(View.GONE);
                 viewHolder.llEstwaitTime.setVisibility(View.GONE);
                 viewHolder.tvServiceType.setVisibility(View.GONE);
-                viewHolder.tvMoreInfo.setVisibility(View.GONE);
+                viewHolder.ivMore.setVisibility(View.GONE);
                 if (servicesInfoList.get(position).getProviderImage() != null) {
                     PicassoTrustAll.getInstance(context).load(servicesInfoList.get(position).getProviderImage()).fit().placeholder(R.drawable.icon_noimage).into(viewHolder.ivImage);
 
@@ -108,12 +107,11 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                     viewHolder.ivImage.setImageResource(R.drawable.icon_noimage);
                 }
             } else {
-                viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
                 viewHolder.llTime.setVisibility(View.VISIBLE);
                 viewHolder.llDonationRange.setVisibility(View.VISIBLE);
                 viewHolder.llEstwaitTime.setVisibility(View.VISIBLE);
                 viewHolder.tvServiceType.setVisibility(View.VISIBLE);
-                viewHolder.tvMoreInfo.setVisibility(View.VISIBLE);
+                viewHolder.ivMore.setVisibility(View.VISIBLE);
                 viewHolder.cvImage.setVisibility(View.GONE);
             }
 
@@ -154,13 +152,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                     viewHolder.llDonationRange.setVisibility(View.GONE);
                     int number = servicesInfoList.get(position).getPeopleInLine();
                     if (number >= 0) {
-                        if (number == 0) {
-                            viewHolder.tvPeopleAhead.setText("Be the first in line");
-                        } else if (number == 1) {
-                            viewHolder.tvPeopleAhead.setText(servicesInfoList.get(position).getPeopleInLine() + "  person waiting in line");
-                        } else {
-                            viewHolder.tvPeopleAhead.setText(servicesInfoList.get(position).getPeopleInLine() + "  people waiting in line");
-                        }
+                        viewHolder.tvPeopleAhead.setText("People waiting in line : "+servicesInfoList.get(position).getPeopleInLine());
                     }
                 } else {
 
@@ -217,34 +209,27 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
             // to set Service type
             if (servicesInfoList.get(position).getType() != null && servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.CHECKIN)) {
 
-                viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
                 viewHolder.llDonationRange.setVisibility(View.GONE);
                 viewHolder.tvServiceType.setVisibility(View.VISIBLE);
                 viewHolder.tvServiceType.setText("Check In");
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
-                viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
 
             } else if (servicesInfoList.get(position).getType() != null && servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
-                viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
                 viewHolder.llDonationRange.setVisibility(View.GONE);
                 viewHolder.tvServiceType.setText("Appointments");
                 viewHolder.tvServiceType.setVisibility(View.VISIBLE);
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
-                viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
 
 
             } else if (servicesInfoList.get(position).getType() != null && servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.DONATION)) {
 
-                viewHolder.rlCommonLayout.setVisibility(View.VISIBLE);
                 viewHolder.tvServiceType.setVisibility(View.VISIBLE);
                 viewHolder.tvServiceType.setText("Donation");
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.donation_theme));
-                viewHolder.tvMoreInfo.setTextColor(ContextCompat.getColor(context, R.color.donation_theme));
 
             } else if (servicesInfoList.get(position).getType() != null && servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.PROVIDER)) {
 
-                viewHolder.rlCommonLayout.setVisibility(View.GONE);
                 viewHolder.llDonationRange.setVisibility(View.GONE);
                 viewHolder.tvServiceType.setVisibility(View.GONE);
                 viewHolder.tvPeopleAhead.setVisibility(View.GONE);
@@ -364,7 +349,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                 }
             });
 
-            viewHolder.tvMoreInfo.setOnClickListener(new View.OnClickListener() {
+            viewHolder.ivMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -480,9 +465,9 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
 
 
-        private ImageView ivImage, ivTeleService;
+        private ImageView ivImage, ivTeleService, ivMore;
         private CardView cvImage, cvCard;
-        private CustomTextViewBold tvName, tvEstWaitTime, tvMinAmount, tvMaxAmount, tvMoreInfo, tvNextAvailableTime;
+        private CustomTextViewBold tvName, tvEstWaitTime, tvMinAmount, tvMaxAmount, tvNextAvailableTime;
         private LinearLayout llTime, llEstwaitTime, llDonationRange;
         private CustomTextViewMedium tvNextAvailableText, tvPeopleAhead, tvTimeHint;
         private CustomTextViewSemiBold tvServiceType;
@@ -501,7 +486,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                 tvEstWaitTime = itemView.findViewById(R.id.tv_estWaitTime);
                 tvMinAmount = itemView.findViewById(R.id.tv_minAmount);
                 tvMaxAmount = itemView.findViewById(R.id.tv_maxAmount);
-                tvMoreInfo = itemView.findViewById(R.id.tv_moreInfo);
+                ivMore = itemView.findViewById(R.id.iv_info);
                 llTime = itemView.findViewById(R.id.ll_time);
                 llEstwaitTime = itemView.findViewById(R.id.ll_estWaitTime);
                 llDonationRange = itemView.findViewById(R.id.ll_donationRange);
@@ -509,7 +494,6 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                 tvNextAvailableTime = itemView.findViewById(R.id.tv_nextAvailableTime);
                 tvPeopleAhead = itemView.findViewById(R.id.tv_peopleAhead);
                 tvServiceType = itemView.findViewById(R.id.tv_serviceType);
-                rlCommonLayout = itemView.findViewById(R.id.rl_commonLayout);
                 cvCard = itemView.findViewById(R.id.cv_card);
                 tvTimeHint = itemView.findViewById(R.id.tv_timeHint);
 
@@ -554,7 +538,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                 secondWord = "Today, " + nextAvailableTime;
             }
         } else {
-            firstWord = "Est wait time";
+            firstWord = "Estimated wait time";
             secondWord = Config.getTimeinHourMinutes(Integer.parseInt(estTime));
         }
         return firstWord + "-" + secondWord;

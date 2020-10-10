@@ -110,21 +110,23 @@
 
                     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/card"
+                    <ImageView
+                        android:id="@+id/uImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:src="@drawable/dash_gap"
+                        android:layout_marginTop="@dimen/padding15"
+                        android:layout_below="@id/tv_description">
+
+                    </ImageView>
+
+                    <RelativeLayout
+                        android:id="@+id/relative"
                         android:layout_width="match_parent"
                         android:layout_height="180dp"
-                        android:layout_below="@id/tv_description"
+                        android:layout_below="@id/uImage"
                         android:layout_marginStart="@dimen/padding5"
-                        android:layout_marginTop="@dimen/padding15"
-                        android:layout_marginEnd="@dimen/padding5"
-                        android:layout_marginBottom="@dimen/dimen_50dp"
-                        app:cardCornerRadius="@dimen/padding5"
-                        app:cardElevation="@dimen/dimen_10dp">
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                        android:layout_marginEnd="@dimen/padding5">
 
                             <LinearLayout
                                 android:id="@+id/ll_amountHint"
@@ -206,8 +208,16 @@
 
                         </RelativeLayout>
 
+                    <ImageView
+                        android:id="@+id/lImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:src="@drawable/dash_gap"
+                        android:layout_marginBottom="@dimen/dimen_50dp"
+                        android:layout_below="@id/relative">
 
-                    </androidx.cardview.widget.CardView>
+                    </ImageView>
+
 
                     <LinearLayout
                         android:id="@+id/ll_virtualNumber"

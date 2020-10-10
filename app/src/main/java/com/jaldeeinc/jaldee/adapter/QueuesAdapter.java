@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -53,11 +54,11 @@ public class QueuesAdapter extends RecyclerView.Adapter<QueuesAdapter.QueuesAdap
         myViewHolder.tvTimeSlot.setText(displayQueueTime);
 
         if (position == selectedPosition) {
-            myViewHolder.flSlotBackground.setShadowInner();
-            myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.location_theme));
+            myViewHolder.flSlotBackground.setBackgroundResource(R.drawable.selected_slot);
+            myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.white));
         } else {
-            myViewHolder.flSlotBackground.setShadowOuter();
-            myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.inactive_text));
+            myViewHolder.flSlotBackground.setBackgroundResource(R.drawable.unselected_slot);
+            myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.gray));
         }
 
         myViewHolder.flSlotBackground.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +76,8 @@ public class QueuesAdapter extends RecyclerView.Adapter<QueuesAdapter.QueuesAdap
                     notifyItemChanged(currentPosition);
                     notifyItemChanged(lastSelectedPosition);
                     // select the clicked row
-                    myViewHolder.flSlotBackground.setShadowInner();
+                    myViewHolder.flSlotBackground.setBackgroundResource(R.drawable.selected_slot);
+                    myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.white));
                     iSelectedQueue.sendSelectedQueue(displayQueueTime, queue, queuesList.get(position).getId());
 
                 }
@@ -92,7 +94,7 @@ public class QueuesAdapter extends RecyclerView.Adapter<QueuesAdapter.QueuesAdap
 
     public class QueuesAdapterViewHolder extends RecyclerView.ViewHolder {
 
-        NeomorphFrameLayout flSlotBackground;
+        CardView flSlotBackground;
         CustomTextViewSemiBold tvTimeSlot;
 
 

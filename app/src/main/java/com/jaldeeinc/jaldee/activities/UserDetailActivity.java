@@ -87,11 +87,10 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
     ImageView ivVerified;
 
     @BindView(R.id.tv_spSpecialization)
-    CustomTextViewSemiBold tvSpeciality;
+    CustomTextViewMedium tvSpeciality;
 
     @BindView(R.id.tv_locationName)
     CustomTextViewMedium tvLocationName;
-
 
     @BindView(R.id.ll_specializations)
     LinearLayout llSpecializations;
@@ -108,9 +107,6 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
     @BindView(R.id.iv_image)
     ImageView ivSpImage;
 
-    @BindView(R.id.tv_viewGallery)
-    CustomTextViewSemiBold tvViewGallery;
-
     @BindView(R.id.rb_ratingBar)
     RatingBar ratingBar;
 
@@ -120,11 +116,11 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
     @BindView(R.id.tv_about)
     CustomTextViewMedium tvAbout;
 
+    @BindView(R.id.tv_subDomainHint)
+    CustomTextViewMedium tvSubDomainHint;
+
     @BindView(R.id.mImageViewTextnew)
     TextView tv_mImageViewTextnew;
-
-    @BindView(R.id.txtMoredetails)
-    CustomTextViewMedium tvMoreDetails;
 
     @BindView(R.id.ll_more)
     LinearLayout llMore;
@@ -214,14 +210,10 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             @Override
             public void onClick(View v) {
 
+
                 if (llMore.getVisibility() != View.VISIBLE) {
                     llMore.setVisibility(View.VISIBLE);
                     int size = domainVirtual.size();
-                    if (size > 2) {
-                        tvMoreDetails.setVisibility(View.VISIBLE);
-                    } else {
-                        tvMoreDetails.setVisibility(View.GONE);
-                    }
                     if (size > 0) {
                         llMore.setVisibility(View.VISIBLE);
                     } else {
@@ -229,43 +221,10 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
                     }
                 } else {
                     llMore.setVisibility(View.GONE);
-                    tvMoreDetails.setVisibility(View.GONE);
-                }
-
-            }
-        });
-
-        tvMoreDetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!flag_more) {
-                    flag_more = true;
-                    mRecycle_virtualfield.setVisibility(View.VISIBLE);
-                    Config.logV("Domain Size@@@@@@@@@@@@@" + domainVirtual.size());
-                    Config.logV("Subdomain Size@@@@@@@@@@@@@" + sub_domainVirtual.size());
-                    tvMoreDetails.setText("See Less");
-                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                    mRecycle_virtualfield.setLayoutManager(mLayoutManager);
-                    mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, domainVirtual.size());
-                    mRecycle_virtualfield.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
-                } else {
-                    flag_more = false;
-                    tvMoreDetails.setText("See All");
-                    int size = domainVirtual.size();
-                    if (size == 1) {
-                        size = 1;
-                    } else {
-                        size = 2;
-                    }
-                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                    mRecycle_virtualfield.setLayoutManager(mLayoutManager);
-                    mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, size);
-                    mRecycle_virtualfield.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
                 }
             }
         });
+
 
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -284,10 +243,8 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
                     enquiryDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     enquiryDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     enquiryDialog.show();
-                    DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                    DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
                     int width = (int) (metrics.widthPixels * 1);
-                    enquiryDialog.setCancelable(false);
-                    enquiryDialog.getWindow().setGravity(Gravity.BOTTOM);
                     enquiryDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                 } else {
                     Toast.makeText(UserDetailActivity.this, "Please try after some time", Toast.LENGTH_SHORT).show();
@@ -331,21 +288,13 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
                                 tvMoreInfo.setVisibility(View.VISIBLE);
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                                 mRecycle_virtualfield.setLayoutManager(mLayoutManager);
-                                int size = domainVirtual.size();
-                                if (size == 1) {
-                                    size = 1;
-                                } else {
-                                    size = 2;
-                                }
-                                mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, size);
+                                mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, 0);
                                 mRecycle_virtualfield.setAdapter(mAdapter);
                                 mAdapter.notifyDataSetChanged();
                             } else {
-                                tvMoreDetails.setVisibility(View.VISIBLE);
                                 tvMoreInfo.setVisibility(View.GONE);
                             }
                         } else {
-                            tvMoreDetails.setVisibility(View.GONE);
                             llMore.setVisibility(View.GONE);
                         }
                     } else {
@@ -394,7 +343,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
                             userId = providerDetails.getId();
                             onlinePresence = providerDetails.isOnlinePresence();
                             UpdateMainUI(providerDetails);
-                            apiGetProviders(uniqueId, providerId, locId,userId);
+                            apiGetProviders(uniqueId, providerId, locId, userId);
 
                         }
 
@@ -481,9 +430,10 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             if (mBusinessDataList.getServiceSector().getDisplayName() != null && mBusinessDataList.getServiceSubSector().getDisplayName() != null) {
                 if (mBusinessDataList.getServiceSector().getDisplayName().equalsIgnoreCase("Other / Miscellaneous")) {
                     tvSpeciality.setVisibility(View.GONE);
+                    tvSubDomainHint.setVisibility(View.GONE);
                 } else {
-                    // tv_domain.setText(getBussinessData.getServiceSector().getDisplayName()); //+ " " + "(" + getBussinessData.getServiceSubSector().getDisplayName() + ")");
                     tvSpeciality.setVisibility(View.VISIBLE);
+                    tvSubDomainHint.setVisibility(View.VISIBLE);
                     tvSpeciality.setText(mBusinessDataList.getServiceSubSector().getDisplayName());
                 }
             }
@@ -581,7 +531,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
 
             // Make a collection of all requests you need to call at once, there can be any number of requests, not only 3. You can have 2 or 5, or 100.
             requests.add(apiService.getProviderCheckInSchedule(provid + "-" + locid));
-            requests.add(apiService.getAppointmentSchedule(userId + "-" + locid+"-"+provid));
+            requests.add(apiService.getAppointmentSchedule(userId + "-" + locid + "-" + provid));
             requests.add(apiService.getCheckInServices(locid));
             requests.add(apiService.getAppointmentServices(locid));
 
@@ -800,6 +750,9 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             serviceInfo.setPreInfoEnabled(appointmentServiceInfo.isPreInfoEnabled());
             if (appointmentServiceInfo.getPreInfoText() != null) {
                 serviceInfo.setPreInfoText(appointmentServiceInfo.getPreInfoText());
+            }
+            if (appointmentServiceInfo.getPreInfoTitle() != null){
+                serviceInfo.setPreInfoTitle(appointmentServiceInfo.getPreInfoTitle());
             }
             if (appointmentServiceInfo.getServiceType() != null) {
                 serviceInfo.setServiceType(appointmentServiceInfo.getServiceType());

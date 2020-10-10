@@ -15,7 +15,7 @@
         android:justificationMode="inter_word"
         android:letterSpacing="0.03"
         android:lineSpacingExtra="@dimen/padding3"
-        android:text="Head"
+        android:text=""
         android:textColor="@color/title_grey_light"
         android:textSize="@dimen/txtsize_hint_11"
         android:textStyle="bold" />
@@ -28,8 +28,8 @@
         android:justificationMode="inter_word"
         android:letterSpacing="0.03"
         android:lineSpacingExtra="@dimen/padding3"
-        android:text="value"
-        android:textColor="@color/black"
+        android:text=""
+        android:textColor="@color/title_color"
         android:textSize="@dimen/txtsize_12"
         android:textStyle="bold" />
 

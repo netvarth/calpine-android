@@ -34,8 +34,8 @@ public class ServiceInfoDialog extends Dialog {
     ArrayList<SearchAppointmentDepartmentServices> aGallery;
     ImageView i_servicegallery, ivClose;
     String title, from;
-    CustomTextViewBold tv_toolbartitle, tv_price, tv_duration;
-    CustomTextViewSemiBold tv_service, tv_maxvalue, tv_minvalue, txtpreVal, tv_multiples;
+    CustomTextViewBold tv_toolbartitle, tv_price, tv_duration,txtpreVal;
+    CustomTextViewSemiBold tv_service, tv_maxvalue, tv_minvalue, tv_multiples;
     CustomTextViewMedium tv_descVal, tvisTax;
     ImageView i_backpress;
     boolean isTaxable, isPrepayment;

@@ -112,13 +112,10 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     ImageView ivVerified;
 
     @BindView(R.id.tv_spSpecialization)
-    CustomTextViewSemiBold tvSpeciality;
+    CustomTextViewMedium tvSpeciality;
 
     @BindView(R.id.tv_locationName)
     CustomTextViewMedium tvLocationName;
-
-    @BindView(R.id.txtMoredetails)
-    CustomTextViewMedium tvMoreDetails;
 
     @BindView(R.id.ll_specializations)
     LinearLayout llSpecializations;
@@ -135,9 +132,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @BindView(R.id.iv_image)
     ImageView ivSpImage;
 
-    @BindView(R.id.tv_viewGallery)
-    CustomTextViewSemiBold tvViewGallery;
-
     @BindView(R.id.rb_ratingBar)
     RatingBar ratingBar;
 
@@ -146,6 +140,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
     @BindView(R.id.tv_about)
     CustomTextViewMedium tvAbout;
+
+    @BindView(R.id.tv_subDomainHint)
+    CustomTextViewMedium tvSubDomainHint;
 
     @BindView(R.id.mImageViewTextnew)
     TextView tv_mImageViewTextnew;
@@ -194,7 +191,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     private int providerId;
     private int locationId;
     String accountType = "";
-    boolean flag_more = false;
     boolean isToken;
     private String sharingId = "";
     private boolean onlinePresence = false;
@@ -302,11 +298,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 if (llMore.getVisibility() != View.VISIBLE) {
                     llMore.setVisibility(View.VISIBLE);
                     int size = domainVirtual.size();
-                    if (size > 2) {
-                        tvMoreDetails.setVisibility(View.VISIBLE);
-                    } else {
-                        tvMoreDetails.setVisibility(View.GONE);
-                    }
                     if (size > 0) {
                         llMore.setVisibility(View.VISIBLE);
                     } else {
@@ -314,9 +305,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     }
                 } else {
                     llMore.setVisibility(View.GONE);
-                    tvMoreDetails.setVisibility(View.GONE);
                 }
-
             }
         });
 
@@ -337,38 +326,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         });
 
 
-        tvMoreDetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!flag_more) {
-                    flag_more = true;
-                    mRecycle_virtualfield.setVisibility(View.VISIBLE);
-                    Config.logV("Domain Size@@@@@@@@@@@@@" + domainVirtual.size());
-                    Config.logV("Subdomain Size@@@@@@@@@@@@@" + sub_domainVirtual.size());
-                    tvMoreDetails.setText("See Less");
-                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                    mRecycle_virtualfield.setLayoutManager(mLayoutManager);
-                    mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, domainVirtual.size());
-                    mRecycle_virtualfield.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
-                } else {
-                    flag_more = false;
-                    tvMoreDetails.setText("See All");
-                    int size = domainVirtual.size();
-                    if (size == 1) {
-                        size = 1;
-                    } else {
-                        size = 2;
-                    }
-                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                    mRecycle_virtualfield.setLayoutManager(mLayoutManager);
-                    mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, size);
-                    mRecycle_virtualfield.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
-                }
-            }
-        });
-
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -386,10 +343,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     enquiryDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     enquiryDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     enquiryDialog.show();
-                    DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                    DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
                     int width = (int) (metrics.widthPixels * 1);
-                    enquiryDialog.setCancelable(false);
-                    enquiryDialog.getWindow().setGravity(Gravity.BOTTOM);
                     enquiryDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                 } else {
 
@@ -438,21 +393,13 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                 tvMoreInfo.setVisibility(View.VISIBLE);
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                                 mRecycle_virtualfield.setLayoutManager(mLayoutManager);
-                                int size = domainVirtual.size();
-                                if (size == 1) {
-                                    size = 1;
-                                } else {
-                                    size = 2;
-                                }
-                                mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, size);
+                                mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, 0);
                                 mRecycle_virtualfield.setAdapter(mAdapter);
                                 mAdapter.notifyDataSetChanged();
                             } else {
-                                tvMoreDetails.setVisibility(View.VISIBLE);
                                 tvMoreInfo.setVisibility(View.GONE);
                             }
                         } else {
-                            tvMoreDetails.setVisibility(View.GONE);
                             llMore.setVisibility(View.GONE);
                         }
                     } else {
@@ -565,7 +512,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             onlinePresence = mBusinessDataList.isOnlinePresence();
                             UpdateMainUI(mBusinessDataList);
                             apiSearchGallery(id);
-                            apiSettings_Details(id, providerId, locationId,location);
+                            apiSettings_Details(id, providerId, locationId, location);
                             // check if the provider is a favourite
                             ApiFavList();
 
@@ -724,8 +671,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             if (mBusinessDataList.getServiceSector().getDisplayName() != null && mBusinessDataList.getServiceSubSector().getDisplayName() != null) {
                 if (mBusinessDataList.getServiceSector().getDisplayName().equalsIgnoreCase("Other / Miscellaneous")) {
                     tvSpeciality.setVisibility(View.GONE);
+                    tvSubDomainHint.setVisibility(View.GONE);
                 } else {
-                    // tv_domain.setText(getBussinessData.getServiceSector().getDisplayName()); //+ " " + "(" + getBussinessData.getServiceSubSector().getDisplayName() + ")");
+                    tvSubDomainHint.setVisibility(View.VISIBLE);
                     tvSpeciality.setVisibility(View.VISIBLE);
                     tvSpeciality.setText(mBusinessDataList.getServiceSubSector().getDisplayName());
                 }
@@ -809,7 +757,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         Config.logV("Gallery--------------333-----" + mGallery.size());
         try {
             if (mGallery.size() > 0 || mBusinessDataList.getLogo() != null) {
-                tvViewGallery.setVisibility(View.VISIBLE);
                 ivSpImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -829,29 +776,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         }
                     }
                 });
-
-                tvViewGallery.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Config.logV("Gallery------------------------------" + mGallery.size());
-                        ArrayList<String> mGalleryList = new ArrayList<>();
-                        if (mBusinessDataList.getLogo() != null) {
-                            mGalleryList.add(mBusinessDataList.getLogo().getUrl());
-                        }
-                        for (int i = 0; i < mGallery.size(); i++) {
-                            mGalleryList.add(mGallery.get(i).getUrl());
-                        }
-                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                        if (mValue) {
-                            Intent intent = new Intent(ProviderDetailActivity.this, SwipeGalleryImage.class);
-                            intent.putExtra("pos", 0);
-                            startActivity(intent);
-                        }
-                    }
-                });
-
             } else {
-                tvViewGallery.setVisibility(View.GONE);
+
             }
             Config.logV("Bussiness logo @@@@@@@@@@" + mBusinessDataList.getLogo());
             if (mBusinessDataList.getLogo() != null) {
@@ -915,7 +841,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                                 getOnlyServices(uniqueId, mlocationId, mProviderId);
                             }
-                            ApiCheckInMessage(mlocationId,location);
+                            ApiCheckInMessage(mlocationId, location);
                         }
 
                     }
@@ -1458,7 +1384,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             List<Observable<?>> requests = new ArrayList<>();
 
             // Make a collection of all requests you need to call at once, there can be any number of requests, not only 3. You can have 2 or 5, or 100.
-            requests.add(s3ApiService.getDeptCheckInServices(unqId, sdf.format(currentTime)));
+            requests.add(s3ApiService.getDepartmentProviders(unqId, sdf.format(currentTime)));
             requests.add(apiService.getCheckInsSchedule(provId + "-" + locid));
             requests.add(apiService.getAppointmentSchedule(provId + "-" + locid));
             requests.add(apiService.getCheckInServices(locid));
@@ -1738,7 +1664,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                 if (mFavList.get(i).getId() == mBusinessDataList.getId()) {
                                     favFlag = true;
                                     ivfav.setVisibility(View.VISIBLE);
-                                    ivfav.setImageResource(R.drawable.icon_favourited);
+                                    ivfav.setImageResource(R.drawable.new_favourite);
                                 }
                             }
                             ivfav.setOnClickListener(new View.OnClickListener() {
@@ -1841,7 +1767,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             }
         });
     }
+
     BottomSheetDialog dialog;
+
     private void ApiCheckInMessage(final int mLocid, final String loc) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1857,7 +1785,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             public void onResponse(Call<ArrayList<SearchCheckInMessage>> call, Response<ArrayList<SearchCheckInMessage>> response) {
                 try {
 //                    if (mDialog.isShowing())
-                      //  Config.closeDialog(this, mDialog);
+                    //  Config.closeDialog(this, mDialog);
                     Config.logV("URL-----4444-----Location-----###########@@@@@@-----" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code--------Message-----------------" + response.code());
                     if (response.code() == 200) {
@@ -1869,25 +1797,25 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             mCheckMessage.setLocid(mLocid);
                             mSearchmCheckMessageList.add(mCheckMessage);
                             for (int i = 0; i < mSearchmCheckMessageList.size(); i++) {
-                            if ( mSearchLocList.get(i).getId() == mSearchmCheckMessageList.get(i).getLocid()) {
-                             if(mSearchmCheckMessageList.get(i).getmAllSearch_checkIn().size()>0) {
-                                 tv_checkinsList.setVisibility(View.VISIBLE);
-                             }
-                            //  myViewHolder.tv_checkin.setText("You have "+mCheckInMessage.get(i).getmAllSearch_checkIn().size()+" Check-In at this location");
+                                if (mSearchLocList.get(i).getId() == mSearchmCheckMessageList.get(i).getLocid()) {
+                                    if (mSearchmCheckMessageList.get(i).getmAllSearch_checkIn().size() > 0) {
+                                        tv_checkinsList.setVisibility(View.VISIBLE);
+                                    }
+                                    //  myViewHolder.tv_checkin.setText("You have "+mCheckInMessage.get(i).getmAllSearch_checkIn().size()+" Check-In at this location");
 
-                            if (terminology != null) {
-                                String firstWord = "You have ";
-                                String secondWord = mSearchmCheckMessageList.get(i).getmAllSearch_checkIn().size() + " " + terminology;
-                                String thirdword = " at this location";
-                                Spannable spannable = new SpannableString(firstWord + secondWord + thirdword);
-                                Typeface tyface_edittext2 = Typeface.createFromAsset(mContext.getAssets(),
-                            "fonts/Montserrat_Bold.otf");
-                               spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                               tv_checkinsList.setText(spannable);
+                                    if (terminology != null) {
+                                        String firstWord = "You have ";
+                                        String secondWord = mSearchmCheckMessageList.get(i).getmAllSearch_checkIn().size() + " " + terminology;
+                                        String thirdword = " at this location";
+                                        Spannable spannable = new SpannableString(firstWord + secondWord + thirdword);
+                                        Typeface tyface_edittext2 = Typeface.createFromAsset(mContext.getAssets(),
+                                                "fonts/Montserrat_Bold.otf");
+                                        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        tv_checkinsList.setText(spannable);
 
-                }
-            }
-        }
+                                    }
+                                }
+                            }
                             tv_checkinsList.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -1922,16 +1850,14 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                     mSearchmCheckListShow = response.body();
                                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                                     checkloclist.setLayoutManager(mLayoutManager);
-                                    LocationCheckinAdapter checkAdapter = new LocationCheckinAdapter(callback, String.valueOf(providerId), mSearchmCheckListShow, mContext,ProviderDetailActivity.this);
+                                    LocationCheckinAdapter checkAdapter = new LocationCheckinAdapter(callback, String.valueOf(providerId), mSearchmCheckListShow, mContext, ProviderDetailActivity.this);
                                     checkloclist.setAdapter(checkAdapter);
                                     checkAdapter.notifyDataSetChanged();
                                 }
                             });
 
 
-
-                        }
-                        else {
+                        } else {
                             tv_checkinsList.setVisibility(View.GONE);
                         }
                     }
@@ -1946,7 +1872,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
 //                if (mDialog.isShowing())
 //                    Config.closeDialog(getActivity(), mDialog);
-           }
+            }
         });
     }
 
@@ -1989,9 +1915,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             }
         });
     }
-
-
-
 
 
     private void openMapView(String latitude, String longitude, String locationName) {
@@ -2064,6 +1987,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             if (appointmentServiceInfo.getPreInfoText() != null) {
                 serviceInfo.setPreInfoText(appointmentServiceInfo.getPreInfoText());
             }
+            if (appointmentServiceInfo.getPreInfoTitle() != null){
+                serviceInfo.setPreInfoTitle(appointmentServiceInfo.getPreInfoTitle());
+            }
             if (appointmentServiceInfo.getServiceType() != null) {
                 serviceInfo.setServiceType(appointmentServiceInfo.getServiceType());
             }
@@ -2113,8 +2039,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         locationId = id;
         tvLocation.setText(address);
         location = place;
-     //   ApiCheckInMessage(locationId,place);
-        apiSettings_Details(uniqueId, providerId, locationId,location);
+        //   ApiCheckInMessage(locationId,place);
+        apiSettings_Details(uniqueId, providerId, locationId, location);
 
     }
 

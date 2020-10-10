@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ClipData;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,6 +31,7 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.Editable;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -231,6 +233,15 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     @BindView(R.id.iv_teleService)
     ImageView ivteleService;
 
+    @BindView(R.id.ll_preinfo)
+    LinearLayout llPreInfo;
+
+    @BindView(R.id.tv_preInfoTitle)
+    CustomTextViewSemiBold tvPreInfoTitle;
+
+    @BindView(R.id.tv_preInfo)
+    CustomTextViewMedium tvPreInfo;
+
     CustomTextViewSemiBold tvErrorMessage;
     String mFirstName, mLastName;
     int consumerID;
@@ -427,6 +438,23 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             } else {
 
                 LservicePrepay.setVisibility(View.GONE);
+            }
+
+            if (serviceInfo.isPreInfoEnabled()) {  //  check if pre-info is available for the service
+
+                llPreInfo.setVisibility(View.VISIBLE);
+                if (serviceInfo.getPreInfoTitle() != null) {
+                    tvPreInfoTitle.setText(serviceInfo.getPreInfoTitle());
+                } else {
+                    llPreInfo.setVisibility(View.GONE);
+                }
+                if (serviceInfo.getPreInfoText() != null) {
+                    tvPreInfo.setText((Html.fromHtml(serviceInfo.getPreInfoText())));
+                } else {
+                    llPreInfo.setVisibility(View.GONE);
+                }
+            } else {
+                llPreInfo.setVisibility(View.GONE);
             }
         }
 
@@ -671,14 +699,13 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             @Override
             public void onClick(View v) {
 
-                addNotes = new AddNotes(mContext, providerName, iSendMessage,userMessage);
+                addNotes = new AddNotes(mContext, providerName, iSendMessage, userMessage);
                 addNotes.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                 addNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 addNotes.show();
-                DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-                int width = (int) (metrics.widthPixels * 1);
                 addNotes.setCancelable(false);
-                addNotes.getWindow().setGravity(Gravity.BOTTOM);
+                DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                int width = (int) (metrics.widthPixels * 1);
                 addNotes.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
 
             }
@@ -769,6 +796,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                 } else {
                                     Intent intent = new Intent();
                                     intent.setType("*/*");
+                                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                                     intent.setAction(Intent.ACTION_GET_CONTENT);
                                     startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
                                 }
@@ -776,6 +804,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                                 Intent intent = new Intent();
                                 intent.setType("*/*");
+                                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                                 intent.setAction(Intent.ACTION_GET_CONTENT);
                                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
                             }
@@ -1507,9 +1536,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             Intent checkinShareLocations = new Intent(AppointmentActivity.this, CheckinShareLocationAppointment.class);
                             checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
                             checkinShareLocations.putExtra("uuid", value);
-                            if (serviceInfo.isUser()){
+                            if (serviceInfo.isUser()) {
                                 checkinShareLocations.putExtra("accountID", String.valueOf(userId));
-                            }else {
+                            } else {
                                 checkinShareLocations.putExtra("accountID", String.valueOf(providerId));
                             }
                             checkinShareLocations.putExtra("title", providerName);
@@ -1679,7 +1708,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         if (activeAppointment != null) {
 
                             Bundle b = new Bundle();
-                            b.putSerializable("BookingDetails",  activeAppointment);
+                            b.putSerializable("BookingDetails", activeAppointment);
                             b.putString("terminology", mSearchTerminology.getProvider());
                             Intent checkin = new Intent(AppointmentActivity.this, AppointmentConfirmation.class);
                             checkin.putExtras(b);
@@ -1810,7 +1839,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         try {
 
             // getting data from dialog
-            tvTime.setText(displayTime);
+            String convertedTime = displayTime.replace("am", "AM").replace("pm", "PM");
+            tvTime.setText(convertedTime);
             tvDate.setText(displayDate);
             tvSelectedDateHint.setText("Selected Time slot");
             scheduleId = schdId;
@@ -2185,7 +2215,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             extension = uriString.substring(uriString.lastIndexOf(".") + 1);
                         }
 
-
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
@@ -2198,18 +2227,48 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             return;
                         }
 
-//
                         imagePathList.add(orgFilePath);
-//
 
                         DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
-//                        if (imagePathList.size() > 0 && edt_message.getText().toString().equals("")) {
-//                            Toast.makeText(mContext, "Please enter note", Toast.LENGTH_SHORT).show();
-//                        }
+
+                    }
+                    else if (data.getClipData() != null) {
+                        ClipData mClipData = data.getClipData();
+                        for (int i = 0; i < mClipData.getItemCount(); i++) {
+                            ClipData.Item item = mClipData.getItemAt(i);
+                            Uri imageUri = item.getUri();
+                            String orgFilePath = getRealPathFromURI(imageUri, this);
+                            String filepath = "";//default fileName
+
+                            String mimeType = mContext.getContentResolver().getType(imageUri);
+                            String uriString = imageUri.toString();
+                            String extension = "";
+                            if (uriString.contains(".")) {
+                                extension = uriString.substring(uriString.lastIndexOf(".") + 1);
+                            }
+
+                            if (mimeType != null) {
+                                extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
+                            }
+                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                                if (orgFilePath == null) {
+                                    orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
+                                }
+                            } else {
+                                Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            imagePathList.add(orgFilePath);
+                        }
+                        DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+                        recycle_image_attachment.setLayoutManager(mLayoutManager);
+                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
+                        mDetailFileAdapter.notifyDataSetChanged();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2239,10 +2298,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 recycle_image_attachment.setLayoutManager(mLayoutManager);
                 recycle_image_attachment.setAdapter(mDetailFileAdapter);
                 mDetailFileAdapter.notifyDataSetChanged();
-//                if (imagePathList.size() > 0 && edt_message.getText().toString().equals("")) {
-//                    Toast.makeText(mContext, "Please enter note", Toast.LENGTH_SHORT).show();
-//                }
-
             }
         }
     }
