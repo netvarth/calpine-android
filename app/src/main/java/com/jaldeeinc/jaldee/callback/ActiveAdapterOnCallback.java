@@ -7,8 +7,8 @@ package com.jaldeeinc.jaldee.callback;
 public interface ActiveAdapterOnCallback {
 
     void onMethodActiveCallback(String value);
-    void onMethodActiveBillIconCallback(String payStatus,String value,String provider,String accountID,String consumer,int customerId,String uniqueId);
-    void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID,double amountDue,int customerId,String uniqueId) ;
+    void onMethodActiveBillIconCallback(String payStatus,String value,String provider,String accountID,String consumer,int customerId,String uniqueId,String encId);
+    void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID,double amountDue,int customerId,String uniqueId,String encId) ;
 
 
     void onActiveBookingClick(String showToken);

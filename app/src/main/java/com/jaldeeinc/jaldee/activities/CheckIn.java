@@ -3402,7 +3402,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                                             Config.logV("Account ID --------Paytm------" + modifyAccountID);
                                             PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
-                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID);
+                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID,"");
                                             //payment.generateCheckSum(sAmountPay);
                                             dialogPayment.dismiss();
                                             //ApiGenerateHash(value, sAmountPay, accountID);
@@ -3715,6 +3715,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
             TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
             ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);

@@ -1994,7 +1994,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
 
     @Override
-    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer, int customerId, String uniqueId) {
+    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer, int customerId, String uniqueId, String encId) {
         Log.i("Purpose: ", "billPayment");
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
@@ -2004,6 +2004,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         iBill.putExtra("consumer", consumer);
         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
         iBill.putExtra("uniqueId",uniqueId);
+        iBill.putExtra("encId",encId);
         if (MActiveList != null) {
             for (int i = 0; i < MActiveList.size(); i++) {
                 iBill.putExtra("customerId", MActiveList.get(i).getConsumer().getId());
@@ -2013,7 +2014,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     }
 
     @Override
-    public void onMethodActivePayIconCallback(String payStatus, final String ynwUUID, String provider, final String accountID, final double amountDue, int customerId, String uniqueId) {
+    public void onMethodActivePayIconCallback(String payStatus, final String ynwUUID, String provider, final String accountID, final double amountDue, int customerId, String uniqueId, String encId) {
         Log.i("Purpose: ", "prePayment");
         // APIPayment(accountID, ynwUUID, amountDue);
         Intent i = new Intent(mContext, PaymentActivity.class);
@@ -2022,6 +2023,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         i.putExtra("amountDue", amountDue);
         i.putExtra("purpose", Constants.PURPOSE_PREPAYMENT);
         i.putExtra("uniqueId",uniqueId);
+        i.putExtra("encId",encId);
         if (MActiveList != null) {
             for (int j = 0; j < MActiveList.size(); j++) {
                 i.putExtra("customerId", MActiveList.get(j).getConsumer().getId());

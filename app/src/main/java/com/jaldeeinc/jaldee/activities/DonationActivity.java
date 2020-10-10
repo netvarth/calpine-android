@@ -41,6 +41,8 @@ import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
+import com.jaldeeinc.jaldee.response.ActiveAppointment;
+import com.jaldeeinc.jaldee.response.ActiveDonation;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.SearchDonation;
@@ -138,6 +140,8 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     private IMailSubmit iMailSubmit;
     private IMobileSubmit iMobileSubmit;
     ProfileModel profileDetails;
+    private ActiveDonation activeDonation;
+    private String dntEncId;
 
 
     @Override
@@ -526,63 +530,64 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
 
 
                         }
+                        getConfirmationId(providerId);
 
-                        if (!showPaytmWallet && !showPayU) {
-
-                            //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
-                        } else {
-                            try {
-                                final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
-                                dialog.setContentView(R.layout.prepayment);
-                                dialog.show();
-
-
-                                Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
-                                Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
-                                if (showPaytmWallet) {
-                                    btn_paytm.setVisibility(View.VISIBLE);
-                                } else {
-                                    btn_paytm.setVisibility(View.GONE);
-                                }
-                                if (showPayU) {
-                                    btn_payu.setVisibility(View.VISIBLE);
-                                } else {
-                                    btn_payu.setVisibility(View.GONE);
-                                }
-                                final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-                                TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
-
-                                TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
-
-                                txtprepayment.setText("Donation Amount ");
-
-                                txtamt.setText("Rs." + getMoneyFormat(Config.getAmountinTwoDecimalPoints((Double.parseDouble(etAmount.getText().toString())))));
-                                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                        "fonts/Montserrat_Bold.otf");
-                                txtamt.setTypeface(tyface1);
-                                btn_payu.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-
-                                        new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, etAmount.getText().toString(), String.valueOf(providerId), Constants.PURPOSE_DONATIONPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                btn_paytm.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-
-
-                                        PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
-                                        payment.ApiGenerateHashPaytm(value, etAmount.getText().toString(), String.valueOf(providerId), Constants.PURPOSE_DONATIONPAYMENT, mContext, mActivity, "", familyMEmID);
-                                        dialog.dismiss();
-                                    }
-                                });
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
+//                        if (!showPaytmWallet && !showPayU) {
+//
+//                            //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
+//                        } else {
+//                            try {
+//                                final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+//                                dialog.setContentView(R.layout.prepayment);
+//                                dialog.show();
+//
+//
+//                                Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
+//                                Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
+//                                if (showPaytmWallet) {
+//                                    btn_paytm.setVisibility(View.VISIBLE);
+//                                } else {
+//                                    btn_paytm.setVisibility(View.GONE);
+//                                }
+//                                if (showPayU) {
+//                                    btn_payu.setVisibility(View.VISIBLE);
+//                                } else {
+//                                    btn_payu.setVisibility(View.GONE);
+//                                }
+//                                final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+//                                TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+//
+//                                TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
+//
+//                                txtprepayment.setText("Donation Amount ");
+//
+//                                txtamt.setText("Rs." + getMoneyFormat(Config.getAmountinTwoDecimalPoints((Double.parseDouble(etAmount.getText().toString())))));
+//                                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+//                                        "fonts/Montserrat_Bold.otf");
+//                                txtamt.setTypeface(tyface1);
+//                                btn_payu.setOnClickListener(new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View v) {
+//
+//                                        new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, etAmount.getText().toString(), String.valueOf(providerId), Constants.PURPOSE_DONATIONPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+//                                        dialog.dismiss();
+//                                    }
+//                                });
+//
+//                                btn_paytm.setOnClickListener(new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View v) {
+//
+//
+//                                        PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
+//                                        payment.ApiGenerateHashPaytm(value, etAmount.getText().toString(), String.valueOf(providerId), Constants.PURPOSE_DONATIONPAYMENT, mContext, mActivity, "", familyMEmID,"");
+//                                        dialog.dismiss();
+//                                    }
+//                                });
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
 
                     } else {
                         if (response.code() == 422) {
@@ -638,6 +643,93 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
             }
         });
 
+
+    }
+    private void getConfirmationId(int userId) {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(DonationActivity.this).create(ApiInterface.class);
+        Call<ActiveDonation> call = apiService.getActiveDonationUUID(value, String.valueOf(userId));
+        call.enqueue(new Callback<ActiveDonation>() {
+            @Override
+            public void onResponse(Call<ActiveDonation> call, Response<ActiveDonation> response) {
+                try {
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        activeDonation = response.body();
+                        if (activeDonation != null) {
+                            dntEncId = activeDonation.getDonationEncId();
+                            if (!showPaytmWallet && !showPayU) {
+
+                                //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
+                            } else {
+                                try {
+                                    final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+                                    dialog.setContentView(R.layout.prepayment);
+                                    dialog.show();
+
+
+                                    Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
+                                    Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
+                                    if (showPaytmWallet) {
+                                        btn_paytm.setVisibility(View.VISIBLE);
+                                    } else {
+                                        btn_paytm.setVisibility(View.GONE);
+                                    }
+                                    if (showPayU) {
+                                        btn_payu.setVisibility(View.VISIBLE);
+                                    } else {
+                                        btn_payu.setVisibility(View.GONE);
+                                    }
+                                    final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+                                    TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+
+                                    TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
+
+                                    txtprepayment.setText("Donation Amount ");
+
+                                    txtamt.setText("Rs." + getMoneyFormat(Config.getAmountinTwoDecimalPoints((Double.parseDouble(etAmount.getText().toString())))));
+                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                            "fonts/Montserrat_Bold.otf");
+                                    txtamt.setTypeface(tyface1);
+                                    btn_payu.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, etAmount.getText().toString(), String.valueOf(providerId), Constants.PURPOSE_DONATIONPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    btn_paytm.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+
+                                            PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
+                                            payment.ApiGenerateHashPaytm(value, etAmount.getText().toString(), String.valueOf(providerId), Constants.PURPOSE_DONATIONPAYMENT, mContext, mActivity, "", familyMEmID,dntEncId);
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                        }
+
+                    }
+                } catch (Exception e) {
+                    Log.i("mnbbnmmnbbnm", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveDonation> call, Throwable t) {
+            }
+        });
 
     }
 

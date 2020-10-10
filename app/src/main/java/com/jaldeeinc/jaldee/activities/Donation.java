@@ -2827,7 +2827,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
 
                                             Config.logV("Account ID --------Paytm------" + modifyAccountID);
                                             PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
-                                            payment.ApiGenerateHashPaytm(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_DONATIONPAYMENT, mContext, mActivity, "",familyMEmID);
+                                            payment.ApiGenerateHashPaytm(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_DONATIONPAYMENT, mContext, mActivity, "",familyMEmID,"");
                                             //payment.generateCheckSum(sAmountPay);
                                             dialog.dismiss();
                                             //ApiGenerateHash(value, sAmountPay, accountID);
@@ -2978,7 +2978,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
-
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
 
 
