@@ -639,7 +639,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                             if (serviceInfo.isNoteManidtory()) { // check if notes is mandatory for selected service
 
-                                if (userMessage != null && !userMessage.equalsIgnoreCase("")) {
+                                if (userMessage != null && !userMessage.trim().equalsIgnoreCase("")) {
 
                                     if (serviceInfo.isUser()) {
                                         ApiAppointment(userMessage, userId);
@@ -648,9 +648,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                     }
                                 } else {
 
-                                    DynamicToast.make(AppointmentActivity.this, serviceInfo.getConsumerNoteTitle() + "in Add Notes", AppCompatResources.getDrawable(
-                                            AppointmentActivity.this, R.drawable.ic_info_black),
-                                            ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+                                    // to show tool tip on Add note card with required info message
+                                    CustomToolTip tipWindow = new CustomToolTip(AppointmentActivity.this, CustomToolTip.DRAW_TOP,serviceInfo.getConsumerNoteTitle() +" "+"in Add Notes");
+                                    tipWindow.showToolTip(cvAddNote, CustomToolTip.DRAW_ARROW_DEFAULT_CENTER, false);
                                 }
 
                             } else {
@@ -672,7 +672,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                         if (serviceInfo.isNoteManidtory()) {
 
-                            if (userMessage != null && !userMessage.equalsIgnoreCase("")) {
+                            if (userMessage != null && !userMessage.trim().equalsIgnoreCase("")) {
 
                                 if (serviceInfo.isUser()) {
                                     ApiAppointment(userMessage, userId);
@@ -681,11 +681,10 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                 }
                             } else {
 
-                                DynamicToast.make(AppointmentActivity.this, serviceInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
-                                        AppointmentActivity.this, R.drawable.ic_info_black),
-                                        ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+                                // to show tool tip on Add note card with required info message
+                                CustomToolTip tipWindow = new CustomToolTip(AppointmentActivity.this, CustomToolTip.DRAW_TOP,serviceInfo.getConsumerNoteTitle() +" "+"in Add Notes");
+                                tipWindow.showToolTip(cvAddNote, CustomToolTip.DRAW_ARROW_DEFAULT_CENTER, false);
                             }
-
                         } else {
 
                             if (serviceInfo.isUser()) {

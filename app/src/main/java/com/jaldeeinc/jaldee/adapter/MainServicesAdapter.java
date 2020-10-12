@@ -173,7 +173,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
 
             if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.CHECKIN)) {
                 if (servicesInfoList.get(position).getNextAvailableDate() != null) {
-                    if(servicesInfoList.get(position).getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                    if(!servicesInfoList.get(position).getCalculationMode().equalsIgnoreCase("NoCalc")) {
                         viewHolder.llEstwaitTime.setVisibility(View.VISIBLE);
                         viewHolder.llDonationRange.setVisibility(View.GONE);
                         viewHolder.llTime.setVisibility(View.GONE);

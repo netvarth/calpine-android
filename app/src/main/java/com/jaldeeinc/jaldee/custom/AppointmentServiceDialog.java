@@ -101,7 +101,7 @@ public class AppointmentServiceDialog extends Dialog {
                 if (!searchService.getTotalAmount().equals("0.0")) {
                     tv_price.setVisibility(View.VISIBLE);
                     LserviceLayout.setVisibility(View.VISIBLE);
-                    if (searchService.getTaxable() != null) {
+                    if (searchService.getTaxable() != null && searchService.getTaxable().equalsIgnoreCase("true")) {
                         tv_price.setText("₹ " + searchService.getTotalAmount());
                         tvisTax.setVisibility(View.VISIBLE);
                     } else {

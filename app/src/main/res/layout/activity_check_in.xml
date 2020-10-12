@@ -215,7 +215,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:letterSpacing="0.1"
-                                    android:text=""
+                                    android:text="hello"
                                     android:textColor="@color/appoint_theme"
                                     android:textSize="@dimen/dimen_30sp">
 
