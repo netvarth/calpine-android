@@ -165,15 +165,21 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
 
         if (child.getType().equalsIgnoreCase(Constants.CHECKIN)) {
-            if (child.getNextAvailableDate() != null && child.getNextAvailableTime() != null && child.getEstTime() != null) {
+            if (child.getNextAvailableDate() != null && child.getNextAvailableTime() != null || child.getEstTime() != null) {
                 // to set est waitTime if available
-                viewHolder.llEstwaitTime.setVisibility(View.VISIBLE);
-                viewHolder.llDonationRange.setVisibility(View.GONE);
-                viewHolder.llTime.setVisibility(View.GONE);
-                String time = getWaitingTime(child.getNextAvailableDate(), child.getNextAvailableTime(), child.getEstTime());
-                viewHolder.tvEstWaitTime.setText(time.split("-")[1]);
-                viewHolder.tvTimeHint.setText(time.split("-")[0]);
+                if(!child.getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                    viewHolder.llEstwaitTime.setVisibility(View.VISIBLE);
+                    viewHolder.llDonationRange.setVisibility(View.GONE);
+                    viewHolder.llTime.setVisibility(View.GONE);
+                    String time = getWaitingTime(child.getNextAvailableDate(), child.getNextAvailableTime(), child.getEstTime());
+                    viewHolder.tvEstWaitTime.setText(time.split("-")[1]);
+                    viewHolder.tvTimeHint.setText(time.split("-")[0]);
 
+                }
+                else{
+                    viewHolder.llEstwaitTime.setVisibility(View.GONE);
+                    viewHolder.llTime.setVisibility(View.GONE);
+                }
             } else {
                 viewHolder.llEstwaitTime.setVisibility(View.GONE);
                 viewHolder.llTime.setVisibility(View.GONE);

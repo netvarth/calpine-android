@@ -171,12 +171,18 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
 
             if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.CHECKIN)) {
                 if (servicesInfoList.get(position).getNextAvailableDate() != null) {
-                    viewHolder.llEstwaitTime.setVisibility(View.VISIBLE);
-                    viewHolder.llDonationRange.setVisibility(View.GONE);
-                    viewHolder.llTime.setVisibility(View.GONE);
-                    String time = getWaitingTime(servicesInfoList.get(position).getNextAvailableDate(), servicesInfoList.get(position).getNextAvailableTime(), servicesInfoList.get(position).getEstTime());
-                    viewHolder.tvEstWaitTime.setText(time.split("-")[1]);
-                    viewHolder.tvTimeHint.setText(time.split("-")[0]);
+                    if(servicesInfoList.get(position).getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                        viewHolder.llEstwaitTime.setVisibility(View.VISIBLE);
+                        viewHolder.llDonationRange.setVisibility(View.GONE);
+                        viewHolder.llTime.setVisibility(View.GONE);
+                        String time = getWaitingTime(servicesInfoList.get(position).getNextAvailableDate(), servicesInfoList.get(position).getNextAvailableTime(), servicesInfoList.get(position).getEstTime());
+                        viewHolder.tvEstWaitTime.setText(time.split("-")[1]);
+                        viewHolder.tvTimeHint.setText(time.split("-")[0]);
+                    }
+                    else{
+                        viewHolder.llEstwaitTime.setVisibility(View.GONE);
+                        viewHolder.llTime.setVisibility(View.GONE);
+                    }
                 } else {
                     viewHolder.llEstwaitTime.setVisibility(View.GONE);
                     viewHolder.llTime.setVisibility(View.GONE);
