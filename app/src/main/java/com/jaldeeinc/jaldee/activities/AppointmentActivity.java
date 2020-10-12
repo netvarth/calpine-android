@@ -4,8 +4,10 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -69,6 +71,7 @@ import com.jaldeeinc.jaldee.custom.AddNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.custom.CustomToolTip;
 import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.custom.EnquiryDialog;
 import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
@@ -103,6 +106,7 @@ import com.payumoney.sdkui.ui.utils.ResultModel;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
+
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -872,10 +876,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (imagePathList != null && imagePathLists != null) {
-                            imagePathLists.clear();
-                            imagePathList.clear();
-                        }
                         dialog.dismiss();
                     }
                 });
@@ -1297,7 +1297,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
 
         final Dialog mDialog = Config.getProgressDialog(AppointmentActivity.this, AppointmentActivity.this.getResources().getString(R.string.dialog_log_in));
-        //  mDialog.show();
+          mDialog.show();
 
         JSONObject qjsonObj = new JSONObject();
         JSONObject queueobj = new JSONObject();
@@ -1323,6 +1323,16 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 pjsonobj.put("id", providerId);
             } else {
                 pjsonobj.put("id", 0);
+            }
+
+            if (imagePathList!= null && imagePathList.size()>0){
+
+                if (userMessage != null && userMessage.trim().equalsIgnoreCase("")){
+
+                    showToolTip();
+                    mDialog.dismiss();
+                    return;
+                }
             }
 
             if (etVirtualNumber.getText().toString().trim().length() > 9) {
@@ -1434,127 +1444,14 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             System.out.println("KEY: " + "------>" + getJsonObj);
                             value = reader.getString(getJsonObj);
 
-
                         }
-                  //      if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
-//                            if (!showPaytmWallet && !showPayU) {
-//
-//                                //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
-//                            } else {
+
                                 if (serviceInfo.isUser()) {
                                     getConfirmationId(userId,txt_addnote,id);
                                 }
                                 else{
                                     getConfirmationId(providerId,txt_addnote,id);
                                 }
-//                                try {
-//                                    dialog = new BottomSheetDialog(AppointmentActivity.this);
-//                                    dialog.setContentView(R.layout.prepayment);
-//                                    dialog.setCancelable(false);
-//                                    dialog.show();
-//
-//
-//                                    Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
-//                                    Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
-//                                    ImageView ivClose = dialog.findViewById(R.id.iv_close);
-//                                    ivClose.setVisibility(View.VISIBLE);
-//                                    if (showPaytmWallet) {
-//                                        btn_paytm.setVisibility(View.VISIBLE);
-//                                    } else {
-//                                        btn_paytm.setVisibility(View.GONE);
-//                                    }
-//                                    if (showPayU) {
-//                                        btn_payu.setVisibility(View.VISIBLE);
-//                                    } else {
-//                                        btn_payu.setVisibility(View.GONE);
-//                                    }
-//                                    final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-//                                    TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
-//
-//                                    TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
-//
-//                                    txtprepayment.setText("Prepayment Amount ");
-//
-////                                    DecimalFormat format = new DecimalFormat("0.00");
-//                                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(serviceInfo.getMinPrePaymentAmount()))));
-//                                    Typeface tyface1 = Typeface.createFromAsset(AppointmentActivity.this.getAssets(),
-//                                            "fonts/JosefinSans-SemiBold.ttf");
-//                                    txtamt.setTypeface(tyface1);
-//                                    ivClose.setOnClickListener(new View.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(View v) {
-//
-//                                            finish();
-//                                        }
-//                                    });
-//                                    btn_payu.setOnClickListener(new View.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(View v) {
-//
-//                                            new PaymentGateway(AppointmentActivity.this, AppointmentActivity.this).ApiGenerateHash1(value, serviceInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
-//                                            dialog.dismiss();
-//
-//                                        }
-//                                    });
-//
-//                                    btn_paytm.setOnClickListener(new View.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(View v) {
-//
-//                                            PaytmPayment payment = new PaytmPayment(AppointmentActivity.this, paymentResponse);
-//                                            payment.ApiGenerateHashPaytm(value, serviceInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, AppointmentActivity.this, AppointmentActivity.this, "", familyMEmID,appEncId);
-//                                            //payment.generateCheckSum(sAmountPay);
-//                                            dialog.dismiss();
-//
-//                                        }
-//                                    });
-//                                } catch (Exception e) {
-//                                    e.printStackTrace();
-//                                }
-                           // }
-
-
-                   //     } else {
-                            //  txt_message ="Please find the attachment from Consumer with this message";
-
-//                            if (serviceInfo.isUser()) {
-//                                if (imagePathList.size() > 0) {
-//                                    ApiCommunicateAppointment(value, String.valueOf(userId), txt_addnote, dialog);
-//                                }
-//                                if (!serviceInfo.getLivetrack().equalsIgnoreCase("true")) {
-//                                    getConfirmationDetails(userId);
-//                                }
-//
-//                            } else {
-//
-//                                if (imagePathList.size() > 0) {
-//                                    ApiCommunicateAppointment(value, String.valueOf(providerId), txt_addnote, dialog);
-//                                }
-//                                if (!serviceInfo.getLivetrack().equalsIgnoreCase("true")) {
-//                                    getConfirmationDetails(providerId);
-//                                }
-//
-//                            }
-                      //  }
-
-
-//                        if (serviceInfo.getLivetrack().equalsIgnoreCase("true")) {
-//                            Intent checkinShareLocations = new Intent(AppointmentActivity.this, CheckinShareLocationAppointment.class);
-//                            checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
-//                            checkinShareLocations.putExtra("uuid", value);
-//                            if (serviceInfo.isUser()){
-//                                checkinShareLocations.putExtra("accountID", String.valueOf(userId));
-//                            }else {
-//                                checkinShareLocations.putExtra("accountID", String.valueOf(providerId));
-//                            }
-//                            checkinShareLocations.putExtra("title", providerName);
-//                            checkinShareLocations.putExtra("terminology", mSearchTerminology.getWaitlist());
-//                            checkinShareLocations.putExtra("calcMode", calcMode);
-//                            checkinShareLocations.putExtra("queueStartTime", "");
-//                            checkinShareLocations.putExtra("queueEndTime", "");
-//                            checkinShareLocations.putExtra("from", "appt");
-//                            startActivity(checkinShareLocations);
-//                        }
 
                     } else {
                         if (response.code() == 422) {
@@ -1636,9 +1533,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 path = saveImage(bitmap);
                 file = new File(path);
             }
-//            else{
-//                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
-//            }
             else {
                 file = new File(imagePathList.get(i));
             }
@@ -1670,7 +1564,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
-//                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
                         imagePathList.clear();
                         dialog.dismiss();
 
@@ -1782,7 +1675,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                                         txtprepayment.setText("Prepayment Amount ");
 
-//                                    DecimalFormat format = new DecimalFormat("0.00");
                                         txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(serviceInfo.getMinPrePaymentAmount()))));
                                         Typeface tyface1 = Typeface.createFromAsset(AppointmentActivity.this.getAssets(),
                                                 "fonts/JosefinSans-SemiBold.ttf");
@@ -1823,8 +1715,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                             }
                             else {
-                                //  txt_message ="Please find the attachment from Consumer with this message";
-
 
                                 if (serviceInfo.isUser()) {
                                     if (imagePathList.size() > 0) {
@@ -1946,12 +1836,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 }
                 String day = (String) DateFormat.format("dd", date);
                 String monthString = (String) DateFormat.format("MMM", date);
-//                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-//                        "fonts/Montserrat_Bold.otf");
+
                 secondWord = monthString + " " + day + ", " + nextAvailableTime;
-//                String outputDateStr = outputFormat.format(datechange);
-//                String yourDate = Config.getFormatedDate(outputDateStr);
-//                secondWord = yourDate + ", " + queue.getServiceTime();
+
             } else {
                 secondWord = "Today, " + nextAvailableTime;
             }
@@ -1959,12 +1846,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             firstWord = "Est wait time";
             secondWord = Config.getTimeinHourMinutes(Integer.parseInt(estTime));
         }
-        // Spannable spannable = new SpannableString(firstWord + secondWord);
-//        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),"fonts/Montserrat_Bold.otf");
-//        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return firstWord + "-" + secondWord;
+      return firstWord + "-" + secondWord;
     }
 
     private String getDisplayTime(String slotTime) {
@@ -2055,13 +1937,13 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
         if (serviceInfo.isUser()) {
             if (imagePathList.size() > 0) {
-                ApiCommunicateAppointment(value, String.valueOf(userId), txt_message, dialog);
+                ApiCommunicateAppointment(value, String.valueOf(userId), userMessage, dialog);
             }
             getConfirmationDetails(userId);
 
         } else {
             if (imagePathList.size() > 0) {
-                ApiCommunicateAppointment(value, String.valueOf(providerId), txt_message, dialog);
+                ApiCommunicateAppointment(value, String.valueOf(providerId), userMessage, dialog);
             }
             getConfirmationDetails(providerId);
 
@@ -2113,13 +1995,13 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         // Paytm
         if (serviceInfo.isUser()) {
             if (imagePathList.size() > 0) {
-                ApiCommunicateAppointment(value, String.valueOf(userId), txt_message, dialog);
+                ApiCommunicateAppointment(value, String.valueOf(userId), userMessage, dialog);
             }
             getConfirmationDetails(userId);
 
         } else {
             if (imagePathList.size() > 0) {
-                ApiCommunicateAppointment(value, String.valueOf(providerId), txt_message, dialog);
+                ApiCommunicateAppointment(value, String.valueOf(providerId), userMessage, dialog);
             }
             getConfirmationDetails(providerId);
 
@@ -2474,4 +2356,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         }
 
     }
+
+    private void showToolTip(){
+
+        CustomToolTip tipWindow = new CustomToolTip(AppointmentActivity.this, CustomToolTip.DRAW_TOP, "Please add notes");
+        tipWindow.showToolTip(cvAddNote, CustomToolTip.DRAW_ARROW_DEFAULT_CENTER, false);
+    }
+
 }
