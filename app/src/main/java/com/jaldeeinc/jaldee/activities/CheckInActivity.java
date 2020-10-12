@@ -69,6 +69,7 @@ import com.jaldeeinc.jaldee.custom.CheckInSlotsDialog;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.custom.CustomToolTip;
 import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
 import com.jaldeeinc.jaldee.custom.MyLeadingMarginSpan2;
@@ -233,6 +234,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     @BindView(R.id.tv_preInfo)
     CustomTextViewMedium tvPreInfo;
 
+    @BindView(R.id.tv_term)
+    CustomTextViewMedium tvTerm;
+
     static CustomTextViewMedium txtprepayamount;
 
     static LinearLayout LservicePrepay;
@@ -362,13 +366,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 tvHint.setText(time.split("-")[0]);
 
                 if (checkInInfo.getCheckInServiceAvailability().getPersonAhead() >= 0) {
-                    if (checkInInfo.getCheckInServiceAvailability().getPersonAhead() == 0) {
-                        tvPeopleInLine.setText("Be the first in line");
-                    } else if (checkInInfo.getCheckInServiceAvailability().getPersonAhead() == 1) {
-                        tvPeopleInLine.setText(checkInInfo.getCheckInServiceAvailability().getPersonAhead() + "  person waiting in line");
-                    } else {
-                        tvPeopleInLine.setText(checkInInfo.getCheckInServiceAvailability().getPersonAhead() + "  people waiting in line");
-                    }
+
+                    String changedtext = "People waiting in line : " + "<b>" + checkInInfo.getCheckInServiceAvailability().getPersonAhead() + "</b> ";
+                    tvPeopleInLine.setText(Html.fromHtml(changedtext));
                 }
 
                 if (checkInInfo.getCheckInServiceAvailability().getAvailableDate() != null) {
@@ -490,7 +490,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 emailEditWindow.show();
                 DisplayMetrics metrics = CheckInActivity.this.getResources().getDisplayMetrics();
                 int width = (int) (metrics.widthPixels * 1);
-                emailEditWindow.getWindow().setGravity(Gravity.BOTTOM);
+                emailEditWindow.getWindow().setGravity(Gravity.CENTER);
                 emailEditWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
             }
         });
@@ -506,7 +506,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     mobileNumberDialog.show();
                     DisplayMetrics metrics = CheckInActivity.this.getResources().getDisplayMetrics();
                     int width = (int) (metrics.widthPixels * 1);
-                    mobileNumberDialog.getWindow().setGravity(Gravity.BOTTOM);
+                    mobileNumberDialog.getWindow().setGravity(Gravity.CENTER);
                     mobileNumberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                 }
             }
@@ -866,10 +866,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (imagePathList != null && imagePathLists != null) {
-                            imagePathLists.clear();
-                            imagePathList.clear();
-                        }
+
                         dialog.dismiss();
                     }
                 });
@@ -1124,8 +1121,10 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                             if (isToken) {
                                 tvButtonName.setText("Confirm Token");
+                                tvTerm.setText("Token for");
                             } else {
                                 tvButtonName.setText("Confirm CheckIn");
+                                tvTerm.setText("CheckIn for");
                             }
                             if (response.body().getCalculationMode() != null) {
                                 calcMode = response.body().getCalculationMode();
@@ -1299,7 +1298,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-//        mDialog.show();
+        mDialog.show();
 
 
         JSONObject qjsonObj = new JSONObject();
@@ -1318,6 +1317,17 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             if (isUser) {
                 pjsonobj.put("id", providerId);
             }
+
+            if (imagePathList!= null && imagePathList.size()>0){
+
+                if (userMessage != null && userMessage.trim().equalsIgnoreCase("")){
+
+                    mDialog.dismiss();
+                    showToolTip();
+                    return;
+                }
+            }
+
             if (etVirtualNumber.getText().toString().trim().length() > 9) {
                 if (checkInInfo.getCallingMode() != null && checkInInfo.getCallingMode().equalsIgnoreCase("whatsapp")) {
                     virtualService.put("WhatsApp", etVirtualNumber.getText());
@@ -1414,131 +1424,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         }
 
                         if (isUser) {
-                                    getConfirmationId(userId,txt_addnote,id);
-                                }
-                                else{
-                                    getConfirmationId(providerId,txt_addnote,id);
-                                }
+                            getConfirmationId(userId, txt_addnote, id);
+                        } else {
+                            getConfirmationId(providerId, txt_addnote, id);
+                        }
 
                         System.out.println("VALUE: " + "------>" + value);
-                        // finish();
-//                        dialogPayment = new BottomSheetDialog(mContext);
-//
-//                        if (checkInInfo.isPrePayment()) {
-//                            if (!showPaytmWallet && !showPayU) {
-//
-//                                //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
-//                            } else {
-//                                if (isUser) {
-//                                    getConfirmationDetails(userId);
-//                                }
-//                                else{
-//                                    getConfirmationDetails(providerId);
-//                                }
-//                                try {
-//
-//                                    dialogPayment.setContentView(R.layout.prepayment);
-//                                    dialogPayment.show();
-//
-//
-//                                    Button btn_paytm = (Button) dialogPayment.findViewById(R.id.btn_paytm);
-//                                    Button btn_payu = (Button) dialogPayment.findViewById(R.id.btn_payu);
-//                                    if (showPaytmWallet) {
-//                                        btn_paytm.setVisibility(View.VISIBLE);
-//                                    } else {
-//                                        btn_paytm.setVisibility(View.GONE);
-//                                    }
-//                                    if (showPayU) {
-//                                        btn_payu.setVisibility(View.VISIBLE);
-//                                    } else {
-//                                        btn_payu.setVisibility(View.GONE);
-//                                    }
-//                                    final EditText edt_message = (EditText) dialogPayment.findViewById(R.id.edt_message);
-//                                    TextView txtamt = (TextView) dialogPayment.findViewById(R.id.txtamount);
-//
-//                                    TextView txtprepayment = (TextView) dialogPayment.findViewById(R.id.txtprepayment);
-//
-//                                    txtprepayment.setText("Prepayment Amount ");
-//
-//                                    if (MultiplefamilyList.size() > 1) {
-//                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(totalAmountPay))));
-//                                    } else {
-//                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(checkInInfo.getMinPrePaymentAmount()))));
-//                                    }
-//
-//
-//                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-//                                            "fonts/JosefinSans-SemiBold.ttf");
-//                                    txtamt.setTypeface(tyface1);
-//                                    btn_payu.setOnClickListener(new View.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(View v) {
-//                                            if (MultiplefamilyList.size() > 1) {
-//                                                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, totalAmountPay, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
-//                                            } else {
-//                                                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
-//                                            }
-//                                            dialogPayment.dismiss();
-//                                        }
-//                                    });
-//
-//                                    btn_paytm.setOnClickListener(new View.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(View v) {
-//                                            PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
-//                                            if (MultiplefamilyList.size() > 0) {
-//                                                payment.ApiGenerateHashPaytm(value, totalAmountPay, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID,checkEncId);
-//                                            } else {
-//                                                payment.ApiGenerateHashPaytm(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID,checkEncId);
-//                                            }
-//                                            dialogPayment.dismiss();
-//
-//                                        }
-//                                    });
-//                                } catch (Exception e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//
-//
-//                        } else {
-//
-//                            if (isUser) {
-//                                if (imagePathList.size() > 0) {
-//                                    ApiCommunicateCheckin(value, String.valueOf(userId), txt_addnote, dialog);
-//                                }
-//                                if (!checkInInfo.isLivetrack()) {
-//                                    getConfirmationDetails(userId);
-//                                }
-//
-//                            } else {
-//                                if (imagePathList.size() > 0) {
-//                                    ApiCommunicateCheckin(value, String.valueOf(providerId), txt_addnote, dialog);
-//                                }
-//                                if (!checkInInfo.isLivetrack()) {
-//                                    getConfirmationDetails(providerId);
-//                                }
-//
-//                            }
-//                        }
-//
-//                        if (checkInInfo.isLivetrack()) {
-//                            Intent checkinShareLocations = new Intent(mContext, CheckinShareLocation.class);
-//                            checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
-//                            checkinShareLocations.putExtra("uuid", value);
-//                            if (isUser){
-//                                checkinShareLocations.putExtra("accountID", String.valueOf(userId));
-//                            }else {
-//                                checkinShareLocations.putExtra("accountID", String.valueOf(providerId));
-//                            }
-//                            checkinShareLocations.putExtra("title", providerName);
-//                            checkinShareLocations.putExtra("terminology", mSearchTerminology.getWaitlist());
-//                            checkinShareLocations.putExtra("calcMode", calcMode);
-//                            checkinShareLocations.putExtra("queueStartTime", "");
-//                            checkinShareLocations.putExtra("queueEndTime", "");
-//                            checkinShareLocations.putExtra("from", "checkin");
-//                            startActivity(checkinShareLocations);
-//                        }
 
                     } else {
                         if (response.code() == 422) {
@@ -1692,7 +1583,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
     }
 
-    private void getConfirmationId(int userId,String txt_addnote,int id) {
+    private void getConfirmationId(int userId, String txt_addnote, int id) {
 
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1768,9 +1659,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                             public void onClick(View v) {
                                                 PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
                                                 if (MultiplefamilyList.size() > 0) {
-                                                    payment.ApiGenerateHashPaytm(value, totalAmountPay, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID,checkEncId);
+                                                    payment.ApiGenerateHashPaytm(value, totalAmountPay, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID, checkEncId);
                                                 } else {
-                                                    payment.ApiGenerateHashPaytm(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID,checkEncId);
+                                                    payment.ApiGenerateHashPaytm(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID, checkEncId);
                                                 }
                                                 dialogPayment.dismiss();
 
@@ -1807,9 +1698,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                 Intent checkinShareLocations = new Intent(mContext, CheckinShareLocation.class);
                                 checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
                                 checkinShareLocations.putExtra("uuid", value);
-                                if (isUser){
+                                if (isUser) {
                                     checkinShareLocations.putExtra("accountID", String.valueOf(userId));
-                                }else {
+                                } else {
                                     checkinShareLocations.putExtra("accountID", String.valueOf(providerId));
                                 }
                                 checkinShareLocations.putExtra("title", providerName);
@@ -1929,15 +1820,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             queueId = id;
             apiDate = selectedDate;
             if (queueDetails.getQueueSize() >= 0) {
-                if (queueDetails.getQueueSize() == 0) {
-                    tvPeopleInLine.setText("Be the first in line");
-                } else if (queueDetails.getQueueSize() == 1) {
-                    tvPeopleInLine.setText(queueDetails.getQueueSize() + "  person waiting in line");
-                } else {
-                    tvPeopleInLine.setText(queueDetails.getQueueSize() + "  people waiting in line");
-                }
-            }
 
+                String changedtext = "People waiting in line : " + "<b>" + queueDetails.getQueueSize() + "</b> ";
+                tvPeopleInLine.setText(Html.fromHtml(changedtext));
+
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1953,13 +1840,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 //Do something here
                 if (isUser) {
                     if (imagePathList.size() > 0) {
-                        ApiCommunicateCheckin(value, String.valueOf(userId), txt_message, dialog);
+                        ApiCommunicateCheckin(value, String.valueOf(userId), userMessage, dialog);
                     }
                     getConfirmationDetails(userId);
 
                 } else {
                     if (imagePathList.size() > 0) {
-                        ApiCommunicateCheckin(value, String.valueOf(providerId), txt_message, dialog);
+                        ApiCommunicateCheckin(value, String.valueOf(providerId), userMessage, dialog);
                     }
                     getConfirmationDetails(providerId);
 
@@ -2017,13 +1904,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 //Do something here
                 if (isUser) {
                     if (imagePathList.size() > 0) {
-                        ApiCommunicateCheckin(value, String.valueOf(userId), txt_message, dialog);
+                        ApiCommunicateCheckin(value, String.valueOf(userId), userMessage, dialog);
                     }
                     getConfirmationDetails(userId);
 
                 } else {
                     if (imagePathList.size() > 0) {
-                        ApiCommunicateCheckin(value, String.valueOf(providerId), txt_message, dialog);
+                        ApiCommunicateCheckin(value, String.valueOf(providerId), userMessage, dialog);
                     }
                     getConfirmationDetails(providerId);
 
@@ -2380,5 +2267,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             }
         });
         alertDialog.show();
+    }
+
+    private void showToolTip(){
+
+        CustomToolTip tipWindow = new CustomToolTip(CheckInActivity.this, CustomToolTip.DRAW_TOP, "Please add notes");
+        tipWindow.showToolTip(cvAddNote, CustomToolTip.DRAW_ARROW_DEFAULT_CENTER, false);
     }
 }

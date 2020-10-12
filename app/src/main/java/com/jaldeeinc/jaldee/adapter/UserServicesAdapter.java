@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
+import android.text.Html;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
@@ -149,8 +150,8 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
                     viewHolder.llDonationRange.setVisibility(View.GONE);
                     int number = servicesInfoList.get(position).getPeopleInLine();
                     if (number >= 0) {
-                        viewHolder.tvPeopleAhead.setText("People waiting in line : "+servicesInfoList.get(position).getPeopleInLine());
-                    }
+                        String changedtext = "People waiting in line : "+"<b>" + servicesInfoList.get(position).getPeopleInLine() + "</b> ";
+                        viewHolder.tvPeopleAhead.setText(Html.fromHtml(changedtext));                    }
                 } else {
 
                     viewHolder.llDonationRange.setVisibility(View.GONE);

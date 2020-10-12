@@ -1933,13 +1933,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         return url;
     }
 
-//    @Override
-//    public void sendAddress(String address, int locId) {
-//
-//        locationId = locId;
-//        tvLocation.setText(address);
-//        apiSettings_Details(uniqueId, providerId, locationId);
-//    }
 
     // Click actions of selected items in grid
 
