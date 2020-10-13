@@ -17,6 +17,10 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.MyPayments;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -111,7 +115,8 @@ public class PaymentDetail extends AppCompatActivity {
                             providerLayout.setVisibility(View.GONE);
                         }
                         if(response.body().getPaymentOn()!=null){
-                            dateandtime.setText(response.body().getPaymentOn());
+                            String date = formatDateandTime(response.body().getPaymentOn());
+                            dateandtime.setText(date);
                             dateandtime.setVisibility(View.VISIBLE);
                         }else{
                             dateandtime.setVisibility(View.GONE);
@@ -195,4 +200,21 @@ public class PaymentDetail extends AppCompatActivity {
 
     }
 
+    public String formatDateandTime(String time) {
+        String inputPattern = "yyyy-MM-dd HH:mm:ss aaa";
+        String outputPattern = "dd-MMM-yyyy hh:mm:ss aaa";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+
+        Date date = null;
+        String str = null;
+
+        try {
+            date = inputFormat.parse(time);
+            str = outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
 }

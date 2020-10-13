@@ -15,6 +15,10 @@ import android.widget.TextView;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.PaymentDetail;
 import com.jaldeeinc.jaldee.response.MyPayments;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class MyPaymentAdapter  extends ArrayAdapter<MyPayments> {
@@ -72,7 +76,8 @@ public class MyPaymentAdapter  extends ArrayAdapter<MyPayments> {
 //        }
 
         if(paymentsList.get(position).getPaymentOn()!=null){
-            paymentOn.setText(paymentsList.get(position).getPaymentOn());
+            String dateandTime = formatDateandTime(paymentsList.get(position).getPaymentOn());
+            paymentOn.setText(dateandTime);
             paymentOn.setVisibility(View.VISIBLE);
         }else{
             paymentOn.setVisibility(View.INVISIBLE);
@@ -142,4 +147,21 @@ public class MyPaymentAdapter  extends ArrayAdapter<MyPayments> {
         return listItem;
     }
 
+    public String formatDateandTime(String time) {
+        String inputPattern = "yyyy-MM-dd HH:mm:ss aaa";
+        String outputPattern = "dd-MMM-yyyy hh:mm:ss aaa";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+
+        Date date = null;
+        String str = null;
+
+        try {
+            date = inputFormat.parse(time);
+            str = outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
 }

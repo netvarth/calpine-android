@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,10 +42,11 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
 
     private List<SearchCheckInMessage> checkList;
     Context mContext;
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView name, tv_waittime,txtservice,txttoken;
 
-        ImageView ic_delete,ic_service;
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView name, tv_waittime, txtservice, txttoken;
+
+        ImageView ic_delete, ic_service;
         LinearLayout lfamily;
 
 
@@ -51,12 +54,12 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
             super(view);
             name = (TextView) view.findViewById(R.id.txtname);
             tv_waittime = (TextView) view.findViewById(R.id.txtwaittime);
-            txtservice= (TextView) view.findViewById(R.id.txtservice);
+            txtservice = (TextView) view.findViewById(R.id.txtservice);
             ic_delete = (ImageView) view.findViewById(R.id.delete);
             lfamily = (LinearLayout) view.findViewById(R.id.lfamily);
-            txttoken= (TextView) view.findViewById(R.id.txttoken);
+            txttoken = (TextView) view.findViewById(R.id.txttoken);
             ic_service = view.findViewById(R.id.service_icon);
-          //  tv_nocheckin=(TextView) view.findViewById(R.id.tv_nocheckin);
+            //  tv_nocheckin=(TextView) view.findViewById(R.id.tv_nocheckin);
 
         }
     }
@@ -64,12 +67,13 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
     LocationCheckinCallback callback;
     Activity mActivity;
     String accountID;
-    public LocationCheckinAdapter(LocationCheckinCallback callback,String accountID,List<SearchCheckInMessage> mcheckList, Context mContext, Activity mActivity) {
+
+    public LocationCheckinAdapter(LocationCheckinCallback callback, String accountID, List<SearchCheckInMessage> mcheckList, Context mContext, Activity mActivity) {
         this.mContext = mContext;
         this.checkList = mcheckList;
-        this.callback=callback;
-        this.mActivity=mActivity;
-        this.accountID=accountID;
+        this.callback = callback;
+        this.mActivity = mActivity;
+        this.accountID = accountID;
 
 
     }
@@ -113,7 +117,7 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
         if (checklist.getCalculationMode().equalsIgnoreCase("NoCalc")) {
             myViewHolder.txttoken.setVisibility(View.VISIBLE);
             myViewHolder.txttoken.setText(checklist.getToken());
-        }else{
+        } else {
             myViewHolder.txttoken.setVisibility(View.GONE);
         }
 
@@ -121,82 +125,99 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
             @Override
             public void onClick(View v) {
                 //ApiDeleteCheckin(checklist.getYnwUuid(),accountID,position);
-                AlertDialog diaBox =  AskOption(checklist.getYnwUuid(),accountID,position);
+                AlertDialog diaBox = AskOption(checklist.getYnwUuid(), accountID, position);
                 diaBox.show();
             }
         });
 
 
-            myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
-            if (checklist.getServiceTime() != null) {
+        myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
+        if (checklist.getServiceTime() != null) {
 
-                String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-                if (date.equalsIgnoreCase(checklist.getDate())) {
+            String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+            if (date.equalsIgnoreCase(checklist.getDate())) {
 
-                    myViewHolder.tv_waittime.setText("Today, \n"+ checklist.getServiceTime());
-                } else {
-                    DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-                    String inputDateStr=checklist.getDate();
-                    Date datechange = null;
-                    try {
-                        datechange = inputFormat.parse(inputDateStr);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    String outputDateStr = outputFormat.format(datechange);
-                    myViewHolder.tv_waittime.setText( outputDateStr + ", \n"+checklist.getServiceTime());
-                }
-
-
+                myViewHolder.tv_waittime.setText("Today, \n" + checklist.getServiceTime());
             } else {
-                String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-                if (date.equalsIgnoreCase(checklist.getDate())) {
-                    Config.logV("getAppxWaitingTime------------" + checklist.getAppxWaitingTime());
-                    if (checklist.getAppxWaitingTime() == 0) {
-                        myViewHolder.tv_waittime.setText("Today");
-
-                    } else {
-                        myViewHolder.tv_waittime.setText(Config.getTimeinHourMinutes(checklist.getAppxWaitingTime()));
-                    }
-                } else {
-
-
-                    //Calulate appxtime+questime
-                    Config.logV("Quueue Time----------------" + checklist.getQueue().getQueueStartTime());
-                    Config.logV("App Time----------------" + checklist.getAppxWaitingTime());
-                    long appwaittime = TimeUnit.MINUTES.toMillis(checklist.getAppxWaitingTime());
-
-
-                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
-                    Date Timeconvert = null;
-                    long millis = 0;
-                    try {
-                        // sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                        Timeconvert = sdf.parse(checklist.getQueue().getQueueStartTime());
-                        millis = Timeconvert.getTime();
-                        Config.logV("millsss----" + millis);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    long finalcheckin = appwaittime + millis;
-
-                    String timeFORAMT = getDate(finalcheckin, "hh:mm a");
-
-
-                    myViewHolder.tv_waittime.setText(checklist.getDate());
-
+                DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                String inputDateStr = checklist.getDate();
+                Date datechange = null;
+                try {
+                    datechange = inputFormat.parse(inputDateStr);
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
+                String outputDateStr = outputFormat.format(datechange);
+                myViewHolder.tv_waittime.setText(outputDateStr + ", \n" + checklist.getServiceTime());
+            }
+
+
+        } else {
+            String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+            if (date.equalsIgnoreCase(checklist.getDate())) {
+                Config.logV("getAppxWaitingTime------------" + checklist.getAppxWaitingTime());
+                if (checklist.getAppxWaitingTime() == 0) {
+                    myViewHolder.tv_waittime.setText("Today");
+
+                } else {
+                    myViewHolder.tv_waittime.setText(Config.getTimeinHourMinutes(checklist.getAppxWaitingTime()));
+                }
+            } else {
+
+
+                //Calulate appxtime+questime
+                Config.logV("Quueue Time----------------" + checklist.getQueue().getQueueStartTime());
+                Config.logV("App Time----------------" + checklist.getAppxWaitingTime());
+                long appwaittime = TimeUnit.MINUTES.toMillis(checklist.getAppxWaitingTime());
+
+
+                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+                Date Timeconvert = null;
+                long millis = 0;
+                try {
+                    // sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    Timeconvert = sdf.parse(checklist.getQueue().getQueueStartTime());
+                    millis = Timeconvert.getTime();
+                    Config.logV("millsss----" + millis);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                long finalcheckin = appwaittime + millis;
+
+                String timeFORAMT = getDate(finalcheckin, "hh:mm a");
+
+
+                String actualDate = formatDateandTime(checklist.getDate());
+                myViewHolder.tv_waittime.setText(actualDate);
 
             }
+
+        }
 
 
     }
 
+    public String formatDateandTime(String time) {
+        String inputPattern = "yyyy-MM-dd";
+        String outputPattern = "dd-MM-yyyy";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
 
-    public static String getDate(long milliSeconds, String dateFormat)
-    {
+        Date date = null;
+        String str = null;
+
+        try {
+            date = inputFormat.parse(time);
+            str = outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+
+    public static String getDate(long milliSeconds, String dateFormat) {
         // Create a DateFormatter object for displaying date in specified format.
         SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
         // formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -241,7 +262,7 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
                         if (response.body().string().equalsIgnoreCase("true")) {
                             checkList.remove(pos);
                             notifyDataSetChanged();
-                            if(checkList.size()==0){
+                            if (checkList.size() == 0) {
                                 callback.onMethodCallback();
 
                             }
@@ -271,9 +292,8 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
 
     }
 
-    private AlertDialog AskOption(final String ynwuuid, final String accountID, final int pos)
-    {
-        AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
+    private AlertDialog AskOption(final String ynwuuid, final String accountID, final int pos) {
+        AlertDialog myQuittingDialogBox = new AlertDialog.Builder(mContext)
                 //set message, title, and icon
                 .setTitle("Delete")
                 .setMessage("Are you sure you want to cancel this Check-in?")
@@ -284,11 +304,10 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //your deleting code
                         dialog.dismiss();
-                        ApiDeleteCheckin(ynwuuid,accountID,pos);
+                        ApiDeleteCheckin(ynwuuid, accountID, pos);
                     }
 
                 })
-
 
 
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
