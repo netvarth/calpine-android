@@ -588,9 +588,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                     }
                                 } else {
 
-                                    // to show tool tip on Add note card with required info message
-                                    CustomToolTip tipWindow = new CustomToolTip(CheckInActivity.this, CustomToolTip.DRAW_TOP,checkInInfo.getConsumerNoteTitle() +" "+"in Add Notes");
-                                    tipWindow.showToolTip(cvAddNote, CustomToolTip.DRAW_ARROW_DEFAULT_CENTER, false);
+                                    DynamicToast.make(CheckInActivity.this, checkInInfo.getConsumerNoteTitle() + " in Add Notes", AppCompatResources.getDrawable(
+                                            CheckInActivity.this, R.drawable.ic_info_black),
+                                            ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                                 }
 
                             } else {
