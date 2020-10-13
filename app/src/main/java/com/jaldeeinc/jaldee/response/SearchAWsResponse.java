@@ -19,6 +19,7 @@ public class SearchAWsResponse  {
     String dentistemergencyservices_location1;
     String hosemergencyservices_location1;
     String name;
+    String altemergencyservices_location1;
 
     public String getDepartment_code() {
         return department_code;
@@ -601,6 +602,14 @@ public class SearchAWsResponse  {
 
     @SerializedName("availableSlots")
     private SlotsData slotsData;
+
+    public String getAltemergencyservices_location1() {
+        return altemergencyservices_location1;
+    }
+
+    public void setAltemergencyservices_location1(String altemergencyservices_location1) {
+        this.altemergencyservices_location1 = altemergencyservices_location1;
+    }
 
 }
 

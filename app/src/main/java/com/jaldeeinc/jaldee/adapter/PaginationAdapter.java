@@ -1613,6 +1613,33 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
             }
         }
+
+        if (searchdetailList.getAltemergencyservices_location1() != null) {
+            if (searchdetailList.getAltemergencyservices_location1().equalsIgnoreCase("1")) {
+                TextView dynaText = new TextView(context);
+                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                        "fonts/Montserrat_Regular.otf");
+                dynaText.setTypeface(tyface);
+                dynaText.setText("Emergency");
+                dynaText.setTextSize(10);
+                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                dynaText.setPadding(5, 5, 5, 5);
+                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
+                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                dynaText.setMaxLines(1);
+                dynaText.setLayoutParams(params1);
+                params1.setMargins(10, 7, 10, 7);
+                dynaText.setGravity(Gravity.LEFT);
+                parent.addView(dynaText);
+                dynaText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(activity, "Emergency services available", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }
+
         if (searchdetailList.getTraumacentre_location1() != null) {
             if (searchdetailList.getTraumacentre_location1().equalsIgnoreCase("1")) {
 

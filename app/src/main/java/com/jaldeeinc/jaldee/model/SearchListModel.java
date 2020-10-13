@@ -126,6 +126,7 @@ public class SearchListModel implements Serializable {
     private ArrayList appt_services;
     private ArrayList donation_services;
     private ArrayList providers;
+    private String altemergencyservices_location1;
 
     public String getAvailableDate() {
         return availableDate;
@@ -681,5 +682,13 @@ public class SearchListModel implements Serializable {
 
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
+    }
+
+    public String getAltemergencyservices_location1() {
+        return altemergencyservices_location1;
+    }
+
+    public void setAltemergencyservices_location1(String altemergencyservices_location1) {
+        this.altemergencyservices_location1 = altemergencyservices_location1;
     }
 }
