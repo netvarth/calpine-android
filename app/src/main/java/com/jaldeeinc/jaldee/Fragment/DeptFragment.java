@@ -727,6 +727,11 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     }
 
     @Override
+    public void onMethodServiceListCallback(String uniqueID, String value) {
+
+    }
+
+    @Override
     public void onMethodServiceCallbackUser(ArrayList<SearchService> services, String value, String uniqueID) {
         ServiceListFragment pfFragment = new ServiceListFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
