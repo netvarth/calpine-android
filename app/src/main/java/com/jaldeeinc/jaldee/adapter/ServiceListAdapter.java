@@ -97,7 +97,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
 //        }
         myViewHolder.tv_service.setText(serviceName);
         try{
-        if(serviceList.getServiceType().equalsIgnoreCase("virtualservice")){
+        if(serviceList.getServiceType()!=null && serviceList.getServiceType().equalsIgnoreCase("virtualservice")){
             if(serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
                 myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom,0,0,0);
             }
