@@ -560,7 +560,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     @Override
                                     public void onClick(View v) {
 
-                                        mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid(), serviceIds);
+                                       // mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid(), serviceIds);
+                                        mAdapterCallback.onMethodServiceListCallback(searchdetailList.getUniqueid(),searchdetailList.getTitle());
                                     }
                                 });
                             }

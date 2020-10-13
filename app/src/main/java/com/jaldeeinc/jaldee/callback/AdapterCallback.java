@@ -16,6 +16,8 @@ public interface AdapterCallback {
     void onMethodWorkingCallback(ArrayList<WorkingModel> workingModel,String value,String UniqueID);
 
     void onMethodServiceCallback(ArrayList services, String value, String uniqueID, ArrayList serviceIds);
+    void onMethodServiceListCallback(String uniqueID, String value);
+
     void onMethodServiceCallbackUser(ArrayList<SearchService> services, String value, String uniqueID);
 
 
