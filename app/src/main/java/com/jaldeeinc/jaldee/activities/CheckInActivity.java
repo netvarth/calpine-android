@@ -574,7 +574,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                     }
                                 } else {
 
-                                    DynamicToast.make(CheckInActivity.this, checkInInfo.getConsumerNoteTitle() + "in Add Notes", AppCompatResources.getDrawable(
+                                    DynamicToast.make(CheckInActivity.this, checkInInfo.getConsumerNoteTitle() + " in Add Notes", AppCompatResources.getDrawable(
                                             CheckInActivity.this, R.drawable.ic_info_black),
                                             ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                                 }

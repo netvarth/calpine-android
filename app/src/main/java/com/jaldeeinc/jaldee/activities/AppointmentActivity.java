@@ -648,7 +648,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                     }
                                 } else {
 
-                                    DynamicToast.make(AppointmentActivity.this, serviceInfo.getConsumerNoteTitle() + "in Add Notes", AppCompatResources.getDrawable(
+                                    DynamicToast.make(AppointmentActivity.this, serviceInfo.getConsumerNoteTitle() + " in Add Notes", AppCompatResources.getDrawable(
                                             AppointmentActivity.this, R.drawable.ic_info_black),
                                             ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                                 }
