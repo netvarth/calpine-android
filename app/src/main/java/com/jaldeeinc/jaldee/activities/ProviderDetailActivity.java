@@ -1266,7 +1266,12 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         serviceInfo.setDepartmentId(Integer.parseInt(provider.getDeptId()));
                         serviceInfo.setDepartmentName("");
                         serviceInfo.setId(provider.getId());
-                        serviceInfo.setName(provider.getBusinessName());
+                        if (provider.getBusinessName() != null) {
+                            serviceInfo.setName(provider.getBusinessName());
+                        }
+                        else {
+                            serviceInfo.setName(provider.getFirstName()+" "+provider.getLastName());
+                        }
                         serviceInfo.setType(Constants.PROVIDER);
                         serviceInfo.setEstTime("");
                         serviceInfo.setPeopleInLine(0);
@@ -1511,7 +1516,11 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                     serviceInfo.setDepartmentId(Integer.parseInt(provider.getDepartmentId()));
                                     serviceInfo.setDepartmentName(provider.getDepartmentName());
                                     serviceInfo.setId(user.getId());
-                                    serviceInfo.setName(user.getBusinessName());
+                                    if (user.getBusinessName() != null) {
+                                        serviceInfo.setName(user.getBusinessName());
+                                    }else {
+                                        serviceInfo.setName(user.getFirstName()+" "+user.getLastName());
+                                    }
                                     serviceInfo.setType(Constants.PROVIDER);
                                     serviceInfo.setEstTime("");
                                     serviceInfo.setPeopleInLine(0);

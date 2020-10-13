@@ -25,6 +25,7 @@ public class MyPayments {
     String jaldeeCommission;
     String settlementAmount;
     boolean testTransaction;
+    String paymentModeName;
 
     public int getId() {
         return id;
@@ -209,4 +210,13 @@ public class MyPayments {
     public void setTestTransaction(boolean testTransaction) {
         this.testTransaction = testTransaction;
     }
+
+    public String getPaymentModeName() {
+        return paymentModeName;
+    }
+
+    public void setPaymentModeName(String paymentModeName) {
+        this.paymentModeName = paymentModeName;
+    }
+
 }

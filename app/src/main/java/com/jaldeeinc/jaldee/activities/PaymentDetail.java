@@ -118,10 +118,15 @@ public class PaymentDetail extends AppCompatActivity {
                         }
 
                         if(response.body().getPaymentMode()!=null){
-                            paymentMode.setText(response.body().getPaymentMode());
-                            paymentMode.setVisibility(View.VISIBLE);
+                            if (response.body().getPaymentModeName() != null) {
+                                paymentModeLayout.setVisibility(View.VISIBLE);
+                                paymentMode.setText(response.body().getPaymentModeName());
+                            }
+                            else {
+                                paymentModeLayout.setVisibility(View.GONE);
+                            }
                         }else{
-                            paymentMode.setVisibility(View.GONE);
+                            paymentModeLayout.setVisibility(View.GONE);
                         }
 
                         if(response.body().getAcceptPaymentBy()!=null){
