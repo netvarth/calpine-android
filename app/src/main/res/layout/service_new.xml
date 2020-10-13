@@ -36,9 +36,11 @@
             android:gravity="center|left"
             android:minHeight="?attr/actionBarSize"
             android:paddingLeft="@dimen/padding20"
-            android:text="Title"
+            android:text=""
             android:textColor="@color/app_background"
             android:textSize="@dimen/txtsize_subtitle"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textStyle="bold"
             android:layout_marginEnd="55dp"/>
     </LinearLayout>
