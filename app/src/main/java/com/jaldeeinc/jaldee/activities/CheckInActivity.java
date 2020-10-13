@@ -61,6 +61,7 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
 import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.adapter.MultipleFamilyMemberAdapter;
+import com.jaldeeinc.jaldee.adapter.QueuesAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -294,6 +295,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     static ArrayList<FamilyArrayModel> MultiplefamilyList = new ArrayList<>();
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
     static String totalAmountPay;
+    static ArrayList<QueueTimeSlotModel> mQueueTimeSlotList = new ArrayList<>();
 
     //files related
     private static final String IMAGE_DIRECTORY = "/Jaldee" +
@@ -369,8 +371,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     tvHint.setText(time.split("-")[0]);
 
                 } else {
-                    tvCheckInDate.setVisibility(View.GONE);
-                    tvHint.setVisibility(View.GONE);
+                    tvHint.setVisibility(View.GONE); // else condition to show Queue time and date if calculation mode is NoCalc
+                    if (isUser) {
+                        ApiQueueTimeSlot(locationId, checkInInfo.getId(), userId, checkInInfo.getCheckInServiceAvailability().getAvailableDate());
+                    }else {
+                        ApiQueueTimeSlot(locationId, checkInInfo.getId(), providerId, checkInInfo.getCheckInServiceAvailability().getAvailableDate());
+                    }
                 }
 
                 if (checkInInfo.getCheckInServiceAvailability().getPersonAhead() >= 0) {
@@ -474,6 +480,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         apiSearchViewDetail(uniqueId);
         ApiJaldeegetS3Coupons(uniqueId);
 
+
         // click actions
 
         cvBack.setOnClickListener(new View.OnClickListener() {
@@ -563,7 +570,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         cvSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // ApiGenerateHash();
                 if (tvNumber.length() < 10) {
                     Toast.makeText(CheckInActivity.this, "Mobile number should have 10 digits" + "", Toast.LENGTH_SHORT).show();
                 } else {
@@ -1591,6 +1597,56 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
     }
 
+    private void ApiQueueTimeSlot(int locationId, int subSeriveID, int accountID, String mDate) {
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ArrayList<QueueTimeSlotModel>> call = apiService.getQueueTimeSlot(String.valueOf(locationId), String.valueOf(subSeriveID), mDate, String.valueOf(accountID));
+        call.enqueue(new Callback<ArrayList<QueueTimeSlotModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<QueueTimeSlotModel>> call, Response<ArrayList<QueueTimeSlotModel>> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(CheckInActivity.this, mDialog);
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    Config.logV("mQueueTimeSlotList--------11111-----------------" + response.code());
+                    if (response.code() == 200) {
+                        mQueueTimeSlotList = response.body();
+
+                        if (mQueueTimeSlotList != null) {
+
+                            if (mQueueTimeSlotList.size() > 0) {
+
+                                String startDate = getCustomDateString(mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate());
+                                String queueTime = mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime() + "-" + mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime();
+                                tvCheckInDate.setVisibility(View.VISIBLE);
+                                tvCheckInDate.setText(startDate+","+"\n"+ queueTime);
+
+                            } else {
+
+                            }
+                        }
+
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<QueueTimeSlotModel>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(CheckInActivity.this, mDialog);
+            }
+        });
+    }
+
+
     private void getConfirmationId(int userId, String txt_addnote, int id) {
 
         final ApiInterface apiService =
@@ -1830,8 +1886,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 tvCheckInDate.setText(time.split("-")[1]);
                 tvHint.setText(time.split("-")[0]);
             } else {
-                tvCheckInDate.setVisibility(View.GONE);
+                tvCheckInDate.setVisibility(View.VISIBLE); // else condition to show Queue time and date if calculation mode is NoCalc
                 tvHint.setVisibility(View.GONE);
+                String startDate = getCustomDateString(queueDetails.getEffectiveSchedule().getStartDate());
+                String queueTime = queueDetails.getQueueSchedule().getTimeSlots().get(0).getsTime() + "-" + queueDetails.getQueueSchedule().getTimeSlots().get(0).geteTime();
+                tvCheckInDate.setText(startDate+","+"\n"+ queueTime);
             }
             queueId = id;
             apiDate = selectedDate;
@@ -2294,4 +2353,27 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         CustomToolTip tipWindow = new CustomToolTip(CheckInActivity.this, CustomToolTip.DRAW_TOP, "Please add notes");
         tipWindow.showToolTip(cvAddNote, CustomToolTip.DRAW_ARROW_DEFAULT_CENTER, false);
     }
+
+    public static String getCustomDateString(String d) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date1 = format.parse(d);
+        String date = format.format(date1);
+
+        if (date.endsWith("1") && !date.endsWith("11"))
+            format = new SimpleDateFormat("d'st' MMM, yyyy");
+
+        else if (date.endsWith("2") && !date.endsWith("12"))
+            format = new SimpleDateFormat("d'nd' MMM, yyyy");
+
+        else if (date.endsWith("3") && !date.endsWith("13"))
+            format = new SimpleDateFormat("d'rd' MMM, yyyy");
+
+        else
+            format = new SimpleDateFormat("d'th' MMM, yyyy");
+
+        String yourDate = format.format(date1);
+
+        return yourDate;
+    }
+
 }

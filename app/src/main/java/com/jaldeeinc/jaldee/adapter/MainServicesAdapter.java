@@ -219,7 +219,13 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
 
                 viewHolder.llDonationRange.setVisibility(View.GONE);
                 viewHolder.tvServiceType.setVisibility(View.VISIBLE);
-                viewHolder.tvServiceType.setText("Check In");
+                if (servicesInfoList.get(position).isToken()) {
+                    viewHolder.tvServiceType.setVisibility(View.VISIBLE);
+                    viewHolder.tvServiceType.setText("Get Token");
+                } else {
+                    viewHolder.tvServiceType.setVisibility(View.VISIBLE);
+                    viewHolder.tvServiceType.setText("Check In");
+                }
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
 
             } else if (servicesInfoList.get(position).getType() != null && servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
