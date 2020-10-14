@@ -37,6 +37,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -115,6 +116,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1619,7 +1621,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                             if (mQueueTimeSlotList.size() > 0) {
 
-                                String startDate = getCustomDateString(mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate());
+                                String startDate = convertDate(mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate());
                                 String queueTime = mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime() + "-" + mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime();
                                 tvCheckInDate.setVisibility(View.VISIBLE);
                                 tvCheckInDate.setText(startDate+","+"\n"+ queueTime);
@@ -1865,6 +1867,25 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         return firstWord + "-" + secondWord;
     }
 
+    public static String convertDate(String date) {
+
+        String finalDate = "";
+        Date selectedDate = null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            selectedDate = format.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (DateUtils.isToday(selectedDate.getTime())) {
+            finalDate = "Today";
+        } else {
+            Format f = new SimpleDateFormat("MMM dd");
+            finalDate = f.format(selectedDate);
+        }
+
+        return finalDate;
+    }
 
     public static void refreshName(String name, int memID) {
         Config.logV("NAme----------" + name);
@@ -1888,7 +1909,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             } else {
                 tvCheckInDate.setVisibility(View.VISIBLE); // else condition to show Queue time and date if calculation mode is NoCalc
                 tvHint.setVisibility(View.GONE);
-                String startDate = getCustomDateString(queueDetails.getEffectiveSchedule().getStartDate());
+                String startDate = convertDate(queueDetails.getEffectiveSchedule().getStartDate());
                 String queueTime = queueDetails.getQueueSchedule().getTimeSlots().get(0).getsTime() + "-" + queueDetails.getQueueSchedule().getTimeSlots().get(0).geteTime();
                 tvCheckInDate.setText(startDate+","+"\n"+ queueTime);
             }

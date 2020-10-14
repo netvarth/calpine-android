@@ -1268,9 +1268,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         serviceInfo.setId(provider.getId());
                         if (provider.getBusinessName() != null) {
                             serviceInfo.setName(provider.getBusinessName());
-                        }
-                        else {
-                            serviceInfo.setName(provider.getFirstName()+" "+provider.getLastName());
+                        } else {
+                            serviceInfo.setName(provider.getFirstName() + " " + provider.getLastName());
                         }
                         serviceInfo.setType(Constants.PROVIDER);
                         serviceInfo.setEstTime("");
@@ -1518,8 +1517,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                     serviceInfo.setId(user.getId());
                                     if (user.getBusinessName() != null) {
                                         serviceInfo.setName(user.getBusinessName());
-                                    }else {
-                                        serviceInfo.setName(user.getFirstName()+" "+user.getLastName());
+                                    } else {
+                                        serviceInfo.setName(user.getFirstName() + " " + user.getLastName());
                                     }
                                     serviceInfo.setType(Constants.PROVIDER);
                                     serviceInfo.setEstTime("");
@@ -1541,10 +1540,12 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             }
                         }
 
-                        departmentInfo.setDeptServicesList(services);
-                        departmentInfo.setDepartmentName(department.getDepartmentName());
+                        if (services.size() > 0) {
+                            departmentInfo.setDeptServicesList(services);
+                            departmentInfo.setDepartmentName(department.getDepartmentName());
 
-                        departmentsList.add(departmentInfo);
+                            departmentsList.add(departmentInfo);
+                        }
                     }
 
                     // adding donations only when donations are accepted
@@ -1989,7 +1990,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             if (appointmentServiceInfo.getPreInfoText() != null) {
                 serviceInfo.setPreInfoText(appointmentServiceInfo.getPreInfoText());
             }
-            if (appointmentServiceInfo.getPreInfoTitle() != null){
+            if (appointmentServiceInfo.getPreInfoTitle() != null) {
                 serviceInfo.setPreInfoTitle(appointmentServiceInfo.getPreInfoTitle());
             }
             if (appointmentServiceInfo.getServiceType() != null) {

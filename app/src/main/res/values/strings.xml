@@ -118,7 +118,7 @@
     <string name="addnote">Add Note</string>
     <string name="currentloc">Use current location</string>
     <string name="hint_message">Type your message here</string>
-    <string name="searchhint_loc">Eg: Majestic, Bangalore, Karnataka</string>
+    <string name="searchhint_loc">Eg: Majestic, Bengaluru, Karnataka</string>
     <string name="customer">Customer</string>
     <string name="datetime"><![CDATA[Date & Time]]></string>
     <string name="bill">Bill #</string>
