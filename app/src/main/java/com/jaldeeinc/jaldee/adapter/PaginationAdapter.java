@@ -1436,7 +1436,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Intent iCoupons = new Intent(v.getContext(), CouponActivity.class);
                 iCoupons.putExtra("uniqueID", searchdetailList.getUniqueid());
                 context.startActivity(iCoupons);
-//                mAdapterCallback.onMethodCoupn(searchdetailList.getUniqueid());
 
             }
         });

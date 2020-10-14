@@ -5,6 +5,7 @@ import android.Manifest.permission;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ClipData;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -61,6 +62,7 @@ import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.PaymentActivity;
 import com.jaldeeinc.jaldee.adapter.DetailFileAdapter;
+import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.adapter.ExpandableListAdapterToken;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
 import com.jaldeeinc.jaldee.callback.HistoryAdapterCallback;
@@ -365,12 +367,14 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
                             } else {
                                 Intent intent = new Intent();
                                 intent.setType("*/*");
+                                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                                 intent.setAction(Intent.ACTION_GET_CONTENT);
                                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
                             }
                         } else {
                             Intent intent = new Intent();
                             intent.setType("*/*");
+                            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                             intent.setAction(Intent.ACTION_GET_CONTENT);
                             startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
                         }
@@ -554,6 +558,40 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
                         if (imagePathList.size() > 0 && edt_message.getText().toString().equals("")) {
                             Toast.makeText(mContext, "Please enter message", Toast.LENGTH_SHORT).show();
                         }
+                    }
+                    else if (data.getClipData() != null) {
+                        ClipData mClipData = data.getClipData();
+                        for (int i = 0; i < mClipData.getItemCount(); i++) {
+                            ClipData.Item item = mClipData.getItemAt(i);
+                            Uri imageUri = item.getUri();
+                            String orgFilePath = getRealPathFromURI(imageUri, mActivity);
+                            String filepath = "";//default fileName
+
+                            String mimeType = mContext.getContentResolver().getType(imageUri);
+                            String uriString = imageUri.toString();
+                            String extension = "";
+                            if (uriString.contains(".")) {
+                                extension = uriString.substring(uriString.lastIndexOf(".") + 1);
+                            }
+
+                            if (mimeType != null) {
+                                extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
+                            }
+                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                                if (orgFilePath == null) {
+                                    orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
+                                }
+                            } else {
+                                Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            imagePathList.add(orgFilePath);
+                        }
+                        DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 3);
+                        recycle_image_attachment.setLayoutManager(mLayoutManager);
+                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
+                        mDetailFileAdapter.notifyDataSetChanged();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

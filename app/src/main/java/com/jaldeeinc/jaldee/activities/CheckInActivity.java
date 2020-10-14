@@ -368,6 +368,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 if (checkInInfo.getCheckInServiceAvailability().getCalculationMode() != null && !checkInInfo.getCheckInServiceAvailability().getCalculationMode().equalsIgnoreCase("NoCalc")) {
                     String time = getWaitingTime(checkInInfo.getCheckInServiceAvailability().getAvailableDate(), checkInInfo.getCheckInServiceAvailability().getServiceTime(), checkInInfo.getCheckInServiceAvailability().getQueueWaitingTime());
                     tvCheckInDate.setVisibility(View.VISIBLE);
+                    tvCheckInDate.setTextSize(30);
                     tvHint.setVisibility(View.VISIBLE);
                     tvCheckInDate.setText(time.split("-")[1]);
                     tvHint.setText(time.split("-")[0]);
@@ -590,7 +591,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                     }
                                 } else {
 
-                                    DynamicToast.make(CheckInActivity.this, checkInInfo.getConsumerNoteTitle() + " in Add Notes", AppCompatResources.getDrawable(
+                                    DynamicToast.make(CheckInActivity.this, checkInInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
                                             CheckInActivity.this, R.drawable.ic_info_black),
                                             ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                                 }
@@ -623,10 +624,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                 }
                             } else {
 
-                                // to show tool tip on Add note card with required info message
-                                CustomToolTip tipWindow = new CustomToolTip(CheckInActivity.this, CustomToolTip.DRAW_TOP,checkInInfo.getConsumerNoteTitle() +" "+"in Add Notes");
-                                tipWindow.showToolTip(cvAddNote, CustomToolTip.DRAW_ARROW_DEFAULT_CENTER, false);
-                               }
+                                DynamicToast.make(CheckInActivity.this, checkInInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
+                                        CheckInActivity.this, R.drawable.ic_info_black),
+                                        ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+
+                            }
 
                         } else {
 
@@ -1624,6 +1626,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                 String startDate = convertDate(mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate());
                                 String queueTime = mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime() + "-" + mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime();
                                 tvCheckInDate.setVisibility(View.VISIBLE);
+                                tvCheckInDate.setTextSize(20);
                                 tvCheckInDate.setText(startDate+","+"\n"+ queueTime);
 
                             } else {
@@ -1903,6 +1906,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                 String time = getWaitingTime(selectedDate, queueDetails.getServiceTime(), String.valueOf(queueDetails.getQueueWaitingTime()));
                 tvCheckInDate.setVisibility(View.VISIBLE);
+                tvCheckInDate.setTextSize(30);
                 tvHint.setVisibility(View.VISIBLE);
                 tvCheckInDate.setText(time.split("-")[1]);
                 tvHint.setText(time.split("-")[0]);
@@ -1911,6 +1915,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 tvHint.setVisibility(View.GONE);
                 String startDate = convertDate(queueDetails.getEffectiveSchedule().getStartDate());
                 String queueTime = queueDetails.getQueueSchedule().getTimeSlots().get(0).getsTime() + "-" + queueDetails.getQueueSchedule().getTimeSlots().get(0).geteTime();
+                tvCheckInDate.setTextSize(20);
                 tvCheckInDate.setText(startDate+","+"\n"+ queueTime);
             }
             queueId = id;
@@ -2187,7 +2192,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
                         }
 
                         // check for permanent denial of any permission

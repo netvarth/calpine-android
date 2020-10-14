@@ -35,14 +35,16 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.DonationActivity"
+        <activity android:name=".activities.RescheduleActivity"></activity>
+        <activity
+            android:name=".activities.DonationActivity"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.CheckInActivity"
             android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AppointmentActivity"
             android:hardwareAccelerated="true"
@@ -61,11 +63,11 @@
         <activity
             android:name=".activities.AppointmentConfirmation"
             android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.CheckInConfirmation"
             android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity android:name=".activities.ActiveListing" />
         <activity android:name=".activities.LinkRedirectionActivity" />
         <activity android:name=".activities.NotificationActivity" />

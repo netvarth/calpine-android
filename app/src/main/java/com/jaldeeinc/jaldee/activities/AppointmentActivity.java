@@ -648,7 +648,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                     }
                                 } else {
 
-                                    DynamicToast.make(AppointmentActivity.this, serviceInfo.getConsumerNoteTitle() + " in Add Notes", AppCompatResources.getDrawable(
+                                    DynamicToast.make(AppointmentActivity.this, serviceInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
                                             AppointmentActivity.this, R.drawable.ic_info_black),
                                             ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                                 }
@@ -681,9 +681,10 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                 }
                             } else {
 
-                                // to show tool tip on Add note card with required info message
-                                CustomToolTip tipWindow = new CustomToolTip(AppointmentActivity.this, CustomToolTip.DRAW_TOP,serviceInfo.getConsumerNoteTitle() +" "+"in Add Notes");
-                                tipWindow.showToolTip(cvAddNote, CustomToolTip.DRAW_ARROW_DEFAULT_CENTER, false);
+                                DynamicToast.make(AppointmentActivity.this, serviceInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
+                                        AppointmentActivity.this, R.drawable.ic_info_black),
+                                        ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+
                             }
                         } else {
 
@@ -2164,7 +2165,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
                         }
 
                         // check for permanent denial of any permission
