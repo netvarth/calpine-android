@@ -591,7 +591,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     myViewHolder.txtSeeAll.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid(), serviceIds);
+                                          //  mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid(), serviceIds);
+                                            mAdapterCallback.onMethodServiceListCallback(searchdetailList.getUniqueid(),searchdetailList.getTitle());
                                         }
                                     });
                                     break;
@@ -2380,6 +2381,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 iService.putExtra("isPrePayment", service.get(i).isPrePayment());
                                 iService.putExtra("MinPrePaymentAmount", service.get(i).getMinPrePaymentAmount());
                                 iService.putExtra("department", service.get(i).getDepartment());
+                                if(service.get(i).getVirtualCallingModes()!=null && service.get(i).getVirtualCallingModes().get(0).getCallingMode()!=null) {
+                                    iService.putExtra("callingMode", service.get(i).getVirtualCallingModes().get(0).getCallingMode());
+                                }
+                                iService.putExtra("serviceType",service.get(i).getServiceType());
                                 context.startActivity(iService);
                             }
                         }

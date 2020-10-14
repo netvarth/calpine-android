@@ -122,21 +122,21 @@ public class SearchServiceActivity extends AppCompatActivity {
             tv_service.setVisibility(View.VISIBLE);
             tv_service.setText(name);
             try {
-                if(serviceType.equalsIgnoreCase("virtualService")){
+                if(serviceType!=null && serviceType.equalsIgnoreCase("virtualService")){
                     if(callingMode.equalsIgnoreCase("Zoom")){
-                        tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoomicon_sized,0,0,0);
+                        tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom,0,0,0);
                         tv_service.setCompoundDrawablePadding(10);
                     }
                     else if(callingMode.equalsIgnoreCase("GoogleMeet")){
-                        tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized,0,0,0);
+                        tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet,0,0,0);
                         tv_service.setCompoundDrawablePadding(10);
                     }
                     else if(callingMode.equalsIgnoreCase("WhatsApp")){
-                        tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized,0,0,0);
+                        tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp,0,0,0);
                         tv_service.setCompoundDrawablePadding(10);
                     }
                     else if(callingMode.equalsIgnoreCase("phone")){
-                        tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small,0,0,0);
+                        tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneicon_sized,0,0,0);
                         tv_service.setCompoundDrawablePadding(10);
                     }
 
