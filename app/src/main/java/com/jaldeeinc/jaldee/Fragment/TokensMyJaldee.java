@@ -360,9 +360,9 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
                 public void onClick(View v) {
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if ((ContextCompat.checkSelfPermission(mContext, permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            if ((ContextCompat.checkSelfPermission(mContext, permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                 requestPermissions(new String[]{
-                                        permission.READ_EXTERNAL_STORAGE}, GALLERY);
+                                        permission.READ_EXTERNAL_STORAGE,permission.WRITE_EXTERNAL_STORAGE}, GALLERY);
                                 return;
                             } else {
                                 Intent intent = new Intent();
@@ -467,7 +467,7 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
                 ext = "." + extension;
             }
             File wallpaperDirectoryFile = new File(
-                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
+                    Environment.getExternalStorageDirectory() + File.separator + fileName + ext);
             copy(context, contentUri, wallpaperDirectoryFile);
             return wallpaperDirectoryFile.getAbsolutePath();
         }
@@ -667,7 +667,7 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-                            Toast.makeText(mContext, "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(mContext, "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
                         }
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
