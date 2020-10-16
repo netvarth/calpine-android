@@ -25,6 +25,7 @@ public class ServiceDetails implements Serializable {
     }
 
     String name;
+    int id;
 
     public String getLivetrack() {
         return livetrack;
@@ -119,5 +120,11 @@ public class ServiceDetails implements Serializable {
     String postInfoText;
 
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 }
