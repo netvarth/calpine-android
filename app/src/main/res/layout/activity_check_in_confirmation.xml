@@ -144,13 +144,81 @@
 
 
                         </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/ll_consumer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/ll_provider"
+                            android:layout_marginStart="@dimen/dimen_16dp"
+                            android:layout_marginTop="@dimen/dimen_10dp"
+                            android:layout_marginEnd="@dimen/dimen_10dp"
+                            android:orientation="horizontal"
+                            android:visibility="visible">
+
+                            <TextView
+                                android:id="@+id/tv_consumerName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Token for  :  "
+                                android:textSize="@dimen/txtsize_14">
+
+                            </TextView>
+
+                            <TextView
+                                android:id="@+id/tv_consumervalue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:singleLine="true"
+                                android:text=""
+                                android:textColor="@color/active_text"
+                                android:textSize="@dimen/txtsize_14">
+
+                            </TextView>
+
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/ll_location"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/ll_consumer"
+                            android:layout_marginStart="@dimen/dimen_16dp"
+                            android:layout_marginTop="@dimen/dimen_10dp"
+                            android:layout_marginEnd="@dimen/dimen_10dp"
+                            android:orientation="horizontal"
+                            android:visibility="visible">
+
+                            <TextView
+                                android:id="@+id/tv_locationName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Location  :  "
+                                android:textSize="@dimen/txtsize_14">
+
+                            </TextView>
+
+                            <TextView
+                                android:id="@+id/tv_location"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:singleLine="true"
+                                android:text=""
+                                android:textColor="@color/active_text"
+                                android:textSize="@dimen/txtsize_14">
+
+                            </TextView>
+
+
+                        </LinearLayout>
 
 
                         <LinearLayout
                             android:id="@+id/ll_serviceName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/ll_provider"
+                            android:layout_below="@id/ll_location"
                             android:layout_marginTop="@dimen/dimen_10dp">
 
                             <LinearLayout
@@ -363,7 +431,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
-                                        android:text="Persons Ahead"
+                                        android:text="People in Line"
                                         android:textColor="@color/title_grey"
                                         android:textSize="13sp">
 
