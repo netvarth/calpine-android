@@ -1270,7 +1270,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                     "fonts/Montserrat_Bold.otf");
                             txtprepay.setTypeface(tyface);
                             txtprepayamount.setTypeface(tyface);
-                            String firstWord = "Prepayment Amount: ";
+                            String firstWord = "";
                             String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinPrePaymentAmount()));
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
