@@ -327,7 +327,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/snap/android-studio/90/android-studio/plugins/android/lib/android.jar!/images/material/icons/materialiconsoutlined/looks_one/outline_looks_one_24.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio1/plugins/android/lib/android.jar!/images/material/icons/materialicons/person_add/baseline_person_add_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -337,9 +337,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="aaaaaa" />
-                            <entry key="outputName" value="ic_outline_looks_one_24" />
-                            <entry key="sourceFile" value="$USER_HOME$" />
+                            <entry key="color" value="232faa" />
+                            <entry key="outputName" value="ic_baseline_person_add_24" />
+                            <entry key="sourceFile" value="C:\Users\dell" />
                           </map>
                         </option>
                       </PersistentState>

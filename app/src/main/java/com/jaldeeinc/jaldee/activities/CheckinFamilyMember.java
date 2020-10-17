@@ -233,7 +233,7 @@ public class CheckinFamilyMember extends AppCompatActivity {
                                 }
 
 
-                                mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(btn_changemem, LCheckList, multiple, LCheckList, mContext, mActivity);
+                               // mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(btn_changemem, LCheckList, multiple, LCheckList, mContext, mActivity);
                             } else {
                                 if (memID == 0) {
                                     memID = consumerID;
@@ -241,7 +241,7 @@ public class CheckinFamilyMember extends AppCompatActivity {
 
 
                                 Config.logV("memID @@@@@" + memID);
-                                mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(btn_changemem, update, memID, multiple, LuserProfileList, mContext, mActivity);
+                              //  mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(btn_changemem, update, memID, multiple, LuserProfileList, mContext, mActivity);
                             }
 
                             mRecycleFamily.setAdapter(mFamilyAdpater);

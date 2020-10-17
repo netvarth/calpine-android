@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/dimen_10dp"
+    >
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/close"
+        android:layout_gravity="end"
+        android:padding="@dimen/padding5"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/padding5"
+        app:tint="@color/gray">
+
+    </ImageView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/ll_changemember">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_5dp"
+        android:orientation="horizontal">
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Patient"
+        android:textSize="@dimen/dimen_18sp"
+        android:padding="@dimen/dimen_5dp"
+        android:layout_weight="0.20"/>
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/addmember"
+        android:src="@drawable/ic_baseline_person_add_24"
+        android:layout_weight="0.80"
+        />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:paddingLeft="@dimen/dimen_5dp"
+        android:id="@+id/recycle_familyMember"
+
+        />
+
+        <ImageView
+        android:id="@+id/lImage"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:src="@drawable/dash_gap"
+
+        />
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_5dp"
+        android:text="You get notifications to"
+        android:textSize="@dimen/dimen_18sp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/dimen_5dp">
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone"
+            android:padding="@dimen/dimen_5dp"
+            android:textSize="@dimen/dimen_15sp"/>
+
+        <EditText
+            android:id="@+id/edtPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:padding="@dimen/dimen_5dp"
+            android:textSize="@dimen/dimen_15sp"
+            android:background="@drawable/edittext_color"
+            android:hint="Enter your Phone Number"
+            android:textColor="@color/black"
+            android:inputType="phone"
+            android:maxLength="10"
+            app:tint="@color/spinnerbg"
+            />
+    </LinearLayout>
+    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+        android:id="@+id/error_mesg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_70dp"
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:text="* This field is mandatory"
+        android:textSize="@dimen/txtsize_12"
+        android:visibility="gone"
+        android:textColor="@color/red">
+
+    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/dimen_5dp">
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:padding="@dimen/dimen_5dp"
+            android:textSize="@dimen/dimen_15sp"/>
+
+        <EditText
+            android:id="@+id/edtMail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_8dp"
+            android:padding="@dimen/dimen_5dp"
+            android:textSize="@dimen/dimen_15sp"
+            android:background="@drawable/edittext_color"
+            android:hint="Enter your Email"
+            android:textColor="@color/black"
+            android:inputType="textEmailAddress"
+            app:tint="@color/gray"/>
+    </LinearLayout>
+    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+        android:id="@+id/errormesg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_70dp"
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:text="* This field is mandatory"
+        android:textSize="@dimen/txtsize_12"
+        android:visibility="gone"
+        android:textColor="@color/red">
+
+    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/padding40"
+        android:layout_marginTop="@dimen/padding20"
+        android:layout_marginLeft="@dimen/dimen_10dp"
+        android:layout_marginBottom="@dimen/padding25"
+        android:textSize="@dimen/dimen_12sp"
+        android:textColor="@color/white"
+        android:text="Save"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:padding="@dimen/padding5"
+        android:background="@drawable/curved_save"
+        android:fontFamily="@font/customfont"
+        android:layout_gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/ll_addmember"
+        android:padding="@dimen/dimen_5dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_5dp">
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="First Name"
+                android:padding="@dimen/dimen_5dp"
+                android:textSize="@dimen/dimen_15sp"/>
+
+            <EditText
+                android:id="@+id/addfirstname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:padding="@dimen/dimen_5dp"
+                android:textSize="@dimen/dimen_15sp"
+                android:background="@drawable/edittext_color"
+                android:hint=""
+                android:textColor="@color/black"
+                android:inputType="textPersonName"
+                android:maxLength="10"
+                app:tint="@color/spinnerbg"
+                />
+        </LinearLayout>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            android:id="@+id/error_mesg_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="95dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:text="* This field is mandatory"
+            android:textSize="@dimen/txtsize_12"
+            android:visibility="gone"
+            android:textColor="@color/red">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_5dp">
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last Name"
+                android:padding="@dimen/dimen_5dp"
+                android:textSize="@dimen/dimen_15sp"/>
+
+            <EditText
+                android:id="@+id/addlastname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:padding="@dimen/dimen_5dp"
+                android:textSize="@dimen/dimen_15sp"
+                android:background="@drawable/edittext_color"
+                android:hint=""
+                android:textColor="@color/black"
+                android:inputType="textPersonName"
+                app:tint="@color/gray"/>
+        </LinearLayout>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            android:id="@+id/errormesg_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="95dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:text="* This field is mandatory"
+            android:textSize="@dimen/txtsize_12"
+            android:visibility="gone"
+            android:textColor="@color/red">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+        <Button
+            android:id="@+id/btnAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/padding40"
+            android:layout_marginTop="@dimen/padding20"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/padding25"
+            android:textSize="@dimen/dimen_12sp"
+            android:textColor="@color/white"
+            android:text="Save"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:padding="@dimen/padding5"
+            android:background="@drawable/curved_save"
+            android:fontFamily="@font/customfont"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+</LinearLayout>

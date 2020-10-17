@@ -3,6 +3,8 @@ package com.jaldeeinc.jaldee.adapter;
 import android.app.Activity;
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 
+import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckinFamilyMember;
 import com.jaldeeinc.jaldee.common.Config;
@@ -30,6 +33,7 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
     Context mContext;
     private RadioButton lastCheckedRB = null;
     private List<FamilyArrayModel> checkedfamilyList=new ArrayList<>();
+    private IFamillyListSelected iFamillyListSelected;
 
     //private List<FamilyArrayModel> checkeditemList=new ArrayList<>();
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -40,6 +44,8 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
             super(view);
             name = (RadioButton) view.findViewById(R.id.Rmemeber);
             Checkmemeber = (CheckBox) view.findViewById(R.id.Checkmemeber);
+            Typeface font = Typeface.createFromAsset(mContext.getAssets(),  "fonts/JosefinSans-Regular.ttf");
+            Checkmemeber.setTypeface(font);
 
 
         }
@@ -50,7 +56,7 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
     int memId,update;
     Button changemem;
 
-    public CheckIn_FamilyMemberListAdapter(Button changemem,int update,int memId, boolean multiple, List<FamilyArrayModel> mfamilyList, Context mContext, Activity mActivity) {
+    public CheckIn_FamilyMemberListAdapter(Button changemem,int update,int memId, boolean multiple, List<FamilyArrayModel> mfamilyList, Context mContext, Activity mActivity,IFamillyListSelected iFamillyListSelected) {
         this.mContext = mContext;
         this.familyList = mfamilyList;
         this.activity = mActivity;
@@ -58,19 +64,21 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
         this.memId = memId;
         this.update=update;
         this.changemem=changemem;
+        this.iFamillyListSelected =iFamillyListSelected;
         Config.logV("multiplemem------222---------------" + multiple);
 
     }
 
     ArrayList<FamilyArrayModel> CheckList = new ArrayList<>();
 
-    public CheckIn_FamilyMemberListAdapter(Button changemem,ArrayList<FamilyArrayModel> mCheckList, boolean multiple, List<FamilyArrayModel> mfamilyList, Context mContext, Activity mActivity) {
+    public CheckIn_FamilyMemberListAdapter(Button changemem,ArrayList<FamilyArrayModel> mCheckList, boolean multiple, List<FamilyArrayModel> mfamilyList, Context mContext, Activity mActivity,IFamillyListSelected iFamillyListSelected) {
         this.mContext = mContext;
         this.familyList = mfamilyList;
         this.activity = mActivity;
         this.multiple = multiple;
         this.CheckList = mCheckList;
         this.changemem=changemem;
+        this.iFamillyListSelected=iFamillyListSelected;
 
 
     }
@@ -147,7 +155,8 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
 
               //  familyList.get(position).setCheck(isChecked);
                 //familyList.get(myViewHolder.getAdapterPosition()).setCheck(isChecked);
-                CheckinFamilyMember.changeMemberName(myViewHolder.name.getText().toString(), familylist.getId());
+               // CheckinFamilyMember.changeMemberName(myViewHolder.name.getText().toString(), familylist.getId());
+                iFamillyListSelected.changeMemberName(myViewHolder.name.getText().toString(), familylist.getId());
             }
         });
 
@@ -172,12 +181,13 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
                         checkedfamilyList.add(family);
                     }
                 }
-                CheckinFamilyMember.CheckedFamilyList(checkedfamilyList);
+               // CheckinFamilyMember.CheckedFamilyList(checkedfamilyList);
+                iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
 
                 Config.logV("Check Family List-------------"+checkedfamilyList.size());
                 if(checkedfamilyList.size()>0){
-                    changemem.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
-                    changemem.setTextColor(mContext.getResources().getColor(R.color.app_background));
+                    changemem.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
+                    changemem.setTextColor(mContext.getResources().getColor(R.color.white));
                     changemem.setEnabled(true);
                 }else{
                     changemem.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));

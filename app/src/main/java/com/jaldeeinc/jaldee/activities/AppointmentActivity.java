@@ -55,6 +55,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
+import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.Interface.IMobileSubmit;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
@@ -74,6 +76,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomToolTip;
 import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.custom.EnquiryDialog;
+import com.jaldeeinc.jaldee.custom.FamilyMemberDialog;
 import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
 import com.jaldeeinc.jaldee.custom.SlotsDialog;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
@@ -146,7 +149,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AppointmentActivity extends AppCompatActivity implements PaymentResultWithDataListener, ISlotInfo, IMailSubmit, IPaymentResponse, IMobileSubmit, ISendMessage {
+public class AppointmentActivity extends AppCompatActivity implements PaymentResultWithDataListener, ISlotInfo, IMailSubmit, IPaymentResponse, IMobileSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected {
 
     @BindView(R.id.tv_providerName)
     CustomTextViewSemiBold tvProviderName;
@@ -256,6 +259,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     private int serviceId;
     private String serviceName;
     private String phoneNumber;
+    private String emailId;
     private String serviceDescription;
     private ServiceInfo serviceInfo = new ServiceInfo();
     SearchTerminology mSearchTerminology;
@@ -314,6 +318,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     private AddNotes addNotes;
     private String userMessage = "";
     String appEncId;
+    private FamilyMemberDialog familyMemberDialog;
+    private IFamilyMemberDetails iFamilyMemberDetails;
 
 
     @Override
@@ -328,6 +334,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         iMobileSubmit = this;
         paymentResponse = this;
         iSendMessage = this;
+        iFamilyMemberDetails = this;
 
         // getting necessary details from intent
         Intent intent = getIntent();
@@ -488,18 +495,18 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             @Override
             public void onClick(View v) {
 
-                String mailId = "";
-                if (tvEmail.getText().toString() != null) {
-                    mailId = tvEmail.getText().toString();
-                }
-                emailEditWindow = new EmailEditWindow(AppointmentActivity.this, profileDetails, iMailSubmit, mailId);
-                emailEditWindow.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
-                emailEditWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                emailEditWindow.show();
-                DisplayMetrics metrics = AppointmentActivity.this.getResources().getDisplayMetrics();
-                int width = (int) (metrics.widthPixels * 1);
-                emailEditWindow.getWindow().setGravity(Gravity.BOTTOM);
-                emailEditWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                String mailId = "";
+//                if (tvEmail.getText().toString() != null) {
+//                    mailId = tvEmail.getText().toString();
+//                }
+//                emailEditWindow = new EmailEditWindow(AppointmentActivity.this, profileDetails, iMailSubmit, mailId);
+//                emailEditWindow.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+//                emailEditWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//                emailEditWindow.show();
+//                DisplayMetrics metrics = AppointmentActivity.this.getResources().getDisplayMetrics();
+//                int width = (int) (metrics.widthPixels * 1);
+//                emailEditWindow.getWindow().setGravity(Gravity.BOTTOM);
+//                emailEditWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
             }
         });
 
@@ -507,31 +514,39 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             @Override
             public void onClick(View v) {
 
-                if (tvNumber.getText().toString() != null) {
-                    mobileNumberDialog = new MobileNumberDialog(AppointmentActivity.this, profileDetails, iMobileSubmit, tvNumber.getText().toString());
-                    mobileNumberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
-                    mobileNumberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    mobileNumberDialog.show();
-                    DisplayMetrics metrics = AppointmentActivity.this.getResources().getDisplayMetrics();
-                    int width = (int) (metrics.widthPixels * 1);
-                    mobileNumberDialog.getWindow().setGravity(Gravity.BOTTOM);
-                    mobileNumberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-                }
+//                if (tvNumber.getText().toString() != null) {
+//                    mobileNumberDialog = new MobileNumberDialog(AppointmentActivity.this, profileDetails, iMobileSubmit, tvNumber.getText().toString());
+//                    mobileNumberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+//                    mobileNumberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//                    mobileNumberDialog.show();
+//                    DisplayMetrics metrics = AppointmentActivity.this.getResources().getDisplayMetrics();
+//                    int width = (int) (metrics.widthPixels * 1);
+//                    mobileNumberDialog.getWindow().setGravity(Gravity.BOTTOM);
+//                    mobileNumberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                }
             }
         });
 
         llEditDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                 familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this,familyMEmID,tvEmail.getText().toString(),tvNumber.getText().toString(),serviceInfo.getIsPrePayment(),iFamilyMemberDetails,profileDetails,multiplemem,0);
+                 familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+                 familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                 familyMemberDialog.show();
+                 DisplayMetrics metrics = AppointmentActivity.this.getResources().getDisplayMetrics();
+                 int width = (int) (metrics.widthPixels * 1);
+                 familyMemberDialog.setCancelable(false);
+                 familyMemberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-                Intent familyIntent = new Intent(AppointmentActivity.this, CheckinFamilyMemberAppointment.class);
-                familyIntent.putExtra("firstname", mFirstName);
-                familyIntent.putExtra("lastname", mLastName);
-                familyIntent.putExtra("consumerID", consumerID);
-                familyIntent.putExtra("multiple", multiplemem);
-                familyIntent.putExtra("memberID", familyMEmID);
-                familyIntent.putExtra("update", 0);
-                startActivity(familyIntent);
+//                Intent familyIntent = new Intent(AppointmentActivity.this, CheckinFamilyMemberAppointment.class);
+//                familyIntent.putExtra("firstname", mFirstName);
+//                familyIntent.putExtra("lastname", mLastName);
+//                familyIntent.putExtra("consumerID", consumerID);
+//                familyIntent.putExtra("multiple", multiplemem);
+//                familyIntent.putExtra("memberID", familyMEmID);
+//                familyIntent.putExtra("update", 0);
+//                startActivity(familyIntent);
 
             }
         });
@@ -965,7 +980,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             etVirtualNumber.setText(profileDetails.getUserprofile().getPrimaryMobileNo());
                             phoneNumber = tvNumber.getText().toString();
                             if (profileDetails.getUserprofile().getEmail() != null) {
-                                tvEmail.setText(profileDetails.getUserprofile().getEmail());
+                                emailId = profileDetails.getUserprofile().getEmail();
+                                tvEmail.setText(emailId);
                             } else {
                                 tvEmail.setHint("Enter your Mail Id");
                             }
@@ -1070,7 +1086,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                             sector = mBusinessDataList.getServiceSector().getDomain();
                             subsector = mBusinessDataList.getServiceSubSector().getSubDomain();
-                            APISector(sector, subsector);
+                        //
+                            //    APISector(sector, subsector);
                         }
 
                     }
@@ -1397,7 +1414,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
             }
             waitlistArray.put(waitobj);
-
 
             queueobj.putOpt("service", sejsonobj);
             // queueobj.putOpt("queue", qjsonObj);
@@ -1902,8 +1918,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     @Override
     public void mailUpdated() {
-        String mail = SharedPreference.getInstance(mContext).getStringValue("email", "");
-        tvEmail.setText(mail);
+        emailId = SharedPreference.getInstance(mContext).getStringValue("email", "");
+        tvEmail.setText(emailId);
 
         //  ApiGetProfileDetail();
 
@@ -2010,8 +2026,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     @Override
     public void mobileUpdated() {
-        String phone = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
-        tvNumber.setText(phone);
+        phoneNumber = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+        tvNumber.setText(phoneNumber);
     }
 
 
@@ -2363,4 +2379,33 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         tipWindow.showToolTip(cvAddNote, CustomToolTip.DRAW_ARROW_DEFAULT_CENTER, false);
     }
 
+    @Override
+    public void sendFamilyMemberDetails(int consumerId, String firstName, String lastName, String phone, String email) {
+        mFirstName = firstName;
+        mLastName = lastName;
+        phoneNumber = phone;
+        familyMEmID = consumerId;
+        emailId = email;
+        tvNumber.setText(phoneNumber);
+        if(!emailId.equalsIgnoreCase("")) {
+            tvEmail.setText(emailId);
+        }
+        else{
+            tvEmail.setText("");
+        }
+        tvConsumerName.setText(mFirstName);
+
+
+    }
+
+    @Override
+    public void changeMemberName(String name, int id) {
+
+    }
+
+    @Override
+    public void CheckedFamilyList(List<FamilyArrayModel> familyList) {
+        MultiplefamilyList.addAll(familyList);
+
+    }
 }
