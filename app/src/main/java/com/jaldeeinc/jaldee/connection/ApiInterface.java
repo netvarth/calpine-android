@@ -85,7 +85,7 @@ public interface ApiInterface {
     @GET("consumer/{mobile}/check")
     Call<ResponseBody> chkNewUser(@Path("mobile") String mobile);
 
-    @Headers({"Accept: application/json","User-Agent: android"})
+    @Headers({"Accept: application/json", "User-Agent: android"})
     @POST("consumer")
     Call<ResponseBody> getSignUpResponse(@Body RequestBody jsonObj);
 
@@ -93,16 +93,16 @@ public interface ApiInterface {
     @Headers("User-Agent: android")
     Call<ResponseBody> OtpVerify(@Path("otp") String otp);
 
-    @Headers({"Accept: application/json","User-Agent: android"})
+    @Headers({"Accept: application/json", "User-Agent: android"})
     @PUT("consumer/{otp}/activate")
     Call<ResponseBody> SetPassword(@Path("otp") String otp, @Body RequestBody jsonObj);
 
 
-    @Headers({"Accept: application/json","User-Agent: android"})
+    @Headers({"Accept: application/json", "User-Agent: android"})
     @POST("consumer/login")
     Call<LoginResponse> LoginResponse(@Body RequestBody jsonObj);
 
-    @Headers({"Accept: application/json","User-Agent: android"})
+    @Headers({"Accept: application/json", "User-Agent: android"})
     @POST("consumer/login")
     Single<LoginResponse> login(@Body RequestBody jsonObj);
 
@@ -141,22 +141,22 @@ public interface ApiInterface {
     Call<ShareLocation> UpdateShareLiveLocation(@Path("uuid") String uuid, @Query("account") String account, @Body RequestBody jsonObj);
 
     @PUT("consumer/waitlist/update/travelmode/{uuid}")
-    Call<ResponseBody> PutTravelMode(@Path("uuid") String uuid,@Query("account") Integer account,@Body RequestBody jsonObj);
+    Call<ResponseBody> PutTravelMode(@Path("uuid") String uuid, @Query("account") Integer account, @Body RequestBody jsonObj);
 
     @PUT("consumer/waitlist/update/travelmode/{uuid}")
-    Call<ShareLocation> PutTravelModes(@Path("uuid") String uuid,@Query("account") Integer account,@Body RequestBody jsonObj);
+    Call<ShareLocation> PutTravelModes(@Path("uuid") String uuid, @Query("account") Integer account, @Body RequestBody jsonObj);
 
     @PUT("consumer/waitlist/update/latlong/{uuid}")
-    Call<ResponseBody> UpdateLatLong(@Path("uuid") String uuid,@Query("account") Integer account,@Body RequestBody jsonObj);
+    Call<ResponseBody> UpdateLatLong(@Path("uuid") String uuid, @Query("account") Integer account, @Body RequestBody jsonObj);
 
     @PUT("consumer/waitlist/start/mytracking/{uuid}")
-    Call<ResponseBody> StartTracking(@Path("uuid") String uuid,@Query("account") Integer account);
+    Call<ResponseBody> StartTracking(@Path("uuid") String uuid, @Query("account") Integer account);
 
     @DELETE("consumer/waitlist/stop/mytracking/{uuid}")
-    Call<ResponseBody> StopTracking(@Path("uuid") String uuid,@Query("account") Integer account);
+    Call<ResponseBody> StopTracking(@Path("uuid") String uuid, @Query("account") Integer account);
 
     @GET("consumer/waitlist/status/mytracking/{uuid}")
-    Call<ResponseBody> StatusTracking(@Path("uuid") String uuid,@Query("account") Integer account);
+    Call<ResponseBody> StatusTracking(@Path("uuid") String uuid, @Query("account") Integer account);
 
 
     @POST("consumer/appointment/saveMyLoc/{uuid}")
@@ -166,22 +166,22 @@ public interface ApiInterface {
     Call<ShareLocation> UpdateShareLiveLocationAppointment(@Path("uuid") String uuid, @Query("account") String account, @Body RequestBody jsonObj);
 
     @PUT("consumer/appointment/update/travelmode/{uuid}")
-    Call<ResponseBody> PutTravelModeAppointment(@Path("uuid") String uuid,@Query("account") Integer account,@Body RequestBody jsonObj);
+    Call<ResponseBody> PutTravelModeAppointment(@Path("uuid") String uuid, @Query("account") Integer account, @Body RequestBody jsonObj);
 
     @PUT("consumer/appointment/update/travelmode/{uuid}")
-    Call<ShareLocation> PutTravelModesAppointment(@Path("uuid") String uuid,@Query("account") Integer account,@Body RequestBody jsonObj);
+    Call<ShareLocation> PutTravelModesAppointment(@Path("uuid") String uuid, @Query("account") Integer account, @Body RequestBody jsonObj);
 
     @PUT("consumer/appointment/update/latlong/{uuid}")
-    Call<ResponseBody> UpdateLatLongAppointment(@Path("uuid") String uuid,@Query("account") Integer account,@Body RequestBody jsonObj);
+    Call<ResponseBody> UpdateLatLongAppointment(@Path("uuid") String uuid, @Query("account") Integer account, @Body RequestBody jsonObj);
 
     @PUT("consumer/appointment/start/mytracking/{uuid}")
-    Call<ResponseBody> StartTrackingAppointment(@Path("uuid") String uuid,@Query("account") Integer account);
+    Call<ResponseBody> StartTrackingAppointment(@Path("uuid") String uuid, @Query("account") Integer account);
 
     @DELETE("consumer/appointment/stop/mytracking/{uuid}")
-    Call<ResponseBody> StopTrackingAppointment(@Path("uuid") String uuid,@Query("account") Integer account);
+    Call<ResponseBody> StopTrackingAppointment(@Path("uuid") String uuid, @Query("account") Integer account);
 
     @GET("consumer/appointment/status/mytracking/{uuid}")
-    Call<ResponseBody> StatusTrackingAppointment(@Path("uuid") String uuid,@Query("account") Integer account);
+    Call<ResponseBody> StatusTrackingAppointment(@Path("uuid") String uuid, @Query("account") Integer account);
 
     @PUT("consumer/login/{otp}/verifyLogin")
     Call<ResponseBody> ChngeEmailOtp(@Path("otp") String otp, @Body RequestBody jsonObj);
@@ -217,10 +217,10 @@ public interface ApiInterface {
 
 
     @GET("consumer/waitlist/{uuid}")
-    Call<ActiveCheckIn> getActiveCheckInUUID(@Path("uuid") String uuid,@Query("account") String account);
+    Call<ActiveCheckIn> getActiveCheckInUUID(@Path("uuid") String uuid, @Query("account") String account);
 
     @GET("consumer/appointment/{uuid}")
-    Call<ActiveAppointment> getActiveAppointmentUUID(@Path("uuid") String uuid,@Query("account") String account);
+    Call<ActiveAppointment> getActiveAppointmentUUID(@Path("uuid") String uuid, @Query("account") String account);
 
 
     @GET("consumer/donation/{uuid}")
@@ -241,7 +241,7 @@ public interface ApiInterface {
 
 
     @GET("{consumerID}/businessProfile.json")
-    Call<SearchViewDetail>  getSearchViewDetail(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+    Call<SearchViewDetail> getSearchViewDetail(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
     @GET("{uniqueId}/{userId}/providerBusinessProfile.json")
     Call<SearchViewDetail> getUserBusinessProfile(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
@@ -329,7 +329,6 @@ public interface ApiInterface {
     Call<ArrayList<ScheduleList>> getSchedule(@Path("id") String id);
 
 
-
     @GET("provider/business/{id}")
     Call<String> getUniqueID(@Path("id") String id);
 
@@ -353,16 +352,16 @@ public interface ApiInterface {
 
 
     @GET("consumer/waitlist/history")
-    Call<ArrayList<ActiveCheckIn>> getCheckInList(@QueryMap(encoded = true) Map<String, String>   query);
+    Call<ArrayList<ActiveCheckIn>> getCheckInList(@QueryMap(encoded = true) Map<String, String> query);
 
     @GET("consumer/appointment/history")
-    Call<ArrayList<ActiveAppointment>> getAppointmentList(@QueryMap(encoded = true) Map<String, String>   query);
+    Call<ArrayList<ActiveAppointment>> getAppointmentList(@QueryMap(encoded = true) Map<String, String> query);
 
     @GET("consumer/waitlist/future")
-    Call<ArrayList<ActiveCheckIn>> getFutureCheckInList(@QueryMap(encoded = true) Map<String, String>   query);
+    Call<ArrayList<ActiveCheckIn>> getFutureCheckInList(@QueryMap(encoded = true) Map<String, String> query);
 
     @GET("consumer/appointment/future")
-    Call<ArrayList<ActiveAppointment>> getFutureAppointmentList(@QueryMap(encoded = true) Map<String, String>   query);
+    Call<ArrayList<ActiveAppointment>> getFutureAppointmentList(@QueryMap(encoded = true) Map<String, String> query);
 
 
     @POST("consumer/communications")
@@ -412,7 +411,7 @@ public interface ApiInterface {
 
 
     @POST("consumer/jaldee/coupons/{coupon}/{ynwuuid}")
-    Call<BillModel> getBillCoupon(@Path("coupon") String coupon,@Path("ynwuuid") String uuid, @Query("account") String account);
+    Call<BillModel> getBillCoupon(@Path("coupon") String coupon, @Path("ynwuuid") String uuid, @Query("account") String account);
 
 
     @DELETE("consumer/waitlist/{ynwuuid}")
@@ -498,10 +497,10 @@ public interface ApiInterface {
     Call<RefinedFilters> getMoreFilters(@Path("subdomain") String subdomain);
 
     @GET("ynwConf/refinedFilters/{domain}/{subdomain}")
-    Call<RefinedFilters> getSubDomainMoreFilters(@Path("subdomain") String subdomain,@Path("domain") String domain);
+    Call<RefinedFilters> getSubDomainMoreFilters(@Path("subdomain") String subdomain, @Path("domain") String domain);
 
     @GET("consumer/waitlist/providerByDepartmentId/{departmentId}")
-    Call<ArrayList<SearchUsers>> getUsers(@Path("departmentId")  int departmentId, @Query("account") int account);
+    Call<ArrayList<SearchUsers>> getUsers(@Path("departmentId") int departmentId, @Query("account") int account);
 
     @GET("consumer/waitlist/{uuid}/meetingDetails/{mode}")
     Call<TeleServiceCheckIn> getMeetingDetails(@Path("uuid") String uuid, @Path("mode") String mode, @Query("account") int account);
@@ -511,6 +510,9 @@ public interface ApiInterface {
 
     @GET("consumer/appointment/schedule/date/{date}/location/{location}/service/{service}")
     Call<ArrayList<SlotsData>> getSlotsOnDate(@Path("date") String date, @Path("location") int location, @Path("service") int service, @Query("account") int accountId);
+
+    @PUT("consumer/appointment/reschedule")
+    Call<ResponseBody> reScheduleAppointment(@Query("account") int id, @Body RequestBody jsonObj);
 
     //RxJava calls
 

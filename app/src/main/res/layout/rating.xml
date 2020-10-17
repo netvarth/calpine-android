@@ -28,7 +28,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=" Rate"
+            android:text=" Rate *"
             android:layout_marginTop="@dimen/padding15"
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_hint" />
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding2"
-            android:text=" Message *"
+            android:text=" Message"
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_hint" />
 

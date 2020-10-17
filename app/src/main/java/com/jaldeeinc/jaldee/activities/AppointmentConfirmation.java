@@ -28,6 +28,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
     CardView cvOk;
     private String terminology;
     ImageView icon_service;
+    private TextView tv_consumer,tv_location;
 
     @Override
     public void onBackPressed() {
@@ -66,6 +67,14 @@ public class AppointmentConfirmation extends AppCompatActivity {
                 String term = terminology;
                 term = term.substring(0, 1).toUpperCase() + term.substring(1).toLowerCase();
                 tvTerm.setText(term);
+            }
+
+            if(activeCheckInInfo.getLocation()!=null){
+                tv_location.setText(activeCheckInInfo.getLocation().getPlace());
+            }
+
+            if(activeCheckInInfo.getAppmtFor()!=null){
+                tv_consumer.setText(activeCheckInInfo.getAppmtFor().get(0).getFirstName() + " " + activeCheckInInfo.getAppmtFor().get(0).getLastName());
             }
 
             if (activeCheckInInfo.getService() != null) {
@@ -216,6 +225,8 @@ public class AppointmentConfirmation extends AppCompatActivity {
         cvOk = findViewById(R.id.cv_ok);
         tvTerm = findViewById(R.id.tv_term);
         icon_service = findViewById(R.id.serviceicon);
+        tv_consumer = findViewById(R.id.tv_consumervalue);
+        tv_location = findViewById(R.id.tv_location);
 
     }
 

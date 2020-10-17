@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.RescheduleActivity;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
@@ -85,7 +86,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
         Button btn_pay;
         LinearLayout layout_activeAppointment;
         ImageView icon_service;
-        CardView cvCard;
+        CardView cvCard,cvReschedule;
 
 
         public MyViewHolder(View view) {
@@ -106,6 +107,8 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
             layout_activeAppointment = (LinearLayout) view.findViewById(R.id.activecheckin);
             icon_service =(ImageView) view.findViewById(R.id.serviceicon);
             cvCard = view.findViewById(R.id.card);
+            cvReschedule = view.findViewById(R.id.cv_reschedule);
+
         }
     }
 
@@ -171,6 +174,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
         if (activelist.getApptStatus().equalsIgnoreCase("done")) {
             myViewHolder.tv_status.setText("Completed");
             myViewHolder.tv_status.setVisibility(View.VISIBLE);
+            myViewHolder.cvReschedule.setVisibility(View.GONE);
             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.green));
         }
 
@@ -184,21 +188,25 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
                 myViewHolder.tv_status.setVisibility(View.VISIBLE);
                 myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
             }
+            myViewHolder.cvReschedule.setVisibility(View.GONE);
         }
 
         if (activelist.getApptStatus().equalsIgnoreCase("Confirmed")) {
             myViewHolder.tv_status.setVisibility(View.GONE);
+            myViewHolder.cvReschedule.setVisibility(View.VISIBLE);
         }
 
         if (activelist.getApptStatus().equalsIgnoreCase("started")) {
             myViewHolder.tv_status.setText("Started");
             myViewHolder.tv_status.setVisibility(View.VISIBLE);
+            myViewHolder.cvReschedule.setVisibility(View.GONE);
             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.cyan));
         }
 
         if (activelist.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
             myViewHolder.tv_status.setText("Prepayment Pending");
             myViewHolder.tv_status.setVisibility(View.VISIBLE);
+            myViewHolder.cvReschedule.setVisibility(View.GONE);
             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.gray));
         }
 
@@ -279,6 +287,17 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
                 }
             }
         });
+
+            // click action for reSchedule
+            myViewHolder.cvReschedule.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent rescheduleIntent = new Intent(mContext, RescheduleActivity.class);
+                    rescheduleIntent.putExtra("appointmentInfo",activeChekinList.get(position));
+                    mContext.startActivity(rescheduleIntent);
+                }
+            });
 
 
 

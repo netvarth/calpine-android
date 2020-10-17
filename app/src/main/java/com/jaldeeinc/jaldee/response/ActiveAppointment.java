@@ -134,6 +134,7 @@ public class ActiveAppointment implements Serializable {
     String amountPaid;
     double amountDue;
     String batchId;
+    String phoneNo;
 
     public String getPhone() {
         return Phone;
@@ -1072,5 +1073,11 @@ public class ActiveAppointment implements Serializable {
     private ProviderDetails provider;
 
 
+    public String getPhoneNo() {
+        return phoneNo;
+    }
 
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
 }

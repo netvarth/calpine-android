@@ -280,7 +280,7 @@
                                 android:layout_alignParentBottom="true"
                                 android:layout_marginEnd="@dimen/padding15"
                                 android:paddingBottom="@dimen/padding15"
-                                android:text="Change time"
+                                android:text="Change"
                                 android:textAllCaps="true"
                                 android:textColor="@color/location_theme"
                                 android:textSize="@dimen/txtsize_12">
@@ -351,7 +351,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="Booking for"
-                    android:textAllCaps="true"
+                    android:textAllCaps="false"
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/txtsize_12">
 
@@ -365,7 +365,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/dimen_15dp">
 
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                         android:id="@+id/tv_edit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -375,7 +375,7 @@
                         android:textColor="@color/location_theme"
                         android:textSize="@dimen/txtsize_12">
 
-                    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
                     <ImageView
                         android:layout_width="@dimen/padding15"
@@ -691,7 +691,7 @@
                 android:layout_gravity="center"
                 android:text="Confirm Appointment"
                 android:textColor="@color/white"
-                android:textSize="@dimen/txtsize_14">
+                android:textSize="@dimen/dimen_18sp">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 

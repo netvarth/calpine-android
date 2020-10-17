@@ -38,6 +38,7 @@ import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckinShareLocationAppointment;
 import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
+import com.jaldeeinc.jaldee.activities.RescheduleActivity;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
 import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
 import com.jaldeeinc.jaldee.custom.MeetingInfo;
@@ -329,6 +330,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         CardView cvZoomDetails = view.findViewById(R.id.cv_ZoommeetDetails);
         CardView cvWhatsppDetails = view.findViewById(R.id.cv_whatsppDetails);
         CardView cvPhoneDetails = view.findViewById(R.id.cv_phoneMeetDetails);
+        CardView cvReschedule = view.findViewById(R.id.cv_reschedule);
         ImageView icon_service = view.findViewById(R.id.serviceicon);
         LinearLayout llprovider = view.findViewById(R.id.ll_providerName);
         TextView tvProviderName = view.findViewById(R.id.tv_providerName);
@@ -1785,7 +1787,22 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
             tv_status.setTextColor(mContext.getResources().getColor(R.color.purple));
             tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.purple));
             tv_check_in.setVisibility(View.GONE);
+
+            if (header.equalsIgnoreCase("today") || header.equalsIgnoreCase("future")){
+                cvReschedule.setVisibility(View.VISIBLE);
+            }
+            else {
+                cvReschedule.setVisibility(View.GONE);
+            }
         }
+
+//        if (activelist.getApptStatus().equalsIgnoreCase("Confirmed") && header.equalsIgnoreCase("today") || header.equalsIgnoreCase("future")){
+//            cvReschedule.setVisibility(View.VISIBLE);
+//        }
+//        else {
+//
+//            cvReschedule.setVisibility(View.GONE);
+//        }
 
         if (activelist.getApptStatus().equalsIgnoreCase("Started")) {
             tv_check_in.setVisibility(View.GONE);
@@ -1940,6 +1957,15 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
 //            tv_status.setVisibility(View.GONE);
 //        }
 
+        cvReschedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent rescheduleIntent = new Intent(mContext, RescheduleActivity.class);
+                rescheduleIntent.putExtra("appointmentInfo",activelist);
+                mContext.startActivity(rescheduleIntent);
+            }
+        });
 
         btn_pay.setOnClickListener(new View.OnClickListener() {
             @Override

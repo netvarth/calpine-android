@@ -27,6 +27,7 @@ public class CheckInConfirmation extends AppCompatActivity {
     private CardView cvPeople, cvOk;
     String terminology;
     ImageView icon_service;
+    private TextView tvCheckin,tvConsumerName,tvLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +145,21 @@ public class CheckInConfirmation extends AppCompatActivity {
                 llProvider.setVisibility(View.GONE);
             }
 
+            if(activeCheckInInfo.getQueue()!=null && activeCheckInInfo.getQueue().getLocation()!=null){
+                tvLocation.setText(activeCheckInInfo.getQueue().getLocation().getPlace());
+            }
+
+            if(activeCheckInInfo.getShowToken()!=null && activeCheckInInfo.getShowToken().equalsIgnoreCase("true")){
+                tvCheckin.setText("Token for : ");
+            }
+            else{
+                tvCheckin.setText("Check-in for : ");
+            }
+
+            if(activeCheckInInfo.getWaitlistingFor()!=null){
+                tvConsumerName.setText(activeCheckInInfo.getWaitlistingFor().get(0).getFirstName() + " " + activeCheckInInfo.getWaitlistingFor().get(0).getLastName());
+            }
+
 
             if (activeCheckInInfo.getCheckinEncId() != null) {
 
@@ -240,6 +256,9 @@ public class CheckInConfirmation extends AppCompatActivity {
         cvOk = findViewById(R.id.cv_ok);
         tvTerm = findViewById(R.id.tv_term);
         icon_service = findViewById(R.id.serviceicon);
+        tvCheckin = findViewById(R.id.tv_consumerName);
+        tvConsumerName = findViewById(R.id.tv_consumervalue);
+        tvLocation = findViewById(R.id.tv_location);
     }
 
     @Override

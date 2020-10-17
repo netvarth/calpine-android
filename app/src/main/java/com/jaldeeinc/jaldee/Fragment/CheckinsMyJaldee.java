@@ -467,7 +467,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                 ext = "." + extension;
             }
             File wallpaperDirectoryFile = new File(
-                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
+                    Environment.getExternalStorageDirectory() + File.separator + fileName + ext);
             copy(context, contentUri, wallpaperDirectoryFile);
             return wallpaperDirectoryFile.getAbsolutePath();
         }
@@ -666,7 +666,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-                            Toast.makeText(mContext, "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(mContext, "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
                         }
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
