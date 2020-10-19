@@ -117,7 +117,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
     String slotTime,apiDate;
     private SlotsDialog slotsDialog;
     private RecyclerView rvSlots;
-    private LinearLayout llNoSlots;
+    private LinearLayout llNoSlots,llChangeTo;
     private NeomorphFrameLayout cvCalender;
     TimeSlotsAdapter sAdapter;
     private LinearLayout llSeeMoreHint;
@@ -412,12 +412,12 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
         llSeeMoreHint = findViewById(R.id.ll_seeMoreHint);
         llNoSlots = findViewById(R.id.ll_noSlots);
         cvCalender = findViewById(R.id.fl_calender);
+        llChangeTo = findViewById(R.id.ll_changeTo);
     }
 
     private void updateSelectedDate(int year, int monthOfYear, int dayOfMonth) {
 
         try {
-
 
             SimpleDateFormat simpledateformat = new SimpleDateFormat("EEE");
             Date date = new Date(year, monthOfYear, dayOfMonth - 1);
@@ -519,6 +519,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
                                 if (activeSlotsList.size() > 0) {
 
                                     rvSlots.setVisibility(View.VISIBLE);
+                                    llChangeTo.setVisibility(View.VISIBLE);
                                     llNoSlots.setVisibility(View.GONE);
                                     tvDate.setVisibility(View.VISIBLE);
                                     tvTime.setVisibility(View.VISIBLE);
@@ -543,6 +544,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
                                     llNoSlots.setVisibility(View.VISIBLE);
                                     tvDate.setVisibility(View.GONE);
                                     tvTime.setVisibility(View.GONE);
+                                    llChangeTo.setVisibility(View.GONE);
                                 }
                             }
                         }

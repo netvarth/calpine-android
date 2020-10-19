@@ -80,7 +80,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16dp"
-                android:layout_marginTop="@dimen/padding3"
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:ellipsize="end"
                 android:maxLines="2"
@@ -139,8 +138,7 @@
                 android:id="@+id/ll_serviceName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_16dp"
-                android:layout_marginTop="@dimen/padding3">
+                android:layout_marginStart="@dimen/dimen_16dp">
 
                 <ImageView
                     android:id="@+id/iv_teleService"
@@ -194,7 +192,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16dp"
-                android:layout_marginTop="@dimen/padding5"
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:orientation="vertical">
 
@@ -378,7 +375,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16dp"
-                android:layout_marginTop="@dimen/padding5"
                 android:text=""
                 android:textColor="@color/title_color"
                 android:textSize="@dimen/dimen_16dp">
@@ -601,6 +597,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_changeTo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -635,7 +632,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:letterSpacing="0.1"
-                    android:text="Oct 14, 2020"
+                    android:text=""
                     android:textColor="@color/appoint_theme"
                     android:textSize="@dimen/dimen_18sp">
 
@@ -648,7 +645,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="@dimen/padding5"
                     android:letterSpacing="0.1"
-                    android:text="12:45 AM"
+                    android:text=""
                     android:textColor="@color/appoint_theme"
                     android:textSize="@dimen/dimen_18sp">
 

@@ -44,8 +44,9 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
             super(view);
             name = (RadioButton) view.findViewById(R.id.Rmemeber);
             Checkmemeber = (CheckBox) view.findViewById(R.id.Checkmemeber);
-            Typeface font = Typeface.createFromAsset(mContext.getAssets(),  "fonts/JosefinSans-Regular.ttf");
+            Typeface font = Typeface.createFromAsset(mContext.getAssets(),  "fonts/JosefinSans-SemiBold.ttf");
             Checkmemeber.setTypeface(font);
+            name.setTypeface(font);
 
 
         }

@@ -1,11 +1,17 @@
 package com.jaldeeinc.jaldee.custom;
 
+import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -70,17 +76,18 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
     public FamilyMemberDialog(@NonNull Context context) {
         super(context);
     }
+
     private Context context;
-    private ImageView ivClose,ivAddMember;
-    String firstName,lastName,phone,email,prepayment,membername;
-    int consumerId,memId;
+    private ImageView ivClose, ivAddMember;
+    String firstName, lastName, phone, email, prepayment, selectedMemberName;
+    int consumerId, memId;
     ArrayList<FamilyArrayModel> familyMembersList = new ArrayList<>();
     List<FamilyArrayModel> LuserProfileList = new ArrayList<>();
     private Spinner memberSpinner;
-    private EditText et_phone,et_email,et_firstname,et_lastName;
-    private Button bt_save,bt_add;
+    private EditText et_phone, et_email, et_firstname, et_lastName;
+    private Button bt_save, bt_add;
     private IFamilyMemberDetails iFamilyMemberDetails;
-    CustomTextViewSemiBold tv_errorphone,tv_error_mail,tv_errorfirstname,tv_errorlastname;
+    CustomTextViewSemiBold tv_errorphone, tv_error_mail, tv_errorfirstname, tv_errorlastname;
     boolean isPrepayment;
     ProfileModel profileDetails;
     ArrayList<FamilyArrayModel> LCheckList = new ArrayList<>();
@@ -93,11 +100,11 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
     ArrayList<FamilyArrayModel> familyList = new ArrayList<>();
     ArrayList<FamilyArrayModel> data = new ArrayList<>();
     ArrayList<FamilyArrayModel> checkList = new ArrayList<>();
-    private LinearLayout ll_changeMember,ll_addmember;
+    private LinearLayout ll_changeMember, ll_addmember;
+    Animation slideUp, slideRight;
 
 
-
-    public FamilyMemberDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone,String prepayment,IFamilyMemberDetails iFamilyMemberDetails,ProfileModel profileDetails,boolean multiple,int update) {
+    public FamilyMemberDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update) {
         super(appointmentActivity);
         this.context = appointmentActivity;
         this.memId = familyMEmID;
@@ -110,7 +117,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         this.update = update;
     }
 
-    public FamilyMemberDialog(CheckInActivity checkInActivity, int familyMEmID, String email, String phone, boolean prePayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails,boolean multiple,int update) {
+    public FamilyMemberDialog(CheckInActivity checkInActivity, int familyMEmID, String email, String phone, boolean prePayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update) {
         super(checkInActivity);
         this.context = checkInActivity;
         this.memId = familyMEmID;
@@ -144,70 +151,80 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         bt_add = findViewById(R.id.btnAdd);
         tv_errorlastname = findViewById(R.id.errormesg_add);
         tv_errorfirstname = findViewById(R.id.error_mesg_add);
+        slideUp = AnimationUtils.loadAnimation(context, R.anim.slide_in_left);
+        slideRight = AnimationUtils.loadAnimation(context, R.anim.slide_out_right);
 
         this.iFamillyListSelected = this;
-        if(update==1){
+        if (update == 1) {
             checkList = (ArrayList<FamilyArrayModel>) checkedfamilyList;
-        }
-        else{
+        } else {
             checkedfamilyList.clear();
         }
 
-        et_email.setText(email);
-        et_phone.setText(phone);
+        if (email != null) {
+            et_email.setText(email);
+        }
+        if (phone != null) {
+            et_phone.setText(phone);
+        }
 
         firstName = SharedPreference.getInstance(context).getStringValue("firstname", "");
         lastName = SharedPreference.getInstance(context).getStringValue("lastname", "");
         consumerId = SharedPreference.getInstance(context).getIntValue("consumerId", 0);
         mRecycleFamily = findViewById(R.id.recycle_familyMember);
 
+        bt_save.setEnabled(false);
+        bt_save.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
         bt_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 email = et_email.getText().toString();
                 phone = et_phone.getText().toString();
-                if (!et_phone.getText().toString().equalsIgnoreCase("")) {
-                    if(prepayment!=null){
-                        appointment();
-                    }
-                    else{
-                        checkin();
-                        if (multiple) {
-                            familyList.clear();
+                if (!phone.equalsIgnoreCase("")) {
+                    if (phone.trim().length() > 9) {
+                        if (prepayment != null) {
+                            appointment();
+                        } else {
+                            checkin();
+                            if (multiple) {
+                                familyList.clear();
 
-                            data = mFamilyAdpater.onItemSelected();
+                                data = mFamilyAdpater.onItemSelected();
 
-                            Config.logV("Family------------" + data.size());
-                            for (int i = 0; i < data.size(); i++) {
+                                Config.logV("Family------------" + data.size());
+                                for (int i = 0; i < data.size(); i++) {
 
-                                if (data.get(i).isCheck()) {
-                                    FamilyArrayModel family = new FamilyArrayModel();
-                                    family.setId(data.get(i).getId());
-                                    family.setFirstName(data.get(i).getFirstName());
-                                    family.setLastName(data.get(i).getLastName());
-                                    family.setCheck(true);
-                                    familyList.add(family);
-                                }
-
-                                if (i == data.size() - 1) {
-                                    Config.logV("family refresh-------@@@@---------" + familyList.size());
-                                    if(familyList.size()>0) {
-                                        CheckInActivity.refreshMultipleMEmList(familyList);
-                                        dismiss();
+                                    if (data.get(i).isCheck()) {
+                                        FamilyArrayModel family = new FamilyArrayModel();
+                                        family.setId(data.get(i).getId());
+                                        family.setFirstName(data.get(i).getFirstName());
+                                        family.setLastName(data.get(i).getLastName());
+                                        family.setCheck(true);
+                                        familyList.add(family);
                                     }
-                                }
 
+                                    if (i == data.size() - 1) {
+                                        Config.logV("family refresh-------@@@@---------" + familyList.size());
+                                        if (familyList.size() > 0) {
+                                            CheckInActivity.refreshMultipleMEmList(familyList);
+                                            dismiss();
+                                        }
+                                    }
+
+                                }
+                            } else {
+                                CheckInActivity.refreshName(s_changename, memberid);
+                                dismiss();
                             }
                         }
-                        else {
-                            CheckInActivity.refreshName(s_changename, memberid);
-                            dismiss();
-                        }
+                    } else {
+                        tv_errorphone.setText("Enter valid mobile number");
+                        tv_errorphone.setVisibility(View.VISIBLE);
                     }
 
                 } else {
-                        tv_errorphone.setText("This field is required");
-                        tv_errorphone.setVisibility(View.VISIBLE);
+                    tv_errorphone.setText("This field is required");
+                    tv_errorphone.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -223,8 +240,11 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         ivAddMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ll_addmember.setVisibility(View.VISIBLE);
+
                 ll_changeMember.setVisibility(View.GONE);
+                ll_changeMember.startAnimation(slideRight);
+                ll_addmember.setVisibility(View.VISIBLE);
+                ll_addmember.startAnimation(slideUp);
 
             }
         });
@@ -235,12 +255,11 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                 if (!et_firstname.getText().toString().isEmpty() && !et_lastName.getText().toString().isEmpty()) {
                     ApiAddFamilyMember();
                 } else {
-                    if(et_firstname.getText().toString().isEmpty()){
+                    if (et_firstname.getText().toString().isEmpty()) {
                         tv_errorfirstname.setText("This field is required");
                         tv_errorfirstname.setVisibility(View.VISIBLE);
-                    }
-                    else{
-                        if(et_lastName.getText().toString().isEmpty()) {
+                    } else {
+                        if (et_lastName.getText().toString().isEmpty()) {
                             tv_errorlastname.setText("This field is required");
                             tv_errorlastname.setVisibility(View.VISIBLE);
                         }
@@ -252,75 +271,64 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         ApiListFamilyMember();
 
     }
+
     boolean isEmailValid(CharSequence email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email)
                 .matches();
     }
 
-    void appointment(){
-        if (prepayment!=null && prepayment.equalsIgnoreCase("true")) {
+    void appointment() {
+        if (prepayment != null && prepayment.equalsIgnoreCase("true")) {
             if (email.trim().length() > 0) {
                 if (isEmailValid(email)) {
                     ApiEditProfileDetail();
-                }
-                else{
-                    tv_error_mail.setText("Enter valid mail Id");
+                } else {
+                    tv_error_mail.setText("Enter valid mail id");
                     tv_error_mail.setVisibility(View.VISIBLE);
                 }
-            }
-            else{
+            } else {
                 tv_error_mail.setText("This field is required");
                 tv_error_mail.setVisibility(View.VISIBLE);
             }
-        }
-
-        else {
+        } else {
             if (email.trim().length() > 0) {
                 if (isEmailValid(email)) {
                     ApiEditProfileDetail();
-                }
-                else{
-                    tv_error_mail.setText("Enter valid mail Id");
+                } else {
+                    tv_error_mail.setText("Enter valid mail id");
                     tv_error_mail.setVisibility(View.VISIBLE);
                 }
-            }
-            else{
-                iFamilyMemberDetails.sendFamilyMemberDetails(memId, firstName, lastName, phone, email);
+            } else {
+                iFamilyMemberDetails.sendFamilyMemberDetails(memId, selectedMemberName, lastName, phone, email);
                 Toast.makeText(context, "Details saved successfully", Toast.LENGTH_SHORT).show();
                 dismiss();
             }
         }
     }
 
-    void checkin(){
+    void checkin() {
         if (isPrepayment) {
             if (email.trim().length() > 0) {
                 if (isEmailValid(email)) {
                     ApiEditProfileDetail();
-                }
-                else{
+                } else {
                     tv_error_mail.setText("Enter valid mail Id");
                     tv_error_mail.setVisibility(View.VISIBLE);
                 }
-            }
-            else{
+            } else {
                 tv_error_mail.setText("This field is required");
                 tv_error_mail.setVisibility(View.VISIBLE);
             }
-        }
-
-        else {
+        } else {
             if (email.trim().length() > 0) {
                 if (isEmailValid(email)) {
                     ApiEditProfileDetail();
-                }
-                else{
+                } else {
                     tv_error_mail.setText("Enter valid mail Id");
                     tv_error_mail.setVisibility(View.VISIBLE);
                 }
-            }
-            else{
-                iFamilyMemberDetails.sendFamilyMemberDetails(memId, firstName, lastName, phone, email);
+            } else {
+                iFamilyMemberDetails.sendFamilyMemberDetails(memId, selectedMemberName, lastName, phone, email);
                 iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
                 Toast.makeText(context, "Details saved successfully", Toast.LENGTH_SHORT).show();
                 dismiss();
@@ -328,8 +336,6 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         }
 
     }
-
-
 
 
     private void ApiListFamilyMember() {
@@ -373,126 +379,63 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                                     family1.setLastName(response.body().get(i).getUserProfile().getLastName());
                                     family1.setId(response.body().get(i).getUserProfile().getId());
                                     LuserProfileList.add(family1);
-                               }
+                                }
                             }
                         }
-//                        ArrayAdapter<FamilyArrayModel> adapter = new ArrayAdapter<FamilyArrayModel>(context, android.R.layout.simple_spinner_dropdown_item,LuserProfileList);
-//                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                        memberSpinner.setAdapter(adapter);
-//                        for(int i =0;i<LuserProfileList.size();i++) {
-//                            if (memId == LuserProfileList.get(i).getId()) {
-//                                memberSpinner.setSelection(i);
-//                                consumerId = memId;
-//                            }
-//                        }
-
-//
-//                        memberSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                            @Override
-//                            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//                                memId = LuserProfileList.get(i).getId();
-//                                firstName = LuserProfileList.get(i).getFirstName();
-//                                lastName = LuserProfileList.get(i).getLastName();
-//
-//
-////                                if(consumerId == memId){
-////                                    et_email.setText(email);
-////                                    et_phone.setText(phone);
-////                                }
-////                                else{
-////                                    et_phone.setText("");
-////                                    et_email.setText("");
-////                                }
-//
-//                            }
-//
-//                            @Override
-//                            public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//                            }
-//                        });
-
-
-
-
-                        Config.logV("Response--Array size-------------------------" + response.body().size());
-                        Config.logV("Response--Array ----Family List---------------------" + new Gson().toJson(response.body()));
-
-
 
                         LCheckList.clear();
-//                        FamilyArrayModel family = new FamilyArrayModel();
-//                        family.setFirstName(firstname);
-//                        family.setLastName(lastname);
-//                        family.setId(consumerID);
-//                        LuserProfileList.add(family);
-//                        if (LuserProfileList.size() > 0) {
-//
-//                            if (response.body().size() > 0) {
-//                                //  LuserProfileList.addAll(response.body());
-//                                for (int i = 0; i < response.body().size(); i++) {
-//                                    FamilyArrayModel family1 = new FamilyArrayModel();
-//                                    family1.setFirstName(response.body().get(i).getUserProfile().getFirstName());
-//                                    family1.setLastName(response.body().get(i).getUserProfile().getLastName());
-//                                    family1.setId(response.body().get(i).getUserProfile().getId());
-//                                    LuserProfileList.add(family1);
-//                                }
-//                            }
 
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
+                        mRecycleFamily.setLayoutManager(mLayoutManager);
 
-                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
-                            mRecycleFamily.setLayoutManager(mLayoutManager);
+                        Config.logV("CheckList@@@@@@@@@@@@@@@@@@@@1111" + checkedfamilyList.size());
+                        Config.logV("CheckList@@@@@@@@@@@@@@@@@@@@ LuserProfileList" + LuserProfileList.size());
+                        if (update == 1 || multiple) {
 
-                            Config.logV("CheckList@@@@@@@@@@@@@@@@@@@@1111" + checkedfamilyList.size());
-                            Config.logV("CheckList@@@@@@@@@@@@@@@@@@@@ LuserProfileList" + LuserProfileList.size());
-                            if (update == 1 || multiple) {
+                            for (int j = 0; j < LuserProfileList.size(); j++) {
+                                FamilyArrayModel family1 = new FamilyArrayModel();
+                                family1.setFirstName(LuserProfileList.get(j).getFirstName());
+                                family1.setLastName(LuserProfileList.get(j).getLastName());
+                                family1.setId(LuserProfileList.get(j).getId());
+                                for (int i = 0; i < checkedfamilyList.size(); i++) {
 
-                                for (int j = 0; j < LuserProfileList.size(); j++) {
-                                    FamilyArrayModel family1 = new FamilyArrayModel();
-                                    family1.setFirstName(LuserProfileList.get(j).getFirstName());
-                                    family1.setLastName(LuserProfileList.get(j).getLastName());
-                                    family1.setId(LuserProfileList.get(j).getId());
-                                    for (int i = 0; i < checkedfamilyList.size(); i++) {
-
-                                        if (checkedfamilyList.get(i).getId() == LuserProfileList.get(j).getId()) {
-                                            family1.setCheck(true);
-                                            Config.logV("Family %%%%%%%%%%%%%%%" + LuserProfileList.get(j).getFirstName());
-                                        }
+                                    if (checkedfamilyList.get(i).getId() == LuserProfileList.get(j).getId()) {
+                                        family1.setCheck(true);
+                                        Config.logV("Family %%%%%%%%%%%%%%%" + LuserProfileList.get(j).getFirstName());
                                     }
-                                    LCheckList.add(family1);
-
                                 }
+                                LCheckList.add(family1);
 
-                                Config.logV("Family @@@@" + LCheckList.size());
-
-                                if (checkedfamilyList.size() > 0) {
-                                    bt_save.setBackground(context.getResources().getDrawable(R.drawable.curved_save));
-                                    bt_save.setTextColor(context.getResources().getColor(R.color.white));
-                                    bt_save.setEnabled(true);
-                                } else {
-                                    bt_save.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
-                                    bt_save.setTextColor(context.getResources().getColor(R.color.button_grey));
-                                    bt_save.setEnabled(false);
-                                }
-
-
-                                mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(bt_save, LCheckList, multiple, LCheckList, context,(Activity) context,iFamillyListSelected);
-                            } else {
-                                if (memId == 0) {
-                                    memId = consumerId;
-                                }
-
-
-                                Config.logV("memID @@@@@" + memId);
-                                mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(bt_save, update, memId, multiple, LuserProfileList, context,(Activity) context,iFamillyListSelected);
                             }
 
-                            mRecycleFamily.setAdapter(mFamilyAdpater);
-                            mFamilyAdpater.notifyDataSetChanged();
+                            Config.logV("Family @@@@" + LCheckList.size());
 
+                            if (checkedfamilyList.size() > 0) {
+                                bt_save.setBackground(context.getResources().getDrawable(R.drawable.curved_save));
+                                bt_save.setTextColor(context.getResources().getColor(R.color.white));
+                                bt_save.setEnabled(true);
+                            } else {
+                                bt_save.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                                bt_save.setTextColor(context.getResources().getColor(R.color.button_grey));
+                                bt_save.setEnabled(false);
+                            }
+
+
+                            mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(bt_save, LCheckList, multiple, LCheckList, context, (Activity) context, iFamillyListSelected);
+                        } else {
+                            if (memId == 0) {
+                                memId = consumerId;
+                            }
+
+
+                            Config.logV("memID @@@@@" + memId);
+                            mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(bt_save, update, memId, multiple, LuserProfileList, context, (Activity) context, iFamillyListSelected);
                         }
 
+                        mRecycleFamily.setAdapter(mFamilyAdpater);
+                        mFamilyAdpater.notifyDataSetChanged();
 
+                    }
 
 
                 } catch (
@@ -514,6 +457,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
 
 
     }
+
     private void ApiEditProfileDetail() {
 
 
@@ -553,10 +497,10 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
-                            SharedPreference.getInstance(context).setValue("email",et_email.getText().toString());
+                            SharedPreference.getInstance(context).setValue("email", et_email.getText().toString());
 
                             Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
-                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, firstName, lastName, phone, email);
+                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, selectedMemberName, lastName, phone, email);
                             iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
                             dismiss();
 
@@ -590,8 +534,6 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
 
 
     }
-
-
 
 
     private void ApiAddFamilyMember() {
@@ -633,8 +575,15 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                     Config.logV("Response--code-------------------------" + response.code());
                     Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
-
-                       dismiss();
+                        bt_save.setEnabled(false);
+                        bt_save.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                        et_firstname.setText("");
+                        et_lastName.setText("");
+                        ll_addmember.setVisibility(View.GONE);
+                        ll_addmember.startAnimation(slideRight);
+                        ll_changeMember.setVisibility(View.VISIBLE);
+                        ll_changeMember.startAnimation(slideUp);
+                        ApiListFamilyMember();
 
 
                     } else {
@@ -669,17 +618,11 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
 
     @Override
     public void changeMemberName(String name, int id) {
-        firstName = name;
+        selectedMemberName = name;
         memId = id;
-        if (!name.equalsIgnoreCase("")) {
-            bt_save.setBackground(context.getResources().getDrawable(R.drawable.curved_save));
-            bt_save.setTextColor(context.getResources().getColor(R.color.white));
-            bt_save.setEnabled(true);
-        } else {
-            bt_save.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
-            bt_save.setTextColor(context.getResources().getColor(R.color.button_grey));
-            bt_save.setEnabled(false);
-        }
+        bt_save.setBackground(context.getResources().getDrawable(R.drawable.curved_save));
+        bt_save.setTextColor(context.getResources().getColor(R.color.white));
+        bt_save.setEnabled(true);
 
     }
 
