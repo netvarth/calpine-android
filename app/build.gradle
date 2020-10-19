@@ -11,7 +11,6 @@ android {
         versionName "1.4.60"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         multiDexEnabled true
-        vectorDrawables.useSupportLibrary = true
     }
     compileOptions {
         // Flag to enable support for the new language APIs
@@ -28,9 +27,6 @@ android {
         }
     }
 
-    aaptOptions {
-        additionalParameters "--no-version-vectors"
-    }
 }
 
 dependencies {

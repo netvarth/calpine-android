@@ -119,8 +119,6 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
     @BindView(R.id.providerlabel)
     CustomTextViewMedium tv_labelprovider;
 
-    @BindView(R.id.userlabel)
-    CustomTextViewMedium tv_labeluser;
 
     int scheduleId,serviceId,locationId,accountId;
     String slotTime,apiDate;
@@ -188,11 +186,16 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
             tvSpName.setText(name);
 
             if(appointmentInfo.getProvider()!=null){
-                String username = appointmentInfo.getProvider().getFirstName() + " " + appointmentInfo.getProvider().getLastName();
+                String username = "";
+                if (appointmentInfo.getProvider().getBusinessName() != null){
+                    username = appointmentInfo.getProvider().getBusinessName();
+                }else {
+                    username  = appointmentInfo.getProvider().getFirstName() + " " + appointmentInfo.getProvider().getLastName();
+                }
                 username = username.substring(0, 1).toUpperCase() + username.substring(1).toLowerCase();
                 tv_userName.setText(username);
                 tv_userName.setVisibility(View.VISIBLE);
-                tv_labeluser.setVisibility(View.VISIBLE);
+                tvSpName.setTextSize(16);
             }
 
 
