@@ -66,6 +66,7 @@
             <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/providerlabel"
                 android:layout_marginStart="@dimen/dimen_16dp"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:layout_marginEnd="@dimen/padding5"
@@ -120,6 +121,34 @@
                 </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
             </LinearLayout>
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/userlabel"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginEnd="@dimen/padding5"
+                android:text="Name of the provider"
+                android:textColor="@color/title_color"
+                android:textSize="@dimen/dimen_14sp"
+                android:visibility="gone">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                android:id="@+id/tv_userName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text=""
+                android:textColor="@color/title_color"
+                android:textSize="@dimen/dimen_20dp"
+                android:visibility="gone">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                 android:id="@+id/tv_term"
