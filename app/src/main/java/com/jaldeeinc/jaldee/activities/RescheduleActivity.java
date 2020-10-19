@@ -545,6 +545,9 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
                                     llNoSlots.setVisibility(View.GONE);
                                     tvDate.setVisibility(View.VISIBLE);
                                     tvTime.setVisibility(View.VISIBLE);
+                                    cvSubmit.setClickable(true);
+                                    cvSubmit.setEnabled(true);
+                                    cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.location_theme));
                                     if (activeSlotsList.size()>15){
                                         llSeeMoreHint.setVisibility(View.VISIBLE);
                                     }
@@ -568,6 +571,10 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
                                     tvDate.setVisibility(View.GONE);
                                     tvTime.setVisibility(View.GONE);
                                     llChangeTo.setVisibility(View.GONE);
+                                    cvSubmit.setClickable(false);
+                                    cvSubmit.setEnabled(false);
+                                    cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.inactive_text));
+
                                 }
                             }
                         }
