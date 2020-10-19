@@ -408,7 +408,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/dimen_10dp"
-                        android:text="Choose you new date"
+                        android:text="Choose your new date"
                         android:textAllCaps="false"
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_14">
@@ -512,7 +512,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/dimen_10dp"
-                        android:text="Choose your new Slot"
+                        android:text="Choose your new slot"
                         android:textAllCaps="false"
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_14">

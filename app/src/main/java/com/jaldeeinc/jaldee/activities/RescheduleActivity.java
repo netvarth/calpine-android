@@ -542,6 +542,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
 
                                     rvSlots.setVisibility(View.GONE);
                                     llNoSlots.setVisibility(View.VISIBLE);
+                                    llSeeMoreHint.setVisibility(View.GONE);
                                     tvDate.setVisibility(View.GONE);
                                     tvTime.setVisibility(View.GONE);
                                     llChangeTo.setVisibility(View.GONE);
