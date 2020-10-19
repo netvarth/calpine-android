@@ -142,7 +142,7 @@
     <string name="db_table_fav">tb_favour</string>
     <string name="db_table_mycheckin">tb_mycheckin</string>
     <string name="db_table_mfavID">tb_favID</string>
-    <string name="serve_prepay">The service needs prepayment for Check-in</string>
+    <string name="serve_prepay">This service requires an advance payment of </string>
     <string name="terms"><![CDATA[T & C]]></string>
     <string name="err_pwd_valid_login">Invalid password</string>
     <string name="tab6">Appointment</string>

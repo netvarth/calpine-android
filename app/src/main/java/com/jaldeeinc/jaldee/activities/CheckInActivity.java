@@ -1283,7 +1283,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                     "fonts/Montserrat_Bold.otf");
                             txtprepay.setTypeface(tyface);
                             txtprepayamount.setTypeface(tyface);
-                            String firstWord = "Prepayment Amount: ";
+                            String firstWord = "";
                             String secondWord;
                             if (MultiplefamilyList.size() > 1) {
                                 secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
@@ -1826,7 +1826,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 //                "fonts/Montserrat_Bold.otf");
 //        txtprepay.setTypeface(tyface);
 //        txtprepayamount.setTypeface(tyface);
-            String firstWord = "Prepayment Amount: ";
+            String firstWord = "";
             String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
             Spannable spannable = new SpannableString(firstWord + secondWord);
             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
