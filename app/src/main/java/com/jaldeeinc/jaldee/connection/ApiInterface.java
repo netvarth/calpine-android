@@ -67,6 +67,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -98,9 +99,9 @@ public interface ApiInterface {
     Call<ResponseBody> SetPassword(@Path("otp") String otp, @Body RequestBody jsonObj);
 
 
-    @Headers({"Accept: application/json", "User-Agent: android"})
+    @Headers({"Accept: application/json","User-Agent: android"})
     @POST("consumer/login")
-    Call<LoginResponse> LoginResponse(@Body RequestBody jsonObj);
+    Call<LoginResponse> LoginResponse(@Header("device-name") String name, @Body RequestBody jsonObj);
 
     @Headers({"Accept: application/json", "User-Agent: android"})
     @POST("consumer/login")
