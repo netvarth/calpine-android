@@ -25,9 +25,4 @@
         android:visibility="gone"
         android:button="@drawable/custom_radiobutton"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_margin="@dimen/padding5"
-        android:background="@color/view_border" />
 </LinearLayout>

@@ -53,6 +53,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
+import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.Interface.IMobileSubmit;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
@@ -73,6 +75,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomToolTip;
 import com.jaldeeinc.jaldee.custom.EmailEditWindow;
+import com.jaldeeinc.jaldee.custom.FamilyMemberDialog;
 import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
 import com.jaldeeinc.jaldee.custom.MyLeadingMarginSpan2;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
@@ -143,7 +146,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CheckInActivity extends AppCompatActivity implements ISelectQ, PaymentResultWithDataListener, IPaymentResponse, IMobileSubmit, IMailSubmit, ISendMessage {
+public class CheckInActivity extends AppCompatActivity implements ISelectQ, PaymentResultWithDataListener, IPaymentResponse, IMobileSubmit, IMailSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected {
 
     @BindView(R.id.tv_providerName)
     CustomTextViewSemiBold tvProviderName;
@@ -321,7 +324,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     private AddNotes addNotes;
     private String userMessage = "";
     String checkEncId;
-
+    private FamilyMemberDialog familyMemberDialog;
+    private IFamilyMemberDetails iFamilyMemberDetails;
+    String emailId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -335,6 +340,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         iMobileSubmit = this;
         paymentResponse = this;
         iSendMessage = this;
+        iFamilyMemberDetails = this;
 
         // getting necessary details from intent
         Intent intent = getIntent();
@@ -498,35 +504,35 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             @Override
             public void onClick(View v) {
 
-                String mailId = "";
-                if (tvEmail.getText().toString() != null) {
-                    mailId = tvEmail.getText().toString();
-                }
-                emailEditWindow = new EmailEditWindow(CheckInActivity.this, profileDetails, iMailSubmit, mailId);
-                emailEditWindow.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
-                emailEditWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                emailEditWindow.show();
-                DisplayMetrics metrics = CheckInActivity.this.getResources().getDisplayMetrics();
-                int width = (int) (metrics.widthPixels * 1);
-                emailEditWindow.getWindow().setGravity(Gravity.CENTER);
-                emailEditWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-            }
+//                String mailId = "";
+//                if (tvEmail.getText().toString() != null) {
+//                    mailId = tvEmail.getText().toString();
+//                }
+//                emailEditWindow = new EmailEditWindow(CheckInActivity.this, profileDetails, iMailSubmit, mailId);
+//                emailEditWindow.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+//                emailEditWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//                emailEditWindow.show();
+//                DisplayMetrics metrics = CheckInActivity.this.getResources().getDisplayMetrics();
+//                int width = (int) (metrics.widthPixels * 1);
+//                emailEditWindow.getWindow().setGravity(Gravity.CENTER);
+//                emailEditWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+           }
         });
 
         tvNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (tvNumber.getText().toString() != null) {
-                    mobileNumberDialog = new MobileNumberDialog(CheckInActivity.this, profileDetails, iMobileSubmit, tvNumber.getText().toString());
-                    mobileNumberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
-                    mobileNumberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    mobileNumberDialog.show();
-                    DisplayMetrics metrics = CheckInActivity.this.getResources().getDisplayMetrics();
-                    int width = (int) (metrics.widthPixels * 1);
-                    mobileNumberDialog.getWindow().setGravity(Gravity.CENTER);
-                    mobileNumberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-                }
+//                if (tvNumber.getText().toString() != null) {
+//                    mobileNumberDialog = new MobileNumberDialog(CheckInActivity.this, profileDetails, iMobileSubmit, tvNumber.getText().toString());
+//                    mobileNumberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+//                    mobileNumberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//                    mobileNumberDialog.show();
+//                    DisplayMetrics metrics = CheckInActivity.this.getResources().getDisplayMetrics();
+//                    int width = (int) (metrics.widthPixels * 1);
+//                    mobileNumberDialog.getWindow().setGravity(Gravity.CENTER);
+//                    mobileNumberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                }
             }
         });
 
@@ -534,14 +540,23 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             @Override
             public void onClick(View v) {
 
-                Intent familyIntent = new Intent(CheckInActivity.this, CheckinFamilyMember.class);
-                familyIntent.putExtra("firstname", mFirstName);
-                familyIntent.putExtra("lastname", mLastName);
-                familyIntent.putExtra("consumerID", consumerID);
-                familyIntent.putExtra("multiple", multiplemem);
-                familyIntent.putExtra("memberID", familyMEmID);
-                familyIntent.putExtra("update", 0);
-                startActivity(familyIntent);
+                familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this,familyMEmID,tvEmail.getText().toString(),tvNumber.getText().toString(),checkInInfo.isPrePayment(),iFamilyMemberDetails,profileDetails,multiplemem,0);
+                familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+                familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                familyMemberDialog.show();
+                DisplayMetrics metrics =CheckInActivity.this.getResources().getDisplayMetrics();
+                int width = (int) (metrics.widthPixels * 1);
+                familyMemberDialog.setCancelable(false);
+                familyMemberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+//                Intent familyIntent = new Intent(CheckInActivity.this, CheckinFamilyMember.class);
+//                familyIntent.putExtra("firstname", mFirstName);
+//                familyIntent.putExtra("lastname", mLastName);
+//                familyIntent.putExtra("consumerID", consumerID);
+//                familyIntent.putExtra("multiple", multiplemem);
+//                familyIntent.putExtra("memberID", familyMEmID);
+//                familyIntent.putExtra("update", 0);
+//                startActivity(familyIntent);
 
             }
         });
@@ -1268,7 +1283,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                     "fonts/Montserrat_Bold.otf");
                             txtprepay.setTypeface(tyface);
                             txtprepayamount.setTypeface(tyface);
-                            String firstWord = "Prepayment Amount: ";
+                            String firstWord = "";
                             String secondWord;
                             if (MultiplefamilyList.size() > 1) {
                                 secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
@@ -1401,6 +1416,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             queueobj.putOpt("service", service);
             queueobj.putOpt("queue", qjsonObj);
             queueobj.putOpt("waitlistingFor", waitlistArray);
+
             if (isUser) {
                 queueobj.putOpt("provider", pjsonobj);
             }
@@ -1810,7 +1826,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 //                "fonts/Montserrat_Bold.otf");
 //        txtprepay.setTypeface(tyface);
 //        txtprepayamount.setTypeface(tyface);
-            String firstWord = "Prepayment Amount: ";
+            String firstWord = "";
             String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
             Spannable spannable = new SpannableString(firstWord + secondWord);
             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
@@ -2402,4 +2418,54 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         return yourDate;
     }
 
+    @Override
+    public void sendFamilyMemberDetails(int consumerId, String firstName, String lastName, String phone, String email) {
+        mFirstName = firstName;
+        mLastName = lastName;
+        phoneNumber = phone;
+        familyMEmID = consumerId;
+        emailId = email;
+        tvNumber.setText(phoneNumber);
+        if(!emailId.equalsIgnoreCase("")) {
+            tvEmail.setText(emailId);
+        }
+        else{
+            tvEmail.setText("");
+        }
+        tvConsumerName.setText(mFirstName);
+    }
+
+    @Override
+    public void changeMemberName(String name, int id) {
+
+    }
+
+    @Override
+    public void CheckedFamilyList(List<FamilyArrayModel> familyList) {
+//        MultiplefamilyList.clear();
+//        MultiplefamilyList.addAll(familyList);
+//        recycle_family.setVisibility(View.VISIBLE);
+//        if (checkInInfo.isPrePayment()) {
+//            totalAmountPay = String.valueOf(Double.parseDouble(checkInInfo.getMinPrePaymentAmount()) * MultiplefamilyList.size());
+//            LservicePrepay.setVisibility(View.VISIBLE);
+////        Typeface tyface = Typeface.createFromAsset(getAssets(),
+////                "fonts/Montserrat_Bold.otf");
+////        txtprepay.setTypeface(tyface);
+////        txtprepayamount.setTypeface(tyface);
+//            String firstWord = "Prepayment Amount: ";
+//            String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
+//            Spannable spannable = new SpannableString(firstWord + secondWord);
+//            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
+//                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            txtprepayamount.setText(spannable);
+//        }
+//
+//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+//        recycle_family.setLayoutManager(mLayoutManager);
+//        MultipleFamilyMemberAdapter mFamilyAdpater = new MultipleFamilyMemberAdapter(MultiplefamilyList, mContext, mActivity);
+//        recycle_family.setAdapter(mFamilyAdpater);
+//        mFamilyAdpater.notifyDataSetChanged();
+//        tvConsumerName.setVisibility(View.GONE);
+
+    }
 }

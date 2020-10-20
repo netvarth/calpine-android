@@ -421,8 +421,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding2"
-                    android:drawableRight="@drawable/edit_icon_sized"
-                    android:drawablePadding="@dimen/padding5"
                     android:text=""
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/txtsize_14">
@@ -434,8 +432,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding2"
-                    android:drawableRight="@drawable/edit_icon_sized"
-                    android:drawablePadding="@dimen/padding5"
                     android:text=""
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/txtsize_14">
@@ -567,7 +563,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding5"
                     android:gravity="center"
-                    android:text="Prepayment Amount:"
+                    android:text=" "
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_hint_11" />
             </LinearLayout>

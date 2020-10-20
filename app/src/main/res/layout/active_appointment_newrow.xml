@@ -64,7 +64,34 @@
                     android:gravity="center"
                     android:text="Bill"
                     android:textSize="@dimen/txtsize_12" />
+
             </LinearLayout>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_reschedule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:foregroundGravity="left"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                card_view:cardBackgroundColor="@color/appoint_theme"
+                card_view:cardCornerRadius="@dimen/padding5"
+                android:layout_marginEnd="@dimen/padding2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reschedule"
+                    android:layout_marginStart="@dimen/padding5"
+                    android:layout_marginEnd="@dimen/padding5"
+                    android:layout_marginTop="@dimen/padding2"
+                    android:layout_marginBottom="@dimen/padding2"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/dimen_10dp">
+
+                </TextView>
+
+            </androidx.cardview.widget.CardView>
 
 
         </LinearLayout>
@@ -106,31 +133,6 @@
             android:textSize="@dimen/txtsize_12"
             android:visibility="gone"/>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv_reschedule"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:visibility="gone"
-            card_view:cardBackgroundColor="@color/appoint_theme"
-            card_view:cardCornerRadius="@dimen/padding5"
-            android:layout_marginEnd="@dimen/padding2">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Reschedule"
-                android:layout_marginStart="@dimen/padding5"
-                android:layout_marginEnd="@dimen/padding5"
-                android:layout_marginTop="@dimen/padding2"
-                android:layout_marginBottom="@dimen/padding2"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:textSize="@dimen/dimen_10dp">
-
-            </TextView>
-
-        </androidx.cardview.widget.CardView>
 
         </RelativeLayout>
 

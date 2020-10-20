@@ -91,4 +91,7 @@ public class FamilyArrayModel  implements Serializable{
     }
 
     boolean check=false;
+    public String toString() {
+        return this.firstName + " " + lastName; // Value to be displayed in the Spinner
+    }
 }

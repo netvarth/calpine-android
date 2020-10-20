@@ -66,29 +66,47 @@
             <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/providerlabel"
                 android:layout_marginStart="@dimen/dimen_16dp"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:layout_marginEnd="@dimen/padding5"
-                android:text="Name of the provider"
+                android:text="Service Provider"
                 android:textColor="@color/title_color"
                 android:textSize="@dimen/dimen_14sp">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-                android:id="@+id/tv_spName"
+                android:id="@+id/tv_userName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16dp"
-                android:layout_marginTop="@dimen/padding3"
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:text=""
                 android:textColor="@color/title_color"
-                android:textSize="@dimen/dimen_20dp">
+                android:textSize="@dimen/dimen_20sp"
+                android:visibility="gone">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                android:id="@+id/tv_spName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text=""
+                android:textColor="@color/title_color"
+                android:textSize="@dimen/dimen_20sp">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -114,13 +132,14 @@
                     android:layout_marginStart="@dimen/padding3"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:text=""
+                    android:text="Thrissur,Kerala"
                     android:textColor="@color/location_theme"
                     android:textSize="@dimen/dimen_14sp">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
             </LinearLayout>
+
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                 android:id="@+id/tv_term"
@@ -139,8 +158,7 @@
                 android:id="@+id/ll_serviceName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_16dp"
-                android:layout_marginTop="@dimen/padding3">
+                android:layout_marginStart="@dimen/dimen_16dp">
 
                 <ImageView
                     android:id="@+id/iv_teleService"
@@ -194,7 +212,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16dp"
-                android:layout_marginTop="@dimen/padding5"
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:orientation="vertical">
 
@@ -378,7 +395,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16dp"
-                android:layout_marginTop="@dimen/padding5"
                 android:text=""
                 android:textColor="@color/title_color"
                 android:textSize="@dimen/dimen_16dp">
@@ -412,7 +428,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/dimen_10dp"
-                        android:text="Choose you new date"
+                        android:text="Choose your new date"
                         android:textAllCaps="false"
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_14">
@@ -516,7 +532,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/dimen_10dp"
-                        android:text="Choose your new Slot"
+                        android:text="Choose your new slot"
                         android:textAllCaps="false"
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_14">
@@ -601,6 +617,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_changeTo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -635,7 +652,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:letterSpacing="0.1"
-                    android:text="Oct 14, 2020"
+                    android:text=""
                     android:textColor="@color/appoint_theme"
                     android:textSize="@dimen/dimen_18sp">
 
@@ -648,7 +665,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="@dimen/padding5"
                     android:letterSpacing="0.1"
-                    android:text="12:45 AM"
+                    android:text=""
                     android:textColor="@color/appoint_theme"
                     android:textSize="@dimen/dimen_18sp">
 

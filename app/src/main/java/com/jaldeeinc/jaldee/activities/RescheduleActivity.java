@@ -113,11 +113,18 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
     @BindView(R.id.tv_calenderDate)
     CustomTextViewSemiBold tvCalenderDate;
 
+    @BindView(R.id.tv_userName)
+    CustomTextViewBold tv_userName;
+
+    @BindView(R.id.providerlabel)
+    CustomTextViewMedium tv_labelprovider;
+
+
     int scheduleId,serviceId,locationId,accountId;
     String slotTime,apiDate;
     private SlotsDialog slotsDialog;
     private RecyclerView rvSlots;
-    private LinearLayout llNoSlots;
+    private LinearLayout llNoSlots,llChangeTo;
     private NeomorphFrameLayout cvCalender;
     TimeSlotsAdapter sAdapter;
     private LinearLayout llSeeMoreHint;
@@ -175,7 +182,22 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
 
             String name = appointmentInfo.getProviderAccount().getBusinessName();
             name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+
             tvSpName.setText(name);
+
+            if(appointmentInfo.getProvider()!=null){
+                String username = "";
+                if (appointmentInfo.getProvider().getBusinessName() != null){
+                    username = appointmentInfo.getProvider().getBusinessName();
+                }else {
+                    username  = appointmentInfo.getProvider().getFirstName() + " " + appointmentInfo.getProvider().getLastName();
+                }
+                username = username.substring(0, 1).toUpperCase() + username.substring(1).toLowerCase();
+                tv_userName.setText(username);
+                tv_userName.setVisibility(View.VISIBLE);
+                tvSpName.setTextSize(16);
+            }
+
 
             try {
                 if (appointmentInfo.getLocation().getGoogleMapUrl() != null) {
@@ -412,12 +434,12 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
         llSeeMoreHint = findViewById(R.id.ll_seeMoreHint);
         llNoSlots = findViewById(R.id.ll_noSlots);
         cvCalender = findViewById(R.id.fl_calender);
+        llChangeTo = findViewById(R.id.ll_changeTo);
     }
 
     private void updateSelectedDate(int year, int monthOfYear, int dayOfMonth) {
 
         try {
-
 
             SimpleDateFormat simpledateformat = new SimpleDateFormat("EEE");
             Date date = new Date(year, monthOfYear, dayOfMonth - 1);
@@ -519,9 +541,13 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
                                 if (activeSlotsList.size() > 0) {
 
                                     rvSlots.setVisibility(View.VISIBLE);
+                                    llChangeTo.setVisibility(View.VISIBLE);
                                     llNoSlots.setVisibility(View.GONE);
                                     tvDate.setVisibility(View.VISIBLE);
                                     tvTime.setVisibility(View.VISIBLE);
+                                    cvSubmit.setClickable(true);
+                                    cvSubmit.setEnabled(true);
+                                    cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.location_theme));
                                     if (activeSlotsList.size()>15){
                                         llSeeMoreHint.setVisibility(View.VISIBLE);
                                     }
@@ -541,8 +567,14 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
 
                                     rvSlots.setVisibility(View.GONE);
                                     llNoSlots.setVisibility(View.VISIBLE);
+                                    llSeeMoreHint.setVisibility(View.GONE);
                                     tvDate.setVisibility(View.GONE);
                                     tvTime.setVisibility(View.GONE);
+                                    llChangeTo.setVisibility(View.GONE);
+                                    cvSubmit.setClickable(false);
+                                    cvSubmit.setEnabled(false);
+                                    cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.inactive_text));
+
                                 }
                             }
                         }
@@ -776,4 +808,6 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
         //hide scroll hint when recyclerview reaches to last position
         llSeeMoreHint.setVisibility(View.GONE);
     }
+
+
 }
