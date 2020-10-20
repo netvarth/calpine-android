@@ -1624,6 +1624,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             Bundle b = new Bundle();
                             b.putSerializable("BookingDetails", activeAppointment);
                             b.putString("terminology", mSearchTerminology.getProvider());
+                            b.putString("from","");
                             Intent checkin = new Intent(AppointmentActivity.this, AppointmentConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);

@@ -29,6 +29,8 @@ public class AppointmentConfirmation extends AppCompatActivity {
     private String terminology;
     ImageView icon_service;
     private TextView tv_consumer,tv_location;
+    private String from;
+    private TextView tv_heading;
 
     @Override
     public void onBackPressed() {
@@ -48,9 +50,20 @@ public class AppointmentConfirmation extends AppCompatActivity {
 
             activeCheckInInfo = (ActiveAppointment) extras.getSerializable("BookingDetails");
             terminology = extras.getString("terminology");
+            from = extras.getString("from");
+
         }
 
         initializations();
+
+        if(from!=null && activeCheckInInfo!=null){
+            if(from.equalsIgnoreCase("Reschedule")){
+                tv_heading.setText("Appointment Rescheduled");
+            }
+            else{
+                tv_heading.setText("Booking Confirmed");
+            }
+        }
 
 
         if (activeCheckInInfo != null) {
