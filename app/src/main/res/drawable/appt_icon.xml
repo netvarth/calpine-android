@@ -1,0 +1,39 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="512dp"
+    android:height="512dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+  <path
+      android:pathData="M386,210m-20,0a20,20 0,1 1,40 0a20,20 0,1 1,-40 0"
+      android:fillColor="#183e7a"/>
+  <path
+      android:pathData="M432,40H406V20a20,20 0,0 0,-40 0V40H275V20a20,20 0,0 0,-40 0V40H145V20a20,20 0,0 0,-40 0V40H80A80.11,80.11 0,0 0,0 120V432a80.11,80.11 0,0 0,80 80H233a20,20 0,0 0,0 -40H80a40,40 0,0 1,-40 -40V120A40,40 0,0 1,80 80h25v20a20,20 0,0 0,40 0V80h90v20a20,20 0,0 0,40 0V80h91v20a20,20 0,0 0,40 0V80h26a40,40 0,0 1,40 40V234a20,20 0,0 0,40 0V120A80.11,80.11 0,0 0,432 40Z"
+      android:fillColor="#183e7a"/>
+  <path
+      android:pathData="M391,270A121,121 0,1 0,512 391,121.16 121.16,0 0,0 391,270ZM391,472a81,81 0,1 1,81 -81A81,81 0,0 1,391 472Z"
+      android:fillColor="#183e7a"/>
+  <path
+      android:pathData="M299,210m-20,0a20,20 0,1 1,40 0a20,20 0,1 1,-40 0"
+      android:fillColor="#183e7a"/>
+  <path
+      android:pathData="M212,297m-20,0a20,20 0,1 1,40 0a20,20 0,1 1,-40 0"
+      android:fillColor="#183e7a"/>
+  <path
+      android:pathData="M125,210m-20,0a20,20 0,1 1,40 0a20,20 0,1 1,-40 0"
+      android:fillColor="#183e7a"/>
+  <path
+      android:pathData="M125,297m-20,0a20,20 0,1 1,40 0a20,20 0,1 1,-40 0"
+      android:fillColor="#183e7a"/>
+  <path
+      android:pathData="M125,384m-20,0a20,20 0,1 1,40 0a20,20 0,1 1,-40 0"
+      android:fillColor="#183e7a"/>
+  <path
+      android:pathData="M212,384m-20,0a20,20 0,1 1,40 0a20,20 0,1 1,-40 0"
+      android:fillColor="#183e7a"/>
+  <path
+      android:pathData="M212,210m-20,0a20,20 0,1 1,40 0a20,20 0,1 1,-40 0"
+      android:fillColor="#183e7a"/>
+  <path
+      android:pathData="M378.75,405.7l-2.33,15.62L341.89,421.32l22.61,-94h49.2l23.3,94L400.68,421.32l-2.74,-15.62ZM393.15,379.93c-1,-7.26 -3.16,-21.24 -4.66,-32.07h-0.83c-1.37,10.42 -2.87,22.07 -4.52,32.07Z"
+      android:fillColor="#183e7a"/>
+</vector>

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ActionMode;
@@ -219,7 +220,7 @@ public class Login extends AppCompatActivity {
         Config.logV("JSON--------------" + jsonObj);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<LoginResponse> call = apiService.LoginResponse(body);
+        Call<LoginResponse> call = apiService.LoginResponse(getDeviceName(), body);
 
         call.enqueue(new Callback<LoginResponse>() {
             @Override
@@ -392,5 +393,13 @@ public class Login extends AppCompatActivity {
         });
 
 
+    }
+    public static String getDeviceName() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.startsWith(manufacturer)) {
+            return model;
+        }
+        return manufacturer + " " + model;
     }
 }

@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.activities;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -71,6 +72,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
@@ -243,6 +245,11 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
             Date today = cal.getTime();
             cal.add(Calendar.DAY_OF_YEAR, 1);
             Date tomorow = cal.getTime();
+            try {
+                tvCalenderDate.setText(getCalenderDateFormat(appointmentInfo.getAppmtDate()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             if (today.before(sDate)) {
                 Config.logV("Date Enabled---------------");
                 ivMinus.setEnabled(true);
@@ -906,6 +913,12 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
                                 getConfirmationDetails(userId);
                             }
                         finish();
+
+                    } else if (response.code() == 422){
+
+                        DynamicToast.make(RescheduleActivity.this, response.errorBody().string(), AppCompatResources.getDrawable(
+                                RescheduleActivity.this, R.drawable.ic_info_black),
+                                ContextCompat.getColor(RescheduleActivity.this, R.color.white), ContextCompat.getColor(RescheduleActivity.this, R.color.red), Toast.LENGTH_SHORT).show();
 
                     }
                 } catch (Exception e) {
