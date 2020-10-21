@@ -240,6 +240,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
         icon_service = findViewById(R.id.serviceicon);
         tv_consumer = findViewById(R.id.tv_consumervalue);
         tv_location = findViewById(R.id.tv_location);
+        tv_heading = findViewById(R.id.tv_heading);
 
     }
 

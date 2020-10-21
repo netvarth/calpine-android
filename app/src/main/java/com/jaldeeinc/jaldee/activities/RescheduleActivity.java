@@ -207,7 +207,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
     private Uri mImageUri;
     Bitmap bitmap;
     File file;
-    String value;
+    String value,user;
     ActiveAppointment activeAppointment = new ActiveAppointment();
     SearchTerminology mSearchTerminology;
     int userId;
@@ -228,7 +228,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
         Intent i = getIntent();
         appointmentInfo = (ActiveAppointment) i.getSerializableExtra("appointmentInfo");
 
-        ApiSearchViewTerminology(Integer.parseInt(appointmentInfo.getUniqueId()));
+        ApiSearchViewTerminology(Integer.parseInt(appointmentInfo.getProviderAccount().getUniqueId()));
 
 
         if (appointmentInfo != null && appointmentInfo.getAppmtDate() != null) {
@@ -445,15 +445,18 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
             }
         });
 
+
+        if(appointmentInfo.getProvider()!=null){
+            user = tv_userName.getText().toString();
+        }
+        else{
+            user = tvSpName.getText().toString();
+        }
         cvAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(appointmentInfo.getProvider()!=null) {
-                    addNotes = new AddNotes(mContext, tvSpName.getText().toString(), iSendMessage, userMessage);
-                }
-                else{
-                    addNotes = new AddNotes(mContext,tv_userName.getText().toString(),iSendMessage,userMessage);
-                }
+
+                addNotes = new AddNotes(mContext, user, iSendMessage, userMessage);
                 addNotes.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                 addNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 addNotes.show();
@@ -912,7 +915,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
                             else{
                                 getConfirmationDetails(userId);
                             }
-                        finish();
+
 
                     } else if (response.code() == 422){
 
@@ -1460,7 +1463,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
 
         final ApiInterface apiService =
                 ApiClient.getClient(RescheduleActivity.this).create(ApiInterface.class);
-        Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(value, String.valueOf(userId));
+        Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(appointmentInfo.getUid(), String.valueOf(userId));
         call.enqueue(new Callback<ActiveAppointment>() {
             @Override
             public void onResponse(Call<ActiveAppointment> call, Response<ActiveAppointment> response) {
