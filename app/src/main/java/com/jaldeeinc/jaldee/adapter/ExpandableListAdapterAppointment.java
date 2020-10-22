@@ -987,6 +987,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
             layout_dateCheckin.setVisibility(View.VISIBLE);
             tv_queueTime.setVisibility(View.GONE);
             liveTrackLayout.setVisibility(View.GONE);
+            cvReschedule.setVisibility(View.GONE);
 
         } else {
             tv_check_in.setVisibility(View.GONE);
@@ -1761,6 +1762,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
             tv_statusSmall.setVisibility(View.VISIBLE);
             tv_status.setTextColor(mContext.getResources().getColor(R.color.green));
             tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.green));
+            cvReschedule.setVisibility(View.GONE);
         }
         if (activelist.getApptStatus().equalsIgnoreCase("Arrived")) {
             if(activelist.getService().getServiceType().equalsIgnoreCase("virtualService")){
@@ -1778,7 +1780,10 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
             tv_statusSmall.setVisibility(View.VISIBLE);
             tv_status.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
             tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
+            cvReschedule.setVisibility(View.GONE);
         }
+
+
         if (activelist.getApptStatus().equalsIgnoreCase("Confirmed")) {
             tv_status.setText("Confirmed");
             tv_statusSmall.setText("Confirmed");
@@ -1812,6 +1817,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
             tv_statusSmall.setVisibility(View.VISIBLE);
             tv_status.setTextColor(mContext.getResources().getColor(R.color.cyan));
             tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.cyan));
+            cvReschedule.setVisibility(View.GONE);
         }
 
         if (activelist.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
@@ -1826,6 +1832,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                 tv_status.setTextColor(mContext.getResources().getColor(R.color.gray));
                 tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.gray));
             }
+            cvReschedule.setVisibility(View.GONE);
         }
 
 

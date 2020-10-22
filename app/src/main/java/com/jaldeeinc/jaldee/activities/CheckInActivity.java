@@ -1152,12 +1152,23 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         if (response.body() != null) {
                             isToken = response.body().isShowTokenId();
 
-                            if (isToken) {
-                                tvButtonName.setText("Confirm Token");
-                                tvTerm.setText("Token for");
-                            } else {
-                                tvButtonName.setText("Confirm CheckIn");
-                                tvTerm.setText("CheckIn for");
+                            if(!checkInInfo.isPrePayment()) {
+                                if (isToken) {
+                                    tvButtonName.setText("Confirm Token");
+                                    tvTerm.setText("Token for");
+                                } else {
+                                    tvButtonName.setText("Confirm CheckIn");
+                                    tvTerm.setText("CheckIn for");
+                                }
+                            }
+                            else{
+                                if (isToken) {
+                                    tvButtonName.setText("Proceed to Payment");
+                                    tvTerm.setText("Token for");
+                                } else {
+                                    tvButtonName.setText("Proceed to Payment");
+                                    tvTerm.setText("CheckIn for");
+                                }
                             }
                             if (response.body().getCalculationMode() != null) {
                                 calcMode = response.body().getCalculationMode();
