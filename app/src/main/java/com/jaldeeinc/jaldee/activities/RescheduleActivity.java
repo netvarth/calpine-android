@@ -907,13 +907,13 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
 
                         Toast.makeText(RescheduleActivity.this,"Appointment rescheduled successfully",Toast.LENGTH_SHORT).show();
 
-                            if (imagePathList.size() > 0) {
+                            if (imagePathList.size() > 0 || !userMessage.equalsIgnoreCase("")) {
                                 if(appointmentInfo.getUid()!=null) {
-                                    ApiCommunicateAppointment(appointmentInfo.getUid(), String.valueOf(userId), userMessage, dialog);
+                                    ApiCommunicateAppointment(appointmentInfo.getUid(), String.valueOf(id), userMessage, dialog);
                                 }
                             }
                             else{
-                                getConfirmationDetails(userId);
+                                getConfirmationDetails(id);
                             }
 
 
@@ -1433,12 +1433,12 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
 
                     if (response.code() == 200) {
                         imagePathList.clear();
-                        dialog.dismiss();
-
-                        getConfirmationDetails(userId);
+                      //  dialog.dismiss();
+                        getConfirmationDetails(Integer.parseInt(accountID));
 
 
                     } else {
+
                         if (response.code() == 422) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }

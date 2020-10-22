@@ -249,6 +249,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     @BindView(R.id.tv_preInfo)
     CustomTextViewMedium tvPreInfo;
 
+    @BindView(R.id.tv_buttonName)
+    CustomTextViewBold tvButtonName;
+
     CustomTextViewSemiBold tvErrorMessage;
     String mFirstName, mLastName;
     int consumerID;
@@ -357,6 +360,13 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
         if (providerName != null) {
             tvProviderName.setText(providerName);
+        }
+
+        if(serviceInfo.getIsPrePayment().equalsIgnoreCase("true")){
+            tvButtonName.setText("Proceed to Payment");
+        }
+        else{
+            tvButtonName.setText("Confirm Appointment");
         }
 
         if (serviceInfo != null) {
