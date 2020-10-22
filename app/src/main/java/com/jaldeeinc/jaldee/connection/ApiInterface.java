@@ -548,5 +548,9 @@ public interface ApiInterface {
     @GET("provider/waitlist/queues/providerWaitingTime/{id}")
     Observable<ArrayList<QueueList>> getProviderCheckInSchedule(@Path("id") String id);
 
+    @GET("consumer/appointment")
+    Observable<ArrayList<ActiveAppointment>> getAppointments(@QueryMap(encoded = true) Map<String, String> query);
 
+    @GET("consumer/waitlist")
+    Observable<ArrayList<ActiveCheckIn>> getCheckIns(@QueryMap(encoded = true) Map<String, String> query);
 }

@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white">
 
     <RelativeLayout
@@ -109,6 +110,44 @@
 
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                android:id="@+id/tv_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="History"
+                android:textAllCaps="true"
+                android:layout_marginTop="@dimen/padding5"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:textSize="@dimen/dimen_16sp"
+                android:layout_marginBottom="@dimen/padding5"
+                android:textColor="@color/location_theme"
+                android:layout_below="@id/tv_ConsumerName"
+                android:layout_alignParentEnd="true">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_history"
+                app:tabTextColor="@color/title_color"
+                app:tabIndicatorFullWidth="false"
+                android:textAlignment="viewStart"
+                app:tabPaddingBottom="-18dp"
+                android:layout_marginStart="-6dp"
+                app:tabIndicatorColor="@color/donation_theme"
+                app:tabIndicator="@drawable/custom_indicator"
+                android:background="@color/white">
+            </com.google.android.material.tabs.TabLayout>
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tabLayout" />
+
 
 
         </RelativeLayout>

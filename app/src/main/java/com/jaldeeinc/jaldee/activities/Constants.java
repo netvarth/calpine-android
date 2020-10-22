@@ -32,6 +32,13 @@ public class Constants {
     public static final String DONATION = "Donation";
     public static final String PROVIDER = "Provider";
 
+    public static final String CONFIRMED = "Confirmed";
+    public static final String ARRIVED = "Arrived";
+    public static final String COMPLETED = "Completed";
+    public static final String CANCELLED = "cancelled";
+
+
+
     public static final String DEVICE_NAME = "deviceName";
 
 
