@@ -1373,13 +1373,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             }
 
             if (etVirtualNumber.getText().toString().trim().length() > 9) {
-                if (checkInInfo.getCallingMode() != null && checkInInfo.getCallingMode().equalsIgnoreCase("whatsapp")) {
+                if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("whatsApp")) {
                     virtualService.put("WhatsApp", etVirtualNumber.getText());
-                } else if (checkInInfo.getCallingMode() != null && checkInInfo.getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                    virtualService.put("GoogleMeet", checkInInfo.getVirtualCallingModes().get(0).getCallingMode());
-                } else if (checkInInfo.getCallingMode() != null && checkInInfo.getCallingMode().equalsIgnoreCase("Zoom")) {
-                    virtualService.put("Zoom", checkInInfo.getVirtualCallingModes().get(0).getCallingMode());
-                } else if (checkInInfo.getCallingMode() != null && checkInInfo.getCallingMode().equalsIgnoreCase("Phone")) {
+                } else if (checkInInfo.getVirtualCallingModes() != null &&  checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                    virtualService.put("GoogleMeet", checkInInfo.getVirtualCallingModes().get(0).getValue());
+                } else if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                    virtualService.put("Zoom", checkInInfo.getVirtualCallingModes().get(0).getValue());
+                } else if (checkInInfo.getVirtualCallingModes()!= null &&  checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Phone")) {
                     virtualService.put("Phone", etVirtualNumber.getText());
                 }
             } else {

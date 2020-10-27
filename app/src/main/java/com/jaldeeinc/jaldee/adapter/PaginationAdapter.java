@@ -400,9 +400,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     final ArrayList serviceNames = new ArrayList();
                     final ArrayList serviceTypes = new ArrayList();
                     final ArrayList serviceIds = new ArrayList();
-
-
-
                     serviceNames.clear();
                     try {
 //                        String serviceName = sszearchdetailList.getServices().toString();
@@ -601,6 +598,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                         }
                     }
+//                    else{
+//                        myViewHolder.txtservice1.setVisibility(View.GONE);
+//                        myViewHolder.txtservice2.setVisibility(View.GONE);
+//                        myViewHolder.txtSeeAll.setVisibility(View.GONE);
+//                    }
                 }
                 if (searchdetailList.getDepartments() != null) {
                     if (searchdetailList.getDepartments().size() > 0) {
