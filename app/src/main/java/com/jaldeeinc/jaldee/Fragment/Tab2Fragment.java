@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.adapter.MyPaymentAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -37,9 +38,7 @@ import retrofit2.Response;
 import static androidx.core.content.ContextCompat.getSystemService;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class Tab2Fragment extends RootFragment  {
 
     List<MyPayments> paymentsList;
@@ -63,14 +62,25 @@ public class Tab2Fragment extends RootFragment  {
         View row = inflater.inflate(R.layout.fragment_tab2, container, false);
         payments_listview = row.findViewById(R.id.payment_inner_list);
         mContext = getActivity();
-        ApiPayments();
-
+        Home.doubleBackToExitPressedOnce = false;
+        mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        try {
+            if (Config.isOnline(mContext)) {
+                ApiPayments();
+            } else {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
         ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface1);
-        iBackPress.setVisibility(View.VISIBLE);
+        iBackPress.setVisibility(View.GONE);
         tv_title.setText("My Payments");
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");
@@ -81,8 +91,7 @@ public class Tab2Fragment extends RootFragment  {
                 getFragmentManager().popBackStack();
             }
         });
-        mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
+
 
         return row;
     }

@@ -99,6 +99,7 @@ public class ServiceDetails implements Serializable {
     String preInfoTitle;
     String preInfoText;
     boolean postInfoEnabled;
+    String virtualServiceType;
 
     public boolean isPreInfoEnabled() {
         return preInfoEnabled;
@@ -126,5 +127,13 @@ public class ServiceDetails implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getVirtualServiceType() {
+        return virtualServiceType;
+    }
+
+    public void setVirtualServiceType(String virtualServiceType) {
+        this.virtualServiceType = virtualServiceType;
     }
 }

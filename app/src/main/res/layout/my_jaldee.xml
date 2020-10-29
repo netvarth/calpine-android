@@ -99,10 +99,10 @@
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                android:id="@+id/tv_ConsumerName"
+                android:id="@+id/tv_consumerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sravan kumar !"
+                android:text=""
                 android:layout_below="@id/tv_hello"
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:textSize="@dimen/dimen_30sp"
@@ -119,10 +119,10 @@
                 android:textAllCaps="true"
                 android:layout_marginTop="@dimen/padding5"
                 android:layout_marginEnd="@dimen/dimen_10dp"
-                android:textSize="@dimen/dimen_16sp"
+                android:textSize="@dimen/txtsize_12"
                 android:layout_marginBottom="@dimen/padding5"
                 android:textColor="@color/location_theme"
-                android:layout_below="@id/tv_ConsumerName"
+                android:layout_below="@id/tv_consumerName"
                 android:layout_alignParentEnd="true">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
@@ -136,7 +136,10 @@
                 app:tabIndicatorFullWidth="false"
                 android:textAlignment="viewStart"
                 app:tabPaddingBottom="-18dp"
+                app:tabGravity="fill"
+                app:tabMode="scrollable"
                 android:layout_marginStart="-6dp"
+                app:tabTextAppearance="@style/CustomTabText"
                 app:tabIndicatorColor="@color/donation_theme"
                 app:tabIndicator="@drawable/custom_indicator"
                 android:background="@color/white">

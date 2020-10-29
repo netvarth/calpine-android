@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.jaldeeinc.jaldee.Fragment.MyBookings;
 import com.jaldeeinc.jaldee.Fragment.MyPaymentsFragment;
+import com.jaldeeinc.jaldee.Fragment.Tab2Fragment;
 
 public class JaldeeTabs extends FragmentPagerAdapter {
 
@@ -27,8 +28,8 @@ public class JaldeeTabs extends FragmentPagerAdapter {
                 MyBookings bookings = new MyBookings();
                 return bookings;
             case 1:
-                MyPaymentsFragment paymentsFragment = new MyPaymentsFragment();
-                return paymentsFragment;
+                Tab2Fragment tab2Fragment = new Tab2Fragment();
+                return tab2Fragment;
             default:
                 return null;
         }

@@ -15,8 +15,13 @@ public class Bookings implements Serializable {
     private String serviceName;
     private boolean isVirtual;
     private String callingType;
+    private boolean videoService;
     private String date;
     private String bookingStatus;
+    private String serviceTime;
+    private int waitingTime;
+    private String calculationMode;
+    private int tokenNo;
     private ActiveAppointment appointmentInfo;
     private ActiveCheckIn checkInInfo;
 
@@ -135,4 +140,43 @@ public class Bookings implements Serializable {
         this.bookingStatus = bookingStatus;
     }
 
+    public boolean isVideoService() {
+        return videoService;
+    }
+
+    public void setVideoService(boolean videoService) {
+        this.videoService = videoService;
+    }
+
+    public String getServiceTime() {
+        return serviceTime;
+    }
+
+    public void setServiceTime(String serviceTime) {
+        this.serviceTime = serviceTime;
+    }
+
+    public int getWaitingTime() {
+        return waitingTime;
+    }
+
+    public void setWaitingTime(int waitingTime) {
+        this.waitingTime = waitingTime;
+    }
+
+    public String getCalculationMode() {
+        return calculationMode;
+    }
+
+    public void setCalculationMode(String calculationMode) {
+        this.calculationMode = calculationMode;
+    }
+
+    public int getTokenNo() {
+        return tokenNo;
+    }
+
+    public void setTokenNo(int tokenNo) {
+        this.tokenNo = tokenNo;
+    }
 }

@@ -1,7 +1,9 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,17 +15,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.UserDetailActivity;
+import com.jaldeeinc.jaldee.adapter.ExpandableListAdapter;
 import com.jaldeeinc.jaldee.adapter.TodayBookingsAdapter;
 import com.jaldeeinc.jaldee.adapter.UserServicesAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
+import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
@@ -51,8 +58,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class MyBookings extends Fragment implements ISelectedBooking {
-
+public class MyBookings extends RootFragment implements ISelectedBooking {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -62,13 +68,17 @@ public class MyBookings extends Fragment implements ISelectedBooking {
 
     private Context mContext;
     private Activity mActivity;
+    private CustomTextViewItalicSemiBold tvToday,tvUpcoming;
+    private LinearLayout llNoBookingsForToday, llNoBookingsForFuture,llNoBookings,llBookings;
     private RecyclerView rvTodays, rvUpcomings;
     private TodayBookingsAdapter todayBookingsAdapter;
-    private LinearLayoutManager linearLayoutManager,futureLayoutManager;
+    private LinearLayoutManager linearLayoutManager, futureLayoutManager;
     private ISelectedBooking iSelectedBooking;
     ArrayList<ActiveAppointment> mAppointmentTodayList = new ArrayList<>();
     ArrayList<ActiveAppointment> mAppointmentFutureList = new ArrayList<>();
     ArrayList<Bookings> bookingsList = new ArrayList<>();
+    List<ActiveCheckIn> allCheckInsOffline = new ArrayList<>();
+
 
     public MyBookings() {
         // Required empty public constructor
@@ -99,8 +109,9 @@ public class MyBookings extends Fragment implements ISelectedBooking {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_my_bookings, container, false);
+        mContext = getActivity();
         iSelectedBooking = (ISelectedBooking) this;
-
+        Home.doubleBackToExitPressedOnce = false;
         initializations(view);
 
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -109,15 +120,31 @@ public class MyBookings extends Fragment implements ISelectedBooking {
         todayBookingsAdapter = new TodayBookingsAdapter(bookingsList, getContext(), true, iSelectedBooking);
         rvTodays.setAdapter(todayBookingsAdapter);
 
-        apiGetAllBookings();
+        try {
+            if (Config.isOnline(mContext)) {
+                apiGetAllBookings();
+            } else {
+                setOfflineBookings();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         return view;
     }
+
 
     private void initializations(View view) {
 
         rvTodays = view.findViewById(R.id.rv_todays);
         rvUpcomings = view.findViewById(R.id.rv_upcoming);
+        llBookings = view.findViewById(R.id.ll_bookings);
+        llNoBookings = view.findViewById(R.id.ll_noBookings);
+        llNoBookingsForFuture = view.findViewById(R.id.ll_noFutureBookings);
+        llNoBookingsForToday = view.findViewById(R.id.ll_noTodayBookings);
+        tvToday = view.findViewById(R.id.tv_today);
+        tvUpcoming = view.findViewById(R.id.tv_upcoming);
     }
 
 
@@ -151,6 +178,11 @@ public class MyBookings extends Fragment implements ISelectedBooking {
 
                     ArrayList<Bookings> bookings = new ArrayList<Bookings>();
 
+                    DatabaseHandler db = new DatabaseHandler(mContext);
+                    db.DeleteMyCheckin("today");
+                    db.DeleteMyCheckin("future");
+                    db.insertMyCheckinInfo(checkInList);
+
                     bookingsList.clear();
 
                     for (ActiveAppointment activeAppointment : appntList) {
@@ -170,10 +202,16 @@ public class MyBookings extends Fragment implements ISelectedBooking {
                             }
                         }
 
-                        if (activeAppointment.getService() != null) {
+                        if (activeAppointment.getService() != null && activeAppointment.getApptStatus() != null) {
                             bookingInfo.setServiceName(activeAppointment.getService().getName());
                             if (activeAppointment.getService().getServiceType().equalsIgnoreCase("virtualService")) { //  check if it is a virtual service
                                 bookingInfo.setVirtual(true);
+                            }
+
+                            if (activeAppointment.getService().getServiceType().equalsIgnoreCase("virtualService") && activeAppointment.getApptStatus().equalsIgnoreCase(Constants.ARRIVED)) {
+                                bookingInfo.setBookingStatus(null);
+                            } else {
+                                bookingInfo.setBookingStatus(activeAppointment.getApptStatus());
                             }
                         }
 
@@ -185,8 +223,21 @@ public class MyBookings extends Fragment implements ISelectedBooking {
                             bookingInfo.setBookingOn(activeAppointment.getAppmtDate()); // to check if it is today's or future's
                         }
 
-                        if (activeAppointment.getApptStatus() != null) { //  to set status
-                            bookingInfo.setBookingStatus(activeAppointment.getApptStatus());
+                        if (activeAppointment.getService() != null) {
+
+                            if (activeAppointment.getService().getVirtualServiceType() != null) {
+
+                                if (activeAppointment.getService().getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                    bookingInfo.setVideoService(true);
+                                } else {
+                                    bookingInfo.setVideoService(false);
+                                }
+                            }
+
+                            if (activeAppointment.getService().getVirtualCallingModes() != null) {
+
+                                bookingInfo.setCallingType(activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode());
+                            }
                         }
 
                         bookings.add(bookingInfo);
@@ -203,6 +254,14 @@ public class MyBookings extends Fragment implements ISelectedBooking {
                             bookingInfo.setBookingType(Constants.CHECKIN);
                         }
                         bookingInfo.setCheckInInfo(activeCheckIn);
+                        bookingInfo.setWaitingTime(activeCheckIn.getAppxWaitingTime());
+                        bookingInfo.setTokenNo(activeCheckIn.getToken());
+                        if (activeCheckIn.getCalculationMode() != null) {
+                            bookingInfo.setCalculationMode(activeCheckIn.getCalculationMode());
+                        }
+                        if (activeCheckIn.getServiceTime() != null) {
+                            bookingInfo.setServiceTime(activeCheckIn.getServiceTime());
+                        }
                         if (activeCheckIn.getProviderAccount() != null) {
                             bookingInfo.setSpName(activeCheckIn.getProviderAccount().getBusinessName());
                         }
@@ -215,10 +274,16 @@ public class MyBookings extends Fragment implements ISelectedBooking {
                             }
                         }
 
-                        if (activeCheckIn.getService() != null) {
+                        if (activeCheckIn.getService() != null && activeCheckIn.getWaitlistStatus() != null) {
                             bookingInfo.setServiceName(activeCheckIn.getService().getName());
                             if (activeCheckIn.getService().getServiceType().equalsIgnoreCase("virtualService")) { //  check if it is a virtual service
                                 bookingInfo.setVirtual(true);
+                            }
+
+                            if (activeCheckIn.getService().getServiceType().equalsIgnoreCase("virtualService") && activeCheckIn.getWaitlistStatus().equalsIgnoreCase(Constants.ARRIVED)) {
+                                bookingInfo.setBookingStatus(null);
+                            } else {
+                                bookingInfo.setBookingStatus(activeCheckIn.getWaitlistStatus());
                             }
                         }
 
@@ -227,7 +292,24 @@ public class MyBookings extends Fragment implements ISelectedBooking {
                             String date = getCustomDateString(activeCheckIn.getDate());
                             String time = activeCheckIn.getQueue().getQueueStartTime() + " - " + activeCheckIn.getQueue().getQueueEndTime();
                             bookingInfo.setDate(date + " " + time);
-                            bookingInfo.setBookingOn(date);
+                            bookingInfo.setBookingOn(activeCheckIn.getDate());
+                        }
+
+                        if (activeCheckIn.getService() != null) {
+
+                            if (activeCheckIn.getService().getVirtualServiceType() != null) {
+
+                                if (activeCheckIn.getService().getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                    bookingInfo.setVideoService(true);
+                                } else {
+                                    bookingInfo.setVideoService(false);
+                                }
+                            }
+
+                            if (activeCheckIn.getService().getVirtualCallingModes() != null) {
+
+                                bookingInfo.setCallingType(activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode());
+                            }
                         }
 
                         bookings.add(bookingInfo);
@@ -257,37 +339,53 @@ public class MyBookings extends Fragment implements ISelectedBooking {
                                                 ArrayList<Bookings> futureBookings = new ArrayList<>();
 
                                                 if (allBookings != null && allBookings.size() > 0) {
+                                                    llBookings.setVisibility(View.VISIBLE);
+                                                    llNoBookings.setVisibility(View.GONE);
                                                     String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                                                     for (int i = 0; i < allBookings.size(); i++) {
 
-                                                        if (date.equalsIgnoreCase(allBookings.get(i).getDate())){
+                                                        if (date.equalsIgnoreCase(allBookings.get(i).getBookingOn())) {
 
                                                             todayBookings.add(allBookings.get(i));
-                                                        }
-                                                        else {
+                                                        } else {
                                                             futureBookings.add(allBookings.get(i));
                                                         }
                                                     }
 
-                                                    if (todayBookings.size() >0){
+                                                    if (todayBookings.size() > 0) {
 
+                                                        tvToday.setVisibility(View.VISIBLE);
+                                                        llNoBookingsForToday.setVisibility(View.GONE);
                                                         rvTodays.setVisibility(View.VISIBLE);
                                                         rvTodays.setLayoutManager(linearLayoutManager);
                                                         todayBookingsAdapter = new TodayBookingsAdapter(todayBookings, getContext(), false, iSelectedBooking);
                                                         rvTodays.setAdapter(todayBookingsAdapter);
+                                                    } else {
+                                                        tvToday.setVisibility(View.GONE);
+                                                        rvTodays.setVisibility(View.GONE);
+                                                        llNoBookingsForToday.setVisibility(View.VISIBLE);
                                                     }
 
-                                                    if (futureBookings.size()>0){
+                                                    if (futureBookings.size() > 0) {
 
+                                                        tvUpcoming.setVisibility(View.VISIBLE);
+                                                        llNoBookingsForFuture.setVisibility(View.GONE);
                                                         rvUpcomings.setVisibility(View.VISIBLE);
                                                         rvUpcomings.setLayoutManager(futureLayoutManager);
                                                         todayBookingsAdapter = new TodayBookingsAdapter(futureBookings, getContext(), false, iSelectedBooking);
                                                         rvUpcomings.setAdapter(todayBookingsAdapter);
+                                                    } else {
+
+                                                        tvUpcoming.setVisibility(View.GONE);
+                                                        rvUpcomings.setVisibility(View.GONE);
+                                                        llNoBookingsForFuture.setVisibility(View.VISIBLE);
                                                     }
 
                                                 } else {
 
                                                     // hide all
+                                                    llNoBookings.setVisibility(View.VISIBLE);
+                                                    llBookings.setVisibility(View.GONE);
                                                 }
 
                                             }
@@ -311,6 +409,144 @@ public class MyBookings extends Fragment implements ISelectedBooking {
             e.printStackTrace();
         }
 
+    }
+
+
+    public void setOfflineBookings() {
+
+        try {
+
+            allCheckInsOffline.clear();
+            bookingsList.clear();
+            DatabaseHandler db = new DatabaseHandler(mContext);
+            List<ActiveCheckIn> todayCheckInsOffline = new ArrayList<>();
+            List<ActiveCheckIn> futureCheckInsOffline = new ArrayList<>();
+            todayCheckInsOffline = db.getMyCheckinList("today");
+            futureCheckInsOffline = db.getMyCheckinList("future");
+            allCheckInsOffline.addAll(todayCheckInsOffline);
+            allCheckInsOffline.addAll(futureCheckInsOffline);
+            ArrayList<Bookings> bookings = new ArrayList<Bookings>();
+            for (ActiveCheckIn activeCheckIn : allCheckInsOffline) {
+
+                Bookings bookingInfo = new Bookings();
+                bookingInfo.setBookingId(activeCheckIn.getYnwUuid());
+                if (activeCheckIn.getShowToken() != null && activeCheckIn.getShowToken().equalsIgnoreCase("true")) {
+                    bookingInfo.setBookingType(Constants.TOKEN);
+                } else {
+                    bookingInfo.setBookingType(Constants.CHECKIN);
+                }
+                bookingInfo.setCheckInInfo(activeCheckIn);
+                bookingInfo.setWaitingTime(activeCheckIn.getAppxWaitingTime());
+                bookingInfo.setTokenNo(activeCheckIn.getToken());
+                if (activeCheckIn.getCalculationMode() != null) {
+                    bookingInfo.setCalculationMode(activeCheckIn.getCalculationMode());
+                }
+                if (activeCheckIn.getServiceTime() != null) {
+                    bookingInfo.setServiceTime(activeCheckIn.getServiceTime());
+                }
+                if (activeCheckIn.getBusinessName() != null) {
+                    bookingInfo.setSpName(activeCheckIn.getBusinessName());
+                }
+
+                if (activeCheckIn.getProvider() != null) {  // to get businessName of firstName & lastName
+                    bookingInfo.setProviderName(activeCheckIn.getProvider().getFirstName() + " " + activeCheckIn.getProvider().getLastName());
+                }
+
+                if (activeCheckIn.getName() != null) {
+                    bookingInfo.setServiceName(activeCheckIn.getName());
+                }
+
+                if (activeCheckIn.getService() != null && activeCheckIn.getWaitlistStatus() != null) {
+                    if (activeCheckIn.getService().getServiceType().equalsIgnoreCase("virtualService")) { //  check if it is a virtual service
+                        bookingInfo.setVirtual(true);
+                    }
+
+                    if (activeCheckIn.getService().getServiceType().equalsIgnoreCase("virtualService") && activeCheckIn.getWaitlistStatus().equalsIgnoreCase(Constants.ARRIVED)) {
+                        bookingInfo.setBookingStatus(null);
+                    } else {
+                        bookingInfo.setBookingStatus(activeCheckIn.getWaitlistStatus());
+                    }
+                }
+
+                if (activeCheckIn.getDate() != null && activeCheckIn.getQueueStartTime() != null && activeCheckIn.getQueueEndTime() != null) {
+
+                    String date = getCustomDateString(activeCheckIn.getDate());
+                    String time = activeCheckIn.getQueueStartTime() + " - " + activeCheckIn.getQueueEndTime();
+                    bookingInfo.setDate(date + " " + time);
+                    bookingInfo.setBookingOn(activeCheckIn.getDate());
+                }
+
+                if (activeCheckIn.getService() != null) {
+
+                    if (activeCheckIn.getService().getVirtualCallingModes() != null) {
+
+                        bookingInfo.setCallingType(activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode());
+                    }
+                }
+
+                bookings.add(bookingInfo);
+            }
+
+            bookingsList.addAll(bookings);
+
+            setOfflineBookingsToAdapter(bookingsList);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void setOfflineBookingsToAdapter(ArrayList<Bookings> offlineBookingsList) {
+
+        ArrayList<Bookings> todayBookings = new ArrayList<>();
+        ArrayList<Bookings> futureBookings = new ArrayList<>();
+        if (offlineBookingsList != null && offlineBookingsList.size() > 0) {
+            llBookings.setVisibility(View.VISIBLE);
+            llNoBookings.setVisibility(View.GONE);
+            String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+            for (int i = 0; i < offlineBookingsList.size(); i++) {
+
+                if (date.equalsIgnoreCase(offlineBookingsList.get(i).getBookingOn())) {
+
+                    todayBookings.add(offlineBookingsList.get(i));
+                } else {
+                    futureBookings.add(offlineBookingsList.get(i));
+                }
+            }
+
+            if (todayBookings.size() > 0) {
+
+                llNoBookingsForToday.setVisibility(View.GONE);
+                rvTodays.setVisibility(View.VISIBLE);
+                rvTodays.setLayoutManager(linearLayoutManager);
+                todayBookingsAdapter = new TodayBookingsAdapter(todayBookings, getContext(), false, iSelectedBooking);
+                rvTodays.setAdapter(todayBookingsAdapter);
+            } else {
+                rvTodays.setVisibility(View.GONE);
+                llNoBookingsForToday.setVisibility(View.VISIBLE);
+            }
+
+            if (futureBookings.size() > 0) {
+
+                llNoBookingsForFuture.setVisibility(View.GONE);
+                rvUpcomings.setVisibility(View.VISIBLE);
+                rvUpcomings.setLayoutManager(futureLayoutManager);
+                todayBookingsAdapter = new TodayBookingsAdapter(futureBookings, getContext(), false, iSelectedBooking);
+                rvUpcomings.setAdapter(todayBookingsAdapter);
+            } else {
+
+                rvUpcomings.setVisibility(View.GONE);
+                llNoBookingsForFuture.setVisibility(View.VISIBLE);
+            }
+
+        } else {
+
+            // hide all
+            llNoBookings.setVisibility(View.VISIBLE);
+            llBookings.setVisibility(View.GONE);
+
+        }
     }
 
 
@@ -355,5 +591,10 @@ public class MyBookings extends Fragment implements ISelectedBooking {
     public void onAttach(Context context) {
         super.onAttach(context);
         mActivity = getActivity();
+    }
+
+    @Override
+    public void sendBookingInfo(Bookings bookings) {
+
     }
 }

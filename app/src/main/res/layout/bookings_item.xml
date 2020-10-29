@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/padding5"
     app:cardCornerRadius="@dimen/padding15"
+    android:id="@+id/cv_booking"
     app:cardElevation="@dimen/padding5">
 
     <LinearLayout
@@ -15,8 +16,8 @@
 
         <ImageView
             android:id="@+id/iv_bookingType"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="@dimen/dimen_50dp"
+            android:layout_height="@dimen/dimen_50dp"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/dimen_10dp">
 
@@ -101,8 +102,9 @@
 
                 <ImageView
                     android:id="@+id/iv_serviceIcon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp">
+                    android:layout_width="@dimen/dimen_26dp"
+                    android:layout_height="@dimen/dimen_26dp"
+                    android:layout_marginEnd="@dimen/dimen_5dp">
 
                 </ImageView>
 
@@ -113,7 +115,6 @@
                     android:text=""
                     android:maxLines="2"
                     android:ellipsize="end"
-                    android:layout_marginStart="@dimen/padding5"
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/dimen_16sp">
 
@@ -127,7 +128,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textSize="@dimen/dimen_16sp"
+                android:textSize="@dimen/dimen_14sp"
                 android:textColor="@color/location_theme"
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_marginTop="@dimen/padding3">

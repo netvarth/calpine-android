@@ -25,6 +25,12 @@
 
     </style>
 
+    <style name="CustomTabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">@dimen/txtsize_12</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">@font/josefinsans_regular</item>
+    </style>
+
     <style name="CustomAlertDialogStyle">
         <item name="android:bottomBright">@android:color/transparent</item>
         <item name="android:bottomDark">@android:color/transparent</item>
