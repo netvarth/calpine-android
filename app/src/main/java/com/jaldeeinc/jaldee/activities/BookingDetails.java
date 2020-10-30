@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
@@ -74,6 +75,9 @@ public class BookingDetails extends AppCompatActivity {
     @BindView(R.id.tv_time)
     CustomTextViewBold tvTime;
 
+    @BindView(R.id.tv_batchNo)
+    CustomTextViewBold tvBatchNo;
+
     @BindView(R.id.tv_viewMore)
     CustomTextViewSemiBold tvViewMore;
 
@@ -104,8 +108,18 @@ public class BookingDetails extends AppCompatActivity {
     @BindView(R.id.ll_reschedule)
     LinearLayout llReschedule;
 
+    @BindView(R.id.ll_batch)
+    LinearLayout llBatch;
+
+    @BindView(R.id.ll_location)
+    LinearLayout llLocation;
+
+    @BindView(R.id.iv_ltIcon)
+    ImageView ivLtIcon;
+
     private Context mContext;
     private Bookings bookingInfo = new Bookings();
+    private boolean isActive = true;
     private ActiveAppointment apptInfo = new ActiveAppointment();
 
 
@@ -119,6 +133,8 @@ public class BookingDetails extends AppCompatActivity {
         Intent i = getIntent();
         if (i != null) {
             bookingInfo = (Bookings) i.getSerializableExtra("bookingInfo");
+            isActive = i.getBooleanExtra("isActive", true);
+
         }
 
         cvBack.setOnClickListener(new View.OnClickListener() {
@@ -132,8 +148,9 @@ public class BookingDetails extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(BookingDetails.this,RescheduleActivity.class);
-
+                Intent intent = new Intent(BookingDetails.this, RescheduleActivity.class);
+                intent.putExtra("appointmentInfo", apptInfo);
+                startActivity(intent);
             }
         });
 
@@ -163,7 +180,6 @@ public class BookingDetails extends AppCompatActivity {
                     if (response.code() == 200) {
                         apptInfo = response.body();
                         updateUI(apptInfo);
-
                     }
                 } catch (Exception e) {
 
@@ -230,64 +246,98 @@ public class BookingDetails extends AppCompatActivity {
                 }
 
                 // to set confirmation number
-                if (bookingInfo.getAppointmentInfo().getAppointmentEncId() != null) {
-                    tvConfirmationNumber.setText(bookingInfo.getAppointmentInfo().getAppointmentEncId());
+                if (appointmentInfo.getAppointmentEncId() != null) {
+                    tvConfirmationNumber.setText(appointmentInfo.getAppointmentEncId());
                 }
 
                 // to set status
-                if (bookingInfo.getAppointmentInfo().getApptStatus() != null) {
+                if (appointmentInfo.getApptStatus() != null) {
                     tvStatus.setVisibility(View.VISIBLE);
-                    tvStatus.setText(convertToTitleForm(bookingInfo.getAppointmentInfo().getApptStatus()));
+                    tvStatus.setText(convertToTitleForm(appointmentInfo.getApptStatus()));
                 } else {
                     tvStatus.setVisibility(View.GONE);
                 }
 
 
                 // to set paid info
-                if (bookingInfo.getAppointmentInfo().getAmountPaid() != null && !bookingInfo.getAppointmentInfo().getAmountPaid().equalsIgnoreCase("0.0")) {
+                if (appointmentInfo.getAmountPaid() != null && !appointmentInfo.getAmountPaid().equalsIgnoreCase("0.0")) {
                     llPayment.setVisibility(View.VISIBLE);
-                    tvAmount.setText("₹" + " " + convertAmountToDecimals(bookingInfo.getAppointmentInfo().getAmountPaid()) + " " + "PAID");
+                    tvAmount.setText("₹" + " " + convertAmountToDecimals(appointmentInfo.getAmountPaid()) + " " + "PAID");
                 } else {
 
                     llPayment.setVisibility(View.GONE);
                 }
 
                 // to set consumer name
-                if (bookingInfo.getAppointmentInfo().getAppmtFor() != null) {
+                if (appointmentInfo.getAppmtFor() != null) {
 
-                    if (bookingInfo.getAppointmentInfo().getAppmtFor().get(0).getUserName() != null) {
-                        tvConsumerName.setText(bookingInfo.getAppointmentInfo().getAppmtFor().get(0).getUserName());
+                    if (appointmentInfo.getAppmtFor().get(0).getUserName() != null) {
+                        tvConsumerName.setText(appointmentInfo.getAppmtFor().get(0).getUserName());
                     } else {
-                        tvConsumerName.setText(bookingInfo.getAppointmentInfo().getAppmtFor().get(0).getFirstName() + " " + bookingInfo.getAppointmentInfo().getAppmtFor().get(0).getLastName());
+                        tvConsumerName.setText(appointmentInfo.getAppmtFor().get(0).getFirstName() + " " + appointmentInfo.getAppmtFor().get(0).getLastName());
                     }
                 }
 
                 // to set appointment date
-                if (bookingInfo.getAppointmentInfo().getAppmtDate() != null) {
-                    tvDate.setText(getCustomDateString(bookingInfo.getAppointmentInfo().getAppmtDate()));
+                if (appointmentInfo.getAppmtDate() != null) {
+                    tvDate.setText(getCustomDateString(appointmentInfo.getAppmtDate()));
                 }
 
                 // to set slot time
-                if (bookingInfo.getAppointmentInfo().getAppmtTime() != null) {
+                if (appointmentInfo.getAppmtTime() != null) {
 
-                    tvTime.setText(convertTime(bookingInfo.getAppointmentInfo().getAppmtTime().split("-")[0]));
+                    tvTime.setText(convertTime(appointmentInfo.getAppmtTime().split("-")[0]));
+                }
+
+                if (appointmentInfo.getBatchId() != null) {
+                    llBatch.setVisibility(View.VISIBLE);
+                    tvBatchNo.setText(appointmentInfo.getBatchId());
+                } else {
+                    llBatch.setVisibility(View.GONE);
                 }
 
                 // to set location
-                if (bookingInfo.getAppointmentInfo().getLocation() != null) {
+                if (appointmentInfo.getLocation() != null) {
 
-                    if (bookingInfo.getAppointmentInfo().getLocation().getPlace() != null) {
+                    if (appointmentInfo.getLocation().getPlace() != null) {
 
-                        tvLocationName.setText(bookingInfo.getAppointmentInfo().getLocation().getPlace());
+                        tvLocationName.setText(appointmentInfo.getLocation().getPlace());
 
                         tvLocationName.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
 
-                                openMapView(bookingInfo.getAppointmentInfo().getLocation().getLattitude(), bookingInfo.getAppointmentInfo().getLocation().getLongitude(), bookingInfo.getAppointmentInfo().getLocation().getPlace());
+                                openMapView(appointmentInfo.getLocation().getLattitude(), appointmentInfo.getLocation().getLongitude(), appointmentInfo.getLocation().getPlace());
                             }
                         });
                     }
+                }
+
+                if (isActive) {
+                    llReschedule.setVisibility(View.VISIBLE);
+                    llCancel.setVisibility(View.VISIBLE);
+
+                    if (appointmentInfo.getService() != null) {
+
+                        if (appointmentInfo.getService().getLivetrack().equalsIgnoreCase("true")) {
+                            llLocation.setVisibility(View.VISIBLE);
+                            if (appointmentInfo.getJaldeeApptDistanceTime() != null) {
+                                Glide.with(BookingDetails.this).load(R.drawable.address).into(ivLtIcon);
+                            } else {
+                                ivLtIcon.setImageResource(R.drawable.location_off);
+                                ivLtIcon.setColorFilter(ContextCompat.getColor(context, R.color.light_gray));
+
+                            }
+                        } else {
+                            llLocation.setVisibility(View.GONE);
+                        }
+                    }
+
+
+                } else {
+                    llReschedule.setVisibility(View.GONE);
+                    llCancel.setVisibility(View.GONE);
+                    llLocation.setVisibility(View.GONE);
                 }
 
             }

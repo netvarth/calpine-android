@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.Fragment;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
 
@@ -20,7 +21,9 @@ import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.BookingDetails;
 import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.activities.HistoryActivity;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.UserDetailActivity;
 import com.jaldeeinc.jaldee.adapter.ExpandableListAdapter;
@@ -595,6 +598,25 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
 
     @Override
     public void sendBookingInfo(Bookings bookings) {
+
+        if (bookings != null) {
+
+            if (bookings.getBookingType().equalsIgnoreCase(Constants.APPOINTMENT)){
+
+                Intent intent = new Intent(mContext, BookingDetails.class);
+                intent.putExtra("bookingInfo", bookings);
+                intent.putExtra("isActive",true);
+                startActivity(intent);
+            }
+            else if (bookings.getBookingType().equalsIgnoreCase(Constants.CHECKEDIN)){
+
+
+            } else if (bookings.getBookingType().equalsIgnoreCase(Constants.TOKEN)){
+
+
+            }
+
+        }
 
     }
 }

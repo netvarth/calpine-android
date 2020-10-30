@@ -147,9 +147,13 @@
             app:neomorph_shadow_visible="true"
             app:neomorph_view_type="rectangular">
 
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:id="@+id/layout"
@@ -502,73 +506,60 @@
                     </LinearLayout>
 
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/layout"
-                    android:layout_marginStart="@dimen/dimen_20dp"
-                    android:layout_marginTop="@dimen/dimen_25dp"
-                    android:layout_marginEnd="@dimen/padding15"
-                    android:layout_marginBottom="@dimen/padding30"
-                    android:visibility="gone"
-                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimen_20dp"
+                        android:layout_marginTop="@dimen/dimen_20dp"
+                        android:layout_marginEnd="@dimen/dimen_8dp"
+                        android:orientation="horizontal">
 
 
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/dimen_35dp"
-                        android:layout_weight="0.5"
-                        android:orientation="vertical">
-
-                        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                            android:id="@+id/tv_viewMore"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:id="@+id/ll_batch"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:paddingRight="@dimen/dimen_20dp"
-                            android:text="View More"
-                            android:layout_centerVertical="true"
-                            android:textAllCaps="true"
-                            android:textColor="@color/location_theme"
-                            android:textSize="@dimen/txtsize_12">
+                            android:layout_weight="0.5"
+                            android:gravity="start"
+                            android:layout_marginEnd="@dimen/dimen_8dp"
+                            android:orientation="vertical">
 
-                        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewLight
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Batch"
+                                android:textAllCaps="true"
+                                android:textSize="@dimen/txtsize_12">
+
+                            </com.jaldeeinc.jaldee.custom.CustomTextViewLight>
+
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                                android:id="@+id/tv_batchNo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="@dimen/dimen_1dp"
+                                android:text=""
+                                android:textColor="@color/appoint_theme"
+                                android:textSize="@dimen/dimen_18dp">
+
+                            </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+                        </LinearLayout>
 
 
-                    </RelativeLayout>
+                    </LinearLayout>
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/cv_ok"
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/dimen_35dp"
-                        android:layout_marginStart="@dimen/padding5"
-                        android:layout_weight="0.5"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        app:cardBackgroundColor="@color/location_theme"
-                        app:cardCornerRadius="@dimen/padding3">
-
-                        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="OK"
-                            android:textAllCaps="true"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/txtsize_12">
-
-                        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
-
-                    </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
 
+
                 <LinearLayout
+                    android:id="@+id/ll_options"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/dimen_35dp"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
                     android:layout_marginTop="@dimen/dimen_25dp"
                     android:layout_below="@id/layout">
 
@@ -669,19 +660,104 @@
                             android:layout_height="wrap_content"
                             android:text="Reschedule"
                             android:visibility="gone"
-                            android:textSize="@dimen/txtsize_12"
-                            >
+                            android:textSize="@dimen/txtsize_12">
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/ll_location"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_marginStart="@dimen/dimen_15dp"
+                        android:backgroundTint="@color/white"
+                        android:background="@drawable/filled_circle">
+
+                        <ImageView
+                            android:id="@+id/iv_ltIcon"
+                            android:layout_width="@dimen/dimen_26dp"
+                            android:layout_height="@dimen/dimen_26dp"
+                            android:src="@drawable/address">
+
+                        </ImageView>
+
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/ll_viewMore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ll_options"
+                    android:layout_marginStart="@dimen/dimen_20dp"
+                    android:layout_marginTop="@dimen/dimen_25dp"
+                    android:layout_marginEnd="@dimen/padding15"
+                    android:layout_marginBottom="@dimen/dimen_25dp"
+                    android:visibility="visible"
+                    android:orientation="horizontal">
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dimen_35dp"
+                        android:layout_weight="0.5"
+                        android:orientation="vertical">
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                            android:id="@+id/tv_viewMore"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingRight="@dimen/dimen_20dp"
+                            android:text="View More"
+                            android:layout_centerVertical="true"
+                            android:textAllCaps="true"
+                            android:textColor="@color/location_theme"
+                            android:textSize="@dimen/txtsize_12">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+
+                    </RelativeLayout>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cv_ok"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dimen_35dp"
+                        android:layout_marginStart="@dimen/padding5"
+                        android:layout_weight="0.5"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        app:cardBackgroundColor="@color/location_theme"
+                        app:cardCornerRadius="@dimen/padding3">
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="OK"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/txtsize_12">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                    </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
 
 
 
+
             </RelativeLayout>
+
+            </androidx.core.widget.NestedScrollView>
 
 
         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>

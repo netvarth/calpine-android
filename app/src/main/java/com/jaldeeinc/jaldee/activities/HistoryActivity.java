@@ -537,9 +537,25 @@ public class HistoryActivity extends AppCompatActivity implements ISelectedBooki
     @Override
     public void sendBookingInfo(Bookings bookings) {
 
-        Intent intent = new Intent(HistoryActivity.this,BookingDetails.class);
-        intent.putExtra("bookingInfo",bookings);
-        startActivity(intent);
+        if (bookings != null) {
+
+            if (bookings.getBookingType().equalsIgnoreCase(Constants.APPOINTMENT)){
+
+                Intent intent = new Intent(HistoryActivity.this,BookingDetails.class);
+                intent.putExtra("bookingInfo",bookings);
+                intent.putExtra("isActive",false);
+                startActivity(intent);
+
+            }
+            else if (bookings.getBookingType().equalsIgnoreCase(Constants.CHECKEDIN)){
+
+
+            } else if (bookings.getBookingType().equalsIgnoreCase(Constants.TOKEN)){
+
+
+            }
+
+        }
 
     }
 }
