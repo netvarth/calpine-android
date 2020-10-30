@@ -37,6 +37,8 @@ import android.widget.Toast;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckinShareLocation;
 import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
+import com.jaldeeinc.jaldee.activities.RescheduleActivity;
+import com.jaldeeinc.jaldee.activities.RescheduleCheckinActivity;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
 import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
 import com.jaldeeinc.jaldee.custom.MeetingInfo;
@@ -361,6 +363,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         CardView cvZoomDetails = view.findViewById(R.id.cv_ZoommeetDetails);
         CardView cvWhatsppDetails = view.findViewById(R.id.cv_whatsppDetails);
         CardView cvPhoneDetails = view.findViewById(R.id.cv_phoneMeetDetails);
+        CardView cvReschedule = view.findViewById(R.id.cv_reschedule);
         ImageView icon_service = view.findViewById(R.id.serviceicon);
         LinearLayout llprovider = view.findViewById(R.id.ll_providerName);
         TextView tvProviderName = view.findViewById(R.id.tv_providerName);
@@ -1035,6 +1038,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             layout_dateCheckin.setVisibility(View.VISIBLE);
             tv_queueTime.setVisibility(View.GONE);
             liveTrackLayout.setVisibility(View.GONE);
+            cvReschedule.setVisibility(View.GONE);
 
 
         } else {
@@ -1155,6 +1159,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                     tv_statusSmall.setText("Cancelled ");
                     tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.red));
+
                     //tv_estTime.setText(spannable);
                 }
                 if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
@@ -1815,6 +1820,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             tv_statusSmall.setVisibility(View.VISIBLE);
             tv_status.setTextColor(mContext.getResources().getColor(R.color.green));
             tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.green));
+            cvReschedule.setVisibility(View.GONE);
+
         }
         if (activelist.getWaitlistStatus().equalsIgnoreCase("arrived")) {
             if(activelist.getService().getServiceType().equalsIgnoreCase("virtualService")){
@@ -1832,6 +1839,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             tv_statusSmall.setVisibility(View.VISIBLE);
             tv_status.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
             tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
+            cvReschedule.setVisibility(View.GONE);
         }
         if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
             tv_status.setText("Checked-in");
@@ -1841,6 +1849,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             tv_status.setTextColor(mContext.getResources().getColor(R.color.purple));
             tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.purple));
             tv_check_in.setVisibility(View.GONE);
+
+            if (header.equalsIgnoreCase("today") || header.equalsIgnoreCase("future")){
+                cvReschedule.setVisibility(View.VISIBLE);
+            }
+            else {
+                cvReschedule.setVisibility(View.GONE);
+            }
+
         }
 
         if (activelist.getWaitlistStatus().equalsIgnoreCase("started")) {
@@ -1851,6 +1867,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             tv_statusSmall.setVisibility(View.VISIBLE);
             tv_status.setTextColor(mContext.getResources().getColor(R.color.cyan));
             tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.cyan));
+            cvReschedule.setVisibility(View.GONE);
         }
 
         if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
@@ -1865,6 +1882,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 tv_status.setTextColor(mContext.getResources().getColor(R.color.gray));
                 tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.gray));
             }
+            cvReschedule.setVisibility(View.GONE);
         }
 
 
@@ -1995,6 +2013,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 //            btn_pay.setVisibility(View.GONE);
 //            tv_status.setVisibility(View.GONE);
 //        }
+
+        cvReschedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent rescheduleIntent = new Intent(mContext, RescheduleCheckinActivity.class);
+                rescheduleIntent.putExtra("checkinInfo",activelist);
+                mContext.startActivity(rescheduleIntent);
+            }
+        });
 
 
         btn_pay.setOnClickListener(new View.OnClickListener() {
