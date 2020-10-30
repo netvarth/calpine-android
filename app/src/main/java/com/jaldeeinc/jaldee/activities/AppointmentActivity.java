@@ -1363,7 +1363,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             }
 
             if (etVirtualNumber.getText().toString().trim().length() > 9) {
-                if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("whatsapp")) {
+                if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("whatsApp")) {
                     virtualService.put("WhatsApp", etVirtualNumber.getText());
                 } else if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("GoogleMeet")) {
                     virtualService.put("GoogleMeet", serviceInfo.getVirtualCallingValue());

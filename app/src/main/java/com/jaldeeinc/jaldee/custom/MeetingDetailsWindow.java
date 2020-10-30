@@ -62,6 +62,9 @@ public class MeetingDetailsWindow extends Dialog {
 
                 tvLink.setText(teleServiceCheckInResponse.getStartingUl());
             }
+            else{
+                btJoin.setVisibility(View.GONE);
+            }
 
             tvLink.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -79,7 +82,6 @@ public class MeetingDetailsWindow extends Dialog {
         btJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);

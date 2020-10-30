@@ -1373,13 +1373,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             }
 
             if (etVirtualNumber.getText().toString().trim().length() > 9) {
-                if (checkInInfo.getCallingMode() != null && checkInInfo.getCallingMode().equalsIgnoreCase("whatsapp")) {
+                if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("whatsApp")) {
                     virtualService.put("WhatsApp", etVirtualNumber.getText());
-                } else if (checkInInfo.getCallingMode() != null && checkInInfo.getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                    virtualService.put("GoogleMeet", checkInInfo.getVirtualCallingModes().get(0).getCallingMode());
-                } else if (checkInInfo.getCallingMode() != null && checkInInfo.getCallingMode().equalsIgnoreCase("Zoom")) {
-                    virtualService.put("Zoom", checkInInfo.getVirtualCallingModes().get(0).getCallingMode());
-                } else if (checkInInfo.getCallingMode() != null && checkInInfo.getCallingMode().equalsIgnoreCase("Phone")) {
+                } else if (checkInInfo.getVirtualCallingModes() != null &&  checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                    virtualService.put("GoogleMeet", checkInInfo.getVirtualCallingModes().get(0).getValue());
+                } else if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                    virtualService.put("Zoom", checkInInfo.getVirtualCallingModes().get(0).getValue());
+                } else if (checkInInfo.getVirtualCallingModes()!= null &&  checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Phone")) {
                     virtualService.put("Phone", etVirtualNumber.getText());
                 }
             } else {
@@ -1411,7 +1411,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             if (MultiplefamilyList.size() > 0) {
                 for (int i = 0; i < MultiplefamilyList.size(); i++) {
                     JSONObject waitobj1 = new JSONObject();
-                    waitobj1.put("id", MultiplefamilyList.get(i).getId());
+                    if(familyMEmID==MultiplefamilyList.get(i).getId()){
+                        waitobj1.put("id",0);
+                    }
+                    else {
+                        waitobj1.put("id", MultiplefamilyList.get(i).getId());
+                    }
                     waitobj1.put("firstName", MultiplefamilyList.get(i).getFirstName());
                     waitobj1.put("lastName", MultiplefamilyList.get(i).getLastName());
                     waitlistArray.put(waitobj1);

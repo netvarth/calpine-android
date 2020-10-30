@@ -385,6 +385,9 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
                 String oldtime = convertTime(time);
                 tvActualTime.setText(oldDate + ", " + oldtime);
             }
+            if(appointmentInfo.getConsumerNote()!=null){
+                userMessage = appointmentInfo.getConsumerNote();
+            }
 
         }
 
@@ -885,6 +888,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
             body.put("time",slotTime);
             body.put("date",apiDate);
             body.put("schedule",scheduleId);
+            body.put("consumerNote",userMessage);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -909,7 +913,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
 
                         Toast.makeText(RescheduleActivity.this,"Appointment rescheduled successfully",Toast.LENGTH_SHORT).show();
 
-                            if (imagePathList.size() > 0 || !userMessage.equalsIgnoreCase("")) {
+                            if (imagePathList.size() > 0) {
                                 if(appointmentInfo.getUid()!=null) {
                                     ApiCommunicateAppointment(appointmentInfo.getUid(), String.valueOf(id), userMessage, dialog);
                                 }
