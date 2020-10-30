@@ -740,6 +740,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
             String pickedDate = apiSdf.format(myCalendar.getTime());
             tvDate.setText(getCustomDateString(pickedDate));
             UpdateDAte(mDate);
+            apiDate = pickedDate;
             getSlotsOnDate(serviceId, locationId, pickedDate, accountId);
         } catch (Exception e) {
             e.printStackTrace();
