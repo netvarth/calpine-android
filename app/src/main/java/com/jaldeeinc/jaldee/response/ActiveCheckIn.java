@@ -126,8 +126,9 @@ public class ActiveCheckIn implements Serializable {
 
     @SerializedName("queue")
     private ActiveCheckIn queue;
+
     @SerializedName("location")
-    private ActiveCheckIn location;
+    private LocationDetails location;
     String place;
     String address;
     String longitude;
@@ -464,13 +465,14 @@ public class ActiveCheckIn implements Serializable {
         this.queue = queue;
     }
 
-    public ActiveCheckIn getLocation() {
+    public LocationDetails getLocation() {
         return location;
     }
 
-    public void setLocation(ActiveCheckIn location) {
+    public void setLocation(LocationDetails location) {
         this.location = location;
     }
+
 
     public String getPlace() {
         return place;

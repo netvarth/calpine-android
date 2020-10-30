@@ -98,6 +98,16 @@ public class SearchViewDetail implements Serializable {
 
     String accEncUid;
 
+    public String getCustomId() {
+        return customId;
+    }
+
+    public void setCustomId(String customId) {
+        this.customId = customId;
+    }
+
+    String customId;
+
     public void setBaseLocation(LocationModel baseLocation) {
         this.baseLocation = baseLocation;
     }

@@ -1,5 +1,14 @@
 package com.jaldeeinc.jaldee.activities;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+
+import com.jaldeeinc.jaldee.Interface.ISelectQ;
+import com.jaldeeinc.jaldee.Interface.ISelectedQueue;
+import com.jaldeeinc.jaldee.R;
+
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
@@ -26,6 +35,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
@@ -47,18 +57,22 @@ import com.jaldeeinc.jaldee.Interface.ISlotInfo;
 import com.jaldeeinc.jaldee.Interface.OnBottomReachedListener;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
+import com.jaldeeinc.jaldee.adapter.QueuesAdapter;
 import com.jaldeeinc.jaldee.adapter.TimeSlotsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.AddNotes;
+import com.jaldeeinc.jaldee.custom.CheckInSlotsDialog;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.SlotsDialog;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
+import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.ProfileModel;
+import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SlotsData;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
@@ -91,10 +105,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -106,7 +124,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,ISelectSlotInterface,OnBottomReachedListener,ISendMessage {
+public class RescheduleCheckinActivity extends AppCompatActivity implements ISelectQ,ISelectedQueue,ISendMessage {
 
 
     @BindView(R.id.tv_spName)
@@ -172,23 +190,30 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
     @BindView(R.id.cv_attachFile)
     CardView cvAttachFile;
 
+    @BindView(R.id.rescheduleTitle)
+    CustomTextViewMedium tv_title;
 
-    int scheduleId,serviceId,locationId,accountId;
-    String slotTime,apiDate;
-    private SlotsDialog slotsDialog;
+    @BindView(R.id.tv_term)
+    CustomTextViewMedium tv_bookingFor;
+
+    @BindView(R.id.tv_peopleAhead)
+    CustomTextViewBold tv_peopleAhead;
+
+
+    int queueId,serviceId,locationId,accountId;
+    String apiDate;
+    private CheckInSlotsDialog slotsDialog;
     private RecyclerView rvSlots;
     private LinearLayout llNoSlots,llChangeTo;
     private NeomorphFrameLayout cvCalender;
-    TimeSlotsAdapter sAdapter;
+    QueuesAdapter queuesAdapter;
     private LinearLayout llSeeMoreHint;
-    ArrayList<AvailableSlotsData> activeSlotsList = new ArrayList<>();
-    ArrayList<SlotsData> slotsData = new ArrayList<SlotsData>();
-    private ISelectSlotInterface iSelectSlotInterface;
-    private OnBottomReachedListener onBottomReachedListener;
-    private ISlotInfo iSlotInfo;
+    ArrayList<QueueTimeSlotModel> queuesData = new ArrayList<>();
+    private ISelectedQueue iSelectedQueue;
+    private ISelectQ iSelectQ;
     private Context mContext;
     final Calendar myCalendar = Calendar.getInstance();
-    ActiveAppointment appointmentInfo = new ActiveAppointment();
+    ActiveCheckIn checkInInfo = new ActiveCheckIn();
     private AddNotes addNotes;
     private ISendMessage iSendMessage;
     private String userMessage = "";
@@ -208,35 +233,32 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
     Bitmap bitmap;
     File file;
     String value,user;
-    ActiveAppointment activeAppointment = new ActiveAppointment();
+    ActiveCheckIn activeCheckIn = new ActiveCheckIn();
     SearchTerminology mSearchTerminology;
     int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reschedule);
-        ButterKnife.bind(RescheduleActivity.this);
+        setContentView(R.layout.activity_reschedule_checkin);
+        ButterKnife.bind(RescheduleCheckinActivity.this);
         mContext = this;
-        iSlotInfo = this;
-        this.iSelectSlotInterface = this;
-        this.onBottomReachedListener = this;
+        iSelectQ = this;
         iSendMessage = this;
+        iSelectQ=this;
+        iSelectedQueue = this;
 
         initializations();
 
         Intent i = getIntent();
-        appointmentInfo = (ActiveAppointment) i.getSerializableExtra("appointmentInfo");
+        checkInInfo = (ActiveCheckIn) i.getSerializableExtra("checkinInfo");
 
-        if(appointmentInfo!=null) {
-            ApiSearchViewTerminology(Integer.parseInt(appointmentInfo.getProviderAccount().getUniqueId()));
-        }
+        ApiSearchViewTerminology(Integer.parseInt(checkInInfo.getUniqueId()));
 
 
-        if (appointmentInfo != null && appointmentInfo.getAppmtDate() != null) {
+        if (checkInInfo != null && checkInInfo.getDate() != null) {
 
-            Date sDate = null;
-            String dtStart = appointmentInfo.getAppmtDate();
+            Date sDate = null;String dtStart =checkInInfo.getDate();
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 sDate = format.parse(dtStart);
@@ -248,54 +270,63 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
             cal.add(Calendar.DAY_OF_YEAR, 1);
             Date tomorow = cal.getTime();
             try {
-                tvCalenderDate.setText(getCalenderDateFormat(appointmentInfo.getAppmtDate()));
+                tvCalenderDate.setText(getCalenderDateFormat(checkInInfo.getDate()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
             if (today.before(sDate)) {
                 Config.logV("Date Enabled---------------");
                 ivMinus.setEnabled(true);
-                ivMinus.setColorFilter(ContextCompat.getColor(RescheduleActivity.this, R.color.location_theme), android.graphics.PorterDuff.Mode.SRC_IN);
+                ivMinus.setColorFilter(ContextCompat.getColor(RescheduleCheckinActivity.this, R.color.location_theme), android.graphics.PorterDuff.Mode.SRC_IN);
 
             } else {
                 Config.logV("Date Disabled---------------");
                 ivMinus.setEnabled(false);
-                ivMinus.setColorFilter(ContextCompat.getColor(RescheduleActivity.this, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                ivMinus.setColorFilter(ContextCompat.getColor(RescheduleCheckinActivity.this, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         }
 
-        if (appointmentInfo != null) {
+        if (checkInInfo != null) {
 
-            String name = appointmentInfo.getProviderAccount().getBusinessName();
+            if(checkInInfo.getShowToken()!=null && checkInInfo.getShowToken().equalsIgnoreCase("true")){
+                tv_title.setText("Reschedule a token");
+                tv_bookingFor.setText("Token for");
+            }
+            else{
+                tv_title.setText("Reschedule a checkin");
+                tv_bookingFor.setText("Checkin for");
+            }
+
+            String name = checkInInfo.getBusinessName();
             name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
 
             tvSpName.setText(name);
 
-            if (appointmentInfo.getProvider() != null) {
+            if (checkInInfo.getProvider() != null) {
                 String username = "";
-                if (appointmentInfo.getProvider().getBusinessName() != null) {
-                    username = appointmentInfo.getProvider().getBusinessName();
+                if (checkInInfo.getProvider().getBusinessName() != null) {
+                    username = checkInInfo.getProvider().getBusinessName();
                 } else {
-                    username = appointmentInfo.getProvider().getFirstName() + " " + appointmentInfo.getProvider().getLastName();
+                    username = checkInInfo.getProvider().getFirstName() + " " + checkInInfo.getProvider().getLastName();
                 }
                 username = username.substring(0, 1).toUpperCase() + username.substring(1).toLowerCase();
                 tv_userName.setText(username);
                 tv_userName.setVisibility(View.VISIBLE);
                 tvSpName.setTextSize(16);
-                userId = appointmentInfo.getProvider().getId();
+                userId = checkInInfo.getProvider().getId();
             }
             else {
-                userId = appointmentInfo.getProviderAccount().getId();
+                userId = checkInInfo.getId();
             }
 
 
             try {
-                if (appointmentInfo.getLocation().getGoogleMapUrl() != null) {
-                    String geoUri = appointmentInfo.getLocation().getGoogleMapUrl();
+                if (checkInInfo.getLocation().getGoogleMapUrl() != null) {
+                    String geoUri = checkInInfo.getLocation().getGoogleMapUrl();
                     if (geoUri != null) {
 
                         tvLocationName.setVisibility(View.VISIBLE);
-                        tvLocationName.setText(appointmentInfo.getLocation().getPlace());
+                        tvLocationName.setText(checkInInfo.getLocation().getPlace());
                     } else {
                         tvLocationName.setVisibility(View.GONE);
                     }
@@ -308,7 +339,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
                 @Override
                 public void onClick(View v) {
 
-                    String geoUri = appointmentInfo.getLocation().getGoogleMapUrl();
+                    String geoUri = checkInInfo.getLocation().getGoogleMapUrl();
                     try {
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
                         startActivity(intent);
@@ -319,26 +350,26 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
             });
 
             // to set service name
-            if (appointmentInfo.getService() != null) {
+            if (checkInInfo.getService() != null) {
 
-                if (appointmentInfo.getService().getName() != null) {
-                    String sName = appointmentInfo.getService().getName();
+                if (checkInInfo.getService().getName() != null) {
+                    String sName = checkInInfo.getService().getName();
                     sName = sName.substring(0, 1).toUpperCase() + sName.substring(1).toLowerCase();
                     tvServiceName.setText(sName);
                 }
 
                 try {
-                    if (appointmentInfo.getService().getServiceType() != null) {
-                        if (appointmentInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
+                    if (checkInInfo.getService().getServiceType() != null) {
+                        if (checkInInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
                             ivteleService.setVisibility(View.VISIBLE);
-                            if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                            if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
                                 ivteleService.setImageResource(R.drawable.zoom);
-                            } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                            } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
                                 ivteleService.setImageResource(R.drawable.googlemeet);
-                            } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                            } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
                                 ivteleService.setImageResource(R.drawable.whatsapp_icon);
 
-                            } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                            } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 ivteleService.setImageResource(R.drawable.phone_icon);
                             }
                         } else {
@@ -351,42 +382,39 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
 
             }
 
-            if (appointmentInfo.getAppmtDate() != null && appointmentInfo.getService() != null && appointmentInfo.getLocation() != null && appointmentInfo.getProviderAccount() != null) {
+            if (checkInInfo.getDate() != null && checkInInfo.getService() != null && checkInInfo.getLocation() != null) {
 
-                apiDate = appointmentInfo.getAppmtDate();
-                serviceId = appointmentInfo.getService().getId();
-                locationId = appointmentInfo.getLocation().getId();
-                accountId = appointmentInfo.getProviderAccount().getId();
-                // api call to get slots on default date (appointment date)
-                getSlotsOnDate(serviceId, locationId, apiDate, accountId);
+                apiDate = checkInInfo.getDate();
+                serviceId = checkInInfo.getService().getId();
+                locationId = checkInInfo.getLocation().getId();
+                accountId = checkInInfo.getId();
+                // api call to get slots on default date (checkin date)
+                ApiQueueTimeSlot(String.valueOf(locationId),String.valueOf(serviceId),String.valueOf(accountId),apiDate);
 
             }
 
-            if (appointmentInfo.getAppmtFor() != null) {
-                String cName = Config.toTitleCase(appointmentInfo.getAppmtFor().get(0).getFirstName()) + " " + Config.toTitleCase(appointmentInfo.getAppmtFor().get(0).getLastName());
+            if (checkInInfo.getFirstName() != null && checkInInfo.getLastName()!=null) {
+                String cName = Config.toTitleCase(checkInInfo.getFirstName()) + " " + Config.toTitleCase(checkInInfo.getLastName());
                 tvConsumerName.setText(cName);
-                if (appointmentInfo.getPhoneNumber() != null) {
+                if (checkInInfo.getPhoneNo() != null) {
                     tvNumber.setVisibility(View.VISIBLE);
-                    tvNumber.setText(appointmentInfo.getPhoneNumber());
+                    tvNumber.setText(checkInInfo.getPhoneNo());
                 } else {
                     tvNumber.setVisibility(View.GONE);
                 }
-                if (appointmentInfo.getAppmtFor().get(0).getEmail() != null) {
+                if (checkInInfo.getEmail() != null) {
                     tvEmail.setVisibility(View.VISIBLE);
-                    tvEmail.setText(appointmentInfo.getAppmtFor().get(0).getEmail());
+                    tvEmail.setText(checkInInfo.getEmail());
                 } else {
                     tvEmail.setVisibility(View.GONE);
                 }
             }
 
-            if (appointmentInfo.getAppmtDate() != null && appointmentInfo.getAppmtTime() != null) {
-                String oldDate = convertDate(appointmentInfo.getAppmtDate());
-                String time = appointmentInfo.getAppmtTime().split("-")[0];
+            if (checkInInfo.getDate() != null && checkInInfo.getCheckInTime() != null) {
+                String oldDate = convertDate(checkInInfo.getDate());
+                String time = checkInInfo.getCheckInTime().split("-")[0];
                 String oldtime = convertTime(time);
                 tvActualTime.setText(oldDate + ", " + oldtime);
-            }
-            if(appointmentInfo.getConsumerNote()!=null){
-                userMessage = appointmentInfo.getConsumerNote();
             }
 
         }
@@ -433,12 +461,12 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
             public void onClick(View view) {
 
                 try {
-                    if (appointmentInfo.getAppmtDate() != null && appointmentInfo.getService() != null && appointmentInfo.getLocation() != null && appointmentInfo.getProviderAccount() != null) {
-                        slotsDialog = new SlotsDialog(RescheduleActivity.this, appointmentInfo.getService().getId(), appointmentInfo.getLocation().getId(), iSlotInfo, appointmentInfo.getProviderAccount().getId(), appointmentInfo.getAppmtDate());
+                    if (checkInInfo.getDate() != null && checkInInfo.getService() != null && checkInInfo.getLocation() != null ) {
+                        slotsDialog = new CheckInSlotsDialog(RescheduleCheckinActivity.this, checkInInfo.getService().getId(), checkInInfo.getLocation().getId(), iSelectQ, checkInInfo.getId(),checkInInfo.getDate());
                         slotsDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                         slotsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         slotsDialog.show();
-                        DisplayMetrics metrics = RescheduleActivity.this.getResources().getDisplayMetrics();
+                        DisplayMetrics metrics = RescheduleCheckinActivity.this.getResources().getDisplayMetrics();
                         int width = (int) (metrics.widthPixels * 1);
                         slotsDialog.setCancelable(false);
                         slotsDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -451,7 +479,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
         });
 
 
-        if(appointmentInfo.getProvider()!=null){
+        if(checkInInfo.getProvider()!=null){
             user = tv_userName.getText().toString();
         }
         else{
@@ -575,7 +603,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
 
                 });
 
-//
+
                 tv_camera.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -703,7 +731,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
             @Override
             public void onClick(View view) {
 
-                reScheduleAppointment(appointmentInfo.getProviderAccount().getId());
+                reScheduleCheckin(checkInInfo.getId());
             }
         });
     }
@@ -742,8 +770,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
             String pickedDate = apiSdf.format(myCalendar.getTime());
             tvDate.setText(getCustomDateString(pickedDate));
             UpdateDAte(mDate);
-            apiDate = pickedDate;
-            getSlotsOnDate(serviceId, locationId, pickedDate, accountId);
+            ApiQueueTimeSlot(String.valueOf(locationId),String.valueOf(serviceId),String.valueOf(accountId),pickedDate);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -760,7 +787,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        getSlotsOnDate(serviceId, locationId, sDate, accountId);
+        ApiQueueTimeSlot(String.valueOf(locationId),String.valueOf(serviceId),String.valueOf(accountId),sDate);
 
         Calendar cal = Calendar.getInstance();
         Date today = cal.getTime();
@@ -780,124 +807,24 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
         return "";
     }
 
-
-
-    private void getSlotsOnDate(int serviceId, int mSpinnertext, String selectDate, int modifyAccountID) {
+    private void reScheduleCheckin(int id) {
 
         ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Call<ArrayList<SlotsData>> call = apiService.getSlotsOnDate(selectDate, mSpinnertext, serviceId, modifyAccountID);
-
-        call.enqueue(new Callback<ArrayList<SlotsData>>() {
-            @Override
-            public void onResponse(Call<ArrayList<SlotsData>> call, Response<ArrayList<SlotsData>> response) {
-                try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(RescheduleActivity.this, mDialog);
-                    if (response.code() == 200) {
-
-                        if (response.body() != null) {
-                            slotsData = response.body();
-
-                            activeSlotsList.clear();
-                            for (int i = 0; i < slotsData.size(); i++) {
-                                ArrayList<AvailableSlotsData> availableSlotsList = new ArrayList<>();
-                                availableSlotsList = slotsData.get(i).getAvailableSlots();
-
-                                for (int j = 0; j < availableSlotsList.size(); j++) {
-                                    if (availableSlotsList.get(j).getNoOfAvailableSlots() != 0 && availableSlotsList.get(j).isActive()) {
-
-                                        availableSlotsList.get(j).setScheduleId(slotsData.get(i).getScheduleId());
-                                        String displayTime = getDisplayTime(availableSlotsList.get(j).getSlotTime());
-                                        availableSlotsList.get(j).setDisplayTime(displayTime);
-                                        activeSlotsList.add(availableSlotsList.get(j));
-                                    }
-                                }
-                            }
-
-                            if (activeSlotsList != null) {
-                                if (activeSlotsList.size() > 0) {
-
-                                    rvSlots.setVisibility(View.VISIBLE);
-                                    llChangeTo.setVisibility(View.VISIBLE);
-                                    llNoSlots.setVisibility(View.GONE);
-                                    tvDate.setVisibility(View.VISIBLE);
-                                    tvTime.setVisibility(View.VISIBLE);
-                                    cvSubmit.setClickable(true);
-                                    cvSubmit.setEnabled(true);
-                                    cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.location_theme));
-                                    if (activeSlotsList.size()>15){
-                                        llSeeMoreHint.setVisibility(View.VISIBLE);
-                                    }
-                                    else {
-                                        llSeeMoreHint.setVisibility(View.GONE);
-                                    }
-                                    scheduleId = activeSlotsList.get(0).getScheduleId();
-                                    slotTime = activeSlotsList.get(0).getSlotTime();
-                                    tvTime.setText(activeSlotsList.get(0).getDisplayTime());
-                                    tvDate.setText(getCustomDateString(slotsData.get(0).getDate()));
-                                    tvCalenderDate.setText(getCalenderDateFormat(slotsData.get(0).getDate()));
-                                    RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 3);
-                                    rvSlots.setLayoutManager(mLayoutManager);
-                                    sAdapter = new TimeSlotsAdapter(mContext, activeSlotsList, iSelectSlotInterface,onBottomReachedListener);
-                                    rvSlots.setAdapter(sAdapter);
-                                } else {
-
-                                    rvSlots.setVisibility(View.GONE);
-                                    llNoSlots.setVisibility(View.VISIBLE);
-                                    llSeeMoreHint.setVisibility(View.GONE);
-                                    tvDate.setVisibility(View.GONE);
-                                    tvTime.setVisibility(View.GONE);
-                                    llChangeTo.setVisibility(View.GONE);
-                                    cvSubmit.setClickable(false);
-                                    cvSubmit.setEnabled(false);
-                                    cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.inactive_text));
-
-                                }
-                            }
-                        }
-
-                    } else {
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<SlotsData>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(RescheduleActivity.this, mDialog);
-            }
-        });
-    }
-
-
-    private void reScheduleAppointment(int id) {
-
-        ApiInterface apiService =
-                ApiClient.getClient(RescheduleActivity.this).create(ApiInterface.class);
+                ApiClient.getClient(RescheduleCheckinActivity.this).create(ApiInterface.class);
 
         JSONObject body = new JSONObject();
         try {
-            body.put("uid",appointmentInfo.getUid());
-            body.put("time",slotTime);
+            body.put("ynwUuid",checkInInfo.getYnwUuid());
             body.put("date",apiDate);
-            body.put("schedule",scheduleId);
-            body.put("consumerNote",userMessage);
+            body.put("queue",queueId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        final Dialog mDialog = Config.getProgressDialog(RescheduleActivity.this, RescheduleActivity.this.getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(RescheduleCheckinActivity.this, RescheduleCheckinActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), body.toString());
-        Call<ResponseBody> call = apiService.reScheduleAppointment(id,requestBody);
+        Call<ResponseBody> call = apiService.reScheduleCheckin(id,requestBody);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -912,23 +839,59 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
 
-                        Toast.makeText(RescheduleActivity.this,"Appointment rescheduled successfully",Toast.LENGTH_SHORT).show();
+                        if(checkInInfo.getShowToken()!=null && checkInInfo.getShowToken().equalsIgnoreCase("true")){
+                            Toast.makeText(RescheduleCheckinActivity.this, "Token rescheduled successfully", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                             Toast.makeText(RescheduleCheckinActivity.this, "Checkin rescheduled successfully", Toast.LENGTH_SHORT).show();
+                        }
 
-                            if (imagePathList.size() > 0) {
-                                if(appointmentInfo.getUid()!=null) {
-                                    ApiCommunicateAppointment(appointmentInfo.getUid(), String.valueOf(id), userMessage, dialog);
-                                }
+                        if (imagePathList.size() > 0 || !userMessage.equalsIgnoreCase("")) {
+                            if(checkInInfo.getYnwUuid()!=null) {
+                                ApiCommunicateCheckin(checkInInfo.getYnwUuid(), String.valueOf(id), userMessage, dialog);
                             }
-                            else{
-                                getConfirmationDetails(id);
-                            }
+                        }
+                        else{
+                            getConfirmationDetails(id);
+                        }
 
 
                     } else if (response.code() == 422){
 
-                        DynamicToast.make(RescheduleActivity.this, response.errorBody().string(), AppCompatResources.getDrawable(
-                                RescheduleActivity.this, R.drawable.ic_info_black),
-                                ContextCompat.getColor(RescheduleActivity.this, R.color.white), ContextCompat.getColor(RescheduleActivity.this, R.color.red), Toast.LENGTH_SHORT).show();
+
+                        String errorString = response.errorBody().string();
+
+                        Config.logV("Error String-----------" + errorString);
+                        Map<String, String> tokens = new HashMap<String, String>();
+                        tokens.put("Customer", Config.toTitleCase(mSearchTerminology.getCustomer()));
+                        tokens.put("provider", mSearchTerminology.getProvider());
+                        tokens.put("arrived", mSearchTerminology.getArrived());
+                        tokens.put("waitlisted", mSearchTerminology.getWaitlist());
+
+                        tokens.put("start", mSearchTerminology.getStart());
+                        tokens.put("cancelled", mSearchTerminology.getCancelled());
+                        tokens.put("done", mSearchTerminology.getDone());
+
+
+                        StringBuffer sb = new StringBuffer();
+
+                        Pattern p3 = Pattern.compile("\\[(.*?)\\]");
+
+                        Matcher matcher = p3.matcher(errorString);
+                        while (matcher.find()) {
+                            System.out.println(matcher.group(1));
+                            matcher.appendReplacement(sb, tokens.get(matcher.group(1)));
+                        }
+                        matcher.appendTail(sb);
+
+                        System.out.println("SubString@@@@@@@@@@@@@" + sb.toString());
+
+
+                      //  Toast.makeText(mContext, sb.toString(), Toast.LENGTH_LONG).show();
+
+                        DynamicToast.make(RescheduleCheckinActivity.this, sb.toString(), AppCompatResources.getDrawable(
+                                RescheduleCheckinActivity.this, R.drawable.ic_info_black),
+                                ContextCompat.getColor(RescheduleCheckinActivity.this, R.color.white), ContextCompat.getColor(RescheduleCheckinActivity.this, R.color.red), Toast.LENGTH_SHORT).show();
 
                     }
                 } catch (Exception e) {
@@ -1032,79 +995,6 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
 
         return cal.getTime();
     }
-
-    @Override
-    public void sendSlotInfo(String displayTime, String selectedSlot, int schdId, String displayDate, String date) {
-
-        try {
-
-            // getting data from dialog
-            String convertedTime = displayTime.replace("am", "AM").replace("pm", "PM");
-            tvTime.setText(convertedTime);
-            tvDate.setText(displayDate);
-            scheduleId = schdId;
-            slotTime = selectedSlot;
-            cvSubmit.setClickable(true);
-            cvSubmit.setEnabled(true);
-            cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.location_theme));
-            try {
-                apiDate = getApiDateFormat(date);  // to convert selected date to api date format
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public static String getApiDateFormat(String d) throws ParseException {
-
-        SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
-        Date date1 = format.parse(d);
-        format = new SimpleDateFormat("yyyy-MM-dd");
-        String yourDate = format.format(date1);
-
-        return yourDate;
-
-    }
-
-    private String getDisplayTime(String slotTime) {
-
-        String displayTime = slotTime.split("-")[0];
-        String sTime = "";
-
-        try {
-            final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
-            final Date dateObj = sdf.parse(displayTime);
-            SimpleDateFormat time = new SimpleDateFormat("hh:mm aa");
-            sTime = time.format(dateObj);
-        } catch (final ParseException e) {
-            e.printStackTrace();
-        }
-        return sTime;
-    }
-
-
-    @Override
-    public void sendSelectedTime(String dspTime, String sTime, int schdId) {
-
-        // assigning
-        tvTime.setText(dspTime);
-        slotTime = sTime;
-        scheduleId = schdId;
-        cvSubmit.setClickable(true);
-        cvSubmit.setEnabled(true);
-        cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.location_theme));
-    }
-
-    @Override
-    public void onBottomReached(int position) {
-
-        //hide scroll hint when recyclerview reaches to last position
-        llSeeMoreHint.setVisibility(View.GONE);
-    }
-
 
     @Override
     public void getMessage(String message) {
@@ -1388,7 +1278,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
             }
         }
     }
-    private void ApiCommunicateAppointment(String waitListId, String accountID, String message,
+    private void ApiCommunicateCheckin(String waitListId, String accountID, String message,
                                            final BottomSheetDialog dialog) {
 
 
@@ -1426,7 +1316,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
 
-        Call<ResponseBody> call = apiService.AppointmentMessage(waitListId, String.valueOf(accountID.split("-")[0]), requestBody);
+        Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID.split("-")[0]), requestBody);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -1440,7 +1330,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
 
                     if (response.code() == 200) {
                         imagePathList.clear();
-                      //  dialog.dismiss();
+                        //  dialog.dismiss();
                         getConfirmationDetails(Integer.parseInt(accountID));
 
 
@@ -1469,22 +1359,22 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
     private void getConfirmationDetails(int userId) {
 
         final ApiInterface apiService =
-                ApiClient.getClient(RescheduleActivity.this).create(ApiInterface.class);
-        Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(appointmentInfo.getUid(), String.valueOf(userId));
-        call.enqueue(new Callback<ActiveAppointment>() {
+                ApiClient.getClient(RescheduleCheckinActivity.this).create(ApiInterface.class);
+        Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(checkInInfo.getYnwUuid(), String.valueOf(userId));
+        call.enqueue(new Callback<ActiveCheckIn>() {
             @Override
-            public void onResponse(Call<ActiveAppointment> call, Response<ActiveAppointment> response) {
+            public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
                 try {
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
-                        activeAppointment = response.body();
-                        if (activeAppointment != null) {
+                        activeCheckIn = response.body();
+                        if (activeCheckIn != null) {
                             Bundle b = new Bundle();
-                            b.putSerializable("BookingDetails", activeAppointment);
+                            b.putSerializable("BookingDetails", activeCheckIn);
                             b.putString("terminology", mSearchTerminology.getProvider());
                             b.putString("from","Reschedule");
-                            Intent checkin = new Intent(RescheduleActivity.this, AppointmentConfirmation.class);
+                            Intent checkin = new Intent(RescheduleCheckinActivity.this, CheckInConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);
                         }
@@ -1497,7 +1387,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
             }
 
             @Override
-            public void onFailure(Call<ActiveAppointment> call, Throwable t) {
+            public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
             }
         });
 
@@ -1506,8 +1396,8 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
 
 
         ApiInterface apiService =
-                ApiClient.getClientS3Cloud(RescheduleActivity.this).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(RescheduleActivity.this, RescheduleActivity.this.getResources().getString(R.string.dialog_log_in));
+                ApiClient.getClientS3Cloud(RescheduleCheckinActivity.this).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(RescheduleCheckinActivity.this, RescheduleCheckinActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
         Date currentTime = new Date();
@@ -1552,4 +1442,94 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
         });
     }
 
+    private void ApiQueueTimeSlot(String locationId, String subSeriveID, String accountID, String mDate) {
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ArrayList<QueueTimeSlotModel>> call = apiService.getQueueTimeSlot(locationId, subSeriveID, mDate, accountID);
+        call.enqueue(new Callback<ArrayList<QueueTimeSlotModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<QueueTimeSlotModel>> call, Response<ArrayList<QueueTimeSlotModel>> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog((Activity) mContext, mDialog);
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    Config.logV("mQueueTimeSlotList--------11111-----------------" + response.code());
+                    if (response.code() == 200) {
+                       queuesData = response.body();
+
+                        if (queuesData != null) {
+                            if (queuesData.size() > 0) {
+                                rvSlots.setVisibility(View.VISIBLE);
+                                llChangeTo.setVisibility(View.VISIBLE);
+                                llNoSlots.setVisibility(View.GONE);
+                                tvDate.setVisibility(View.VISIBLE);
+                                tvTime.setVisibility(View.VISIBLE);
+                                cvSubmit.setClickable(true);
+                                cvSubmit.setEnabled(true);
+                                cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.location_theme));
+                                if (queuesData.size()>4){
+                                    llSeeMoreHint.setVisibility(View.VISIBLE);
+                                }
+                                else {
+                                    llSeeMoreHint.setVisibility(View.GONE);
+                                }
+                                queueId = queuesData.get(0).getId();
+                                tv_peopleAhead.setText(String.valueOf(queuesData.get(0).getQueueSize()));
+                                tvTime.setText(queuesData.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime());
+                                tvDate.setText(getCustomDateString(queuesData.get(0).getEffectiveSchedule().getStartDate()));
+                                tvCalenderDate.setText(getCalenderDateFormat(queuesData.get(0).getEffectiveSchedule().getStartDate()));
+                                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 2);
+                                rvSlots.setLayoutManager(mLayoutManager);
+                                queuesAdapter = new QueuesAdapter(mContext, queuesData, iSelectedQueue);
+                                rvSlots.setAdapter(queuesAdapter);
+                            } else {
+
+                                rvSlots.setVisibility(View.GONE);
+                                llNoSlots.setVisibility(View.VISIBLE);
+                                llSeeMoreHint.setVisibility(View.GONE);
+                                tvDate.setVisibility(View.GONE);
+                                tvTime.setVisibility(View.GONE);
+                                llChangeTo.setVisibility(View.GONE);
+                                cvSubmit.setClickable(false);
+                                cvSubmit.setEnabled(false);
+                                cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.inactive_text));
+
+                            }
+                        }
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<QueueTimeSlotModel>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog((Activity) mContext, mDialog);
+            }
+        });
+    }
+
+    @Override
+    public void sendSelectedQueueInfo(String displayTime, int queueId, QueueTimeSlotModel queueDetails, String selectedDate) {
+
+
+    }
+
+    @Override
+    public void sendSelectedQueue(String displayQueueTime, QueueTimeSlotModel queue, int id) {
+        tv_peopleAhead.setText(String.valueOf(queue.getQueueSize()));
+        tvTime.setText(displayQueueTime.split("-")[0]);
+        queueId = id;
+        cvSubmit.setClickable(true);
+        cvSubmit.setEnabled(true);
+        cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.location_theme));
+
+    }
 }
