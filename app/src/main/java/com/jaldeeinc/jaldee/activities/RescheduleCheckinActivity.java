@@ -419,6 +419,10 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
         }
 
+        if(checkInInfo.getConsumerNote()!=null){
+            userMessage = checkInInfo.getConsumerNote();
+        }
+
         // click actions
 
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -770,6 +774,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
             String pickedDate = apiSdf.format(myCalendar.getTime());
             tvDate.setText(getCustomDateString(pickedDate));
             UpdateDAte(mDate);
+            apiDate = pickedDate;
             ApiQueueTimeSlot(String.valueOf(locationId),String.valueOf(serviceId),String.valueOf(accountId),pickedDate);
         } catch (Exception e) {
             e.printStackTrace();
@@ -817,6 +822,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
             body.put("ynwUuid",checkInInfo.getYnwUuid());
             body.put("date",apiDate);
             body.put("queue",queueId);
+            body.put("consumerNote",userMessage);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -846,7 +852,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                              Toast.makeText(RescheduleCheckinActivity.this, "Checkin rescheduled successfully", Toast.LENGTH_SHORT).show();
                         }
 
-                        if (imagePathList.size() > 0 || !userMessage.equalsIgnoreCase("")) {
+                        if (imagePathList.size() > 0) {
                             if(checkInInfo.getYnwUuid()!=null) {
                                 ApiCommunicateCheckin(checkInInfo.getYnwUuid(), String.valueOf(id), userMessage, dialog);
                             }

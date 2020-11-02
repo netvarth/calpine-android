@@ -247,7 +247,6 @@
                     android:textAllCaps="true"
                     android:textColor="@color/app_background"
                     android:textSize="@dimen/txtsize_10"
-
                     android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
