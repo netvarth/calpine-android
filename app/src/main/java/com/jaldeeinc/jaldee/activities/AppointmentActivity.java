@@ -323,6 +323,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     String appEncId;
     private FamilyMemberDialog familyMemberDialog;
     private IFamilyMemberDetails iFamilyMemberDetails;
+    private String prepayAmount ="";
 
 
     @Override
@@ -1469,6 +1470,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             String getJsonObj = (String) iteratorObj.next();
                             System.out.println("KEY: " + "------>" + getJsonObj);
                             value = reader.getString(getJsonObj);
+                            prepayAmount = reader.getString("_prepaymentAmount");
 
                         }
 
@@ -1702,7 +1704,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                                         txtprepayment.setText("Prepayment Amount ");
 
-                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(serviceInfo.getMinPrePaymentAmount()))));
+                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(prepayAmount))));
                                         Typeface tyface1 = Typeface.createFromAsset(AppointmentActivity.this.getAssets(),
                                                 "fonts/JosefinSans-SemiBold.ttf");
                                         txtamt.setTypeface(tyface1);
@@ -1717,7 +1719,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                             @Override
                                             public void onClick(View v) {
 
-                                                new PaymentGateway(AppointmentActivity.this, AppointmentActivity.this).ApiGenerateHash1(value, serviceInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                                new PaymentGateway(AppointmentActivity.this, AppointmentActivity.this).ApiGenerateHash1(value, prepayAmount, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
                                                 dialog.dismiss();
 
                                             }
@@ -1728,7 +1730,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                             public void onClick(View v) {
 
                                                 PaytmPayment payment = new PaytmPayment(AppointmentActivity.this, paymentResponse);
-                                                payment.ApiGenerateHashPaytm(value, serviceInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, AppointmentActivity.this, AppointmentActivity.this, "", familyMEmID,appEncId);
+                                                payment.ApiGenerateHashPaytm(value,prepayAmount, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, AppointmentActivity.this, AppointmentActivity.this, "", familyMEmID,appEncId);
                                                 //payment.generateCheckSum(sAmountPay);
                                                 dialog.dismiss();
 

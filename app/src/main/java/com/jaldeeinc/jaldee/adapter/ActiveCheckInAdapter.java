@@ -596,7 +596,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                         myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     }
                     else{
-                        myViewHolder.tv_status.setVisibility(View.GONE);
+                      //  myViewHolder.tv_status.setVisibility(View.GONE);
                     }
                     if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
                         if (activelist.getShowToken().equalsIgnoreCase("true") && activelist.getCalculationMode().equalsIgnoreCase("NoCalc")){
@@ -637,7 +637,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
                         else{
-                            myViewHolder.tv_status.setVisibility(View.GONE);
+                        //    myViewHolder.tv_status.setVisibility(View.GONE);
                         }
                     } else {
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
@@ -674,7 +674,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
                         else{
-                            myViewHolder.tv_status.setVisibility(View.GONE);
+                         //   myViewHolder.tv_status.setVisibility(View.GONE);
                         }
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
                             if (activelist.getShowToken().equalsIgnoreCase("true") && activelist.getCalculationMode().equalsIgnoreCase("NoCalc")){
@@ -759,7 +759,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                         myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     }
                     else{
-                        myViewHolder.tv_status.setVisibility(View.GONE);
+                    //    myViewHolder.tv_status.setVisibility(View.GONE);
                     }
                     if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
                         myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
@@ -816,7 +816,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
                         else{
-                            myViewHolder.tv_status.setVisibility(View.GONE);
+                         //   myViewHolder.tv_status.setVisibility(View.GONE);
                         }
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
                             myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
