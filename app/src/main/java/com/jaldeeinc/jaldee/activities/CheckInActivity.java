@@ -326,7 +326,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     String checkEncId;
     private FamilyMemberDialog familyMemberDialog;
     private IFamilyMemberDetails iFamilyMemberDetails;
-    String emailId;
+    String emailId,prepayAmount = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1469,6 +1469,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             String getJsonObj = (String) iteratorObj.next();
                             System.out.println("KEY: " + "------>" + getJsonObj);
                             value = reader.getString(getJsonObj);
+                            prepayAmount = reader.getString("_prepaymentAmount");
                             break;
 
                         }
@@ -1736,7 +1737,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                         if (MultiplefamilyList.size() > 1) {
                                             txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(totalAmountPay))));
                                         } else {
-                                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(checkInInfo.getMinPrePaymentAmount()))));
+                                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(prepayAmount))));
                                         }
 
 
@@ -1749,7 +1750,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                                 if (MultiplefamilyList.size() > 1) {
                                                     new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, totalAmountPay, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
                                                 } else {
-                                                    new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                                    new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, prepayAmount, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
                                                 }
                                                 dialogPayment.dismiss();
                                             }
@@ -1762,7 +1763,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                                 if (MultiplefamilyList.size() > 0) {
                                                     payment.ApiGenerateHashPaytm(value, totalAmountPay, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID, checkEncId);
                                                 } else {
-                                                    payment.ApiGenerateHashPaytm(value, checkInInfo.getMinPrePaymentAmount(), String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID, checkEncId);
+                                                    payment.ApiGenerateHashPaytm(value, prepayAmount, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID, checkEncId);
                                                 }
                                                 dialogPayment.dismiss();
 

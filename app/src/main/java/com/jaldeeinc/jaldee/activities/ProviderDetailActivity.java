@@ -498,11 +498,15 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                         if (mBusinessDataList != null) {
                             accountType = mBusinessDataList.getAccountType();
-
-                            if (mBusinessDataList.getAccEncUid() != null) {
-
-                                sharingId = mBusinessDataList.getAccEncUid();
-                            } else {
+//
+//
+                            if(mBusinessDataList.getCustomId()!=null){
+                                sharingId = mBusinessDataList.getCustomId();
+                            }
+                           else if (mBusinessDataList.getAccEncUid() != null) {
+                               sharingId = mBusinessDataList.getAccEncUid();
+                            }
+                            else {
                                 sharingId = mBusinessDataList.getUniqueId();
                             }
 
@@ -1666,8 +1670,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     if (response.code() == 200) {
                         mFavList.clear();
                         mFavList = response.body();
-                        favFlag = false;
                         if (mFavList != null && mFavList.size() > 0) {
+                            favFlag = false;
                             for (int i = 0; i < mFavList.size(); i++) {
                                 Config.logV("Fav List-----##&&&-----" + mFavList.get(i).getId());
                                 Config.logV("Fav Fav List--------%%%%--" + mBusinessDataList.getId());
@@ -1677,7 +1681,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                     ivfav.setImageResource(R.drawable.new_favourite);
                                 }
                             }
-                        }
                             ivfav.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -1689,7 +1692,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                     }
                                 }
                             });
-
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

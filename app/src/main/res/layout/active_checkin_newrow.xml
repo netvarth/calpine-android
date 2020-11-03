@@ -38,16 +38,7 @@
                     android:textColor="@color/title_consu"
                     android:textSize="@dimen/txtsize_hint" />
 
-                <TextView
-                    android:id="@+id/txt_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/padding2"
-                    android:drawableLeft="@drawable/loc_new"
-                    android:drawablePadding="3dp"
-                    android:textColor="@color/sec_title_grey"
-                    android:textSize="@dimen/txtsize_title_term_small"
-                    android:visibility="gone" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -68,6 +59,53 @@
             </LinearLayout>
 
 
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/dimen_5dp">
+
+            <TextView
+                android:id="@+id/txt_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding2"
+                android:drawableLeft="@drawable/loc_new"
+                android:drawablePadding="3dp"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:textColor="@color/sec_title_grey"
+                android:textSize="@dimen/txtsize_title_term_small"
+                android:visibility="gone" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_reschedule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:layout_gravity="right"
+                android:visibility="gone"
+                android:foregroundGravity="right"
+                card_view:cardBackgroundColor="@color/appoint_theme"
+                card_view:cardCornerRadius="@dimen/padding5"
+                android:layout_marginEnd="@dimen/padding2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reschedule"
+                    android:layout_marginStart="@dimen/padding5"
+                    android:layout_marginEnd="@dimen/padding5"
+                    android:layout_marginTop="@dimen/padding2"
+                    android:layout_marginBottom="@dimen/padding2"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/dimen_10dp">
+
+                </TextView>
+
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
 
 
@@ -209,7 +247,6 @@
                     android:textAllCaps="true"
                     android:textColor="@color/app_background"
                     android:textSize="@dimen/txtsize_10"
-
                     android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>

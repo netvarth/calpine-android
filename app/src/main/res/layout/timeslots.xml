@@ -18,7 +18,7 @@
         android:paddingStart="@dimen/dimen_1dp"
         android:paddingEnd="@dimen/dimen_1dp"
         android:textColor="@color/location_theme"
-        android:textSize="14sp">
+        android:textSize="12sp">
 
     </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 

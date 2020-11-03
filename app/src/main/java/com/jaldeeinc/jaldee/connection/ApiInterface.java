@@ -514,6 +514,9 @@ public interface ApiInterface {
     @PUT("consumer/appointment/reschedule")
     Call<ResponseBody> reScheduleAppointment(@Query("account") int id, @Body RequestBody jsonObj);
 
+    @PUT("consumer/waitlist/reschedule")
+    Call<ResponseBody> reScheduleCheckin(@Query("account") int id, @Body RequestBody jsonObj);
+
     //RxJava calls
 
     @GET("{uniqueId}/services.json")

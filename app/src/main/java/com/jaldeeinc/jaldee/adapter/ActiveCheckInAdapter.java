@@ -27,6 +27,8 @@ import android.widget.TextView;
 import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
 import com.jaldeeinc.jaldee.Interface.IActiveBookings;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.RescheduleActivity;
+import com.jaldeeinc.jaldee.activities.RescheduleCheckinActivity;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
@@ -78,7 +80,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         LinearLayout layout_btnpay,layout_activeCheckin;
         Button btn_pay;
         ImageView icon_service;
-        CardView cvCard;
+        CardView cvCard, cvReschedule;
         public MyViewHolder(View view) {
             super(view);
             tv_businessname = (TextView) view.findViewById(R.id.txt_businessname);
@@ -98,6 +100,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             tv_token = (TextView) view.findViewById(R.id.txt_token);
             icon_service =(ImageView) view.findViewById(R.id.serviceicon);
             cvCard = view.findViewById(R.id.card);
+            cvReschedule = view.findViewById(R.id.cv_reschedule);
         }
     }
     Activity activity;
@@ -147,6 +150,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             myViewHolder.tv_status.setText("Completed");
             myViewHolder.tv_status.setVisibility(View.VISIBLE);
             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.green));
+            myViewHolder.cvReschedule.setVisibility(View.GONE);
         }
         Config.logV("activelist.getPersonsAhead()"+activelist.getPersonsAhead());
         if(activelist.getPersonsAhead()!=-1){
@@ -195,19 +199,23 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             myViewHolder.tv_status.setVisibility(View.VISIBLE);
             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
             }
+            myViewHolder.cvReschedule.setVisibility(View.GONE);
         }
         if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
             myViewHolder.tv_status.setVisibility(View.GONE);
+            myViewHolder.cvReschedule.setVisibility(View.VISIBLE);
         }
         if (activelist.getWaitlistStatus().equalsIgnoreCase("started")) {
             myViewHolder.tv_status.setText("Started");
             myViewHolder.tv_status.setVisibility(View.VISIBLE);
             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.cyan));
+            myViewHolder.cvReschedule.setVisibility(View.GONE);
         }
         if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
             myViewHolder.tv_status.setText("Prepayment Pending");
             myViewHolder.tv_status.setVisibility(View.VISIBLE);
             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.gray));
+            myViewHolder.cvReschedule.setVisibility(View.GONE);
         }
         try {
             if (activelist.getGoogleMapUrl() != null) {
@@ -302,6 +310,17 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        // click action for reSchedule
+        myViewHolder.cvReschedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent rescheduleIntent = new Intent(mContext, RescheduleCheckinActivity.class);
+                rescheduleIntent.putExtra("checkinInfo",activeChekinList.get(position));
+                mContext.startActivity(rescheduleIntent);
             }
         });
 
@@ -470,6 +489,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
             myViewHolder.tv_queueTime.setVisibility(View.GONE);
             myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
+            myViewHolder.cvReschedule.setVisibility(View.GONE);
         }
         else{
             myViewHolder.tv_check_in.setVisibility(View.GONE);
@@ -576,7 +596,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                         myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     }
                     else{
-                        myViewHolder.tv_status.setVisibility(View.GONE);
+                      //  myViewHolder.tv_status.setVisibility(View.GONE);
                     }
                     if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
                         if (activelist.getShowToken().equalsIgnoreCase("true") && activelist.getCalculationMode().equalsIgnoreCase("NoCalc")){
@@ -617,7 +637,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
                         else{
-                            myViewHolder.tv_status.setVisibility(View.GONE);
+                        //    myViewHolder.tv_status.setVisibility(View.GONE);
                         }
                     } else {
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
@@ -654,7 +674,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
                         else{
-                            myViewHolder.tv_status.setVisibility(View.GONE);
+                         //   myViewHolder.tv_status.setVisibility(View.GONE);
                         }
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
                             if (activelist.getShowToken().equalsIgnoreCase("true") && activelist.getCalculationMode().equalsIgnoreCase("NoCalc")){
@@ -739,7 +759,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                         myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     }
                     else{
-                        myViewHolder.tv_status.setVisibility(View.GONE);
+                    //    myViewHolder.tv_status.setVisibility(View.GONE);
                     }
                     if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
                         myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
@@ -796,7 +816,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
                         else{
-                            myViewHolder.tv_status.setVisibility(View.GONE);
+                         //   myViewHolder.tv_status.setVisibility(View.GONE);
                         }
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
                             myViewHolder.tv_estTime.setVisibility(View.VISIBLE);

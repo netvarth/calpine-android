@@ -27,7 +27,8 @@ public class CheckInConfirmation extends AppCompatActivity {
     private CardView cvPeople, cvOk;
     String terminology;
     ImageView icon_service;
-    private TextView tvCheckin,tvConsumerName,tvLocation;
+    private TextView tvCheckin,tvConsumerName,tvLocation, tv_heading;
+    private String from;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +40,23 @@ public class CheckInConfirmation extends AppCompatActivity {
         Intent i = getIntent();
         activeCheckInInfo = (ActiveCheckIn) i.getSerializableExtra("BookingDetails");
         terminology = i.getStringExtra("terminology");
+        from = i.getStringExtra("from");
 
         initializations();
+
+        if(from!=null && activeCheckInInfo!=null){
+            if(from.equalsIgnoreCase("Reschedule")){
+                if(activeCheckInInfo.getShowToken()!=null && activeCheckInInfo.getShowToken().equalsIgnoreCase("true")) {
+                    tv_heading.setText("Token Rescheduled");
+                }
+                else{
+                    tv_heading.setText("Checkin Rescheduled");
+                }
+            }
+            else{
+                tv_heading.setText("Booking Confirmed");
+            }
+        }
 
 
         if (activeCheckInInfo != null) {
@@ -259,6 +275,7 @@ public class CheckInConfirmation extends AppCompatActivity {
         tvCheckin = findViewById(R.id.tv_consumerName);
         tvConsumerName = findViewById(R.id.tv_consumervalue);
         tvLocation = findViewById(R.id.tv_location);
+        tv_heading = findViewById(R.id.tv_heading);
     }
 
     @Override
