@@ -107,6 +107,23 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
     }
 
     @Override
+    public void onResume() {
+
+        try {
+            if (Config.isOnline(mContext)) {
+                apiGetAllBookings();
+            } else {
+                setOfflineBookings();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        super.onResume();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -123,15 +140,6 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
         todayBookingsAdapter = new TodayBookingsAdapter(bookingsList, getContext(), true, iSelectedBooking);
         rvTodays.setAdapter(todayBookingsAdapter);
 
-        try {
-            if (Config.isOnline(mContext)) {
-                apiGetAllBookings();
-            } else {
-                setOfflineBookings();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
 
         return view;
@@ -605,7 +613,12 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
 
                 Intent intent = new Intent(mContext, BookingDetails.class);
                 intent.putExtra("bookingInfo", bookings);
-                intent.putExtra("isActive",true);
+                if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled")) {
+                    intent.putExtra("isActive", true);
+                }
+                else {
+                    intent.putExtra("isActive", false);
+                }
                 startActivity(intent);
             }
             else if (bookings.getBookingType().equalsIgnoreCase(Constants.CHECKEDIN)){

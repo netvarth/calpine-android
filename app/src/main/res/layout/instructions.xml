@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginStart="@dimen/dimen_15dp">
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+        android:id="@+id/tv_postInfoTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Post Instructions"
+        android:layout_centerVertical="true"
+        android:letterSpacing="0.05"
+        android:textColor="@color/location_theme"
+        android:textSize="@dimen/txtsize_14">
+
+    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/close"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dimen_15dp"
+            android:layout_alignParentEnd="true"
+            app:tint="@color/title_grey_light">
+
+        </ImageView>
+
+    </RelativeLayout>
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        android:id="@+id/tv_postInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_15dp"
+        android:layout_marginStart="@dimen/dimen_15dp"
+        android:layout_marginBottom="@dimen/dimen_25dp">
+
+    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+</LinearLayout>
