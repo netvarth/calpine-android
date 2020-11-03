@@ -770,6 +770,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
             String pickedDate = apiSdf.format(myCalendar.getTime());
             tvDate.setText(getCustomDateString(pickedDate));
             UpdateDAte(mDate);
+            apiDate = pickedDate;
             ApiQueueTimeSlot(String.valueOf(locationId),String.valueOf(serviceId),String.valueOf(accountId),pickedDate);
         } catch (Exception e) {
             e.printStackTrace();

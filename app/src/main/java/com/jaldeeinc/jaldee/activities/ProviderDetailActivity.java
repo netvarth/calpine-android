@@ -498,13 +498,12 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                         if (mBusinessDataList != null) {
                             accountType = mBusinessDataList.getAccountType();
-//
-//                            if (mBusinessDataList.getAccEncUid() != null) {
-//
-//                                sharingId = mBusinessDataList.getAccEncUid();
-//                            }
+
                             if(mBusinessDataList.getCustomId()!=null){
                                 sharingId = mBusinessDataList.getCustomId();
+                            }
+                            else if (mBusinessDataList.getAccEncUid() != null) {
+                                sharingId = mBusinessDataList.getAccEncUid();
                             }
                             else {
                                 sharingId = mBusinessDataList.getUniqueId();
