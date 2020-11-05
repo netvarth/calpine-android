@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:background="@color/hometopbar"
+            android:visibility="gone"
             android:orientation="vertical">
 
             <include
@@ -29,11 +30,9 @@
 
         <ListView
             android:id="@+id/payment_inner_list"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="@dimen/dimen_8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
             android:background="#ffffff"
+            android:divider="@null"
+            android:dividerHeight="0dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

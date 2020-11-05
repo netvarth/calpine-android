@@ -6,7 +6,7 @@
     android:padding="@dimen/dimen_20dp">
 
 
-    <TextView
+    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
         android:id="@+id/info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,9 +17,9 @@
         android:textSize="@dimen/dimen_16sp"
         android:textStyle="bold">
 
-    </TextView>
+    </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
-    <TextView
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:id="@+id/hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,9 +29,9 @@
         android:textSize="10sp"
         android:layout_below="@id/info">
 
-    </TextView>
+    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-    <TextView
+    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
         android:id="@+id/tv_serviceName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,10 +44,10 @@
         android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/padding3">
 
-    </TextView>
+    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
 
-    <TextView
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:id="@+id/tv_timeInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
         android:text=""
         android:visibility="gone">
 
-    </TextView>
+    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
         android:layout_marginStart="@dimen/dimen_10dp"
         android:orientation="vertical">
 
-        <TextView
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_10dp"
@@ -76,9 +76,9 @@
             android:textColor="#000000"
             android:textSize="13sp">
 
-        </TextView>
+        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-        <TextView
+        <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
             android:id="@+id/tv_phoneNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,13 +94,13 @@
             android:textIsSelectable="true"
             android:textSize="@dimen/dimen_15sp">
 
-        </TextView>
+        </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
 
 
     </LinearLayout>
 
 
-    <TextView
+    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
         android:id="@+id/tv_ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -113,6 +113,6 @@
         android:textSize="@dimen/dimen_16sp"
         android:textStyle="bold">
 
-    </TextView>
+    </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
 </LinearLayout>

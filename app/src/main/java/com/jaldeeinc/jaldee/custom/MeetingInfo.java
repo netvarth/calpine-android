@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.custom;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -40,6 +41,8 @@ public class MeetingInfo extends Dialog {
         tvTime = findViewById(R.id.tv_timeInfo);
         tvOK = findViewById(R.id.tv_ok);
         tvPhoneNumber = findViewById(R.id.tv_phoneNumber);
+
+
 
         if (serviceName != null){
             String name = serviceName;

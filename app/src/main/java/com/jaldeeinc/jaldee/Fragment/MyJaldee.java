@@ -1,18 +1,44 @@
 package com.jaldeeinc.jaldee.Fragment;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.LinearLayout;
 
+import com.google.android.material.tabs.TabLayout;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.AppointmentActivity;
+import com.jaldeeinc.jaldee.activities.HistoryActivity;
+import com.jaldeeinc.jaldee.activities.Home;
+import com.jaldeeinc.jaldee.adapter.JaldeeTabs;
+import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
+import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.custom.NotificationDialog;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 
-public class MyJaldee extends Fragment {
+public class MyJaldee extends RootFragment {
 
 
+    TabLayout tabLayout;
+    ViewPager viewPager;
+    public boolean toHome = false;
+    public String message = null;
+    NotificationDialog notificationDialog;
+    Context mContext;
+    Activity mActivity;
+    private CustomTextViewMedium tvConsumerName;
+    String mFirstName,mLastName;
+    private CustomTextViewSemiBold tvHistory;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -47,6 +73,80 @@ public class MyJaldee extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.my_jaldee, container, false);
+        mContext = getActivity();
+        mActivity = getActivity();
+        Home.doubleBackToExitPressedOnce = false;
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            toHome = bundle.getBoolean("toHome");
+            message = bundle.getString("message");
+        }
+
+        tabLayout=(TabLayout)view.findViewById(R.id.tabLayout);
+        viewPager=(ViewPager)view.findViewById(R.id.viewPager);
+        tvConsumerName = view.findViewById(R.id.tv_consumerName);
+        tvHistory = view.findViewById(R.id.tv_history);
+
+        if (message != null) {
+
+            notificationDialog = new NotificationDialog(mContext, message);
+            notificationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            notificationDialog.show();
+            notificationDialog.setCancelable(false);
+            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+            int width = (int) (metrics.widthPixels * 1);
+            notificationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            if (bundle != null) {
+                bundle.remove("message");
+            }
+        }
+
+        mFirstName = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
+        mLastName = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
+        String name = mFirstName + " "+ mLastName+"!";
+
+        if (name.trim().length() < 18){
+            tvConsumerName.setTextSize(30);
+        } else {
+            tvConsumerName.setTextSize(25);
+        }
+        tvConsumerName.setText(name);
+
+        tvHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent historyIntent = new Intent(getContext(), HistoryActivity.class);
+                startActivity(historyIntent);
+            }
+        });
+
+        tabLayout.addTab(tabLayout.newTab().setText("My Bookings"));
+        tabLayout.addTab(tabLayout.newTab().setText("My Payments"));
+        tabLayout.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        tabLayout.setTextDirection(View.TEXT_ALIGNMENT_TEXT_START);
+        final JaldeeTabs adapter = new JaldeeTabs(getContext(),getChildFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(2);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         return view;
     }
 }

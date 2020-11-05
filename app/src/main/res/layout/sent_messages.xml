@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen_8dp"
+    android:orientation="vertical">
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        android:id="@+id/tv_sentMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="240dp"
+        android:textSize="@dimen/txtsize_12"
+        android:padding="@dimen/dimen_10dp"
+        android:text=""
+        android:layout_gravity="end"
+        android:background="@drawable/chat_sent"
+        android:layout_marginEnd="@dimen/dimen_8dp"
+        android:textColor="@color/title_color">
+
+    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic
+        android:id="@+id/tv_sentTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12:58 PM"
+        android:textSize="@dimen/txtsize_10"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/dimen_8dp">
+
+    </com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic>
+
+
+
+</LinearLayout>

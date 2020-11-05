@@ -15,8 +15,7 @@
         android:layout_margin="@dimen/default_padding"
         android:background="@color/app_background"
         android:orientation="vertical">
-        <TextView
-
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
             android:id="@+id/txtratevisit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,7 +24,7 @@
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_subtitle" />
 
-        <TextView
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=" Rate *"
@@ -50,7 +49,7 @@
             android:layout_marginTop="@dimen/padding7"
             android:progressDrawable="@drawable/rating_display" />-->
 
-        <TextView
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
             android:id="@+id/txtsendmsg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,10 +90,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:background="@drawable/roundedrect_grey"
+            android:background="@drawable/rounded_lightgrey_bg"
             android:text="@string/cancel"
             android:textAllCaps="true"
-            android:textColor="@color/app_background"
+            android:textColor="@color/title_color"
             android:textSize="@dimen/txtsize_hint" />
 
         <Button
@@ -104,7 +103,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:layout_marginLeft="@dimen/default_padding"
-            android:background="@drawable/btn_checkin_grey"
+            android:background="@drawable/curved_save"
             android:text="@string/rate"
             android:enabled="false"
             android:clickable="false"

@@ -47,6 +47,7 @@ public class HomeTabFragment extends Fragment {
 
 
     Tab1Fragment tab1Fragment;
+    MyJaldee myJaldeeFragment;
     InboxFragment inboxFragment;
     ProfileFragment profileFragment;
 
@@ -139,34 +140,6 @@ public class HomeTabFragment extends Fragment {
                     }
                 });
 
-        /*viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (prevMenuItem != null) {
-                    prevMenuItem.setChecked(false);
-                } else {
-                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
-                }
-                Log.d("page", "onPageSelected: " + position);
-                bottomNavigationView.getMenu().getItem(position).setChecked(true);
-                prevMenuItem = bottomNavigationView.getMenu().getItem(position);
-               *//* FragmentInterface fragment = (FragmentInterface) adapter.instantiateItem(viewPager, position);
-                if (fragment != null) {
-                    fragment.fragmentBecameVisible();
-                }*//*
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });*/
 
         viewPager.setOnPageChangeListener(new CustomViewPager.OnPageChangeListener() {
             @Override
@@ -223,18 +196,21 @@ public class HomeTabFragment extends Fragment {
 
 
         tab1Fragment = new Tab1Fragment();
+        myJaldeeFragment = new MyJaldee();
         Bundle bundle = new Bundle();
         if (message != null) {
             bundle.putString("message", message);
             tab1Fragment.setArguments(bundle);
+            myJaldeeFragment.setArguments(bundle);
         }
+
         // checkinFragment = new CheckinsFragmentCopy();
         favFragment = new FavouriteFragment();
         inboxFragment = new InboxFragment();
         profileFragment = new ProfileFragment();
 
         adapter.addFragment(homeFragment);
-        adapter.addFragment(tab1Fragment);
+        adapter.addFragment(myJaldeeFragment);
         adapter.addFragment(favFragment);
         adapter.addFragment(inboxFragment);
         adapter.addFragment(profileFragment);

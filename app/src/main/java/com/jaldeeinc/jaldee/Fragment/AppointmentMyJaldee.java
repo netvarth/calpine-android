@@ -274,12 +274,10 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                         mAppointmentFutureList.clear();
                         mAppointmentTodayList.clear();
                         ArrayList<ActiveAppointment> mActiveAppointments = response.body();
-//                        Log.i("appointment123today",new Gson().toJson(mActiveAppointments));
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         for (int i = 0; i < mActiveAppointments.size(); i++) {
                             if (date.equalsIgnoreCase(mActiveAppointments.get(i).getAppmtDate())) {
                                 mAppointmentTodayList.add(mActiveAppointments.get(i));
-//                                Log.i("appointment123456",new Gson().toJson(mAppointmentTodayList));
                             } else {
                                 mAppointmentFutureList.add(mActiveAppointments.get(i));
                             }

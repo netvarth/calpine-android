@@ -1,9 +1,6 @@
 package com.jaldeeinc.jaldee.connection;
 
 
-import android.os.Build;
-
-import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
@@ -18,6 +15,7 @@ import com.jaldeeinc.jaldee.response.AppointmentSchedule;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
+import com.jaldeeinc.jaldee.response.InboxList;
 import com.jaldeeinc.jaldee.response.InboxModel;
 import com.jaldeeinc.jaldee.response.JdnResponse;
 import com.jaldeeinc.jaldee.response.LocationResponse;
@@ -64,7 +62,6 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
-import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -372,6 +369,8 @@ public interface ApiInterface {
     @GET("consumer/communications")
     Call<ArrayList<InboxModel>> getMessage();
 
+    @GET("consumer/communications")
+    Call<ArrayList<InboxList>> getCommunications();
 
     @GET("consumer/providers")
     Call<ArrayList<FavouriteModel>> getFavourites();
@@ -551,5 +550,16 @@ public interface ApiInterface {
     @GET("provider/waitlist/queues/providerWaitingTime/{id}")
     Observable<ArrayList<QueueList>> getProviderCheckInSchedule(@Path("id") String id);
 
+    @GET("consumer/appointment")
+    Observable<ArrayList<ActiveAppointment>> getAppointments(@QueryMap(encoded = true) Map<String, String> query);
+
+    @GET("consumer/waitlist")
+    Observable<ArrayList<ActiveCheckIn>> getCheckIns(@QueryMap(encoded = true) Map<String, String> query);
+
+    @GET("consumer/waitlist/history")
+    Observable<ArrayList<ActiveCheckIn>> getHistoryCheckIns(@QueryMap(encoded = true) Map<String, String> query);
+
+    @GET("consumer/appointment/history")
+    Observable<ArrayList<ActiveAppointment>> getHistoryAppointments(@QueryMap(encoded = true) Map<String, String> query);
 
 }

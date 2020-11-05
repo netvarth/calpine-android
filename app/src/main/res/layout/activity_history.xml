@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context="com.jaldeeinc.jaldee.activities.HistoryActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_60dp"
+        android:background="@color/white"
+        android:paddingEnd="@dimen/dimen_10dp">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_back"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="@dimen/padding3">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding5"
+                android:src="@drawable/img_back_arrow"
+                app:tint="@color/dark_blue">
+
+            </ImageView>
+
+        </androidx.cardview.widget.CardView>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Jaldee History"
+            android:textSize="@dimen/dimen_16sp"
+            android:textColor="@color/location_theme"
+            android:layout_centerInParent="true">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+    </RelativeLayout>
+
+    <soup.neumorphism.NeumorphCardView
+        android:id="@+id/pressed_card"
+        style="@style/Widget.Neumorph.CardView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:neumorph_backgroundColor="@color/white"
+        app:neumorph_insetBottom="@dimen/dimen_0dp"
+        app:neumorph_insetEnd="@dimen/dimen_1dp"
+        app:neumorph_insetStart="@dimen/dimen_1dp"
+        app:neumorph_insetTop="@dimen/dimen_1dp"
+        app:neumorph_shadowColorDark="#BEF2F2F2"
+        app:neumorph_shadowColorLight="#BEF2F2F2"
+        app:neumorph_shapeType="pressed">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding2"
+            android:layout_marginTop="@dimen/padding5"
+            android:layout_marginBottom="@dimen/padding5"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <LinearLayout
+                android:id="@+id/ll_noBookings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_40dp"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/confused">
+
+                </ImageView>
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding5"
+                    android:textColor="@color/title_color"
+                    android:text="No booking history">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </soup.neumorphism.NeumorphCardView>
+
+
+
+</LinearLayout>
