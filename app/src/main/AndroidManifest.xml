@@ -36,13 +36,14 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.ChatActivity"></activity>
+        <activity android:name=".activities.CheckInDetails"></activity>
+        <activity android:name=".activities.ChatActivity" />
         <activity android:name=".activities.BookingDetails" />
         <activity android:name=".activities.HistoryActivity" />
         <activity
             android:name=".activities.TestActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.RescheduleCheckinActivity"></activity>
+        <activity android:name=".activities.RescheduleCheckinActivity" />
         <activity android:name=".activities.RescheduleActivity" />
         <activity
             android:name=".activities.DonationActivity"

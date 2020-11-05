@@ -4,11 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
-import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -20,6 +15,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -32,30 +28,22 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.tabs.TabLayout;
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.InboxAdapter;
-import com.jaldeeinc.jaldee.adapter.JaldeeTabs;
-import com.jaldeeinc.jaldee.adapter.MoreInfoTabs;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.ChatHistory;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomerNotes;
-import com.jaldeeinc.jaldee.custom.EnquiryDialog;
 import com.jaldeeinc.jaldee.custom.InstructionsDialog;
-import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.Bookings;
-import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
-import com.jaldeeinc.jaldee.response.InboxModel;
+import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.RatingResponse;
-import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import org.json.JSONException;
@@ -65,11 +53,8 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -82,7 +67,7 @@ import retrofit2.Response;
 
 import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
-public class BookingDetails extends AppCompatActivity {
+public class CheckInDetails extends AppCompatActivity {
 
     @BindView(R.id.tv_providerName)
     CustomTextViewMedium tvProviderName;
@@ -117,8 +102,6 @@ public class BookingDetails extends AppCompatActivity {
     @BindView(R.id.tv_time)
     CustomTextViewBold tvTime;
 
-    @BindView(R.id.tv_batchNo)
-    CustomTextViewBold tvBatchNo;
 
     @BindView(R.id.tv_viewMore)
     CustomTextViewSemiBold tvViewMore;
@@ -153,9 +136,6 @@ public class BookingDetails extends AppCompatActivity {
     @BindView(R.id.ll_reschedule)
     LinearLayout llReschedule;
 
-    @BindView(R.id.ll_batch)
-    LinearLayout llBatch;
-
     @BindView(R.id.ll_location)
     LinearLayout llLocation;
 
@@ -177,28 +157,28 @@ public class BookingDetails extends AppCompatActivity {
     @BindView(R.id.tv_amountToPay)
     CustomTextViewRegularItalic tvAmountToPay;
 
+    @BindView(R.id.tv_tokenWaitTime)
+    CustomTextViewItalicSemiBold tvTokenWaitTime;
+
+    @BindView(R.id.tv_hint)
+    CustomTextViewLight tvHint;
+
     boolean firstTimeRating = false;
-    TabLayout tabLayout;
-    ViewPager viewPager;
-    private Context mContext;
-    private Bookings bookingInfo = new Bookings();
-    private boolean isActive = true;
-    private ActiveAppointment apptInfo = new ActiveAppointment();
+
     private InstructionsDialog instructionsDialog;
     private CustomerNotes customerNotes;
-    private ChatHistory chatHistory;
-    ArrayList<InboxModel> mInboxList = new ArrayList<>();
-
+    private Context mContext;
+    private boolean isToken = true;
+    private Bookings bookingInfo = new Bookings();
+    private boolean isActive = true;
+    private ActiveCheckIn activeCheckIn = new ActiveCheckIn();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_booking_details);
-        ButterKnife.bind(BookingDetails.this);
-        mContext = BookingDetails.this;
-
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        setContentView(R.layout.activity_check_in_details);
+        ButterKnife.bind(CheckInDetails.this);
+        mContext = CheckInDetails.this;
 
         Intent i = getIntent();
         if (i != null) {
@@ -218,8 +198,8 @@ public class BookingDetails extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(BookingDetails.this, RescheduleActivity.class);
-                intent.putExtra("appointmentInfo", apptInfo);
+                Intent intent = new Intent(CheckInDetails.this, RescheduleCheckinActivity.class);
+                intent.putExtra("checkinInfo", activeCheckIn);
                 startActivity(intent);
             }
         });
@@ -230,8 +210,8 @@ public class BookingDetails extends AppCompatActivity {
 
                 try {
 
-                    if (apptInfo != null && apptInfo.getService() != null) {
-                        instructionsDialog = new InstructionsDialog(mContext, apptInfo.getService().getPostInfoText(), apptInfo.getService().getPostInfoTitle());
+                    if (activeCheckIn != null && activeCheckIn.getService() != null) {
+                        instructionsDialog = new InstructionsDialog(mContext, activeCheckIn.getService().getPostInfoText(), activeCheckIn.getService().getPostInfoTitle());
                         instructionsDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                         instructionsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         instructionsDialog.show();
@@ -251,17 +231,15 @@ public class BookingDetails extends AppCompatActivity {
             public void onClick(View view) {
 
                 try {
-                    Intent intent = new Intent(BookingDetails.this, ChatActivity.class);
-                    intent.putExtra("uuid", apptInfo.getUid());
-                    intent.putExtra("accountId", apptInfo.getProviderAccount().getId());
-                    intent.putExtra("name", apptInfo.getProviderAccount().getBusinessName());
+                    Intent intent = new Intent(CheckInDetails.this, ChatActivity.class);
+                    intent.putExtra("uuid", activeCheckIn.getYnwUuid());
+                    intent.putExtra("accountId", activeCheckIn.getProviderAccount().getId());
+                    intent.putExtra("name", activeCheckIn.getProviderAccount().getBusinessName());
                     startActivity(intent);
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
             }
         });
 
@@ -276,11 +254,17 @@ public class BookingDetails extends AppCompatActivity {
                 Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
                 final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                 TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
-                txtsendmsg.setText("Do you want to cancel this Appointment?");
+                String mesg = "";
+                if (isToken){
+                    mesg = "Do you want to cancel this Token ?";
+                } else {
+                    mesg = "Do you want to cancel this CheckIn ?";
+                }
+                txtsendmsg.setText(mesg);
                 btn_send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ApiDeleteAppointment(apptInfo.getUid(), String.valueOf(apptInfo.getProviderAccount().getId()), dialog);
+                        ApiDeleteCheckIn(activeCheckIn.getYnwUuid(), String.valueOf(activeCheckIn.getProviderAccount().getId()), dialog);
                     }
                 });
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -308,16 +292,16 @@ public class BookingDetails extends AppCompatActivity {
 
                 try {
                     Intent intent = new Intent(mContext, CheckinShareLocationAppointment.class);
-                    intent.putExtra("waitlistPhonenumber", apptInfo.getConsumer().getUserProfile().getPrimaryMobileNo());
-                    intent.putExtra("uuid", apptInfo.getUid());
-                    intent.putExtra("accountID", String.valueOf(apptInfo.getProviderAccount().getId()));
-                    intent.putExtra("title", apptInfo.getProviderAccount().getBusinessName());
+                    intent.putExtra("waitlistPhonenumber", activeCheckIn.getWaitlistingFor().get(0).getPhoneNo());
+                    intent.putExtra("uuid", activeCheckIn.getYnwUuid());
+                    intent.putExtra("accountID", String.valueOf(activeCheckIn.getProviderAccount().getId()));
+                    intent.putExtra("title", activeCheckIn.getProviderAccount().getBusinessName());
                     intent.putExtra("terminology", "Check-in");
                     intent.putExtra("calcMode", "Check-in");
-                    intent.putExtra("queueStartTime", apptInfo.getSchedule().getApptSchedule().getTimeSlots().get(0).getsTime());
-                    intent.putExtra("queueEndTime", apptInfo.getSchedule().getApptSchedule().getTimeSlots().get(0).geteTime());
-                    if (apptInfo.getJaldeeApptDistanceTime() != null && apptInfo.getJaldeeApptDistanceTime().getJaldeeDistanceTime() != null) {
-                        intent.putExtra("jaldeeDistance", apptInfo.getJaldeeApptDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance());
+                    intent.putExtra("queueStartTime", activeCheckIn.getQueue().getQueueStartTime());
+                    intent.putExtra("queueEndTime", activeCheckIn.getQueue().getQueueEndTime());
+                    if (activeCheckIn.getJaldeeWaitlistDistanceTime() != null && activeCheckIn.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
+                        intent.putExtra("jaldeeDistance", activeCheckIn.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance());
                     }
                     mContext.startActivity(intent);
                 } catch (Exception e) {
@@ -331,7 +315,7 @@ public class BookingDetails extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                ApiRating(String.valueOf(apptInfo.getProviderAccount().getId()), apptInfo.getUid());
+                ApiRating(String.valueOf(activeCheckIn.getProviderAccount().getId()), activeCheckIn.getYnwUuid());
 
             }
         });
@@ -342,8 +326,8 @@ public class BookingDetails extends AppCompatActivity {
 
                 try {
 
-                    if (apptInfo != null && apptInfo.getService() != null) {
-                        customerNotes = new CustomerNotes(mContext, apptInfo.getService().getConsumerNoteTitle(), apptInfo.getConsumerNote());
+                    if (activeCheckIn != null && activeCheckIn.getService() != null) {
+                        customerNotes = new CustomerNotes(mContext, activeCheckIn.getService().getConsumerNoteTitle(), activeCheckIn.getConsumerNote());
                         customerNotes.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                         customerNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         customerNotes.show();
@@ -357,93 +341,95 @@ public class BookingDetails extends AppCompatActivity {
             }
         });
 
-
     }
 
     @Override
     protected void onResume() {
 
         // Api call
-        if (bookingInfo != null && bookingInfo.getAppointmentInfo() != null) {
-            getAppointmentDetails(bookingInfo.getAppointmentInfo().getUid(), bookingInfo.getAppointmentInfo().getProviderAccount().getId());
+        if (bookingInfo != null && bookingInfo.getCheckInInfo() != null) {
+            getBookingDetails(bookingInfo.getCheckInInfo().getYnwUuid(), bookingInfo.getCheckInInfo().getProviderAccount().getId());
         }
         super.onResume();
     }
 
+    private void getBookingDetails(String uid, int id) {
 
-
-    public void getAppointmentDetails(String uid, int id) {
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-        Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(uid, String.valueOf(id));
-        call.enqueue(new Callback<ActiveAppointment>() {
+        Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(uid, String.valueOf(id));
+        call.enqueue(new Callback<ActiveCheckIn>() {
             @Override
-            public void onResponse(Call<ActiveAppointment> call, Response<ActiveAppointment> response) {
+            public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
                 try {
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
-                        apptInfo = response.body();
-                        updateUI(apptInfo);
+                        activeCheckIn = response.body();
+
+                        if (activeCheckIn != null) {
+
+                            updateUI(activeCheckIn);
+
+                        }
+
                     }
                 } catch (Exception e) {
-
+                    Log.i("mnbbnmmnbbnm", e.toString());
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ActiveAppointment> call, Throwable t) {
+            public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
             }
         });
     }
 
-
-    private void updateUI(ActiveAppointment appointmentInfo) {
+    private void updateUI(ActiveCheckIn checkInInfo) {
 
         try {
 
-            if (appointmentInfo != null) {
-                if (appointmentInfo.getProvider() != null) {
+            if (checkInInfo != null) {
+                if (checkInInfo.getProvider() != null) {
 
-                    if (appointmentInfo.getProvider().getBusinessName() != null && !appointmentInfo.getProvider().getBusinessName().equalsIgnoreCase("")) {
-                        tvDoctorName.setText(convertToTitleForm(appointmentInfo.getProvider().getBusinessName()));
+                    if (checkInInfo.getProvider().getBusinessName() != null && !checkInInfo.getProvider().getBusinessName().equalsIgnoreCase("")) {
+                        tvDoctorName.setText(convertToTitleForm(checkInInfo.getProvider().getBusinessName()));
                     } else {
-                        String name = appointmentInfo.getProvider().getFirstName() + " " + appointmentInfo.getProvider().getLastName();
+                        String name = checkInInfo.getProvider().getFirstName() + " " + checkInInfo.getProvider().getLastName();
                         tvDoctorName.setText(convertToTitleForm(name));
                     }
                     tvProviderName.setVisibility(View.VISIBLE);
-                    tvProviderName.setText(convertToTitleForm(appointmentInfo.getProviderAccount().getBusinessName()));
+                    tvProviderName.setText(convertToTitleForm(checkInInfo.getProviderAccount().getBusinessName()));
                 } else {
                     tvProviderName.setVisibility(View.INVISIBLE);
-                    tvDoctorName.setText(convertToTitleForm(appointmentInfo.getProviderAccount().getBusinessName()));
+                    tvDoctorName.setText(convertToTitleForm(checkInInfo.getProviderAccount().getBusinessName()));
 
                 }
 
                 tvViewMore.setVisibility(View.VISIBLE);
                 llMoreDetails.setVisibility(View.GONE);
 
-                if (appointmentInfo.getService() != null) {
-                    tvServiceName.setText(convertToTitleForm(appointmentInfo.getService().getName()));
+                if (checkInInfo.getService() != null) {
+                    tvServiceName.setText(convertToTitleForm(checkInInfo.getService().getName()));
 
+                    if (checkInInfo.getService().getServiceType() != null && checkInInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
 
-                    if (appointmentInfo.getService().getServiceType() != null && appointmentInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
-
-                        if (appointmentInfo.getService().getVirtualCallingModes() != null) {
+                        if (checkInInfo.getService().getVirtualCallingModes() != null) {
                             ivTeleService.setVisibility(View.VISIBLE);
-                            if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                            if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
                                 ivTeleService.setImageResource(R.drawable.zoom_meet);
 
-                            } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                            } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
                                 ivTeleService.setImageResource(R.drawable.google_meet);
 
-                            } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                if (appointmentInfo.getService().getVirtualServiceType() != null && appointmentInfo.getService().getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                            } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                                if (checkInInfo.getService().getVirtualServiceType() != null && checkInInfo.getService().getVirtualServiceType().equalsIgnoreCase("videoService")) {
                                     ivTeleService.setImageResource(R.drawable.whatsapp_videoicon);
                                 } else {
                                     ivTeleService.setImageResource(R.drawable.whatsapp_icon);
                                 }
-                            } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                            } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 ivTeleService.setImageResource(R.drawable.phone_icon);
                             }
                         } else {
@@ -454,20 +440,20 @@ public class BookingDetails extends AppCompatActivity {
                 }
 
                 // to set confirmation number
-                if (appointmentInfo.getAppointmentEncId() != null) {
-                    tvConfirmationNumber.setText(appointmentInfo.getAppointmentEncId());
+                if (checkInInfo.getCheckinEncId() != null) {
+                    tvConfirmationNumber.setText(checkInInfo.getCheckinEncId());
                 }
 
                 // to set status
-                if (appointmentInfo.getApptStatus() != null) {
+                if (checkInInfo.getWaitlistStatus() != null) {
                     tvStatus.setVisibility(View.VISIBLE);
-                    if (appointmentInfo.getApptStatus().equalsIgnoreCase("Cancelled")) {
+                    if (checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled")) {
                         tvStatus.setTextColor(mContext.getResources().getColor(R.color.red));
-                        tvStatus.setText(convertToTitleForm(appointmentInfo.getApptStatus()));
+                        tvStatus.setText(convertToTitleForm(checkInInfo.getWaitlistStatus()));
 
                     } else {
                         tvStatus.setTextColor(mContext.getResources().getColor(R.color.location_theme));
-                        tvStatus.setText(convertToTitleForm(appointmentInfo.getApptStatus()));
+                        tvStatus.setText(convertToTitleForm(checkInInfo.getWaitlistStatus()));
                     }
                 } else {
                     tvStatus.setVisibility(View.GONE);
@@ -475,54 +461,72 @@ public class BookingDetails extends AppCompatActivity {
 
 
                 // to set paid info
-                if (appointmentInfo.getAmountPaid() != null && !appointmentInfo.getAmountPaid().equalsIgnoreCase("0.0")) {
+                if (checkInInfo.getAmountPaid() != 0) {
                     llPayment.setVisibility(View.VISIBLE);
-                    tvAmount.setText("₹" + " " + convertAmountToDecimals(appointmentInfo.getAmountPaid()) + " " + "PAID");
+                    tvAmount.setText("₹" + " " + convertAmountToDecimals(checkInInfo.getAmountPaid()) + " " + "PAID");
                 } else {
 
                     llPayment.setVisibility(View.GONE);
                 }
 
                 // to set consumer name
-                if (appointmentInfo.getAppmtFor() != null) {
+                if (checkInInfo.getWaitlistingFor() != null) {
 
-                    if (appointmentInfo.getAppmtFor().get(0).getUserName() != null) {
-                        tvConsumerName.setText(appointmentInfo.getAppmtFor().get(0).getUserName());
-                    } else {
-                        tvConsumerName.setText(appointmentInfo.getAppmtFor().get(0).getFirstName() + " " + appointmentInfo.getAppmtFor().get(0).getLastName());
-                    }
+                    tvConsumerName.setText(checkInInfo.getWaitlistingFor().get(0).getFirstName() + " " + checkInInfo.getWaitlistingFor().get(0).getLastName());
+
                 }
 
                 // to set appointment date
-                if (appointmentInfo.getAppmtDate() != null) {
-                    tvDate.setText(getCustomDateString(appointmentInfo.getAppmtDate()));
+                if (checkInInfo.getDate() != null && checkInInfo.getQueue() != null) {
+                    String date = getCustomDateString(checkInInfo.getDate());
+                    String time = checkInInfo.getQueue().getQueueStartTime() + " - " + checkInInfo.getQueue().getQueueEndTime();
+                    tvDate.setText(date + "\n" + time);
+
                 }
 
-                // to set slot time
-                if (appointmentInfo.getAppmtTime() != null) {
+                // to set waitTime or token No with waitTime
+                if (checkInInfo.getShowToken() != null && checkInInfo.getShowToken().equalsIgnoreCase("true")) {
 
-                    tvTime.setText(convertTime(appointmentInfo.getAppmtTime().split("-")[0]));
-                }
+                    isToken = true;
+                    if (checkInInfo.getCalculationMode() != null && !checkInInfo.getCalculationMode().equalsIgnoreCase("NoCalc")) {
 
-                if (appointmentInfo.getBatchId() != null) {
-                    llBatch.setVisibility(View.VISIBLE);
-                    tvBatchNo.setText(appointmentInfo.getBatchId());
+                        tvHint.setText("Token #");
+                        tvTime.setText(String.valueOf(checkInInfo.getToken()));
+                        tvTime.setGravity(Gravity.CENTER);
+                        tvTokenWaitTime.setVisibility(View.VISIBLE);
+                        if (checkInInfo.getAppxWaitingTime() == 1){
+                            tvTokenWaitTime.setText("Est wait time : "+ checkInInfo.getAppxWaitingTime()+" Min");
+
+                        }else {
+                            tvTokenWaitTime.setText("Est wait time : "+ checkInInfo.getAppxWaitingTime()+" Mins");
+                        }
+
+                    } else {
+                        tvHint.setText("Token #");
+                        tvTime.setText(String.valueOf(checkInInfo.getToken()));
+                        tvTime.setGravity(Gravity.CENTER);
+                        tvTokenWaitTime.setVisibility(View.GONE);
+                    }
                 } else {
-                    llBatch.setVisibility(View.GONE);
+
+                    isToken = false;
+                    tvHint.setText("Est wait time");
+                    tvTime.setText(checkInInfo.getAppxWaitingTime() + " Minutes");
                 }
+
 
                 // to set location
-                if (appointmentInfo.getLocation() != null) {
+                if (checkInInfo.getQueue()!= null && checkInInfo.getQueue().getLocation() != null) {
 
-                    if (appointmentInfo.getLocation().getPlace() != null) {
+                    if (checkInInfo.getQueue().getLocation().getPlace() != null) {
 
-                        tvLocationName.setText(appointmentInfo.getLocation().getPlace());
+                        tvLocationName.setText(checkInInfo.getQueue().getLocation().getPlace());
 
                         tvLocationName.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
 
-                                openMapView(appointmentInfo.getLocation().getLattitude(), appointmentInfo.getLocation().getLongitude(), appointmentInfo.getLocation().getPlace());
+                                openMapView(checkInInfo.getQueue().getLocation().getLattitude(), checkInInfo.getQueue().getLocation().getLongitude(), checkInInfo.getLocation().getPlace());
                             }
                         });
                     }
@@ -532,12 +536,12 @@ public class BookingDetails extends AppCompatActivity {
                     llReschedule.setVisibility(View.VISIBLE);
                     llCancel.setVisibility(View.VISIBLE);
 
-                    if (appointmentInfo.getService() != null) {
+                    if (checkInInfo.getService() != null) {
 
-                        if (appointmentInfo.getService().getLivetrack().equalsIgnoreCase("true")) {
+                        if (checkInInfo.getService().getLivetrack().equalsIgnoreCase("true")) {
                             llLocation.setVisibility(View.VISIBLE);
-                            if (appointmentInfo.getJaldeeApptDistanceTime() != null) {
-                                Glide.with(BookingDetails.this).load(R.drawable.address).into(ivLtIcon);
+                            if (checkInInfo.getJaldeeWaitlistDistanceTime() != null) {
+                                Glide.with(CheckInDetails.this).load(R.drawable.address).into(ivLtIcon);
                             } else {
                                 ivLtIcon.setImageResource(R.drawable.location_off);
 
@@ -555,40 +559,40 @@ public class BookingDetails extends AppCompatActivity {
                 }
 
                 // hide instructions link when there are no post instructions
-                if (appointmentInfo.getService() != null && appointmentInfo.getService().isPostInfoEnabled()) {
+                if (checkInInfo.getService() != null && checkInInfo.getService().isPostInfoEnabled()) {
                     tvInstructions.setVisibility(View.VISIBLE);
                 } else {
                     tvInstructions.setVisibility(View.GONE);
                 }
 
                 // hide customerNotes when there is no notes from consumer
-                if (appointmentInfo.getConsumerNote() != null && !appointmentInfo.getConsumerNote().equalsIgnoreCase("")) {
+                if (checkInInfo.getConsumerNote() != null && !checkInInfo.getConsumerNote().equalsIgnoreCase("")) {
                     tvCustomerNotes.setVisibility(View.VISIBLE);
                 } else {
                     tvCustomerNotes.setVisibility(View.GONE);
                 }
 
-                if (appointmentInfo.getPaymentStatus().equalsIgnoreCase("FullyPaid") || appointmentInfo.getPaymentStatus().equalsIgnoreCase("Refund")) {
-                    String amount = "₹" + " " + convertAmountToDecimals(String.valueOf(appointmentInfo.getAmountDue()));
+                if (checkInInfo.getPaymentStatus().equalsIgnoreCase("FullyPaid") || checkInInfo.getPaymentStatus().equalsIgnoreCase("Refund")) {
+                    String amount = "₹" + " " + convertAmountToDecimals(checkInInfo.getAmountDue());
                     tvAmountToPay.setText(amount);
                     cvBill.setVisibility(View.VISIBLE);
                     tvBillText.setText("Receipt");
                 } else {
-                    String amount = "₹" + " " + convertAmountToDecimals(String.valueOf(appointmentInfo.getAmountDue()));
+                    String amount = "₹" + " " + convertAmountToDecimals(checkInInfo.getAmountDue());
                     tvAmountToPay.setText(amount);
                     cvBill.setVisibility(View.VISIBLE);
                     tvBillText.setText("Pay bill");
                 }
 
-                if (appointmentInfo.getBillViewStatus() != null && !appointmentInfo.getApptStatus().equalsIgnoreCase("cancelled")) {
-                    if (appointmentInfo.getBillViewStatus().equalsIgnoreCase("Show")) {
+                if (checkInInfo.getBillViewStatus() != null && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                    if (checkInInfo.getBillViewStatus().equalsIgnoreCase("Show")) {
                         cvBill.setVisibility(View.VISIBLE);
                     } else {
                         cvBill.setVisibility(View.GONE);
                     }
 
                 } else {
-                    if (!appointmentInfo.getPaymentStatus().equalsIgnoreCase("NotPaid")) {
+                    if (!checkInInfo.getPaymentStatus().equalsIgnoreCase("NotPaid")) {
                         cvBill.setVisibility(View.VISIBLE);
                     } else {
                         cvBill.setVisibility(View.GONE);
@@ -600,14 +604,14 @@ public class BookingDetails extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        Intent iBill = new Intent(BookingDetails.this, BillActivity.class);
-                        iBill.putExtra("ynwUUID", appointmentInfo.getUid());
-                        iBill.putExtra("provider", appointmentInfo.getProviderAccount().getBusinessName());
-                        iBill.putExtra("accountID", appointmentInfo.getProviderAccount().getId());
-                        iBill.putExtra("payStatus", appointmentInfo.getPaymentStatus());
+                        Intent iBill = new Intent(CheckInDetails.this, BillActivity.class);
+                        iBill.putExtra("ynwUUID", checkInInfo.getYnwUuid());
+                        iBill.putExtra("provider", checkInInfo.getProviderAccount().getBusinessName());
+                        iBill.putExtra("accountID", checkInInfo.getProviderAccount().getId());
+                        iBill.putExtra("payStatus", checkInInfo.getPaymentStatus());
                         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
-                        iBill.putExtra("consumer", appointmentInfo.getAppmtFor().get(0).getFirstName()+" "+appointmentInfo.getAppmtFor().get(0).getLastName());
-                        iBill.putExtra("uniqueId",appointmentInfo.getProviderAccount().getUniqueId());
+                        iBill.putExtra("consumer", checkInInfo.getWaitlistingFor().get(0).getFirstName() + " " + checkInInfo.getWaitlistingFor().get(0).getLastName());
+                        iBill.putExtra("uniqueId", checkInInfo.getProviderAccount().getUniqueId());
                         startActivity(iBill);
 
                     }
@@ -617,51 +621,6 @@ public class BookingDetails extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void ApiDeleteAppointment(String ynwuuid, String accountID, final BottomSheetDialog dialog) {
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Call<ResponseBody> call = apiService.deleteAppointment(ynwuuid, String.valueOf(accountID));
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(BookingDetails.this, mDialog);
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-                    if (response.code() == 200) {
-                        if (response.body().string().equalsIgnoreCase("true")) {
-                            DynamicToast.make(context, "Appointment cancelled successfully", AppCompatResources.getDrawable(
-                                    context, R.drawable.ic_info_black),
-                                    ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
-
-                            dialog.dismiss();
-                            isActive = false;
-                            getAppointmentDetails(apptInfo.getUid(), apptInfo.getProviderAccount().getId());
-
-                        }
-                    } else {
-                        if (response.code() != 419) {
-                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(BookingDetails.this, mDialog);
-            }
-        });
     }
 
     BottomSheetDialog dialog;
@@ -676,14 +635,14 @@ public class BookingDetails extends AppCompatActivity {
         Map<String, String> query = new HashMap<>();
         query.put("account-eq", accountID);
         query.put("uId-eq", UUID);
-        Call<ArrayList<RatingResponse>> call = apiService.getRatingApp(query);
+        Call<ArrayList<RatingResponse>> call = apiService.getRating(query);
         Config.logV("Location-----###########@@@@@@" + query);
         call.enqueue(new Callback<ArrayList<RatingResponse>>() {
             @Override
             public void onResponse(Call<ArrayList<RatingResponse>> call, final Response<ArrayList<RatingResponse>> response) {
                 try {
                     if (mDialog.isShowing())
-                        Config.closeDialog(BookingDetails.this, mDialog);
+                        Config.closeDialog(CheckInDetails.this, mDialog);
                     Config.logV("URL----------Location-----###########@@@@@@-----" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code--------Message-----------------" + response.code());
                     if (response.code() == 200) {
@@ -763,7 +722,7 @@ public class BookingDetails extends AppCompatActivity {
                 // Log error here since request failed
                 Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
                 if (mDialog.isShowing())
-                    Config.closeDialog(BookingDetails.this, mDialog);
+                    Config.closeDialog(CheckInDetails.this, mDialog);
             }
         });
     }
@@ -785,18 +744,17 @@ public class BookingDetails extends AppCompatActivity {
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call;
         if (firstTimerate) {
-            call = apiService.PostRatingApp(accountID, body);
+            call = apiService.PostRating(accountID, body);
         } else {
-            call = apiService.PutRatingApp(accountID, body);
+            call = apiService.PutRating(accountID, body);
         }
-//        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
                     Config.logV("URL-------Request---" + response.raw().request().url().toString().trim());
                     if (mDialog.isShowing())
-                        Config.closeDialog(BookingDetails.this, mDialog);
+                        Config.closeDialog(CheckInDetails.this, mDialog);
                     dialog.dismiss();
                     Config.logV("Put Rating#########################" + response.code());
                     if (response.code() == 200) {
@@ -816,10 +774,64 @@ public class BookingDetails extends AppCompatActivity {
                 // Log error here since request failed
                 Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
                 if (mDialog.isShowing())
-                    Config.closeDialog(BookingDetails.this, mDialog);
+                    Config.closeDialog(CheckInDetails.this, mDialog);
             }
         });
     }
+
+
+    private void ApiDeleteCheckIn(String ynwuuid, String accountID, final BottomSheetDialog dialog) {
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ResponseBody> call = apiService.deleteActiveCheckIn(ynwuuid, String.valueOf(accountID));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(CheckInDetails.this, mDialog);
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        if (response.body().string().equalsIgnoreCase("true")) {
+
+                            String mesg = "";
+                            if (isToken){
+                                mesg = "Token cancelled successfully";
+                            } else {
+                                mesg = "CheckIn cancelled successfully";
+                            }
+                            DynamicToast.make(context, mesg, AppCompatResources.getDrawable(
+                                    context, R.drawable.ic_info_black),
+                                    ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
+
+                            dialog.dismiss();
+                            isActive = false;
+                            getBookingDetails(activeCheckIn.getYnwUuid(), activeCheckIn.getProviderAccount().getId());
+
+                        }
+                    } else {
+                        if (response.code() != 419) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(CheckInDetails.this, mDialog);
+            }
+        });
+    }
+
 
 
     public static String convertToTitleForm(String name) {
@@ -828,11 +840,10 @@ public class BookingDetails extends AppCompatActivity {
         return convertName;
     }
 
-    public static String convertAmountToDecimals(String price) {
+    public static String convertAmountToDecimals(double price) {
 
-        double a = Double.parseDouble(price);
         DecimalFormat decim = new DecimalFormat("0.00");
-        Double price2 = Double.parseDouble(decim.format(a));
+        Double price2 = Double.parseDouble(decim.format(price));
         String amount = decim.format(price2);
         return amount;
 
@@ -883,5 +894,6 @@ public class BookingDetails extends AppCompatActivity {
             context.startActivity(mapIntent);
         }
     }
+
 
 }

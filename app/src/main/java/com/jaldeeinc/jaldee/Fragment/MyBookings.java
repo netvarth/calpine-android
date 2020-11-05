@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BookingDetails;
+import com.jaldeeinc.jaldee.activities.CheckInDetails;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.HistoryActivity;
 import com.jaldeeinc.jaldee.activities.Home;
@@ -71,8 +72,8 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
 
     private Context mContext;
     private Activity mActivity;
-    private CustomTextViewItalicSemiBold tvToday,tvUpcoming;
-    private LinearLayout llNoBookingsForToday, llNoBookingsForFuture,llNoBookings,llBookings;
+    private CustomTextViewItalicSemiBold tvToday, tvUpcoming;
+    private LinearLayout llNoBookingsForToday, llNoBookingsForFuture, llNoBookings, llBookings;
     private RecyclerView rvTodays, rvUpcomings;
     private TodayBookingsAdapter todayBookingsAdapter;
     private LinearLayoutManager linearLayoutManager, futureLayoutManager;
@@ -139,7 +140,6 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
         rvTodays.setLayoutManager(linearLayoutManager);
         todayBookingsAdapter = new TodayBookingsAdapter(bookingsList, getContext(), true, iSelectedBooking);
         rvTodays.setAdapter(todayBookingsAdapter);
-
 
 
         return view;
@@ -609,23 +609,26 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
 
         if (bookings != null) {
 
-            if (bookings.getBookingType().equalsIgnoreCase(Constants.APPOINTMENT)){
+            if (bookings.getBookingType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
                 Intent intent = new Intent(mContext, BookingDetails.class);
                 intent.putExtra("bookingInfo", bookings);
                 if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled")) {
                     intent.putExtra("isActive", true);
-                }
-                else {
+                } else {
                     intent.putExtra("isActive", false);
                 }
                 startActivity(intent);
-            }
-            else if (bookings.getBookingType().equalsIgnoreCase(Constants.CHECKEDIN)){
+            } else if (bookings.getBookingType().equalsIgnoreCase(Constants.CHECKIN) || bookings.getBookingType().equalsIgnoreCase(Constants.TOKEN)) {
 
-
-            } else if (bookings.getBookingType().equalsIgnoreCase(Constants.TOKEN)){
-
+                Intent intent = new Intent(mContext, CheckInDetails.class);
+                intent.putExtra("bookingInfo", bookings);
+                if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled")) {
+                    intent.putExtra("isActive", true);
+                } else {
+                    intent.putExtra("isActive", false);
+                }
+                startActivity(intent);
 
             }
 

@@ -205,7 +205,7 @@
                                             android:layout_marginEnd="8dp"
                                             android:ellipsize="end"
                                             android:maxLines="2"
-                                            android:text="Dr.Sreeraj Mahendra"
+                                            android:text=""
                                             android:textColor="@color/title_color"
                                             android:textSize="@dimen/dimen_20dp">
 
@@ -221,8 +221,7 @@
                                             <ImageView
                                                 android:id="@+id/iv_teleService"
                                                 android:layout_width="20dp"
-                                                android:layout_height="18dp"
-                                                android:src="@drawable/whatsapp_icon">
+                                                android:layout_height="18dp">
 
                                             </ImageView>
 
@@ -233,7 +232,7 @@
                                                 android:layout_marginStart="@dimen/padding3"
                                                 android:ellipsize="end"
                                                 android:maxLines="2"
-                                                android:text="Uro Consultation"
+                                                android:text=""
                                                 android:textColor="@color/title_color"
                                                 android:textSize="@dimen/dimen_17sp">
 
@@ -264,7 +263,7 @@
                                                 android:layout_marginStart="@dimen/padding3"
                                                 android:ellipsize="end"
                                                 android:maxLines="2"
-                                                android:text="Location Name"
+                                                android:text=""
                                                 android:textColor="@color/location_theme"
                                                 android:textSize="@dimen/txtsize_14">
 
@@ -330,7 +329,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:paddingTop="@dimen/dimen_1dp"
-                                            android:text="a-2237q531-6"
+                                            android:text=""
                                             android:textColor="@color/title_color"
                                             android:textSize="@dimen/dimen_16dp">
 
@@ -359,7 +358,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:paddingTop="@dimen/dimen_1dp"
-                                            android:text="Confirmed"
+                                            android:text=""
                                             android:textColor="@color/location_theme"
                                             android:textSize="@dimen/dimen_16dp">
 
@@ -400,7 +399,6 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:paddingTop="@dimen/dimen_1dp"
-                                            android:text="Rs.500 PAID"
                                             android:textColor="@color/title_color"
                                             android:textSize="@dimen/dimen_16dp">
 
@@ -429,7 +427,6 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:paddingTop="@dimen/dimen_1dp"
-                                            android:text="Jane Doe"
                                             android:textColor="@color/title_color"
                                             android:textSize="@dimen/dimen_16dp">
 
@@ -458,7 +455,7 @@
                                         <com.jaldeeinc.jaldee.custom.CustomTextViewLight
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="Date"
+                                            android:text="Date &amp; Time-window"
                                             android:textAllCaps="true"
                                             android:textSize="@dimen/txtsize_12">
 
@@ -469,9 +466,9 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:paddingTop="@dimen/dimen_1dp"
-                                            android:text="24th Oct 2020"
+                                            android:text=""
                                             android:textColor="@color/appoint_theme"
-                                            android:textSize="@dimen/dimen_18dp">
+                                            android:textSize="@dimen/dimen_16dp">
 
                                         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
@@ -485,9 +482,10 @@
                                         android:orientation="vertical">
 
                                         <com.jaldeeinc.jaldee.custom.CustomTextViewLight
+                                            android:id="@+id/tv_hint"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="Time"
+                                            android:text="EST wait time"
                                             android:textAllCaps="true"
                                             android:textSize="@dimen/txtsize_12">
 
@@ -498,56 +496,24 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:paddingTop="@dimen/dimen_1dp"
-                                            android:text="12:35 PM"
-                                            android:textColor="@color/appoint_theme"
-                                            android:textSize="@dimen/dimen_18dp">
-
-                                        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-                                    </LinearLayout>
-
-                                </LinearLayout>
-
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/dimen_20dp"
-                                    android:layout_marginTop="@dimen/dimen_20dp"
-                                    android:layout_marginEnd="@dimen/dimen_8dp"
-                                    android:orientation="horizontal">
-
-
-                                    <LinearLayout
-                                        android:id="@+id/ll_batch"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginEnd="@dimen/dimen_8dp"
-                                        android:layout_weight="0.5"
-                                        android:gravity="start"
-                                        android:orientation="vertical">
-
-                                        <com.jaldeeinc.jaldee.custom.CustomTextViewLight
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="Batch"
-                                            android:textAllCaps="true"
-                                            android:textSize="@dimen/txtsize_12">
-
-                                        </com.jaldeeinc.jaldee.custom.CustomTextViewLight>
-
-                                        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-                                            android:id="@+id/tv_batchNo"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:paddingTop="@dimen/dimen_1dp"
                                             android:text=""
                                             android:textColor="@color/appoint_theme"
-                                            android:textSize="@dimen/dimen_18dp">
+                                            android:textSize="@dimen/dimen_16dp">
 
                                         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
-                                    </LinearLayout>
+                                        <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
+                                            android:id="@+id/tv_tokenWaitTime"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text=""
+                                            android:textSize="@dimen/dimen_12dp"
+                                            android:visibility="gone"
+                                            android:textColor="@color/appoint_theme"
+                                            android:layout_marginTop="@dimen/dimen_1dp">
 
+                                        </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
+                                    </LinearLayout>
 
                                 </LinearLayout>
 
@@ -825,7 +791,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="@dimen/dimen_5dp"
                                         android:layout_marginTop="@dimen/dimen_5dp"
-                                        android:text="Rs.2456.00"
+                                        android:text=""
                                         android:textColor="@color/white"
                                         android:textSize="@dimen/txtsize_12">
 
@@ -839,7 +805,6 @@
                                         android:layout_alignParentBottom="true"
                                         android:layout_marginEnd="@dimen/padding5"
                                         android:paddingBottom="@dimen/padding3"
-                                        android:text="Pay bill"
                                         android:textAllCaps="false"
                                         android:textColor="@color/white"
                                         android:textSize="18dp">
