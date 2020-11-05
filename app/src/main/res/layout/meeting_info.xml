@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <TextView
+    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
         android:id="@+id/info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,10 +17,10 @@
         android:textSize="@dimen/dimen_16sp"
         android:textColor="@color/dark_blue">
 
-    </TextView>
+    </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
 
-    <TextView
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:id="@+id/hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,9 +30,9 @@
         android:textSize="10sp"
         android:layout_below="@id/info">
 
-    </TextView>
+    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-    <TextView
+    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
         android:id="@+id/tv_serviceName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,9 +45,9 @@
         android:layout_marginStart="@dimen/dimen_15sp"
         android:layout_marginTop="@dimen/dimen_1dp">
 
-    </TextView>
+    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
-    <TextView
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:id="@+id/tv_timeInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,9 +57,9 @@
         android:layout_marginTop="@dimen/dimen_5dp"
         android:layout_below="@id/tv_serviceName">
 
-    </TextView>
+    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-    <TextView
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:id="@+id/header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -70,9 +70,9 @@
         android:layout_marginStart="@dimen/dimen_15sp"
         android:layout_marginTop="@dimen/dimen_10dp">
 
-    </TextView>
+    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-    <TextView
+    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
         android:id="@+id/tv_meetingLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
         android:text=""
         android:textColor="@color/violet">
 
-    </TextView>
+    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
 
     <Button

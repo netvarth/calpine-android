@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
@@ -40,10 +42,13 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomerNotes;
 import com.jaldeeinc.jaldee.custom.InstructionsDialog;
+import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
+import com.jaldeeinc.jaldee.custom.MeetingInfo;
 import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.RatingResponse;
+import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import org.json.JSONException;
@@ -145,14 +150,14 @@ public class CheckInDetails extends AppCompatActivity {
     @BindView(R.id.iv_ltIcon)
     ImageView ivLtIcon;
 
-    @BindView(R.id.tv_instructions)
-    CustomTextViewMedium tvInstructions;
+    @BindView(R.id.ll_customerNotes)
+    LinearLayout llCustomerNotes;
 
-    @BindView(R.id.tv_chat)
-    CustomTextViewMedium tvChat;
+    @BindView(R.id.ll_instructions)
+    LinearLayout llInstructions;
 
-    @BindView(R.id.tv_customerNotes)
-    CustomTextViewMedium tvCustomerNotes;
+    @BindView(R.id.tv_trackingText)
+    CustomTextViewMedium tvTrackingText;
 
     @BindView(R.id.tv_amountToPay)
     CustomTextViewRegularItalic tvAmountToPay;
@@ -163,6 +168,15 @@ public class CheckInDetails extends AppCompatActivity {
     @BindView(R.id.tv_hint)
     CustomTextViewLight tvHint;
 
+    @BindView(R.id.tv_queueTime)
+    CustomTextViewSemiBold tvQueueTime;
+
+    @BindView(R.id.cv_meetingDetails)
+    NeomorphFrameLayout cvMeetingDetails;
+
+    @BindView(R.id.iv_meetingIcon)
+    ImageView ivMeetingIcon;
+
     boolean firstTimeRating = false;
 
     private InstructionsDialog instructionsDialog;
@@ -172,6 +186,9 @@ public class CheckInDetails extends AppCompatActivity {
     private Bookings bookingInfo = new Bookings();
     private boolean isActive = true;
     private ActiveCheckIn activeCheckIn = new ActiveCheckIn();
+    private TeleServiceCheckIn meetingDetails;
+    private MeetingDetailsWindow meetingDetailsWindow;
+    private MeetingInfo meetingInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,12 +216,14 @@ public class CheckInDetails extends AppCompatActivity {
             public void onClick(View view) {
 
                 Intent intent = new Intent(CheckInDetails.this, RescheduleCheckinActivity.class);
-                intent.putExtra("checkinInfo", activeCheckIn);
+                intent.putExtra("uniqueId", activeCheckIn.getProviderAccount().getUniqueId());
+                intent.putExtra("ynwuuid", activeCheckIn.getYnwUuid());
+                intent.putExtra("providerId", activeCheckIn.getProviderAccount().getId());
                 startActivity(intent);
             }
         });
 
-        tvInstructions.setOnClickListener(new View.OnClickListener() {
+        llInstructions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -255,7 +274,7 @@ public class CheckInDetails extends AppCompatActivity {
                 final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                 TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
                 String mesg = "";
-                if (isToken){
+                if (isToken) {
                     mesg = "Do you want to cancel this Token ?";
                 } else {
                     mesg = "Do you want to cancel this CheckIn ?";
@@ -320,7 +339,7 @@ public class CheckInDetails extends AppCompatActivity {
             }
         });
 
-        tvCustomerNotes.setOnClickListener(new View.OnClickListener() {
+        llCustomerNotes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -415,28 +434,38 @@ public class CheckInDetails extends AppCompatActivity {
 
                     if (checkInInfo.getService().getServiceType() != null && checkInInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
 
+                        if (isActive) {
+                            cvMeetingDetails.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            cvMeetingDetails.setVisibility(View.GONE);
+                        }
                         if (checkInInfo.getService().getVirtualCallingModes() != null) {
                             ivTeleService.setVisibility(View.VISIBLE);
                             if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
                                 ivTeleService.setImageResource(R.drawable.zoom_meet);
-
+                                ivMeetingIcon.setImageResource(R.drawable.zoom_meet);
                             } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
                                 ivTeleService.setImageResource(R.drawable.google_meet);
-
+                                ivMeetingIcon.setImageResource(R.drawable.google_meet);
                             } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
                                 if (checkInInfo.getService().getVirtualServiceType() != null && checkInInfo.getService().getVirtualServiceType().equalsIgnoreCase("videoService")) {
                                     ivTeleService.setImageResource(R.drawable.whatsapp_videoicon);
+                                    ivMeetingIcon.setImageResource(R.drawable.whatsapp_videoicon);
                                 } else {
                                     ivTeleService.setImageResource(R.drawable.whatsapp_icon);
+                                    ivMeetingIcon.setImageResource(R.drawable.whatsapp_icon);
                                 }
                             } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 ivTeleService.setImageResource(R.drawable.phone_icon);
+                                ivMeetingIcon.setImageResource(R.drawable.phone_icon);
                             }
                         } else {
                             ivTeleService.setVisibility(View.GONE);
                         }
+                    } else {
+                        cvMeetingDetails.setVisibility(View.GONE);
                     }
-
                 }
 
                 // to set confirmation number
@@ -480,7 +509,8 @@ public class CheckInDetails extends AppCompatActivity {
                 if (checkInInfo.getDate() != null && checkInInfo.getQueue() != null) {
                     String date = getCustomDateString(checkInInfo.getDate());
                     String time = checkInInfo.getQueue().getQueueStartTime() + " - " + checkInInfo.getQueue().getQueueEndTime();
-                    tvDate.setText(date + "\n" + time);
+                    tvDate.setText(date);
+                    tvQueueTime.setText(time);
 
                 }
 
@@ -492,19 +522,19 @@ public class CheckInDetails extends AppCompatActivity {
 
                         tvHint.setText("Token #");
                         tvTime.setText(String.valueOf(checkInInfo.getToken()));
-                        tvTime.setGravity(Gravity.CENTER);
+                        tvTime.setGravity(Gravity.CENTER_HORIZONTAL);
                         tvTokenWaitTime.setVisibility(View.VISIBLE);
-                        if (checkInInfo.getAppxWaitingTime() == 1){
-                            tvTokenWaitTime.setText("Est wait time : "+ checkInInfo.getAppxWaitingTime()+" Min");
+                        if (checkInInfo.getAppxWaitingTime() == 1) {
+                            tvTokenWaitTime.setText("Est wait time : " + checkInInfo.getAppxWaitingTime() + " Min");
 
-                        }else {
-                            tvTokenWaitTime.setText("Est wait time : "+ checkInInfo.getAppxWaitingTime()+" Mins");
+                        } else {
+                            tvTokenWaitTime.setText("Est wait time : " + checkInInfo.getAppxWaitingTime() + " Mins");
                         }
 
                     } else {
                         tvHint.setText("Token #");
                         tvTime.setText(String.valueOf(checkInInfo.getToken()));
-                        tvTime.setGravity(Gravity.CENTER);
+                        tvTime.setGravity(Gravity.CENTER_HORIZONTAL);
                         tvTokenWaitTime.setVisibility(View.GONE);
                     }
                 } else {
@@ -516,7 +546,7 @@ public class CheckInDetails extends AppCompatActivity {
 
 
                 // to set location
-                if (checkInInfo.getQueue()!= null && checkInInfo.getQueue().getLocation() != null) {
+                if (checkInInfo.getQueue() != null && checkInInfo.getQueue().getLocation() != null) {
 
                     if (checkInInfo.getQueue().getLocation().getPlace() != null) {
 
@@ -533,8 +563,22 @@ public class CheckInDetails extends AppCompatActivity {
                 }
 
                 if (isActive) {
-                    llReschedule.setVisibility(View.VISIBLE);
-                    llCancel.setVisibility(View.VISIBLE);
+
+                    if (checkInInfo.getWaitlistStatus() != null) {
+                        if (checkInInfo.getWaitlistStatus().equalsIgnoreCase("Checkedin") || checkInInfo.getWaitlistStatus().equalsIgnoreCase("Arrived")) {
+                            llReschedule.setVisibility(View.VISIBLE);
+                        } else {
+                            hideView(llReschedule);
+                        }
+
+                        if (checkInInfo.getWaitlistStatus().equalsIgnoreCase("Checkedin") || checkInInfo.getWaitlistStatus().equalsIgnoreCase("Arrived") || checkInInfo.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+                            llCancel.setVisibility(View.VISIBLE);
+                        } else {
+
+                            hideView(llCancel);
+                        }
+                    }
+
 
                     if (checkInInfo.getService() != null) {
 
@@ -547,41 +591,48 @@ public class CheckInDetails extends AppCompatActivity {
 
                             }
                         } else {
-                            llLocation.setVisibility(View.GONE);
+                            hideView(llLocation);
                         }
                     }
 
 
                 } else {
-                    llReschedule.setVisibility(View.GONE);
-                    llCancel.setVisibility(View.GONE);
-                    llLocation.setVisibility(View.GONE);
+                    hideView(llReschedule);
+                    hideView(llCancel);
+                    hideView(llLocation);
                 }
 
                 // hide instructions link when there are no post instructions
                 if (checkInInfo.getService() != null && checkInInfo.getService().isPostInfoEnabled()) {
-                    tvInstructions.setVisibility(View.VISIBLE);
+                    llInstructions.setVisibility(View.VISIBLE);
                 } else {
-                    tvInstructions.setVisibility(View.GONE);
+
+                    hideView(llInstructions);
                 }
 
                 // hide customerNotes when there is no notes from consumer
                 if (checkInInfo.getConsumerNote() != null && !checkInInfo.getConsumerNote().equalsIgnoreCase("")) {
-                    tvCustomerNotes.setVisibility(View.VISIBLE);
+                    llCustomerNotes.setVisibility(View.VISIBLE);
                 } else {
-                    tvCustomerNotes.setVisibility(View.GONE);
+                    hideView(llCustomerNotes);
                 }
 
                 if (checkInInfo.getPaymentStatus().equalsIgnoreCase("FullyPaid") || checkInInfo.getPaymentStatus().equalsIgnoreCase("Refund")) {
                     String amount = "₹" + " " + convertAmountToDecimals(checkInInfo.getAmountDue());
                     tvAmountToPay.setText(amount);
+                    tvAmountToPay.setVisibility(View.GONE);
                     cvBill.setVisibility(View.VISIBLE);
                     tvBillText.setText("Receipt");
                 } else {
                     String amount = "₹" + " " + convertAmountToDecimals(checkInInfo.getAmountDue());
-                    tvAmountToPay.setText(amount);
+                    if (checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled")) {
+                        tvAmountToPay.setVisibility(View.GONE);
+                    } else {
+                        tvAmountToPay.setText(amount);
+                        tvAmountToPay.setVisibility(View.VISIBLE);
+                    }
                     cvBill.setVisibility(View.VISIBLE);
-                    tvBillText.setText("Pay bill");
+                    tvBillText.setText("Bill");
                 }
 
                 if (checkInInfo.getBillViewStatus() != null && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
@@ -607,12 +658,21 @@ public class CheckInDetails extends AppCompatActivity {
                         Intent iBill = new Intent(CheckInDetails.this, BillActivity.class);
                         iBill.putExtra("ynwUUID", checkInInfo.getYnwUuid());
                         iBill.putExtra("provider", checkInInfo.getProviderAccount().getBusinessName());
-                        iBill.putExtra("accountID", checkInInfo.getProviderAccount().getId());
+                        iBill.putExtra("accountID", String.valueOf(checkInInfo.getProviderAccount().getId()));
                         iBill.putExtra("payStatus", checkInInfo.getPaymentStatus());
                         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
                         iBill.putExtra("consumer", checkInInfo.getWaitlistingFor().get(0).getFirstName() + " " + checkInInfo.getWaitlistingFor().get(0).getLastName());
                         iBill.putExtra("uniqueId", checkInInfo.getProviderAccount().getUniqueId());
                         startActivity(iBill);
+
+                    }
+                });
+
+                cvMeetingDetails.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        apiGetMeetingDetails(checkInInfo.getYnwUuid(), checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode(), checkInInfo.getProviderAccount().getId(), checkInInfo);
 
                     }
                 });
@@ -727,6 +787,82 @@ public class CheckInDetails extends AppCompatActivity {
         });
     }
 
+    private void apiGetMeetingDetails(String uuid, String mode, int accountID, ActiveCheckIn info) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        Call<TeleServiceCheckIn> call = apiService.getMeetingDetails(uuid, mode, accountID);
+
+        call.enqueue(new Callback<TeleServiceCheckIn>() {
+            @Override
+            public void onResponse(Call<TeleServiceCheckIn> call, Response<TeleServiceCheckIn> response) {
+
+                try {
+                    if (response.code() == 200) {
+
+                        meetingDetails = response.body();
+                        if (meetingDetails != null) {
+
+                            if (mode.equalsIgnoreCase("GoogleMeet")) {
+
+                                showMeetingDetailsWindow(info, mode, meetingDetails);
+                            } else if (mode.equalsIgnoreCase("Zoom")) {
+
+                                showMeetingDetailsWindow(info, mode, meetingDetails);
+
+                            } else if (mode.equalsIgnoreCase("WhatsApp")) {
+
+                                showMeetingWindow(info, mode, meetingDetails);
+
+                            } else if (mode.equalsIgnoreCase("Phone")) {
+
+                                showMeetingWindow(info, mode, meetingDetails);
+
+                            }
+                        }
+                    }
+                } catch (
+                        Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TeleServiceCheckIn> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+
+            }
+        });
+    }
+
+    // for zoom and GMeet
+    public void showMeetingDetailsWindow(ActiveCheckIn activeCheckIn, String mode, TeleServiceCheckIn meetingDetails) {
+
+        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode());
+        meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        meetingDetailsWindow.show();
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels * 1);
+        meetingDetailsWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
+    // for Whatsspp and Phone
+    public void showMeetingWindow(ActiveCheckIn activeCheckIn, String mode, TeleServiceCheckIn meetingDetails) {
+
+        if (mode.equalsIgnoreCase("WhatsApp")) {
+            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getWhatsApp());
+        } else {
+            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getPhone());
+        }
+        meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        meetingInfo.show();
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels * 1);
+        meetingInfo.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
     private void ApiPUTRating(final int stars, final String UUID, String feedback, String accountID, final BottomSheetDialog dialog, boolean firstTimerate) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -798,7 +934,7 @@ public class CheckInDetails extends AppCompatActivity {
                         if (response.body().string().equalsIgnoreCase("true")) {
 
                             String mesg = "";
-                            if (isToken){
+                            if (isToken) {
                                 mesg = "Token cancelled successfully";
                             } else {
                                 mesg = "CheckIn cancelled successfully";
@@ -831,7 +967,6 @@ public class CheckInDetails extends AppCompatActivity {
             }
         });
     }
-
 
 
     public static String convertToTitleForm(String name) {
@@ -895,5 +1030,14 @@ public class CheckInDetails extends AppCompatActivity {
         }
     }
 
+    private void hideView(View view) {
+        GridLayout gridLayout = (GridLayout) view.getParent();
+        for (int i = 0; i < gridLayout.getChildCount(); i++) {
+            if (view == gridLayout.getChildAt(i)) {
+                gridLayout.removeViewAt(i);
+                break;
+            }
+        }
+    }
 
 }

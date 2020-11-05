@@ -4,10 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
-import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.Dialog;
@@ -19,11 +15,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -31,13 +27,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.tabs.TabLayout;
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.InboxAdapter;
-import com.jaldeeinc.jaldee.adapter.JaldeeTabs;
-import com.jaldeeinc.jaldee.adapter.MoreInfoTabs;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -47,15 +40,14 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomerNotes;
-import com.jaldeeinc.jaldee.custom.EnquiryDialog;
 import com.jaldeeinc.jaldee.custom.InstructionsDialog;
-import com.jaldeeinc.jaldee.database.DatabaseHandler;
+import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
+import com.jaldeeinc.jaldee.custom.MeetingInfo;
 import com.jaldeeinc.jaldee.model.Bookings;
-import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.InboxModel;
 import com.jaldeeinc.jaldee.response.RatingResponse;
-import com.jaldeeinc.jaldee.utils.SharedPreference;
+import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import org.json.JSONException;
@@ -65,11 +57,8 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -162,20 +151,26 @@ public class BookingDetails extends AppCompatActivity {
     @BindView(R.id.ll_rating)
     LinearLayout llRating;
 
+    @BindView(R.id.ll_customerNotes)
+    LinearLayout llCustomerNotes;
+
+    @BindView(R.id.ll_instructions)
+    LinearLayout llInstructions;
+
     @BindView(R.id.iv_ltIcon)
     ImageView ivLtIcon;
 
-    @BindView(R.id.tv_instructions)
-    CustomTextViewMedium tvInstructions;
-
-    @BindView(R.id.tv_chat)
-    CustomTextViewMedium tvChat;
-
-    @BindView(R.id.tv_customerNotes)
-    CustomTextViewMedium tvCustomerNotes;
+    @BindView(R.id.tv_trackingText)
+    CustomTextViewMedium tvTrackingText;
 
     @BindView(R.id.tv_amountToPay)
     CustomTextViewRegularItalic tvAmountToPay;
+
+    @BindView(R.id.cv_meetingDetails)
+    NeomorphFrameLayout cvMeetingDetails;
+
+    @BindView(R.id.iv_meetingIcon)
+    ImageView ivMeetingIcon;
 
     boolean firstTimeRating = false;
     TabLayout tabLayout;
@@ -188,6 +183,9 @@ public class BookingDetails extends AppCompatActivity {
     private CustomerNotes customerNotes;
     private ChatHistory chatHistory;
     ArrayList<InboxModel> mInboxList = new ArrayList<>();
+    private TeleServiceCheckIn meetingDetails;
+    private MeetingDetailsWindow meetingDetailsWindow;
+    private MeetingInfo meetingInfo;
 
 
     @Override
@@ -224,7 +222,7 @@ public class BookingDetails extends AppCompatActivity {
             }
         });
 
-        tvInstructions.setOnClickListener(new View.OnClickListener() {
+        llInstructions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -336,7 +334,7 @@ public class BookingDetails extends AppCompatActivity {
             }
         });
 
-        tvCustomerNotes.setOnClickListener(new View.OnClickListener() {
+        llCustomerNotes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -369,7 +367,6 @@ public class BookingDetails extends AppCompatActivity {
         }
         super.onResume();
     }
-
 
 
     public void getAppointmentDetails(String uid, int id) {
@@ -429,26 +426,38 @@ public class BookingDetails extends AppCompatActivity {
 
                     if (appointmentInfo.getService().getServiceType() != null && appointmentInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
 
+                        if (isActive) {
+                            cvMeetingDetails.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            cvMeetingDetails.setVisibility(View.GONE);
+                        }
                         if (appointmentInfo.getService().getVirtualCallingModes() != null) {
                             ivTeleService.setVisibility(View.VISIBLE);
                             if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
                                 ivTeleService.setImageResource(R.drawable.zoom_meet);
-
+                                ivMeetingIcon.setImageResource(R.drawable.zoom_meet);
                             } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
                                 ivTeleService.setImageResource(R.drawable.google_meet);
-
+                                ivMeetingIcon.setImageResource(R.drawable.google_meet);
                             } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
                                 if (appointmentInfo.getService().getVirtualServiceType() != null && appointmentInfo.getService().getVirtualServiceType().equalsIgnoreCase("videoService")) {
                                     ivTeleService.setImageResource(R.drawable.whatsapp_videoicon);
+                                    ivMeetingIcon.setImageResource(R.drawable.whatsapp_videoicon);
                                 } else {
                                     ivTeleService.setImageResource(R.drawable.whatsapp_icon);
+                                    ivMeetingIcon.setImageResource(R.drawable.whatsapp_icon);
                                 }
                             } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 ivTeleService.setImageResource(R.drawable.phone_icon);
+                                ivMeetingIcon.setImageResource(R.drawable.phone_icon);
                             }
                         } else {
                             ivTeleService.setVisibility(View.GONE);
                         }
+                    } else {
+
+                        cvMeetingDetails.setVisibility(View.GONE);
                     }
 
                 }
@@ -529,55 +538,79 @@ public class BookingDetails extends AppCompatActivity {
                 }
 
                 if (isActive) {
-                    llReschedule.setVisibility(View.VISIBLE);
-                    llCancel.setVisibility(View.VISIBLE);
+
+                    if (appointmentInfo.getApptStatus() != null) {
+                        if (appointmentInfo.getApptStatus().equalsIgnoreCase("Confirmed") || appointmentInfo.getApptStatus().equalsIgnoreCase("Arrived")) {
+                            llReschedule.setVisibility(View.VISIBLE);
+                        } else {
+                            hideView(llReschedule);
+                        }
+
+                        if (appointmentInfo.getApptStatus().equalsIgnoreCase("Confirmed") || appointmentInfo.getApptStatus().equalsIgnoreCase("Arrived") || appointmentInfo.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
+                            llCancel.setVisibility(View.VISIBLE);
+                        } else {
+
+                            hideView(llCancel);
+                        }
+                    }
 
                     if (appointmentInfo.getService() != null) {
 
                         if (appointmentInfo.getService().getLivetrack().equalsIgnoreCase("true")) {
                             llLocation.setVisibility(View.VISIBLE);
                             if (appointmentInfo.getJaldeeApptDistanceTime() != null) {
-                                Glide.with(BookingDetails.this).load(R.drawable.address).into(ivLtIcon);
+                                tvTrackingText.setText("   Tracking On   ");
+                                Glide.with(BookingDetails.this).load(R.drawable.new_location).into(ivLtIcon);
                             } else {
+                                tvTrackingText.setText("   Tracking Off   ");
                                 ivLtIcon.setImageResource(R.drawable.location_off);
 
                             }
                         } else {
-                            llLocation.setVisibility(View.GONE);
+                            hideView(llLocation);
                         }
                     }
 
 
                 } else {
-                    llReschedule.setVisibility(View.GONE);
-                    llCancel.setVisibility(View.GONE);
-                    llLocation.setVisibility(View.GONE);
+                    hideView(llReschedule);
+                    hideView(llCancel);
+                    hideView(llLocation);
+
                 }
 
                 // hide instructions link when there are no post instructions
                 if (appointmentInfo.getService() != null && appointmentInfo.getService().isPostInfoEnabled()) {
-                    tvInstructions.setVisibility(View.VISIBLE);
+                    llInstructions.setVisibility(View.VISIBLE);
                 } else {
-                    tvInstructions.setVisibility(View.GONE);
+
+                    hideView(llInstructions);
                 }
 
                 // hide customerNotes when there is no notes from consumer
                 if (appointmentInfo.getConsumerNote() != null && !appointmentInfo.getConsumerNote().equalsIgnoreCase("")) {
-                    tvCustomerNotes.setVisibility(View.VISIBLE);
+                    llCustomerNotes.setVisibility(View.VISIBLE);
                 } else {
-                    tvCustomerNotes.setVisibility(View.GONE);
+
+                    hideView(llCustomerNotes);
                 }
 
                 if (appointmentInfo.getPaymentStatus().equalsIgnoreCase("FullyPaid") || appointmentInfo.getPaymentStatus().equalsIgnoreCase("Refund")) {
                     String amount = "₹" + " " + convertAmountToDecimals(String.valueOf(appointmentInfo.getAmountDue()));
                     tvAmountToPay.setText(amount);
+                    tvAmountToPay.setVisibility(View.GONE);
                     cvBill.setVisibility(View.VISIBLE);
                     tvBillText.setText("Receipt");
                 } else {
                     String amount = "₹" + " " + convertAmountToDecimals(String.valueOf(appointmentInfo.getAmountDue()));
-                    tvAmountToPay.setText(amount);
+                    if (appointmentInfo.getApptStatus().equalsIgnoreCase("Cancelled")){
+                        tvAmountToPay.setVisibility(View.GONE);
+                    }else {
+                        tvAmountToPay.setText(amount);
+                        tvAmountToPay.setVisibility(View.VISIBLE);
+                    }
                     cvBill.setVisibility(View.VISIBLE);
-                    tvBillText.setText("Pay bill");
+                    tvBillText.setText("Bill");
                 }
 
                 if (appointmentInfo.getBillViewStatus() != null && !appointmentInfo.getApptStatus().equalsIgnoreCase("cancelled")) {
@@ -603,21 +636,108 @@ public class BookingDetails extends AppCompatActivity {
                         Intent iBill = new Intent(BookingDetails.this, BillActivity.class);
                         iBill.putExtra("ynwUUID", appointmentInfo.getUid());
                         iBill.putExtra("provider", appointmentInfo.getProviderAccount().getBusinessName());
-                        iBill.putExtra("accountID", appointmentInfo.getProviderAccount().getId());
+                        iBill.putExtra("accountID", String.valueOf(appointmentInfo.getProviderAccount().getId()));
                         iBill.putExtra("payStatus", appointmentInfo.getPaymentStatus());
                         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
-                        iBill.putExtra("consumer", appointmentInfo.getAppmtFor().get(0).getFirstName()+" "+appointmentInfo.getAppmtFor().get(0).getLastName());
-                        iBill.putExtra("uniqueId",appointmentInfo.getProviderAccount().getUniqueId());
+                        iBill.putExtra("consumer", appointmentInfo.getAppmtFor().get(0).getFirstName() + " " + appointmentInfo.getAppmtFor().get(0).getLastName());
+                        iBill.putExtra("uniqueId", appointmentInfo.getProviderAccount().getUniqueId());
                         startActivity(iBill);
 
                     }
                 });
+
+                cvMeetingDetails.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        apiGetMeetingDetails(appointmentInfo.getUid(), appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode(), appointmentInfo.getProviderAccount().getId(), appointmentInfo);
+
+                    }
+                });
+
 
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    private void apiGetMeetingDetails(String uuid, String mode, int accountID, ActiveAppointment info) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        Call<TeleServiceCheckIn> call = apiService.getMeetingDetailsAppointment(uuid, mode, accountID);
+
+        call.enqueue(new Callback<TeleServiceCheckIn>() {
+            @Override
+            public void onResponse(Call<TeleServiceCheckIn> call, Response<TeleServiceCheckIn> response) {
+
+                try {
+                    if (response.code() == 200) {
+
+                        meetingDetails = response.body();
+                        if (meetingDetails != null) {
+
+                            if (mode.equalsIgnoreCase("GoogleMeet")) {
+
+                                showMeetingDetailsWindow(info, mode,meetingDetails);
+                            } else if (mode.equalsIgnoreCase("Zoom")) {
+
+                                showMeetingDetailsWindow(info, mode,meetingDetails);
+
+                            } else if (mode.equalsIgnoreCase("WhatsApp")) {
+
+                                showMeetingWindow(info, mode,meetingDetails);
+
+                            } else if (mode.equalsIgnoreCase("Phone")) {
+
+                                showMeetingWindow(info, mode,meetingDetails);
+
+                            }
+                        }
+                    }
+                } catch (
+                        Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TeleServiceCheckIn> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+
+            }
+        });
+    }
+
+    // for zoom and GMeet
+    public void showMeetingDetailsWindow(ActiveAppointment activeAppointment, String mode, TeleServiceCheckIn meetingDetails) {
+
+        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode());
+        meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        meetingDetailsWindow.show();
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels * 1);
+        meetingDetailsWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
+    // for Whatsspp and Phone
+    public void showMeetingWindow(ActiveAppointment activeAppointment, String mode, TeleServiceCheckIn meetingDetails) {
+
+        if (mode.equalsIgnoreCase("WhatsApp")){
+            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getWhatsApp());
+        } else {
+            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getPhoneNo());
+        }
+        meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        meetingInfo.show();
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels * 1);
+        meetingInfo.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
 
     private void ApiDeleteAppointment(String ynwuuid, String accountID, final BottomSheetDialog dialog) {
         ApiInterface apiService =
@@ -881,6 +1001,16 @@ public class BookingDetails extends AppCompatActivity {
         mapIntent.setPackage("com.google.android.apps.maps");
         if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
             context.startActivity(mapIntent);
+        }
+    }
+
+    private void hideView(View view) {
+        GridLayout gridLayout = (GridLayout) view.getParent();
+        for (int i = 0; i < gridLayout.getChildCount(); i++) {
+            if (view == gridLayout.getChildAt(i)) {
+                gridLayout.removeViewAt(i);
+                break;
+            }
         }
     }
 

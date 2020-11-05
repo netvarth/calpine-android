@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.custom;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -41,6 +42,9 @@ public class MeetingDetailsWindow extends Dialog {
         tvTime = findViewById(R.id.tv_timeInfo);
         btJoin = findViewById(R.id.bt_join);
 
+        Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        btJoin.setTypeface(tyface);
 
         if (serviceName != null){
             String name = serviceName;

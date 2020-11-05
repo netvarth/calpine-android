@@ -255,8 +255,8 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         ynwuuid  =  i.getStringExtra("ynwuuid");
         userId   =   i.getIntExtra("providerId",0);
 
-        if(userId!=0){
-            getCheckInInfo(userId);
+        if(ynwuuid!=null){
+            getCheckInInfo(ynwuuid,userId);
         }
 
         if(uniqueId!=null) {
@@ -1359,11 +1359,11 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
 
 
-    private void getCheckInInfo(int id) {
+    private void getCheckInInfo(String uid, int id) {
 
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-        Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(ynwuuid, String.valueOf(id));
+        Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(uid, String.valueOf(id));
         call.enqueue(new Callback<ActiveCheckIn>() {
             @Override
             public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
