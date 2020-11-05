@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 
@@ -71,8 +72,8 @@ public class AppointmentConfirmation extends AppCompatActivity {
             if (activeCheckInInfo.getProviderAccount() != null) {
 
                 String name = activeCheckInInfo.getProviderAccount().getBusinessName();
-                name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-                tvProviderName.setText(name);
+               // name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                tvProviderName.setText(Config.toTitleCase(name));
             }
 
             if (terminology != null) {
@@ -170,7 +171,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
                 if (activeCheckInInfo.getProvider().getFirstName() != null) {
 
                     llProvider.setVisibility(View.VISIBLE);
-                    tvProvider.setText(activeCheckInInfo.getProvider().getFirstName() + " " + activeCheckInInfo.getProvider().getLastName());
+                    tvProvider.setText(Config.toTitleCase(activeCheckInInfo.getProvider().getFirstName() + " " + activeCheckInInfo.getProvider().getLastName()));
                 } else {
                     llProvider.setVisibility(View.GONE);
                 }

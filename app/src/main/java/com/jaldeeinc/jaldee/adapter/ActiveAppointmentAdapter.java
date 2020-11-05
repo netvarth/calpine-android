@@ -188,7 +188,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
                 myViewHolder.tv_status.setVisibility(View.VISIBLE);
                 myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
             }
-            myViewHolder.cvReschedule.setVisibility(View.GONE);
+            myViewHolder.cvReschedule.setVisibility(View.VISIBLE);
         }
 
         if (activelist.getApptStatus().equalsIgnoreCase("Confirmed")) {
