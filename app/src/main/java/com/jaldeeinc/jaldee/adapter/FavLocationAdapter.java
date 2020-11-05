@@ -9,6 +9,8 @@ import android.graphics.Typeface;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.format.DateFormat;
@@ -150,6 +152,25 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 //        } else {
 //            myViewHolder.tv_qmessage.setVisibility(View.GONE);
 //        }
+        myViewHolder.tv_loc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mFavList.get(position).getGoogleMapUrl()!=null){
+                    String geoUri = mFavList.get(position).getGoogleMapUrl();
+                    try {
+                        Intent locationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                        mContext.startActivity(locationIntent);
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+
+                }
+            }
+        });
+
+
 
         myViewHolder.btn_checkin.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -276,7 +276,7 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
 
                             } else if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("phone")) {
 
-                                viewHolder.ivTeleService.setImageResource(R.drawable.phone_icon);
+                                viewHolder.ivTeleService.setImageResource(R.drawable.phoneaudioicon);
 
                             }
                         }

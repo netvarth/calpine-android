@@ -959,7 +959,7 @@
                         android:padding="@dimen/dimen_5dp"
                         android:layout_gravity="center"
                         android:layout_marginEnd="@dimen/dimen_10dp"
-                        android:src="@drawable/phone_icon">
+                        android:src="@drawable/phoneaudioicon">
 
                     </ImageView>
 

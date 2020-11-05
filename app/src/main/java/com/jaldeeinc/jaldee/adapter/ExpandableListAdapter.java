@@ -2019,7 +2019,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             public void onClick(View view) {
 
                 Intent rescheduleIntent = new Intent(mContext, RescheduleCheckinActivity.class);
-                rescheduleIntent.putExtra("checkinInfo",activelist);
+                rescheduleIntent.putExtra("ynwuuid",activelist.getYnwUuid());
+                rescheduleIntent.putExtra("uniqueId",activelist.getUniqueId());
+                if(activelist.getProviderAccount()!=null) {
+                    rescheduleIntent.putExtra("providerId", activelist.getProviderAccount().getId());
+                }
+                else{
+                    rescheduleIntent.putExtra("providerId", activelist.getId());
+                }
                 mContext.startActivity(rescheduleIntent);
             }
         });

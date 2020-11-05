@@ -278,7 +278,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
                         } else if (child.getCallingMode().equalsIgnoreCase("phone")) {
 
-                            viewHolder.ivTeleService.setImageResource(R.drawable.phone_icon);
+                            viewHolder.ivTeleService.setImageResource(R.drawable.phoneaudioicon);
 
                         }
                     }

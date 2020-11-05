@@ -436,7 +436,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                     } else if (serviceInfo.getCallingMode().equalsIgnoreCase("Phone")) {
 
-                        ivteleService.setImageResource(R.drawable.phone_icon);
+                        ivteleService.setImageResource(R.drawable.phoneaudioicon);
 
                     } else {
                         ivteleService.setVisibility(View.GONE);
@@ -1470,7 +1470,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             String getJsonObj = (String) iteratorObj.next();
                             System.out.println("KEY: " + "------>" + getJsonObj);
                             value = reader.getString(getJsonObj);
-                            prepayAmount = reader.getString("_prepaymentAmount");
+                            if(serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
+                                prepayAmount = reader.getString("_prepaymentAmount");
+                            }
 
                         }
 

@@ -179,11 +179,12 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                                 Config.logV("Revel Phone--@@@------------"+mFavList.get(i).isRevealPhoneNumber()+"Title"+mFavList.get(i).getBusinessName());
                                 String locid = "";
                                 String place = "";
+                                String googleMap ="";
                                 for (int j = 0; j < mFavList.get(i).getLocations().size(); j++) {
                                     if (j == 0) {
-                                        locid += mFavList.get(i).getLocations().get(j).getLocId();
+                                        locid += mFavList.get(i).getLocations().get(j).getId();
                                     } else {
-                                        locid += "," + mFavList.get(i).getLocations().get(j).getLocId();
+                                        locid += "," + mFavList.get(i).getLocations().get(j).getId();
                                     }
 
                                     if (j == 0) {
@@ -191,10 +192,16 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                                     } else {
                                         place += "," + mFavList.get(i).getLocations().get(j).getPlace();
                                     }
+                                    if (j == 0) {
+                                        googleMap += mFavList.get(i).getLocations().get(j).getGoogleMapUrl();
+                                    } else {
+                                        googleMap += "," + mFavList.get(i).getLocations().get(j).getGoogleMapUrl();
+                                    }
                                 }
                                 Config.logV("Loc ID @@@@@@@@@@@" + locid);
                                 fav.setLocationId(locid);
                                 fav.setPlace(place);
+                                fav.setGoogleMapUrl(googleMap);
                                 db.insertFavInfo(fav);
                             }
 

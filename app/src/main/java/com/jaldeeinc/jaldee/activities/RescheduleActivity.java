@@ -339,7 +339,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo,I
                                 ivteleService.setImageResource(R.drawable.whatsapp_icon);
 
                             } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
-                                ivteleService.setImageResource(R.drawable.phone_icon);
+                                ivteleService.setImageResource(R.drawable.phoneaudioicon);
                             }
                         } else {
                             ivteleService.setVisibility(View.GONE);

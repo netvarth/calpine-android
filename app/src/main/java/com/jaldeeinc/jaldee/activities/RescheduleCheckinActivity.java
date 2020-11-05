@@ -236,6 +236,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
     ActiveCheckIn activeCheckIn = new ActiveCheckIn();
     SearchTerminology mSearchTerminology;
     int userId;
+    String uniqueId,ynwuuid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -245,182 +246,21 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         mContext = this;
         iSelectQ = this;
         iSendMessage = this;
-        iSelectQ=this;
         iSelectedQueue = this;
 
         initializations();
 
         Intent i = getIntent();
-        checkInInfo = (ActiveCheckIn) i.getSerializableExtra("checkinInfo");
+        uniqueId =  i.getStringExtra("uniqueId");
+        ynwuuid  =  i.getStringExtra("ynwuuid");
+        userId   =   i.getIntExtra("providerId",0);
 
-        ApiSearchViewTerminology(Integer.parseInt(checkInInfo.getUniqueId()));
-
-
-        if (checkInInfo != null && checkInInfo.getDate() != null) {
-
-            Date sDate = null;String dtStart =checkInInfo.getDate();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                sDate = format.parse(dtStart);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            Calendar cal = Calendar.getInstance();
-            Date today = cal.getTime();
-            cal.add(Calendar.DAY_OF_YEAR, 1);
-            Date tomorow = cal.getTime();
-            try {
-                tvCalenderDate.setText(getCalenderDateFormat(checkInInfo.getDate()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            if (today.before(sDate)) {
-                Config.logV("Date Enabled---------------");
-                ivMinus.setEnabled(true);
-                ivMinus.setColorFilter(ContextCompat.getColor(RescheduleCheckinActivity.this, R.color.location_theme), android.graphics.PorterDuff.Mode.SRC_IN);
-
-            } else {
-                Config.logV("Date Disabled---------------");
-                ivMinus.setEnabled(false);
-                ivMinus.setColorFilter(ContextCompat.getColor(RescheduleCheckinActivity.this, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-            }
+        if(userId!=0){
+            getCheckInInfo(userId);
         }
 
-        if (checkInInfo != null) {
-
-            if(checkInInfo.getShowToken()!=null && checkInInfo.getShowToken().equalsIgnoreCase("true")){
-                tv_title.setText("Reschedule a token");
-                tv_bookingFor.setText("Token for");
-            }
-            else{
-                tv_title.setText("Reschedule a checkin");
-                tv_bookingFor.setText("Checkin for");
-            }
-
-            String name = checkInInfo.getBusinessName();
-            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-
-            tvSpName.setText(name);
-
-            if (checkInInfo.getProvider() != null) {
-                String username = "";
-                if (checkInInfo.getProvider().getBusinessName() != null) {
-                    username = checkInInfo.getProvider().getBusinessName();
-                } else {
-                    username = checkInInfo.getProvider().getFirstName() + " " + checkInInfo.getProvider().getLastName();
-                }
-                username = username.substring(0, 1).toUpperCase() + username.substring(1).toLowerCase();
-                tv_userName.setText(username);
-                tv_userName.setVisibility(View.VISIBLE);
-                tvSpName.setTextSize(16);
-                userId = checkInInfo.getProvider().getId();
-            }
-            else {
-                userId = checkInInfo.getId();
-            }
-
-
-            try {
-                if (checkInInfo.getLocation().getGoogleMapUrl() != null) {
-                    String geoUri = checkInInfo.getLocation().getGoogleMapUrl();
-                    if (geoUri != null) {
-
-                        tvLocationName.setVisibility(View.VISIBLE);
-                        tvLocationName.setText(checkInInfo.getLocation().getPlace());
-                    } else {
-                        tvLocationName.setVisibility(View.GONE);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            tvLocationName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    String geoUri = checkInInfo.getLocation().getGoogleMapUrl();
-                    try {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
-                        startActivity(intent);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            // to set service name
-            if (checkInInfo.getService() != null) {
-
-                if (checkInInfo.getService().getName() != null) {
-                    String sName = checkInInfo.getService().getName();
-                    sName = sName.substring(0, 1).toUpperCase() + sName.substring(1).toLowerCase();
-                    tvServiceName.setText(sName);
-                }
-
-                try {
-                    if (checkInInfo.getService().getServiceType() != null) {
-                        if (checkInInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
-                            ivteleService.setVisibility(View.VISIBLE);
-                            if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
-                                ivteleService.setImageResource(R.drawable.zoom);
-                            } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                                ivteleService.setImageResource(R.drawable.googlemeet);
-                            } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                ivteleService.setImageResource(R.drawable.whatsapp_icon);
-
-                            } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
-                                ivteleService.setImageResource(R.drawable.phone_icon);
-                            }
-                        } else {
-                            ivteleService.setVisibility(View.GONE);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            if (checkInInfo.getDate() != null && checkInInfo.getService() != null && checkInInfo.getLocation() != null) {
-
-                apiDate = checkInInfo.getDate();
-                serviceId = checkInInfo.getService().getId();
-                locationId = checkInInfo.getLocation().getId();
-                accountId = checkInInfo.getId();
-                // api call to get slots on default date (checkin date)
-                ApiQueueTimeSlot(String.valueOf(locationId),String.valueOf(serviceId),String.valueOf(accountId),apiDate);
-
-            }
-
-            if (checkInInfo.getFirstName() != null && checkInInfo.getLastName()!=null) {
-                String cName = Config.toTitleCase(checkInInfo.getFirstName()) + " " + Config.toTitleCase(checkInInfo.getLastName());
-                tvConsumerName.setText(cName);
-                if (checkInInfo.getPhoneNo() != null) {
-                    tvNumber.setVisibility(View.VISIBLE);
-                    tvNumber.setText(checkInInfo.getPhoneNo());
-                } else {
-                    tvNumber.setVisibility(View.GONE);
-                }
-                if (checkInInfo.getEmail() != null) {
-                    tvEmail.setVisibility(View.VISIBLE);
-                    tvEmail.setText(checkInInfo.getEmail());
-                } else {
-                    tvEmail.setVisibility(View.GONE);
-                }
-            }
-
-            if (checkInInfo.getDate() != null && checkInInfo.getCheckInTime() != null) {
-                String oldDate = convertDate(checkInInfo.getDate());
-                String time = checkInInfo.getCheckInTime().split("-")[0];
-                String oldtime = convertTime(time);
-                tvActualTime.setText(oldDate + ", " + oldtime);
-            }
-
-        }
-
-        if(checkInInfo.getConsumerNote()!=null){
-            userMessage = checkInInfo.getConsumerNote();
+        if(uniqueId!=null) {
+            ApiSearchViewTerminology(Integer.parseInt(uniqueId));
         }
 
         // click actions
@@ -465,8 +305,8 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
             public void onClick(View view) {
 
                 try {
-                    if (checkInInfo.getDate() != null && checkInInfo.getService() != null && checkInInfo.getLocation() != null ) {
-                        slotsDialog = new CheckInSlotsDialog(RescheduleCheckinActivity.this, checkInInfo.getService().getId(), checkInInfo.getLocation().getId(), iSelectQ, checkInInfo.getId(),checkInInfo.getDate());
+                    if (checkInInfo.getDate() != null && checkInInfo.getService() != null && checkInInfo.getQueue() != null ) {
+                        slotsDialog = new CheckInSlotsDialog(RescheduleCheckinActivity.this, checkInInfo.getService().getId(), checkInInfo.getQueue().getLocation().getId(), iSelectQ, checkInInfo.getProviderAccount().getId(),checkInInfo.getDate());
                         slotsDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                         slotsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         slotsDialog.show();
@@ -483,12 +323,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         });
 
 
-        if(checkInInfo.getProvider()!=null){
-            user = tv_userName.getText().toString();
-        }
-        else{
-            user = tvSpName.getText().toString();
-        }
+
         cvAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -735,7 +570,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
             @Override
             public void onClick(View view) {
 
-                reScheduleCheckin(checkInInfo.getId());
+                reScheduleCheckin(checkInInfo.getProviderAccount().getId());
             }
         });
     }
@@ -819,7 +654,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
         JSONObject body = new JSONObject();
         try {
-            body.put("ynwUuid",checkInInfo.getYnwUuid());
+            body.put("ynwUuid",ynwuuid);
             body.put("date",apiDate);
             body.put("queue",queueId);
             body.put("consumerNote",userMessage);
@@ -854,7 +689,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
                         if (imagePathList.size() > 0) {
                             if(checkInInfo.getYnwUuid()!=null) {
-                                ApiCommunicateCheckin(checkInInfo.getYnwUuid(), String.valueOf(id), userMessage, dialog);
+                                ApiCommunicateCheckin(ynwuuid, String.valueOf(id), userMessage, dialog);
                             }
                         }
                         else{
@@ -1520,6 +1355,209 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                     Config.closeDialog((Activity) mContext, mDialog);
             }
         });
+    }
+
+
+
+    private void getCheckInInfo(int id) {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(ynwuuid, String.valueOf(id));
+        call.enqueue(new Callback<ActiveCheckIn>() {
+            @Override
+            public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
+                try {
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        checkInInfo = response.body();
+                        if (checkInInfo != null && checkInInfo.getDate() != null) {
+
+                            Date sDate = null;String dtStart =checkInInfo.getDate();
+                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                            try {
+                                sDate = format.parse(dtStart);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            Calendar cal = Calendar.getInstance();
+                            Date today = cal.getTime();
+                            cal.add(Calendar.DAY_OF_YEAR, 1);
+                            Date tomorow = cal.getTime();
+                            try {
+                                tvCalenderDate.setText(getCalenderDateFormat(checkInInfo.getDate()));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            if (today.before(sDate)) {
+                                Config.logV("Date Enabled---------------");
+                                ivMinus.setEnabled(true);
+                                ivMinus.setColorFilter(ContextCompat.getColor(RescheduleCheckinActivity.this, R.color.location_theme), android.graphics.PorterDuff.Mode.SRC_IN);
+
+                            } else {
+                                Config.logV("Date Disabled---------------");
+                                ivMinus.setEnabled(false);
+                                ivMinus.setColorFilter(ContextCompat.getColor(RescheduleCheckinActivity.this, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                            }
+                        }
+
+                        if (checkInInfo != null) {
+
+                            if(checkInInfo.getShowToken()!=null && checkInInfo.getShowToken().equalsIgnoreCase("true")){
+                                tv_title.setText("Reschedule a token");
+                                tv_bookingFor.setText("Token for");
+                            }
+                            else{
+                                tv_title.setText("Reschedule a checkin");
+                                tv_bookingFor.setText("Checkin for");
+                            }
+
+                            String name = checkInInfo.getProviderAccount().getBusinessName();
+                            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+
+                            tvSpName.setText(name);
+
+                            if (checkInInfo.getProvider() != null) {
+                                String username = "";
+
+                                username = checkInInfo.getProvider().getFirstName() + " " + checkInInfo.getProvider().getLastName();
+
+                                username = username.substring(0, 1).toUpperCase() + username.substring(1).toLowerCase();
+                                tv_userName.setText(username);
+                                tv_userName.setVisibility(View.VISIBLE);
+                                tvSpName.setTextSize(16);
+                                userId = checkInInfo.getProvider().getId();
+                            }
+                            else {
+                                userId = checkInInfo.getId();
+                            }
+
+//                            if(checkInInfo.getProvider()!=null){
+//                                user = tv_userName.getText().toString();
+//                            }
+//                            else{
+                                user = tvSpName.getText().toString();
+//                            }
+
+
+                            try {
+                                if(checkInInfo.getQueue()!=null) {
+                                    if (checkInInfo.getQueue().getLocation().getGoogleMapUrl() != null) {
+                                        String geoUri = checkInInfo.getQueue().getLocation().getGoogleMapUrl();
+                                        if (geoUri != null) {
+                                            tvLocationName.setVisibility(View.VISIBLE);
+                                            tvLocationName.setText(checkInInfo.getQueue().getLocation().getPlace());
+                                        } else {
+                                            tvLocationName.setVisibility(View.GONE);
+                                        }
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            tvLocationName.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    String geoUri = checkInInfo.getQueue().getLocation().getGoogleMapUrl();
+                                    try {
+                                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                                        startActivity(intent);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+
+                            // to set service name
+                            if (checkInInfo.getService() != null) {
+
+                                if (checkInInfo.getService().getName() != null) {
+                                    String sName = checkInInfo.getService().getName();
+                                    sName = sName.substring(0, 1).toUpperCase() + sName.substring(1).toLowerCase();
+                                    tvServiceName.setText(sName);
+                                }
+
+                                try {
+                                    if (checkInInfo.getService().getServiceType() != null) {
+                                        if (checkInInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
+                                            ivteleService.setVisibility(View.VISIBLE);
+                                            if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                                                ivteleService.setImageResource(R.drawable.zoom);
+                                            } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                                                ivteleService.setImageResource(R.drawable.googlemeet);
+                                            } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                                                ivteleService.setImageResource(R.drawable.whatsapp_icon);
+
+                                            } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                                                ivteleService.setImageResource(R.drawable.phoneaudioicon);
+                                            }
+                                        } else {
+                                            ivteleService.setVisibility(View.GONE);
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+
+                            if (checkInInfo.getDate() != null && checkInInfo.getService() != null && checkInInfo.getQueue() != null) {
+
+                                apiDate = checkInInfo.getDate();
+                                serviceId = checkInInfo.getService().getId();
+                                locationId = checkInInfo.getQueue().getLocation().getId();
+                                accountId = checkInInfo.getProviderAccount().getId();
+                                // api call to get slots on default date (checkin date)
+                                ApiQueueTimeSlot(String.valueOf(locationId),String.valueOf(serviceId),String.valueOf(accountId),apiDate);
+
+                            }
+
+                            if(checkInInfo.getWaitlistingFor()!=null) {
+                                if (checkInInfo.getWaitlistingFor().get(0).getFirstName() != null && checkInInfo.getWaitlistingFor().get(0).getLastName() != null) {
+                                    String cName = Config.toTitleCase(checkInInfo.getWaitlistingFor().get(0).getFirstName()) + " " + Config.toTitleCase(checkInInfo.getWaitlistingFor().get(0).getLastName());
+                                    tvConsumerName.setText(cName);
+                                    if (checkInInfo.getWaitlistingFor().get(0).getPhoneNo() != null) {
+                                        tvNumber.setVisibility(View.VISIBLE);
+                                        tvNumber.setText(checkInInfo.getWaitlistingFor().get(0).getPhoneNo());
+                                    } else {
+                                        tvNumber.setVisibility(View.GONE);
+                                    }
+                                    if (checkInInfo.getWaitlistingFor().get(0).getEmail() != null) {
+                                        tvEmail.setVisibility(View.VISIBLE);
+                                        tvEmail.setText(checkInInfo.getWaitlistingFor().get(0).getEmail());
+                                    } else {
+                                        tvEmail.setVisibility(View.GONE);
+                                    }
+                                }
+                            }
+
+                            if (checkInInfo.getDate() != null && checkInInfo.getCheckInTime() != null) {
+                                String oldDate = convertDate(checkInInfo.getDate());
+                                String time = checkInInfo.getCheckInTime().split("-")[0];
+                                String oldtime = convertTime(time);
+                                tvActualTime.setText(oldDate + ", " + oldtime);
+                            }
+
+                        }
+
+                        if(checkInInfo.getConsumerNote()!=null){
+                            userMessage = checkInInfo.getConsumerNote();
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.i("mnbbnmmnbbnm", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
+            }
+        });
+
     }
 
     @Override

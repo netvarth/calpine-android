@@ -109,14 +109,14 @@ public class FavouriteModel {
         this.status = status;
     }
 
-
-    public ArrayList<FavouriteModel> getLocations() {
+    public ArrayList<LocationDetails> getLocations() {
         return locations;
     }
 
-    public void setLocations(ArrayList<FavouriteModel> locations) {
+    public void setLocations(ArrayList<LocationDetails> locations) {
         this.locations = locations;
     }
+
 
     public String getPlace() {
         return place;
@@ -126,8 +126,10 @@ public class FavouriteModel {
         this.place = place;
     }
 
+
+
     @SerializedName("locations")
-    private ArrayList<FavouriteModel> locations;
+    private ArrayList<LocationDetails> locations;
 
     String place;
 
@@ -140,6 +142,16 @@ public class FavouriteModel {
     }
 
     int id;
+
+    public String getGoogleMapUrl() {
+        return googleMapUrl;
+    }
+
+    public void setGoogleMapUrl(String googleMapUrl) {
+        this.googleMapUrl = googleMapUrl;
+    }
+
+    String googleMapUrl;
 
 
     public String getLocationId() {

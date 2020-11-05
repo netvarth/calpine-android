@@ -567,9 +567,23 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         tv_mImageViewTextnew.setVisibility(View.GONE);
                         if (mBusinessDataList.getLogo() != null) {
                             PicassoTrustAll.getInstance(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(ivSpImage);
-                            if (mSearchGallery != null) {
-                                UpdateGallery(mSearchGallery);
-                            }
+                            ivSpImage.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    ArrayList<String> mGalleryList = new ArrayList<>();
+                                    if (mBusinessDataList.getLogo() != null) {
+                                        mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+                                    }
+
+                                    boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, view.getContext());
+                                    if (mValue) {
+                                        Intent intent = new Intent(ProviderDetailActivity.this, SwipeGalleryImage.class);
+                                        intent.putExtra("pos", 0);
+                                        startActivity(intent);
+                                    }
+                                }
+                            });
+
                         } else {
                             tv_mImageViewTextnew.setVisibility(View.GONE);
                         }
