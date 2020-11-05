@@ -33,6 +33,17 @@
         </androidx.cardview.widget.CardView>
 
 
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Appointment Details"
+            android:textSize="@dimen/dimen_14sp"
+            android:textColor="@color/location_theme"
+            android:layout_centerInParent="true">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -646,6 +657,7 @@
                                 android:visibility="visible">
 
                                 <GridLayout
+                                    android:id="@+id/gridLayout"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/dimen_15dp"

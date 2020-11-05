@@ -355,6 +355,22 @@ public class BookingDetails extends AppCompatActivity {
             }
         });
 
+        cvShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (apptInfo != null && apptInfo.getAppointmentEncId() != null) {
+                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    sharingIntent.setType("text/html");
+                    String statusUrl = Constants.URL + "status/" + apptInfo.getAppointmentEncId();
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share your Appointment status link");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, statusUrl);
+                    startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                }
+
+            }
+        });
+
 
     }
 
@@ -372,11 +388,15 @@ public class BookingDetails extends AppCompatActivity {
     public void getAppointmentDetails(String uid, int id) {
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(BookingDetails.this, BookingDetails.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
         Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(uid, String.valueOf(id));
         call.enqueue(new Callback<ActiveAppointment>() {
             @Override
             public void onResponse(Call<ActiveAppointment> call, Response<ActiveAppointment> response) {
                 try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
@@ -391,6 +411,8 @@ public class BookingDetails extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ActiveAppointment> call, Throwable t) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
             }
         });
     }
@@ -411,9 +433,38 @@ public class BookingDetails extends AppCompatActivity {
                     }
                     tvProviderName.setVisibility(View.VISIBLE);
                     tvProviderName.setText(convertToTitleForm(appointmentInfo.getProviderAccount().getBusinessName()));
+                    tvProviderName.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            try {
+                                Intent intent = new Intent(BookingDetails.this,ProviderDetailActivity.class);
+                                intent.putExtra("uniqueID",appointmentInfo.getProviderAccount().getUniqueId());
+                                intent.putExtra("locationId",appointmentInfo.getLocation().getId());
+                                startActivity(intent);
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 } else {
                     tvProviderName.setVisibility(View.INVISIBLE);
                     tvDoctorName.setText(convertToTitleForm(appointmentInfo.getProviderAccount().getBusinessName()));
+
+                    tvDoctorName.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            try {
+                                Intent intent = new Intent(BookingDetails.this,ProviderDetailActivity.class);
+                                intent.putExtra("uniqueID",appointmentInfo.getProviderAccount().getUniqueId());
+                                intent.putExtra("locationId",appointmentInfo.getLocation().getId());
+                                startActivity(intent);
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
 
                 }
 
@@ -469,6 +520,11 @@ public class BookingDetails extends AppCompatActivity {
 
                 // to set status
                 if (appointmentInfo.getApptStatus() != null) {
+                    if (appointmentInfo.getApptStatus().equalsIgnoreCase("Completed")){
+                        llRating.setVisibility(View.VISIBLE);
+                    }else {
+                        hideView(llRating);
+                    }
                     tvStatus.setVisibility(View.VISIBLE);
                     if (appointmentInfo.getApptStatus().equalsIgnoreCase("Cancelled")) {
                         tvStatus.setTextColor(mContext.getResources().getColor(R.color.red));
@@ -539,6 +595,7 @@ public class BookingDetails extends AppCompatActivity {
 
                 if (isActive) {
 
+                    cvShare.setVisibility(View.VISIBLE);
                     if (appointmentInfo.getApptStatus() != null) {
                         if (appointmentInfo.getApptStatus().equalsIgnoreCase("Confirmed") || appointmentInfo.getApptStatus().equalsIgnoreCase("Arrived")) {
                             llReschedule.setVisibility(View.VISIBLE);
@@ -573,6 +630,7 @@ public class BookingDetails extends AppCompatActivity {
 
 
                 } else {
+                    cvShare.setVisibility(View.GONE);
                     hideView(llReschedule);
                     hideView(llCancel);
                     hideView(llLocation);
@@ -841,7 +899,7 @@ public class BookingDetails extends AppCompatActivity {
                                 if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
                                     btn_rate.setEnabled(true);
                                     btn_rate.setClickable(true);
-                                    btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                                    btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
                                 } else {
                                     btn_rate.setEnabled(false);
                                     btn_rate.setClickable(false);
@@ -1006,10 +1064,12 @@ public class BookingDetails extends AppCompatActivity {
 
     private void hideView(View view) {
         GridLayout gridLayout = (GridLayout) view.getParent();
-        for (int i = 0; i < gridLayout.getChildCount(); i++) {
-            if (view == gridLayout.getChildAt(i)) {
-                gridLayout.removeViewAt(i);
-                break;
+        if (gridLayout != null) {
+            for (int i = 0; i < gridLayout.getChildCount(); i++) {
+                if (view == gridLayout.getChildAt(i)) {
+                    gridLayout.removeViewAt(i);
+                    break;
+                }
             }
         }
     }

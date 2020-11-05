@@ -44,7 +44,11 @@ public class CustomerNotes extends Dialog {
             }
         });
 
-        tvTitle.setText(title);
+        if (title != null) {
+            tvTitle.setText(title);
+        }else {
+            tvTitle.setText("Customer Notes");
+        }
         tvCustomerNotes.setText(notes);
 
 

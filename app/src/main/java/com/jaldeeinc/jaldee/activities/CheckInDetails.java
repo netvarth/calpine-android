@@ -171,6 +171,9 @@ public class CheckInDetails extends AppCompatActivity {
     @BindView(R.id.tv_queueTime)
     CustomTextViewSemiBold tvQueueTime;
 
+    @BindView(R.id.tv_title)
+    CustomTextViewSemiBold tvTitle;
+
     @BindView(R.id.cv_meetingDetails)
     NeomorphFrameLayout cvMeetingDetails;
 
@@ -360,6 +363,23 @@ public class CheckInDetails extends AppCompatActivity {
             }
         });
 
+        cvShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (activeCheckIn != null && activeCheckIn.getAppointmentEncId() != null) {
+                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    sharingIntent.setType("text/html");
+                    String statusUrl = Constants.URL + "status/" + activeCheckIn.getAppointmentEncId();
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share your CheckIn/Token status link");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, statusUrl);
+                    startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                }
+
+            }
+        });
+
+
     }
 
     @Override
@@ -376,11 +396,15 @@ public class CheckInDetails extends AppCompatActivity {
 
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(CheckInDetails.this, CheckInDetails.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
         Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(uid, String.valueOf(id));
         call.enqueue(new Callback<ActiveCheckIn>() {
             @Override
             public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
                 try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
@@ -401,6 +425,8 @@ public class CheckInDetails extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
             }
         });
     }
@@ -420,10 +446,37 @@ public class CheckInDetails extends AppCompatActivity {
                     }
                     tvProviderName.setVisibility(View.VISIBLE);
                     tvProviderName.setText(convertToTitleForm(checkInInfo.getProviderAccount().getBusinessName()));
+                    tvProviderName.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            try {
+                                Intent intent = new Intent(CheckInDetails.this,ProviderDetailActivity.class);
+                                intent.putExtra("uniqueID",checkInInfo.getProviderAccount().getUniqueId());
+                                intent.putExtra("locationId",checkInInfo.getQueue().getLocation().getId());
+                                startActivity(intent);
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 } else {
                     tvProviderName.setVisibility(View.INVISIBLE);
                     tvDoctorName.setText(convertToTitleForm(checkInInfo.getProviderAccount().getBusinessName()));
+                    tvDoctorName.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
+                            try {
+                                Intent intent = new Intent(CheckInDetails.this,ProviderDetailActivity.class);
+                                intent.putExtra("uniqueID",checkInInfo.getProviderAccount().getUniqueId());
+                                intent.putExtra("locationId",checkInInfo.getQueue().getLocation().getId());
+                                startActivity(intent);
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 }
 
                 tvViewMore.setVisibility(View.VISIBLE);
@@ -475,6 +528,12 @@ public class CheckInDetails extends AppCompatActivity {
 
                 // to set status
                 if (checkInInfo.getWaitlistStatus() != null) {
+
+                    if (checkInInfo.getWaitlistStatus().equalsIgnoreCase("done")){
+                        llRating.setVisibility(View.VISIBLE);
+                    }else {
+                        hideView(llRating);
+                    }
                     tvStatus.setVisibility(View.VISIBLE);
                     if (checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled")) {
                         tvStatus.setTextColor(mContext.getResources().getColor(R.color.red));
@@ -516,7 +575,7 @@ public class CheckInDetails extends AppCompatActivity {
 
                 // to set waitTime or token No with waitTime
                 if (checkInInfo.getShowToken() != null && checkInInfo.getShowToken().equalsIgnoreCase("true")) {
-
+                    tvTitle.setText("Token Details");
                     isToken = true;
                     if (checkInInfo.getCalculationMode() != null && !checkInInfo.getCalculationMode().equalsIgnoreCase("NoCalc")) {
 
@@ -538,7 +597,7 @@ public class CheckInDetails extends AppCompatActivity {
                         tvTokenWaitTime.setVisibility(View.GONE);
                     }
                 } else {
-
+                    tvTitle.setText("CheckIn Details");
                     isToken = false;
                     tvHint.setText("Est wait time");
                     tvTime.setText(checkInInfo.getAppxWaitingTime() + " Minutes");
@@ -564,6 +623,7 @@ public class CheckInDetails extends AppCompatActivity {
 
                 if (isActive) {
 
+                    cvShare.setVisibility(View.VISIBLE);
                     if (checkInInfo.getWaitlistStatus() != null) {
                         if (checkInInfo.getWaitlistStatus().equalsIgnoreCase("Checkedin") || checkInInfo.getWaitlistStatus().equalsIgnoreCase("Arrived")) {
                             llReschedule.setVisibility(View.VISIBLE);
@@ -597,6 +657,7 @@ public class CheckInDetails extends AppCompatActivity {
 
 
                 } else {
+                    cvShare.setVisibility(View.GONE);
                     hideView(llReschedule);
                     hideView(llCancel);
                     hideView(llLocation);
@@ -693,7 +754,7 @@ public class CheckInDetails extends AppCompatActivity {
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Map<String, String> query = new HashMap<>();
-        query.put("account-eq", accountID);
+        query.put("account", accountID);
         query.put("uId-eq", UUID);
         Call<ArrayList<RatingResponse>> call = apiService.getRating(query);
         Config.logV("Location-----###########@@@@@@" + query);
@@ -740,7 +801,7 @@ public class CheckInDetails extends AppCompatActivity {
                                 if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
                                     btn_rate.setEnabled(true);
                                     btn_rate.setClickable(true);
-                                    btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                                    btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
                                 } else {
                                     btn_rate.setEnabled(false);
                                     btn_rate.setClickable(false);
@@ -1032,10 +1093,12 @@ public class CheckInDetails extends AppCompatActivity {
 
     private void hideView(View view) {
         GridLayout gridLayout = (GridLayout) view.getParent();
-        for (int i = 0; i < gridLayout.getChildCount(); i++) {
-            if (view == gridLayout.getChildAt(i)) {
-                gridLayout.removeViewAt(i);
-                break;
+        if (gridLayout != null) {
+            for (int i = 0; i < gridLayout.getChildCount(); i++) {
+                if (view == gridLayout.getChildAt(i)) {
+                    gridLayout.removeViewAt(i);
+                    break;
+                }
             }
         }
     }

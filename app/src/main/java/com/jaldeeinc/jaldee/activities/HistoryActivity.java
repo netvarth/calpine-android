@@ -539,23 +539,18 @@ public class HistoryActivity extends AppCompatActivity implements ISelectedBooki
 
         if (bookings != null) {
 
-            if (bookings.getBookingType().equalsIgnoreCase(Constants.APPOINTMENT)){
+            if (bookings.getBookingType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
-                Intent intent = new Intent(HistoryActivity.this,BookingDetails.class);
-                intent.putExtra("bookingInfo",bookings);
-                intent.putExtra("isActive",false);
+                Intent intent = new Intent(HistoryActivity.this, BookingDetails.class);
+                intent.putExtra("bookingInfo", bookings);
+                intent.putExtra("isActive", false);
                 startActivity(intent);
 
-            }
-            else if (bookings.getBookingType().equalsIgnoreCase(Constants.CHECKIN) || bookings.getBookingType().equalsIgnoreCase(Constants.TOKEN)) {
+            } else if (bookings.getBookingType().equalsIgnoreCase(Constants.CHECKIN) || bookings.getBookingType().equalsIgnoreCase(Constants.TOKEN)) {
 
                 Intent intent = new Intent(HistoryActivity.this, CheckInDetails.class);
                 intent.putExtra("bookingInfo", bookings);
-                if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled")) {
-                    intent.putExtra("isActive", true);
-                } else {
-                    intent.putExtra("isActive", false);
-                }
+                intent.putExtra("isActive", false);
                 startActivity(intent);
 
 

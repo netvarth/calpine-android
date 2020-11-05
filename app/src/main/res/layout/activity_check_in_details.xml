@@ -32,6 +32,17 @@
 
         </androidx.cardview.widget.CardView>
 
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Token Details"
+            android:textSize="@dimen/dimen_16sp"
+            android:textColor="@color/location_theme"
+            android:layout_centerInParent="true">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -222,7 +233,8 @@
                                             <ImageView
                                                 android:id="@+id/iv_teleService"
                                                 android:layout_width="20dp"
-                                                android:layout_height="18dp">
+                                                android:layout_height="18dp"
+                                                android:visibility="gone">
 
                                             </ImageView>
 
