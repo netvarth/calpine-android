@@ -96,7 +96,7 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
             if (inboxList.getAttachments().size() == 1) {
                 myViewHolder.tv_noAttachments.setText(inboxList.getAttachments().size() + " " + "Attachment");
                 myViewHolder.tv_noAttachments.setVisibility(View.VISIBLE);
-            } else {
+            } else if(inboxList.getAttachments().size()>1){
                 myViewHolder.tv_noAttachments.setText(inboxList.getAttachments().size() + " " + "Attachments");
                 myViewHolder.tv_noAttachments.setVisibility(View.VISIBLE);
             }

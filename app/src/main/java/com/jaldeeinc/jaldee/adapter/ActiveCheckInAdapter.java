@@ -319,7 +319,14 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             public void onClick(View view) {
 
                 Intent rescheduleIntent = new Intent(mContext, RescheduleCheckinActivity.class);
-                rescheduleIntent.putExtra("checkinInfo",activeChekinList.get(position));
+                rescheduleIntent.putExtra("ynwuuid",activeChekinList.get(position).getYnwUuid());
+                rescheduleIntent.putExtra("uniqueId",activeChekinList.get(position).getUniqueId());
+                if(activeChekinList.get(position).getProviderAccount()!=null) {
+                    rescheduleIntent.putExtra("providerId", activeChekinList.get(position).getProviderAccount().getId());
+                }
+                else{
+                    rescheduleIntent.putExtra("providerId", activeChekinList.get(position).getId());
+                }
                 mContext.startActivity(rescheduleIntent);
             }
         });

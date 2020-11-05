@@ -431,7 +431,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                     } else if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Phone")) {
 
-                        ivteleService.setImageResource(R.drawable.phone_icon);
+                        ivteleService.setImageResource(R.drawable.phoneaudioicon);
 
                     } else {
                         ivteleService.setVisibility(View.GONE);
@@ -1469,7 +1469,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             String getJsonObj = (String) iteratorObj.next();
                             System.out.println("KEY: " + "------>" + getJsonObj);
                             value = reader.getString(getJsonObj);
-                            prepayAmount = reader.getString("_prepaymentAmount");
+                            if(checkInInfo.isPrePayment()) {
+                                prepayAmount = reader.getString("_prepaymentAmount");
+                            }
                             break;
 
                         }

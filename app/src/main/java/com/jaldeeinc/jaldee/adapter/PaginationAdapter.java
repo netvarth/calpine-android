@@ -240,17 +240,18 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 //                        }
 //                    });
                     PicassoTrustAll.getInstance(context).load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
-                    myViewHolder.profile.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Config.logV("Unique Id List", searchdetailList.getUniqueid());
-                            ApiSearchGallery(searchdetailList.getUniqueid(), searchdetailList);
-                        }
-                    });
+
                 } else {
 
                     PicassoTrustAll.getInstance(context).load(R.drawable.icon_noimage).fit().into(myViewHolder.profile);
                 }
+                myViewHolder.profile.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Config.logV("Unique Id List", searchdetailList.getUniqueid());
+                        ApiSearchGallery(searchdetailList.getUniqueid(), searchdetailList);
+                    }
+                });
                 if (searchdetailList.getGallery_thumb_nails() != null) {
                     if (searchdetailList.getGallery_thumb_nails().size() > 0) {
                         myViewHolder.mImageViewText.setVisibility(View.VISIBLE);

@@ -281,7 +281,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
 
                             } else if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("phone")) {
 
-                                viewHolder.ivTeleService.setImageResource(R.drawable.phone_icon);
+                                viewHolder.ivTeleService.setImageResource(R.drawable.phoneaudioicon);
 
                             }
                         }
