@@ -313,7 +313,7 @@ public class CheckInDetails extends AppCompatActivity {
             public void onClick(View view) {
 
                 try {
-                    Intent intent = new Intent(mContext, CheckinShareLocationAppointment.class);
+                    Intent intent = new Intent(mContext, CheckinShareLocation.class);
                     intent.putExtra("waitlistPhonenumber", activeCheckIn.getWaitlistingFor().get(0).getPhoneNo());
                     intent.putExtra("uuid", activeCheckIn.getYnwUuid());
                     intent.putExtra("accountID", String.valueOf(activeCheckIn.getProviderAccount().getId()));

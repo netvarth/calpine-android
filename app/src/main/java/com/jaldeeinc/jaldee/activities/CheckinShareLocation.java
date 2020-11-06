@@ -100,7 +100,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
     boolean firstCall = true;
     LocationManager locationManager;
     String latValues, longValues, terminology, calcMode,queueStartTime,queueEndTime;
-    String jaldeeDistance, from;
+    String jaldeeDistance = "", from;
 
 
 
@@ -327,10 +327,15 @@ public class CheckinShareLocation extends AppCompatActivity implements
                         finish();
                     }
                     else {
-                        Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
-                        checkin.putExtra("BookingDetails", a);
-                        checkin.putExtra("terminology", terminology);
-                        startActivity(checkin);
+                        if(from!=null && from.equalsIgnoreCase("checkin")) {
+                            Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
+                            checkin.putExtra("BookingDetails", a);
+                            checkin.putExtra("terminology", terminology);
+                            startActivity(checkin);
+                        }
+                        else{
+                            finish();
+                        }
                     }
                 }
                 else{
@@ -343,10 +348,15 @@ public class CheckinShareLocation extends AppCompatActivity implements
                         finish();
                     }
                     else {
-                        Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
-                        checkin.putExtra("BookingDetails", a);
-                        checkin.putExtra("terminology", terminology);
-                        startActivity(checkin);
+                        if (from != null && from.equalsIgnoreCase("checkin")) {
+                            Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
+                            checkin.putExtra("BookingDetails", a);
+                            checkin.putExtra("terminology", terminology);
+                            startActivity(checkin);
+                        }
+                        else{
+                            finish();
+                        }
                     }
                 }
             }

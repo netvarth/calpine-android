@@ -155,8 +155,8 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         myViewHolder.tv_loc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mFavList.get(position).getGoogleMapUrl()!=null){
-                    String geoUri = mFavList.get(position).getGoogleMapUrl();
+                if(mFavList.get(position).getLocations().get(0).getGoogleMapUrl()!=null){
+                    String geoUri = mFavList.get(position).getLocations().get(0).getGoogleMapUrl();
                     try {
                         Intent locationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
                         mContext.startActivity(locationIntent);

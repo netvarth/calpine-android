@@ -329,10 +329,15 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                         finish();
                     }
                     else {
-                        Intent checkin = new Intent(CheckinShareLocationAppointment.this, AppointmentConfirmation.class);
-                        checkin.putExtra("BookingDetails", a);
-                        checkin.putExtra("terminology", terminology);
-                        startActivity(checkin);
+                        if (from != null && from.equalsIgnoreCase("appt")) {
+                            Intent checkin = new Intent(CheckinShareLocationAppointment.this, AppointmentConfirmation.class);
+                            checkin.putExtra("BookingDetails", a);
+                            checkin.putExtra("terminology", terminology);
+                            startActivity(checkin);
+                        }
+                        else{
+                            finish();
+                        }
                     }
 
                 }
@@ -346,10 +351,15 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                         finish();
                     }
                     else {
-                        Intent checkin = new Intent(CheckinShareLocationAppointment.this, AppointmentConfirmation.class);
-                        checkin.putExtra("BookingDetails", a);
-                        checkin.putExtra("terminology", terminology);
-                        startActivity(checkin);
+                        if (from != null && from.equalsIgnoreCase("appt")) {
+                            Intent checkin = new Intent(CheckinShareLocationAppointment.this, AppointmentConfirmation.class);
+                            checkin.putExtra("BookingDetails", a);
+                            checkin.putExtra("terminology", terminology);
+                            startActivity(checkin);
+                        }
+                        else{
+                            finish();
+                        }
                     }
                 }
             }
