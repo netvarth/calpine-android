@@ -16,9 +16,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BookingDetails;
@@ -72,6 +76,8 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
 
     private Context mContext;
     private Activity mActivity;
+    private RelativeLayout rlOptions;
+    private NeomorphFrameLayout flOptions;
     private CustomTextViewItalicSemiBold tvToday, tvUpcoming;
     private LinearLayout llNoBookingsForToday, llNoBookingsForFuture, llNoBookings, llBookings;
     private RecyclerView rvTodays, rvUpcomings;
@@ -82,6 +88,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
     ArrayList<ActiveAppointment> mAppointmentFutureList = new ArrayList<>();
     ArrayList<Bookings> bookingsList = new ArrayList<>();
     List<ActiveCheckIn> allCheckInsOffline = new ArrayList<>();
+    Animation slideUp, slideRight;
 
 
     public MyBookings() {
@@ -135,12 +142,32 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
         Home.doubleBackToExitPressedOnce = false;
         initializations(view);
 
+        Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
         linearLayoutManager = new LinearLayoutManager(getContext());
         futureLayoutManager = new LinearLayoutManager(getContext());
         rvTodays.setLayoutManager(linearLayoutManager);
         todayBookingsAdapter = new TodayBookingsAdapter(bookingsList, getContext(), true, iSelectedBooking);
         rvTodays.setAdapter(todayBookingsAdapter);
 
+
+        flOptions.requestFocus();
+        rlOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                rlOptions.startAnimation(slideRight);
+                rlOptions.setVisibility(View.GONE);
+
+            }
+        });
+
+        flOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+            }
+        });
 
         return view;
     }
@@ -156,6 +183,11 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
         llNoBookingsForToday = view.findViewById(R.id.ll_noTodayBookings);
         tvToday = view.findViewById(R.id.tv_today);
         tvUpcoming = view.findViewById(R.id.tv_upcoming);
+        rlOptions = view.findViewById(R.id.rl_options);
+        flOptions = view.findViewById(R.id.fl_options);
+        slideUp = AnimationUtils.loadAnimation(mContext, R.anim.slide_up_in);
+        slideRight = AnimationUtils.loadAnimation(mContext, R.anim.slide_up_out);
+
     }
 
 
@@ -633,6 +665,14 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
             }
 
         }
+
+    }
+
+    @Override
+    public void sendSelectedBookingActions(Bookings bookings) {
+
+        rlOptions.setVisibility(View.VISIBLE);
+        rlOptions.startAnimation(slideUp);
 
     }
 }

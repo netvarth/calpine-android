@@ -202,6 +202,15 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                     }
                 });
 
+                viewHolder.ivMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                            iSelectedBooking.sendSelectedBookingActions(bookings);
+
+                    }
+                });
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -221,7 +230,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView ivBookingType, ivServiceIcon;
+        ImageView ivBookingType, ivServiceIcon,ivMore;
         CustomTextViewBold tvSpName;
         CustomTextViewSemiBold tvProviderName;
         CustomTextViewMedium tvStatus, tvServiceName, tvDateAndTime;
@@ -241,6 +250,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                 tvServiceName = itemView.findViewById(R.id.tv_serviceName);
                 tvDateAndTime = itemView.findViewById(R.id.tv_dateAndTime);
                 cvBooking = itemView.findViewById(R.id.cv_booking);
+                ivMore = itemView.findViewById(R.id.iv_more);
 
             }
 

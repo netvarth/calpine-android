@@ -558,4 +558,9 @@ public class HistoryActivity extends AppCompatActivity implements ISelectedBooki
         }
 
     }
+
+    @Override
+    public void sendSelectedBookingActions(Bookings bookings) {
+
+    }
 }

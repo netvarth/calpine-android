@@ -669,8 +669,10 @@ public class CheckInDetails extends AppCompatActivity {
                         if (checkInInfo.getService().getLivetrack().equalsIgnoreCase("true")) {
                             llLocation.setVisibility(View.VISIBLE);
                             if (checkInInfo.getJaldeeWaitlistDistanceTime() != null) {
+                                tvTrackingText.setText("   Tracking On   ");
                                 Glide.with(CheckInDetails.this).load(R.drawable.new_location).into(ivLtIcon);
                             } else {
+                                tvTrackingText.setText("   Tracking Off   ");
                                 ivLtIcon.setImageResource(R.drawable.location_off);
 
                             }

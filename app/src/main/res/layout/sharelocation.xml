@@ -227,9 +227,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:background="@drawable/roundedrect_grey"
+            android:background="@drawable/rounded_lightgrey_bg"
             android:text="@string/cancel"
-            android:textColor="@color/app_background"
+            android:textColor="@color/title_color"
             android:textSize="@dimen/txtsize_hint" />
 
         <Button
@@ -239,7 +239,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_padding"
             android:layout_weight="0.5"
-            android:background="@drawable/roundedrect_blue"
+            android:background="@drawable/curved_save"
             android:text="@string/save"
             android:textAllCaps="true"
             android:textColor="@color/app_background"

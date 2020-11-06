@@ -4,4 +4,6 @@ import com.jaldeeinc.jaldee.model.Bookings;
 
 public interface ISelectedBooking {
    public void sendBookingInfo(Bookings bookings);
+
+   public void sendSelectedBookingActions(Bookings bookings);
 }
