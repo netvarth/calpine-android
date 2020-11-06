@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Appointment Details"
-            android:textSize="@dimen/dimen_14sp"
+            android:textSize="@dimen/txtsize_14"
             android:textColor="@color/location_theme"
             android:layout_centerInParent="true">
 

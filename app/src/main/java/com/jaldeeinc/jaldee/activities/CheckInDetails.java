@@ -321,7 +321,7 @@ public class CheckInDetails extends AppCompatActivity {
             public void onClick(View view) {
 
                 try {
-                    Intent intent = new Intent(mContext, CheckinShareLocationAppointment.class);
+                    Intent intent = new Intent(mContext, CheckinShareLocation.class);
                     intent.putExtra("waitlistPhonenumber", activeCheckIn.getWaitlistingFor().get(0).getPhoneNo());
                     intent.putExtra("uuid", activeCheckIn.getYnwUuid());
                     intent.putExtra("accountID", String.valueOf(activeCheckIn.getProviderAccount().getId()));
@@ -331,7 +331,7 @@ public class CheckInDetails extends AppCompatActivity {
                     intent.putExtra("queueStartTime", activeCheckIn.getQueue().getQueueStartTime());
                     intent.putExtra("queueEndTime", activeCheckIn.getQueue().getQueueEndTime());
                     if (activeCheckIn.getJaldeeWaitlistDistanceTime() != null && activeCheckIn.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
-                        intent.putExtra("jaldeeDistance", activeCheckIn.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance());
+                        intent.putExtra("jaldeeDistance", String.valueOf(activeCheckIn.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance()));
                     }
                     mContext.startActivity(intent);
                 } catch (Exception e) {
@@ -375,10 +375,10 @@ public class CheckInDetails extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (activeCheckIn != null && activeCheckIn.getAppointmentEncId() != null) {
+                if (activeCheckIn != null && activeCheckIn.getCheckinEncId() != null) {
                     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                     sharingIntent.setType("text/html");
-                    String statusUrl = Constants.URL + "status/" + activeCheckIn.getAppointmentEncId();
+                    String statusUrl = Constants.URL + "status/" + activeCheckIn.getCheckinEncId();
                     sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share your CheckIn/Token status link");
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, statusUrl);
                     startActivity(Intent.createChooser(sharingIntent, "Share via"));
@@ -639,7 +639,7 @@ public class CheckInDetails extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
 
-                                openMapView(checkInInfo.getQueue().getLocation().getLattitude(), checkInInfo.getQueue().getLocation().getLongitude(), checkInInfo.getLocation().getPlace());
+                                openMapView(checkInInfo.getQueue().getLocation().getLattitude(), checkInInfo.getQueue().getLocation().getLongitude(), checkInInfo.getQueue().getLocation().getPlace());
                             }
                         });
                     }
@@ -669,7 +669,7 @@ public class CheckInDetails extends AppCompatActivity {
                         if (checkInInfo.getService().getLivetrack().equalsIgnoreCase("true")) {
                             llLocation.setVisibility(View.VISIBLE);
                             if (checkInInfo.getJaldeeWaitlistDistanceTime() != null) {
-                                Glide.with(CheckInDetails.this).load(R.drawable.address).into(ivLtIcon);
+                                Glide.with(CheckInDetails.this).load(R.drawable.new_location).into(ivLtIcon);
                             } else {
                                 ivLtIcon.setImageResource(R.drawable.location_off);
 
