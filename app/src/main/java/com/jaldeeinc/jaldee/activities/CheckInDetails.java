@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,10 +31,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.Contents;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
@@ -44,6 +48,7 @@ import com.jaldeeinc.jaldee.custom.CustomerNotes;
 import com.jaldeeinc.jaldee.custom.InstructionsDialog;
 import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
 import com.jaldeeinc.jaldee.custom.MeetingInfo;
+import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
@@ -179,6 +184,9 @@ public class CheckInDetails extends AppCompatActivity {
 
     @BindView(R.id.iv_meetingIcon)
     ImageView ivMeetingIcon;
+
+    @BindView(R.id.iv_Qr)
+    ImageView ivQR;
 
     boolean firstTimeRating = false;
 
@@ -477,6 +485,22 @@ public class CheckInDetails extends AppCompatActivity {
                             }
                         }
                     });
+                }
+
+                if (checkInInfo.getCheckinEncId() != null) {
+                    //Encode with a QR Code image
+                    String statusUrl = Constants.URL + "status/" + checkInInfo.getCheckinEncId();
+                    QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(statusUrl,
+                            null,
+                            Contents.Type.TEXT,
+                            BarcodeFormat.QR_CODE.toString(), 0);
+                    try {
+                        Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
+                        ivQR.setImageBitmap(bitmap);
+
+                    } catch (WriterException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 tvViewMore.setVisibility(View.VISIBLE);
