@@ -699,41 +699,44 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
                     } else if (response.code() == 422){
 
-
-                        String errorString = response.errorBody().string();
-
-                        Config.logV("Error String-----------" + errorString);
-                        Map<String, String> tokens = new HashMap<String, String>();
-                        tokens.put("Customer", Config.toTitleCase(mSearchTerminology.getCustomer()));
-                        tokens.put("provider", mSearchTerminology.getProvider());
-                        tokens.put("arrived", mSearchTerminology.getArrived());
-                        tokens.put("waitlisted", mSearchTerminology.getWaitlist());
-
-                        tokens.put("start", mSearchTerminology.getStart());
-                        tokens.put("cancelled", mSearchTerminology.getCancelled());
-                        tokens.put("done", mSearchTerminology.getDone());
+                        if(response.errorBody()!=null) {
+                            String errorString = response.errorBody().string();
 
 
-                        StringBuffer sb = new StringBuffer();
+                            Config.logV("Error String-----------" + errorString);
 
-                        Pattern p3 = Pattern.compile("\\[(.*?)\\]");
+                            Map<String, String> tokens = new HashMap<String, String>();
+                            tokens.put("Customer", Config.toTitleCase(mSearchTerminology.getCustomer()));
+                            tokens.put("provider", mSearchTerminology.getProvider());
+                            tokens.put("arrived", mSearchTerminology.getArrived());
+                            tokens.put("waitlisted", mSearchTerminology.getWaitlist());
 
-                        Matcher matcher = p3.matcher(errorString);
-                        while (matcher.find()) {
-                            System.out.println(matcher.group(1));
-                            matcher.appendReplacement(sb, tokens.get(matcher.group(1)));
+                            tokens.put("start", mSearchTerminology.getStart());
+                            tokens.put("cancelled", mSearchTerminology.getCancelled());
+                            tokens.put("done", mSearchTerminology.getDone());
+
+
+                            StringBuffer sb = new StringBuffer();
+
+                            Pattern p3 = Pattern.compile("\\[(.*?)]");
+
+                            Matcher matcher = p3.matcher(errorString);
+
+                            while (matcher.find()) {
+                                System.out.println(matcher.group(1));
+                                matcher.appendReplacement(sb, tokens.get(matcher.group(1)));
+                            }
+                            matcher.appendTail(sb);
+
+                            System.out.println("SubString@@@@@@@@@@@@@" + sb.toString());
+
+
+                            //  Toast.makeText(mContext, sb.toString(), Toast.LENGTH_LONG).show();
+
+                            DynamicToast.make(RescheduleCheckinActivity.this, sb.toString(), AppCompatResources.getDrawable(
+                                    RescheduleCheckinActivity.this, R.drawable.ic_info_black),
+                                    ContextCompat.getColor(RescheduleCheckinActivity.this, R.color.white), ContextCompat.getColor(RescheduleCheckinActivity.this, R.color.red), Toast.LENGTH_SHORT).show();
                         }
-                        matcher.appendTail(sb);
-
-                        System.out.println("SubString@@@@@@@@@@@@@" + sb.toString());
-
-
-                      //  Toast.makeText(mContext, sb.toString(), Toast.LENGTH_LONG).show();
-
-                        DynamicToast.make(RescheduleCheckinActivity.this, sb.toString(), AppCompatResources.getDrawable(
-                                RescheduleCheckinActivity.this, R.drawable.ic_info_black),
-                                ContextCompat.getColor(RescheduleCheckinActivity.this, R.color.white), ContextCompat.getColor(RescheduleCheckinActivity.this, R.color.red), Toast.LENGTH_SHORT).show();
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -913,9 +916,14 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         }
         String fileName = null;
         String path = uri.getPath();
-        int cut = path.lastIndexOf('/');
+        int cut = 0;
+        if (path != null) {
+            cut = path.lastIndexOf('/');
+        }
         if (cut != -1) {
-            fileName = path.substring(cut + 1);
+            if (path != null) {
+                fileName = path.substring(cut + 1);
+            }
         }
         return fileName;
     }
@@ -1100,7 +1108,9 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                 path = saveImage(bitmap);
                 // imagePathList.add(bitmap.toString());
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                if (bitmap != null) {
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                }
 //            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
                 if (path != null) {
                     mImageUri = Uri.parse(path);
@@ -1543,7 +1553,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
                         }
 
-                        if(checkInInfo.getConsumerNote()!=null){
+                        if (checkInInfo != null && checkInInfo.getConsumerNote() != null) {
                             userMessage = checkInInfo.getConsumerNote();
                         }
                     }

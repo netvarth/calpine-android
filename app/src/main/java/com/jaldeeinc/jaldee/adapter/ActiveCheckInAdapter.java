@@ -199,7 +199,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             myViewHolder.tv_status.setVisibility(View.VISIBLE);
             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
             }
-            myViewHolder.cvReschedule.setVisibility(View.GONE);
+            myViewHolder.cvReschedule.setVisibility(View.VISIBLE);
         }
         if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
             myViewHolder.tv_status.setVisibility(View.GONE);
