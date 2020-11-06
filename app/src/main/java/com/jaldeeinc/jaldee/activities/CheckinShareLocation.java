@@ -100,7 +100,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
     boolean firstCall = true;
     LocationManager locationManager;
     String latValues, longValues, terminology, calcMode,queueStartTime,queueEndTime;
-    String jaldeeDistance = "", from;
+    String jaldeeDistance, from;
 
 
 

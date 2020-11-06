@@ -152,23 +152,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 //        } else {
 //            myViewHolder.tv_qmessage.setVisibility(View.GONE);
 //        }
-        myViewHolder.tv_loc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(mFavList.get(position).getLocations().get(0).getGoogleMapUrl()!=null){
-                    String geoUri = mFavList.get(position).getLocations().get(0).getGoogleMapUrl();
-                    try {
-                        Intent locationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
-                        mContext.startActivity(locationIntent);
-                    }
-                    catch (Exception e){
-                        e.printStackTrace();
-                    }
 
-
-                }
-            }
-        });
 
 
 
@@ -254,10 +238,51 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                             if (mFavList.get(i).getLocations().get(j).getId() == (queueList.getNextAvailableQueue().getLocation().getId())) {
                                 Config.logV("Location--##################------------" + mFavList.get(i).getLocations().get(j).getPlace());
                                 myViewHolder.tv_loc.setText(mFavList.get(i).getLocations().get(j).getPlace());
+                                int finalI2 = i;
+                                int finalJ = j;
+                                myViewHolder.tv_loc.setOnClickListener(new View.OnClickListener() {
+
+
+                                    @Override
+                                    public void onClick(View view) {
+                                    if(mFavList.get(finalI2).getLocations().get(finalJ).getGoogleMapUrl()!=null){
+                                        String geoUri = mFavList.get(finalI2).getLocations().get(finalJ).getGoogleMapUrl();
+                                        try {
+                                            Intent locationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                                            mContext.startActivity(locationIntent);
+                                        }
+                                        catch (Exception e){
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+                                    }
+        });
                             }
                         } else {
                             Config.logV("ELSE Location--##################------------" + mFavList.get(i).getLocations().get(j).getPlace());
                             myViewHolder.tv_loc.setText(mFavList.get(i).getLocations().get(j).getPlace());
+                            int finalI2 = i;
+                            int finalJ = j;
+                            myViewHolder.tv_loc.setOnClickListener(new View.OnClickListener() {
+
+
+                                @Override
+                                public void onClick(View view) {
+                                    if(mFavList.get(finalI2).getLocations().get(finalJ).getGoogleMapUrl()!=null){
+                                        String geoUri = mFavList.get(finalI2).getLocations().get(finalJ).getGoogleMapUrl();
+                                        try {
+                                            Intent locationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                                            mContext.startActivity(locationIntent);
+                                        }
+                                        catch (Exception e){
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+                                }
+                            });
+
                         }
                     }
                 }
