@@ -129,7 +129,7 @@
                 android:layout_height="26dp"
                 android:layout_gravity="center"
                 android:layout_weight="0.1"
-                android:src="@drawable/icon_attachments"
+                android:src="@drawable/icon_attachments_active_new"
                 tools:ignore="HardcodedText"
                 app:tint="@color/location_theme" />
 

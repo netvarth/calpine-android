@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:card_view="http://schemas.android.com/tools"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -36,10 +36,10 @@
         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text="Appointment Details"
-            android:textSize="@dimen/txtsize_14"
             android:textColor="@color/location_theme"
-            android:layout_centerInParent="true">
+            android:textSize="@dimen/txtsize_14">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
@@ -301,8 +301,8 @@
                                             android:layout_marginStart="@dimen/padding3"
                                             android:layout_marginTop="@dimen/padding5"
                                             android:layout_marginEnd="@dimen/padding3"
-                                            android:scaleType="fitXY"
                                             android:layout_marginBottom="@dimen/padding5"
+                                            android:scaleType="fitXY"
                                             android:src="@drawable/qr_code">
 
                                         </ImageView>
@@ -562,14 +562,14 @@
                                     android:id="@+id/cv_meetingDetails"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:visibility="gone"
                                     android:layout_marginStart="@dimen/dimen_10dp"
                                     android:layout_marginTop="@dimen/dimen_10dp"
-                                    android:layout_marginBottom="@dimen/dimen_5dp"
                                     android:layout_marginEnd="@dimen/dimen_10dp"
+                                    android:layout_marginBottom="@dimen/dimen_5dp"
                                     android:elevation="@dimen/dimen_10dp"
-                                    app:neomorph_shadow_type="inner"
+                                    android:visibility="gone"
                                     app:neomorph_corner_radius="@dimen/dimen_8dp"
+                                    app:neomorph_shadow_type="inner"
                                     card_view:cardBackgroundColor="#f8f8f8">
 
                                     <LinearLayout
@@ -581,31 +581,30 @@
                                             android:id="@+id/iv_meetingIcon"
                                             android:layout_width="@dimen/dimen_35dp"
                                             android:layout_height="@dimen/dimen_35dp"
-                                            android:padding="@dimen/dimen_5dp"
                                             android:layout_gravity="center"
-                                            android:layout_marginEnd="@dimen/dimen_10dp">
+                                            android:layout_marginEnd="@dimen/dimen_10dp"
+                                            android:padding="@dimen/dimen_5dp">
 
                                         </ImageView>
 
                                         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="Meeting Details"
                                             android:layout_gravity="center"
                                             android:gravity="center"
                                             android:letterSpacing="0.09"
                                             android:paddingTop="@dimen/dimen_5dp"
-                                            android:paddingBottom="@dimen/dimen_5dp"
                                             android:paddingEnd="@dimen/dimen_5dp"
-                                            android:textSize="@dimen/dimen_14sp"
-                                            android:textColor="@color/title_color">
+                                            android:paddingBottom="@dimen/dimen_5dp"
+                                            android:text="Meeting Details"
+                                            android:textColor="@color/title_color"
+                                            android:textSize="@dimen/dimen_14sp">
 
                                         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
                                     </LinearLayout>
 
                                 </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
-
 
 
                             </LinearLayout>
@@ -640,14 +639,27 @@
 
                         </RelativeLayout>
 
+                        <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimen_5dp"
+                            android:layout_marginTop="@dimen/dimen_5dp"
+                            android:layout_marginEnd="@dimen/dimen_5dp"
+                            android:layout_marginBottom="@dimen/dimen_5dp"
+                            android:elevation="@dimen/dimen_10dp"
+                            android:visibility="visible"
+                            android:layout_below="@id/rl_new"
+                            app:neomorph_corner_radius="@dimen/dimen_8dp"
+                            app:neomorph_shadow_type="inner"
+                            card_view:cardBackgroundColor="#f8f8f8">
+
                         <LinearLayout
                             android:id="@+id/ll_moreDetails"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/rl_new"
                             android:layout_marginTop="@dimen/dimen_5dp"
                             android:orientation="vertical"
-                            android:visibility="gone">
+                            android:visibility="visible">
 
 
                             <LinearLayout
@@ -670,10 +682,10 @@
                                     <LinearLayout
                                         android:id="@+id/ll_reschedule"
                                         android:layout_width="0dp"
-                                        android:visibility="visible"
-                                        android:layout_marginTop="@dimen/dimen_10dp"
                                         android:layout_height="match_parent"
-                                        android:layout_columnWeight="1">
+                                        android:layout_columnWeight="1"
+                                        android:layout_marginTop="@dimen/dimen_10dp"
+                                        android:visibility="visible">
 
                                         <LinearLayout
                                             android:layout_width="match_parent"
@@ -707,9 +719,9 @@
                                     <LinearLayout
                                         android:id="@+id/ll_message"
                                         android:layout_width="0dp"
-                                        android:layout_marginTop="@dimen/dimen_10dp"
                                         android:layout_height="match_parent"
-                                        android:layout_columnWeight="1">
+                                        android:layout_columnWeight="1"
+                                        android:layout_marginTop="@dimen/dimen_10dp">
 
                                         <LinearLayout
                                             android:layout_width="match_parent"
@@ -745,9 +757,9 @@
                                     <LinearLayout
                                         android:id="@+id/ll_rating"
                                         android:layout_width="0dp"
-                                        android:layout_marginTop="@dimen/dimen_10dp"
                                         android:layout_height="match_parent"
-                                        android:layout_columnWeight="1">
+                                        android:layout_columnWeight="1"
+                                        android:layout_marginTop="@dimen/dimen_10dp">
 
                                         <LinearLayout
                                             android:layout_width="match_parent"
@@ -781,8 +793,8 @@
                                         android:id="@+id/ll_cancel"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:layout_marginTop="@dimen/dimen_10dp"
-                                        android:layout_columnWeight="1">
+                                        android:layout_columnWeight="1"
+                                        android:layout_marginTop="@dimen/dimen_10dp">
 
                                         <LinearLayout
                                             android:layout_width="match_parent"
@@ -986,6 +998,8 @@
 
 
                         </LinearLayout>
+
+                        </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
 
 
                     </RelativeLayout>

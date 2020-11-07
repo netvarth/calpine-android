@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
 
@@ -12,10 +14,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
@@ -28,6 +33,7 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BookingDetails;
 import com.jaldeeinc.jaldee.activities.CheckInDetails;
 import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.activities.DonationActivity;
 import com.jaldeeinc.jaldee.activities.HistoryActivity;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.UserDetailActivity;
@@ -37,7 +43,9 @@ import com.jaldeeinc.jaldee.adapter.UserServicesAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.ActionsDialog;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
+import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
@@ -76,8 +84,6 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
 
     private Context mContext;
     private Activity mActivity;
-    private RelativeLayout rlOptions;
-    private NeomorphFrameLayout flOptions;
     private CustomTextViewItalicSemiBold tvToday, tvUpcoming;
     private LinearLayout llNoBookingsForToday, llNoBookingsForFuture, llNoBookings, llBookings;
     private RecyclerView rvTodays, rvUpcomings;
@@ -89,6 +95,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
     ArrayList<Bookings> bookingsList = new ArrayList<>();
     List<ActiveCheckIn> allCheckInsOffline = new ArrayList<>();
     Animation slideUp, slideRight;
+    private ActionsDialog actionsDialog;
 
 
     public MyBookings() {
@@ -142,7 +149,6 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
         Home.doubleBackToExitPressedOnce = false;
         initializations(view);
 
-        Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
         linearLayoutManager = new LinearLayoutManager(getContext());
         futureLayoutManager = new LinearLayoutManager(getContext());
         rvTodays.setLayoutManager(linearLayoutManager);
@@ -150,24 +156,6 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
         rvTodays.setAdapter(todayBookingsAdapter);
 
 
-        flOptions.requestFocus();
-        rlOptions.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                rlOptions.startAnimation(slideRight);
-                rlOptions.setVisibility(View.GONE);
-
-            }
-        });
-
-        flOptions.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-            }
-        });
 
         return view;
     }
@@ -183,8 +171,6 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
         llNoBookingsForToday = view.findViewById(R.id.ll_noTodayBookings);
         tvToday = view.findViewById(R.id.tv_today);
         tvUpcoming = view.findViewById(R.id.tv_upcoming);
-        rlOptions = view.findViewById(R.id.rl_options);
-        flOptions = view.findViewById(R.id.fl_options);
         slideUp = AnimationUtils.loadAnimation(mContext, R.anim.slide_up_in);
         slideRight = AnimationUtils.loadAnimation(mContext, R.anim.slide_up_out);
 
@@ -645,7 +631,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
 
                 Intent intent = new Intent(mContext, BookingDetails.class);
                 intent.putExtra("bookingInfo", bookings);
-                if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled")) {
+                if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled") && !bookings.getBookingStatus().equalsIgnoreCase("Completed")) {
                     intent.putExtra("isActive", true);
                 } else {
                     intent.putExtra("isActive", false);
@@ -671,8 +657,21 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
     @Override
     public void sendSelectedBookingActions(Bookings bookings) {
 
-        rlOptions.setVisibility(View.VISIBLE);
-        rlOptions.startAnimation(slideUp);
+        boolean isActive = false;
+        if (bookings != null && bookings.getBookingStatus() != null){
+            if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled") && !bookings.getBookingStatus().equalsIgnoreCase("Completed")){
+                isActive = true;
+            }
+        }
+        actionsDialog = new ActionsDialog(mContext,isActive,bookings);
+        actionsDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+        actionsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        actionsDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        actionsDialog.show();
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels * 1);
+        actionsDialog.getWindow().setGravity(Gravity.BOTTOM);
+        actionsDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
 
     }
 }

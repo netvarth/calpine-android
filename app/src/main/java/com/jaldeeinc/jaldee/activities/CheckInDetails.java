@@ -459,9 +459,9 @@ public class CheckInDetails extends AppCompatActivity {
                         public void onClick(View view) {
 
                             try {
-                                Intent intent = new Intent(CheckInDetails.this,ProviderDetailActivity.class);
-                                intent.putExtra("uniqueID",checkInInfo.getProviderAccount().getUniqueId());
-                                intent.putExtra("locationId",checkInInfo.getQueue().getLocation().getId());
+                                Intent intent = new Intent(CheckInDetails.this, ProviderDetailActivity.class);
+                                intent.putExtra("uniqueID", checkInInfo.getProviderAccount().getUniqueId());
+                                intent.putExtra("locationId", checkInInfo.getQueue().getLocation().getId());
                                 startActivity(intent);
                             } catch (NumberFormatException e) {
                                 e.printStackTrace();
@@ -476,9 +476,9 @@ public class CheckInDetails extends AppCompatActivity {
                         public void onClick(View view) {
 
                             try {
-                                Intent intent = new Intent(CheckInDetails.this,ProviderDetailActivity.class);
-                                intent.putExtra("uniqueID",checkInInfo.getProviderAccount().getUniqueId());
-                                intent.putExtra("locationId",checkInInfo.getQueue().getLocation().getId());
+                                Intent intent = new Intent(CheckInDetails.this, ProviderDetailActivity.class);
+                                intent.putExtra("uniqueID", checkInInfo.getProviderAccount().getUniqueId());
+                                intent.putExtra("locationId", checkInInfo.getQueue().getLocation().getId());
                                 startActivity(intent);
                             } catch (NumberFormatException e) {
                                 e.printStackTrace();
@@ -498,6 +498,30 @@ public class CheckInDetails extends AppCompatActivity {
                         Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
                         ivQR.setImageBitmap(bitmap);
 
+                        ivQR.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                Dialog settingsDialog = new Dialog(CheckInDetails.this);
+                                settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+                                settingsDialog.setContentView(getLayoutInflater().inflate(R.layout.image_layout
+                                        , null));
+                                ImageView imageView = settingsDialog.findViewById(R.id.iv_close);
+                                ImageView ivQR = settingsDialog.findViewById(R.id.iv_Qr);
+                                imageView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+
+                                        settingsDialog.dismiss();
+                                    }
+                                });
+
+                                ivQR.setImageBitmap(bitmap);
+                                settingsDialog.show();
+                            }
+                        });
+
+
                     } catch (WriterException e) {
                         e.printStackTrace();
                     }
@@ -513,8 +537,7 @@ public class CheckInDetails extends AppCompatActivity {
 
                         if (isActive) {
                             cvMeetingDetails.setVisibility(View.VISIBLE);
-                        }
-                        else {
+                        } else {
                             cvMeetingDetails.setVisibility(View.GONE);
                         }
                         if (checkInInfo.getService().getVirtualCallingModes() != null) {
@@ -553,9 +576,9 @@ public class CheckInDetails extends AppCompatActivity {
                 // to set status
                 if (checkInInfo.getWaitlistStatus() != null) {
 
-                    if (checkInInfo.getWaitlistStatus().equalsIgnoreCase("done")){
+                    if (checkInInfo.getWaitlistStatus().equalsIgnoreCase("done")) {
                         llRating.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         hideView(llRating);
                     }
                     tvStatus.setVisibility(View.VISIBLE);
@@ -691,7 +714,9 @@ public class CheckInDetails extends AppCompatActivity {
 
                 // hide instructions link when there are no post instructions
                 if (checkInInfo.getService() != null && checkInInfo.getService().isPostInfoEnabled()) {
-                    llInstructions.setVisibility(View.VISIBLE);
+                    if (isActive) {
+                        llInstructions.setVisibility(View.VISIBLE);
+                    }
                 } else {
 
                     hideView(llInstructions);
@@ -699,7 +724,9 @@ public class CheckInDetails extends AppCompatActivity {
 
                 // hide customerNotes when there is no notes from consumer
                 if (checkInInfo.getConsumerNote() != null && !checkInInfo.getConsumerNote().equalsIgnoreCase("")) {
-                    llCustomerNotes.setVisibility(View.VISIBLE);
+                    if (isActive) {
+                        llCustomerNotes.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     hideView(llCustomerNotes);
                 }

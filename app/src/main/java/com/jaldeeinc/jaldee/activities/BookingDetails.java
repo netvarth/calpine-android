@@ -379,6 +379,7 @@ public class BookingDetails extends AppCompatActivity {
             }
         });
 
+
     }
 
     @Override
@@ -481,10 +482,35 @@ public class BookingDetails extends AppCompatActivity {
                     QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(statusUrl,
                             null,
                             Contents.Type.TEXT,
-                            BarcodeFormat.QR_CODE.toString(), 0);
+                            BarcodeFormat.QR_CODE.toString(), 175);
                     try {
                         Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
                         ivQR.setImageBitmap(bitmap);
+
+                        ivQR.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                Dialog settingsDialog = new Dialog(BookingDetails.this);
+                                settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+                                settingsDialog.getWindow().getAttributes().windowAnimations = R.style.zoomInAndOut;
+                                settingsDialog.setContentView(getLayoutInflater().inflate(R.layout.image_layout
+                                        , null));
+                                ImageView imageView = settingsDialog.findViewById(R.id.iv_close);
+                                ImageView ivQR = settingsDialog.findViewById(R.id.iv_Qr);
+                                imageView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+
+                                        settingsDialog.dismiss();
+                                    }
+                                });
+
+                                ivQR.setImageBitmap(bitmap);
+                                settingsDialog.show();
+                            }
+                        });
+
 
                     } catch (WriterException e) {
                         e.printStackTrace();

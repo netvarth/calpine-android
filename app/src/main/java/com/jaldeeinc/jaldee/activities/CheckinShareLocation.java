@@ -133,6 +133,22 @@ public class CheckinShareLocation extends AppCompatActivity implements
         myReceiver = new MyReceiver();
         setContentView(R.layout.sharelocation);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            waitlistPhonenumber = extras.getString("waitlistPhonenumber");
+            uuid = extras.getString("uuid");
+            accountID = extras.getString("accountID");
+            title = extras.getString("title");
+            terminology = extras.getString("terminology");
+            calcMode = extras.getString("calcMode");
+            queueStartTime = extras.getString("queueStartTime");
+            queueEndTime = extras.getString("queueEndTime");
+            jaldeeDistance = extras.getString("jaldeeDistance");
+            from = extras.getString("from");
+            Log.i("calcmode",calcMode);
+        }
+        locationStatus = true;
+
 
         shareSwitch = findViewById(R.id.shareSwitch);
         checkinMessage = findViewById(R.id.checkinMessage);
@@ -236,21 +252,6 @@ public class CheckinShareLocation extends AppCompatActivity implements
             }
         });
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            waitlistPhonenumber = extras.getString("waitlistPhonenumber");
-            uuid = extras.getString("uuid");
-            accountID = extras.getString("accountID");
-            title = extras.getString("title");
-            terminology = extras.getString("terminology");
-            calcMode = extras.getString("calcMode");
-            queueStartTime = extras.getString("queueStartTime");
-            queueEndTime = extras.getString("queueEndTime");
-            jaldeeDistance = extras.getString("jaldeeDistance");
-            from = extras.getString("from");
-            Log.i("calcmode",calcMode);
-        }
-        locationStatus = true;
 
 
         modeLabel.setVisibility(View.VISIBLE);

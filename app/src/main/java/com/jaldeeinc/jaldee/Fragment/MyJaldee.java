@@ -13,9 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
+import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.android.material.tabs.TabLayout;
+import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.AppointmentActivity;
 import com.jaldeeinc.jaldee.activities.HistoryActivity;
@@ -24,6 +29,7 @@ import com.jaldeeinc.jaldee.adapter.JaldeeTabs;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.NotificationDialog;
+import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 public class MyJaldee extends RootFragment {
@@ -41,7 +47,7 @@ public class MyJaldee extends RootFragment {
     private CustomTextViewSemiBold tvHistory;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    Animation slideUp, slideRight;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -85,6 +91,8 @@ public class MyJaldee extends RootFragment {
         tabLayout=(TabLayout)view.findViewById(R.id.tabLayout);
         viewPager=(ViewPager)view.findViewById(R.id.viewPager);
         tvConsumerName = view.findViewById(R.id.tv_consumerName);
+        slideUp = AnimationUtils.loadAnimation(mContext, R.anim.slide_up_in);
+        slideRight = AnimationUtils.loadAnimation(mContext, R.anim.slide_up_out);
         tvHistory = view.findViewById(R.id.tv_history);
 
         if (message != null) {
@@ -147,6 +155,9 @@ public class MyJaldee extends RootFragment {
 
             }
         });
+
+
         return view;
     }
+
 }
