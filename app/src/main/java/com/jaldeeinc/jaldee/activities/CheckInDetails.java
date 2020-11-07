@@ -505,6 +505,7 @@ public class CheckInDetails extends AppCompatActivity {
 
                                 Dialog settingsDialog = new Dialog(CheckInDetails.this);
                                 settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+                                settingsDialog.getWindow().getAttributes().windowAnimations = R.style.zoomInAndOut;
                                 settingsDialog.setContentView(getLayoutInflater().inflate(R.layout.image_layout
                                         , null));
                                 ImageView imageView = settingsDialog.findViewById(R.id.iv_close);
