@@ -179,7 +179,7 @@
     </style>
 
     <style name="zoomInAndOut">
-        <item name="android:windowEnterAnimation">@anim/zoom_in</item>
-        <item name="android:windowExitAnimation">@anim/zoom_out</item>
+        <item name="android:windowEnterAnimation">@anim/bounce</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_up</item>
     </style>
 </resources>

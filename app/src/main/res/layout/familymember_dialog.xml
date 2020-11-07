@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.20"
                 android:padding="@dimen/dimen_5dp"
-                android:text="Select family member"
+                android:text="Select a person booking for"
                 android:textSize="@dimen/dimen_16sp" />
 
 
@@ -73,8 +73,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/dimen_5dp"
-            android:text="You get notifications to"
-            android:textSize="@dimen/dimen_16sp" />
+            android:text="Booking alerts and communications send to"
+            android:textSize="@dimen/dimen_14sp" />
 
         <LinearLayout
             android:layout_width="match_parent"

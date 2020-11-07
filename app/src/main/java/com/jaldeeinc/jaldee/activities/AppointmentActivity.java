@@ -152,7 +152,7 @@ import retrofit2.Response;
 public class AppointmentActivity extends AppCompatActivity implements PaymentResultWithDataListener, ISlotInfo, IMailSubmit, IPaymentResponse, IMobileSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected {
 
     @BindView(R.id.tv_providerName)
-    CustomTextViewSemiBold tvProviderName;
+    CustomTextViewBold tvProviderName;
 
     @BindView(R.id.tv_serviceName)
     CustomTextViewBold tvServiceName;

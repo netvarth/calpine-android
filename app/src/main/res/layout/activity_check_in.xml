@@ -38,7 +38,7 @@
         </androidx.cardview.widget.CardView>
 
 
-        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
             android:id="@+id/tv_providerName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,10 +46,12 @@
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/dimen_15dp"
             android:text=""
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="@color/title_color"
-            android:textSize="@dimen/dimen_16sp">
+            android:textSize="@dimen/dimen_18dp">
 
-        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
     </LinearLayout>
 

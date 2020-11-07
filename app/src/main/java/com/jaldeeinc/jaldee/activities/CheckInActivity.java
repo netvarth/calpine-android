@@ -149,7 +149,7 @@ import retrofit2.Response;
 public class CheckInActivity extends AppCompatActivity implements ISelectQ, PaymentResultWithDataListener, IPaymentResponse, IMobileSubmit, IMailSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected {
 
     @BindView(R.id.tv_providerName)
-    CustomTextViewSemiBold tvProviderName;
+    CustomTextViewBold tvProviderName;
 
     @BindView(R.id.tv_serviceName)
     CustomTextViewBold tvServiceName;
