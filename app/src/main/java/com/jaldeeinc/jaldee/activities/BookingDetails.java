@@ -261,6 +261,7 @@ public class BookingDetails extends AppCompatActivity {
                     intent.putExtra("uuid", apptInfo.getUid());
                     intent.putExtra("accountId", apptInfo.getProviderAccount().getId());
                     intent.putExtra("name", apptInfo.getProviderAccount().getBusinessName());
+                    intent.putExtra("from","appt");
                     startActivity(intent);
 
                 } catch (Exception e) {
