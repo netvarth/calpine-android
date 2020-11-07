@@ -265,6 +265,7 @@ public class CheckInDetails extends AppCompatActivity {
                     intent.putExtra("uuid", activeCheckIn.getYnwUuid());
                     intent.putExtra("accountId", activeCheckIn.getProviderAccount().getId());
                     intent.putExtra("name", activeCheckIn.getProviderAccount().getBusinessName());
+                    intent.putExtra("from","checkin");
                     startActivity(intent);
 
                 } catch (Exception e) {
