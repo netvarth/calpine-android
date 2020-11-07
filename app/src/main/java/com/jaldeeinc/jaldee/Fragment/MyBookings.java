@@ -392,7 +392,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
                                                     } else {
                                                         tvToday.setVisibility(View.GONE);
                                                         rvTodays.setVisibility(View.GONE);
-                                                        llNoBookingsForToday.setVisibility(View.VISIBLE);
+                                                        llNoBookingsForToday.setVisibility(View.GONE);
                                                     }
 
                                                     if (futureBookings.size() > 0) {
@@ -407,7 +407,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
 
                                                         tvUpcoming.setVisibility(View.GONE);
                                                         rvUpcomings.setVisibility(View.GONE);
-                                                        llNoBookingsForFuture.setVisibility(View.VISIBLE);
+                                                        llNoBookingsForFuture.setVisibility(View.GONE);
                                                     }
 
                                                 } else {
@@ -553,7 +553,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
                 rvTodays.setAdapter(todayBookingsAdapter);
             } else {
                 rvTodays.setVisibility(View.GONE);
-                llNoBookingsForToday.setVisibility(View.VISIBLE);
+                llNoBookingsForToday.setVisibility(View.GONE);
             }
 
             if (futureBookings.size() > 0) {
@@ -566,7 +566,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
             } else {
 
                 rvUpcomings.setVisibility(View.GONE);
-                llNoBookingsForFuture.setVisibility(View.VISIBLE);
+                llNoBookingsForFuture.setVisibility(View.GONE);
             }
 
         } else {

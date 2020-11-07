@@ -136,23 +136,18 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/confused">
-
-                </ImageView>
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding5"
-                    android:text="No bookings for today"
+                    android:text="No bookings available."
                     android:textColor="@color/title_color">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
             </LinearLayout>
+
 
         </LinearLayout>
 

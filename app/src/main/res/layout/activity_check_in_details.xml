@@ -625,14 +625,28 @@
 
                         </RelativeLayout>
 
-                        <LinearLayout
+                        <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
                             android:id="@+id/ll_moreDetails"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimen_5dp"
+                            android:layout_marginTop="@dimen/dimen_5dp"
+                            android:layout_marginEnd="@dimen/dimen_5dp"
+                            android:layout_marginBottom="@dimen/dimen_5dp"
+                            android:elevation="@dimen/dimen_10dp"
+                            android:visibility="gone"
+                            android:layout_below="@id/rl_new"
+                            app:neomorph_corner_radius="@dimen/dimen_8dp"
+                            app:neomorph_shadow_type="inner"
+                            card_view:cardBackgroundColor="#f8f8f8">
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/rl_new"
                             android:layout_marginTop="@dimen/dimen_5dp"
                             android:orientation="vertical"
-                            android:visibility="gone">
+                            android:visibility="visible">
 
                             <LinearLayout
                                 android:id="@+id/ll_options"
@@ -776,7 +790,7 @@
                                             <ImageView
                                                 android:layout_width="@dimen/dimen_30dp"
                                                 android:layout_height="@dimen/dimen_30dp"
-                                                android:src="@drawable/close"
+                                                android:src="@drawable/cancel_new"
                                                 app:tint="@color/title_color">
 
                                             </ImageView>
@@ -968,6 +982,8 @@
 
 
                         </LinearLayout>
+
+                        </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
 
 
                     </RelativeLayout>

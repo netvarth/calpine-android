@@ -33,7 +33,7 @@
 
         </androidx.cardview.widget.CardView>
 
-        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,9 +42,9 @@
             android:maxLines="1"
             android:text=""
             android:textColor="@color/location_theme"
-            android:textSize="@dimen/dimen_16sp">
+            android:textSize="@dimen/dimen_18dp">
 
-        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
 
     </RelativeLayout>
@@ -158,8 +158,7 @@
             android:layout_weight="0.1"
             android:layout_marginEnd="@dimen/dimen_15dp"
             app:cardBackgroundColor="@color/location_theme"
-            android:layout_gravity="center_vertical"
-            >
+            android:layout_gravity="center_vertical">
 
             <ImageView
                 android:id="@+id/iv_submit_message"

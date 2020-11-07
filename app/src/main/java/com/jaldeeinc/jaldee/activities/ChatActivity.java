@@ -43,6 +43,7 @@ import com.jaldeeinc.jaldee.adapter.MessageListAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.UserMessage;
 import com.jaldeeinc.jaldee.response.InboxList;
@@ -93,7 +94,7 @@ public class ChatActivity extends AppCompatActivity {
     private EditText etMessage;
     private ImageView ivSend;
     private CardView cvBack;
-    private CustomTextViewSemiBold tvTitle;
+    private CustomTextViewBold tvTitle;
     ArrayList<String> imagePathList = new ArrayList<>();
     ArrayList<String> imagePathLists = new ArrayList<>();
     Bitmap bitmap;
@@ -173,10 +174,10 @@ public class ChatActivity extends AppCompatActivity {
                     public void onClick(View v) {
 
                         if (imagePathList != null && imagePathList.size() > 0) {
-                            if(from!=null && from.equalsIgnoreCase("appt")) {
+                            if(from!=null && from.equalsIgnoreCase(Constants.APPOINTMENT)) {
                                 ApiCommunicateAppointment(uuId, String.valueOf(accountID), etMessage.getText().toString());
                             }
-                            else if(from!=null && from.equalsIgnoreCase("checkin")){
+                            else if(from!=null && from.equalsIgnoreCase(Constants.CHECKIN)){
                                 ApiCommunicateCheckin(uuId,String.valueOf(accountID),etMessage.getText().toString());
                             }
                             tvErrorMessage.setVisibility(View.GONE);
@@ -290,10 +291,10 @@ public class ChatActivity extends AppCompatActivity {
 
                         if (imagePathList != null && imagePathList.size() > 0) {
 
-                            if(from!=null && from.equalsIgnoreCase("appt")) {
+                            if(from!=null && from.equalsIgnoreCase(Constants.APPOINTMENT)) {
                                 ApiCommunicateAppointment(uuId, String.valueOf(accountID), etMessage.getText().toString());
                             }
-                            else if(from!=null && from.equalsIgnoreCase("checkin")){
+                            else if(from!=null && from.equalsIgnoreCase(Constants.CHECKIN)){
                                 ApiCommunicateCheckin(uuId,String.valueOf(accountID),etMessage.getText().toString());
                             }
                             tvErrorMessage.setVisibility(View.GONE);
@@ -326,10 +327,10 @@ public class ChatActivity extends AppCompatActivity {
 
                 if (!etMessage.getText().toString().trim().equalsIgnoreCase("")) {
 
-                    if(from!=null && from.equalsIgnoreCase("appt")) {
+                    if(from!=null && from.equalsIgnoreCase(Constants.APPOINTMENT)) {
                         ApiCommunicateAppointment(uuId, String.valueOf(accountID), etMessage.getText().toString());
                     }
-                    else if(from!=null && from.equalsIgnoreCase("checkin")){
+                    else if(from!=null && from.equalsIgnoreCase(Constants.CHECKIN)){
                         ApiCommunicateCheckin(uuId,String.valueOf(accountID),etMessage.getText().toString());
                     }
 

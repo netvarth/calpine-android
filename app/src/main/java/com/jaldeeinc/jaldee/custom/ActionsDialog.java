@@ -290,10 +290,12 @@ public class ActionsDialog extends Dialog {
                         intent.putExtra("uuid", bookings.getAppointmentInfo().getUid());
                         intent.putExtra("accountId", bookings.getAppointmentInfo().getProviderAccount().getId());
                         intent.putExtra("name", bookings.getAppointmentInfo().getProviderAccount().getBusinessName());
+                        intent.putExtra("from",Constants.APPOINTMENT);
                     } else if (bookings.getCheckInInfo() != null) {
                         intent.putExtra("uuid", bookings.getCheckInInfo().getYnwUuid());
                         intent.putExtra("accountId", bookings.getCheckInInfo().getProviderAccount().getId());
                         intent.putExtra("name", bookings.getCheckInInfo().getProviderAccount().getBusinessName());
+                        intent.putExtra("from",Constants.CHECKIN);
                     }
                     mContext.startActivity(intent);
                     dismiss();

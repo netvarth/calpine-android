@@ -139,7 +139,7 @@ public class BookingDetails extends AppCompatActivity {
     LinearLayout llCancel;
 
     @BindView(R.id.ll_moreDetails)
-    LinearLayout llMoreDetails;
+    NeomorphFrameLayout llMoreDetails;
 
     @BindView(R.id.ll_message)
     LinearLayout llMessage;
@@ -261,7 +261,7 @@ public class BookingDetails extends AppCompatActivity {
                     intent.putExtra("uuid", apptInfo.getUid());
                     intent.putExtra("accountId", apptInfo.getProviderAccount().getId());
                     intent.putExtra("name", apptInfo.getProviderAccount().getBusinessName());
-                    intent.putExtra("from","appt");
+                    intent.putExtra("from",Constants.APPOINTMENT);
                     startActivity(intent);
 
                 } catch (Exception e) {

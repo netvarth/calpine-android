@@ -15,6 +15,18 @@
 
     </ImageView>
 
+    <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:textColor="@color/location_theme"
+        android:textSize="@dimen/dimen_16dp"
+        android:text="Check your status">
+
+    </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
+
     <ImageView
         android:id="@+id/iv_Qr"
         android:layout_width="175dp"
@@ -23,8 +35,8 @@
         android:layout_marginEnd="@dimen/dimen_20dp"
         android:layout_marginStart="@dimen/dimen_20dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dimen_30dp"
+        android:layout_marginTop="@dimen/dimen_15dp"
         android:layout_marginBottom="@dimen/dimen_30dp"
-        android:layout_below="@id/iv_close"/>
+        android:layout_below="@id/header"/>
 
 </RelativeLayout>

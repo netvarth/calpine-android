@@ -138,7 +138,7 @@ public class CheckInDetails extends AppCompatActivity {
     LinearLayout llCancel;
 
     @BindView(R.id.ll_moreDetails)
-    LinearLayout llMoreDetails;
+    NeomorphFrameLayout llMoreDetails;
 
     @BindView(R.id.ll_message)
     LinearLayout llMessage;
@@ -265,7 +265,7 @@ public class CheckInDetails extends AppCompatActivity {
                     intent.putExtra("uuid", activeCheckIn.getYnwUuid());
                     intent.putExtra("accountId", activeCheckIn.getProviderAccount().getId());
                     intent.putExtra("name", activeCheckIn.getProviderAccount().getBusinessName());
-                    intent.putExtra("from","checkin");
+                    intent.putExtra("from",Constants.CHECKIN);
                     startActivity(intent);
 
                 } catch (Exception e) {

@@ -335,7 +335,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             @Override
             public void onClick(View v) {
 
-                callback.onActiveBookingClick(activelist.getShowToken());
+//                callback.onActiveBookingClick(activelist.getShowToken());
             }
         });
 

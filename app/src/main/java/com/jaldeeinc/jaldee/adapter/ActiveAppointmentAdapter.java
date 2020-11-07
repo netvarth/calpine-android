@@ -455,7 +455,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
             @Override
             public void onClick(View v) {
 
-                callback.onActiveBookingClick("Appointment");
+//                callback.onActiveBookingClick("Appointment");
             }
         });
 

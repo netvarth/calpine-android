@@ -135,15 +135,15 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_history"
                 app:tabTextColor="@color/title_color"
-                app:tabIndicatorFullWidth="false"
+                app:tabIndicatorFullWidth="true"
                 android:textAlignment="viewStart"
                 app:tabPaddingBottom="-18dp"
                 app:tabGravity="fill"
                 app:tabMode="scrollable"
                 android:layout_marginStart="-6dp"
                 app:tabTextAppearance="@style/CustomTabText"
+                app:tabIndicatorHeight="1.5dp"
                 app:tabIndicatorColor="@color/donation_theme"
-                app:tabIndicator="@drawable/custom_indicator"
                 android:background="@color/white">
             </com.google.android.material.tabs.TabLayout>
 
