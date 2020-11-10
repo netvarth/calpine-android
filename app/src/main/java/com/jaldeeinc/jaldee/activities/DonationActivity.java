@@ -498,6 +498,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
             queueobj.putOpt("donor", donor);
             queueobj.putOpt("providerConsumer", providerConsumer);
             queueobj.putOpt("location", location);
+            queueobj.putOpt("donorPhoneNumber",SharedPreference.getInstance(mContext).getStringValue("mobile", ""));
 
         } catch (JSONException e) {
             e.printStackTrace();

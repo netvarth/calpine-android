@@ -1,16 +1,12 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.location.LocationManager;
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,37 +20,23 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BookingDetails;
 import com.jaldeeinc.jaldee.activities.CheckInDetails;
 import com.jaldeeinc.jaldee.activities.Constants;
-import com.jaldeeinc.jaldee.activities.DonationActivity;
-import com.jaldeeinc.jaldee.activities.HistoryActivity;
 import com.jaldeeinc.jaldee.activities.Home;
-import com.jaldeeinc.jaldee.activities.UserDetailActivity;
-import com.jaldeeinc.jaldee.adapter.ExpandableListAdapter;
 import com.jaldeeinc.jaldee.adapter.TodayBookingsAdapter;
-import com.jaldeeinc.jaldee.adapter.UserServicesAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.ActionsDialog;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
-import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
-import com.jaldeeinc.jaldee.response.DepServiceInfo;
-import com.jaldeeinc.jaldee.response.QueueList;
-import com.jaldeeinc.jaldee.response.ScheduleList;
-import com.jaldeeinc.jaldee.response.SearchAppoinment;
-import com.jaldeeinc.jaldee.response.SearchService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -64,14 +46,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.functions.Function;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class MyBookings extends RootFragment implements ISelectedBooking {
@@ -96,6 +74,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
     List<ActiveCheckIn> allCheckInsOffline = new ArrayList<>();
     Animation slideUp, slideRight;
     private ActionsDialog actionsDialog;
+    boolean hideMoreInfo = false;
 
 
     public MyBookings() {
@@ -152,7 +131,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
         linearLayoutManager = new LinearLayoutManager(getContext());
         futureLayoutManager = new LinearLayoutManager(getContext());
         rvTodays.setLayoutManager(linearLayoutManager);
-        todayBookingsAdapter = new TodayBookingsAdapter(bookingsList, getContext(), true, iSelectedBooking);
+        todayBookingsAdapter = new TodayBookingsAdapter(bookingsList, getContext(), true, iSelectedBooking, hideMoreInfo);
         rvTodays.setAdapter(todayBookingsAdapter);
 
 
@@ -387,7 +366,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
                                                         llNoBookingsForToday.setVisibility(View.GONE);
                                                         rvTodays.setVisibility(View.VISIBLE);
                                                         rvTodays.setLayoutManager(linearLayoutManager);
-                                                        todayBookingsAdapter = new TodayBookingsAdapter(todayBookings, getContext(), false, iSelectedBooking);
+                                                        todayBookingsAdapter = new TodayBookingsAdapter(todayBookings, getContext(), false, iSelectedBooking, hideMoreInfo);
                                                         rvTodays.setAdapter(todayBookingsAdapter);
                                                     } else {
                                                         tvToday.setVisibility(View.GONE);
@@ -401,7 +380,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
                                                         llNoBookingsForFuture.setVisibility(View.GONE);
                                                         rvUpcomings.setVisibility(View.VISIBLE);
                                                         rvUpcomings.setLayoutManager(futureLayoutManager);
-                                                        todayBookingsAdapter = new TodayBookingsAdapter(futureBookings, getContext(), false, iSelectedBooking);
+                                                        todayBookingsAdapter = new TodayBookingsAdapter(futureBookings, getContext(), false, iSelectedBooking, hideMoreInfo);
                                                         rvUpcomings.setAdapter(todayBookingsAdapter);
                                                     } else {
 
@@ -549,7 +528,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
                 llNoBookingsForToday.setVisibility(View.GONE);
                 rvTodays.setVisibility(View.VISIBLE);
                 rvTodays.setLayoutManager(linearLayoutManager);
-                todayBookingsAdapter = new TodayBookingsAdapter(todayBookings, getContext(), false, iSelectedBooking);
+                todayBookingsAdapter = new TodayBookingsAdapter(todayBookings, getContext(), false, iSelectedBooking, hideMoreInfo);
                 rvTodays.setAdapter(todayBookingsAdapter);
             } else {
                 rvTodays.setVisibility(View.GONE);
@@ -561,7 +540,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
                 llNoBookingsForFuture.setVisibility(View.GONE);
                 rvUpcomings.setVisibility(View.VISIBLE);
                 rvUpcomings.setLayoutManager(futureLayoutManager);
-                todayBookingsAdapter = new TodayBookingsAdapter(futureBookings, getContext(), false, iSelectedBooking);
+                todayBookingsAdapter = new TodayBookingsAdapter(futureBookings, getContext(), false, iSelectedBooking, hideMoreInfo);
                 rvUpcomings.setAdapter(todayBookingsAdapter);
             } else {
 
