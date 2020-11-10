@@ -172,6 +172,9 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
     @BindView(R.id.cv_attachFile)
     CardView cvAttachFile;
 
+    @BindView(R.id.attach_file_size)
+    CustomTextViewMedium tvAttachFileSize;
+
 
     int scheduleId, serviceId, locationId, accountId;
     String slotTime, apiDate;
@@ -619,9 +622,10 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
 
                             tvErrorMessage.setVisibility(View.GONE);
                             imagePathLists = imagePathList;
+                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
                             dialog.dismiss();
                         } else {
-
+                            tvAttachFileSize.setText("Attach File");
                             tvErrorMessage.setVisibility(View.VISIBLE);
                         }
                     }
@@ -630,6 +634,12 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if(imagePathList.size()>0){
+                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
+                        }
+                        else {
+                            tvAttachFileSize.setText("Attach File");
+                        }
                         dialog.dismiss();
                     }
                 });

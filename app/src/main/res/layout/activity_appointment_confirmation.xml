@@ -368,14 +368,51 @@
                                 </LinearLayout>
 
 
+
+
                             </LinearLayout>
 
+                            <LinearLayout
+                                android:id="@+id/ll_batchNo"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/ll_confirmationNo"
+                                android:layout_marginTop="@dimen/dimen_10dp">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/dimen_16dp"
+                                    android:gravity="center"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="Batch :  "
+                                        android:textSize="@dimen/txtsize_14">
+
+                                    </TextView>
+
+                                    <TextView
+                                        android:id="@+id/tv_batchNo"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:singleLine="true"
+                                        android:text=""
+                                        android:textColor="@color/active_text"
+                                        android:textSize="@dimen/txtsize_14">
+
+                                    </TextView>
+                                </LinearLayout>
+                            </LinearLayout>
 
                             <LinearLayout
                                 android:id="@+id/ll_divider"
                                 android:layout_width="match_parent"
                                 android:layout_height="1dp"
-                                android:layout_below="@id/ll_confirmationNo"
+                                android:layout_below="@id/ll_batchNo"
                                 android:layout_marginStart="@dimen/dimen_16dp"
                                 android:layout_marginTop="@dimen/padding5"
                                 android:layout_marginEnd="@dimen/dimen_16dp"

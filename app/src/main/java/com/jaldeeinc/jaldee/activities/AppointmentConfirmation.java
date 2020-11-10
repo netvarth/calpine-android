@@ -24,8 +24,8 @@ import java.util.Date;
 public class AppointmentConfirmation extends AppCompatActivity {
 
     ActiveAppointment activeCheckInInfo = new ActiveAppointment();
-    private TextView tvProviderName, tvServiceName, tvTimeWindow, tvProvider, tvConfirmationNumber, tvStatusLink, tvPreInfoTitle, tvPreInfo, tvPostInfo, tvPostInfoTitle, tvTerm;
-    private LinearLayout llProvider;
+    private TextView tvProviderName, tvServiceName, tvTimeWindow, tvProvider, tvConfirmationNumber, tvStatusLink, tvPreInfoTitle, tvPreInfo, tvPostInfo, tvPostInfoTitle, tvTerm, tvBatchId;
+    private LinearLayout llProvider,llBatchNo;
     CardView cvOk;
     private String terminology;
     ImageView icon_service;
@@ -198,6 +198,17 @@ public class AppointmentConfirmation extends AppCompatActivity {
                 });
             }
 
+            if(activeCheckInInfo.getBatchId()!=null){
+                llBatchNo.setVisibility(View.VISIBLE);
+                tvBatchId.setText(activeCheckInInfo.getBatchId());
+            }
+            else{
+                llBatchNo.setVisibility(View.GONE);
+            }
+
+
+
+
             if (activeCheckInInfo.getService() != null) {
 
                 if (activeCheckInInfo.getService().isPostInfoEnabled()) {
@@ -242,6 +253,8 @@ public class AppointmentConfirmation extends AppCompatActivity {
         tv_consumer = findViewById(R.id.tv_consumervalue);
         tv_location = findViewById(R.id.tv_location);
         tv_heading = findViewById(R.id.tv_heading);
+        tvBatchId = findViewById(R.id.tv_batchNo);
+        llBatchNo = findViewById(R.id.ll_batchNo);
 
     }
 

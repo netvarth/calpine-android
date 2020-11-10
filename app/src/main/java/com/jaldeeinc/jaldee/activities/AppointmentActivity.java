@@ -252,6 +252,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     @BindView(R.id.tv_buttonName)
     CustomTextViewBold tvButtonName;
 
+    @BindView(R.id.attach_file_size)
+    CustomTextViewMedium tvAttachFileSize;
+
     CustomTextViewSemiBold tvErrorMessage;
     String mFirstName, mLastName;
     int consumerID;
@@ -781,7 +784,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             imagePathLists = imagePathList;
                             dialog.dismiss();
                         } else {
-
+                            tvAttachFileSize.setText("Attach File");
                             tvErrorMessage.setVisibility(View.VISIBLE);
                         }
 
@@ -798,6 +801,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         dialog.dismiss();
                     }
                 });
+
+
 
 
                 requestMultiplePermissions();
@@ -891,9 +896,10 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                             tvErrorMessage.setVisibility(View.GONE);
                             imagePathLists = imagePathList;
+                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
                             dialog.dismiss();
                         } else {
-
+                            tvAttachFileSize.setText("Attach File");
                             tvErrorMessage.setVisibility(View.VISIBLE);
                         }
                     }
@@ -902,11 +908,18 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if(imagePathList.size()>0){
+                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
+                        }
+                        else {
+                            tvAttachFileSize.setText("Attach File");
+                        }
                         dialog.dismiss();
                     }
                 });
             }
         });
+
 
     }
 

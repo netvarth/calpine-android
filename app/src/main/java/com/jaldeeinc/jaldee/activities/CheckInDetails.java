@@ -200,6 +200,7 @@ public class CheckInDetails extends AppCompatActivity {
     private TeleServiceCheckIn meetingDetails;
     private MeetingDetailsWindow meetingDetailsWindow;
     private MeetingInfo meetingInfo;
+    private String uuid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -262,7 +263,14 @@ public class CheckInDetails extends AppCompatActivity {
 
                 try {
                     Intent intent = new Intent(CheckInDetails.this, ChatActivity.class);
-                    intent.putExtra("uuid", activeCheckIn.getYnwUuid());
+
+                    if(activeCheckIn.getYnwUuid().contains("h_")){
+                         uuid = activeCheckIn.getYnwUuid().replace("h_","");
+                        intent.putExtra("uuid", uuid);
+                    }
+                    else {
+                        intent.putExtra("uuid", activeCheckIn.getYnwUuid());
+                    }
                     intent.putExtra("accountId", activeCheckIn.getProviderAccount().getId());
                     intent.putExtra("name", activeCheckIn.getProviderAccount().getBusinessName());
                     intent.putExtra("from",Constants.CHECKIN);

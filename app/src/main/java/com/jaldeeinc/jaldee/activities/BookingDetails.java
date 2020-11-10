@@ -194,6 +194,7 @@ public class BookingDetails extends AppCompatActivity {
     private TeleServiceCheckIn meetingDetails;
     private MeetingDetailsWindow meetingDetailsWindow;
     private MeetingInfo meetingInfo;
+    private String uuid;
 
 
     @Override
@@ -258,7 +259,13 @@ public class BookingDetails extends AppCompatActivity {
 
                 try {
                     Intent intent = new Intent(BookingDetails.this, ChatActivity.class);
-                    intent.putExtra("uuid", apptInfo.getUid());
+                    if(apptInfo.getUid().contains("h_")){
+                        uuid = apptInfo.getUid().replace("h_","");
+                        intent.putExtra("uuid", uuid);
+                    }
+                    else {
+                        intent.putExtra("uuid", apptInfo.getUid());
+                    }
                     intent.putExtra("accountId", apptInfo.getProviderAccount().getId());
                     intent.putExtra("name", apptInfo.getProviderAccount().getBusinessName());
                     intent.putExtra("from",Constants.APPOINTMENT);
