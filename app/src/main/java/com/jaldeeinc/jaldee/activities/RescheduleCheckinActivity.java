@@ -199,6 +199,9 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
     @BindView(R.id.tv_peopleAhead)
     CustomTextViewBold tv_peopleAhead;
 
+    @BindView(R.id.attach_file_size)
+    CustomTextViewMedium tvAttachFileSize;
+
 
     int queueId,serviceId,locationId,accountId;
     String apiDate;
@@ -487,9 +490,10 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
                             tvErrorMessage.setVisibility(View.GONE);
                             imagePathLists = imagePathList;
+                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
                             dialog.dismiss();
                         } else {
-
+                            tvAttachFileSize.setText("Attach File");
                             tvErrorMessage.setVisibility(View.VISIBLE);
                         }
                     }
@@ -498,6 +502,12 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if(imagePathList.size()>0){
+                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
+                        }
+                        else {
+                            tvAttachFileSize.setText("Attach File");
+                        }
                         dialog.dismiss();
                     }
                 });

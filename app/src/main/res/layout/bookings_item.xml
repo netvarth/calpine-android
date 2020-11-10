@@ -132,7 +132,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textSize="@dimen/dimen_14sp"
+                android:textSize="11sp"
                 android:layout_alignParentStart="true"
                 android:textColor="@color/location_theme"
                 android:layout_marginStart="@dimen/dimen_10dp"

@@ -243,6 +243,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     @BindView(R.id.tv_term)
     CustomTextViewMedium tvTerm;
 
+    @BindView(R.id.attach_file_size)
+    CustomTextViewMedium tvAttachFileSize;
+
     static CustomTextViewMedium txtprepayamount;
 
     static LinearLayout LservicePrepay;
@@ -888,9 +891,10 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                             tvErrorMessage.setVisibility(View.GONE);
                             imagePathLists = imagePathList;
+                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
                             dialog.dismiss();
                         } else {
-
+                            tvAttachFileSize.setText("Attach File");
                             tvErrorMessage.setVisibility(View.VISIBLE);
                         }
                     }
@@ -899,7 +903,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        if(imagePathList.size()>0){
+                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
+                        }
+                        else {
+                            tvAttachFileSize.setText("Attach File");
+                        }
                         dialog.dismiss();
                     }
                 });

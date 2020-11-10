@@ -16,7 +16,7 @@ public class MeetingInfo extends Dialog {
 
     TextView tvServiceName,tvTime,tvOK,tvPhoneNumber;
     String time = null;
-    String serviceName;
+    String serviceName,callingMode;
     TeleServiceCheckIn teleServiceCheckInResponse;
     Context context;
     String phoneNumber;
@@ -30,6 +30,7 @@ public class MeetingInfo extends Dialog {
         this.serviceName = name;
         this.teleServiceCheckInResponse = teleServiceCheckInResponse;
         this.phoneNumber = waitlistPhoneNumber;
+        this.callingMode = callingMode;
     }
 
     @Override
@@ -48,6 +49,27 @@ public class MeetingInfo extends Dialog {
             String name = serviceName;
             name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
             tvServiceName.setText(name);
+
+            try {
+                if(callingMode!=null) {
+                    if (callingMode.equalsIgnoreCase("Zoom")) {
+                        tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom, 0, 0, 0);
+                        tvServiceName.setCompoundDrawablePadding(15);
+                    } else if (callingMode.equalsIgnoreCase("GoogleMeet")) {
+                        tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet, 0, 0, 0);
+                        tvServiceName.setCompoundDrawablePadding(15);
+                    } else if (callingMode.equalsIgnoreCase("WhatsApp")) {
+                        tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                        tvServiceName.setCompoundDrawablePadding(15);
+                    } else if (callingMode.equalsIgnoreCase("phone")) {
+                        tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneicon_sized, 0, 0, 0);
+                        tvServiceName.setCompoundDrawablePadding(15);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         if (time != null){

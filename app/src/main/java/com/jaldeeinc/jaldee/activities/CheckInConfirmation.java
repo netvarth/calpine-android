@@ -114,7 +114,7 @@ public class CheckInConfirmation extends AppCompatActivity {
                 if (activeCheckInInfo.getToken() != 0) {
 
                     llToken.setVisibility(View.VISIBLE);
-                    tvTokenNumber.setText("#" + String.valueOf(activeCheckInInfo.getToken()));
+                    tvTokenNumber.setText(String.valueOf(activeCheckInInfo.getToken()));
                 }
                 else{
                    llToken.setVisibility(View.GONE);
