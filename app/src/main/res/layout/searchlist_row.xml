@@ -38,7 +38,7 @@
                     android:id="@+id/profile"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/icon_noimage" />
+                    android:src="@drawable/kotak" />
 
                 <ImageView
                     android:id="@+id/iprofile1"

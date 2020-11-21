@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Fragment.DashboardFragment;
+import com.jaldeeinc.jaldee.Fragment.HomeSearchFragment;
 import com.jaldeeinc.jaldee.Fragment.SearchListFragment;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.LocationSearchAdapter;
@@ -323,12 +324,15 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
     public void onMethodCallback(String value, Double lat, Double longtitude, String locName, String typ) {
         Config.logV("UpdateLocation 555----" + lat);
         if (from.equalsIgnoreCase("dashboard")) {
-            if (DashboardFragment.UpdateLocation(lat, longtitude, locName,typ)) {
+            if (HomeSearchFragment.UpdateLocation(lat, longtitude, locName,typ)) {
                 SharedPreference.getInstance(this).setValue("current_loc", "no");
+                Intent resultIntent = new Intent();
+                resultIntent .putExtra("extra",locName);
+                setResult(Activity.RESULT_OK, resultIntent);
                 finish();
             }
         } else {
-            if (DashboardFragment.UpdateLocation(lat, longtitude, locName,typ)) {
+            if (HomeSearchFragment.UpdateLocation(lat, longtitude, locName,typ)) {
                 SharedPreference.getInstance(this).setValue("current_loc", "no");
 
             }

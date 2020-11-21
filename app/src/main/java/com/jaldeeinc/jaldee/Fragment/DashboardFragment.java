@@ -61,6 +61,7 @@ import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.PaymentActivity;
 import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
+import com.jaldeeinc.jaldee.activities.SearchResultsActivity;
 import com.jaldeeinc.jaldee.adapter.ActiveAppointmentAdapter;
 import com.jaldeeinc.jaldee.adapter.ActiveCheckInAdapter;
 import com.jaldeeinc.jaldee.adapter.SearchListAdpter;
@@ -967,8 +968,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 bundle.putString("url", pass);
 
                 if (Config.isOnline(mContext)) {
-                    SearchListFragment pfFragment = new SearchListFragment();
+//                    SearchListFragment pfFragment = new SearchListFragment();
 
+                    Intent intent = new Intent(mContext,SearchResultsActivity.class);
                     bundle.putString("subdomain_select", "true");
                     bundle.putString("locName", mCurrentLoc.getText().toString());
 
@@ -980,14 +982,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     Config.logV("SEARCH TXT 99999" + mSearchtxt);
                     bundle.putString("searchtxt", mSearchtxt);
                     bundle.putString("typ", mtyp);
-                    pfFragment.setArguments(bundle);
-
-
-                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                    transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
-                    // Store the Fragment in stack
-                    transaction.addToBackStack(null);
-                    transaction.replace(R.id.mainlayout, pfFragment).commit();
+                    intent.putExtra("Details",bundle);
+                    startActivity(intent);
+//                    pfFragment.setArguments(bundle);
+//                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+//                    transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
+//                    // Store the Fragment in stack
+//                    transaction.addToBackStack(null);
+//                    transaction.replace(R.id.mainlayout, pfFragment).commit();
                     searchSrcTextView.clearFocus();
                     mSearchView.clearFocus();
                 }
@@ -1497,7 +1499,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         Config.logV("Popular Text__________@@@Del111e");
         mSearchView.setQuery("", false);
         if (Config.isOnline(getActivity())) {
-            SearchListFragment pfFragment = new SearchListFragment();
+//            SearchListFragment pfFragment = new SearchListFragment();
+            Intent intent = new Intent(mContext,SearchResultsActivity.class);
             bundle.putString("locName", mCurrentLoc.getText().toString());
             bundle.putString("latitude", String.valueOf(latitude));
             bundle.putString("longitude", String.valueOf(longitude));
@@ -1509,14 +1512,16 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             Config.logV("Popular Text_______$$$$_______" + mPopularSearchtxt);
             bundle.putString("searchtxt", mPopularSearchtxt);
             bundle.putString("typ", mtyp);
-            pfFragment.setArguments(bundle);
-            Config.logV("APi SUBDOMAIN DASHHHHHHH@@@@@@@@@@@@@@@@@" + subdomainName);
-
-            FragmentTransaction transaction = this.getChildFragmentManager().beginTransaction();
-            transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
-            // Store the Fragment in stack
-            transaction.addToBackStack(null);
-            transaction.replace(R.id.mainlayout, pfFragment).commit();
+            intent.putExtra("Details",bundle);
+            startActivity(intent);
+//            pfFragment.setArguments(bundle);
+//            Config.logV("APi SUBDOMAIN DASHHHHHHH@@@@@@@@@@@@@@@@@" + subdomainName);
+//
+//            FragmentTransaction transaction = this.getChildFragmentManager().beginTransaction();
+//            transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
+//            // Store the Fragment in stack
+//            transaction.addToBackStack(null);
+//            transaction.replace(R.id.mainlayout, pfFragment).commit();
             searchSrcTextView.clearFocus();
             mSearchView.clearFocus();
         }
@@ -1627,7 +1632,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 mCurrentLoc.setVisibility(View.VISIBLE);
                 mCurrentLoc.setText(addresses.get(0).getLocality());
 
-                SearchListFragment.UpdateLocationSearch(String.valueOf(latitude), String.valueOf(longitude), addresses.get(0).getLocality(), mtyp);
+//                SearchListFragment.UpdateLocationSearch(String.valueOf(latitude), String.valueOf(longitude), addresses.get(0).getLocality(), mtyp);
                 //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
             } catch (Exception e) {
 
@@ -1850,7 +1855,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
         bundle.putString("url", pass);
         if (Config.isOnline(mContext)) {
-            SearchListFragment pfFragment = new SearchListFragment();
+//            SearchListFragment pfFragment = new SearchListFragment();
+            Intent intent = new Intent(mContext,SearchResultsActivity.class);
             bundle.putString("locName", mCurrentLoc.getText().toString());
             bundle.putString("latitude", String.valueOf(latitude));
             bundle.putString("longitude", String.valueOf(longitude));
@@ -1862,13 +1868,15 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             } else {
                 bundle.putString("searchtxt", "");
             }
-            pfFragment.setArguments(bundle);
             bundle.putString("subdomain_select", "false");
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
-            // Store the Fragment in stack
-            transaction.addToBackStack(null);
-            transaction.replace(R.id.mainlayout, pfFragment).commit();
+            intent.putExtra("Details",bundle);
+            startActivity(intent);
+//            pfFragment.setArguments(bundle);
+//            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+//            transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
+//            // Store the Fragment in stack
+//            transaction.addToBackStack(null);
+//            transaction.replace(R.id.mainlayout, pfFragment).commit();
             searchSrcTextView.clearFocus();
             mSearchView.clearFocus();
         }
@@ -1901,7 +1909,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
         bundle.putString("url", pass);
         if (Config.isOnline(mContext)) {
-            SearchListFragment pfFragment = new SearchListFragment();
+//            SearchListFragment pfFragment = new SearchListFragment();
+            Intent intent = new Intent(mContext, SearchResultsActivity.class);
             bundle.putString("locName", mCurrentLoc.getText().toString());
             bundle.putString("latitude", String.valueOf(latitude));
             bundle.putString("longitude", String.valueOf(longitude));
@@ -1910,12 +1919,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             bundle.putString("searchtxt", mSearchtxt);
             bundle.putString("typ", mtyp);
             bundle.putString("subdomain_select", "false");
-            pfFragment.setArguments(bundle);
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
+            intent.putExtra("Details",bundle);
+            startActivity(intent);
+//            pfFragment.setArguments(bundle);
+//            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+//            transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
             // Store the Fragment in stack
-            transaction.addToBackStack(null);
-            transaction.replace(R.id.mainlayout, pfFragment).commit();
+//            transaction.addToBackStack(null);
+//            transaction.replace(R.id.mainlayout, pfFragment).commit();
             searchSrcTextView.clearFocus();
             mSearchView.clearFocus();
         }

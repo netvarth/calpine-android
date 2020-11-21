@@ -157,19 +157,23 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
 
                     viewHolder.tvStatus.setVisibility(View.VISIBLE);
                     viewHolder.rlStatus.setVisibility(View.VISIBLE);
-                    viewHolder.tvStatus.setText(convertToTitleForm(bookings.getBookingStatus()));
-                    if (bookings.getBookingStatus().equalsIgnoreCase(Constants.CONFIRMED)) {
-                        viewHolder.tvStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
-                    } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.ARRIVED)) {
-                        viewHolder.tvStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
-                    } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.COMPLETED)) {
-                        viewHolder.tvStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.location_theme));
-                    } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.CANCELLED)) {
-                        viewHolder.tvStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.cb_errorRed));
-                    } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.CHECKEDIN)) {
-                        viewHolder.tvStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
+                    if (bookings.getBookingStatus().equalsIgnoreCase("Done")) {
+                        viewHolder.tvStatus.setText("Completed");
                     } else {
-                        viewHolder.tvStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.orange));
+                        viewHolder.tvStatus.setText(convertToTitleForm(bookings.getBookingStatus()));
+                    }
+                    if (bookings.getBookingStatus().equalsIgnoreCase(Constants.CONFIRMED)) {
+                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
+                    } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.ARRIVED)) {
+                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
+                    } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.COMPLETED)) {
+                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.location_theme));
+                    } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.CANCELLED)) {
+                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.cb_errorRed));
+                    } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.CHECKEDIN)) {
+                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
+                    } else {
+                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.orange));
                     }
                 } else {
                     viewHolder.tvStatus.setVisibility(View.GONE);

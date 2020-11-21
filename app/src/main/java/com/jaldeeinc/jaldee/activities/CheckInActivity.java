@@ -1342,7 +1342,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
     private void ApiCheckin(final String txt_addnote, int id) {
 
-        phoneNumber = etVirtualNumber.getText().toString();
+        String number = etVirtualNumber.getText().toString();
         uuid = UUID.randomUUID().toString();
 
 

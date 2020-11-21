@@ -43,6 +43,7 @@ public class HomeTabFragment extends Fragment {
 
     FavouriteFragment favFragment;
     DashboardFragment homeFragment;
+    HomeSearchFragment homeSearchFragment;
     // CheckinsFragmentCopy checkinFragment;
 
 
@@ -193,6 +194,7 @@ public class HomeTabFragment extends Fragment {
     private void setupViewPager(CustomViewPager viewPager) {
         adapter = new ViewPagerAdapter(getChildFragmentManager());
         homeFragment = new DashboardFragment();
+        homeSearchFragment = new HomeSearchFragment();
 
 
         tab1Fragment = new Tab1Fragment();
@@ -209,7 +211,7 @@ public class HomeTabFragment extends Fragment {
         inboxFragment = new InboxFragment();
         profileFragment = new ProfileFragment();
 
-        adapter.addFragment(homeFragment);
+        adapter.addFragment(homeSearchFragment);
         adapter.addFragment(myJaldeeFragment);
         adapter.addFragment(favFragment);
         adapter.addFragment(inboxFragment);

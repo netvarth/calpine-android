@@ -36,7 +36,8 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.CheckInDetails"></activity>
+        <activity android:name=".activities.SearchResultsActivity"></activity>
+        <activity android:name=".activities.CheckInDetails" />
         <activity android:name=".activities.ChatActivity" />
         <activity android:name=".activities.BookingDetails" />
         <activity android:name=".activities.HistoryActivity" />

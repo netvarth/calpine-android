@@ -96,7 +96,7 @@
     <string name="new_ynw">New on Jaldee?</string>
     <string name="creteaccount">Create Your Account</string>
     <string name="emailtitle">We will send OTP via Email</string>
-    <string name="searchhint">Eg: Dentist, Restaurants, Car Wash...</string>
+    <string name="searchhint">Search for Doctors, Salons...</string>
     <string name="activecheckin">Active Check-in</string>
     <string name="typecity">Type a City or neighborhood...</string>
     <string name="selectservice">Service</string>

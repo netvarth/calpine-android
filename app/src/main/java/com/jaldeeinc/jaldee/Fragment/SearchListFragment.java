@@ -49,6 +49,7 @@ import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
 import com.jaldeeinc.jaldee.adapter.MoreFilterAdapter;
 import com.jaldeeinc.jaldee.adapter.PaginationAdapter;
 import com.jaldeeinc.jaldee.adapter.SearchListAdpter;
+import com.jaldeeinc.jaldee.adapter.SearchResultsAdapter;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -112,6 +113,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     ProgressBar progressBar;
     LinearLayoutManager linearLayoutManager;
     PaginationAdapter pageadapter;
+    SearchResultsAdapter searchResultsAdapter;
     ArrayList<SearchViewDetail> mSpecializationList;
 
     private int PAGE_START = 0;
@@ -366,11 +368,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         Config.logV("Fragment Context--43343---" + searchDetail);
         progressBar = (ProgressBar) row.findViewById(R.id.main_progress);
         mSearchView = (EmptySubmitSearchView) row.findViewById(R.id.search);
-        pageadapter = new PaginationAdapter(getActivity(), mSearchView, getActivity(), searchDetail, this, uniqueID, mQueueList);
+        searchResultsAdapter = new SearchResultsAdapter(getActivity(), getActivity(), this, uniqueID, mQueueList);
         linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         mRecySearchDetail.setLayoutManager(linearLayoutManager);
         mRecySearchDetail.setItemAnimator(new DefaultItemAnimator());
-        mRecySearchDetail.setAdapter(pageadapter);
+        mRecySearchDetail.setAdapter(searchResultsAdapter);
 
 
         mRecySearchDetail.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
@@ -1080,7 +1082,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 mSearchView.setQuery(searchTxt, false);
 
 
-                pageadapter.clear();
+                searchResultsAdapter.clear();
 
 
                 /*pageadapter = new PaginationAdapter(mSearchView,getActivity(), searchDetail,mInterface);
@@ -1372,22 +1374,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         });
     }
 
-
-    /* */
-
-    /**
-     * Performs a Retrofit call to the top rated movies API.
-     * Same API call for Pagination.
-     * As {@link #currentPage} will be incremented automatically
-     * by @{@link PaginationScrollListener} to load next page.
-     *//*
-    private Call<TopRatedMovies> callTopRatedMoviesApi() {
-        return movieService.getTopRatedMovies(
-                getString(R.string.my_api_key),
-                "en_US",
-                currentPage
-        );
-    }*/
     public void ApiSEARCHAWSLoadFirstData(String mQueryPass, String mPass, String sort) {
 
         Config.logV("zeo WWWW" + sort);
@@ -1677,10 +1663,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
     }
 
-
-
-
-
     /**
      * Method to combine Cloud response with Estimated waiting time.
      *
@@ -1721,7 +1703,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 Config.logV("TOTAL PAGES_--------------" + TOTAL_PAGES);
                                 Config.logV("CURRENT PAGE**22222**555***********" + TOTAL_PAGES);
                                 Config.logV("CURRENT PAGE**333*****5555********" + currentPage);
-                                pageadapter.removeLoadingFooter();
+                                searchResultsAdapter.removeLoadingFooter();
                                 isLoading = false;
                                 mSearchListModel.clear();
                                 for (int i = 0; i < mSearchRespPass.size(); i++) {
@@ -1892,11 +1874,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 }
 
                                 List<SearchListModel> results = mSearchListModel;
-                                pageadapter.addAll(results);
+                                searchResultsAdapter.addAll(results);
                                 boolean isLoading = true;
-                                pageadapter.notifyDataSetChanged();
+                                searchResultsAdapter.notifyDataSetChanged();
                                 if (currentPage / 10 != TOTAL_PAGES) {
-                                    pageadapter.addLoadingFooter();
+                                    searchResultsAdapter.addLoadingFooter();
                                 } else {
                                     isLastPage = true;
                                 }
@@ -2072,15 +2054,15 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 final List<SearchListModel> results = mSearchListModel;
 //                                Log.i("FinalResult", new Gson().toJson(results));
                                 progressBar.setVisibility(View.GONE);
-                                pageadapter.addAll(results);
-                                pageadapter.notifyDataSetChanged();
+                                searchResultsAdapter.addAll(results);
+                                searchResultsAdapter.notifyDataSetChanged();
                                 Config.logV("QUEUELIST @@@@@@@@@@@@@@@@@@@@@@ RESUlt" + results.size());
                                 Config.logV("Results@@@@@@@@@@@@@@@@@" + results.size());
                                 Config.logV("CURRENT PAGE**22222*************" + TOTAL_PAGES);
                                 Config.logV("CURRENT PAGE**333*************" + currentPage);
                                 if (TOTAL_PAGES > 0 && total_foundcount > 10) {
                                     Config.logV("First ADD Footer");
-                                    pageadapter.addLoadingFooter();
+                                    searchResultsAdapter.addLoadingFooter();
                                 } else {
                                     isLastPage = true;
                                 }
@@ -2345,7 +2327,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         total_foundcount = 0;
         TOTAL_PAGES = 0;
         currentPage = PAGE_START;
-        pageadapter.clear();
+        searchResultsAdapter.clear();
         Config.logV("Query-----------" + querycreate);
      /*   final String query1 = "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")";
         final String pass1 = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";*/
@@ -2425,7 +2407,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         total_foundcount = 0;
         TOTAL_PAGES = 0;
         currentPage = PAGE_START;
-        pageadapter.clear();
+        searchResultsAdapter.clear();
 
 
         Config.logV("Query-----------" + querycreate);
@@ -2519,13 +2501,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             }
         });
     }
-//
-//    @Override
-//    public void onMethodCoupn(String uniqueID) {
-//
-//      //  ApiJaldeeCoupan(uniqueID);
-//
-//    }
+
 
 
     @Override
@@ -3398,7 +3374,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         total_foundcount = 0;
         TOTAL_PAGES = 0;
         currentPage = PAGE_START;
-        pageadapter.clear();
+        searchResultsAdapter.clear();
         // final String query1 = "(and location1:" + locationRange + ")";
         final String query1;
         if (query.equalsIgnoreCase("")) {
@@ -3431,7 +3407,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         total_foundcount = 0;
         TOTAL_PAGES = 0;
         currentPage = PAGE_START;
-        pageadapter.clear();
+        searchResultsAdapter.clear();
         passformula = pass_formula;
      /*   final String query1 = "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")";
         final String pass1 = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";*/

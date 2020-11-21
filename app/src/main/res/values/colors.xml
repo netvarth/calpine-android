@@ -12,6 +12,7 @@
 
     <color name="input_border">#dddddd</color>
     <color name="app_theme">#e1f5fd</color>
+    <color name="special_background">#f2f6fa</color>
 
     <color name="action_header">#00183A</color>
     <color name="hometopbar">#00183A

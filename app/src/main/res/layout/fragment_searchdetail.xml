@@ -165,8 +165,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="right|center"
                     android:layout_gravity="center"
-                    android:tint="@color/title_grey"
-                    android:src="@drawable/sort" />
+                    android:src="@drawable/sort"
+                    app:tint="@color/title_grey" />
             </LinearLayout>
         </LinearLayout>
 

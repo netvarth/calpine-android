@@ -20,6 +20,8 @@
     </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
 
+
+
     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:id="@+id/hint"
         android:layout_width="wrap_content"
@@ -94,7 +96,7 @@
         android:layout_height="@dimen/dimen_40dp"
         android:text="Join Meeting"
         android:textAllCaps="false"
-        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/padding20"
         android:layout_marginBottom="@dimen/dimen_16dp"
         android:layout_marginEnd="@dimen/dimen_20dp"

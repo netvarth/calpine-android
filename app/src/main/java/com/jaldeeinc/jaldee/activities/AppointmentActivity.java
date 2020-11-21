@@ -1329,7 +1329,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     private void ApiAppointment(final String txt_addnote, int id) {
 
-        phoneNumber = tvNumber.getText().toString();
+        String number = tvNumber.getText().toString();
         uuid = UUID.randomUUID().toString();
 
 
