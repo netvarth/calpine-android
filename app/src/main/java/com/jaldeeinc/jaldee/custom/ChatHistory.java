@@ -52,6 +52,7 @@ public class ChatHistory extends Dialog {
         rvChatMessages = (RecyclerView) findViewById(R.id.rv_chatMessages);
         messageListAdapter = new MessageListAdapter(mContext, userMessagesList);
         rvChatMessages.setLayoutManager(new LinearLayoutManager(mContext));
+        rvChatMessages.getLayoutManager().scrollToPosition(userMessagesList.size() - 1);
         rvChatMessages.setAdapter(messageListAdapter);
 
         ApiInboxList();
@@ -122,6 +123,7 @@ public class ChatHistory extends Dialog {
                                 }
                                 messageListAdapter = new MessageListAdapter(mContext, userMessagesList);
                                 rvChatMessages.setLayoutManager(new LinearLayoutManager(mContext));
+                                rvChatMessages.getLayoutManager().scrollToPosition(userMessagesList.size() - 1);
                                 rvChatMessages.setAdapter(messageListAdapter);
 
                             } else {

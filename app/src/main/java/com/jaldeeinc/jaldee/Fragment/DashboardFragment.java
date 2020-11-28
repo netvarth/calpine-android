@@ -877,7 +877,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 double lowerRightLon = Lanlong.getLowerRightLon();
                 String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
                 String sub = "";
-                String querycreate = "";
+                String   querycreate = "";
                 mSector = cell.getMsector();
                 Config.logV("Sector--------------" + mSector);
 
@@ -1832,11 +1832,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             if (query.equals("")) {
                 querycreate = "sector :'" + mDomainSpinner + "'";
             } else {
-                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' custom_id: " + "'" + query + "' enc_uid: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "') sector :'" + mDomainSpinner + "'";
+               // querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' custom_id: " + "'" + query + "' enc_uid: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "') sector :'" + mDomainSpinner + "'";
+                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "'( prefix field = title " + "'" + query + "') (phrase field = title " + "'" + query + "')services: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "') sector :'" + mDomainSpinner + "'";
             }
         } else {
             if (!query.equals("")) {
-                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' custom_id: " + "'" + query + "' enc_uid: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "')";
+              //  querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' custom_id: " + "'" + query + "' enc_uid: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "')";
+                  querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "'( prefix field = title " + "'" + query + "') (phrase field = title " + "'" + query + "') services: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "')";
             } else {
                 querycreate = "";
             }

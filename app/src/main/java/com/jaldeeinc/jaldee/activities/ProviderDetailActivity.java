@@ -1015,62 +1015,69 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     if (queueList.get(0).isWaitlistEnabled()) {
                         for (SearchService checkInService : checkInServList) {
 
-                            DepServiceInfo serviceInfo = new DepServiceInfo();
-                            serviceInfo.setDepartmentId(0);
-                            serviceInfo.setDepartmentName("");
-                            serviceInfo.setId(checkInService.getId());
-                            serviceInfo.setName(checkInService.getName());
-                            serviceInfo.setType(Constants.CHECKIN);
-                            serviceInfo.setToken(isToken);
-                            serviceInfo.setOnline(onlinePresence);
-                            if (checkInService.getCheckInServiceAvailability() != null) {
-                                serviceInfo.setAvailability(true);
-                                if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
-                                    serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
+                            if(checkInService.getCheckInServiceAvailability() != null) {
+
+                                DepServiceInfo serviceInfo = new DepServiceInfo();
+                                serviceInfo.setDepartmentId(0);
+                                serviceInfo.setDepartmentName("");
+                                serviceInfo.setId(checkInService.getId());
+                                serviceInfo.setName(checkInService.getName());
+                                serviceInfo.setType(Constants.CHECKIN);
+                                serviceInfo.setToken(isToken);
+                                serviceInfo.setOnline(onlinePresence);
+                                if (checkInService.getCheckInServiceAvailability() != null) {
+                                    serviceInfo.setAvailability(true);
+                                    if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
+                                        serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
+                                    }
+                                    serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
+                                    serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
+                                    serviceInfo.setNextAvailableDate(checkInService.getCheckInServiceAvailability().getAvailableDate());
+                                    if (checkInService.getCheckInServiceAvailability().getServiceTime() != null) {
+                                        serviceInfo.setNextAvailableTime(checkInService.getCheckInServiceAvailability().getServiceTime());
+                                    }
                                 }
-                                serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
-                                serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
-                                serviceInfo.setNextAvailableDate(checkInService.getCheckInServiceAvailability().getAvailableDate());
-                                if (checkInService.getCheckInServiceAvailability().getServiceTime() != null) {
-                                    serviceInfo.setNextAvailableTime(checkInService.getCheckInServiceAvailability().getServiceTime());
+                                serviceInfo.setServiceMode(checkInService.getServiceType());
+                                if (checkInService.getVirtualCallingModes() != null) {
+                                    serviceInfo.setCallingMode(checkInService.getVirtualCallingModes().get(0).getCallingMode());
+                                    serviceInfo.setVirtualServiceType(checkInService.getVirtualServiceType());
                                 }
+                                // adding all the info
+                                serviceInfo.setChecinServiceInfo(checkInService);
+                                services.add(serviceInfo);
                             }
-                            serviceInfo.setServiceMode(checkInService.getServiceType());
-                            if (checkInService.getVirtualCallingModes() != null) {
-                                serviceInfo.setCallingMode(checkInService.getVirtualCallingModes().get(0).getCallingMode());
-                            }
-                            // adding all the info
-                            serviceInfo.setChecinServiceInfo(checkInService);
-                            services.add(serviceInfo);
 
                         }
                     }
 
                     if (schedulesList.get(0).isApptEnabled()) {
                         for (SearchAppoinment appt : apptServicesList) {
-                            DepServiceInfo serviceInfo = new DepServiceInfo();
-                            serviceInfo.setDepartmentId(0);
-                            serviceInfo.setDepartmentName("");
-                            serviceInfo.setId(appt.getId());
-                            serviceInfo.setName(appt.getName());
-                            serviceInfo.setType(Constants.APPOINTMENT);
-                            serviceInfo.setEstTime("");
-                            serviceInfo.setPeopleInLine(0);
-                            serviceInfo.setCalculationMode("");
-                            serviceInfo.setOnline(onlinePresence);
-                            serviceInfo.setServiceMode(appt.getServiceType());
-                            if (appt.getVirtualCallingModes() != null) {
-                                serviceInfo.setCallingMode(appt.getVirtualCallingModes().get(0).getCallingMode());
-                            }
-                            if (appt.getAppointServiceAvailability() != null) {
-                                serviceInfo.setAvailability(true);
-                                serviceInfo.setNextAvailableDate(appt.getAppointServiceAvailability().getNextAvailableDate());
-                                serviceInfo.setNextAvailableTime(appt.getAppointServiceAvailability().getNextAvailable().split("-")[0]);
+                            if(appt.getAppointServiceAvailability() != null) {
+                                DepServiceInfo serviceInfo = new DepServiceInfo();
+                                serviceInfo.setDepartmentId(0);
+                                serviceInfo.setDepartmentName("");
+                                serviceInfo.setId(appt.getId());
+                                serviceInfo.setName(appt.getName());
+                                serviceInfo.setType(Constants.APPOINTMENT);
+                                serviceInfo.setEstTime("");
+                                serviceInfo.setPeopleInLine(0);
+                                serviceInfo.setCalculationMode("");
+                                serviceInfo.setOnline(onlinePresence);
+                                serviceInfo.setServiceMode(appt.getServiceType());
+                                if (appt.getVirtualCallingModes() != null) {
+                                    serviceInfo.setCallingMode(appt.getVirtualCallingModes().get(0).getCallingMode());
+                                    serviceInfo.setVirtualServiceType(appt.getVirtualServiceType());
+                                }
+                                if (appt.getAppointServiceAvailability() != null) {
+                                    serviceInfo.setAvailability(true);
+                                    serviceInfo.setNextAvailableDate(appt.getAppointServiceAvailability().getNextAvailableDate());
+                                    serviceInfo.setNextAvailableTime(appt.getAppointServiceAvailability().getNextAvailable().split("-")[0]);
 
+                                }
+                                // adding all the info
+                                serviceInfo.setAppointmentServiceInfo(appt);
+                                services.add(serviceInfo);
                             }
-                            // adding all the info
-                            serviceInfo.setAppointmentServiceInfo(appt);
-                            services.add(serviceInfo);
 
                         }
                     }
@@ -1215,33 +1222,37 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                             if (checkInService.getProvider() == null) {  // adding only Sp level services
 
-                                DepServiceInfo serviceInfo = new DepServiceInfo();
-                                serviceInfo.setDepartmentId(0);
-                                serviceInfo.setDepartmentName("");
-                                serviceInfo.setId(checkInService.getId());
-                                serviceInfo.setName(checkInService.getName());
-                                serviceInfo.setType(Constants.CHECKIN);
-                                serviceInfo.setToken(isToken);
-                                serviceInfo.setOnline(onlinePresence);
-                                if (checkInService.getCheckInServiceAvailability() != null) {
-                                    serviceInfo.setAvailability(true);
-                                    if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
-                                        serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
+                                if(checkInService.getCheckInServiceAvailability() != null) {
+
+                                    DepServiceInfo serviceInfo = new DepServiceInfo();
+                                    serviceInfo.setDepartmentId(0);
+                                    serviceInfo.setDepartmentName("");
+                                    serviceInfo.setId(checkInService.getId());
+                                    serviceInfo.setName(checkInService.getName());
+                                    serviceInfo.setType(Constants.CHECKIN);
+                                    serviceInfo.setToken(isToken);
+                                    serviceInfo.setOnline(onlinePresence);
+                                    if (checkInService.getCheckInServiceAvailability() != null) {
+                                        serviceInfo.setAvailability(true);
+                                        if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
+                                            serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
+                                        }
+                                        serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
+                                        serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
+                                        serviceInfo.setNextAvailableDate(checkInService.getCheckInServiceAvailability().getAvailableDate());
+                                        if (checkInService.getCheckInServiceAvailability().getServiceTime() != null) {
+                                            serviceInfo.setNextAvailableTime(checkInService.getCheckInServiceAvailability().getServiceTime());
+                                        }
                                     }
-                                    serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
-                                    serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
-                                    serviceInfo.setNextAvailableDate(checkInService.getCheckInServiceAvailability().getAvailableDate());
-                                    if (checkInService.getCheckInServiceAvailability().getServiceTime() != null) {
-                                        serviceInfo.setNextAvailableTime(checkInService.getCheckInServiceAvailability().getServiceTime());
+                                    serviceInfo.setServiceMode(checkInService.getServiceType());
+                                    if (checkInService.getVirtualCallingModes() != null) {
+                                        serviceInfo.setCallingMode(checkInService.getVirtualCallingModes().get(0).getCallingMode());
+                                        serviceInfo.setVirtualServiceType(checkInService.getVirtualServiceType());
                                     }
+                                    // adding all the info
+                                    serviceInfo.setChecinServiceInfo(checkInService);
+                                    services.add(serviceInfo);
                                 }
-                                serviceInfo.setServiceMode(checkInService.getServiceType());
-                                if (checkInService.getVirtualCallingModes() != null) {
-                                    serviceInfo.setCallingMode(checkInService.getVirtualCallingModes().get(0).getCallingMode());
-                                }
-                                // adding all the info
-                                serviceInfo.setChecinServiceInfo(checkInService);
-                                services.add(serviceInfo);
 
                             }
 
@@ -1252,30 +1263,33 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         for (SearchAppoinment appt : apptServicesList) {
 
                             if (appt.getProvider() == null) {  // adding only Sp level services
+                                if(appt.getAppointServiceAvailability() != null) {
 
-                                DepServiceInfo serviceInfo = new DepServiceInfo();
-                                serviceInfo.setDepartmentId(0);
-                                serviceInfo.setDepartmentName("");
-                                serviceInfo.setId(appt.getId());
-                                serviceInfo.setName(appt.getName());
-                                serviceInfo.setType(Constants.APPOINTMENT);
-                                serviceInfo.setEstTime("");
-                                serviceInfo.setOnline(onlinePresence);
-                                serviceInfo.setPeopleInLine(0);
-                                serviceInfo.setCalculationMode("");
-                                serviceInfo.setServiceMode(appt.getServiceType());
-                                if (appt.getVirtualCallingModes() != null) {
-                                    serviceInfo.setCallingMode(appt.getVirtualCallingModes().get(0).getCallingMode());
-                                }
-                                if (appt.getAppointServiceAvailability() != null) {
-                                    serviceInfo.setAvailability(true);
-                                    serviceInfo.setNextAvailableDate(appt.getAppointServiceAvailability().getNextAvailableDate());
-                                    serviceInfo.setNextAvailableTime(appt.getAppointServiceAvailability().getNextAvailable().split("-")[0]);
+                                    DepServiceInfo serviceInfo = new DepServiceInfo();
+                                    serviceInfo.setDepartmentId(0);
+                                    serviceInfo.setDepartmentName("");
+                                    serviceInfo.setId(appt.getId());
+                                    serviceInfo.setName(appt.getName());
+                                    serviceInfo.setType(Constants.APPOINTMENT);
+                                    serviceInfo.setEstTime("");
+                                    serviceInfo.setOnline(onlinePresence);
+                                    serviceInfo.setPeopleInLine(0);
+                                    serviceInfo.setCalculationMode("");
+                                    serviceInfo.setServiceMode(appt.getServiceType());
+                                    if (appt.getVirtualCallingModes() != null) {
+                                        serviceInfo.setCallingMode(appt.getVirtualCallingModes().get(0).getCallingMode());
+                                        serviceInfo.setVirtualServiceType(appt.getVirtualServiceType());
+                                    }
+                                    if (appt.getAppointServiceAvailability() != null) {
+                                        serviceInfo.setAvailability(true);
+                                        serviceInfo.setNextAvailableDate(appt.getAppointServiceAvailability().getNextAvailableDate());
+                                        serviceInfo.setNextAvailableTime(appt.getAppointServiceAvailability().getNextAvailable().split("-")[0]);
 
+                                    }
+                                    // adding all the info
+                                    serviceInfo.setAppointmentServiceInfo(appt);
+                                    services.add(serviceInfo);
                                 }
-                                // adding all the info
-                                serviceInfo.setAppointmentServiceInfo(appt);
-                                services.add(serviceInfo);
                             }
 
                         }
@@ -1457,33 +1471,37 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                                     if (checkInService.getProvider() == null) {  // adding only Sp level services
 
-                                        DepServiceInfo serviceInfo = new DepServiceInfo();
-                                        serviceInfo.setDepartmentId(checkInService.getDepartment());
-                                        serviceInfo.setDepartmentName(department.getDepartmentName());
-                                        serviceInfo.setId(checkInService.getId());
-                                        serviceInfo.setName(checkInService.getName());
-                                        serviceInfo.setType(Constants.CHECKIN);
-                                        serviceInfo.setToken(isToken);
-                                        serviceInfo.setOnline(onlinePresence);
-                                        if (checkInService.getCheckInServiceAvailability() != null) {
-                                            serviceInfo.setAvailability(true);
-                                            if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
-                                                serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
+                                        if(checkInService.getCheckInServiceAvailability() != null) {
+
+                                            DepServiceInfo serviceInfo = new DepServiceInfo();
+                                            serviceInfo.setDepartmentId(checkInService.getDepartment());
+                                            serviceInfo.setDepartmentName(department.getDepartmentName());
+                                            serviceInfo.setId(checkInService.getId());
+                                            serviceInfo.setName(checkInService.getName());
+                                            serviceInfo.setType(Constants.CHECKIN);
+                                            serviceInfo.setToken(isToken);
+                                            serviceInfo.setOnline(onlinePresence);
+                                            if (checkInService.getCheckInServiceAvailability() != null) {
+                                                serviceInfo.setAvailability(true);
+                                                if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
+                                                    serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
+                                                }
+                                                serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
+                                                serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
+                                                serviceInfo.setNextAvailableDate(checkInService.getCheckInServiceAvailability().getAvailableDate());
+                                                if (checkInService.getCheckInServiceAvailability().getServiceTime() != null) {
+                                                    serviceInfo.setNextAvailableTime(checkInService.getCheckInServiceAvailability().getServiceTime());
+                                                }
                                             }
-                                            serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
-                                            serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
-                                            serviceInfo.setNextAvailableDate(checkInService.getCheckInServiceAvailability().getAvailableDate());
-                                            if (checkInService.getCheckInServiceAvailability().getServiceTime() != null) {
-                                                serviceInfo.setNextAvailableTime(checkInService.getCheckInServiceAvailability().getServiceTime());
+                                            serviceInfo.setServiceMode(checkInService.getServiceType());
+                                            serviceInfo.setChecinServiceInfo(checkInService);
+                                            if (checkInService.getVirtualCallingModes() != null) {
+                                                serviceInfo.setCallingMode(checkInService.getVirtualCallingModes().get(0).getCallingMode());
+                                                serviceInfo.setVirtualServiceType(checkInService.getVirtualServiceType());
                                             }
+                                            // adding all the info
+                                            services.add(serviceInfo);
                                         }
-                                        serviceInfo.setServiceMode(checkInService.getServiceType());
-                                        serviceInfo.setChecinServiceInfo(checkInService);
-                                        if (checkInService.getVirtualCallingModes() != null) {
-                                            serviceInfo.setCallingMode(checkInService.getVirtualCallingModes().get(0).getCallingMode());
-                                        }
-                                        // adding all the info
-                                        services.add(serviceInfo);
                                     }
                                 }
                             }
@@ -1498,29 +1516,33 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                                     if (appt.getProvider() == null) {  // adding only Sp level services
 
-                                        DepServiceInfo serviceInfo = new DepServiceInfo();
-                                        serviceInfo.setDepartmentId(appt.getDepartment());
-                                        serviceInfo.setDepartmentName(department.getDepartmentName());
-                                        serviceInfo.setId(appt.getId());
-                                        serviceInfo.setName(appt.getName());
-                                        serviceInfo.setType(Constants.APPOINTMENT);
-                                        serviceInfo.setOnline(onlinePresence);
-                                        serviceInfo.setEstTime("");
-                                        serviceInfo.setPeopleInLine(0);
-                                        serviceInfo.setCalculationMode("");
-                                        serviceInfo.setServiceMode(appt.getServiceType());
-                                        if (appt.getVirtualCallingModes() != null) {
-                                            serviceInfo.setCallingMode(appt.getVirtualCallingModes().get(0).getCallingMode());
-                                        }
-                                        if (appt.getAppointServiceAvailability() != null) {
-                                            serviceInfo.setAvailability(true);
-                                            serviceInfo.setNextAvailableDate(appt.getAppointServiceAvailability().getNextAvailableDate());
-                                            serviceInfo.setNextAvailableTime(appt.getAppointServiceAvailability().getNextAvailable().split("-")[0]);
+                                        if(appt.getAppointServiceAvailability() != null) {
 
+                                            DepServiceInfo serviceInfo = new DepServiceInfo();
+                                            serviceInfo.setDepartmentId(appt.getDepartment());
+                                            serviceInfo.setDepartmentName(department.getDepartmentName());
+                                            serviceInfo.setId(appt.getId());
+                                            serviceInfo.setName(appt.getName());
+                                            serviceInfo.setType(Constants.APPOINTMENT);
+                                            serviceInfo.setOnline(onlinePresence);
+                                            serviceInfo.setEstTime("");
+                                            serviceInfo.setPeopleInLine(0);
+                                            serviceInfo.setCalculationMode("");
+                                            serviceInfo.setServiceMode(appt.getServiceType());
+                                            if (appt.getVirtualCallingModes() != null) {
+                                                serviceInfo.setCallingMode(appt.getVirtualCallingModes().get(0).getCallingMode());
+                                                serviceInfo.setVirtualServiceType(appt.getVirtualServiceType());
+                                            }
+                                            if (appt.getAppointServiceAvailability() != null) {
+                                                serviceInfo.setAvailability(true);
+                                                serviceInfo.setNextAvailableDate(appt.getAppointServiceAvailability().getNextAvailableDate());
+                                                serviceInfo.setNextAvailableTime(appt.getAppointServiceAvailability().getNextAvailable().split("-")[0]);
+
+                                            }
+                                            // adding all the info
+                                            serviceInfo.setAppointmentServiceInfo(appt);
+                                            services.add(serviceInfo);
                                         }
-                                        // adding all the info
-                                        serviceInfo.setAppointmentServiceInfo(appt);
-                                        services.add(serviceInfo);
                                     }
                                 }
                             }
@@ -1838,7 +1860,13 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                                     if (terminology != null) {
                                         String firstWord = "You have ";
-                                        String secondWord = mSearchmCheckMessageList.get(i).getmAllSearch_checkIn().size() + " " + terminology;
+                                        String secondWord = "";
+                                        if(mSearchmCheckMessageList.get(i).getmAllSearch_checkIn().size()>1) {
+                                            secondWord = mSearchmCheckMessageList.get(i).getmAllSearch_checkIn().size() + " " + "Bookings";
+                                        }
+                                        else{
+                                               secondWord = mSearchmCheckMessageList.get(i).getmAllSearch_checkIn().size() + " " + "Booking";
+                                            }
                                         String thirdword = " at this location";
                                         Spannable spannable = new SpannableString(firstWord + secondWord + thirdword);
                                         Typeface tyface_edittext2 = Typeface.createFromAsset(mContext.getAssets(),
@@ -1858,12 +1886,15 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                     dialog.show();
                                     TextView tv_title = (TextView) dialog.findViewById(R.id.tv_title);
                                     TextView tv_token = (TextView) dialog.findViewById(R.id.tv_token);
-                                    if (mSearchSettings.getCalculationMode().equalsIgnoreCase("NoCalc") && mSearchSettings.isShowTokenId()) {
+                                    String firstWord = "";
+                                    if (mSearchSettings.isShowTokenId()) {
+                                         firstWord = "Your " + "Token" + " at ";
                                         tv_token.setVisibility(View.VISIBLE);
                                     } else {
+                                         firstWord = "Your " + terminology + " at ";
                                         tv_token.setVisibility(View.GONE);
                                     }
-                                    String firstWord = "Your " + terminology + " at ";
+
                                     String secondWord = loc;
                                     location = loc;
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -2022,6 +2053,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             if (appointmentServiceInfo.getVirtualCallingModes() != null) {
                 serviceInfo.setCallingMode(appointmentServiceInfo.getVirtualCallingModes().get(0).getCallingMode());
                 serviceInfo.setVirtualCallingValue(appointmentServiceInfo.getVirtualCallingModes().get(0).getValue());
+                serviceInfo.setVirtualServiceType(appointmentServiceInfo.getVirtualServiceType());
             }
             if (appointmentServiceInfo.getAppointServiceAvailability() != null) {
                 serviceInfo.setScheduleId(appointmentServiceInfo.getAppointServiceAvailability().getId());

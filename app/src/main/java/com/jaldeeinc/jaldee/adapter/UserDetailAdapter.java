@@ -388,7 +388,12 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                                 holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                                 holder.txtservice1.setCompoundDrawablePadding(10);
                                             } else if (servicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                                holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                                if (servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType() != null && servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                                    holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                                } else {
+                                                    holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                                }
+
                                                 holder.txtservice1.setCompoundDrawablePadding(10);
                                             } else if (servicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                                 holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -431,7 +436,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                                     holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                                     holder.txtservice1.setCompoundDrawablePadding(10);
                                                 } else if (servicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                                    holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                                    if (servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType() != null && servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                                        holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                                    } else {
+                                                        holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                                    }
                                                     holder.txtservice1.setCompoundDrawablePadding(10);
                                                 } else if (servicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                                     holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -453,7 +462,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                                     holder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                                     holder.txtservice2.setCompoundDrawablePadding(10);
                                                 } else if (servicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                                    holder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                                    if (servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType() != null && servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                                        holder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                                    } else {
+                                                        holder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                                    }
                                                     holder.txtservice2.setCompoundDrawablePadding(10);
                                                 } else if (servicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                                     holder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -504,7 +517,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                                     holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                                     holder.txtservice1.setCompoundDrawablePadding(10);
                                                 } else if (servicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                                    holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                                    if (servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType() != null && servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                                        holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                                    } else {
+                                                        holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                                    }
                                                     holder.txtservice1.setCompoundDrawablePadding(10);
                                                 } else if (servicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                                     holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -526,7 +543,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                                     holder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                                     holder.txtservice2.setCompoundDrawablePadding(10);
                                                 } else if (servicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                                    holder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                                    if (servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType() != null && servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                                        holder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                                    } else {
+                                                        holder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                                    }
                                                     holder.txtservice2.setCompoundDrawablePadding(10);
                                                 } else if (servicesList.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                                     holder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -587,7 +608,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                                         holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                                         holder.txtservice1.setCompoundDrawablePadding(10);
                                                     } else if (servicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                                        holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                                        if (servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType() != null && servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                                            holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                                        } else {
+                                                            holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                                        }
                                                         holder.txtservice1.setCompoundDrawablePadding(10);
                                                     } else if (servicesList.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                                         holder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -1162,7 +1187,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                             holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                             holder.tvAppService1.setCompoundDrawablePadding(10);
                         } else if (appointServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                            holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                            if (servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType() != null && servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                            } else {
+                                holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                            }
                             holder.tvAppService1.setCompoundDrawablePadding(10);
                         } else if (appointServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                             holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -1205,7 +1234,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                 holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                 holder.tvAppService1.setCompoundDrawablePadding(10);
                             } else if (appointServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                if (servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType() != null && servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                    holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                } else {
+                                    holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                }
                                 holder.tvAppService1.setCompoundDrawablePadding(10);
                             } else if (appointServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -1227,7 +1260,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                 holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                 holder.tvAppService2.setCompoundDrawablePadding(10);
                             } else if (appointServices.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                if (servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType() != null && servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                    holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                } else {
+                                    holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                }
                                 holder.tvAppService2.setCompoundDrawablePadding(10);
                             } else if (appointServices.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -1279,7 +1316,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                 holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                 holder.tvAppService1.setCompoundDrawablePadding(10);
                             } else if (appointServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                if (servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType() != null && servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                    holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                } else {
+                                    holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                }
                                 holder.tvAppService1.setCompoundDrawablePadding(10);
                             } else if (appointServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -1301,7 +1342,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                 holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                 holder.tvAppService2.setCompoundDrawablePadding(10);
                             } else if (appointServices.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                if (servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType() != null && servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                    holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                } else {
+                                    holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                }
                                 holder.tvAppService2.setCompoundDrawablePadding(10);
                             } else if (appointServices.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -1362,7 +1407,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                     holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                     holder.tvAppService1.setCompoundDrawablePadding(10);
                                 } else if (appointServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                    holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    if (servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType() != null && servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                        holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                    } else {
+                                        holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    }
                                     holder.tvAppService1.setCompoundDrawablePadding(10);
                                 } else if (appointServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                     holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -1465,7 +1514,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                             holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                             holder.tvAppService1.setCompoundDrawablePadding(10);
                         } else if (apptServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                            holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                            if (servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType() != null && servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                            } else {
+                                holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                            }
                             holder.tvAppService1.setCompoundDrawablePadding(10);
                         } else if (apptServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                             holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -1508,7 +1561,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                 holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                 holder.tvAppService1.setCompoundDrawablePadding(10);
                             } else if (apptServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                if (servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType() != null && servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                    holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                } else {
+                                    holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                }
                                 holder.tvAppService1.setCompoundDrawablePadding(10);
                             } else if (apptServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -1530,7 +1587,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                 holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                 holder.tvAppService2.setCompoundDrawablePadding(10);
                             } else if (apptServices.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                if (servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType() != null && servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                    holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                } else {
+                                    holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                }
                                 holder.tvAppService2.setCompoundDrawablePadding(10);
                             } else if (apptServices.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -1583,7 +1644,12 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                 holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                 holder.tvAppService1.setCompoundDrawablePadding(10);
                             } else if (apptServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                if(appServices.get(0).getVirtualCallingModes().get(0).getVirtualServiceType()!=null && appServices.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")){
+                                    holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                }
+                                else {
+                                    holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                }
                                 holder.tvAppService1.setCompoundDrawablePadding(10);
                             } else if (apptServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -1605,7 +1671,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                 holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                 holder.tvAppService2.setCompoundDrawablePadding(10);
                             } else if (apptServices.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                if (servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType() != null && servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                    holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                } else {
+                                    holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                }
                                 holder.tvAppService2.setCompoundDrawablePadding(10);
                             } else if (apptServices.get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 holder.tvAppService2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -1672,7 +1742,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                     holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                     holder.tvAppService1.setCompoundDrawablePadding(10);
                                 } else if (apptServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                    holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    if (servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType() != null && servicesList.get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                        holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                    } else {
+                                        holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    }
                                     holder.tvAppService1.setCompoundDrawablePadding(10);
                                 } else if (apptServices.get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                     holder.tvAppService1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);

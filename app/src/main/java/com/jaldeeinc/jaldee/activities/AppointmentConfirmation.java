@@ -2,229 +2,428 @@ package com.jaldeeinc.jaldee.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-
+import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.custom.Contents;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
+import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.custom.InstructionsDialog;
+import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
-import com.jaldeeinc.jaldee.response.ActiveCheckIn;
-
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import static com.jaldeeinc.jaldee.activities.BookingDetails.convertAmountToDecimals;
+import static com.jaldeeinc.jaldee.activities.BookingDetails.convertTime;
+import static com.jaldeeinc.jaldee.activities.BookingDetails.convertToTitleForm;
+import static com.jaldeeinc.jaldee.activities.BookingDetails.getCustomDateString;
+import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 public class AppointmentConfirmation extends AppCompatActivity {
 
     ActiveAppointment activeCheckInInfo = new ActiveAppointment();
-    private TextView tvProviderName, tvServiceName, tvTimeWindow, tvProvider, tvConfirmationNumber, tvStatusLink, tvPreInfoTitle, tvPreInfo, tvPostInfo, tvPostInfoTitle, tvTerm, tvBatchId;
-    private LinearLayout llProvider,llBatchNo;
-    CardView cvOk;
+    private LinearLayout llBatchNo;
+    Button btnOk,btnOk1;
     private String terminology;
-    ImageView icon_service;
-    private TextView tv_consumer,tv_location;
+    ImageView icon_service,ivQR;
     private String from;
-    private TextView tv_heading;
+    CustomTextViewSemiBold tvViewMore,tvViewLess;
+    CustomTextViewMedium tvProviderName,tvServiceName,tv_location;
+    CustomTextViewBold tvProvider,tvConfirmationNumber,tv_consumer,tvStatus,tvDate,tvTime,tvBatchNo,tvAmount,tv_heading;
+    Context mContext;
+    LinearLayout llPayment;
+    CardView cvBack,cvShare;
+    NeomorphFrameLayout llMoreDetails;
+    LinearLayout llMessage, llInstructions, llViewMore, llViewLess;
+    private String uuid;
+    private InstructionsDialog instructionsDialog;
+    private String phoneNumber, providerId, livetrack;
 
-    @Override
-    public void onBackPressed() {
-        Intent home = new Intent(AppointmentConfirmation.this, Home.class);
-        startActivity(home);
-        finish();
-        super.onBackPressed();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_appointment_confirmation);
+        setContentView(R.layout.appointment_confirmation);
+        mContext = this;
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-
             activeCheckInInfo = (ActiveAppointment) extras.getSerializable("BookingDetails");
             terminology = extras.getString("terminology");
             from = extras.getString("from");
-
+            phoneNumber = extras.getString("waitlistPhonenumber");
+            livetrack = extras.getString("livetrack");
+            providerId = extras.getString("accountID");
         }
 
         initializations();
 
         if(from!=null && activeCheckInInfo!=null){
             if(from.equalsIgnoreCase("Reschedule")){
-                tv_heading.setText("Appointment Rescheduled");
+                tv_heading.setText("Appointment Rescheduled!");
             }
             else{
-                tv_heading.setText("Booking Confirmed");
+                tv_heading.setText("Booking Confirmed!");
             }
         }
 
+        cvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent home = new Intent(AppointmentConfirmation.this, Home.class);
+                startActivity(home);
+                finish();
+            }
+        });
 
         if (activeCheckInInfo != null) {
 
-            if (activeCheckInInfo.getProviderAccount() != null) {
-
-                String name = activeCheckInInfo.getProviderAccount().getBusinessName();
-               // name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-                tvProviderName.setText(Config.toTitleCase(name));
-            }
-
-            if (terminology != null) {
-
-                String term = terminology;
-                term = term.substring(0, 1).toUpperCase() + term.substring(1).toLowerCase();
-                tvTerm.setText(term);
-            }
-
-            if(activeCheckInInfo.getLocation()!=null){
-                tv_location.setText(activeCheckInInfo.getLocation().getPlace());
-            }
-
-            if(activeCheckInInfo.getAppmtFor()!=null){
-                tv_consumer.setText(activeCheckInInfo.getAppmtFor().get(0).getFirstName() + " " + activeCheckInInfo.getAppmtFor().get(0).getLastName());
-            }
-
-            if (activeCheckInInfo.getService() != null) {
-                if (activeCheckInInfo.getService().getName() != null) {
-
-                    String name2 = activeCheckInInfo.getService().getName();
-                    name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
-                    tvServiceName.setText(name2);
-
-                    try{
-                        if(activeCheckInInfo.getService().getServiceType().equalsIgnoreCase("virtualService")){
-                            icon_service.setVisibility(View.VISIBLE);
-                            icon_service.setY(15);
-
-                            if(activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")){
-                                icon_service.setImageResource(R.drawable.zoomicon_sized);
-                            }
-                            else if(activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")){
-                                icon_service.setImageResource(R.drawable.googlemeet_sized);
-                            }
-                            else if(activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
-                                icon_service.setImageResource(R.drawable.whatsappicon_sized);
-
-                            }
-                            else if(activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){
-                                icon_service.setImageResource(R.drawable.phoneiconsized_small);
-                            }
-
-                        }
-                        else{
-                            icon_service.setVisibility(View.GONE);
-                        }
-                    }
-                    catch(Exception e){
-                        e.printStackTrace();
-                    }
-                }
-
-            }
-
-            if (activeCheckInInfo.getAppmtTime() != null) {
-
-                // to format time
-                String formattedTime = "";
-                String time = activeCheckInInfo.getAppmtTime().split("-")[0];
-                try {
-                    final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                    final Date dateObj = sdf.parse(time);
-                    time = new SimpleDateFormat("hh:mm aa").format(dateObj);
-                    formattedTime = time.replace("am", "AM").replace("pm", "PM");
-
-                } catch (final ParseException e) {
-                    e.printStackTrace();
-                }
-
-                // to format date
-                String date;
-                SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd");
-                Date newDate = null;
-                try {
-                    newDate = spf.parse(activeCheckInInfo.getAppmtDate());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                spf = new SimpleDateFormat("dd, MMM yyyy");
-                date = spf.format(newDate);
-                tvTimeWindow.setText(date + "  " + formattedTime);
-            }
-
-
             if (activeCheckInInfo.getProvider() != null) {
 
-                if (terminology != null) {
-
-                    String term = terminology;
-                    term = term.substring(0, 1).toUpperCase() + term.substring(1).toLowerCase();
-                    tvTerm.setText(term+"  :  ");
-                }
-
-                if (activeCheckInInfo.getProvider().getFirstName() != null) {
-
-                    llProvider.setVisibility(View.VISIBLE);
-                    tvProvider.setText(Config.toTitleCase(activeCheckInInfo.getProvider().getFirstName() + " " + activeCheckInInfo.getProvider().getLastName()));
+                if (activeCheckInInfo.getProvider().getBusinessName() != null && !activeCheckInInfo.getProvider().getBusinessName().equalsIgnoreCase("")) {
+                    tvProvider.setText(convertToTitleForm(activeCheckInInfo.getProvider().getBusinessName()));
                 } else {
-                    llProvider.setVisibility(View.GONE);
+                    String name = activeCheckInInfo.getProvider().getFirstName() + " " + activeCheckInInfo.getProvider().getLastName();
+                    tvProvider.setText(convertToTitleForm(name));
                 }
-
-            } else {
-
-                llProvider.setVisibility(View.GONE);
-            }
-
-            if (activeCheckInInfo.getAppointmentEncId() != null) {
-
-                tvConfirmationNumber.setText(activeCheckInInfo.getAppointmentEncId());
-                String statusUrl = Constants.URL +"status/"+activeCheckInInfo.getAppointmentEncId();
-                tvStatusLink.setText(statusUrl);
-
-                tvStatusLink.setOnClickListener(new View.OnClickListener() {
+                tvProviderName.setVisibility(View.VISIBLE);
+                tvProviderName.setText(convertToTitleForm(activeCheckInInfo.getProviderAccount().getBusinessName()));
+                tvProviderName.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
 
-                        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                                Uri.parse(statusUrl));
-                        startActivity(intent);
+                        try {
+                            Intent intent = new Intent(AppointmentConfirmation.this, ProviderDetailActivity.class);
+                            intent.putExtra("uniqueID", activeCheckInInfo.getProviderAccount().getUniqueId());
+                            intent.putExtra("locationId", activeCheckInInfo.getLocation().getId());
+                            startActivity(intent);
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            } else {
+                tvProviderName.setVisibility(View.INVISIBLE);
+                tvProvider.setText(convertToTitleForm(activeCheckInInfo.getProviderAccount().getBusinessName()));
+
+                tvProvider.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        try {
+                            Intent intent = new Intent(AppointmentConfirmation.this, ProviderDetailActivity.class);
+                            intent.putExtra("uniqueID", activeCheckInInfo.getProviderAccount().getUniqueId());
+                            intent.putExtra("locationId", activeCheckInInfo.getLocation().getId());
+                            startActivity(intent);
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
             }
 
-            if(activeCheckInInfo.getBatchId()!=null){
-                llBatchNo.setVisibility(View.VISIBLE);
-                tvBatchId.setText(activeCheckInInfo.getBatchId());
-            }
-            else{
-                llBatchNo.setVisibility(View.GONE);
-            }
 
-
-
-
-            if (activeCheckInInfo.getService() != null) {
-
-                if (activeCheckInInfo.getService().isPostInfoEnabled()) {
-
-                    tvPostInfoTitle.setText(activeCheckInInfo.getService().getPostInfoTitle());
-                    tvPostInfo.setText(Html.fromHtml(activeCheckInInfo.getService().getPostInfoText()));
+            // to set location
+            if (activeCheckInInfo.getLocation() != null) {
+                if (activeCheckInInfo.getLocation().getPlace() != null) {
+                    tv_location.setText(activeCheckInInfo.getLocation().getPlace());
+                    tv_location.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            openMapView(activeCheckInInfo.getLocation().getLattitude(), activeCheckInInfo.getLocation().getLongitude(), activeCheckInInfo.getLocation().getPlace());
+                        }
+                    });
                 }
             }
 
-            cvOk.setOnClickListener(new View.OnClickListener() {
+            // to set consumer name
+            if (activeCheckInInfo.getAppmtFor() != null) {
+                if (activeCheckInInfo.getAppmtFor().get(0).getUserName() != null) {
+                    tv_consumer.setText(activeCheckInInfo.getAppmtFor().get(0).getUserName());
+                } else {
+                    tv_consumer.setText(activeCheckInInfo.getAppmtFor().get(0).getFirstName() + " " + activeCheckInInfo.getAppmtFor().get(0).getLastName());
+                }
+            }
+
+            if (activeCheckInInfo.getService() != null) {
+                tvServiceName.setText(convertToTitleForm(activeCheckInInfo.getService().getName()));
+
+                if (activeCheckInInfo.getService().getServiceType() != null && activeCheckInInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
+
+                    if (activeCheckInInfo.getService().getVirtualCallingModes() != null) {
+                        icon_service.setVisibility(View.VISIBLE);
+                        if (activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                            icon_service.setImageResource(R.drawable.zoom_meet);
+                        } else if (activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                            icon_service.setImageResource(R.drawable.google_meet);
+                        } else if (activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                            if (activeCheckInInfo.getService().getVirtualServiceType() != null && activeCheckInInfo.getService().getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                icon_service.setImageResource(R.drawable.whatsapp_videoicon);
+                            } else {
+                                icon_service.setImageResource(R.drawable.whatsapp_icon);
+                            }
+                        } else if (activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                            icon_service.setImageResource(R.drawable.phone_icon);
+                        }
+                    } else {
+                        icon_service.setVisibility(View.GONE);
+                    }
+                }
+
+            }
+
+            if (activeCheckInInfo.getAppointmentEncId() != null) {
+                tvConfirmationNumber.setText(activeCheckInInfo.getAppointmentEncId());
+            }
+
+            // to set appointment date
+            if (activeCheckInInfo.getAppmtDate() != null) {
+                try {
+                    tvDate.setText(getCustomDateString(activeCheckInInfo.getAppmtDate()));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // to set slot time
+            if (activeCheckInInfo.getAppmtTime() != null) {
+                tvTime.setText(convertTime(activeCheckInInfo.getAppmtTime().split("-")[0]));
+            }
+
+            if (activeCheckInInfo.getBatchId() != null) {
+                llBatchNo.setVisibility(View.VISIBLE);
+                tvBatchNo.setText(activeCheckInInfo.getBatchId());
+            } else {
+                llBatchNo.setVisibility(View.GONE);
+            }
+
+            // to set status
+            if (activeCheckInInfo.getApptStatus() != null) {
+                tvStatus.setVisibility(View.VISIBLE);
+                if (activeCheckInInfo.getApptStatus().equalsIgnoreCase("Cancelled")) {
+                    tvStatus.setTextColor(mContext.getResources().getColor(R.color.red));
+
+                }
+                else {
+                    tvStatus.setTextColor(mContext.getResources().getColor(R.color.location_theme));
+                }
+                tvStatus.setText(convertToTitleForm(activeCheckInInfo.getApptStatus()));
+            } else {
+                tvStatus.setVisibility(View.GONE);
+            }
+
+
+            // to set paid info
+            if (activeCheckInInfo.getAmountPaid() != null && !activeCheckInInfo.getAmountPaid().equalsIgnoreCase("0.0")) {
+                llPayment.setVisibility(View.VISIBLE);
+                tvAmount.setText("₹" + " " + convertAmountToDecimals(activeCheckInInfo.getAmountPaid()) + " " + "PAID");
+            } else {
+
+                llPayment.setVisibility(View.GONE);
+            }
+
+
+            cvShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if (activeCheckInInfo != null && activeCheckInInfo.getAppointmentEncId() != null) {
+                        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                        sharingIntent.setType("text/html");
+                        String statusUrl = Constants.URL + "status/" + activeCheckInInfo.getAppointmentEncId();
+                        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share your Appointment status link");
+                        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, statusUrl);
+                        startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                    }
+
+                }
+            });
+
+
+            if (activeCheckInInfo.getAppointmentEncId() != null) {
+                //Encode with a QR Code image
+                String statusUrl = Constants.URL + "status/" + activeCheckInInfo.getAppointmentEncId();
+                QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(statusUrl,
+                        null,
+                        Contents.Type.TEXT,
+                        BarcodeFormat.QR_CODE.toString(), 175);
+                try {
+                    Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
+                    ivQR.setImageBitmap(bitmap);
+
+                    ivQR.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            Dialog settingsDialog = new Dialog(AppointmentConfirmation.this);
+                            settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+                            settingsDialog.getWindow().getAttributes().windowAnimations = R.style.zoomInAndOut;
+                            settingsDialog.setContentView(getLayoutInflater().inflate(R.layout.image_layout
+                                    , null));
+                            ImageView imageView = settingsDialog.findViewById(R.id.iv_close);
+                            ImageView ivQR = settingsDialog.findViewById(R.id.iv_Qr);
+                            imageView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                    settingsDialog.dismiss();
+                                }
+                            });
+
+                            ivQR.setImageBitmap(bitmap);
+                            settingsDialog.show();
+                        }
+                    });
+
+
+                } catch (WriterException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            tvViewMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    llViewMore.setVisibility(View.GONE);
+                    llMoreDetails.setVisibility(View.VISIBLE);
+                    llViewLess.setVisibility(View.VISIBLE);
+                }
+            });
+
+            tvViewLess.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    llViewLess.setVisibility(View.GONE);
+                    llMoreDetails.setVisibility(View.GONE);
+                    llViewMore.setVisibility(View.VISIBLE);
+                }
+            });
+
+
+            // hide instructions link when there are no post instructions
+            if (activeCheckInInfo.getService() != null && activeCheckInInfo.getService().isPostInfoEnabled()) {
+                llInstructions.setVisibility(View.VISIBLE);
+                }
+             else {
+                 llInstructions.setVisibility(View.GONE);
+            }
+
+            llInstructions.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    try {
+
+                        if (activeCheckInInfo != null && activeCheckInInfo.getService() != null) {
+                            instructionsDialog = new InstructionsDialog(mContext, activeCheckInInfo.getService().getPostInfoText(), activeCheckInInfo.getService().getPostInfoTitle());
+                            instructionsDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+                            instructionsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            instructionsDialog.show();
+                            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            instructionsDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
+            llMessage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    try {
+                        Intent intent = new Intent(AppointmentConfirmation.this, ChatActivity.class);
+                        if(activeCheckInInfo.getUid().contains("h_")){
+                            uuid = activeCheckInInfo.getUid().replace("h_","");
+                            intent.putExtra("uuid", uuid);
+                        }
+                        else {
+                            intent.putExtra("uuid", activeCheckInInfo.getUid());
+                        }
+                        intent.putExtra("accountId", activeCheckInInfo.getProviderAccount().getId());
+                        intent.putExtra("name", activeCheckInInfo.getProviderAccount().getBusinessName());
+                        intent.putExtra("from",Constants.APPOINTMENT);
+                        startActivity(intent);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            });
+
+
+            btnOk.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                  if(livetrack!=null && livetrack.equalsIgnoreCase("true")) {
+                      Intent checkinShareLocations = new Intent(AppointmentConfirmation.this, CheckinShareLocationAppointment.class);
+                      checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
+                      checkinShareLocations.putExtra("uuid", activeCheckInInfo.getUid());
+                      checkinShareLocations.putExtra("accountID", providerId);
+                      checkinShareLocations.putExtra("title", activeCheckInInfo.getProviderAccount().getBusinessName());
+                      checkinShareLocations.putExtra("terminology", terminology);
+                      checkinShareLocations.putExtra("calcMode", "");
+                      checkinShareLocations.putExtra("queueStartTime", "");
+                      checkinShareLocations.putExtra("queueEndTime", "");
+                      checkinShareLocations.putExtra("from", "appt");
+                      startActivity(checkinShareLocations);
+
+
+                  }
+                  else {
+                      Intent home = new Intent(AppointmentConfirmation.this, Home.class);
+                      startActivity(home);
+                      finish();
+                  }
+
+                }
+            });
+
+
+
+
+            btnOk1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    Intent home = new Intent(AppointmentConfirmation.this, Home.class);
-                    startActivity(home);
-                    finish();
+                    if(livetrack.equalsIgnoreCase("true")) {
+                        Intent checkinShareLocations = new Intent(AppointmentConfirmation.this, CheckinShareLocationAppointment.class);
+                        checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
+                        checkinShareLocations.putExtra("uuid", activeCheckInInfo.getUid());
+                        checkinShareLocations.putExtra("accountID", providerId);
+                        checkinShareLocations.putExtra("title", activeCheckInInfo.getProviderAccount().getBusinessName());
+                        checkinShareLocations.putExtra("terminology", terminology);
+                        checkinShareLocations.putExtra("calcMode", "");
+                        checkinShareLocations.putExtra("queueStartTime", "");
+                        checkinShareLocations.putExtra("queueEndTime", "");
+                        checkinShareLocations.putExtra("from", "appt");
+                        startActivity(checkinShareLocations);
+
+
+                    }
+                    else {
+                        Intent home = new Intent(AppointmentConfirmation.this, Home.class);
+                        startActivity(home);
+                        finish();
+                    }
 
                 }
             });
@@ -233,28 +432,44 @@ public class AppointmentConfirmation extends AppCompatActivity {
         }
 
     }
+    private void openMapView(String latitude, String longitude, String locationName) {
+        Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude + "?q=" + locationName);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(mapIntent);
+        }
+    }
 
     private void initializations() {
 
         tvProviderName = findViewById(R.id.tv_providerName);
         tvServiceName = findViewById(R.id.tv_serviceName);
-        tvTimeWindow = findViewById(R.id.tv_timeWindow);
-        tvProvider = findViewById(R.id.tv_provider);
-        tvConfirmationNumber = findViewById(R.id.tv_confrmNo);
-        tvStatusLink = findViewById(R.id.tv_currentStatusLink);
-        tvPreInfo = findViewById(R.id.tv_preInfo);
-        tvPreInfoTitle = findViewById(R.id.tv_preInfoTitle);
-        tvPostInfo = findViewById(R.id.tv_postInfo);
-        tvPostInfoTitle = findViewById(R.id.tv_postInfoTitle);
-        llProvider = findViewById(R.id.ll_provider);
-        cvOk = findViewById(R.id.cv_ok);
-        tvTerm = findViewById(R.id.tv_term);
-        icon_service = findViewById(R.id.serviceicon);
-        tv_consumer = findViewById(R.id.tv_consumervalue);
-        tv_location = findViewById(R.id.tv_location);
+        tvProvider = findViewById(R.id.tv_doctorName);
+        tvConfirmationNumber = findViewById(R.id.tv_confirmationNumber);
+        btnOk = findViewById(R.id.cv_ok);
+        btnOk1 = findViewById(R.id.cv_ok1);
+        icon_service = findViewById(R.id.iv_teleService);
+        tv_consumer = findViewById(R.id.tv_consumerName);
+        tv_location = findViewById(R.id.tv_locationName);
         tv_heading = findViewById(R.id.tv_heading);
-        tvBatchId = findViewById(R.id.tv_batchNo);
-        llBatchNo = findViewById(R.id.ll_batchNo);
+        tvBatchNo = findViewById(R.id.tv_batchNo);
+        llBatchNo = findViewById(R.id.ll_batch);
+        tvStatus = findViewById(R.id.tv_status);
+        tvDate = findViewById(R.id.tv_date);
+        tvTime = findViewById(R.id.tv_time);
+        llPayment = findViewById(R.id.ll_payment);
+        tvAmount = findViewById(R.id.tv_amount);
+        cvBack = findViewById(R.id.cv_back);
+        cvShare = findViewById(R.id.cv_share);
+        ivQR = findViewById(R.id.iv_Qr);
+        llMoreDetails = findViewById(R.id.ll_moreDetails);
+        llMessage = findViewById(R.id.ll_message);
+        llInstructions = findViewById(R.id.ll_instructions);
+        tvViewMore = findViewById(R.id.tv_viewMore);
+        tvViewLess = findViewById(R.id.tv_viewLess);
+        llViewMore = findViewById(R.id.ll_viewMore);
+        llViewLess = findViewById(R.id.ll_viewLess);
 
     }
 

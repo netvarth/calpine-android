@@ -27,12 +27,13 @@ public class DepServiceInfo {
     SearchDonation donationServiceInfo;
     ProviderUserModel providerInfo;
     private boolean isOnline;
+    String virtualServiceType;
 
     public DepServiceInfo(){
 
     }
 
-    public DepServiceInfo(String departmentName, int departmentId, String providerImage, int id, String name, String estTime, int peopleInLine, String nextAvailableDate, String nextAvailableTime, String type, String serviceMode, String callingMode, String calculationMode, String minDonationAmount, String maxDonationAmount, boolean availability, SearchService checinServiceInfo, SearchAppoinment appointmentServiceInfo, SearchDonation donationServiceInfo, ProviderUserModel providerInfo) {
+    public DepServiceInfo(String departmentName, int departmentId, String providerImage, int id, String name, String estTime, int peopleInLine, String nextAvailableDate, String nextAvailableTime, String type, String serviceMode, String callingMode, String calculationMode, String minDonationAmount, String maxDonationAmount, boolean availability, SearchService checinServiceInfo, SearchAppoinment appointmentServiceInfo, SearchDonation donationServiceInfo, ProviderUserModel providerInfo, String virtualServiceType) {
         this.departmentName = departmentName;
         this.departmentId = departmentId;
         this.providerImage = providerImage;
@@ -53,6 +54,7 @@ public class DepServiceInfo {
         this.appointmentServiceInfo = appointmentServiceInfo;
         this.donationServiceInfo = donationServiceInfo;
         this.providerInfo = providerInfo;
+        this.virtualServiceType = virtualServiceType;
     }
 
 
@@ -230,5 +232,13 @@ public class DepServiceInfo {
 
     public void setOnline(boolean online) {
         isOnline = online;
+    }
+
+    public String getVirtualServiceType() {
+        return virtualServiceType;
+    }
+
+    public void setVirtualServiceType(String virtualServiceType) {
+        this.virtualServiceType = virtualServiceType;
     }
 }

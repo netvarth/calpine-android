@@ -256,6 +256,10 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     CustomTextViewMedium tvAttachFileSize;
 
     CustomTextViewSemiBold tvErrorMessage;
+
+    @BindView(R.id.tv_addNote)
+    CustomTextViewMedium tvAddNotes;
+
     String mFirstName, mLastName;
     int consumerID;
     private int uniqueId;
@@ -373,6 +377,15 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             tvButtonName.setText("Confirm Appointment");
         }
 
+        if(serviceInfo.getConsumerNoteTitle()!=null && !serviceInfo.getConsumerNoteTitle().equalsIgnoreCase("")){
+            tvAddNotes.setText(serviceInfo.getConsumerNoteTitle());
+        }
+        else{
+           tvAddNotes.setText("Add Note");
+        }
+
+
+
         if (serviceInfo != null) {
             String name = serviceInfo.getServiceName();
             name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
@@ -434,8 +447,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         ivteleService.setImageResource(R.drawable.googlemeet);
 
                     } else if (serviceInfo.getCallingMode().equalsIgnoreCase("WhatsApp")) {
-
-                        ivteleService.setImageResource(R.drawable.whatsapp_icon);
+                        if (serviceInfo.getVirtualServiceType() != null && serviceInfo.getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                            ivteleService.setImageResource(R.drawable.whatsapp_videoicon);
+                        } else {
+                            ivteleService.setImageResource(R.drawable.whatsapp_icon);
+                        }
 
                     } else if (serviceInfo.getCallingMode().equalsIgnoreCase("Phone")) {
 
@@ -784,7 +800,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             imagePathLists = imagePathList;
                             dialog.dismiss();
                         } else {
-                            tvAttachFileSize.setText("Attach File");
                             tvErrorMessage.setVisibility(View.VISIBLE);
                         }
 
@@ -1652,6 +1667,13 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             b.putSerializable("BookingDetails", activeAppointment);
                             b.putString("terminology", mSearchTerminology.getProvider());
                             b.putString("from","");
+                            b.putString("waitlistPhonenumber", phoneNumber);
+                            if (serviceInfo.isUser()){
+                                b.putString("accountID", String.valueOf(userId));
+                            }else {
+                                b.putString("accountID", String.valueOf(providerId));
+                            }
+                            b.putString("livetrack", serviceInfo.getLivetrack());
                             Intent checkin = new Intent(AppointmentActivity.this, AppointmentConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);
@@ -1764,38 +1786,38 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                     if (imagePathList.size() > 0) {
                                         ApiCommunicateAppointment(value, String.valueOf(userId), txt_addnote, dialog);
                                     }
-                                    if (!serviceInfo.getLivetrack().equalsIgnoreCase("true")) {
+//                                    if (!serviceInfo.getLivetrack().equalsIgnoreCase("true")) {
                                         getConfirmationDetails(userId);
-                                    }
+                                  //  }
 
                                 } else {
 
                                     if (imagePathList.size() > 0) {
                                         ApiCommunicateAppointment(value, String.valueOf(providerId), txt_addnote, dialog);
                                     }
-                                    if (!serviceInfo.getLivetrack().equalsIgnoreCase("true")) {
+//                                    if (!serviceInfo.getLivetrack().equalsIgnoreCase("true")) {
                                         getConfirmationDetails(providerId);
-                                    }
+                                 //   }
 
                                 }
                             }
-                            if (serviceInfo.getLivetrack().equalsIgnoreCase("true")) {
-                                Intent checkinShareLocations = new Intent(AppointmentActivity.this, CheckinShareLocationAppointment.class);
-                                checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
-                                checkinShareLocations.putExtra("uuid", value);
-                                if (serviceInfo.isUser()){
-                                    checkinShareLocations.putExtra("accountID", String.valueOf(userId));
-                                }else {
-                                    checkinShareLocations.putExtra("accountID", String.valueOf(providerId));
-                                }
-                                checkinShareLocations.putExtra("title", providerName);
-                                checkinShareLocations.putExtra("terminology", mSearchTerminology.getWaitlist());
-                                checkinShareLocations.putExtra("calcMode", calcMode);
-                                checkinShareLocations.putExtra("queueStartTime", "");
-                                checkinShareLocations.putExtra("queueEndTime", "");
-                                checkinShareLocations.putExtra("from", "appt");
-                                startActivity(checkinShareLocations);
-                            }
+//                            if (serviceInfo.getLivetrack().equalsIgnoreCase("true")) {
+//                                Intent checkinShareLocations = new Intent(AppointmentActivity.this, CheckinShareLocationAppointment.class);
+//                                checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
+//                                checkinShareLocations.putExtra("uuid", value);
+//                                if (serviceInfo.isUser()){
+//                                    checkinShareLocations.putExtra("accountID", String.valueOf(userId));
+//                                }else {
+//                                    checkinShareLocations.putExtra("accountID", String.valueOf(providerId));
+//                                }
+//                                checkinShareLocations.putExtra("title", providerName);
+//                                checkinShareLocations.putExtra("terminology", mSearchTerminology.getWaitlist());
+//                                checkinShareLocations.putExtra("calcMode", calcMode);
+//                                checkinShareLocations.putExtra("queueStartTime", "");
+//                                checkinShareLocations.putExtra("queueEndTime", "");
+//                                checkinShareLocations.putExtra("from", "appt");
+//                                startActivity(checkinShareLocations);
+//                            }
 
                         }
 

@@ -104,6 +104,16 @@ public class SearchAppointmentDepartmentServices implements Serializable {
 
     String callingMode;
 
+    public String getVirtualServiceType() {
+        return virtualServiceType;
+    }
+
+    public void setVirtualServiceType(String virtualServiceType) {
+        this.virtualServiceType = virtualServiceType;
+    }
+
+    String virtualServiceType;
+
     public int getId() {
         return id;
     }

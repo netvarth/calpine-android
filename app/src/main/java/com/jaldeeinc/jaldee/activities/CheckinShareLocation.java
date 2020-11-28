@@ -284,38 +284,42 @@ public class CheckinShareLocation extends AppCompatActivity implements
                 if(shareSwitch.isChecked()){
                     UpdateShareLiveLocation();
                     mService.removeLocationUpdates();
-                    if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
-                        finish();
-                    }
-                    else {
-                        if(from!=null && from.equalsIgnoreCase("checkin")) {
-                            Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
-                            checkin.putExtra("BookingDetails", a);
-                            checkin.putExtra("terminology", terminology);
-                            startActivity(checkin);
-                        }
-                        else{
-                            finish();
-                        }
-                    }
+//                    if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+//                        finish();
+//                    }
+//                    else {
+//                        if(from!=null && from.equalsIgnoreCase("checkin")) {
+//                            Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
+//                            checkin.putExtra("BookingDetails", a);
+//                            checkin.putExtra("terminology", terminology);
+//                            startActivity(checkin);
+//                        }
+//                        else{
+//                            finish();
+//                        }
+//                    }
+                    Intent intent = new Intent(CheckinShareLocation.this,Home.class);
+                    startActivity(intent);
                 }
                 else {
                     UpdateShareLiveLocation();
                     mService.removeLocationUpdates();
-                    if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
-                        finish();
-                    }
-                    else {
-                        if(from!=null && from.equalsIgnoreCase("checkin")) {
-                            Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
-                            checkin.putExtra("BookingDetails", a);
-                            checkin.putExtra("terminology", terminology);
-                            startActivity(checkin);
-                        }
-                        else{
-                            finish();
-                        }
-                    }
+//                    if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+//                        finish();
+//                    }
+//                    else {
+//                        if(from!=null && from.equalsIgnoreCase("checkin")) {
+//                            Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
+//                            checkin.putExtra("BookingDetails", a);
+//                            checkin.putExtra("terminology", terminology);
+//                            startActivity(checkin);
+//                        }
+//                        else{
+//                            finish();
+//                        }
+//                    }
+                    Intent intent = new Intent(CheckinShareLocation.this,Home.class);
+                    startActivity(intent);
                 }  }
         });
         btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -324,20 +328,24 @@ public class CheckinShareLocation extends AppCompatActivity implements
                 if(shareSwitch.isChecked()){
                     UpdateShareLiveLocation();
                     mService.removeLocationUpdates();
-                    if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
-                        finish();
-                    }
-                    else {
-                        if(from!=null && from.equalsIgnoreCase("checkin")) {
-                            Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
-                            checkin.putExtra("BookingDetails", a);
-                            checkin.putExtra("terminology", terminology);
-                            startActivity(checkin);
-                        }
-                        else{
-                            finish();
-                        }
-                    }
+//                    if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+//                        finish();
+//                    }
+//                    else {
+//                        if(from!=null && from.equalsIgnoreCase("checkin")) {
+//                            Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
+//                            checkin.putExtra("BookingDetails", a);
+//                            checkin.putExtra("terminology", terminology);
+//                            startActivity(checkin);
+//                        }
+//                        else{
+//                            finish();
+//                        }
+//                    }
+                    Intent intent = new Intent(CheckinShareLocation.this,Home.class);
+                    startActivity(intent);
+
+
                 }
                 else{
                 shareSwitch.setChecked(false);
@@ -345,20 +353,22 @@ public class CheckinShareLocation extends AppCompatActivity implements
                 UpdateShareLiveLocation();
                 Toast.makeText(CheckinShareLocation.this, "Live tracking has been disabled", Toast.LENGTH_SHORT).show();
                 mService.removeLocationUpdates();
-                    if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
-                        finish();
-                    }
-                    else {
-                        if (from != null && from.equalsIgnoreCase("checkin")) {
-                            Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
-                            checkin.putExtra("BookingDetails", a);
-                            checkin.putExtra("terminology", terminology);
-                            startActivity(checkin);
-                        }
-                        else{
-                            finish();
-                        }
-                    }
+                Intent intent = new Intent(CheckinShareLocation.this,Home.class);
+                startActivity(intent);
+//                    if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+//                        finish();
+//                    }
+//                    else {
+//                        if (from != null && from.equalsIgnoreCase("checkin")) {
+//                            Intent checkin = new Intent(CheckinShareLocation.this, CheckInConfirmation.class);
+//                            checkin.putExtra("BookingDetails", a);
+//                            checkin.putExtra("terminology", terminology);
+//                            startActivity(checkin);
+//                        }
+//                        else{
+//                            finish();
+//                        }
+//                    }
                 }
             }
         });

@@ -37,6 +37,7 @@ public class Constants {
     public static final String COMPLETED = "Completed";
     public static final String CANCELLED = "cancelled";
     public static final String CHECKEDIN = "Checkedin";
+    public static final String CHAT = "ChatSection";
 
 
 

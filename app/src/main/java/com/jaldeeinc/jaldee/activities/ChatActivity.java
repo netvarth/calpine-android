@@ -138,7 +138,10 @@ public class ChatActivity extends AppCompatActivity {
         etMessage.setTypeface(font_style);
         rvChatMessages = (RecyclerView) findViewById(R.id.rv_chatMessages);
         messageListAdapter = new MessageListAdapter(mContext, userMessagesList);
-        rvChatMessages.setLayoutManager(new LinearLayoutManager(mContext));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
+        linearLayoutManager.scrollToPositionWithOffset(0,userMessagesList.size());
+        rvChatMessages.setLayoutManager(linearLayoutManager);
+        rvChatMessages.getLayoutManager().scrollToPosition(userMessagesList.size() - 1);
         rvChatMessages.setAdapter(messageListAdapter);
 
         iv_attach.setOnClickListener(new View.OnClickListener() {
@@ -220,8 +223,6 @@ public class ChatActivity extends AppCompatActivity {
                         try {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-
                                     requestPermissions(new String[]{
                                             Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
 
@@ -255,7 +256,6 @@ public class ChatActivity extends AppCompatActivity {
                         try {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-
 
                                     requestPermissions(new String[]{
                                             Manifest.permission.CAMERA}, CAMERA);
@@ -838,11 +838,17 @@ public class ChatActivity extends AppCompatActivity {
                                     }
                                     userMessage.setTimeStamp(inbox.getTimeStamp());
                                     userMessagesList.add(userMessage);
+
+                                    if(inbox.getAttachments()!=null && inbox.getAttachments().size()>0){
+                                        userMessage.setAttachments(inbox.getAttachments());
+                                    }
+
                                 }
                                 llNoHistory.setVisibility(View.GONE);
                                 rvChatMessages.setVisibility(View.VISIBLE);
                                 messageListAdapter = new MessageListAdapter(mContext, userMessagesList);
                                 rvChatMessages.setLayoutManager(new LinearLayoutManager(mContext));
+                                rvChatMessages.getLayoutManager().scrollToPosition(userMessagesList.size() - 1);
                                 rvChatMessages.setAdapter(messageListAdapter);
 
                             } else {

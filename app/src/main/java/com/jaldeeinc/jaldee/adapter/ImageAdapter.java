@@ -81,7 +81,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
             if (inboxList.get(position).getS3path() != null) {
                 builder.build().load(inboxList.get(position).getS3path()).fit().into(myViewHolder.imageView);
 
-
             }
         }
 //            PdfRenderer renderer = new PdfRenderer(myViewHolder.imageView.getContext());

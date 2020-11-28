@@ -831,8 +831,12 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                         icon_service.setImageResource(R.drawable.googlemeet_sized);
                     }
                     else if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
-                        icon_service.setImageResource(R.drawable.whatsappicon_sized);
-
+                        if(activelist.getService().getVirtualCallingModes().get(0).getVirtualServiceType()!=null && activelist.getService().getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")){
+                            icon_service.setImageResource(R.drawable.whatsapp_videoicon);
+                        }
+                        else {
+                            icon_service.setImageResource(R.drawable.whatsappicon_sized);
+                        }
                     }
                     else if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){
                         icon_service.setImageResource(R.drawable.phoneiconsized_small);
@@ -2053,7 +2057,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                                     @Override
                                     public void onClick(View v) {
 
-                                        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activelist.getApptTime(), activelist.getService().getName(), gMeetResponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode());
+                                        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activelist.getApptTime(), activelist.getService().getName(), gMeetResponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode(),activelist.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
                                         meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                         meetingDetailsWindow.show();
                                         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
@@ -2070,7 +2074,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                                     @Override
                                     public void onClick(View v) {
 
-                                        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activelist.getApptTime(), activelist.getService().getName(), zoomResponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode());
+                                        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activelist.getApptTime(), activelist.getService().getName(), zoomResponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode(),activelist.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
                                         meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                         meetingDetailsWindow.show();
                                         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
@@ -2088,7 +2092,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                                     @Override
                                     public void onClick(View v) {
 
-                                        meetingInfo = new MeetingInfo(mContext, activelist.getApptTime(), activelist.getService().getName(), whatsappResponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode(),activelist.getVirtualService().getWhatsApp());
+                                        meetingInfo = new MeetingInfo(mContext, activelist.getApptTime(), activelist.getService().getName(), whatsappResponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode(),activelist.getVirtualService().getWhatsApp(),activelist.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
                                         meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                         meetingInfo.show();
                                         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
@@ -2106,7 +2110,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                                     @Override
                                     public void onClick(View v) {
 
-                                        meetingInfo = new MeetingInfo(mContext, activelist.getApptTime(), activelist.getService().getName(), phoneresponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getVirtualService().getPhone());
+                                        meetingInfo = new MeetingInfo(mContext, activelist.getApptTime(), activelist.getService().getName(), phoneresponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getVirtualService().getPhone(),activelist.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
                                         meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                         meetingInfo.show();
                                         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();

@@ -599,11 +599,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                         }
                     }
-//                    else{
-//                        myViewHolder.txtservice1.setVisibility(View.GONE);
-//                        myViewHolder.txtservice2.setVisibility(View.GONE);
-//                        myViewHolder.txtSeeAll.setVisibility(View.GONE);
-//                    }
+                    else{
+                        myViewHolder.txtservice1.setVisibility(View.GONE);
+                        myViewHolder.txtservice2.setVisibility(View.GONE);
+                        myViewHolder.txtSeeAll.setVisibility(View.GONE);
+                    }
                 }
                 if (searchdetailList.getDepartments() != null) {
                     if (searchdetailList.getDepartments().size() > 0) {
@@ -2385,6 +2385,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 iService.putExtra("department", service.get(i).getDepartment());
                                 if(service.get(i).getVirtualCallingModes()!=null && service.get(i).getVirtualCallingModes().get(0).getCallingMode()!=null) {
                                     iService.putExtra("callingMode", service.get(i).getVirtualCallingModes().get(0).getCallingMode());
+                                    iService.putExtra("virtualServiceType", service.get(i).getVirtualCallingModes().get(0).getVirtualServiceType());
                                 }
                                 iService.putExtra("serviceType",service.get(i).getServiceType());
                                 context.startActivity(iService);

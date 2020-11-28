@@ -202,6 +202,9 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
     @BindView(R.id.attach_file_size)
     CustomTextViewMedium tvAttachFileSize;
 
+    @BindView(R.id.tv_addNote)
+    CustomTextViewMedium tvAddNotes;
+
 
     int queueId,serviceId,locationId,accountId;
     String apiDate;
@@ -265,6 +268,8 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         if(uniqueId!=null) {
             ApiSearchViewTerminology(Integer.parseInt(uniqueId));
         }
+
+
 
         // click actions
 
@@ -1453,6 +1458,14 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                                 userId = checkInInfo.getId();
                             }
 
+
+                            if(checkInInfo.getService()!=null && checkInInfo.getService().getConsumerNoteTitle()!=null && !checkInInfo.getService().getConsumerNoteTitle().equalsIgnoreCase("")){
+                                tvAddNotes.setText(checkInInfo.getService().getConsumerNoteTitle());
+                            }
+                            else{
+                                tvAddNotes.setText("Add Note");
+                            }
+
 //                            if(checkInInfo.getProvider()!=null){
 //                                user = tv_userName.getText().toString();
 //                            }
@@ -1509,7 +1522,11 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                                             } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
                                                 ivteleService.setImageResource(R.drawable.googlemeet);
                                             } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                                ivteleService.setImageResource(R.drawable.whatsapp_icon);
+                                                if (checkInInfo.getService().getVirtualServiceType() != null && checkInInfo.getService().getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                                    ivteleService.setImageResource(R.drawable.whatsapp_videoicon);
+                                                } else {
+                                                    ivteleService.setImageResource(R.drawable.whatsapp_icon);
+                                                }
 
                                             } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                                 ivteleService.setImageResource(R.drawable.phoneaudioicon);

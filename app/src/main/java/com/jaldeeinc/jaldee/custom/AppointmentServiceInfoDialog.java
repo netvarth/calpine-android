@@ -79,7 +79,12 @@ public class AppointmentServiceInfoDialog extends Dialog {
                     tv_toolbartitle.setCompoundDrawablePadding(15);
                 }
                 else if(appointmentServices.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
-                    tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp,0,0,0);
+                    if(appointmentServices.getVirtualCallingModes().get(0).getVirtualServiceType()!=null && appointmentServices.getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")){
+                        tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon,0,0,0);
+                    }
+                    else{
+                        tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp,0,0,0);
+                    }
                     tv_toolbartitle.setCompoundDrawablePadding(15);
                 }
                 else if(appointmentServices.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){

@@ -2,23 +2,85 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="@dimen/dimen_8dp"
     android:orientation="vertical">
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-        android:id="@+id/tv_sentMessage"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="240dp"
+        android:orientation="vertical"
+        android:layout_gravity="end"
+        android:background="@drawable/chat_sent">
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        android:id="@+id/tv_sentMessage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:textSize="@dimen/txtsize_12"
         android:padding="@dimen/dimen_10dp"
         android:text=""
         android:layout_gravity="end"
-        android:background="@drawable/chat_sent"
+        android:gravity="end"
         android:layout_marginEnd="@dimen/dimen_8dp"
-        android:textColor="@color/title_color">
+        android:textColor="@color/title_color"
+       >
 
     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/attach_sent"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:padding="@dimen/dimen_10dp"
+        android:layout_gravity="end"
+        android:visibility="gone"
+        android:background="@color/white">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/img_sent1"
+            app:srcCompat="@drawable/icon_noimage"
+            android:layout_marginRight="@dimen/dimen_5dp"
+            android:visibility="gone">
+
+       </ImageView>
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/img_sent2"
+            app:srcCompat="@drawable/icon_noimage"
+            android:layout_marginRight="@dimen/dimen_5dp"
+            android:visibility="gone">
+
+        </ImageView>
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+1 more"
+            android:id="@+id/tv_attach_sent"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textColor="@color/yellow"
+            android:layout_marginRight="@dimen/dimen_5dp"
+            android:textSize="@dimen/dimen_12sp"
+            android:visibility="gone">
+            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+
+    </LinearLayout>
+    </LinearLayout>
+
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/recyclerImage"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:nestedScrollingEnabled="false"-->
+<!--        android:scrollbars="horizontal" />-->
+
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic
         android:id="@+id/tv_sentTime"

@@ -229,7 +229,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
             viewHolder.llDonationRange.setVisibility(View.GONE);
             viewHolder.tvServiceType.setVisibility(View.VISIBLE);
-            viewHolder.tvServiceType.setText("Appointments");
+            viewHolder.tvServiceType.setText("Appointment");
             viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
 
 
@@ -273,8 +273,12 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                             viewHolder.ivTeleService.setImageResource(R.drawable.new_gmeet);
 
                         } else if (child.getCallingMode().equalsIgnoreCase("WhatsApp")) {
-
-                            viewHolder.ivTeleService.setImageResource(R.drawable.whatsapp_icon);
+                            if(child.getVirtualServiceType()!=null && child.getVirtualServiceType().equalsIgnoreCase("videoService")){
+                                viewHolder.ivTeleService.setImageResource(R.drawable.whatsapp_videoicon);
+                            }
+                            else {
+                                viewHolder.ivTeleService.setImageResource(R.drawable.whatsapp_icon);
+                            }
 
                         } else if (child.getCallingMode().equalsIgnoreCase("phone")) {
 
@@ -291,6 +295,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                 viewHolder.ivTeleService.setVisibility(View.GONE);
             }
         }
+
 
         viewHolder.cvCard.setOnClickListener(new View.OnClickListener() {
             @Override

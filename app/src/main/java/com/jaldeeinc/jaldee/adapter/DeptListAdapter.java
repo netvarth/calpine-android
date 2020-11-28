@@ -692,7 +692,12 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                 myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                 myViewHolder.txtservice1.setCompoundDrawablePadding(10);
                             } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                if(searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getVirtualServiceType()!=null && searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")){
+                                    myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                }
+                                else{
+                                    myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                }
                                 myViewHolder.txtservice1.setCompoundDrawablePadding(10);
                             } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -720,6 +725,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                             iService.putExtra("serviceType", searchdetailList.getServices().get(0).getServiceType());
                             if (searchdetailList.getServices().get(0).getVirtualCallingModes() != null) {
                                 iService.putExtra("callingMode", searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode());
+                                iService.putExtra("virtualServiceType", searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getVirtualServiceType());
                             }
                             activity.startActivity(iService);
                         }
@@ -744,7 +750,12 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                     myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                     myViewHolder.txtservice1.setCompoundDrawablePadding(10);
                                 } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                    myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    if(searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getVirtualServiceType()!=null && searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")){
+                                        myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                    }
+                                    else{
+                                        myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    }
                                     myViewHolder.txtservice1.setCompoundDrawablePadding(10);
                                 } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                     myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -766,7 +777,12 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                     myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                     myViewHolder.txtservice2.setCompoundDrawablePadding(10);
                                 } else if (searchdetailList.getServices().get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                    myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    if(searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getVirtualServiceType()!=null && searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")){
+                                        myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                    }
+                                    else{
+                                        myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    }
                                     myViewHolder.txtservice2.setCompoundDrawablePadding(10);
                                 } else if (searchdetailList.getServices().get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                     myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -793,6 +809,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                 iService.putExtra("serviceType", searchdetailList.getServices().get(0).getServiceType());
                                 if (searchdetailList.getServices().get(0).getVirtualCallingModes() != null) {
                                     iService.putExtra("callingMode", searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode());
+                                    iService.putExtra("virtualServiceType", searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getVirtualServiceType());
                                 }
                                 activity.startActivity(iService);
                             }
@@ -836,7 +853,12 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                     myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                     myViewHolder.txtservice1.setCompoundDrawablePadding(10);
                                 } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                    myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    if(searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getVirtualServiceType()!=null && searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")){
+                                        myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                    }
+                                    else{
+                                        myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    }
                                     myViewHolder.txtservice1.setCompoundDrawablePadding(10);
                                 } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                     myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -858,7 +880,12 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                     myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                     myViewHolder.txtservice2.setCompoundDrawablePadding(10);
                                 } else if (searchdetailList.getServices().get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                    myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    if(searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getVirtualServiceType()!=null && searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")){
+                                        myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                    }
+                                    else{
+                                        myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    }
                                     myViewHolder.txtservice2.setCompoundDrawablePadding(10);
                                 } else if (searchdetailList.getServices().get(1).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                     myViewHolder.txtservice2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -885,6 +912,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                 iService.putExtra("serviceType", searchdetailList.getServices().get(0).getServiceType());
                                 if (searchdetailList.getServices().get(0).getVirtualCallingModes() != null) {
                                     iService.putExtra("callingMode", searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode());
+                                    iService.putExtra("virtualServiceType", searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getVirtualServiceType());
                                 }
                                 activity.startActivity(iService);
                             }
@@ -938,7 +966,12 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                     } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
                                         myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet_sized, 0, 0, 0);
                                     } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                        myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                        if(searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getVirtualServiceType()!=null && searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")){
+                                            myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                                        }
+                                        else{
+                                            myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                        }
                                         myViewHolder.txtservice1.setCompoundDrawablePadding(10);
                                     } else if (searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                         myViewHolder.txtservice1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneiconsized_small, 0, 0, 0);
@@ -967,6 +1000,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                     iService.putExtra("serviceType", searchdetailList.getServices().get(0).getServiceType());
                                     if (searchdetailList.getServices().get(0).getVirtualCallingModes() != null) {
                                         iService.putExtra("callingMode", searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getCallingMode());
+                                        iService.putExtra("virtualServiceType", searchdetailList.getServices().get(0).getVirtualCallingModes().get(0).getVirtualServiceType());
                                     }
                                     activity.startActivity(iService);
                                 }

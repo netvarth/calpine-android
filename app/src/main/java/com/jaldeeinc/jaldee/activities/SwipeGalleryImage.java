@@ -19,16 +19,15 @@ import java.util.ArrayList;
  * Created by sharmila on 31/7/18.
  */
 
-public class
-SwipeGalleryImage extends AppCompatActivity {
-
+public class SwipeGalleryImage extends AppCompatActivity {
 
     public static Activity mActivity;
     private Toolbar mToolbar;
     static ViewPager mViewPager;
     static ArrayList<String> mGalleryList;
+    int position;
+    String from;
 
-int position;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,8 +57,9 @@ int position;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             position = extras.getInt("pos", 0);
+            from = extras.getString("from");
         }
-            CustomPageAdapter mCustomPagerAdapter = new CustomPageAdapter(this, mGalleryList);
+            CustomPageAdapter mCustomPagerAdapter = new CustomPageAdapter(this, mGalleryList,from);
             mViewPager.setAdapter(mCustomPagerAdapter);
             mViewPager.setCurrentItem(position);
 
