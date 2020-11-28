@@ -1,7 +1,6 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -24,13 +23,11 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.Bookings;
-import com.jaldeeinc.jaldee.response.SearchService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdapter.ViewHolder> {
@@ -40,13 +37,15 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
     public Context context;
     private int lastPosition = -1;
     private ISelectedBooking iSelectedBooking;
+    private boolean hideMoreInfo = false;
 
 
-    public TodayBookingsAdapter(ArrayList<Bookings> bookingsList, Context context, boolean isLoading, ISelectedBooking iSelectedBooking) {
+    public TodayBookingsAdapter(ArrayList<Bookings> bookingsList, Context context, boolean isLoading, ISelectedBooking iSelectedBooking, boolean hideMoreInfo) {
         this.context = context;
         this.bookingsList = bookingsList;
         this.isLoading = isLoading;
         this.iSelectedBooking = iSelectedBooking;
+        this.hideMoreInfo = hideMoreInfo;
     }
 
     @NonNull
@@ -71,6 +70,12 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
             final Bookings bookings = bookingsList.get(position);
 
             setAnimation(viewHolder.cvBooking, position);
+
+            if (hideMoreInfo) {
+                viewHolder.ivMore.setVisibility(View.GONE);
+            } else {
+                viewHolder.ivMore.setVisibility(View.VISIBLE);
+            }
 
             try {
 
@@ -116,14 +121,13 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                                 }
                             } else {
                                 if (bookings.getServiceTime() != null) {
-                                    viewHolder.tvDateAndTime.setText("Today, "+bookings.getServiceTime());
+                                    viewHolder.tvDateAndTime.setText("Today, " + bookings.getServiceTime());
                                 }
                             }
 
-                        }
-                        else if (bookings.getBookingType().equalsIgnoreCase(Constants.TOKEN)){
+                        } else if (bookings.getBookingType().equalsIgnoreCase(Constants.TOKEN)) {
 
-                            String builder = "Token "+"<b>"+"#"+bookings.getTokenNo()+"</b>";
+                            String builder = "Token " + "<b>" + "#" + bookings.getTokenNo() + "</b>";
                             viewHolder.tvDateAndTime.setText(Html.fromHtml(builder));
                         }
                     } else {
@@ -152,6 +156,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                 if (bookings.getBookingStatus() != null) {
 
                     viewHolder.tvStatus.setVisibility(View.VISIBLE);
+                    viewHolder.rlStatus.setVisibility(View.VISIBLE);
                     viewHolder.tvStatus.setText(convertToTitleForm(bookings.getBookingStatus()));
                     if (bookings.getBookingStatus().equalsIgnoreCase(Constants.CONFIRMED)) {
                         viewHolder.tvStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
@@ -168,6 +173,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                     }
                 } else {
                     viewHolder.tvStatus.setVisibility(View.GONE);
+                    viewHolder.rlStatus.setVisibility(View.GONE);
                 }
 
 
@@ -206,7 +212,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                     @Override
                     public void onClick(View view) {
 
-                            iSelectedBooking.sendSelectedBookingActions(bookings);
+                        iSelectedBooking.sendSelectedBookingActions(bookings);
 
                     }
                 });
@@ -230,11 +236,12 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView ivBookingType, ivServiceIcon,ivMore;
+        ImageView ivBookingType, ivServiceIcon, ivMore;
         CustomTextViewBold tvSpName;
         CustomTextViewSemiBold tvProviderName;
         CustomTextViewMedium tvStatus, tvServiceName, tvDateAndTime;
         CardView cvBooking;
+        RelativeLayout rlStatus;
 
 
         public ViewHolder(@NonNull View itemView, boolean isLoading) {
@@ -251,6 +258,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                 tvDateAndTime = itemView.findViewById(R.id.tv_dateAndTime);
                 cvBooking = itemView.findViewById(R.id.cv_booking);
                 ivMore = itemView.findViewById(R.id.iv_more);
+                rlStatus = itemView.findViewById(R.id.rl_status);
 
             }
 

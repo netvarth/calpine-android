@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
@@ -27,14 +26,12 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,6 +49,7 @@ public class HistoryActivity extends AppCompatActivity implements ISelectedBooki
     private ISelectedBooking iSelectedBooking;
     private TodayBookingsAdapter todayBookingsAdapter;
     List<ActiveCheckIn> allCheckInsOffline = new ArrayList<>();
+    boolean hideMoreInfo = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +60,7 @@ public class HistoryActivity extends AppCompatActivity implements ISelectedBooki
 
         linearLayoutManager = new LinearLayoutManager(HistoryActivity.this);
         rvHistory.setLayoutManager(linearLayoutManager);
-        todayBookingsAdapter = new TodayBookingsAdapter(bookingsList, HistoryActivity.this, true, iSelectedBooking);
+        todayBookingsAdapter = new TodayBookingsAdapter(bookingsList, HistoryActivity.this, true, iSelectedBooking, hideMoreInfo);
         rvHistory.setAdapter(todayBookingsAdapter);
 
         cvBack.setOnClickListener(new View.OnClickListener() {
@@ -335,7 +333,7 @@ public class HistoryActivity extends AppCompatActivity implements ISelectedBooki
                                                 llNoBookings.setVisibility(View.GONE);
                                                 rvHistory.setVisibility(View.VISIBLE);
                                                 rvHistory.setLayoutManager(linearLayoutManager);
-                                                todayBookingsAdapter = new TodayBookingsAdapter(allBookings, HistoryActivity.this, false, iSelectedBooking);
+                                                todayBookingsAdapter = new TodayBookingsAdapter(allBookings, HistoryActivity.this, false, iSelectedBooking,hideMoreInfo);
                                                 rvHistory.setAdapter(todayBookingsAdapter);
                                             } else {
 
@@ -485,7 +483,7 @@ public class HistoryActivity extends AppCompatActivity implements ISelectedBooki
             llNoBookings.setVisibility(View.GONE);
             rvHistory.setVisibility(View.VISIBLE);
             rvHistory.setLayoutManager(linearLayoutManager);
-            todayBookingsAdapter = new TodayBookingsAdapter(bookingsList, HistoryActivity.this, false, iSelectedBooking);
+            todayBookingsAdapter = new TodayBookingsAdapter(bookingsList, HistoryActivity.this, false, iSelectedBooking, hideMoreInfo);
             rvHistory.setAdapter(todayBookingsAdapter);
         } else {
 
