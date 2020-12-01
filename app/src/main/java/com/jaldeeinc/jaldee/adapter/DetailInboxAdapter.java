@@ -5,6 +5,7 @@ package com.jaldeeinc.jaldee.adapter;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -18,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.ChatActivity;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.callback.DetailInboxAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.response.InboxModel;
@@ -113,6 +116,23 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
                     myViewHolder.recyclerImage.setAdapter(imageAdapter);
                     imageAdapter.notifyDataSetChanged();
                 }
+            }
+        });
+
+        myViewHolder.tv_message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), ChatActivity.class);
+                intent.putExtra("uuid",inboxList.getWaitlistId());
+                intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
+                intent.putExtra("name",inboxList.getAccountName());
+                if(inboxList.getWaitlistId().contains("_wl")){
+                    intent.putExtra("from", Constants.CHECKIN);
+                }
+                else if(inboxList.getWaitlistId().contains("_appt")){
+                    intent.putExtra("from", Constants.APPOINTMENT);
+                }
+                view.getContext().startActivity(intent);
             }
         });
 

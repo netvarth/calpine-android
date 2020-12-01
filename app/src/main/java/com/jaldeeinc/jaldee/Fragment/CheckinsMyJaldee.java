@@ -900,7 +900,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                         edt_message.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void afterTextChanged(Editable arg0) {
-                                if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
+                                if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating!=null && rating.getRating()!=0) {
                                     btn_rate.setEnabled(true);
                                     btn_rate.setClickable(true);
                                     btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
@@ -919,6 +919,27 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                             public void onTextChanged(CharSequence s, int start, int before, int count) {
                             }
                         });
+
+                        if (rating != null) {
+                            rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                                @Override
+                                public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                                    if(edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating.getRating() != 0){
+                                        btn_rate.setEnabled(true);
+                                        btn_rate.setClickable(true);
+                                        btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
+                                    }
+                                    else{
+                                        btn_rate.setEnabled(false);
+                                        btn_rate.setClickable(false);
+                                        btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                                    }
+                                }
+                            });
+                        }
+
+
+
                         btn_close.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

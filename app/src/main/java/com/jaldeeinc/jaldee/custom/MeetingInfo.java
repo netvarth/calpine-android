@@ -20,9 +20,10 @@ public class MeetingInfo extends Dialog {
     TeleServiceCheckIn teleServiceCheckInResponse;
     Context context;
     String phoneNumber;
+    String virtualServiceType;
 
 
-    public MeetingInfo(@NonNull Context context, String checkInTime, String name, TeleServiceCheckIn teleServiceCheckInResponse, String callingMode, String waitlistPhoneNumber) {
+    public MeetingInfo(@NonNull Context context, String checkInTime, String name, TeleServiceCheckIn teleServiceCheckInResponse, String callingMode, String waitlistPhoneNumber, String virtualServiceType) {
         super(context);
         this.context = context;
         this.context =context;
@@ -31,6 +32,7 @@ public class MeetingInfo extends Dialog {
         this.teleServiceCheckInResponse = teleServiceCheckInResponse;
         this.phoneNumber = waitlistPhoneNumber;
         this.callingMode = callingMode;
+        this.virtualServiceType = virtualServiceType;
     }
 
     @Override
@@ -59,7 +61,12 @@ public class MeetingInfo extends Dialog {
                         tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet, 0, 0, 0);
                         tvServiceName.setCompoundDrawablePadding(15);
                     } else if (callingMode.equalsIgnoreCase("WhatsApp")) {
-                        tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                        if(virtualServiceType!=null && virtualServiceType.equalsIgnoreCase("videoService")){
+                            tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                        }
+                        else {
+                            tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                        }
                         tvServiceName.setCompoundDrawablePadding(15);
                     } else if (callingMode.equalsIgnoreCase("phone")) {
                         tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneicon_sized, 0, 0, 0);

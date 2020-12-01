@@ -134,6 +134,15 @@ public class SearchCheckInMessage {
 
     String token;
 
+    public boolean isShowToken() {
+        return showToken;
+    }
+
+    public void setShowToken(boolean showToken) {
+        this.showToken = showToken;
+    }
+
+    boolean showToken;
 
 
 }

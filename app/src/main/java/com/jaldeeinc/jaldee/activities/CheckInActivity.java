@@ -246,6 +246,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     @BindView(R.id.attach_file_size)
     CustomTextViewMedium tvAttachFileSize;
 
+    @BindView(R.id.tv_addNote)
+    CustomTextViewMedium tvAddNotes;
+
     static CustomTextViewMedium txtprepayamount;
 
     static LinearLayout LservicePrepay;
@@ -429,8 +432,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         ivteleService.setImageResource(R.drawable.googlemeet);
 
                     } else if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-
-                        ivteleService.setImageResource(R.drawable.whatsapp_icon);
+                        if (checkInInfo.getVirtualServiceType() != null && checkInInfo.getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                            ivteleService.setImageResource(R.drawable.whatsapp_videoicon);
+                        } else {
+                            ivteleService.setImageResource(R.drawable.whatsapp_icon);
+                        }
 
                     } else if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Phone")) {
 
@@ -478,6 +484,14 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             } else {
 
                 llPreInfo.setVisibility(View.GONE);
+            }
+
+
+            if(checkInInfo.getConsumerNoteTitle()!=null && !checkInInfo.getConsumerNoteTitle().equalsIgnoreCase("")){
+                tvAddNotes.setText(checkInInfo.getConsumerNoteTitle());
+            }
+            else{
+                tvAddNotes.setText("Add Note");
             }
         }
 
@@ -1628,6 +1642,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             Intent checkin = new Intent(CheckInActivity.this, CheckInConfirmation.class);
                             checkin.putExtra("BookingDetails", activeAppointment);
                             checkin.putExtra("terminology", mSearchTerminology.getProvider());
+                            checkin.putExtra("waitlistPhonenumber", phoneNumber);
+                            checkin.putExtra("livetrack", checkInInfo.isLivetrack());
+                            if (isUser) {
+                                    checkin.putExtra("accountID", String.valueOf(userId));
+                                } else {
+                                    checkin.putExtra("accountID", String.valueOf(providerId));
+                                }
                             startActivity(checkin);
                         }
 
@@ -1800,30 +1821,30 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                     if (imagePathList.size() > 0) {
                                         ApiCommunicateCheckin(value, String.valueOf(providerId), txt_addnote, dialog);
                                     }
-                                    if (!checkInInfo.isLivetrack()) {
+//                                    if (!checkInInfo.isLivetrack()) {
                                         getConfirmationDetails(providerId);
-                                    }
+//                                    }
 
                                 }
                             }
 
-                            if (checkInInfo.isLivetrack()) {
-                                Intent checkinShareLocations = new Intent(mContext, CheckinShareLocation.class);
-                                checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
-                                checkinShareLocations.putExtra("uuid", value);
-                                if (isUser) {
-                                    checkinShareLocations.putExtra("accountID", String.valueOf(userId));
-                                } else {
-                                    checkinShareLocations.putExtra("accountID", String.valueOf(providerId));
-                                }
-                                checkinShareLocations.putExtra("title", providerName);
-                                checkinShareLocations.putExtra("terminology", mSearchTerminology.getWaitlist());
-                                checkinShareLocations.putExtra("calcMode", calcMode);
-                                checkinShareLocations.putExtra("queueStartTime", "");
-                                checkinShareLocations.putExtra("queueEndTime", "");
-                                checkinShareLocations.putExtra("from", "checkin");
-                                startActivity(checkinShareLocations);
-                            }
+//                            if (checkInInfo.isLivetrack()) {
+//                                Intent checkinShareLocations = new Intent(mContext, CheckinShareLocation.class);
+//                                checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
+//                                checkinShareLocations.putExtra("uuid", value);
+//                                if (isUser) {
+//                                    checkinShareLocations.putExtra("accountID", String.valueOf(userId));
+//                                } else {
+//                                    checkinShareLocations.putExtra("accountID", String.valueOf(providerId));
+//                                }
+//                                checkinShareLocations.putExtra("title", providerName);
+//                                checkinShareLocations.putExtra("terminology", mSearchTerminology.getWaitlist());
+//                                checkinShareLocations.putExtra("calcMode", calcMode);
+//                                checkinShareLocations.putExtra("queueStartTime", "");
+//                                checkinShareLocations.putExtra("queueEndTime", "");
+//                                checkinShareLocations.putExtra("from", "checkin");
+//                                startActivity(checkinShareLocations);
+//                            }
 
 
                         }

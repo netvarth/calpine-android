@@ -67,6 +67,7 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
     LocationCheckinCallback callback;
     Activity mActivity;
     String accountID;
+    boolean isToken = false;
 
     public LocationCheckinAdapter(LocationCheckinCallback callback, String accountID, List<SearchCheckInMessage> mcheckList, Context mContext, Activity mActivity) {
         this.mContext = mContext;
@@ -103,7 +104,12 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
                 } else if (checklist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
                     myViewHolder.ic_service.setImageResource(R.drawable.googlemeet_sized);
                 } else if (checklist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                    myViewHolder.ic_service.setImageResource(R.drawable.whatsappicon_sized);
+                    if(checklist.getService().getVirtualServiceType()!=null && checklist.getService().getVirtualServiceType().equalsIgnoreCase("videoService")){
+                        myViewHolder.ic_service.setImageResource(R.drawable.whatsapp_videoicon_sized);
+                    }
+                    else {
+                        myViewHolder.ic_service.setImageResource(R.drawable.whatsappicon_sized);
+                    }
                 } else if (checklist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                     myViewHolder.ic_service.setImageResource(R.drawable.phoneiconsized_small);
 
@@ -114,7 +120,8 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
         }
 
 
-        if (checklist.getCalculationMode().equalsIgnoreCase("NoCalc")) {
+        if (checklist.isShowToken()) {
+            isToken = true;
             myViewHolder.txttoken.setVisibility(View.VISIBLE);
             myViewHolder.txttoken.setText(checklist.getToken());
         } else {
@@ -125,8 +132,16 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
             @Override
             public void onClick(View v) {
                 //ApiDeleteCheckin(checklist.getYnwUuid(),accountID,position);
-                AlertDialog diaBox = AskOption(checklist.getYnwUuid(), accountID, position);
-                diaBox.show();
+                if(checklist.isShowToken()) {
+                    AlertDialog diaBox = AskOption(checklist.getYnwUuid(), accountID, position, isToken);
+                    diaBox.show();
+                }
+                else{
+                    AlertDialog diaBox = AskOption(checklist.getYnwUuid(), accountID, position, isToken);
+                    diaBox.show();
+                }
+
+
             }
         });
 
@@ -292,11 +307,18 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
 
     }
 
-    private AlertDialog AskOption(final String ynwuuid, final String accountID, final int pos) {
+    private AlertDialog AskOption(final String ynwuuid, final String accountID, final int pos, boolean isToken) {
+        String term;
+        if(isToken){
+            term = "Token";
+        }
+        else{
+            term = "Check-in";
+        }
         AlertDialog myQuittingDialogBox = new AlertDialog.Builder(mContext)
                 //set message, title, and icon
                 .setTitle("Delete")
-                .setMessage("Are you sure you want to cancel this Check-in?")
+                .setMessage("Are you sure you want to cancel this " + term + " ?")
 
 
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {

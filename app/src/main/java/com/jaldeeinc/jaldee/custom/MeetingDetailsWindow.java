@@ -23,14 +23,16 @@ public class MeetingDetailsWindow extends Dialog {
     String serviceName, callingMode;
     TeleServiceCheckIn teleServiceCheckInResponse;
     Context context;
+    String virtualServiceType;
 
-    public MeetingDetailsWindow(@NonNull Context context, String checkInTime, String name, TeleServiceCheckIn teleServiceCheckInResponse, String callingMode) {
+    public MeetingDetailsWindow(@NonNull Context context, String checkInTime, String name, TeleServiceCheckIn teleServiceCheckInResponse, String callingMode, String virtualServiceType) {
         super(context);
         this.context =context;
         this.time = checkInTime;
         this.serviceName = name;
         this.teleServiceCheckInResponse = teleServiceCheckInResponse;
         this.callingMode = callingMode;
+        this.virtualServiceType = virtualServiceType;
     }
 
     @Override
@@ -61,7 +63,12 @@ public class MeetingDetailsWindow extends Dialog {
                         tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet, 0, 0, 0);
                         tvServiceName.setCompoundDrawablePadding(15);
                     } else if (callingMode.equalsIgnoreCase("WhatsApp")) {
-                        tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                        if (virtualServiceType != null && virtualServiceType.equalsIgnoreCase("videoService")) {
+                            tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                        }
+                        else {
+                            tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                        }
                         tvServiceName.setCompoundDrawablePadding(15);
                     } else if (callingMode.equalsIgnoreCase("phone")) {
                         tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneicon_sized, 0, 0, 0);

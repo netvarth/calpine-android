@@ -1,5 +1,9 @@
 package com.jaldeeinc.jaldee.model;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
 public class UserMessage {
 
     private int id;
@@ -7,6 +11,8 @@ public class UserMessage {
     private String userName;
     private String senderName;
     private String timeStamp;
+    @SerializedName("attachements")
+    public List<FileAttachment> attachments;
 
     public UserMessage(){
 
@@ -58,5 +64,13 @@ public class UserMessage {
 
     public void setTimeStamp(String timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public List<FileAttachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<FileAttachment> attachments) {
+        this.attachments = attachments;
     }
 }

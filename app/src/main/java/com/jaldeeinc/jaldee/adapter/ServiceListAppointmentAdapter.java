@@ -112,7 +112,12 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
                         } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
                             myViewHolder.ivIcon.setImageResource(R.drawable.google_meet);
                         } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                            myViewHolder.ivIcon.setImageResource(R.drawable.whatsapp);
+                            if(serviceList.getVirtualCallingModes().get(0).getVirtualServiceType()!=null && serviceList.getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")){
+                                myViewHolder.ivIcon.setImageResource(R.drawable.whatsapp_videoicon);
+                            }
+                            else {
+                                myViewHolder.ivIcon.setImageResource(R.drawable.whatsapp);
+                            }
                         } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                             myViewHolder.ivIcon.setImageResource(R.drawable.phoneicon_sized);
                         }
@@ -185,7 +190,12 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
                     } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
                         myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet, 0, 0, 0);
                     } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                        myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                        if(serviceList.getVirtualCallingModes().get(0).getVirtualServiceType()!=null && serviceList.getVirtualCallingModes().get(0).getVirtualServiceType().equalsIgnoreCase("videoService")){
+                            myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                        }
+                        else {
+                            myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                        }
                     } else if (serviceList.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                         myViewHolder.tv_service.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneicon_sized, 0, 0, 0);
                     }

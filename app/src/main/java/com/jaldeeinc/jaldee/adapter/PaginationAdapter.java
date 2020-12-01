@@ -198,7 +198,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View v) {
                         mSearchView.setQuery("", false);
-                        mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid(), searchdetailList.getClaimable(),searchdetailList.getLocation_id1());
+                        mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid(), searchdetailList.getClaimable(), searchdetailList.getLocation_id1());
                     }
                 });
                 showUserInfo(myViewHolder, searchdetailList);
@@ -362,7 +362,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                 serviceNames.add(i, name);
                                 serviceTypes.add(i, serviceType);
-                                serviceIds.add(i,serviceId);
+                                serviceIds.add(i, serviceId);
                                 Log.i("sar", serviceNames.toString());
                             }
                         } catch (JSONException e) {
@@ -454,8 +454,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     @Override
                                     public void onClick(View v) {
 
-                                       // mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid(), serviceIds);
-                                        mAdapterCallback.onMethodServiceListCallback(searchdetailList.getUniqueid(),searchdetailList.getTitle());
+                                        // mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid(), serviceIds);
+                                        mAdapterCallback.onMethodServiceListCallback(searchdetailList.getUniqueid(), searchdetailList.getTitle());
                                     }
                                 });
                             }
@@ -482,8 +482,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     myViewHolder.txtSeeAll.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                          //  mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid(), serviceIds);
-                                            mAdapterCallback.onMethodServiceListCallback(searchdetailList.getUniqueid(),searchdetailList.getTitle());
+                                            //  mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid(), serviceIds);
+                                            mAdapterCallback.onMethodServiceListCallback(searchdetailList.getUniqueid(), searchdetailList.getTitle());
                                         }
                                     });
                                     break;
@@ -491,6 +491,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             }
 
                         }
+                    } else {
+                        myViewHolder.txtservice1.setVisibility(View.GONE);
+                        myViewHolder.txtservice2.setVisibility(View.GONE);
+                        myViewHolder.txtSeeAll.setVisibility(View.GONE);
                     }
                 }
                 if (searchdetailList.getDepartments() != null) {
@@ -910,7 +914,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         String name = jsonObject.optString("name");
                         String serviceId = jsonObject.optString("id");
                         serviceNamesDonations.add(i, name);
-                        dntServiceIds.add(i,serviceId);
+                        dntServiceIds.add(i, serviceId);
 
                     }
                 } catch (JSONException e) {
@@ -1049,7 +1053,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         @Override
                         public void onClick(View v) {
 
-                            ApiService(searchdetailList.getUniqueid(), serviceNamesDonations.get(0).toString(), searchdetailList.getTitle(),dntServiceIds.get(0).toString());
+                            ApiService(searchdetailList.getUniqueid(), serviceNamesDonations.get(0).toString(), searchdetailList.getTitle(), dntServiceIds.get(0).toString());
 
                         }
                     });
@@ -1604,7 +1608,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1")) { // Conventional
                                         showWaitingTime(myViewHolder, searchdetailList, null);
                                         String waitTime = myViewHolder.tv_WaitTime.getText().toString();
-                                        String waitTimes = waitTime.replace("\n","-");
+                                        String waitTimes = waitTime.replace("\n", "-");
                                         myViewHolder.tv_peopleahead.setText(waitTimes);
                                         String message = Config.getPersonsAheadText(searchdetailList.getPersonAhead());
                                         myViewHolder.tv_WaitTime.setText(message);
@@ -1765,7 +1769,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         String name = jsonObject.optString("name");
                         String serviceId = jsonObject.optString("id");
                         serviceNamesAppointments.add(i, name);
-                        serviceIds.add(i,serviceId);
+                        serviceIds.add(i, serviceId);
                         Log.i("sar", serviceNamesAppointments.toString());
                     }
                 } catch (JSONException e) {
@@ -1858,7 +1862,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             @Override
                             public void onClick(View v) {
 
-                                mAdapterCallback.onMethodServiceCallback(serviceNamesAppointments, searchdetailList.getTitle(), searchdetailList.getUniqueid(),serviceIds);
+                                mAdapterCallback.onMethodServiceCallback(serviceNamesAppointments, searchdetailList.getTitle(), searchdetailList.getUniqueid(), serviceIds);
 
                             }
                         });
@@ -2218,10 +2222,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 iService.putExtra("isPrePayment", service.get(i).isPrePayment());
                                 iService.putExtra("MinPrePaymentAmount", service.get(i).getMinPrePaymentAmount());
                                 iService.putExtra("department", service.get(i).getDepartment());
-                                if(service.get(i).getVirtualCallingModes()!=null && service.get(i).getVirtualCallingModes().get(0).getCallingMode()!=null) {
+                                if (service.get(i).getVirtualCallingModes() != null && service.get(i).getVirtualCallingModes().get(0).getCallingMode() != null) {
                                     iService.putExtra("callingMode", service.get(i).getVirtualCallingModes().get(0).getCallingMode());
+                                    iService.putExtra("virtualServiceType", service.get(i).getVirtualCallingModes().get(0).getVirtualServiceType());
                                 }
-                                iService.putExtra("serviceType",service.get(i).getServiceType());
+                                iService.putExtra("serviceType", service.get(i).getServiceType());
                                 context.startActivity(iService);
                             }
                         }

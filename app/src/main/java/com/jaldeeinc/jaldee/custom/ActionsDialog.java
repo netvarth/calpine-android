@@ -603,7 +603,7 @@ public class ActionsDialog extends Dialog {
     // for zoom and GMeet
     public void showMeetingDetailsWindow(ActiveAppointment activeAppointment, String mode, TeleServiceCheckIn meetingDetails) {
 
-        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode());
+        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(),activeAppointment.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
         meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
         meetingDetailsWindow.show();
         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
@@ -615,9 +615,9 @@ public class ActionsDialog extends Dialog {
     public void showMeetingWindow(ActiveAppointment activeAppointment, String mode, TeleServiceCheckIn meetingDetails) {
 
         if (mode.equalsIgnoreCase("WhatsApp")) {
-            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getWhatsApp());
+            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getWhatsApp(), activeAppointment.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
         } else {
-            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getPhoneNo());
+            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getPhoneNo(),"");
         }
         meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
         meetingInfo.show();
@@ -681,7 +681,7 @@ public class ActionsDialog extends Dialog {
     // for zoom and GMeet
     public void showCheckInMeetingDetailsWindow(ActiveCheckIn activeCheckIn, String mode, TeleServiceCheckIn meetingDetails) {
 
-        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode());
+        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(),activeCheckIn.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
         meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
         meetingDetailsWindow.show();
         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
@@ -693,9 +693,9 @@ public class ActionsDialog extends Dialog {
     public void showCheckInMeetingWindow(ActiveCheckIn activeCheckIn, String mode, TeleServiceCheckIn meetingDetails) {
 
         if (mode.equalsIgnoreCase("WhatsApp")) {
-            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getWhatsApp());
+            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getWhatsApp(),activeCheckIn.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
         } else {
-            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getPhone());
+            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getPhone(),"");
         }
         meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
         meetingInfo.show();
@@ -855,7 +855,7 @@ public class ActionsDialog extends Dialog {
                         edt_message.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void afterTextChanged(Editable arg0) {
-                                if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
+                                if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating!=null && rating.getRating()!=0) {
                                     btn_rate.setEnabled(true);
                                     btn_rate.setClickable(true);
                                     btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
@@ -874,6 +874,26 @@ public class ActionsDialog extends Dialog {
                             public void onTextChanged(CharSequence s, int start, int before, int count) {
                             }
                         });
+
+                        if (rating != null) {
+                            rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                                @Override
+                                public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                                    if(edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating.getRating() != 0){
+                                        btn_rate.setEnabled(true);
+                                        btn_rate.setClickable(true);
+                                        btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
+                                    }
+                                    else{
+                                        btn_rate.setEnabled(false);
+                                        btn_rate.setClickable(false);
+                                        btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                                    }
+                                }
+                            });
+                        }
+
+
                         btn_close.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -1008,7 +1028,7 @@ public class ActionsDialog extends Dialog {
                         edt_message.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void afterTextChanged(Editable arg0) {
-                                if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
+                                if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating!=null && rating.getRating()!=0) {
                                     btn_rate.setEnabled(true);
                                     btn_rate.setClickable(true);
                                     btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
@@ -1027,6 +1047,26 @@ public class ActionsDialog extends Dialog {
                             public void onTextChanged(CharSequence s, int start, int before, int count) {
                             }
                         });
+
+                        if (rating != null) {
+                            rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                                @Override
+                                public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                                    if(edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating.getRating() != 0){
+                                        btn_rate.setEnabled(true);
+                                        btn_rate.setClickable(true);
+                                        btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
+                                    }
+                                    else{
+                                        btn_rate.setEnabled(false);
+                                        btn_rate.setClickable(false);
+                                        btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                                    }
+                                }
+                            });
+                        }
+
+
                         btn_close.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

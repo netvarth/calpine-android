@@ -227,7 +227,7 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
 
                 viewHolder.llDonationRange.setVisibility(View.GONE);
                 viewHolder.tvServiceType.setVisibility(View.VISIBLE);
-                viewHolder.tvServiceType.setText("Appointments");
+                viewHolder.tvServiceType.setText("Appointment");
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
 
 
@@ -271,8 +271,12 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
                                 viewHolder.ivTeleService.setImageResource(R.drawable.googlemeet);
 
                             } else if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-
-                                viewHolder.ivTeleService.setImageResource(R.drawable.whatsapp_icon);
+                                if(servicesInfoList.get(position).getVirtualServiceType()!=null && servicesInfoList.get(position).getVirtualServiceType().equalsIgnoreCase("videoService")){
+                                    viewHolder.ivTeleService.setImageResource(R.drawable.whatsapp_videoicon);
+                                }
+                                else {
+                                    viewHolder.ivTeleService.setImageResource(R.drawable.whatsapp_icon);
+                                }
 
                             } else if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("phone")) {
 

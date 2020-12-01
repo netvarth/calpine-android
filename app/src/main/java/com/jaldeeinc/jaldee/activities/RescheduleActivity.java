@@ -175,6 +175,9 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
     @BindView(R.id.attach_file_size)
     CustomTextViewMedium tvAttachFileSize;
 
+    @BindView(R.id.tv_addNote)
+    CustomTextViewMedium tvAddNotes;
+
 
     int scheduleId, serviceId, locationId, accountId;
     String slotTime, apiDate;
@@ -234,6 +237,14 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
         if (appointmentInfo != null) {
 
             ApiSearchViewTerminology(Integer.parseInt(appointmentInfo.getProviderAccount().getUniqueId()));
+
+            if(appointmentInfo.getService()!=null && appointmentInfo.getService().getConsumerNoteTitle()!=null && !appointmentInfo.getService().getConsumerNoteTitle().equalsIgnoreCase("")){
+                tvAddNotes.setText(appointmentInfo.getService().getConsumerNoteTitle());
+            }
+            else{
+                tvAddNotes.setText("Add Note");
+            }
+
         }
 
 
@@ -339,7 +350,11 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                             } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
                                 ivteleService.setImageResource(R.drawable.googlemeet);
                             } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                ivteleService.setImageResource(R.drawable.whatsapp_icon);
+                                if (appointmentInfo.getService().getVirtualServiceType() != null && appointmentInfo.getService().getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                    ivteleService.setImageResource(R.drawable.whatsapp_videoicon);
+                                } else {
+                                    ivteleService.setImageResource(R.drawable.whatsapp_icon);
+                                }
 
                             } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 ivteleService.setImageResource(R.drawable.phoneaudioicon);

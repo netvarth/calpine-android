@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.ChatActivity;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.DetailInboxList;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.response.InboxModel;
@@ -102,6 +104,22 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
 
         myViewHolder.tv_message.setText(inboxList.getMsg());
 //        Log.i("kingiii",new Gson().toJson(inboxList.getAttachments()));
+        myViewHolder.tv_message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), ChatActivity.class);
+                intent.putExtra("uuid",inboxList.getWaitlistId());
+                intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
+                intent.putExtra("name",inboxList.getAccountName());
+                if(inboxList.getWaitlistId().contains("_wl")){
+                    intent.putExtra("from", Constants.CHECKIN);
+                }
+                else if(inboxList.getWaitlistId().contains("_appt")){
+                    intent.putExtra("from", Constants.APPOINTMENT);
+                }
+                view.getContext().startActivity(intent);
+            }
+        });
 
 
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
@@ -182,9 +200,23 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
                if(DetailInboxList.setInboxList(mDetailInboxList))
 
                {
-                   Intent iInbox = new Intent(v.getContext(), DetailInboxList.class);
-                   iInbox.putExtra("provider",inboxList.getAccountName());
-                   mContext.startActivity(iInbox);
+                   Intent intent = new Intent(v.getContext(), ChatActivity.class);
+                   intent.putExtra("uuid",inboxList.getWaitlistId());
+                   intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
+                   intent.putExtra("name",inboxList.getAccountName());
+                   if(inboxList.getWaitlistId().contains("_wl")){
+                       intent.putExtra("from", Constants.CHECKIN);
+                   }
+                   else if(inboxList.getWaitlistId().contains("_appt")){
+                       intent.putExtra("from", Constants.APPOINTMENT);
+                   }
+                   mContext.startActivity(intent);
+
+
+
+//                   Intent iInbox = new Intent(v.getContext(), DetailInboxList.class);
+//                   iInbox.putExtra("provider",inboxList.getAccountName());
+//                   mContext.startActivity(iInbox);
                }
 
 

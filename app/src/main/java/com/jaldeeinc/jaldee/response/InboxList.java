@@ -2,8 +2,10 @@ package com.jaldeeinc.jaldee.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.jaldeeinc.jaldee.model.FileAttachment;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class InboxList implements Serializable {
 
@@ -26,6 +28,11 @@ public class InboxList implements Serializable {
     private String messageId;
 
     private boolean read;
+
+
+
+    @SerializedName("attachements")
+    public List<FileAttachment> attachments;
 
     public InboxList() {
 
@@ -121,5 +128,13 @@ public class InboxList implements Serializable {
 
     public void setAccountName(String accountName) {
         this.accountName = accountName;
+    }
+
+    public List<FileAttachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<FileAttachment> attachments) {
+        this.attachments = attachments;
     }
 }

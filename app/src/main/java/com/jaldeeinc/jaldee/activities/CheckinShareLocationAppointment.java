@@ -2,7 +2,7 @@ package com.jaldeeinc.jaldee.activities;
 
 
 
-import android.app.AlertDialog;
+import  android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -281,20 +281,22 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
          if(shareSwitch.isChecked()){
                 UpdateShareLiveLocation();
                 mService.removeLocationUpdates();
-             if (a.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
-                 finish();
-             }
-             else {
-                 if(from!=null && from.equalsIgnoreCase("appt")) {
-                     Intent checkin = new Intent(CheckinShareLocationAppointment.this, AppointmentConfirmation.class);
-                     checkin.putExtra("BookingDetails", a);
-                     checkin.putExtra("terminology", terminology);
-                     startActivity(checkin);
-                 }
-                 else{
-                     finish();
-                 }
-             }
+//             if (a.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
+//                 finish();
+//             }
+//             else {
+//                 if(from!=null && from.equalsIgnoreCase("appt")) {
+//                     Intent checkin = new Intent(CheckinShareLocationAppointment.this, AppointmentConfirmation.class);
+//                     checkin.putExtra("BookingDetails", a);
+//                     checkin.putExtra("terminology", terminology);
+//                     startActivity(checkin);
+//                 }
+//                 else{
+//                     finish();
+//                 }
+//             }
+             Intent intent = new Intent(CheckinShareLocationAppointment.this,Home.class);
+             startActivity(intent);
          }
          else{
              shareSwitch.setChecked(false);
@@ -302,20 +304,23 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
              UpdateShareLiveLocation();
              Toast.makeText(CheckinShareLocationAppointment.this, "Live tracking has been disabled", Toast.LENGTH_SHORT).show();
              mService.removeLocationUpdates();
-             if (a.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
-                 finish();
-             }
-             else {
-                 if(from!=null && from.equalsIgnoreCase("appt")) {
-                     Intent checkin = new Intent(CheckinShareLocationAppointment.this, AppointmentConfirmation.class);
-                     checkin.putExtra("BookingDetails", a);
-                     checkin.putExtra("terminology", terminology);
-                     startActivity(checkin);
-                 }
-                 else{
-                     finish();
-                 }
-             }
+//             if (a.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
+//                 finish();
+//             }
+//             else {
+//                 if(from!=null && from.equalsIgnoreCase("appt")) {
+//                     Intent checkin = new Intent(CheckinShareLocationAppointment.this, AppointmentConfirmation.class);
+//                     checkin.putExtra("BookingDetails", a);
+//                     checkin.putExtra("terminology", terminology);
+//                     startActivity(checkin);
+//                 }
+//                 else{
+//                     finish();
+//                 }
+//             }
+
+             Intent intent = new Intent(CheckinShareLocationAppointment.this,Home.class);
+             startActivity(intent);
          }
             }
         });
@@ -325,20 +330,22 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                 if(shareSwitch.isChecked()){
                     UpdateShareLiveLocation();
                     mService.removeLocationUpdates();
-                    if (a.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
-                        finish();
-                    }
-                    else {
-                        if (from != null && from.equalsIgnoreCase("appt")) {
-                            Intent checkin = new Intent(CheckinShareLocationAppointment.this, AppointmentConfirmation.class);
-                            checkin.putExtra("BookingDetails", a);
-                            checkin.putExtra("terminology", terminology);
-                            startActivity(checkin);
-                        }
-                        else{
-                            finish();
-                        }
-                    }
+//                    if (a.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
+//                        finish();
+//                    }
+//                    else {
+//                        if (from != null && from.equalsIgnoreCase("appt")) {
+//                            Intent checkin = new Intent(CheckinShareLocationAppointment.this, AppointmentConfirmation.class);
+//                            checkin.putExtra("BookingDetails", a);
+//                            checkin.putExtra("terminology", terminology);
+//                            startActivity(checkin);
+//                        }
+//                        else{
+//                            finish();
+//                        }
+//                    }
+                    Intent intent = new Intent(CheckinShareLocationAppointment.this,Home.class);
+                    startActivity(intent);
 
                 }
                 else{
@@ -347,20 +354,22 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                 UpdateShareLiveLocation();
                 Toast.makeText(CheckinShareLocationAppointment.this, "Live tracking has been disabled", Toast.LENGTH_SHORT).show();
                 mService.removeLocationUpdates();
-                    if (a.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
-                        finish();
-                    }
-                    else {
-                        if (from != null && from.equalsIgnoreCase("appt")) {
-                            Intent checkin = new Intent(CheckinShareLocationAppointment.this, AppointmentConfirmation.class);
-                            checkin.putExtra("BookingDetails", a);
-                            checkin.putExtra("terminology", terminology);
-                            startActivity(checkin);
-                        }
-                        else{
-                            finish();
-                        }
-                    }
+//                    if (a.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
+//                        finish();
+//                    }
+//                    else {
+//                        if (from != null && from.equalsIgnoreCase("appt")) {
+//                            Intent checkin = new Intent(CheckinShareLocationAppointment.this, AppointmentConfirmation.class);
+//                            checkin.putExtra("BookingDetails", a);
+//                            checkin.putExtra("terminology", terminology);
+//                            startActivity(checkin);
+//                        }
+//                        else{
+//                            finish();
+//                        }
+//                    }
+                    Intent intent = new Intent(CheckinShareLocationAppointment.this,Home.class);
+                    startActivity(intent);
                 }
             }
         });
@@ -393,13 +402,7 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                     transportLayout.setVisibility(View.GONE);
                    // btn_send.setVisibility(View.GONE);
                     btn_cancel.setVisibility(View.VISIBLE);
-
-
-
-
-
                     view1.setVisibility(View.GONE);
-
                     view3.setVisibility(View.GONE);
                     UpdateShareLiveLocation();
                     mService.removeLocationUpdates();
@@ -635,12 +638,6 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                         transportLayout.setVisibility(View.VISIBLE);
                         btn_send.setVisibility(View.VISIBLE);
                         btn_cancel.setVisibility(View.VISIBLE);
-
-
-
-
-
-
                         view3.setVisibility(View.VISIBLE);
                         firstCall = false;
                         if(response.body().getJaldeeDistanceTime()!= null) {
@@ -700,12 +697,6 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                         transportLayout.setVisibility(View.VISIBLE);
                         btn_send.setVisibility(View.VISIBLE);
                         btn_cancel.setVisibility(View.VISIBLE);
-
-
-
-
-
-
                         view3.setVisibility(View.VISIBLE);
                         if (response.body().getJaldeeDistanceTime() != null) {
 

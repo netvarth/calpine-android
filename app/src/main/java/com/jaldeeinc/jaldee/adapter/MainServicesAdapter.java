@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -231,7 +232,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
             } else if (servicesInfoList.get(position).getType() != null && servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
                 viewHolder.llDonationRange.setVisibility(View.GONE);
-                viewHolder.tvServiceType.setText("Appointments");
+                viewHolder.tvServiceType.setText("Appointment");
                 viewHolder.tvServiceType.setVisibility(View.VISIBLE);
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
 
@@ -276,8 +277,12 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                                 viewHolder.ivTeleService.setImageResource(R.drawable.googlemeet);
 
                             } else if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-
-                                viewHolder.ivTeleService.setImageResource(R.drawable.whatsapp_icon);
+                                if(servicesInfoList.get(position).getVirtualServiceType()!=null && servicesInfoList.get(position).getVirtualServiceType().equalsIgnoreCase("videoService")){
+                                    viewHolder.ivTeleService.setImageResource(R.drawable.whatsapp_videoicon);
+                                }
+                                else {
+                                    viewHolder.ivTeleService.setImageResource(R.drawable.whatsapp_icon);
+                                }
 
                             } else if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("phone")) {
 
@@ -342,14 +347,12 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                                         iSelectedService.onDonationSelected(servicesInfoList.get(position).getDonationServiceInfo());
                                     }
                                 } else {
-
                                     showProviderUnavailable();
                                 }
 
                             }
                         }
                     } else {
-
                         if (servicesInfoList.get(position).getType() != null) {
 
                             if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.CHECKIN) || servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.APPOINTMENT)) {

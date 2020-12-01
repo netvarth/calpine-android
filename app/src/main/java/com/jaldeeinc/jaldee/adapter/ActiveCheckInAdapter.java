@@ -280,8 +280,12 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                         myViewHolder.icon_service.setImageResource(R.drawable.googlemeet_sized);
                     }
                     else if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
-                        myViewHolder.icon_service.setImageResource(R.drawable.whatsappicon_sized);
-
+                        if(activelist.getService().getVirtualServiceType()!=null && activelist.getService().getVirtualServiceType().equalsIgnoreCase("videoService") ){
+                            myViewHolder.icon_service.setImageResource(R.drawable.whatsapp_videoicon_sized);
+                        }
+                        else {
+                            myViewHolder.icon_service.setImageResource(R.drawable.whatsappicon_sized);
+                        }
                     }
                     else if(activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")){
                         myViewHolder.icon_service.setImageResource(R.drawable.phoneiconsized_small);
