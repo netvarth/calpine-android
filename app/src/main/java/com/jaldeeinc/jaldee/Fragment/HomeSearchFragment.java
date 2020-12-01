@@ -2627,7 +2627,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
         jdnFragment.setArguments(bundle);
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.contactLayout, jdnFragment).commit();
+        transaction.replace(R.id.mainlayout, jdnFragment).commit();
     }
 
     @Override

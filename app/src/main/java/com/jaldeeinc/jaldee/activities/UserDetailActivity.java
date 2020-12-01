@@ -372,7 +372,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             // Service provider name
             if (mBusinessDataList.getBusinessName() != null) {
                 String name = mBusinessDataList.getBusinessName();
-                name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+//                name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
                 tvSpName.setText(name);
             }
 

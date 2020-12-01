@@ -38,6 +38,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CircleTransform;
+import com.jaldeeinc.jaldee.custom.CustomDailogVerification;
 import com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
@@ -396,7 +397,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         myViewHolder.ivJaldeeverified.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomDialog cdd = new CustomDialog(context, searchdetailList.getYnw_verified_level(), searchdetailList.getTitle());
+                CustomDailogVerification cdd = new CustomDailogVerification(context, searchdetailList.getYnw_verified_level(), searchdetailList.getTitle());
                 cdd.setCanceledOnTouchOutside(true);
                 cdd.show();
 //                mAdapterCallback.onMethodJaldeeLogo(searchdetailList.getYnw_verified_level(), searchdetailList.getTitle());
