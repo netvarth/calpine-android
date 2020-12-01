@@ -17,6 +17,7 @@ import android.os.Bundle;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -2335,7 +2336,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
 
     @Override
     public void onConnected(Bundle bundle) {
-        checkPermissions();
+          checkPermissions();
         Config.logV("CONNECTED ");
     }
 
@@ -2550,6 +2551,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
 
     }
 
+
     @Override
     public void onMethodCallback(String value, String claimable, String location_id1) {
 
@@ -2617,7 +2619,15 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
 
     @Override
     public void onMethodJdn(String uniqueid) {
-
+        JdnFragment jdnFragment = new JdnFragment();
+        // refreshQuery();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("uniqueID", uniqueid);
+        jdnFragment.setArguments(bundle);
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.contactLayout, jdnFragment).commit();
     }
 
     @Override

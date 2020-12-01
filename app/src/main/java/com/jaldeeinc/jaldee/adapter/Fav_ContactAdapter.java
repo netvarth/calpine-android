@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
+import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.ContactModel;
 
 import java.util.ArrayList;
@@ -28,13 +30,14 @@ public class Fav_ContactAdapter extends RecyclerView.Adapter<Fav_ContactAdapter.
     Context mContext;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView name, txtcontact_value;
+        CustomTextViewSemiBold name;
+        CustomTextViewMedium txtcontact_value;
         LinearLayout contact_list_row_item;
 
         public MyViewHolder(View view) {
             super(view);
-            name = (TextView) view.findViewById(R.id.txtcontact);
-            txtcontact_value = (TextView) view.findViewById(R.id.txtcontact_value);
+            name = view.findViewById(R.id.txtcontact);
+            txtcontact_value =  view.findViewById(R.id.txtcontact_value);
             contact_list_row_item = (LinearLayout) view.findViewById(R.id.contact_list_row_item);
 
         }

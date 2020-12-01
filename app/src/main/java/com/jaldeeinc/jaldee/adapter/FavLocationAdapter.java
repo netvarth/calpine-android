@@ -32,6 +32,10 @@ import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
+import com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic;
+import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.QueueList;
@@ -69,22 +73,25 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tv_loc,tv_date,tv_waittime,tv_Open,tv_qmessage,tvAvailDate,txt_peopleahead;
-        Button btn_checkin,btnappointments,btndonations;
+        TextView tv_date;
+        CustomTextViewBold btn_checkin,btnappointments,btndonations;
         View divider;
         RecyclerView recycleview_contact;
         LinearLayout appoinmentLayouts, donationLayouts;
+        CustomTextViewMedium tv_loc,tv_waittime,tvAvailDate,txt_peopleahead;
+        CustomTextViewSemiBold tv_Open,tv_qmessage;
+
         public MyViewHolder(View view) {
             super(view);
 
-            tv_loc=(TextView)view.findViewById(R.id.txt_loc);
+            tv_loc=view.findViewById(R.id.txt_loc);
             tv_date=(TextView)view.findViewById(R.id.txt_date);
             tvAvailDate = view.findViewById(R.id.txtavaildate);
-            tv_waittime=(TextView)view.findViewById(R.id.txt_time);
-            tv_Open=(TextView)view.findViewById(R.id.txtOpen);
-            btn_checkin=(Button) view.findViewById(R.id.btn_checkin);
-            btnappointments=(Button) view.findViewById(R.id.btnappointments);
-            btndonations = (Button) view.findViewById(R.id.btndonations);
+            tv_waittime=view.findViewById(R.id.txt_time);
+            tv_Open=view.findViewById(R.id.txtOpen);
+            btn_checkin= view.findViewById(R.id.btn_checkin);
+            btnappointments= view.findViewById(R.id.btnappointments);
+            btndonations =  view.findViewById(R.id.btndonations);
             divider=(View)view.findViewById(R.id.divider);
             recycleview_contact=(RecyclerView)view.findViewById(R.id.recycleview_contact);
             tv_qmessage = view.findViewById(R.id.qmessage);
@@ -724,7 +731,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 
     }
     public void enableCheckinButton(FavLocationAdapter.MyViewHolder myViewHolder) {
-        myViewHolder.btn_checkin.setBackgroundColor(mContext.getResources().getColor(R.color.dark_blue));
+        myViewHolder.btn_checkin.setBackgroundColor(mContext.getResources().getColor(R.color.location_theme));
         myViewHolder.btn_checkin.setTextColor(mContext.getResources().getColor(R.color.white));
         myViewHolder.btn_checkin.setEnabled(true);
         myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
