@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.activities.JdnActivity;
 import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
@@ -198,7 +199,10 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 myViewHolder.iv_jdnIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mAdapterCallback.onMethodJdn(searchdetailList.getUniqueid());
+//                        mAdapterCallback.onMethodJdn(searchdetailList.getUniqueid());
+                        Intent jdnIntent = new Intent(view.getContext(), JdnActivity.class);
+                        jdnIntent.putExtra("uniqueID", searchdetailList.getUniqueid());
+                        view.getContext().startActivity(jdnIntent);
                     }
                 });
 
