@@ -36,7 +36,7 @@
                     android:layout_height="@dimen/dimen_35dp"
                     android:src="@drawable/new_close"
                     android:layout_marginEnd="@dimen/dimen_10dp"
-                    app:tint="@color/location_theme">
+                    app:tint="@color/opaque_title_grey">
 
                 </ImageView>
 

@@ -259,15 +259,24 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         if (searchdetailList.isOnlineCheckIn()) {
                             if (searchdetailList.isShowToken()) {
 
-                                if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())) {
-                                    showWaitingTime(myViewHolder, searchdetailList, null);
+                                if (!searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc")) {
+
+                                    if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())) {
+                                        showWaitingTime(myViewHolder, searchdetailList, null);
+                                    } else {
+                                        showWaitingTime(myViewHolder, searchdetailList, "future");
+                                    }
                                 } else {
-                                    showWaitingTime(myViewHolder, searchdetailList, "future");
+
+                                    myViewHolder.tvEstWaitTime.setText("Waiting in line");
+                                    myViewHolder.tvTimeOrPeople.setText(String.valueOf(searchdetailList.getPersonAhead()));
+                                    myViewHolder.tvTimeOrPeopleHint.setVisibility(View.VISIBLE);
+                                    myViewHolder.tvTimeOrPeopleHint.setText("people");
                                 }
 
                             } else {
 
-                                if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1")) { // Conventional
+                                if (!searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc")) { // Conventional
                                     if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())) {
                                         showWaitingTime(myViewHolder, searchdetailList, null);
                                     } else {
@@ -283,13 +292,16 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                 }
 
                             }
+                        } else {
+                            myViewHolder.llEstTime.setVisibility(View.GONE);
                         }
                     }
 
                 } else if (searchdetailList.getOnline_profile() != null && searchdetailList.getOnline_profile().equals("1") && searchdetailList.isApptEnabled()) {
 
-                    myViewHolder.llEstTime.setVisibility(View.VISIBLE);
                     if (searchdetailList.getAvailableDate() != null) {
+
+                        myViewHolder.llEstTime.setVisibility(View.VISIBLE);
 
                         if (formattedDate.equalsIgnoreCase(searchdetailList.getAvailableDate())) {
 
@@ -387,12 +399,12 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     myViewHolder.tvSpOne.setText(list_spec.get(0));
                 } else if (list_spec.size() == 2) {
                     myViewHolder.tvSpOne.setVisibility(View.VISIBLE);
-                    myViewHolder.tvSpOne.setText(list_spec.get(0)+", ");
+                    myViewHolder.tvSpOne.setText(list_spec.get(0) + ", ");
                     myViewHolder.tvSpTwo.setVisibility(View.VISIBLE);
                     myViewHolder.tvSpTwo.setText(list_spec.get(1));
                 } else {
                     myViewHolder.tvSpOne.setVisibility(View.VISIBLE);
-                    myViewHolder.tvSpOne.setText(list_spec.get(0)+", ");
+                    myViewHolder.tvSpOne.setText(list_spec.get(0) + ", ");
                     myViewHolder.tvSpTwo.setVisibility(View.VISIBLE);
                     myViewHolder.tvSpTwo.setText(list_spec.get(1));
                 }

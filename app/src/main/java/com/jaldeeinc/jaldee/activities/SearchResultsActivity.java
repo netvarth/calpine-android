@@ -294,12 +294,6 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                 CustomTextViewSemiBold tvApply = dialog.findViewById(R.id.tv_apply);
                 ImageView ivClose = dialog.findViewById(R.id.iv_close);
 
-//                filterChipsAdapter = new FilterChipsAdapter(mContext, filterChipsList, iClearFilter);
-//                GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 2, GridLayoutManager.HORIZONTAL, false);
-//                rvChips.setLayoutManager(gridLayoutManager);
-//                rvChips.setAdapter(filterChipsAdapter);
-
-
                 if (passedFormulaArray.size() == 0) {
 
                     if (selectedDomain != null && selectedDomain.equalsIgnoreCase("All")) {
@@ -389,8 +383,8 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                     @Override
                     public void onClick(View view) {
 
-                        passformula = "";
-                        passedFormulaArray.clear();
+//                        passformula = "";
+//                        passedFormulaArray.clear();
                         dialog.dismiss();
 
                     }
@@ -415,7 +409,8 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                     @Override
                     public void onClick(View v) {
 
-                        rvChips.removeAllViewsInLayout();
+                        rvAppliedFilters.removeAllViewsInLayout();
+                        filterChipsList.clear();
                         passformula = "";
                         passedFormulaArray.clear();
 //                                txtrefinedsearch.setText("Refine Search");
@@ -1097,8 +1092,6 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
         } else {
             query.put("fq", "(and  " + passformula + " (not test_account:1  ) )");
         }
-
-
         Map<String, String> params = new HashMap<>();
 
         params.put("size", "10");
@@ -1109,8 +1102,6 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
         params.put("return", "_all_fields,distance");
 
         Call<SearchAWsResponse> call = apiService.getSearchAWS(query, params);
-
-
         call.enqueue(new Callback<SearchAWsResponse>() {
             @Override
             public void onResponse(Call<SearchAWsResponse> call, Response<SearchAWsResponse> response) {
@@ -1311,8 +1302,6 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
 
                                 mSearchResp.add(search);
                             }
-
-
                             ApiSheduleList(ids, mSearchResp, "first", mScheduleList);
 
                         } else {
@@ -1320,16 +1309,12 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                             Lnosearchresult.setVisibility(View.VISIBLE);
                             tv_nosearchresult.setVisibility(View.VISIBLE);
                             mRecySearchDetail.setVisibility(View.GONE);
-                            tv_nosearchresult.setText("No search result found for this location");
+                            tv_nosearchresult.setText("No search result found");
                             progressBar.setVisibility(View.GONE);
                             tv_searchresult.setVisibility(View.GONE);
 
-
                         }
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1345,8 +1330,6 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
 
             }
         });
-
-
     }
 
     /**

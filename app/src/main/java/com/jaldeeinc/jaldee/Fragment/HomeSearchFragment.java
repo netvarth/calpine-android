@@ -2487,7 +2487,8 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
             querycreate = sector;
         } else {
             if (category.equalsIgnoreCase("Suggested Search")) {
-                String requiredString = sector.substring(sector.indexOf("]") + 1, sector.indexOf(")"));
+                String requiredString = sector.substring(sector.indexOf("]") + 1, sector.indexOf(")&q"));
+//                String requiredString = getQuery("(and [loc_details]",")&q.parser");
                 Config.logV("Second---------" + requiredString);
                 querycreate = requiredString;
                 subdomainquery = "sub_sector:'" + name + "'";
@@ -2533,6 +2534,13 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
             searchSrcTextView.clearFocus();
             mSearchView.clearFocus();
         }
+    }
+
+    private String getQuery(String s, String s1) {
+
+
+
+        return null;
     }
 
     @Override
