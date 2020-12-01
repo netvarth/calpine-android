@@ -185,6 +185,23 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     myViewHolder.tvLocationName.setVisibility(View.GONE);
                 }
 
+                // to set JDN icon
+                if (searchdetailList.getJdn() != null) {
+                    if (searchdetailList.getJdn().equals("1")) {
+                        myViewHolder.iv_jdnIcon.setVisibility(View.VISIBLE);
+                    } else {
+                        myViewHolder.iv_jdnIcon.setVisibility(View.GONE);
+                    }
+                } else {
+                    myViewHolder.iv_jdnIcon.setVisibility(View.GONE);
+                }
+                myViewHolder.iv_jdnIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mAdapterCallback.onMethodJdn(searchdetailList.getUniqueid());
+                    }
+                });
+
                 // claim info
                 showClaimInfo(myViewHolder, searchdetailList);
 
@@ -664,7 +681,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     protected class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView ivSpImage, ivJaldeeverified;
+        private ImageView ivSpImage, ivJaldeeverified, iv_jdnIcon;
         private CustomTextViewSemiBold tvSpName;
         private CustomTextViewItalicSemiBold tvTimeOrPeople, tvTimeOrPeopleHint;
         private CustomTextViewMedium tvLocationName, tvEstWaitTime, tvInvalidAccount, tvSpOne, tvSpTwo;
@@ -695,6 +712,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             llSpecializations = view.findViewById(R.id.ll_specializations);
             tvSpOne = view.findViewById(R.id.tv_spOne);
             tvSpTwo = view.findViewById(R.id.tv_spTwo);
+            iv_jdnIcon = view.findViewById(R.id.txtjdn);
         }
     }
 

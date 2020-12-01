@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,6 +35,7 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaldeeinc.jaldee.Fragment.HomeSearchFragment;
+import com.jaldeeinc.jaldee.Fragment.JdnFragment;
 import com.jaldeeinc.jaldee.Interface.IClearFilter;
 import com.jaldeeinc.jaldee.Interface.IFilterOptions;
 import com.jaldeeinc.jaldee.R;
@@ -2484,6 +2486,15 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
 
     @Override
     public void onMethodJdn(String uniqueid) {
+        JdnFragment jdnFragment = new JdnFragment();
+        // refreshQuery();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("uniqueID", uniqueid);
+        jdnFragment.setArguments(bundle);
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.contactLayout, jdnFragment).commit();
 
     }
 

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -10,21 +11,30 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/new_location"
+            app:tint="@color/location_theme">
+
+        </ImageView>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
             android:textStyle="bold"
             android:id="@+id/txt_loc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:drawableRight="@drawable/loc_new"
-            android:drawablePadding="@dimen/padding3"
             android:layout_gravity="center"
             android:padding="3dp"
             android:text="Fort Kochi "
             android:textColor="@color/sec_title_grey"
             android:textSize="@dimen/txtsize_hint" />
 
-        <TextView
+
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
             android:id="@+id/txtOpen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,7 +57,7 @@
     </androidx.recyclerview.widget.RecyclerView>
 
 
-    <TextView
+    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
         android:padding="@dimen/padding7"
         android:layout_marginLeft="@dimen/dimen_5dp"
         android:id="@+id/qmessage"
@@ -61,7 +71,7 @@
         android:textSize="@dimen/txtsize_12"
         android:visibility="gone"/>
 
-    <TextView
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:padding="@dimen/padding7"
         android:layout_marginLeft="@dimen/dimen_5dp"
         android:id="@+id/txt_peopleahead"
@@ -82,7 +92,7 @@
         android:layout_gravity="center"
         android:orientation="horizontal">
 
-        <TextView
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
             android:id="@+id/txt_time"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -93,18 +103,18 @@
             android:paddingLeft="@dimen/padding3"
             android:paddingRight="@dimen/padding3"
             android:text="Est WaitTime"
-            android:textColor="@color/dark_blue"
+            android:textColor="@color/location_theme"
             android:textSize="@dimen/txtsize_12"
             android:visibility="gone" />
 
-        <Button
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
             android:id="@+id/btn_checkin"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@color/dark_blue"
+            android:background="@color/location_theme"
             android:gravity="center"
             android:paddingLeft="@dimen/padding3"
             android:paddingRight="@dimen/padding3"
@@ -143,7 +153,7 @@
         android:layout_marginTop="@dimen/default_padding"
         android:orientation="horizontal">
 
-        <TextView
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
             android:id="@+id/txtavaildate"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -157,18 +167,18 @@
             android:paddingLeft="@dimen/padding3"
             android:paddingRight="@dimen/padding3"
             android:text=""
-            android:textColor="@color/dark_blue"
+            android:textColor="@color/location_theme"
             android:textSize="@dimen/txtsize_12"
             android:textStyle="normal"
             android:visibility="visible" />
 
-        <Button
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
             android:id="@+id/btnappointments"
             android:layout_width="0dp"
             android:layout_height="@dimen/dimen_50dp"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@color/dark_blue"
+            android:background="@color/location_theme"
             android:gravity="center"
             android:paddingLeft="@dimen/padding3"
             android:paddingRight="@dimen/padding3"
@@ -190,14 +200,14 @@
 
 
 
-        <Button
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
             android:id="@+id/btndonations"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@color/dark_blue"
+            android:background="@color/location_theme"
             android:gravity="center"
             android:paddingLeft="@dimen/padding3"
             android:paddingRight="@dimen/padding3"

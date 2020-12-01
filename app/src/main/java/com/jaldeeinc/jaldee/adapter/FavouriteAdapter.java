@@ -24,6 +24,8 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.callback.FavAdapterOnCallback;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.SearchLocation;
 
@@ -44,21 +46,22 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tv_provider, tv_removefav, tv_privacy, tv_message, tv_view;
+        CustomTextViewSemiBold tv_removefav, tv_privacy, tv_message, tv_view;
         LinearLayout Lfavlisiting,Layout_fav;
         RecyclerView mrRecylce_fav;
         ImageView imgarrow;
         ArrayList<SearchLocation> mSearchLocList;
+        CustomTextViewBold tv_provider;
 
 
         public MyViewHolder(View view) {
             super(view);
-            tv_provider = (TextView) view.findViewById(R.id.txt_provider);
+            tv_provider = view.findViewById(R.id.txt_provider);
             mrRecylce_fav = (RecyclerView) view.findViewById(R.id.recylce_favloc);
-            tv_removefav = (TextView) view.findViewById(R.id.txtremovefav);
-            tv_privacy = (TextView) view.findViewById(R.id.txtprivacy);
-            tv_message = (TextView) view.findViewById(R.id.txtmessage);
-            tv_view = (TextView) view.findViewById(R.id.txtview);
+            tv_removefav =  view.findViewById(R.id.txtremovefav);
+            tv_privacy = view.findViewById(R.id.txtprivacy);
+            tv_message =  view.findViewById(R.id.txtmessage);
+            tv_view =  view.findViewById(R.id.txtview);
             Lfavlisiting = (LinearLayout) view.findViewById(R.id.favlisiting);
             imgarrow=(ImageView) view.findViewById(R.id.imgarrow);
             Layout_fav=(LinearLayout) view.findViewById(R.id.layout_fav);
@@ -99,9 +102,9 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
 
 //        Log.i("popopopo",new Gson().toJson(mFavList.get(position)));
 
-        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        myViewHolder.tv_provider.setTypeface(tyface);
+//        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+//                "fonts/Montserrat_Bold.otf");
+//        myViewHolder.tv_provider.setTypeface(tyface);
 
         myViewHolder.tv_provider.setText(favList.getBusinessName());
 
