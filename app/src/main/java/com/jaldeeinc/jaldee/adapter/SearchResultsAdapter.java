@@ -200,10 +200,8 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 myViewHolder.iv_jdnIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-//                        mAdapterCallback.onMethodJdn(searchdetailList.getUniqueid());
-                        Intent jdnIntent = new Intent(view.getContext(), JdnActivity.class);
-                        jdnIntent.putExtra("uniqueID", searchdetailList.getUniqueid());
-                        view.getContext().startActivity(jdnIntent);
+                        mAdapterCallback.onMethodJdn(searchdetailList.getUniqueid());
+
                     }
                 });
 
