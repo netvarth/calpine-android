@@ -191,6 +191,9 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 // handle verification
                 handleJaldeeVerification(myViewHolder, searchdetailList);
 
+                // to set specializations
+                setSpecializations(myViewHolder, searchdetailList);
+
                 // to set provider image
                 if (searchdetailList.getLogo() != null) {
                     PicassoTrustAll.getInstance(context).load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.ivSpImage);
@@ -370,6 +373,37 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 //                mAdapterCallback.onMethodJaldeeLogo(searchdetailList.getYnw_verified_level(), searchdetailList.getTitle());
             }
         });
+    }
+
+    public void setSpecializations(SearchResultsAdapter.MyViewHolder myViewHolder, final SearchListModel searchdetailList) {
+        if (searchdetailList.getSpecialization_displayname() != null) {
+            final List<String> list_spec = searchdetailList.getSpecialization_displayname();
+
+            if (list_spec.size() > 0) {
+
+                myViewHolder.llSpecializations.setVisibility(View.VISIBLE);
+                if (list_spec.size() == 1) {
+                    myViewHolder.tvSpOne.setVisibility(View.VISIBLE);
+                    myViewHolder.tvSpOne.setText(list_spec.get(0));
+                } else if (list_spec.size() == 2) {
+                    myViewHolder.tvSpOne.setVisibility(View.VISIBLE);
+                    myViewHolder.tvSpOne.setText(list_spec.get(0)+", ");
+                    myViewHolder.tvSpTwo.setVisibility(View.VISIBLE);
+                    myViewHolder.tvSpTwo.setText(list_spec.get(1));
+                } else {
+                    myViewHolder.tvSpOne.setVisibility(View.VISIBLE);
+                    myViewHolder.tvSpOne.setText(list_spec.get(0)+", ");
+                    myViewHolder.tvSpTwo.setVisibility(View.VISIBLE);
+                    myViewHolder.tvSpTwo.setText(list_spec.get(1));
+                }
+
+            } else {
+                myViewHolder.llSpecializations.setVisibility(View.GONE);
+            }
+        } else {
+
+            myViewHolder.llSpecializations.setVisibility(View.GONE);
+        }
     }
 
 
@@ -633,9 +667,9 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         private ImageView ivSpImage, ivJaldeeverified;
         private CustomTextViewSemiBold tvSpName;
         private CustomTextViewItalicSemiBold tvTimeOrPeople, tvTimeOrPeopleHint;
-        private CustomTextViewMedium tvSpecializations, tvLocationName, tvEstWaitTime, tvInvalidAccount;
+        private CustomTextViewMedium tvLocationName, tvEstWaitTime, tvInvalidAccount, tvSpOne, tvSpTwo;
         private RatingBar ratingBar;
-        private LinearLayout llServices, llEstTime;
+        private LinearLayout llServices, llEstTime, llSpecializations;
         private CustomItalicTextViewNormal tvServiceOne, tvServiceTwo, tvServiceThree;
         private CardView cvSearch, cvClaimNow;
 
@@ -644,7 +678,6 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             ivSpImage = view.findViewById(R.id.iv_spImage);
             tvSpName = view.findViewById(R.id.tv_spName);
-            tvSpecializations = view.findViewById(R.id.tv_specializations);
             tvLocationName = view.findViewById(R.id.tv_locationName);
             ivJaldeeverified = view.findViewById(R.id.iv_jaldeeVerified);
             tvTimeOrPeople = view.findViewById(R.id.tv_timeOrCount);
@@ -659,7 +692,9 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             llEstTime = view.findViewById(R.id.ll_estTime);
             tvInvalidAccount = view.findViewById(R.id.tv_invalidAccount);
             cvClaimNow = view.findViewById(R.id.cv_claimNow);
-
+            llSpecializations = view.findViewById(R.id.ll_specializations);
+            tvSpOne = view.findViewById(R.id.tv_spOne);
+            tvSpTwo = view.findViewById(R.id.tv_spTwo);
         }
     }
 

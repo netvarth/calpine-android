@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/white"
+    android:layout_margin="@dimen/dimen_5dp"
+    app:cardCornerRadius="@dimen/dimen_10dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/dimen_5dp">
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:id="@+id/tv_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_gravity="center"
+            android:textColor="@color/title_color"
+            android:textSize="@dimen/dimen_12dp">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="@dimen/dimen_25dp"
+            android:layout_height="@dimen/dimen_20dp"
+            android:src="@drawable/new_close"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dimen_12dp"
+            app:tint="@color/title_color">
+
+        </ImageView>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

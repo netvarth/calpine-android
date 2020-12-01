@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="36 results found"
+            android:text=""
             android:layout_marginStart="@dimen/dimen_10dp"
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_12"
@@ -80,26 +80,28 @@
 
                 </ImageView>
 
+
             </androidx.cardview.widget.CardView>
 
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cv_sort"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/dimen_16dp"
                 android:layout_marginEnd="@dimen/padding5"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:cardBackgroundColor="@color/white"
                 app:cardElevation="@dimen/padding3">
 
                 <ImageView
                     android:layout_width="29dp"
-                    android:layout_height="29dp"
+                    android:layout_height="@dimen/dimen_25dp"
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/padding3"
                     android:padding="1dp"
-                    android:src="@drawable/icon_favourite_line"
+                    android:src="@drawable/sort"
                     app:tint="@color/dark_blue">
 
                 </ImageView>
@@ -131,9 +133,10 @@
             android:orientation="vertical">
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/tv_applyFilter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sort by :"
+                android:text="Applied filters :"
                 android:textAllCaps="true"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:textColor="@color/location_theme"
@@ -147,51 +150,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cv_distance"
-                    android:layout_width="100dp"
-                    android:layout_marginTop="@dimen/dimen_8dp"
-                    android:layout_marginBottom="@dimen/dimen_5dp"
-                    android:layout_marginStart="@dimen/dimen_10dp"
-                    android:layout_height="@dimen/dimen_40dp"
-                    app:cardCornerRadius="@dimen/dimen_5dp"
-                    app:cardElevation="@dimen/dimen_5dp">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_appliedFilters"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
-                        android:id="@+id/tv_distance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Distance"
-                        android:textSize="@dimen/dimen_12dp"
-                        android:layout_gravity="center"
-                        android:textColor="@color/title_color">
+                </androidx.recyclerview.widget.RecyclerView>
 
-                    </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cv_jaldeeverified"
-                    android:layout_width="125dp"
-                    android:layout_marginTop="@dimen/dimen_8dp"
-                    android:layout_marginBottom="@dimen/dimen_5dp"
-                    android:layout_marginStart="@dimen/dimen_20dp"
-                    android:layout_height="@dimen/dimen_40dp"
-                    app:cardCornerRadius="@dimen/dimen_5dp"
-                    app:cardElevation="@dimen/dimen_5dp">
-
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
-                        android:id="@+id/tv_jaldeeVerified"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Jaldee Verified"
-                        android:textSize="@dimen/dimen_12dp"
-                        android:layout_gravity="center"
-                        android:textColor="@color/title_color">
-
-                    </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
-
-                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 

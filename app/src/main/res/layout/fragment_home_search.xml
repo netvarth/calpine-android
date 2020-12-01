@@ -9,6 +9,7 @@
         android:id="@+id/rl_topLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_60dp"
+
         android:background="@color/white"
         android:paddingEnd="@dimen/dimen_10dp">
 
@@ -146,6 +147,7 @@
                                     android:layout_height="match_parent"
                                     android:layout_gravity="center"
                                     android:layout_margin="5dp"
+                                    android:theme="@style/SpinnerTheme"
                                     android:background="@drawable/gridview_bg">
 
                                 </Spinner>

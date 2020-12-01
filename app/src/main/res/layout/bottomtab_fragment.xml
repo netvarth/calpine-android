@@ -26,6 +26,7 @@
         android:layout_alignParentBottom="true"
         app:itemBackground="@drawable/tab_bg"
         app:labelVisibilityMode="labeled"
+        app:itemIconSize="@dimen/dimen_25dp"
         app:itemIconTint="@drawable/bottom_navigation_color_selector"
         app:itemTextColor="@drawable/bottom_navigation_color_selector"
         app:menu="@menu/menu_bottom_navigation" />

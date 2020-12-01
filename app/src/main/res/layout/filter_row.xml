@@ -41,7 +41,9 @@
         android:layout_marginLeft="@dimen/default_padding"
         android:layout_marginTop="@dimen/padding3"
         android:layout_marginBottom="@dimen/padding3"
-        android:orientation="vertical"></LinearLayout>
+        android:orientation="vertical">
+
+    </LinearLayout>
 
     <View
         android:id="@+id/mView"

@@ -135,19 +135,42 @@
                                     android:layout_weight="0.6"
                                     android:orientation="vertical">
 
-                                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                                        android:id="@+id/tv_specializations"
+                                    <LinearLayout
+                                        android:id="@+id/ll_specializations"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="@dimen/dimen_4dp"
-                                        android:layout_marginEnd="@dimen/dimen_5dp"
-                                        android:ellipsize="end"
-                                        android:maxLines="1"
-                                        android:text="Cardiology,Endoscopy"
-                                        android:textColor="@color/title_color"
-                                        android:textSize="14dp">
+                                        android:layout_marginEnd="@dimen/dimen_5dp">
 
-                                    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                                            android:id="@+id/tv_spOne"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:ellipsize="end"
+                                            android:maxLines="1"
+                                            android:text=""
+                                            android:textColor="@color/title_color"
+                                            android:textSize="14dp">
+
+                                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+
+                                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                                            android:id="@+id/tv_spTwo"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:ellipsize="end"
+                                            android:maxLines="1"
+                                            android:text=""
+                                            android:textColor="@color/title_color"
+                                            android:textSize="14dp">
+
+                                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+
+
+                                    </LinearLayout>
+
 
                                     <LinearLayout
                                         android:layout_width="wrap_content"

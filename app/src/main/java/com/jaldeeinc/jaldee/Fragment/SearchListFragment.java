@@ -56,6 +56,7 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
+import com.jaldeeinc.jaldee.model.FilterChips;
 import com.jaldeeinc.jaldee.model.LanLong;
 import com.jaldeeinc.jaldee.model.ListCell;
 import com.jaldeeinc.jaldee.model.SearchListModel;
@@ -1379,8 +1380,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         Config.logV("zeo WWWW" + sort);
 
         Config.logV("PASS FORMULA @@@@@@@@@@@@@@@@@@@@" + passformula);
-        final ApiInterface apiService =
-                ApiClient.getClientAWS(mContext).create(ApiInterface.class);
+        final ApiInterface apiService = ApiClient.getClientAWS(mContext).create(ApiInterface.class);
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
@@ -2624,7 +2624,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
     //ArrayList<String> refinedSelectedItems=new ArrayList<>();
     @Override
-    public void onMethodQuery(ArrayList<String> sFormula, ArrayList<String> keyFormula) {
+    public void onMethodQuery(ArrayList<String> sFormula, ArrayList<String> keyFormula, ArrayList<FilterChips> filterChipsList) {
 
 
         Set<String> set = new HashSet<>(sFormula);
@@ -3357,6 +3357,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             }
         });
     }
+
     public void SortBy(String sort) {
         Config.logV("zeo" + sort);
         if(mtyp==null){

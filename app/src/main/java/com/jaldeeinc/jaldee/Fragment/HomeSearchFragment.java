@@ -1,7 +1,6 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -14,8 +13,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -28,7 +25,6 @@ import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +34,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -55,11 +50,9 @@ import com.jaldeeinc.jaldee.Interface.ISelectedPopularSearch;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
 import com.jaldeeinc.jaldee.activities.SearchResultsActivity;
-import com.jaldeeinc.jaldee.adapter.ActiveCheckInAdapter;
 import com.jaldeeinc.jaldee.adapter.PopularSearchAdapter;
 import com.jaldeeinc.jaldee.adapter.SearchListAdpter;
 import com.jaldeeinc.jaldee.adapter.SearchResultsAdapter;
-import com.jaldeeinc.jaldee.adapter.UserServicesAdapter;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -68,6 +61,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
+import com.jaldeeinc.jaldee.model.FilterChips;
 import com.jaldeeinc.jaldee.model.LanLong;
 import com.jaldeeinc.jaldee.model.ListCell;
 import com.jaldeeinc.jaldee.model.SearchListModel;
@@ -126,7 +120,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
     String mSearchtxt;
     String mPopularSearchtxt;
     static Fragment home;
-    static String mtyp;
+    static String mtyp = null;
     String AWS_URL = "";
     String query1 = "";
     static String mlocName = "";
@@ -165,6 +159,8 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
     ArrayList<ScheduleList> mScheduleList = new ArrayList<>();
     List<SearchListModel> mSearchListModel = new ArrayList<>();
     String passformula = "";
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -208,18 +204,26 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
 
         String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
         Config.logV("UpdateLocation noooooooooooooooooo" + s_currentLoc);
-        if (!s_currentLoc.equalsIgnoreCase("no")) {
+        if (s_currentLoc.equalsIgnoreCase("yes")) {
 
             setUpGClient();
 
         } else if (s_currentLoc.equalsIgnoreCase("no")) {
 
-            latitude = Double.valueOf(SharedPreference.getInstance(mContext).getStringValue("lat", ""));
-            longitude = Double.valueOf(SharedPreference.getInstance(mContext).getStringValue("longitu", ""));
-            mlocName = SharedPreference.getInstance(mContext).getStringValue("locnme", "");
-            mtyp = SharedPreference.getInstance(mContext).getStringValue("typ", "");
+            try {
 
-            UpdateLocation(latitude, longitude, mlocName, mtyp);
+                latitude = Double.valueOf(SharedPreference.getInstance(mContext).getStringValue("lat", ""));
+                longitude = Double.valueOf(SharedPreference.getInstance(mContext).getStringValue("longitu", ""));
+                mlocName = SharedPreference.getInstance(mContext).getStringValue("locnme", "");
+                mtyp = SharedPreference.getInstance(mContext).getStringValue("typ", "");
+
+                UpdateLocation(latitude, longitude, mlocName, mtyp);
+            } catch (NumberFormatException e) {
+
+                latitude = 12.971599;
+                longitude = 77.594563;
+                e.printStackTrace();
+            }
 
 
         } else {
@@ -259,11 +263,13 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
             ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(mContext, R.layout.spinner_item, domainList);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mSpinnerDomain.setAdapter(adapter);
+            mSpinnerDomain.setPopupBackgroundResource(R.color.white);
         }
 
 
         progressBar = (ProgressBar) row.findViewById(R.id.main_progress);
         searchResultsAdapter = new SearchResultsAdapter(getActivity(), mContext, mInterface, uniqueID, mQueueList);
+        searchResultsAdapter.clear();
         linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         rvNearByResults.setLayoutManager(linearLayoutManager);
         rvNearByResults.setItemAnimator(new DefaultItemAnimator());
@@ -283,6 +289,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
 
         ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(mContext, R.layout.spinner_item, domainList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinnerDomain.setPopupBackgroundResource(R.color.white);
 
         mSpinnerDomain.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
@@ -669,6 +676,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
                     bundle.putString("latitude", String.valueOf(latitude));
                     bundle.putString("longitude", String.valueOf(longitude));
                     bundle.putString("spinnervalue", spinnerTxtPass);
+                    bundle.putString("selectedDomain", mDomainSpinner);
                     mSearchtxt = cell.getMdisplayname();
                     Config.logV("SEARCH TXT 99999" + mSearchtxt);
                     bundle.putString("searchtxt", mSearchtxt);
@@ -681,28 +689,24 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
             }
         });
 
-        if (mtyp == null) {
-            mtyp = "city";
-        }
-        LanLong Lanlong = getLocationNearBy(latitude, longitude, mtyp);
-        double upperLeftLat = Lanlong.getUpperLeftLat();
-        double upperLeftLon = Lanlong.getUpperLeftLon();
-        double lowerRightLat = Lanlong.getLowerRightLat();
-        double lowerRightLon = Lanlong.getLowerRightLon();
-        String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
-
-        String query = "(and location1:" + locationRange + " " + ")";
-        String url = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
-        String sort = "claimable asc,distance asc, ynw_verified_level desc";
-
-//        ApiSEARCHAWSLoadFirstData(query, url, sort);
-
 
         rvNearByResults.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
             @Override
             protected void loadMoreItems() {
 
+                if (mtyp == null) {
+                    mtyp = "city";
+                }
+                LanLong Lanlong = getLocationNearBy(latitude, longitude, mtyp);
+                double upperLeftLat = Lanlong.getUpperLeftLat();
+                double upperLeftLon = Lanlong.getUpperLeftLon();
+                double lowerRightLat = Lanlong.getLowerRightLat();
+                double lowerRightLon = Lanlong.getLowerRightLon();
+                String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
 
+                String query = "(and location1:" + locationRange + " " + ")";
+                String url = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
+                String sort = "claimable asc,distance asc, ynw_verified_level desc";
                 Config.logV("Load More-----------------------");
                 isLoading = true;
                 Config.logV("CURRENT PAGE***************" + currentPage);
@@ -714,6 +718,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
                     @Override
                     public void run() {
                         Config.logV("loadNextPage--------------------" + query);
+
                         loadNextPage(query, url);
                     }
                 }, 1000);
@@ -943,6 +948,8 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
                                 ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(getActivity(), R.layout.spinner_item, domainList);
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 mSpinnerDomain.setAdapter(adapter);
+                                mSpinnerDomain.setPopupBackgroundResource(R.color.white);
+
 
                             }
                         }
@@ -984,7 +991,6 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
 
                 try {
 
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
 
@@ -1009,7 +1015,10 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
                         String url = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
                         String sort = "claimable asc,distance asc, ynw_verified_level desc";
 
-                        ApiSEARCHAWSLoadFirstData(query, url, sort);
+                        String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
+                        if (!s_currentLoc.equalsIgnoreCase("yes")) {
+                            ApiSEARCHAWSLoadFirstData(query, url, sort);
+                        }
                     }
 
 
@@ -2001,6 +2010,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
             bundle.putString("latitude", String.valueOf(latitude));
             bundle.putString("longitude", String.valueOf(longitude));
             bundle.putString("spinnervalue", spinnerTxtPass);
+            bundle.putString("selectedDomain", mDomainSpinner);
             bundle.putString("typ", mtyp);
             Config.logV("SEARCH TXT 99999" + mSearchtxt);
             if (!query.equalsIgnoreCase("")) {
@@ -2043,6 +2053,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
             bundle.putString("latitude", String.valueOf(latitude));
             bundle.putString("longitude", String.valueOf(longitude));
             bundle.putString("spinnervalue", spinnerTxtPass);
+            bundle.putString("selectedDomain", mDomainSpinner);
             Config.logV("SEARCH TXT 99999" + mSearchtxt);
             bundle.putString("searchtxt", mSearchtxt);
             bundle.putString("typ", mtyp);
@@ -2192,7 +2203,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
     }
 
 
-    private void getMyLocation() {
+    private Location getMyLocation() {
         if (googleApiClient != null) {
             if (googleApiClient.isConnected()) {
                 Config.logV("Google api connected granted");
@@ -2201,6 +2212,28 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
                 if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
                     Config.logV("Google api connected granted@2@@@");
                     mylocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                    latitude = mylocation.getLatitude();
+                    longitude = mylocation.getLongitude();
+                    SharedPreference.getInstance(mContext).setValue("lat", latitude);
+                    SharedPreference.getInstance(mContext).setValue("longitu", longitude);
+                    String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
+                    if (s_currentLoc.equalsIgnoreCase("yes")) {
+                        if (mtyp == null) {
+                            mtyp = "city";
+                        }
+                        LanLong Lanlong = getLocationNearBy(latitude, longitude, mtyp);
+                        double upperLeftLat = Lanlong.getUpperLeftLat();
+                        double upperLeftLon = Lanlong.getUpperLeftLon();
+                        double lowerRightLat = Lanlong.getLowerRightLat();
+                        double lowerRightLon = Lanlong.getLowerRightLon();
+                        String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
+
+                        String query = "(and location1:" + locationRange + " " + ")";
+                        String url = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
+                        String sort = "claimable asc,distance asc, ynw_verified_level desc";
+                        searchResultsAdapter.clear();
+                        ApiSEARCHAWSLoadFirstData(query, url, sort);
+                    }
                     LocationRequest locationRequest = new LocationRequest();
                     locationRequest.setInterval(0);        // 10 seconds, in milliseconds
                     locationRequest.setFastestInterval(0); // 1 second, in milliseconds
@@ -2225,12 +2258,14 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
                                     // All location settings are satisfied.
                                     // You can initialize location requests here.
 //Mani Changed getActivity() -> mContext
+
                                     int permissionLocation = ContextCompat
                                             .checkSelfPermission(mContext,
                                                     Manifest.permission.ACCESS_FINE_LOCATION);
                                     if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
                                         mylocation = LocationServices.FusedLocationApi
                                                 .getLastLocation(googleApiClient);
+
                                     }
                                     Config.logV("Google apiClient LocationSettingsStatusCodes.SUCCESS");
                                     break;
@@ -2264,6 +2299,14 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
                 }
             }
         }
+
+        return mylocation;
+    }
+
+    public void updateCurrentLocation() {
+
+        setUpGClient();
+
     }
 
     @Override
@@ -2311,7 +2354,10 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
                 Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
                 List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                 tvLocation.setVisibility(View.VISIBLE);
-                tvLocation.setText(addresses.get(0).getLocality());
+                String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
+                if (s_currentLoc.equalsIgnoreCase("yes")) {
+                    tvLocation.setText(addresses.get(0).getLocality());
+                }
 
             } catch (Exception e) {
 
@@ -2345,6 +2391,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
                             String query = "(and location1:" + locationRange + " " + ")";
                             String url = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
                             String sort = "claimable asc,distance asc, ynw_verified_level desc";
+                            searchResultsAdapter.clear();
                             ApiSEARCHAWSLoadFirstData(query, url, sort);
                         } else {
                             getMyLocation();
@@ -2353,7 +2400,13 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
                     case RESULT_CANCELED:
                         Config.logV("GPS ON Google Cancelled");
                         //getActivity().finish();
-                        DefaultLocation();
+                        if (requestCode == REQUEST_GET_DATA_FROM_SOME_ACTIVITY) {
+
+                            updateCurrentLocation();
+
+                        } else {
+                            DefaultLocation();
+                        }
                         break;
                 }
                 break;
@@ -2459,7 +2512,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
             bundle.putString("latitude", String.valueOf(latitude));
             bundle.putString("longitude", String.valueOf(longitude));
             bundle.putString("spinnervalue", spinnerTxtPass);
-
+            bundle.putString("selectedDomain", mDomainSpinner);
             bundle.putString("subdomain_select", "true");
             bundle.putString("subdomainquery", subdomainquery);
             bundle.putString("subdomainName", subdomainName);
@@ -2536,7 +2589,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
     }
 
     @Override
-    public void onMethodQuery(ArrayList<String> formula, ArrayList<String> key) {
+    public void onMethodQuery(ArrayList<String> formula, ArrayList<String> key, ArrayList<FilterChips> filterChipsList) {
 
     }
 

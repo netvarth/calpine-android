@@ -21,6 +21,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
+import com.jaldeeinc.jaldee.model.FilterChips;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
@@ -778,7 +779,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     }
 
     @Override
-    public void onMethodQuery(ArrayList<String> formula, ArrayList<String> key) {
+    public void onMethodQuery(ArrayList<String> formula, ArrayList<String> key, ArrayList<FilterChips> filterChipsList) {
 
     }
 

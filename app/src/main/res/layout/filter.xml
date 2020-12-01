@@ -1,26 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_12dp"
-        android:layout_marginTop="@dimen/dimen_20dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dimen_50dp"
+        android:background="@drawable/top_radius">
 
-        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Filter"
-            android:textAllCaps="true"
-            android:textColor="@color/location_theme"
-            android:textSize="14dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/dimen_12dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginEnd="@dimen/dimen_12dp"
+            android:orientation="vertical">
 
-        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="end">
+
+                <ImageView
+                    android:id="@+id/iv_close"
+                    android:layout_width="@dimen/dimen_35dp"
+                    android:layout_height="@dimen/dimen_35dp"
+                    android:src="@drawable/new_close"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    app:tint="@color/location_theme">
+
+                </ImageView>
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Close"
+                    android:visibility="gone"
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/dimen_15dp"
+                    android:textColor="@color/location_theme">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10dp">
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:id="@+id/tv_clear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Clear all"
+                    android:layout_marginStart="@dimen/dimen_15dp"
+                    android:textColor="@color/location_theme"
+                    android:textSize="@dimen/dimen_12dp">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                    android:id="@+id/tv_apply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/dimen_15dp"
+                    android:text="Apply"
+                    android:textAllCaps="true"
+                    android:textColor="@color/location_theme"
+                    android:textSize="@dimen/dimen_12dp">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+            </RelativeLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_chips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:visibility="gone">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+
+
+                <LinearLayout
+                    android:id="@+id/ll_domains"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_domains"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="true"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                        android:layout_marginTop="@dimen/dimen_5dp">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+
+                </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ll_languages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/location_theme"
+                    android:textSize="14dp">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_languages"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
 
 </LinearLayout>

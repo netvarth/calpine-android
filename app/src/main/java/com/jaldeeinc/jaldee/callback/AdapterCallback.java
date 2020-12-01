@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.callback;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.jaldeeinc.jaldee.model.FilterChips;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.SearchService;
 
@@ -34,7 +35,7 @@ public interface AdapterCallback {
 
     void onMethodSubDomainFilter(String passformula, RecyclerView recyclepopup,String subdomainame,String domainName,String displayNameSubdomain);
 
-    void onMethodQuery(ArrayList<String> formula,ArrayList<String> key);
+    void onMethodQuery(ArrayList<String> formula, ArrayList<String> key, ArrayList<FilterChips> filterChipsList);
     void onMethodFirstCoupn(String uniqueid);
     void onMethodJdn(String uniqueid);
     void onMethodSpecialization(ArrayList<String> Specialization_displayname, String title);

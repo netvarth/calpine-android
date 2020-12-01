@@ -32,4 +32,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="dimen_scrlimg_dp">100dp</dimen>
 
+    <dimen name="design_navigation_icon_size" tools:override="true">40dp</dimen>
+
+
 </resources>

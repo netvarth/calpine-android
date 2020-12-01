@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
+import com.jaldeeinc.jaldee.model.FilterChips;
 import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.response.RefinedFilters;
 
@@ -56,6 +57,8 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
     private List<RefinedFilters> mFilterList;
     Context mContext;
     AdapterCallback filterAdapterCallback;
+    ArrayList<FilterChips> filterChipsList;
+
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -214,7 +217,8 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
             }
 
-        } else if (filterList.getDataType().equalsIgnoreCase("Rating")) {
+        }
+        else if (filterList.getDataType().equalsIgnoreCase("Rating")) {
             Config.logV("RATING @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             // myViewHolder.LexpandView.setVisibility(View.VISIBLE);
             myViewHolder.LexpandView.removeAllViews();
@@ -297,7 +301,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                         }
 
 
-                        filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                        filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
 
                         img.setVisibility(View.GONE);
                     }
@@ -333,12 +337,13 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
                     passFormula.add(filterList.getCloudSearchIndex() + ": '" + rateValue + "' ");
 
-                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
                 }
             });
 
 
-        } else if (filterList.getDataType().equalsIgnoreCase("Boolean")) {
+        }
+        else if (filterList.getDataType().equalsIgnoreCase("Boolean")) {
             // myViewHolder.LexpandView.setVisibility(View.VISIBLE);
             myViewHolder.LexpandView.removeAllViews();
             Config.logV("Rating @@@@@@@@@@@@@@");
@@ -413,7 +418,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
                             passFormula.add("not " + filterList.getCloudIndexvalue().get(finalI).toString().replace("*", "1") + ":  '0')");
 
-                            filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                            filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
                         } else {
 
                             for (int i = 0; i < passFormula.size(); i++) {
@@ -422,7 +427,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                                 if (passFormula.get(i).toString().contains(filterList.getCloudIndexvalue().get(finalI).toString().replace("*", "1"))) {
 
                                     passFormula.remove(i);
-                                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
 
                                 }
                             }
@@ -432,7 +437,8 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
             }
 
 
-        } else if (filterList.getDataType().equalsIgnoreCase("Spinner")) {
+        }
+        else if (filterList.getDataType().equalsIgnoreCase("Spinner")) {
             // myViewHolder.LexpandView.setVisibility(View.VISIBLE);
             myViewHolder.LexpandView.removeAllViews();
             // keyFormula.add("sector");
@@ -510,7 +516,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                         passFormula.add(query);
 
 
-                        filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                        filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
 
 
                     }
@@ -608,7 +614,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                         Config.logV("DOMAIN NAME @@@@@@@@@@@@@@@@@@" + domainNAme + "Domain Select" + domainSelect);
 
                         filterAdapterCallback.onMethodSubDomainFilter(query, recyclview_popup, spinnerSelect.getName(), domainSelect,spinnerSelect.getDisplayname());
-                        filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                        filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
 
                         // Config.logV("PRINT VAL FORMULA@@WWWWWWWW" + query);
 
@@ -710,7 +716,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
                         passFormula.add(filterList.getCloudSearchIndex() + ": '" + editText.getText().toString() + "' ");
 
-                        filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                        filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
                     }
                     return false;
                 }
@@ -882,7 +888,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                                     }
 
 
-                                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
 
                                     img.setVisibility(View.GONE);
                                 }
@@ -918,7 +924,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
                                 passFormula.add(filterList.getCloudSearchIndex() + ": '" + rateValue + "' ");
 
-                                filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                                filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
                             }
                         });
 
@@ -995,7 +1001,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
                                         passFormula.add("not " + filterList.getCloudIndexvalue().get(finalI).toString().replace("*", "1") + ":  '0')");
 
-                                        filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                                        filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
                                     } else {
 
                                         for (int i = 0; i < passFormula.size(); i++) {
@@ -1004,7 +1010,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                                             if (passFormula.get(i).toString().contains(filterList.getCloudIndexvalue().get(finalI).toString().replace("*", "1"))) {
 
                                                 passFormula.remove(i);
-                                                filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                                                filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
 
                                             }
                                         }
@@ -1089,7 +1095,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                                     passFormula.add(query);
 
 
-                                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
 
 
                                 }
@@ -1174,7 +1180,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                                     Config.logV("DOMAIN NAME @@@@@@@@@@@@@@@@@@" + domainNAme + "Domain Select" + domainSelect);
 
                                     filterAdapterCallback.onMethodSubDomainFilter(query, recyclview_popup, spinnerSelect.getName(), domainSelect,spinnerSelect.getDisplayname());
-                                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
 
                                     // Config.logV("PRINT VAL FORMULA@@WWWWWWWW" + query);
 
@@ -1263,7 +1269,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
                                     passFormula.add(filterList.getCloudSearchIndex() + ": '" + editText.getText().toString() + "' ");
 
-                                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
                                 }
                                 return false;
                             }
@@ -1402,7 +1408,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                             }
 
                             passFormula.add(filterList.getCloudSearchIndex().replace("*", "1") + ": '" + name + "' ");
-                            filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                            filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
 
 
                         } else {
@@ -1410,7 +1416,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                                 if (passFormula.get(i).toString().contains(name)) {
                                     Config.logV("Remove @@@@@@@@@@@@@@@@@@@" + passFormula.get(i).toString());
                                     passFormula.remove(i);
-                                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
                                 }
                             }
                         }
@@ -1480,7 +1486,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                             }
 
                             passFormula.add(filterList.getCloudSearchIndex().replace("*", "1") + ": '" + name + "' ");
-                            filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                            filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
 
 
                         } else {
@@ -1488,7 +1494,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                                 if (passFormula.get(i).toString().contains(name)) {
                                     Config.logV("Remove @@@@@@@@@@@@@@@@@@@" + passFormula.get(i).toString());
                                     passFormula.remove(i);
-                                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula, filterChipsList);
                                 }
                             }
                         }

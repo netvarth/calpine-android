@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/padding7"
     android:padding="@dimen/padding7"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -12,7 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
             android:id="@+id/txtservice"
             android:layout_width="0dp"
             android:layout_weight="0.75"
@@ -22,7 +23,7 @@
             android:textColor="@color/title_grey"
             android:text="Service" />
 
-        <TextView
+        <com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal
             android:id="@+id/txtdomain"
             android:layout_width="0dp"
             android:layout_weight="0.3"
