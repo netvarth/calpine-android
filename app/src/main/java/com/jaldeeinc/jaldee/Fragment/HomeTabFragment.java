@@ -7,9 +7,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -81,11 +84,11 @@ public class HomeTabFragment extends Fragment {
             sforceupdate = bundle.getString("forceupdate", "");
         }
 
-        if (bundle != null){
+        if (bundle != null) {
 
             String content = bundle.getString("message");
-            if (content != null){
-                if (content.length() > 40){
+            if (content != null) {
+                if (content.length() > 40) {
 
                     message = content;
                 }
@@ -232,27 +235,30 @@ public class HomeTabFragment extends Fragment {
         }
 
 
-
     }
 
     public boolean onBackPressed() {
         // currently visible tab Fragment
 
-        OnBackPressListener currentFragment = (OnBackPressListener) adapter.getRegisteredFragment(viewPager.getCurrentItem());
+        try {
+            OnBackPressListener currentFragment = (OnBackPressListener) adapter.getRegisteredFragment(viewPager.getCurrentItem());
 
+            if (currentFragment != null) {
+                // lets see if the currentFragment or any of its childFragment can handle onBackPressed
 
-        if (currentFragment != null) {
-            // lets see if the currentFragment or any of its childFragment can handle onBackPressed
-
-            return currentFragment.onBackPressed();
-        }else{
-            Intent intent = new Intent(mContext, Home.class);
-            startActivity(intent);
+                return currentFragment.onBackPressed();
+            } else {
+                Intent intent = new Intent(mContext, Home.class);
+                startActivity(intent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         // this Fragment couldn't handle the onBackPressed call
         return false;
     }
+
     public void showForceUpdateDialog() {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);

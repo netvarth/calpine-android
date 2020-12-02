@@ -398,6 +398,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
             }
 
+
             @Override
             public int getTotalPageCount() {
                 return TOTAL_PAGES;
