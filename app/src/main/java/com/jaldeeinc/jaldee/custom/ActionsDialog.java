@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.BillActivity;
 import com.jaldeeinc.jaldee.activities.BookingDetails;
 import com.jaldeeinc.jaldee.activities.ChatActivity;
 import com.jaldeeinc.jaldee.activities.CheckInDetails;
@@ -62,17 +63,18 @@ import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 public class ActionsDialog extends Dialog {
 
     private Context mContext;
-    private LinearLayout llReschedule, llMessages, llRating, llCancel, llTrackingOn, llInstructions, llCustomerNotes, llMeetingDetails;
-    private CustomTextViewMedium tvTrackingText;
+    private LinearLayout llReschedule, llMessages, llRating, llCancel, llTrackingOn, llInstructions, llCustomerNotes, llMeetingDetails, llBillDetails;
+    private CustomTextViewMedium tvTrackingText, tvBillText;
     private boolean isActive = false;
     private Bookings bookings = new Bookings();
     boolean firstTimeRating = false;
     private InstructionsDialog instructionsDialog;
     private CustomerNotes customerNotes;
-    private ImageView ivLtIcon, ivMeetIcon;
+    private ImageView ivLtIcon, ivMeetIcon, ivBillIcon;
     private TeleServiceCheckIn meetingDetails;
     private MeetingDetailsWindow meetingDetailsWindow;
     private MeetingInfo meetingInfo;
+
 
     public ActionsDialog(@NonNull Context context, boolean isActive, Bookings bookings) {
         super(context);
@@ -160,12 +162,56 @@ public class ActionsDialog extends Dialog {
                                 ivMeetIcon.setImageResource(R.drawable.phone_icon);
                             }
                         } else {
-                            llMeetingDetails.setVisibility(View.GONE);
+                            hideView(llMeetingDetails);
                         }
                     } else {
-
-                        llMeetingDetails.setVisibility(View.GONE);
+                        hideView(llMeetingDetails);
                     }
+
+                    // To show Bill details
+
+                    if (bookings.getAppointmentInfo().getPaymentStatus().equalsIgnoreCase("FullyPaid") || bookings.getAppointmentInfo().getPaymentStatus().equalsIgnoreCase("Refund")) {
+                        ivBillIcon.setVisibility(View.VISIBLE);
+                        tvBillText.setText("Receipt");
+                    } else {
+                        ivBillIcon.setVisibility(View.VISIBLE);
+                        tvBillText.setText("Pay Bill");
+                    }
+
+                    if (bookings.getAppointmentInfo().getBillViewStatus() != null && !bookings.getAppointmentInfo().getApptStatus().equalsIgnoreCase("cancelled")) {
+                        if (bookings.getAppointmentInfo().getBillViewStatus().equalsIgnoreCase("Show")) {
+                            ivBillIcon.setVisibility(View.VISIBLE);
+                        } else {
+                            ivBillIcon.setVisibility(View.GONE);
+                            hideView(llBillDetails);
+                        }
+
+                    } else {
+                        if (!bookings.getAppointmentInfo().getPaymentStatus().equalsIgnoreCase("NotPaid")) {
+                            ivBillIcon.setVisibility(View.VISIBLE);
+                        } else {
+                            ivBillIcon.setVisibility(View.GONE);
+                            hideView(llBillDetails);
+                        }
+                    }
+
+
+                    ivBillIcon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Intent iBill = new Intent(context, BillActivity.class);
+                            iBill.putExtra("ynwUUID", bookings.getAppointmentInfo().getUid());
+                            iBill.putExtra("provider", bookings.getAppointmentInfo().getProviderAccount().getBusinessName());
+                            iBill.putExtra("accountID", String.valueOf(bookings.getAppointmentInfo().getProviderAccount().getId()));
+                            iBill.putExtra("payStatus", bookings.getAppointmentInfo().getPaymentStatus());
+                            iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
+                            iBill.putExtra("consumer", bookings.getAppointmentInfo().getAppmtFor().get(0).getFirstName() + " " + bookings.getAppointmentInfo().getAppmtFor().get(0).getLastName());
+                            iBill.putExtra("uniqueId", bookings.getAppointmentInfo().getProviderAccount().getUniqueId());
+                            v.getContext().startActivity(iBill);
+                        }
+                    });
+
                 }
 
 
@@ -240,12 +286,58 @@ public class ActionsDialog extends Dialog {
                                 ivMeetIcon.setImageResource(R.drawable.phone_icon);
                             }
                         } else {
-                            llMeetingDetails.setVisibility(View.GONE);
+                            hideView(llMeetingDetails);
                         }
                     } else {
-                        llMeetingDetails.setVisibility(View.GONE);
+                        hideView(llMeetingDetails);
                     }
                 }
+
+                // To show Bill details
+
+                if (bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("FullyPaid") || bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("Refund")) {
+                    ivBillIcon.setVisibility(View.VISIBLE);
+                    tvBillText.setText("Receipt");
+                } else {
+                    ivBillIcon.setVisibility(View.VISIBLE);
+                    tvBillText.setText("Pay Bill");
+                }
+
+                if (bookings.getCheckInInfo().getBillViewStatus() != null && !bookings.getCheckInInfo().getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                    if (bookings.getCheckInInfo().getBillViewStatus().equalsIgnoreCase("Show")) {
+                        ivBillIcon.setVisibility(View.VISIBLE);
+                    } else {
+                        ivBillIcon.setVisibility(View.GONE);
+                        hideView(llBillDetails);
+                    }
+
+                } else {
+                    if (!bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("NotPaid")) {
+                        ivBillIcon.setVisibility(View.VISIBLE);
+                    } else {
+                        ivBillIcon.setVisibility(View.GONE);
+                        hideView(llBillDetails);
+                    }
+                }
+
+
+                ivBillIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent iBill = new Intent(context, BillActivity.class);
+                        iBill.putExtra("ynwUUID", bookings.getCheckInInfo().getYnwUuid());
+                        iBill.putExtra("provider", bookings.getCheckInInfo().getProviderAccount().getBusinessName());
+                        iBill.putExtra("accountID", String.valueOf(bookings.getCheckInInfo().getProviderAccount().getId()));
+                        iBill.putExtra("payStatus", bookings.getCheckInInfo().getPaymentStatus());
+                        iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
+                        iBill.putExtra("consumer", bookings.getCheckInInfo().getWaitlistingFor().get(0).getFirstName() + " " + bookings.getCheckInInfo().getWaitlistingFor().get(0).getLastName());
+                        iBill.putExtra("uniqueId", bookings.getCheckInInfo().getProviderAccount().getUniqueId());
+                        v.getContext().startActivity(iBill);
+
+                    }
+                });
+
             }
 
         } else {
@@ -257,6 +349,97 @@ public class ActionsDialog extends Dialog {
             hideView(llCustomerNotes);
             hideView(llMeetingDetails);
             llRating.setVisibility(View.VISIBLE);
+
+
+            // To show Bill details
+            if(bookings.getAppointmentInfo()!=null) {
+
+                if (bookings.getAppointmentInfo().getPaymentStatus().equalsIgnoreCase("FullyPaid") || bookings.getAppointmentInfo().getPaymentStatus().equalsIgnoreCase("FullyRefunded")) {
+                    ivBillIcon.setVisibility(View.VISIBLE);
+                    tvBillText.setText("Receipt");
+                } else {
+                    ivBillIcon.setVisibility(View.VISIBLE);
+                    tvBillText.setText("Pay Bill");
+                }
+
+                if (bookings.getAppointmentInfo().getBillViewStatus() != null && !bookings.getAppointmentInfo().getApptStatus().equalsIgnoreCase("cancelled")) {
+                    if (bookings.getAppointmentInfo().getBillViewStatus().equalsIgnoreCase("Show")) {
+                        ivBillIcon.setVisibility(View.VISIBLE);
+                    } else {
+                        ivBillIcon.setVisibility(View.GONE);
+                        hideView(llBillDetails);
+                    }
+
+                } else {
+                    if (!bookings.getAppointmentInfo().getPaymentStatus().equalsIgnoreCase("NotPaid")) {
+                        ivBillIcon.setVisibility(View.VISIBLE);
+                    } else {
+                        ivBillIcon.setVisibility(View.GONE);
+                        hideView(llBillDetails);
+                    }
+                }
+
+
+                ivBillIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent iBill = new Intent(context, BillActivity.class);
+                        iBill.putExtra("ynwUUID", bookings.getAppointmentInfo().getUid());
+                        iBill.putExtra("provider", bookings.getAppointmentInfo().getProviderAccount().getBusinessName());
+                        iBill.putExtra("accountID", String.valueOf(bookings.getAppointmentInfo().getProviderAccount().getId()));
+                        iBill.putExtra("payStatus", bookings.getAppointmentInfo().getPaymentStatus());
+                        iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
+                        iBill.putExtra("consumer", bookings.getAppointmentInfo().getAppmtFor().get(0).getFirstName() + " " + bookings.getAppointmentInfo().getAppmtFor().get(0).getLastName());
+                        iBill.putExtra("uniqueId", bookings.getAppointmentInfo().getProviderAccount().getUniqueId());
+                        v.getContext().startActivity(iBill);
+                    }
+                });
+            }
+            else if(bookings.getCheckInInfo()!=null){
+                if (bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("FullyPaid") || bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("FullyRefunded")) {
+                    ivBillIcon.setVisibility(View.VISIBLE);
+                    tvBillText.setText("Receipt");
+                } else {
+                    ivBillIcon.setVisibility(View.VISIBLE);
+                    tvBillText.setText("Pay Bill");
+                }
+
+                if (bookings.getCheckInInfo().getBillViewStatus() != null && !bookings.getCheckInInfo().getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                    if (bookings.getCheckInInfo().getBillViewStatus().equalsIgnoreCase("Show")) {
+                        ivBillIcon.setVisibility(View.VISIBLE);
+                    } else {
+                        ivBillIcon.setVisibility(View.GONE);
+                        hideView(llBillDetails);
+                    }
+
+                } else {
+                    if (!bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("NotPaid")) {
+                        ivBillIcon.setVisibility(View.VISIBLE);
+                    } else {
+                        ivBillIcon.setVisibility(View.GONE);
+                        hideView(llBillDetails);
+                    }
+                }
+
+
+                ivBillIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent iBill = new Intent(context, BillActivity.class);
+                        iBill.putExtra("ynwUUID", bookings.getCheckInInfo().getYnwUuid());
+                        iBill.putExtra("provider", bookings.getCheckInInfo().getProviderAccount().getBusinessName());
+                        iBill.putExtra("accountID", String.valueOf(bookings.getCheckInInfo().getProviderAccount().getId()));
+                        iBill.putExtra("payStatus", bookings.getCheckInInfo().getPaymentStatus());
+                        iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
+                        iBill.putExtra("consumer", bookings.getCheckInInfo().getWaitlistingFor().get(0).getFirstName() + " " + bookings.getCheckInInfo().getWaitlistingFor().get(0).getLastName());
+                        iBill.putExtra("uniqueId", bookings.getCheckInInfo().getProviderAccount().getUniqueId());
+                        v.getContext().startActivity(iBill);
+
+                    }
+                });
+            }
 
         }
 
@@ -547,6 +730,9 @@ public class ActionsDialog extends Dialog {
         tvTrackingText = findViewById(R.id.tv_trackingText);
         ivLtIcon = findViewById(R.id.iv_ltIcon);
         ivMeetIcon = findViewById(R.id.iv_meetIcon);
+        llBillDetails = findViewById(R.id.ll_billDetails);
+        ivBillIcon = findViewById(R.id.iv_billIcon);
+        tvBillText = findViewById(R.id.billLabel);
     }
 
     private void apiGetMeetingDetails(String uuid, String mode, int accountID, ActiveAppointment info) {
