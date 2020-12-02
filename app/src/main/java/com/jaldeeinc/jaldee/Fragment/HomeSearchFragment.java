@@ -50,6 +50,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.JsonArray;
 import com.jaldeeinc.jaldee.Interface.ISelectedPopularSearch;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.JdnActivity;
 import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
 import com.jaldeeinc.jaldee.activities.SearchResultsActivity;
 import com.jaldeeinc.jaldee.adapter.PopularSearchAdapter;
@@ -2619,15 +2620,10 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
 
     @Override
     public void onMethodJdn(String uniqueid) {
-//        JdnFragment jdnFragment = new JdnFragment();
-//        // refreshQuery();
-//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//        Bundle bundle = new Bundle();
-//        bundle.putString("uniqueID", uniqueid);
-//        jdnFragment.setArguments(bundle);
-//        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-//        transaction.addToBackStack(null);
-//        transaction.replace(R.id.contactLayout, jdnFragment).commit();
+
+        Intent jdnIntent = new Intent(mContext, JdnActivity.class);
+        jdnIntent.putExtra("uniqueID", uniqueid);
+        mContext.startActivity(jdnIntent);
     }
 
     @Override
