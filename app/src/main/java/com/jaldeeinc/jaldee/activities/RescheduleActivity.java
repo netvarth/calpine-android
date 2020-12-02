@@ -1338,6 +1338,13 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
 
                         imagePathList.add(orgFilePath);
 
+                        if(imagePathList.size()>0){
+                            tvErrorMessage.setVisibility(View.GONE);
+                        }
+                        else{
+                            tvErrorMessage.setVisibility(View.VISIBLE);
+                        }
+
                         DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
@@ -1371,6 +1378,13 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                                 return;
                             }
                             imagePathList.add(orgFilePath);
+
+                            if(imagePathList.size()>0){
+                                tvErrorMessage.setVisibility(View.GONE);
+                            }
+                            else{
+                                tvErrorMessage.setVisibility(View.VISIBLE);
+                            }
                         }
                         DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
@@ -1395,6 +1409,13 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                 if (path != null) {
                     mImageUri = Uri.parse(path);
                     imagePathList.add(mImageUri.toString());
+
+                    if(imagePathList.size()>0){
+                        tvErrorMessage.setVisibility(View.GONE);
+                    }
+                    else{
+                        tvErrorMessage.setVisibility(View.VISIBLE);
+                    }
                 }
                 try {
                     bytes.close();
@@ -1506,6 +1527,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                             b.putSerializable("BookingDetails", activeAppointment);
                             b.putString("terminology", mSearchTerminology.getProvider());
                             b.putString("from", "Reschedule");
+                            b.putString("livetrack", activeAppointment.getLivetrack());
                             Intent checkin = new Intent(RescheduleActivity.this, AppointmentConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);
