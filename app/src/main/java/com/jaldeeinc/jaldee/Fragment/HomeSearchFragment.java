@@ -7,6 +7,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Address;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -74,6 +76,7 @@ import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchService;
+import com.jaldeeinc.jaldee.utils.AppPreferences;
 import com.jaldeeinc.jaldee.utils.EmptySubmitSearchView;
 import com.jaldeeinc.jaldee.utils.PaginationScrollListener;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
@@ -92,7 +95,7 @@ import retrofit2.Response;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class HomeSearchFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
+public class HomeSearchFragment extends RootFragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener, ISelectedPopularSearch, AdapterCallback {
 
@@ -171,6 +174,16 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
 
     public HomeSearchFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            // do something when visible.
+            userIsInteracting = false;
+            Config.logV("Spinner ITEM NOT CLICKED @@@@@@@@@@@@@@@@" + userIsInteracting);
+        }
     }
 
 
@@ -277,6 +290,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
         rvNearByResults.setLayoutManager(linearLayoutManager);
         rvNearByResults.setItemAnimator(new DefaultItemAnimator());
         rvNearByResults.setAdapter(searchResultsAdapter);
+        ViewCompat.setNestedScrollingEnabled(rvNearByResults,false);
 
 
         tvLocation.setOnClickListener(new View.OnClickListener() {
@@ -289,6 +303,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
 
             }
         });
+
 
         ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(mContext, R.layout.spinner_item, domainList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -752,6 +767,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
 
         mSpinnerDomain = (Spinner) view.findViewById(R.id.spinnerdomain);
         rvNearByResults = view.findViewById(R.id.rv_nearbyResults);
+        rvNearByResults.setNestedScrollingEnabled(false);
         tvLocation = view.findViewById(R.id.tv_location);
         llPopularSearch = view.findViewById(R.id.ll_popularSearch);
         rvPopularSearch = view.findViewById(R.id.rv_popularSearch);
@@ -1702,6 +1718,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
                                 progressBar.setVisibility(View.GONE);
                                 searchResultsAdapter.addAll(results);
                                 searchResultsAdapter.notifyDataSetChanged();
+                                ViewCompat.setNestedScrollingEnabled(rvNearByResults,false);
                                 Config.logV("QUEUELIST @@@@@@@@@@@@@@@@@@@@@@ RESUlt" + results.size());
                                 Config.logV("Results@@@@@@@@@@@@@@@@@" + results.size());
                                 Config.logV("CURRENT PAGE**22222*************" + TOTAL_PAGES);
@@ -2337,7 +2354,7 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
 
     @Override
     public void onConnected(Bundle bundle) {
-          checkPermissions();
+        checkPermissions();
         Config.logV("CONNECTED ");
     }
 
@@ -2539,7 +2556,6 @@ public class HomeSearchFragment extends Fragment implements GoogleApiClient.Conn
     }
 
     private String getQuery(String s, String s1) {
-
 
 
         return null;
