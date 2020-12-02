@@ -838,8 +838,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         try {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-
                                     requestPermissions(new String[]{
                                             Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
 
@@ -908,7 +906,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     public void onClick(View v) {
 
                         if (imagePathList != null && imagePathList.size() > 0) {
-
                             tvErrorMessage.setVisibility(View.GONE);
                             imagePathLists = imagePathList;
                             tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
@@ -2327,6 +2324,13 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                         imagePathList.add(orgFilePath);
 
+                        if(imagePathList.size()>0){
+                            tvErrorMessage.setVisibility(View.GONE);
+                        }
+                        else{
+                            tvErrorMessage.setVisibility(View.VISIBLE);
+                        }
+
                         DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
@@ -2361,6 +2365,16 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                 return;
                             }
                             imagePathList.add(orgFilePath);
+
+
+                            if(imagePathList.size()>0){
+                                tvErrorMessage.setVisibility(View.GONE);
+                            }
+                            else{
+                                tvErrorMessage.setVisibility(View.VISIBLE);
+                            }
+
+
                         }
                         DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
@@ -2385,6 +2399,12 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 if (path != null) {
                     mImageUri = Uri.parse(path);
                     imagePathList.add(mImageUri.toString());
+                    if(imagePathList.size()>0){
+                        tvErrorMessage.setVisibility(View.GONE);
+                    }
+                    else{
+                        tvErrorMessage.setVisibility(View.VISIBLE);
+                    }
                 }
                 try {
                     bytes.close();

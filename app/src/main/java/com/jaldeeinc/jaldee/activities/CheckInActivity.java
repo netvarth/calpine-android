@@ -2353,6 +2353,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         }
                         imagePathList.add(orgFilePath);
 
+                        if(imagePathList.size()>0){
+                            tvErrorMessage.setVisibility(View.GONE);
+                        }
+                        else{
+                            tvErrorMessage.setVisibility(View.VISIBLE);
+                        }
+
                         DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
@@ -2386,6 +2393,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                 return;
                             }
                             imagePathList.add(orgFilePath);
+
+                            if(imagePathList.size()>0){
+                                tvErrorMessage.setVisibility(View.GONE);
+                            }
+                            else{
+                                tvErrorMessage.setVisibility(View.VISIBLE);
+                            }
                         }
                         DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
@@ -2410,6 +2424,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 if (path != null) {
                     mImageUri = Uri.parse(path);
                     imagePathList.add(mImageUri.toString());
+
+                    if(imagePathList.size()>0){
+                        tvErrorMessage.setVisibility(View.GONE);
+                    }
+                    else{
+                        tvErrorMessage.setVisibility(View.VISIBLE);
+                    }
                 }
                 try {
                     bytes.close();

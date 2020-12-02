@@ -404,7 +404,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    if(livetrack.equalsIgnoreCase("true")) {
+                    if(livetrack!=null && livetrack.equalsIgnoreCase("true")) {
                         Intent checkinShareLocations = new Intent(AppointmentConfirmation.this, CheckinShareLocationAppointment.class);
                         checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
                         checkinShareLocations.putExtra("uuid", activeCheckInInfo.getUid());

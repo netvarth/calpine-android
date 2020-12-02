@@ -2469,16 +2469,16 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
 
     @Override
     public void onMethodJdn(String uniqueid) {
-        JdnFragment jdnFragment = new JdnFragment();
-        // refreshQuery();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        Bundle bundle = new Bundle();
-        bundle.putString("uniqueID", uniqueid);
-        jdnFragment.setArguments(bundle);
-        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.contactLayout, jdnFragment).commit();
- 
+//        JdnFragment jdnFragment = new JdnFragment();
+//        // refreshQuery();
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        Bundle bundle = new Bundle();
+//        bundle.putString("uniqueID", uniqueid);
+//        jdnFragment.setArguments(bundle);
+//        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+//        transaction.addToBackStack(null);
+//        transaction.replace(R.id.contactLayout, jdnFragment).commit();
+
     }
 
     @Override

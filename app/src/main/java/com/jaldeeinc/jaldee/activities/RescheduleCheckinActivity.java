@@ -1069,6 +1069,12 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                         }
 
                         imagePathList.add(orgFilePath);
+                        if(imagePathList.size()>0){
+                            tvErrorMessage.setVisibility(View.GONE);
+                        }
+                        else{
+                            tvErrorMessage.setVisibility(View.VISIBLE);
+                        }
 
                         DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
@@ -1104,6 +1110,12 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                                 return;
                             }
                             imagePathList.add(orgFilePath);
+                            if(imagePathList.size()>0){
+                                tvErrorMessage.setVisibility(View.GONE);
+                            }
+                            else{
+                                tvErrorMessage.setVisibility(View.VISIBLE);
+                            }
                         }
                         DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
@@ -1130,6 +1142,12 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                 if (path != null) {
                     mImageUri = Uri.parse(path);
                     imagePathList.add(mImageUri.toString());
+                    if(imagePathList.size()>0){
+                        tvErrorMessage.setVisibility(View.GONE);
+                    }
+                    else{
+                        tvErrorMessage.setVisibility(View.VISIBLE);
+                    }
                 }
                 try {
                     bytes.close();
@@ -1240,6 +1258,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                             b.putSerializable("BookingDetails", activeCheckIn);
                             b.putString("terminology", mSearchTerminology.getProvider());
                             b.putString("from","Reschedule");
+                            b.putBoolean("livetrack", Boolean.parseBoolean(activeCheckIn.getLivetrack()));
                             Intent checkin = new Intent(RescheduleCheckinActivity.this, CheckInConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);
