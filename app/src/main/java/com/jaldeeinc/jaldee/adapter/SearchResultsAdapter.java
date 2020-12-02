@@ -29,6 +29,8 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.JdnActivity;
@@ -216,11 +218,30 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 // to set provider image
                 if (searchdetailList.getLogo() != null) {
-                    PicassoTrustAll.getInstance(context).load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.ivSpImage);
+
+                    ((Activity) context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Your code to run in GUI thread here
+//                            RequestOptions options = new RequestOptions().placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage);
+                            Glide.with(context).load(R.drawable.costa_rica).into(myViewHolder.ivSpImage);
+                        }
+                    });
+
+//                    PicassoTrustAll.getInstance(context).load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.ivSpImage);
 
                 } else {
 
-                    PicassoTrustAll.getInstance(context).load(R.drawable.icon_noimage).fit().into(myViewHolder.ivSpImage);
+                    ((Activity) context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Your code to run in GUI thread here
+                            Glide.with(context).load(R.drawable.icon_noimage).into(myViewHolder.ivSpImage);
+
+                        }
+                    });
+
+//                    PicassoTrustAll.getInstance(context).load(R.drawable.icon_noimage).fit().into(myViewHolder.ivSpImage);
                 }
 
                 // to set services
