@@ -759,6 +759,45 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
             }
         });
 
+//        mRecySearchDetail.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
+//            @Override
+//            protected void loadMoreItems() {
+//
+//
+//                Config.logV("Load More-----------------------");
+//                isLoading = true;
+//                Config.logV("CURRENT PAGE***************" + currentPage);
+//                Config.logV("CURRENT PAGE**111*************" + TOTAL_PAGES);
+//                currentPage += 10;
+//
+//                // mocking network delay for API call
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Config.logV("loadNextPage--------------------" + query);
+//                        loadNextPage(query, url);
+//                    }
+//                }, 1000);
+//
+//            }
+//
+//            @Override
+//            public int getTotalPageCount() {
+//                return TOTAL_PAGES;
+//            }
+//
+//            @Override
+//            public boolean isLastPage() {
+//                return isLastPage;
+//            }
+//
+//            @Override
+//            public boolean isLoading() {
+//                return isLoading;
+//            }
+//        });
+
+
 
         return row;
     }

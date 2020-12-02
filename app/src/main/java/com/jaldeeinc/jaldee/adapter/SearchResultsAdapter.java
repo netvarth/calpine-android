@@ -224,11 +224,12 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         public void run() {
                             //Your code to run in GUI thread here
 //                            RequestOptions options = new RequestOptions().placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage);
-                            Glide.with(context).load(R.drawable.costa_rica).into(myViewHolder.ivSpImage);
+//                            Glide.with(context).load(searchdetailList.getLogo()).apply(options).into(myViewHolder.ivSpImage);
+                            PicassoTrustAll.getInstance(context).load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.ivSpImage);
+
                         }
                     });
 
-//                    PicassoTrustAll.getInstance(context).load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.ivSpImage);
 
                 } else {
 
@@ -236,12 +237,12 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         @Override
                         public void run() {
                             //Your code to run in GUI thread here
-                            Glide.with(context).load(R.drawable.icon_noimage).into(myViewHolder.ivSpImage);
+//                            Glide.with(context).load(R.drawable.icon_noimage).into(myViewHolder.ivSpImage);
+                            PicassoTrustAll.getInstance(context).load(R.drawable.icon_noimage).fit().into(myViewHolder.ivSpImage);
 
                         }
                     });
 
-//                    PicassoTrustAll.getInstance(context).load(R.drawable.icon_noimage).fit().into(myViewHolder.ivSpImage);
                 }
 
                 // to set services
