@@ -30,6 +30,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.ISelectedService;
@@ -91,6 +92,7 @@ import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.functions.Consumer;
@@ -130,7 +132,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     CustomTextViewMedium tvSeeAll;
 
     @BindView(R.id.iv_image)
-    ImageView ivSpImage;
+    CircleImageView ivSpImage;
 
     @BindView(R.id.rb_ratingBar)
     RatingBar ratingBar;
@@ -162,23 +164,17 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @BindView(R.id.ll_more)
     LinearLayout llMore;
 
-    @BindView(R.id.cv_back)
-    CardView cvBack;
-
-    @BindView(R.id.cv_share)
-    CardView cvShare;
-
-    @BindView(R.id.cv_enquiry)
-    CardView cvEnquiry;
-
-    @BindView(R.id.cv_favourite)
-    CardView cvFavourite;
-
-    @BindView(R.id.iv_fav)
-    ImageView ivfav;
+    @BindView(R.id.iv_back)
+    ImageView ivBack;
 
     @BindView(R.id.iv_share)
     ImageView ivShare;
+
+    @BindView(R.id.iv_enquiry)
+    ImageView ivEnquiry;
+
+    @BindView(R.id.iv_fav)
+    ImageView ivFav;
 
     @BindView(R.id.ll_noSlots)
     LinearLayout llNoSlots;
@@ -252,7 +248,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         iSelectedService = this;
         iSendMessage = this;
 
-
         Intent intent = getIntent();
         if (intent != null) {
             mFrom = intent.getStringExtra("from");
@@ -310,7 +305,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         });
 
 
-        cvShare.setOnClickListener(new View.OnClickListener() {
+        ivShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -326,7 +321,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         });
 
 
-        cvBack.setOnClickListener(new View.OnClickListener() {
+        ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -334,7 +329,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             }
         });
 
-        cvEnquiry.setOnClickListener(new View.OnClickListener() {
+        ivEnquiry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -1704,7 +1699,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             @Override
             public void onResponse(Call<ArrayList<FavouriteModel>> call, Response<ArrayList<FavouriteModel>> response) {
                 try {
-                    ivfav.setImageResource(R.drawable.icon_favourite_line);
+                    ivFav.setImageResource(R.drawable.icon_favourite_line);
                     Config.logV("URL-----22222----------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
@@ -1717,12 +1712,12 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                 Config.logV("Fav Fav List--------%%%%--" + mBusinessDataList.getId());
                                 if (mFavList.get(i).getId() == mBusinessDataList.getId()) {
                                     favFlag = true;
-                                    ivfav.setVisibility(View.VISIBLE);
-                                    ivfav.setImageResource(R.drawable.new_favourite);
+                                    ivFav.setVisibility(View.VISIBLE);
+                                    ivFav.setImageResource(R.drawable.new_favourite);
                                 }
                             }
                         }
-                            ivfav.setOnClickListener(new View.OnClickListener() {
+                        ivFav.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     if (favFlag) {
