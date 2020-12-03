@@ -136,6 +136,25 @@ public class ActiveAppointment implements Serializable {
     String batchId;
     String phoneNo;
     String consumerNoteTitle;
+    boolean prescShared;
+    String prescUrl;
+
+    public boolean isPrescShared() {
+        return prescShared;
+    }
+
+    public void setPrescShared(boolean prescShared) {
+        this.prescShared = prescShared;
+    }
+
+
+    public String getPrescUrl() {
+        return prescUrl;
+    }
+
+    public void setPrescUrl(String prescUrl) {
+        this.prescUrl = prescUrl;
+    }
 
     public String getPhone() {
         return Phone;

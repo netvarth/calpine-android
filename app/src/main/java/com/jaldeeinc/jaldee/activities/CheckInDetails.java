@@ -9,7 +9,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -48,6 +50,7 @@ import com.jaldeeinc.jaldee.custom.CustomerNotes;
 import com.jaldeeinc.jaldee.custom.InstructionsDialog;
 import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
 import com.jaldeeinc.jaldee.custom.MeetingInfo;
+import com.jaldeeinc.jaldee.custom.PrescriptionDialog;
 import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
@@ -188,6 +191,9 @@ public class CheckInDetails extends AppCompatActivity {
     @BindView(R.id.iv_Qr)
     ImageView ivQR;
 
+    @BindView(R.id.ll_prescription)
+    LinearLayout llPrescription;
+
     boolean firstTimeRating = false;
 
     private InstructionsDialog instructionsDialog;
@@ -201,6 +207,8 @@ public class CheckInDetails extends AppCompatActivity {
     private MeetingDetailsWindow meetingDetailsWindow;
     private MeetingInfo meetingInfo;
     private String uuid;
+    private PrescriptionDialog prescriptionDialog;
+    private Bookings bookings = new Bookings();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -720,6 +728,7 @@ public class CheckInDetails extends AppCompatActivity {
                     hideView(llReschedule);
                     hideView(llCancel);
                     hideView(llLocation);
+                    hideView(llPrescription);
                 }
 
                 // hide instructions link when there are no post instructions
@@ -798,6 +807,28 @@ public class CheckInDetails extends AppCompatActivity {
 
                         apiGetMeetingDetails(checkInInfo.getYnwUuid(), checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode(), checkInInfo.getProviderAccount().getId(), checkInInfo);
 
+                    }
+                });
+
+                if(checkInInfo.isPrescShared()){
+                    llPrescription.setVisibility(View.VISIBLE);
+                }
+                else{
+                    hideView(llPrescription);
+                }
+
+                llPrescription.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        prescriptionDialog = new PrescriptionDialog(mContext,isActive,checkInInfo,"checkin");
+                        prescriptionDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+                        prescriptionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        prescriptionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        prescriptionDialog.show();
+                        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                        int width = (int) (metrics.widthPixels * 1);
+                        prescriptionDialog.getWindow().setGravity(Gravity.BOTTOM);
+                        prescriptionDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                     }
                 });
 

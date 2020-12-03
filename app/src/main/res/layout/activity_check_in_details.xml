@@ -925,6 +925,45 @@
 
                                     </LinearLayout>
 
+                                    <LinearLayout
+                                        android:id="@+id/ll_prescription"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_columnWeight="1">
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="@dimen/dimen_10dp"
+                                            android:gravity="center"
+                                            android:orientation="vertical">
+
+                                            <ImageView
+                                                android:layout_width="@dimen/dimen_30dp"
+                                                android:layout_height="@dimen/dimen_30dp"
+                                                android:src="@drawable/icon_receipt"
+                                                app:tint="@color/title_color">
+
+                                            </ImageView>
+
+                                            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginTop="@dimen/padding5"
+                                                android:text="View Prescription"
+                                                android:textColor="@color/title_color"
+                                                android:textSize="@dimen/txtsize_12"
+                                                android:layout_gravity="center"
+                                                android:gravity="center"
+                                                android:visibility="visible">
+
+                                            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+
+                                        </LinearLayout>
+
+                                    </LinearLayout>
+
 
                                 </GridLayout>
 

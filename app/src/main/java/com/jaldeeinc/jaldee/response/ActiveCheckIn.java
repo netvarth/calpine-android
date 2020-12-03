@@ -161,6 +161,24 @@ public class ActiveCheckIn implements Serializable {
     String calculationMode;
     String checkInTime;
     String serviceTime;
+    boolean prescShared;
+    String prescUrl;
+
+    public String getPrescUrl() {
+        return prescUrl;
+    }
+
+    public void setPrescUrl(String prescUrl) {
+        this.prescUrl = prescUrl;
+    }
+
+    public boolean isPrescShared() {
+        return prescShared;
+    }
+
+    public void setPrescShared(boolean prescShared) {
+        this.prescShared = prescShared;
+    }
 
     public String getServiceTime() {
         return serviceTime;

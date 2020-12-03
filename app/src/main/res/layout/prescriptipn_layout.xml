@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/dimen_10dp"
+    android:orientation="vertical">
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/presc_download"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginLeft="@dimen/dimen_10dp"
+        android:layout_marginRight="@dimen/dimen_10dp"
+        android:padding="@dimen/dimen_10dp"
+        android:text="Download Prescription"
+        android:textAllCaps="false"
+        android:gravity="center"
+        android:background="@color/checkin_theme"
+        android:textColor="@color/white">
+    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/presc_share"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginLeft="@dimen/dimen_10dp"
+        android:layout_marginRight="@dimen/dimen_10dp"
+        android:padding="@dimen/dimen_10dp"
+        android:text="Share Prescription"
+        android:textAllCaps="false"
+        android:gravity="center"
+        android:background="@color/appoint_theme"
+        android:textColor="@color/white">
+    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+</LinearLayout>

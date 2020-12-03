@@ -3,11 +3,14 @@ package com.jaldeeinc.jaldee.custom;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -63,7 +66,7 @@ import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 public class ActionsDialog extends Dialog {
 
     private Context mContext;
-    private LinearLayout llReschedule, llMessages, llRating, llCancel, llTrackingOn, llInstructions, llCustomerNotes, llMeetingDetails, llBillDetails;
+    private LinearLayout llReschedule, llMessages, llRating, llCancel, llTrackingOn, llInstructions, llCustomerNotes, llMeetingDetails, llBillDetails, llPrescription;
     private CustomTextViewMedium tvTrackingText, tvBillText;
     private boolean isActive = false;
     private Bookings bookings = new Bookings();
@@ -74,6 +77,7 @@ public class ActionsDialog extends Dialog {
     private TeleServiceCheckIn meetingDetails;
     private MeetingDetailsWindow meetingDetailsWindow;
     private MeetingInfo meetingInfo;
+    private PrescriptionDialog prescriptionDialog;
 
 
     public ActionsDialog(@NonNull Context context, boolean isActive, Bookings bookings) {
@@ -212,6 +216,29 @@ public class ActionsDialog extends Dialog {
                         }
                     });
 
+                    // To show prescription
+                    if(bookings.getAppointmentInfo().isPrescShared()){
+                        llPrescription.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        hideView(llPrescription);
+                    }
+
+                    llPrescription.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            prescriptionDialog = new PrescriptionDialog(mContext,isActive,bookings);
+                            prescriptionDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+                            prescriptionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            prescriptionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            prescriptionDialog.show();
+                            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            prescriptionDialog.getWindow().setGravity(Gravity.BOTTOM);
+                            prescriptionDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        }
+                    });
+
                 }
 
 
@@ -338,6 +365,36 @@ public class ActionsDialog extends Dialog {
                     }
                 });
 
+                // To Show Prescription
+                if(bookings.getCheckInInfo().isPrescShared()){
+                    llPrescription.setVisibility(View.VISIBLE);
+                }
+                else{
+                    hideView(llPrescription);
+                }
+
+                llPrescription.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
+
+                llPrescription.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        prescriptionDialog = new PrescriptionDialog(mContext,isActive,bookings);
+                        prescriptionDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+                        prescriptionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        prescriptionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        prescriptionDialog.show();
+                        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                        int width = (int) (metrics.widthPixels * 1);
+                        prescriptionDialog.getWindow().setGravity(Gravity.BOTTOM);
+                        prescriptionDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    }
+                });
+
             }
 
         } else {
@@ -348,6 +405,7 @@ public class ActionsDialog extends Dialog {
             hideView(llInstructions);
             hideView(llCustomerNotes);
             hideView(llMeetingDetails);
+            hideView(llPrescription);
             llRating.setVisibility(View.VISIBLE);
 
 
@@ -733,6 +791,7 @@ public class ActionsDialog extends Dialog {
         llBillDetails = findViewById(R.id.ll_billDetails);
         ivBillIcon = findViewById(R.id.iv_billIcon);
         tvBillText = findViewById(R.id.billLabel);
+        llPrescription = findViewById(R.id.ll_prescriptionDetails);
     }
 
     private void apiGetMeetingDetails(String uuid, String mode, int accountID, ActiveAppointment info) {
