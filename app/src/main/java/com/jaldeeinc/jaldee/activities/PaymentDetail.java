@@ -149,7 +149,7 @@ public class PaymentDetail extends AppCompatActivity {
                         }
 
                         if(response.body().getAmount()!=null){
-                            amount.setText(response.body().getAmount());
+                            amount.setText("₹ " + response.body().getAmount());
                             amount.setVisibility(View.VISIBLE);
                         }else{
                             amount.setVisibility(View.GONE);

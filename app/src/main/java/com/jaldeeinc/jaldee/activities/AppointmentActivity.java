@@ -525,6 +525,15 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             @Override
             public void onClick(View v) {
 
+                familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this,familyMEmID,tvEmail.getText().toString(),tvNumber.getText().toString(),serviceInfo.getIsPrePayment(),iFamilyMemberDetails,profileDetails,multiplemem,0);
+                familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+                familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                familyMemberDialog.show();
+                DisplayMetrics metrics = AppointmentActivity.this.getResources().getDisplayMetrics();
+                int width = (int) (metrics.widthPixels * 1);
+                familyMemberDialog.setCancelable(false);
+                familyMemberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
 //                String mailId = "";
 //                if (tvEmail.getText().toString() != null) {
 //                    mailId = tvEmail.getText().toString();
