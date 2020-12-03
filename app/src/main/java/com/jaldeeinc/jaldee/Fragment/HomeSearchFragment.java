@@ -290,7 +290,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         rvNearByResults.setLayoutManager(linearLayoutManager);
         rvNearByResults.setItemAnimator(new DefaultItemAnimator());
         rvNearByResults.setAdapter(searchResultsAdapter);
-        ViewCompat.setNestedScrollingEnabled(rvNearByResults,false);
+        ViewCompat.setNestedScrollingEnabled(rvNearByResults, false);
 
 
         tvLocation.setOnClickListener(new View.OnClickListener() {
@@ -796,7 +796,6 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
 //                return isLoading;
 //            }
 //        });
-
 
 
         return row;
@@ -1757,7 +1756,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                                 progressBar.setVisibility(View.GONE);
                                 searchResultsAdapter.addAll(results);
                                 searchResultsAdapter.notifyDataSetChanged();
-                                ViewCompat.setNestedScrollingEnabled(rvNearByResults,false);
+                                ViewCompat.setNestedScrollingEnabled(rvNearByResults, false);
                                 Config.logV("QUEUELIST @@@@@@@@@@@@@@@@@@@@@@ RESUlt" + results.size());
                                 Config.logV("Results@@@@@@@@@@@@@@@@@" + results.size());
                                 Config.logV("CURRENT PAGE**22222*************" + TOTAL_PAGES);
@@ -2310,27 +2309,31 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                                                     Manifest.permission.ACCESS_FINE_LOCATION);
                                     if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
                                         mylocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-                                        latitude = mylocation.getLatitude();
-                                        longitude = mylocation.getLongitude();
-                                        SharedPreference.getInstance(mContext).setValue("lat", latitude);
-                                        SharedPreference.getInstance(mContext).setValue("longitu", longitude);
-                                        String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
-                                        if (s_currentLoc.equalsIgnoreCase("yes")) {
-                                            if (mtyp == null) {
-                                                mtyp = "city";
-                                            }
-                                            LanLong Lanlong = getLocationNearBy(latitude, longitude, mtyp);
-                                            double upperLeftLat = Lanlong.getUpperLeftLat();
-                                            double upperLeftLon = Lanlong.getUpperLeftLon();
-                                            double lowerRightLat = Lanlong.getLowerRightLat();
-                                            double lowerRightLon = Lanlong.getLowerRightLon();
-                                            String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
+                                        try {
+                                            latitude = mylocation.getLatitude();
+                                            longitude = mylocation.getLongitude();
+                                            SharedPreference.getInstance(mContext).setValue("lat", latitude);
+                                            SharedPreference.getInstance(mContext).setValue("longitu", longitude);
+                                            String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
+                                            if (s_currentLoc.equalsIgnoreCase("yes")) {
+                                                if (mtyp == null) {
+                                                    mtyp = "city";
+                                                }
+                                                LanLong Lanlong = getLocationNearBy(latitude, longitude, mtyp);
+                                                double upperLeftLat = Lanlong.getUpperLeftLat();
+                                                double upperLeftLon = Lanlong.getUpperLeftLon();
+                                                double lowerRightLat = Lanlong.getLowerRightLat();
+                                                double lowerRightLon = Lanlong.getLowerRightLon();
+                                                String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
 
-                                            String query = "(and location1:" + locationRange + " " + ")";
-                                            String url = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
-                                            String sort = "claimable asc,distance asc, ynw_verified_level desc";
-                                            searchResultsAdapter.clear();
-                                            ApiSEARCHAWSLoadFirstData(query, url, sort);
+                                                String query = "(and location1:" + locationRange + " " + ")";
+                                                String url = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
+                                                String sort = "claimable asc,distance asc, ynw_verified_level desc";
+                                                searchResultsAdapter.clear();
+                                                ApiSEARCHAWSLoadFirstData(query, url, sort);
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
                                         }
 
                                     }
