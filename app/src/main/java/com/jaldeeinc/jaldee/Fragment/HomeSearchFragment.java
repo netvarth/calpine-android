@@ -15,7 +15,9 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
@@ -40,15 +42,25 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.JsonArray;
 import com.jaldeeinc.jaldee.Interface.ISelectedPopularSearch;
 import com.jaldeeinc.jaldee.R;
@@ -140,6 +152,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
     private GoogleApiClient googleApiClient;
     public final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
     private final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
+    public final static int REQUEST_CHECK_SETTINGS = 8;
     static double distance;
     private RecyclerView rvPopularSearch;
     private GridLayoutManager gridLayoutManager;
@@ -166,6 +179,8 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
     List<SearchListModel> mSearchListModel = new ArrayList<>();
     String passformula = "";
     int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationCallback locationCallback;
 
 
     // TODO: Rename and change types of parameters
@@ -212,9 +227,9 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         View row = inflater.inflate(R.layout.fragment_home_search, container, false);
         mContext = getActivity();
         home = getParentFragment();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
         iSelectedPopularSearch = (ISelectedPopularSearch) this;
         mInterface = (AdapterCallback) this;
-
         initializations(row);
         ApiAWSearchDomain();
 
@@ -290,7 +305,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         rvNearByResults.setLayoutManager(linearLayoutManager);
         rvNearByResults.setItemAnimator(new DefaultItemAnimator());
         rvNearByResults.setAdapter(searchResultsAdapter);
-        ViewCompat.setNestedScrollingEnabled(rvNearByResults,false);
+        ViewCompat.setNestedScrollingEnabled(rvNearByResults, false);
 
 
         tvLocation.setOnClickListener(new View.OnClickListener() {
@@ -759,46 +774,6 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
             }
         });
 
-//        mRecySearchDetail.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
-//            @Override
-//            protected void loadMoreItems() {
-//
-//
-//                Config.logV("Load More-----------------------");
-//                isLoading = true;
-//                Config.logV("CURRENT PAGE***************" + currentPage);
-//                Config.logV("CURRENT PAGE**111*************" + TOTAL_PAGES);
-//                currentPage += 10;
-//
-//                // mocking network delay for API call
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Config.logV("loadNextPage--------------------" + query);
-//                        loadNextPage(query, url);
-//                    }
-//                }, 1000);
-//
-//            }
-//
-//            @Override
-//            public int getTotalPageCount() {
-//                return TOTAL_PAGES;
-//            }
-//
-//            @Override
-//            public boolean isLastPage() {
-//                return isLastPage;
-//            }
-//
-//            @Override
-//            public boolean isLoading() {
-//                return isLoading;
-//            }
-//        });
-
-
-
         return row;
     }
 
@@ -813,6 +788,13 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         llNoResults = view.findViewById(R.id.ll_noResults);
         tvNoResults = view.findViewById(R.id.txtnosearchresult);
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+    }
+
 
     private void APiSearchList() {
         final ApiInterface apiService =
@@ -1102,6 +1084,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
 
         final ApiInterface apiService =
                 ApiClient.getClientAWS(mContext).create(ApiInterface.class);
+        Log.e("$$$$$$$$$$toooooppped", "Api call OnStart");
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
@@ -1148,6 +1131,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
 
                         Config.logV("Status" + response.body().getStatus().getRid());
 
+                        searchResultsAdapter.clear();
                         Config.logV("Found @@@@@@@@@@@@@@@@@@" + response.body().getHits().getFound());
                         total_foundcount = response.body().getHits().getFound();
                         TOTAL_PAGES = response.body().getHits().getFound() / 10;
@@ -1757,7 +1741,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                                 progressBar.setVisibility(View.GONE);
                                 searchResultsAdapter.addAll(results);
                                 searchResultsAdapter.notifyDataSetChanged();
-                                ViewCompat.setNestedScrollingEnabled(rvNearByResults,false);
+                                ViewCompat.setNestedScrollingEnabled(rvNearByResults, false);
                                 Config.logV("QUEUELIST @@@@@@@@@@@@@@@@@@@@@@ RESUlt" + results.size());
                                 Config.logV("Results@@@@@@@@@@@@@@@@@" + results.size());
                                 Config.logV("CURRENT PAGE**22222*************" + TOTAL_PAGES);
@@ -2217,9 +2201,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         } catch (Exception e) {
             e.printStackTrace();
         }
-        /*} else {
-            Config.logV("Not Google DEFAULT LOCATION @@@");
-        }*/
+
     }
 
     public static LanLong getLocationNearBy(double lant, double longt, String typ) {
@@ -2239,9 +2221,6 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         double upperLeftLon = longt + distInDegree;
         double lowerRightLat = lant + distInDegree;
         double lowerRightLon = longt - distInDegree;
-        /*double locationRange = '[\'' + lowerRightLat + ',' + lowerRightLon + '\',\'' + upperLeftLat + ',' + upperLeftLon + '\']';
-        double retarr = {'locationRange':locationRange, 'upperLeftLat':upperLeftLat, 'upperLeftLon':
-        upperLeftLon, 'lowerRightLat':lowerRightLat, 'lowerRightLon':lowerRightLon};*/
         LanLong lan = new LanLong();
         lan.setUpperLeftLat(upperLeftLat);
         lan.setUpperLeftLon(upperLeftLon);
@@ -2278,102 +2257,222 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                         Manifest.permission.ACCESS_FINE_LOCATION);
                 if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
                     Config.logV("Google api connected granted@2@@@");
-                    mylocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-
-                    LocationRequest locationRequest = new LocationRequest();
-                    locationRequest.setInterval(0);        // 10 seconds, in milliseconds
-                    locationRequest.setFastestInterval(0); // 1 second, in milliseconds
+                    LocationRequest locationRequest = LocationRequest.create();
+                    locationRequest.setInterval(10 * 1000);
+                    locationRequest.setFastestInterval(5 * 1000);
                     locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                    LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                            .addLocationRequest(locationRequest);
+
+                    LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+                    builder.addLocationRequest(locationRequest); // locationRequest is a Object of LocationRequest
+                    builder.addLocationRequest(LocationRequest.create().setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY));
                     builder.setAlwaysShow(true);
-                    LocationServices.FusedLocationApi
-                            .requestLocationUpdates(googleApiClient, locationRequest, this);
-                    //DefaultLocation();
-                    PendingResult<LocationSettingsResult> result =
-                            LocationServices.SettingsApi
-                                    .checkLocationSettings(googleApiClient, builder.build());
 
-                    result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+                    SettingsClient settingsClient = LocationServices.getSettingsClient(mContext);
+                    Task<LocationSettingsResponse> result = settingsClient.checkLocationSettings(builder.build());
 
-                        @Override
-                        public void onResult(LocationSettingsResult result) {
-                            final Status status = result.getStatus();
-                            switch (status.getStatusCode()) {
-                                case LocationSettingsStatusCodes.SUCCESS:
-                                    // All location settings are satisfied.
-                                    // You can initialize location requests here.
-//Mani Changed getActivity() -> mContext
-
-                                    int permissionLocation = ContextCompat
-                                            .checkSelfPermission(mContext,
-                                                    Manifest.permission.ACCESS_FINE_LOCATION);
-                                    if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
-                                        mylocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-                                        try {
-                                            latitude = mylocation.getLatitude();
-                                            longitude = mylocation.getLongitude();
-                                        } catch (Exception e) {
-
-                                            e.printStackTrace();
-                                        }
-
-                                        SharedPreference.getInstance(mContext).setValue("lat", latitude);
-                                        SharedPreference.getInstance(mContext).setValue("longitu", longitude);
-                                        String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
-                                        if (s_currentLoc.equalsIgnoreCase("yes")) {
-                                            if (mtyp == null) {
-                                                mtyp = "city";
-                                            }
-                                            LanLong Lanlong = getLocationNearBy(latitude, longitude, mtyp);
-                                            double upperLeftLat = Lanlong.getUpperLeftLat();
-                                            double upperLeftLon = Lanlong.getUpperLeftLon();
-                                            double lowerRightLat = Lanlong.getLowerRightLat();
-                                            double lowerRightLon = Lanlong.getLowerRightLon();
-                                            String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
-
-                                            String query = "(and location1:" + locationRange + " " + ")";
-                                            String url = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
-                                            String sort = "claimable asc,distance asc, ynw_verified_level desc";
-                                            searchResultsAdapter.clear();
-                                            ApiSEARCHAWSLoadFirstData(query, url, sort);
-                                        }
-
-                                    }
-                                    Config.logV("Google apiClient LocationSettingsStatusCodes.SUCCESS");
-                                    break;
+                    result.addOnCompleteListener(task -> {
+                        try {
+                            LocationSettingsResponse response = task.getResult(ApiException.class);
+                            updateRequestLocation();
+                        } catch (ApiException exception) {
+                            exception.printStackTrace();
+                            switch (exception.getStatusCode()) {
                                 case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                                    // Location settings are not satisfied.
-                                    // But could be fixed by showing the user a dialog.
                                     try {
-                                        // Show the dialog by calling startResolutionForResult(),
-                                        // and check the result in onActivityResult().
-                                        // Ask to turn on GPS automatically
-                                        Config.logV("Google Ask to turn on GPS automatically");
-                                        /*status.startResolutionForResult(getActivity(),
-                                                REQUEST_CHECK_SETTINGS_GPS);*/
-                                        startIntentSenderForResult(status.getResolution().getIntentSender(), REQUEST_CHECK_SETTINGS_GPS, null, 0, 0, 0, null);
+                                        ResolvableApiException resolvable = (ResolvableApiException) exception;
+//                                        resolvable.startResolutionForResult((Activity)mContext, REQUEST_CHECK_SETTINGS);
+                                        startIntentSenderForResult(resolvable.getResolution().getIntentSender(), REQUEST_CHECK_SETTINGS, null, 0, 0, 0, null);
                                     } catch (IntentSender.SendIntentException e) {
-                                        // Ignore the error.
+                                        e.printStackTrace();
+                                    } catch (ClassCastException e) {
                                         e.printStackTrace();
                                     }
                                     break;
                                 case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                                    // Location settings are not satisfied.
-                                    // However, we have no way
-                                    // to fix the
-                                    // settings so we won't show the dialog.
-                                    // finish();
-                                    Config.logV("Google Location settings are not satisfied");
+
                                     break;
                             }
                         }
                     });
+
+//                    task.addOnSuccessListener((Activity) mContext, new OnSuccessListener<LocationSettingsResponse>() {
+//                        @Override
+//                        public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+//                            // All location settings are satisfied. The client can initialize
+//                            // location requests here.
+//                            updateRequestLocation();
+//                            int permissionLocation = ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION);
+//                            if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
+//                                fusedLocationClient.getLastLocation()
+//                                        .addOnSuccessListener((Activity) mContext, new OnSuccessListener<Location>() {
+//                                            @Override
+//                                            public void onSuccess(Location location) {
+//                                                // Got last known location. In some rare situations this can be null.
+//                                                if (location == null) {
+//                                                    // Logic to handle location object
+//                                                    return;
+//                                                } else {
+//                                                    mylocation = location;
+//                                                    getNearbyProviders(mylocation);
+//                                                }
+//                                            }
+//                                        });
+//
+//                            }
+//                            Config.logV("Google apiClient LocationSettingsStatusCodes.SUCCESS");
+//                        }
+//
+//                    });
+//
+//                    task.addOnFailureListener((Activity) mContext, new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            if (e instanceof ResolvableApiException) {
+//                                // Location settings are not satisfied, but this can be fixed
+//                                // by showing the user a dialog.
+//                                try {
+//                                    // Show the dialog by calling startResolutionForResult(),
+//                                    // and check the result in onActivityResult().
+//                                    ResolvableApiException resolvable = (ResolvableApiException) e;
+//                                    resolvable.startResolutionForResult((Activity)mContext,
+//                                            REQUEST_CHECK_SETTINGS_GPS);
+//                                    startIntentSenderForResult(resolvable.getResolution().getIntentSender(), REQUEST_CHECK_SETTINGS, null, 0, 0, 0, null);
+//
+//                                } catch (IntentSender.SendIntentException sendEx) {
+//                                    // Ignore the error.
+//                                }
+//                            }
+//                        }
+//                    });
+
+
+//                    PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
+//                    result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+//
+//                        @Override
+//                        public void onResult(LocationSettingsResult result) {
+//                            final Status status = result.getStatus();
+//                            switch (status.getStatusCode()) {
+//                                case LocationSettingsStatusCodes.SUCCESS:
+//                                    // All location settings are satisfied.
+//                                    // You can initialize location requests here.
+////Mani Changed getActivity() -> mContext
+//
+//                                    int permissionLocation = ContextCompat
+//                                            .checkSelfPermission(mContext,
+//                                                    Manifest.permission.ACCESS_FINE_LOCATION);
+//                                    if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
+//                                        mylocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+//                                        try {
+//                                            latitude = mylocation.getLatitude();
+//                                            longitude = mylocation.getLongitude();
+//                                            SharedPreference.getInstance(mContext).setValue("lat", latitude);
+//                                            SharedPreference.getInstance(mContext).setValue("longitu", longitude);
+//                                            String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
+//                                            if (s_currentLoc.equalsIgnoreCase("yes")) {
+//                                                if (mtyp == null) {
+//                                                    mtyp = "city";
+//                                                }
+//                                                LanLong Lanlong = getLocationNearBy(latitude, longitude, mtyp);
+//                                                double upperLeftLat = Lanlong.getUpperLeftLat();
+//                                                double upperLeftLon = Lanlong.getUpperLeftLon();
+//                                                double lowerRightLat = Lanlong.getLowerRightLat();
+//                                                double lowerRightLon = Lanlong.getLowerRightLon();
+//                                                String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
+//
+//                                                String query = "(and location1:" + locationRange + " " + ")";
+//                                                String url = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
+//                                                String sort = "claimable asc,distance asc, ynw_verified_level desc";
+//                                                searchResultsAdapter.clear();
+//                                                ApiSEARCHAWSLoadFirstData(query, url, sort);
+//                                            }
+//                                        } catch (Exception e) {
+//                                            e.printStackTrace();
+//                                        }
+//
+//                                    }
+//                                    Config.logV("Google apiClient LocationSettingsStatusCodes.SUCCESS");
+//                                    break;
+//                                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+//                                    // Location settings are not satisfied.
+//                                    // But could be fixed by showing the user a dialog.
+//                                    try {
+//                                        // Show the dialog by calling startResolutionForResult(),
+//                                        // and check the result in onActivityResult().
+//                                        // Ask to turn on GPS automatically
+//                                        Config.logV("Google Ask to turn on GPS automatically");
+//                                        /*status.startResolutionForResult(getActivity(),
+//                                                REQUEST_CHECK_SETTINGS_GPS);*/
+//                                        startIntentSenderForResult(status.getResolution().getIntentSender(), REQUEST_CHECK_SETTINGS_GPS, null, 0, 0, 0, null);
+//                                    } catch (IntentSender.SendIntentException e) {
+//                                        // Ignore the error.
+//                                        e.printStackTrace();
+//                                    }
+//                                    break;
+//                                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+//                                    // Location settings are not satisfied.
+//                                    // However, we have no way
+//                                    // to fix the
+//                                    // settings so we won't show the dialog.
+//                                    // finish();
+//                                    Config.logV("Google Location settings are not satisfied");
+//                                    break;
+//                            }
+//                        }
+//                    });
                 }
             }
         }
 
         return mylocation;
+    }
+
+    public void updateRequestLocation() {
+        fusedLocationClient = null;
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient((Activity) mContext);
+        try {
+
+            startLocationUpdates();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void startLocationUpdates() {
+        if (locationCallback == null) {
+            locationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    if (locationResult == null) {
+                        return;
+                    }
+                    for (Location location : locationResult.getLocations()) {
+                        if (location != null) {
+                            mylocation = location;
+                            Log.e("$$$$$$$$$$toooooppped", "Api call success");
+                            getNearbyProviders(mylocation);
+                            stopLocationUpdates();
+                            return;
+                        }
+                    }
+                }
+            };
+        }
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(10 * 1000);
+        locationRequest.setFastestInterval(2 * 1000);
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+    }
+
+    private void stopLocationUpdates() {
+        if (fusedLocationClient != null)
+            fusedLocationClient.removeLocationUpdates(locationCallback);
+        Log.e("$$$$$$$$$$toooooppped", "Stopped Location updates");
     }
 
     public void updateCurrentLocation() {
@@ -2396,6 +2495,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
             }
         }
     }
+
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -2482,6 +2582,35 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                         }
                         break;
                 }
+                break;
+
+            case REQUEST_CHECK_SETTINGS:
+
+                int permissionLocation = ContextCompat
+                        .checkSelfPermission(mContext,
+                                Manifest.permission.ACCESS_FINE_LOCATION);
+                if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
+//                                mylocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+
+                    updateRequestLocation();
+//                    fusedLocationClient.getLastLocation()
+//                            .addOnSuccessListener((Activity) mContext, new OnSuccessListener<Location>() {
+//                                @Override
+//                                public void onSuccess(Location location) {
+//                                    // Got last known location. In some rare situations this can be null.
+//                                    if (location == null) {
+//                                        // Logic to handle location object
+//                                        return;
+//                                    } else {
+//                                        mylocation = location;
+//                                        getNearbyProviders(mylocation);
+//                                    }
+//                                }
+//                            });
+
+
+                }
+
                 break;
         }
     }
@@ -2597,6 +2726,47 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
             startActivity(intent);
             searchSrcTextView.clearFocus();
             mSearchView.clearFocus();
+        }
+    }
+
+    public void getNearbyProviders(Location mylocation) {
+
+        try {
+            Log.e("$$$$$$$$$$toooooppped", "Ready for Api call");
+            SharedPreference.getInstance(getActivity()).setValue("current_loc", "yes");
+            latitude = mylocation.getLatitude();
+            longitude = mylocation.getLongitude();
+            SharedPreference.getInstance(mContext).setValue("lat", latitude);
+            SharedPreference.getInstance(mContext).setValue("longitu", longitude);
+            Log.e("$$$$$$$$$$toooooppped", String.valueOf(latitude));
+
+            Geocoder geocoder = new Geocoder((Activity)mContext, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(mylocation.getLatitude(), mylocation.getLongitude(), 1);
+            tvLocation.setVisibility(View.VISIBLE);
+            Log.e("$$$$$$$$$$toooooppped", addresses.toString());
+            if (addresses.size()>0) {
+                SharedPreference.getInstance(mContext).setValue("locnme", addresses.get(0).getLocality());
+                tvLocation.setText(addresses.get(0).getLocality());
+            } else {
+                tvLocation.setText(SharedPreference.getInstance(mContext).getStringValue("locnme", mlocName));
+            }
+            if (mtyp == null) {
+                mtyp = "city";
+            }
+            LanLong Lanlong = getLocationNearBy(latitude, longitude, mtyp);
+            double upperLeftLat = Lanlong.getUpperLeftLat();
+            double upperLeftLon = Lanlong.getUpperLeftLon();
+            double lowerRightLat = Lanlong.getLowerRightLat();
+            double lowerRightLon = Lanlong.getLowerRightLon();
+            String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
+
+            String query = "(and location1:" + locationRange + " " + ")";
+            String url = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
+            String sort = "claimable asc,distance asc, ynw_verified_level desc";
+            Log.e("$$$$$$$$$$toooooppped", "About to make Api call");
+            ApiSEARCHAWSLoadFirstData(query, url, sort);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
