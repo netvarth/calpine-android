@@ -8,9 +8,12 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -21,7 +24,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -48,6 +53,8 @@ public class Register extends AppCompatActivity {
     TextView tv_terms, tv_provider, tv_download;
     String sforceupdate = "";
     String detail;
+    CountryCodePicker cCodePicker;
+    String countryCode = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +83,8 @@ public class Register extends AppCompatActivity {
             detail = extras.getString("detail_id", "");
         }
 
-        if(detail!=null){
-            Log.i("detailsofVivek",detail);
+        if (detail != null) {
+            Log.i("detailsofVivek", detail);
         }
 
         if (sforceupdate != null) {
@@ -86,6 +93,19 @@ public class Register extends AppCompatActivity {
                 showForceUpdateDialog();
             }
         }
+
+
+        cCodePicker = findViewById(R.id.ccp);
+
+        cCodePicker.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
+            @Override
+            public void onCountrySelected() {
+
+                countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
+            }
+        });
+
+        countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
 
         Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
@@ -217,7 +237,7 @@ public class Register extends AppCompatActivity {
                         if (response.body().string().equalsIgnoreCase("false")) {
                             SharedPreference.getInstance(mContext).setValue("mobno", mEdtMobno.getText().toString());
                             Intent iReg = new Intent(mContext, Signup.class);
-                            if(detail!=null){
+                            if (detail != null) {
                                 iReg.putExtra("detail_id", (detail));
                             }
                             startActivity(iReg);
@@ -226,9 +246,10 @@ public class Register extends AppCompatActivity {
                         } else {
                             SharedPreference.getInstance(mContext).setValue("mobno", mEdtMobno.getText().toString());
                             Intent iReg = new Intent(mContext, Login.class);
-                            if(detail!=null){
+                            if (detail != null) {
                                 iReg.putExtra("detail_id", (detail));
                             }
+                            iReg.putExtra("countryCode",countryCode);
                             startActivity(iReg);
                             // finish();
                         }

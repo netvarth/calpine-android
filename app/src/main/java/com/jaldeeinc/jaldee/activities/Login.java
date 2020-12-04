@@ -65,6 +65,7 @@ public class Login extends AppCompatActivity {
     TextView tv_account;
     Button btn_login;
     String detail;
+    String countryCode = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +77,7 @@ public class Login extends AppCompatActivity {
         if (extras != null) {
 
             detail = extras.getString("detail_id");
-
+            countryCode = extras.getString("countryCode");
         }
 
 
@@ -209,6 +210,7 @@ public class Login extends AppCompatActivity {
         Config.logV("REGISTARION ID______________@@@@@@@___" + regId);
         JSONObject jsonObj = new JSONObject();
         try {
+            jsonObj.put("countryCode",countryCode);
             jsonObj.put("loginId", loginId);
             jsonObj.put("password", password);
             jsonObj.put("mUniqueId", regId);

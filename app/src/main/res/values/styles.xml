@@ -87,7 +87,7 @@
     <style name="AppSearchView" parent="Widget.AppCompat.SearchView">
         <item name="android:textSize">@dimen/dimen_16dp</item>
         <item name="android:textColor">@color/title_color</item>
-        <item name="android:fontFamily">@font/josefinsans_thin</item>
+        <item name="android:fontFamily">@font/josefinsans_mediumitalic</item>
 
     </style>
 

@@ -3,6 +3,7 @@
     xmlns:android.support.design="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/tools"
     android:background="@drawable/app_bg_gradient">
 
     <LinearLayout
@@ -47,26 +48,38 @@
                 android:layout_marginTop="@dimen/padding5"
                 android:gravity="center"
                 android:text="@string/consumer"
-                android:visibility="gone"
                 android:textAllCaps="true"
                 android:textColor="@color/title_consu"
-                android:textSize="@dimen/txtsize_hint" />
+                android:textSize="@dimen/txtsize_hint"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_below="@+id/mLayout_main"
-            android:layout_marginLeft="@dimen/padding40"
-            android:layout_marginRight="@dimen/padding40"
-            android:layout_weight="7"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/dimen_20dp"
+            android:layout_marginEnd="@dimen/dimen_20dp"
+            android:background="@drawable/textbox_curved">
+
+            <com.hbb20.CountryCodePicker
+                android:id="@+id/ccp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:layout_gravity="center"
+                android:paddingTop="@dimen/dimen_12dp"
+                app:ccp_autoDetectCountry="true"
+                android.support.design:ccp_textSize="@dimen/dimen_12dp"
+                android:background="#F2F2F2"
+                android:paddingStart="@dimen/dimen_10dp" />
 
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/text_input_layout"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.8"
                 android:textColorHint="@color/title_grey"
                 android.support.design:hintTextAppearance="@style/GreyTextInputLayout">
 
@@ -82,9 +95,21 @@
                     android:textColor="@color/title_grey" />
             </com.google.android.material.textfield.TextInputLayout>
 
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_below="@+id/mLayout_main"
+            android:layout_marginLeft="@dimen/padding40"
+            android:layout_marginRight="@dimen/padding40"
+            android:layout_weight="7"
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/reg_submit"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/padding45"
                 android:layout_marginTop="@dimen/padding5"
@@ -92,7 +117,6 @@
                 android:maxHeight="@dimen/padding30"
                 android:onClick="BtnSubmit"
                 android:text="@string/layout_button_ok"
-                style="?android:attr/borderlessButtonStyle"
                 android:textAllCaps="true"
                 android:textColor="@color/app_background" />
 
@@ -100,8 +124,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/padding20"
-                android:layout_marginRight="@dimen/padding20"
                 android:layout_marginTop="@dimen/default_padding"
+                android:layout_marginRight="@dimen/padding20"
                 android:gravity="center"
                 android:text="@string/terms_cond_register3"
                 android:textColor="@color/title_grey"
@@ -122,8 +146,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/padding20"
-                android:layout_marginRight="@dimen/padding20"
                 android:layout_marginTop="@dimen/padding20"
+                android:layout_marginRight="@dimen/padding20"
                 android:gravity="center"
                 android:text="@string/are_provider1"
                 android:textColor="@color/title_grey"

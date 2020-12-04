@@ -90,7 +90,7 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
         tv_currentloc = findViewById(R.id.tv_currentloc);
         tv_title.setText("Search Location");
         Typeface tyface1 = Typeface.createFromAsset(this.getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-Bold.ttf");
         tv_title.setTypeface(tyface1);
 
 
