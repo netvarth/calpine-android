@@ -384,6 +384,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         iCheckIn.putExtra("isshowtoken", searchdetailList.isShowToken());
                         iCheckIn.putExtra("getAvail_date", searchdetailList.getAvail_date());
                         iCheckIn.putExtra("virtualservice", searchdetailList.getVirtual_service_status());
+                        iCheckIn.putExtra("locationId", searchdetailList.getLocation_id1());
                         context.startActivity(iCheckIn);
                     }
                 });
