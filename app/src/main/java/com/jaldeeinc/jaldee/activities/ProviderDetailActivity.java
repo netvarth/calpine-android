@@ -241,6 +241,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     String terminology;
     String userTerminology;
     private SearchLocationAdpterCallback adaptercallback;
+    private String location_Id;
+    private String place;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -263,7 +265,13 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             }
             claimable = intent.getStringExtra("claimable");
             claimable = "0";
-            locationId = intent.getIntExtra("locationId", 0);
+            if(mFrom!=null && mFrom.equalsIgnoreCase("checkin")){
+                location_Id = intent.getStringExtra("locationId");
+                place = intent.getStringExtra("place");
+            }
+            else {
+                locationId = intent.getIntExtra("locationId", 0);
+            }
         }
 
         //more details recyclerView
@@ -451,8 +459,24 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             } else {
                                 rlLocation.setVisibility(View.GONE);
                             }
-                            locationId = mSearchLocList.get(0).getId();
-                            location = mSearchLocList.get(0).getPlace();
+
+                            if(mFrom!=null && mFrom.equalsIgnoreCase("checkin")){
+                               locationId = Integer.parseInt(location_Id);
+                               location = place;
+                                for(int i = 0;i<mSearchLocList.size();i++){
+                                    if(locationId == mSearchLocList.get(i).getId()){
+                                        tvLocation.setText(mSearchLocList.get(i).getAddress());
+                                    }
+                                }
+
+                            }
+                            else {
+                                locationId = mSearchLocList.get(0).getId();
+                                location = mSearchLocList.get(0).getPlace();
+                            }
+
+
+
                             apiSearchViewDetail(uniqueId);
 
                         } else {
