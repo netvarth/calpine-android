@@ -259,6 +259,14 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
             }
         });
 
+        etAmount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                tvErrorAmount.setVisibility(View.GONE);
+            }
+        });
+
         ApiGetProfileDetail();
         ApiSearchViewTerminology(uniqueId);
         APIPayment(providerId);
