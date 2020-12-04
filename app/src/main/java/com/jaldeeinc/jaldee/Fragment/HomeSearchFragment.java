@@ -2310,13 +2310,13 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                                                     Manifest.permission.ACCESS_FINE_LOCATION);
                                     if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
                                         mylocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-//                                        try {
+                                        try {
                                             latitude = mylocation.getLatitude();
                                             longitude = mylocation.getLongitude();
-//                                        } catch (Exception e) {
-//                                            getMyLocation();
-//                                            e.printStackTrace();
-//                                        }
+                                        } catch (Exception e) {
+
+                                            e.printStackTrace();
+                                        }
 
                                         SharedPreference.getInstance(mContext).setValue("lat", latitude);
                                         SharedPreference.getInstance(mContext).setValue("longitu", longitude);
