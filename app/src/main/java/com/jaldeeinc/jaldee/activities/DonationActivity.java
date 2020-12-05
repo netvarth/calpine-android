@@ -142,6 +142,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     ProfileModel profileDetails;
     private ActiveDonation activeDonation;
     private String dntEncId;
+    private String countryCode;
 
 
     @Override
@@ -225,7 +226,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
             public void onClick(View v) {
 
                 if (tvNumber.getText().toString() != null) {
-                    mobileNumberDialog = new MobileNumberDialog(DonationActivity.this, profileDetails, iMobileSubmit, tvNumber.getText().toString());
+                    mobileNumberDialog = new MobileNumberDialog(DonationActivity.this, profileDetails, iMobileSubmit,tvNumber.getText().toString());
                     mobileNumberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     mobileNumberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     mobileNumberDialog.show();
@@ -298,8 +299,10 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                         profileDetails = response.body();
                         if (profileDetails != null) {
                             tvConsumerName.setText(profileDetails.getUserprofile().getFirstName() + " " + profileDetails.getUserprofile().getLastName());
-                            tvNumber.setText(profileDetails.getUserprofile().getPrimaryMobileNo());
-                            phoneNumber = tvNumber.getText().toString();
+                            countryCode = profileDetails.getUserprofile().getCountryCode();
+                            phoneNumber = profileDetails.getUserprofile().getPrimaryMobileNo();
+                            tvNumber.setText(countryCode + " " + phoneNumber );
+
                             if (profileDetails.getUserprofile().getEmail() != null) {
                                 tvEmail.setText(profileDetails.getUserprofile().getEmail());
                             } else {
@@ -809,7 +812,9 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     public void mobileUpdated() {
 
         String phone = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
-        tvNumber.setText(phone);
+        countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode","");
+        phoneNumber = phone;
+        tvNumber.setText(countryCode + " " + phone);
     }
 
     public static String getMoneyFormat(String number) {

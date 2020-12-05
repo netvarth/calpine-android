@@ -38,7 +38,7 @@ public class EmailOtpFragment extends RootFragment {
     TextView txtResend;
     TextInputEditText edtOtp;
     Button btn_verify;
-    String email;
+    String email, countryCode;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,6 +55,7 @@ public class EmailOtpFragment extends RootFragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             email = bundle.getString("email", "");
+            countryCode = bundle.getString("countryCode","");
         }
         btn_verify = (Button) row.findViewById(R.id.btn_verify);
         btn_verify.setOnClickListener(new View.OnClickListener() {
@@ -63,7 +64,7 @@ public class EmailOtpFragment extends RootFragment {
                 if (Config.isOnline(mContext)) {
 
                     if(!edtOtp.getText().toString().equals("")){
-                        ApiOtpEmail(edtOtp.getText().toString(), email);
+                        ApiOtpEmail(edtOtp.getText().toString(), email, countryCode);
                     }else{
                         Toast.makeText(mContext, "Enter OTP", Toast.LENGTH_SHORT).show();
                     }
@@ -159,7 +160,7 @@ public class EmailOtpFragment extends RootFragment {
     }
 
 
-    private void ApiOtpEmail(String otp, final String email) {
+    private void ApiOtpEmail(String otp, final String email, String countryCode) {
 
 
         ApiInterface apiService =
@@ -194,6 +195,7 @@ public class EmailOtpFragment extends RootFragment {
                         if (response.body().string().equals("true")) {
                             Config.logV("Response------#################----------"+email);
                             SharedPreference.getInstance(mContext).setValue("mobile",email);
+                            SharedPreference.getInstance(mContext).setValue("countryCode",countryCode);
                             Toast.makeText(mContext,"Phone Number has been updated successfully ",Toast.LENGTH_LONG).show();
                             getFragmentManager().popBackStack();
 

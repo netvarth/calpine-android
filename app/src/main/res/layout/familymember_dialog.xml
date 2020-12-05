@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:android.support.design="http://schemas.android.com/tools"
     android:layout_margin="@dimen/dimen_10dp"
     android:orientation="vertical">
 
@@ -90,15 +91,30 @@
                 android:text="Phone"
                 android:textSize="@dimen/dimen_15sp" />
 
+            <com.hbb20.CountryCodePicker
+                android:id="@+id/ccp"
+                android:layout_width="@dimen/dimen_65dp"
+                android:layout_height="@dimen/padding40"
+                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/edittext_color"
+                app:ccp_showFlag="false"
+                app:ccp_showNameCode="false"
+                android.support.design:ccp_textSize="@dimen/dimen_12dp"
+                app:ccp_autoDetectCountry="true"
+                android:visibility="gone"/>
+
             <EditText
                 android:id="@+id/edtPhone"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/padding40"
+                android:layout_weight="1"
                 android:layout_marginLeft="@dimen/dimen_5dp"
                 android:background="@drawable/edittext_color"
                 android:hint="Enter Phone Number"
                 android:inputType="phone"
-                android:maxLength="10"
+                android:maxLength="15"
                 android:paddingStart="@dimen/padding5"
                 android:textColor="@color/black"
                 android:textSize="@dimen/dimen_15sp"

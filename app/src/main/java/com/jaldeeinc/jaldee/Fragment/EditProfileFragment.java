@@ -289,7 +289,7 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
         }
         txtfirstname.setText(getProfile.getFirstName());
         txtlastname.setText(getProfile.getLastName());
-        tv_phone.setText(getProfile.getPrimaryMobileNo());
+        tv_phone.setText(getProfile.getCountryCode() + " " +  getProfile.getPrimaryMobileNo());
         tv_email.setText(getProfile.getEmail());
 
         String selectedDate = getProfile.getDob();

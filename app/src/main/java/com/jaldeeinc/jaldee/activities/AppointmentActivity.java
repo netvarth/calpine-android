@@ -331,6 +331,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     private FamilyMemberDialog familyMemberDialog;
     private IFamilyMemberDetails iFamilyMemberDetails;
     private String prepayAmount ="";
+    private String countryCode;
 
 
     @Override
@@ -524,15 +525,16 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         tvEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this,familyMEmID,tvEmail.getText().toString(),tvNumber.getText().toString(),serviceInfo.getIsPrePayment(),iFamilyMemberDetails,profileDetails,multiplemem,0);
-                familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
-                familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                familyMemberDialog.show();
-                DisplayMetrics metrics = AppointmentActivity.this.getResources().getDisplayMetrics();
-                int width = (int) (metrics.widthPixels * 1);
-                familyMemberDialog.setCancelable(false);
-                familyMemberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                if(tvEmail.getText().toString().contains("Enter your Mail Id")) {
+                    familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this, familyMEmID, tvEmail.getText().toString(), tvNumber.getText().toString(), serviceInfo.getIsPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0);
+                    familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+                    familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    familyMemberDialog.show();
+                    DisplayMetrics metrics = AppointmentActivity.this.getResources().getDisplayMetrics();
+                    int width = (int) (metrics.widthPixels * 1);
+                    familyMemberDialog.setCancelable(false);
+                    familyMemberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                }
 
 //                String mailId = "";
 //                if (tvEmail.getText().toString() != null) {
@@ -1021,9 +1023,12 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         profileDetails = response.body();
                         if (profileDetails != null) {
                             tvConsumerName.setText(profileDetails.getUserprofile().getFirstName() + " " + profileDetails.getUserprofile().getLastName());
-                            tvNumber.setText(profileDetails.getUserprofile().getPrimaryMobileNo());
+                            countryCode = profileDetails.getUserprofile().getCountryCode();
+                            phoneNumber =  profileDetails.getUserprofile().getPrimaryMobileNo();
+                            tvNumber.setText(countryCode + " " + phoneNumber);
                             etVirtualNumber.setText(profileDetails.getUserprofile().getPrimaryMobileNo());
-                            phoneNumber = tvNumber.getText().toString();
+
+
                             if (profileDetails.getUserprofile().getEmail() != null) {
                                 emailId = profileDetails.getUserprofile().getEmail();
                                 tvEmail.setText(emailId);
@@ -2459,13 +2464,14 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     }
 
     @Override
-    public void sendFamilyMemberDetails(int consumerId, String firstName, String lastName, String phone, String email) {
+    public void sendFamilyMemberDetails(int consumerId, String firstName, String lastName, String phone, String email, String conCode) {
         mFirstName = firstName;
         mLastName = lastName;
         phoneNumber = phone;
         familyMEmID = consumerId;
         emailId = email;
-        tvNumber.setText(phoneNumber);
+        countryCode = conCode;
+        tvNumber.setText(countryCode + " " +  phoneNumber);
         if(!emailId.equalsIgnoreCase("")) {
             tvEmail.setText(emailId);
         }

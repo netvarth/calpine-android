@@ -9,6 +9,8 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -32,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.gson.Gson;
+import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
 import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
@@ -102,6 +105,8 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
     ArrayList<FamilyArrayModel> checkList = new ArrayList<>();
     private LinearLayout ll_changeMember, ll_addmember;
     Animation slideUp, slideRight;
+    CountryCodePicker cCodePicker;
+    String countryCode = "";
 
 
     public FamilyMemberDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update) {
@@ -153,6 +158,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         tv_errorfirstname = findViewById(R.id.error_mesg_add);
         slideUp = AnimationUtils.loadAnimation(context, R.anim.slide_in_left);
         slideRight = AnimationUtils.loadAnimation(context, R.anim.slide_out_right);
+        cCodePicker = findViewById(R.id.ccp);
 
         this.iFamillyListSelected = this;
         if (update == 1) {
@@ -172,6 +178,38 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         lastName = SharedPreference.getInstance(context).getStringValue("lastname", "");
         consumerId = SharedPreference.getInstance(context).getIntValue("consumerId", 0);
         mRecycleFamily = findViewById(R.id.recycle_familyMember);
+
+
+        cCodePicker.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
+            @Override
+            public void onCountrySelected() {
+
+                countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
+            }
+        });
+
+        countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
+
+
+
+       et_phone.addTextChangedListener(new TextWatcher() {
+           @Override
+           public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+           }
+
+           @Override
+           public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+               cCodePicker.setVisibility(View.VISIBLE);
+           }
+
+           @Override
+           public void afterTextChanged(Editable editable) {
+
+           }
+       });
+
+
 
         bt_save.setEnabled(false);
         bt_save.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
@@ -299,7 +337,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                     tv_error_mail.setVisibility(View.VISIBLE);
                 }
             } else {
-                iFamilyMemberDetails.sendFamilyMemberDetails(memId, selectedMemberName, lastName, phone, email);
+                iFamilyMemberDetails.sendFamilyMemberDetails(memId, selectedMemberName, lastName, phone, email, countryCode);
                 Toast.makeText(context, "Details saved successfully", Toast.LENGTH_SHORT).show();
                 dismiss();
             }
@@ -328,7 +366,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                     tv_error_mail.setVisibility(View.VISIBLE);
                 }
             } else {
-                iFamilyMemberDetails.sendFamilyMemberDetails(memId, selectedMemberName, lastName, phone, email);
+                iFamilyMemberDetails.sendFamilyMemberDetails(memId, selectedMemberName, lastName, phone, email, countryCode);
                 iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
                 Toast.makeText(context, "Details saved successfully", Toast.LENGTH_SHORT).show();
                 dismiss();
@@ -500,7 +538,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                             SharedPreference.getInstance(context).setValue("email", et_email.getText().toString());
 
                             Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
-                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, selectedMemberName, lastName, phone, email);
+                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, selectedMemberName, lastName, phone, email, countryCode);
                             iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
                             dismiss();
 

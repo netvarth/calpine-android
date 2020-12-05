@@ -4,12 +4,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.Interface.IMobileSubmit;
 import com.jaldeeinc.jaldee.R;
@@ -39,6 +42,8 @@ public class MobileNumberDialog extends Dialog {
     CustomTextViewMedium tvErrorMessage;
     private IMobileSubmit iMobileSubmit;
     String phoneNumber;
+    CountryCodePicker cCodePicker;
+    String countryCode = "";
 
     public MobileNumberDialog(Context mContext, ProfileModel profileDetails, IMobileSubmit iMobileSubmit, String number) {
         super(mContext);
@@ -61,11 +66,46 @@ public class MobileNumberDialog extends Dialog {
         phone.setTypeface(tyface);
         btnsave.setTypeface(tyface);
 
+        cCodePicker = findViewById(R.id.ccp);
+
+        cCodePicker.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
+            @Override
+            public void onCountrySelected() {
+
+                countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
+            }
+        });
+
+        countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
+
         if (phoneNumber != null) {
 
             phone.setText(phoneNumber);
 
         }
+
+        phone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                cCodePicker.setVisibility(View.VISIBLE);
+                phone.getText().clear();
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+
+
 
         btnsave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,11 +120,12 @@ public class MobileNumberDialog extends Dialog {
 
     private void checkMail() {
 
-        String phoneNumber = phone.getText().toString();
+        String phoneNumber =  phone.getText().toString();
 
         if (phoneNumber.trim().length() > 9) {
             Toast.makeText(context, "Mobile number has been updated successfully ", Toast.LENGTH_LONG).show();
-            SharedPreference.getInstance(context).setValue("mobile", phone.getText().toString());
+            SharedPreference.getInstance(context).setValue("mobile", phoneNumber);
+            SharedPreference.getInstance(context).setValue("countryCode",countryCode);
             iMobileSubmit.mobileUpdated();
             dismiss();
 
@@ -117,6 +158,7 @@ public class MobileNumberDialog extends Dialog {
             jsonObj.put("phone",phone.getText().toString());
             jsonObj.put("gender", profileDetails.getUserprofile().getGender());
             jsonObj.put("dob", profileDetails.getUserprofile().getDob());
+            jsonObj.put("countryCode", countryCode);
 
         } catch (JSONException e) {
             e.printStackTrace();

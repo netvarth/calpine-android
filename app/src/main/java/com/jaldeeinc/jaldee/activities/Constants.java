@@ -38,6 +38,7 @@ public class Constants {
     public static final String CANCELLED = "cancelled";
     public static final String CHECKEDIN = "Checkedin";
     public static final String CHAT = "ChatSection";
+    public static final String COUNTRY_CODE = "countryCode";
 
 
 
