@@ -93,7 +93,7 @@ public class MobileNumberDialog extends Dialog {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 cCodePicker.setVisibility(View.VISIBLE);
-                phone.getText().clear();
+
 
             }
 
