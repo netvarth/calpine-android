@@ -103,11 +103,20 @@ public class ProfileModel {
         this.phoneVerified = phoneVerified;
     }
 
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
     String firstName;
     String lastName;
     String primaryMobileNo;
     String email;
     String userName;
     boolean emailVerified,phoneVerified;
+    String countryCode;
 
 }

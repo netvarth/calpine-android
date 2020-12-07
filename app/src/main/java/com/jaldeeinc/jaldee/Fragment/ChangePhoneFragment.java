@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.SpannableString;
 
+import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import android.os.Bundle;
@@ -46,6 +47,8 @@ public class ChangePhoneFragment extends RootFragment {
     Button mDone;
     TextInputLayout text_input_phone;
     TextView txtmobile;
+    CountryCodePicker cCodePicker;
+    String countryCode = "";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -63,6 +66,19 @@ public class ChangePhoneFragment extends RootFragment {
         tv_title.setTypeface(tyface1);
 
         ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+
+        cCodePicker = row.findViewById(R.id.ccp);
+
+        cCodePicker.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
+            @Override
+            public void onCountrySelected() {
+
+                countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
+            }
+        });
+
+        countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
+
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,7 +105,7 @@ public class ChangePhoneFragment extends RootFragment {
             public void onClick(View v) {
                 if(Config.isOnline(mContext)){
                     if (validatePhone()) {
-                        ApiChangePhone(edtPhone.getText().toString());
+                        ApiChangePhone(edtPhone.getText().toString(), countryCode);
                     }
 
                 }
@@ -151,11 +167,14 @@ public class ChangePhoneFragment extends RootFragment {
                         Config.logV("Response--mob-------------------------" + response.body().getUserprofile().getPrimaryMobileNo());
 
                         SharedPreference.getInstance(mContext).setValue("mobile", response.body().getUserprofile().getPrimaryMobileNo());
+                        SharedPreference.getInstance(mContext).setValue("countryCode", response.body().getUserprofile().getCountryCode());
 
                         String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+                        String countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
+
 
                         String firstWord ="Your Current Mobile # ";
-                        String secondWord = mobile;
+                        String secondWord = countryCode + " " +  mobile;
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -210,7 +229,7 @@ public class ChangePhoneFragment extends RootFragment {
             }
         }
     }
-    private void ApiChangePhone(final String mPhone) {
+    private void ApiChangePhone(final String mPhone, String countryCode) {
 
 
         ApiInterface apiService =
@@ -240,6 +259,7 @@ public class ChangePhoneFragment extends RootFragment {
                             EmailOtpFragment emailFragment = new EmailOtpFragment();
                             Bundle bundle = new Bundle();
                             bundle.putString("email", mPhone);
+                            bundle.putString("countryCode", countryCode);
                             emailFragment.setArguments(bundle);
                             FragmentTransaction transaction = getFragmentManager().beginTransaction();
                             transaction.addToBackStack(null);

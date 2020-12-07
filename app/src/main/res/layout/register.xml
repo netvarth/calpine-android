@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/tools"
-    android:background="@drawable/app_bg_gradient">
+    android:background="@drawable/app_bg_gradient"
+    app:ignore="NamespaceTypo">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -65,14 +66,14 @@
             <com.hbb20.CountryCodePicker
                 android:id="@+id/ccp"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.4"
+                android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:paddingTop="@dimen/dimen_12dp"
-                app:ccp_autoDetectCountry="true"
-                android.support.design:ccp_textSize="@dimen/dimen_12dp"
+                android:layout_weight="0.4"
                 android:background="#F2F2F2"
-                android:paddingStart="@dimen/dimen_10dp" />
+                android:paddingStart="@dimen/dimen_10dp"
+                android:paddingTop="@dimen/dimen_12dp"
+                android.support.design:ccp_textSize="@dimen/dimen_12dp"
+                app:ccp_autoDetectCountry="true" />
 
 
             <com.google.android.material.textfield.TextInputLayout
