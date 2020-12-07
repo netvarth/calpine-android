@@ -43,6 +43,7 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.CustomDailogVerification;
 import com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic;
@@ -156,7 +157,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
     @NonNull
     private RecyclerView.ViewHolder getViewHolder(ViewGroup parent, LayoutInflater inflater) {
         RecyclerView.ViewHolder viewHolder;
-        View v1 = inflater.inflate(R.layout.search_item, parent, false);
+        View v1 = inflater.inflate(R.layout.search_card, parent, false);
         viewHolder = new SearchResultsAdapter.MyViewHolder(v1);
         return viewHolder;
     }
@@ -168,7 +169,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             case ITEM:
                 final SearchResultsAdapter.MyViewHolder myViewHolder = (SearchResultsAdapter.MyViewHolder) holder;
 
-                setAnimation(myViewHolder.cvSearch, position);
+                setAnimation(myViewHolder.cvCard, position);
                 // to set provider name
                 if (searchdetailList.getQualification() != null) {
                     myViewHolder.tvSpName.setText(searchdetailList.getTitle());
@@ -190,24 +191,25 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }
 
                 // to set JDN icon
-                if (searchdetailList.getJdn() != null) {
-                    if (searchdetailList.getJdn().equals("1")) {
-                        myViewHolder.iv_jdnIcon.setVisibility(View.VISIBLE);
-                    } else {
-                        myViewHolder.iv_jdnIcon.setVisibility(View.GONE);
-                    }
-                } else {
-                    myViewHolder.iv_jdnIcon.setVisibility(View.GONE);
-                }
-                myViewHolder.iv_jdnIcon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mAdapterCallback.onMethodJdn(searchdetailList.getUniqueid());
-
-                    }
-                });
+//                if (searchdetailList.getJdn() != null) {
+//                    if (searchdetailList.getJdn().equals("1")) {
+//                        myViewHolder.iv_jdnIcon.setVisibility(View.VISIBLE);
+//                    } else {
+//                        myViewHolder.iv_jdnIcon.setVisibility(View.GONE);
+//                    }
+//                } else {
+//                    myViewHolder.iv_jdnIcon.setVisibility(View.GONE);
+//                }
+//                myViewHolder.iv_jdnIcon.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        mAdapterCallback.onMethodJdn(searchdetailList.getUniqueid());
+//
+//                    }
+//                });
 
                 // claim info
+
                 showClaimInfo(myViewHolder, searchdetailList);
 
                 // handle verification
@@ -218,46 +220,29 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 // to set provider image
                 if (searchdetailList.getLogo() != null) {
-
                     ((Activity) context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             //Your code to run in GUI thread here
-//                            RequestOptions options = new RequestOptions().placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage);
-//                            Glide.with(context).load(searchdetailList.getLogo()).apply(options).into(myViewHolder.ivSpImage);
+                            myViewHolder.cvImage.setVisibility(View.VISIBLE);
                             PicassoTrustAll.getInstance(context).load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.ivSpImage);
-
                         }
                     });
-
-
                 } else {
-
-                    ((Activity) context).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //Your code to run in GUI thread here
-//                            Glide.with(context).load(R.drawable.icon_noimage).into(myViewHolder.ivSpImage);
-                            PicassoTrustAll.getInstance(context).load(R.drawable.icon_noimage).fit().into(myViewHolder.ivSpImage);
-
-                        }
-                    });
-
+                    myViewHolder.cvImage.setVisibility(View.GONE);
                 }
 
                 // to set services
                 if (searchdetailList.getMessage() == null) {
-                    myViewHolder.tvInvalidAccount.setVisibility(View.GONE);
                     setServices(myViewHolder, searchdetailList);
                 } else {
                     if (searchdetailList.getClaimable().equalsIgnoreCase("0")) {
                         if (!searchdetailList.isWaitlistEnabled() && !searchdetailList.isApptEnabled()) {
-                            myViewHolder.llEstTime.setVisibility(View.GONE);
+                            myViewHolder.rlStatus.setVisibility(View.GONE);
                             myViewHolder.llServices.setVisibility(View.GONE);
-                            myViewHolder.tvInvalidAccount.setVisibility(View.VISIBLE);
-                            myViewHolder.tvInvalidAccount.setText(searchdetailList.getMessage() + "..!");
+
                         } else {
-                            myViewHolder.llEstTime.setVisibility(View.GONE);
+                            myViewHolder.rlStatus.setVisibility(View.GONE);
                         }
                     } else {
 
@@ -294,77 +279,123 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     e.printStackTrace();
                 }
 
-                if (searchdetailList.getOnline_profile() != null && searchdetailList.getOnline_profile().equalsIgnoreCase("1") && searchdetailList.isWaitlistEnabled()) {
+                if (searchdetailList.getOnline_profile() != null && searchdetailList.getOnline_profile().equalsIgnoreCase("1")) {
 
-                    if (searchdetailList.getAvail_date() != null) {
-                        myViewHolder.llEstTime.setVisibility(View.VISIBLE);
-                        if (searchdetailList.isOnlineCheckIn()) {
-                            if (searchdetailList.isShowToken()) {
+                    myViewHolder.rlStatus.setVisibility(View.VISIBLE);
 
+                    if (searchdetailList.isWaitlistEnabled() && searchdetailList.isApptEnabled() && searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1")) {
+
+                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
+                        myViewHolder.tvText.setText("Book Service");
+                        myViewHolder.llEstTime.setVisibility(View.GONE);
+                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+
+                    } else if (searchdetailList.isWaitlistEnabled() && searchdetailList.isApptEnabled()) {
+
+                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
+                        myViewHolder.tvText.setText("Book Service");
+                        myViewHolder.llEstTime.setVisibility(View.GONE);
+                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+
+                    } else if (searchdetailList.isWaitlistEnabled() && searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1")) {
+
+                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
+                        myViewHolder.tvText.setText("Book Service");
+                        myViewHolder.llEstTime.setVisibility(View.GONE);
+                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+
+                    } else if (searchdetailList.isApptEnabled() && searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1")) {
+
+                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
+                        myViewHolder.tvText.setText("Book Service");
+                        myViewHolder.llEstTime.setVisibility(View.GONE);
+                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+
+                    } else if (searchdetailList.isWaitlistEnabled() && !searchdetailList.isApptEnabled() && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1"))) {
+
+                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
+                        if (searchdetailList.isShowToken()) {
+                            myViewHolder.tvText.setText("Get Token");
+                        } else {
+                            myViewHolder.tvText.setText("CheckIn");
+                        }
+
+                        if (searchdetailList.getAvail_date() != null) {
+
+                            // est wait time or Date
+                            if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())) {
+                                myViewHolder.llWaitingInLine.setVisibility(View.VISIBLE);
                                 if (!searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc")) {
-
-                                    if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())) {
-                                        showWaitingTime(myViewHolder, searchdetailList, null);
-                                    } else {
-                                        showWaitingTime(myViewHolder, searchdetailList, "future");
-                                    }
+                                    myViewHolder.llEstTime.setVisibility(View.VISIBLE);
+                                    showWaitingTime(myViewHolder, searchdetailList, null);
                                 } else {
+                                    myViewHolder.llEstTime.setVisibility(View.GONE);
+                                }
 
-                                    myViewHolder.tvEstWaitTime.setText("Waiting in line");
-                                    myViewHolder.tvTimeOrPeople.setText(String.valueOf(searchdetailList.getPersonAhead()));
-                                    myViewHolder.tvTimeOrPeopleHint.setVisibility(View.VISIBLE);
-                                    myViewHolder.tvTimeOrPeopleHint.setText("people");
+                                // people waiting in Line
+                                myViewHolder.tvWaitingCount.setText(String.valueOf(searchdetailList.getPersonAhead()));
+                                if (searchdetailList.getPersonAhead() == 1) {
+                                    myViewHolder.tvWaitingCountHint.setText("Person");
+                                } else {
+                                    myViewHolder.tvWaitingCountHint.setText("People");
                                 }
 
                             } else {
+                                myViewHolder.llEstTime.setVisibility(View.VISIBLE);
+                                myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+                                showWaitingTime(myViewHolder, searchdetailList, "future");
+                            }
 
-                                if (!searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc")) { // Conventional
-                                    if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())) {
-                                        showWaitingTime(myViewHolder, searchdetailList, null);
-                                    } else {
-                                        showWaitingTime(myViewHolder, searchdetailList, "future");
-                                    }
+                        } else {
 
-                                } else {
+                            myViewHolder.llEstTime.setVisibility(View.GONE);
+                            myViewHolder.llWaitingInLine.setVisibility(View.GONE);
 
-                                    myViewHolder.tvEstWaitTime.setText("Waiting in line");
-                                    myViewHolder.tvTimeOrPeople.setText(String.valueOf(searchdetailList.getPersonAhead()));
-                                    myViewHolder.tvTimeOrPeopleHint.setVisibility(View.VISIBLE);
-                                    myViewHolder.tvTimeOrPeopleHint.setText("people");
-                                }
+                        }
+
+                    } else if (searchdetailList.isApptEnabled() && !searchdetailList.isWaitlistEnabled() && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1"))) {
+
+                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
+                        myViewHolder.tvText.setText("Get Appointment");
+                        myViewHolder.llEstTime.setVisibility(View.VISIBLE);
+                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+
+                        if (searchdetailList.getAvailableDate() != null) {
+
+                            if (formattedDate.equalsIgnoreCase(searchdetailList.getAvailableDate())) {
+
+                                myViewHolder.tvEstWaitTime.setText("Next available on");
+                                String time = convertSlotTime(searchdetailList.getAvailableTime().split("-")[0]);
+                                myViewHolder.tvTime.setText("Today, " + time);
+                            } else {
+                                myViewHolder.tvEstWaitTime.setText("Next available on");
+                                String time = convertSlotTime(searchdetailList.getAvailableTime().split("-")[0]);
+                                myViewHolder.tvTime.setText(convertDate(searchdetailList.getAvailableDate()) + " " + time);
 
                             }
                         } else {
+
                             myViewHolder.llEstTime.setVisibility(View.GONE);
+                            myViewHolder.llWaitingInLine.setVisibility(View.GONE);
                         }
-                    }
 
-                } else if (searchdetailList.getOnline_profile() != null && searchdetailList.getOnline_profile().equals("1") && searchdetailList.isApptEnabled()) {
+                    } else if (searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1") && !searchdetailList.isWaitlistEnabled() && !searchdetailList.isApptEnabled()) {
 
-                    if (searchdetailList.getAvailableDate() != null) {
+                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
+                        myViewHolder.tvText.setText("Donate");
+                        myViewHolder.llEstTime.setVisibility(View.GONE);
+                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
 
-                        myViewHolder.llEstTime.setVisibility(View.VISIBLE);
+                    } else {
 
-                        if (formattedDate.equalsIgnoreCase(searchdetailList.getAvailableDate())) {
-
-                            myViewHolder.tvEstWaitTime.setText("Next available on");
-                            String time = convertSlotTime(searchdetailList.getAvailableTime().split("-")[0]);
-                            myViewHolder.tvTimeOrPeople.setText("Today " + "\n" + time);
-                            myViewHolder.tvTimeOrPeopleHint.setVisibility(View.GONE);
-                        } else {
-                            myViewHolder.tvEstWaitTime.setText("Next available on");
-                            String time = convertSlotTime(searchdetailList.getAvailableTime().split("-")[0]);
-                            myViewHolder.tvTimeOrPeople.setText(convertDate(searchdetailList.getAvailableDate()) + " " + "\n" + time);
-                            myViewHolder.tvTimeOrPeopleHint.setVisibility(View.GONE);
-
-                        }
+                        myViewHolder.rlStatus.setVisibility(View.GONE);
                     }
 
                 } else {
-                    myViewHolder.llEstTime.setVisibility(View.GONE);
+                    myViewHolder.rlStatus.setVisibility(View.GONE);
                 }
 
-                myViewHolder.cvSearch.setOnClickListener(new View.OnClickListener() {
+                myViewHolder.cvCard.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
@@ -464,7 +495,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private void setServices(MyViewHolder myViewHolder, SearchListModel searchdetailList) {
 
-        if (searchdetailList.getServices() != null) {
+        if (searchdetailList.getAppt_services() != null) {
             final ArrayList serviceNames = new ArrayList();
             final ArrayList serviceTypes = new ArrayList();
             final ArrayList serviceIds = new ArrayList();
@@ -493,7 +524,6 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
             if (serviceNames.size() > 0) {
 
-                myViewHolder.tvInvalidAccount.setVisibility(View.GONE);
                 myViewHolder.llServices.setVisibility(View.VISIBLE);
 
                 if (serviceNames.size() == 1) {
@@ -548,7 +578,6 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 }
             } else {
-                myViewHolder.tvInvalidAccount.setVisibility(View.GONE);
                 myViewHolder.llServices.setVisibility(View.GONE);
             }
         }
@@ -576,17 +605,13 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
             Spannable spannable = new SpannableString(firstWord + secondWord);
             myViewHolder.tvEstWaitTime.setText(firstWord);
-            myViewHolder.tvTimeOrPeople.setText(secondWord);
-            myViewHolder.tvTimeOrPeopleHint.setVisibility(View.GONE);
+            myViewHolder.tvTime.setText(secondWord);
         } else {
 
             String firstWord = "Est wait time";
-            String secondWord = " \n " + Config.getTimeinHourMinutes(searchdetailList.getQueueWaitingTime());
+            String secondWord = Config.getTimeinHourMinutes(searchdetailList.getQueueWaitingTime());
             myViewHolder.tvEstWaitTime.setText(firstWord);
-            myViewHolder.tvTimeOrPeople.setText(String.valueOf(searchdetailList.getQueueWaitingTime()));
-            myViewHolder.tvTimeOrPeopleHint.setVisibility(View.VISIBLE);
-            myViewHolder.tvTimeOrPeopleHint.setText("Mins");
-
+            myViewHolder.tvTime.setText(secondWord);
         }
 
     }
@@ -594,14 +619,14 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private void showClaimInfo(MyViewHolder myViewHolder, SearchListModel searchdetailList) {
         if (searchdetailList.getClaimable() != null) {
             if (searchdetailList.getClaimable().equals("1")) {
+                myViewHolder.cvCard.setCardBackgroundColor(context.getResources().getColor(R.color.unclaimed));
                 myViewHolder.cvClaimNow.setVisibility(View.VISIBLE);
-                myViewHolder.llEstTime.setVisibility(View.GONE);
+                myViewHolder.rlStatus.setVisibility(View.GONE);
                 myViewHolder.llServices.setVisibility(View.GONE);
-                myViewHolder.tvInvalidAccount.setVisibility(View.GONE);
             } else {
+                myViewHolder.cvCard.setCardBackgroundColor(context.getResources().getColor(R.color.white));
                 myViewHolder.cvClaimNow.setVisibility(View.GONE);
-                myViewHolder.llEstTime.setVisibility(View.VISIBLE);
-                myViewHolder.tvInvalidAccount.setVisibility(View.GONE);
+                myViewHolder.rlStatus.setVisibility(View.VISIBLE);
             }
         }
 
@@ -720,13 +745,15 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
     protected class MyViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView ivSpImage, ivJaldeeverified, iv_jdnIcon;
-        private CustomTextViewSemiBold tvSpName;
-        private CustomTextViewItalicSemiBold tvTimeOrPeople, tvTimeOrPeopleHint;
-        private CustomTextViewMedium tvLocationName, tvEstWaitTime, tvInvalidAccount, tvSpOne, tvSpTwo;
+        private CustomTextViewBold tvSpName;
+        private CustomTextViewItalicSemiBold tvTime, tvWaitingCount, tvWaitingCountHint;
+        private CustomTextViewMedium tvLocationName, tvEstWaitTime, tvSpOne, tvSpTwo, tvWaitingInLine;
         private RatingBar ratingBar;
-        private LinearLayout llServices, llEstTime, llSpecializations;
-        private CustomItalicTextViewNormal tvServiceOne, tvServiceTwo, tvServiceThree;
-        private CardView cvSearch, cvClaimNow;
+        private LinearLayout llServices, llSpecializations, llWaitingInLine, llEstTime;
+        private RelativeLayout rlStatus;
+        private CustomTextViewItalicSemiBold tvServiceOne, tvServiceTwo, tvServiceThree;
+        private CustomTextViewSemiBold tvText;
+        private CardView cvClaimNow, cvAction,cvCard,cvImage;
 
         public MyViewHolder(View view) {
             super(view);
@@ -735,22 +762,29 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             tvSpName = view.findViewById(R.id.tv_spName);
             tvLocationName = view.findViewById(R.id.tv_locationName);
             ivJaldeeverified = view.findViewById(R.id.iv_jaldeeVerified);
-            tvTimeOrPeople = view.findViewById(R.id.tv_timeOrCount);
-            tvTimeOrPeopleHint = view.findViewById(R.id.tv_timeOrCountHint);
+            tvTime = view.findViewById(R.id.tv_time);
             tvEstWaitTime = view.findViewById(R.id.tv_estWaitTime);
             ratingBar = view.findViewById(R.id.rb_ratingBar);
             llServices = view.findViewById(R.id.ll_services);
             tvServiceOne = view.findViewById(R.id.tv_serviceOne);
             tvServiceTwo = view.findViewById(R.id.tv_serviceTwo);
             tvServiceThree = view.findViewById(R.id.tv_serviceThree);
-            cvSearch = view.findViewById(R.id.cv_search);
-            llEstTime = view.findViewById(R.id.ll_estTime);
-            tvInvalidAccount = view.findViewById(R.id.tv_invalidAccount);
+            rlStatus = view.findViewById(R.id.rl_status);
             cvClaimNow = view.findViewById(R.id.cv_claimNow);
             llSpecializations = view.findViewById(R.id.ll_specializations);
             tvSpOne = view.findViewById(R.id.tv_spOne);
             tvSpTwo = view.findViewById(R.id.tv_spTwo);
-            iv_jdnIcon = view.findViewById(R.id.txtjdn);
+//            iv_jdnIcon = view.findViewById(R.id.txtjdn);
+            llWaitingInLine = view.findViewById(R.id.ll_waitingInLine);
+            tvWaitingCount = view.findViewById(R.id.tv_waitingCount);
+            tvWaitingCountHint = view.findViewById(R.id.tv_waitingCountHint);
+            tvWaitingInLine = view.findViewById(R.id.tv_waitingInLine);
+            cvAction = view.findViewById(R.id.cv_Action);
+            tvText = view.findViewById(R.id.tv_text);
+            llEstTime = view.findViewById(R.id.ll_estTime);
+            cvCard = view.findViewById(R.id.cv_card);
+            cvImage = view.findViewById(R.id.cv_image);
+
         }
     }
 

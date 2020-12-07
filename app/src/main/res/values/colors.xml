@@ -41,6 +41,11 @@
     <color name="bussinessname">#2196F3</color>
 
 
+    <color name="unclaimed">#EBEBE4</color>
+
+
+
+
     <!-- <color name="title_subtitle_grey">#707070</color>-->
 
     <color name="app_background_opaque">#ffffff</color>

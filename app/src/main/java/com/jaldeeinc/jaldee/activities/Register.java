@@ -107,6 +107,7 @@ public class Register extends AppCompatActivity {
 
         countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
 
+
         Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         mEdtMobno.setTypeface(tyface_edittext);
