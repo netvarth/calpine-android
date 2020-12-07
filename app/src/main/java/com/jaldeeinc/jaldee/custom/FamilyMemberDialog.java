@@ -87,7 +87,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
     ArrayList<FamilyArrayModel> familyMembersList = new ArrayList<>();
     List<FamilyArrayModel> LuserProfileList = new ArrayList<>();
     private Spinner memberSpinner;
-    private EditText et_phone, et_email, et_firstname, et_lastName;
+    private EditText et_phone, et_email, et_firstname, et_lastName, et_countryCode;
     private Button bt_save, bt_add;
     private IFamilyMemberDetails iFamilyMemberDetails;
     CustomTextViewSemiBold tv_errorphone, tv_error_mail, tv_errorfirstname, tv_errorlastname;
@@ -109,7 +109,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
     String countryCode = "";
 
 
-    public FamilyMemberDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update) {
+    public FamilyMemberDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode) {
         super(appointmentActivity);
         this.context = appointmentActivity;
         this.memId = familyMEmID;
@@ -120,9 +120,10 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         this.profileDetails = profileDetails;
         this.multiple = multiple;
         this.update = update;
+        this.countryCode = countryCode;
     }
 
-    public FamilyMemberDialog(CheckInActivity checkInActivity, int familyMEmID, String email, String phone, boolean prePayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update) {
+    public FamilyMemberDialog(CheckInActivity checkInActivity, int familyMEmID, String email, String phone, boolean prePayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode) {
         super(checkInActivity);
         this.context = checkInActivity;
         this.memId = familyMEmID;
@@ -133,6 +134,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         this.profileDetails = profileDetails;
         this.multiple = multiple;
         this.update = update;
+        this.countryCode = countryCode;
     }
 
 
@@ -159,6 +161,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         slideUp = AnimationUtils.loadAnimation(context, R.anim.slide_in_left);
         slideRight = AnimationUtils.loadAnimation(context, R.anim.slide_out_right);
         cCodePicker = findViewById(R.id.ccp);
+        et_countryCode = findViewById(R.id.edt_Ccode);
 
         this.iFamillyListSelected = this;
         if (update == 1) {
@@ -179,6 +182,29 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         consumerId = SharedPreference.getInstance(context).getIntValue("consumerId", 0);
         mRecycleFamily = findViewById(R.id.recycle_familyMember);
 
+        if(countryCode!=null){
+            et_countryCode.setText(countryCode);
+        }
+
+        et_countryCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                et_countryCode.setVisibility(View.GONE);
+                cCodePicker.setVisibility(View.VISIBLE);
+                countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
 
         cCodePicker.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
             @Override
@@ -188,7 +214,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
             }
         });
 
-        countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
+
 
 
 
@@ -201,6 +227,8 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
            @Override
            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                cCodePicker.setVisibility(View.VISIBLE);
+               countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
+               et_countryCode.setVisibility(View.GONE);
            }
 
            @Override

@@ -106,6 +106,24 @@
                 android:visibility="gone"/>
 
             <EditText
+                android:id="@+id/edt_Ccode"
+                android:layout_width="@dimen/dimen_25dp"
+                android:layout_height="@dimen/padding40"
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:layout_marginEnd="@dimen/dimen_5dp"
+                android:background="@drawable/edittext_color"
+                android:hint="Enter Country Code"
+                android:inputType="phone"
+                android:maxLength="4"
+                android:paddingStart="@dimen/padding3"
+                android:paddingEnd="@dimen/padding3"
+                android:textColor="@color/black"
+                android:textSize="@dimen/dimen_15sp"
+                app:tint="@color/spinnerbg" />
+
+
+            <EditText
                 android:id="@+id/edtPhone"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/padding40"
@@ -114,7 +132,7 @@
                 android:background="@drawable/edittext_color"
                 android:hint="Enter Phone Number"
                 android:inputType="phone"
-                android:maxLength="15"
+                android:maxLength="10"
                 android:paddingStart="@dimen/padding5"
                 android:textColor="@color/black"
                 android:textSize="@dimen/dimen_15sp"

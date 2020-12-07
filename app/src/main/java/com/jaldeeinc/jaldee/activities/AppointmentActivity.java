@@ -526,7 +526,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             @Override
             public void onClick(View v) {
                 if(tvEmail.getText().toString().contains("Enter your Mail Id")) {
-                    familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this, familyMEmID, tvEmail.getText().toString(), tvNumber.getText().toString(), serviceInfo.getIsPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0);
+                    familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, serviceInfo.getIsPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode);
                     familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     familyMemberDialog.show();
@@ -571,7 +571,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         llEditDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this,familyMEmID,tvEmail.getText().toString(),tvNumber.getText().toString(),serviceInfo.getIsPrePayment(),iFamilyMemberDetails,profileDetails,multiplemem,0);
+                 familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this,familyMEmID,tvEmail.getText().toString(),phoneNumber,serviceInfo.getIsPrePayment(),iFamilyMemberDetails,profileDetails,multiplemem,0,countryCode);
                  familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                  familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                  familyMemberDialog.show();

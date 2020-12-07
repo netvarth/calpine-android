@@ -226,7 +226,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
             public void onClick(View v) {
 
                 if (tvNumber.getText().toString() != null) {
-                    mobileNumberDialog = new MobileNumberDialog(DonationActivity.this, profileDetails, iMobileSubmit,tvNumber.getText().toString());
+                    mobileNumberDialog = new MobileNumberDialog(DonationActivity.this, profileDetails, iMobileSubmit,phoneNumber,countryCode);
                     mobileNumberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     mobileNumberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     mobileNumberDialog.show();

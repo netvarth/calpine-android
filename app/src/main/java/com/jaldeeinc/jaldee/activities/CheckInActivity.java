@@ -522,7 +522,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             @Override
             public void onClick(View v) {
                 if(tvEmail.getText().toString().contains("Enter your Mail Id")) {
-                    familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), tvNumber.getText().toString(), checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0);
+                    familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode);
                     familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     familyMemberDialog.show();
@@ -568,7 +568,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             @Override
             public void onClick(View v) {
 
-                familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this,familyMEmID,tvEmail.getText().toString(),tvNumber.getText().toString(),checkInInfo.isPrePayment(),iFamilyMemberDetails,profileDetails,multiplemem,0);
+                familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this,familyMEmID,tvEmail.getText().toString(), phoneNumber,checkInInfo.isPrePayment(),iFamilyMemberDetails,profileDetails,multiplemem,0, countryCode);
                 familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                 familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 familyMemberDialog.show();
