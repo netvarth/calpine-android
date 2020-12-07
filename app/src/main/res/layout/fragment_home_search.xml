@@ -100,14 +100,14 @@
                         android:letterSpacing="0.04"
                         android:text="Let's Skip\nThose Queues"
                         android:textColor="@color/location_theme"
-                        android:textSize="@dimen/dimen_40dp">
+                        android:textSize="@dimen/dimen_35dp">
 
                     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
                     <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
                         android:id="@+id/ll_searchBlock"
                         android:layout_width="match_parent"
-                        android:layout_height="250dp"
+                        android:layout_height="210dp"
                         android:layout_below="@id/skipQueues"
                         android:layout_marginTop="@dimen/dimen_10dp"
                         android:layout_marginBottom="@dimen/dimen_10dp"
