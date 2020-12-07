@@ -3,7 +3,6 @@ package com.jaldeeinc.jaldee.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -15,13 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -29,24 +26,16 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
-import com.jaldeeinc.jaldee.activities.JdnActivity;
 import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
-import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.connection.ApiClient;
-import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.CustomDailogVerification;
-import com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.model.SearchListModel;
@@ -54,7 +43,6 @@ import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
-import com.jaldeeinc.jaldee.widgets.CustomDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,11 +56,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -234,7 +217,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 // to set services
                 if (searchdetailList.getMessage() == null) {
-                    setServices(myViewHolder, searchdetailList);
+//                    setServices(myViewHolder, searchdetailList);
                 } else {
                     if (searchdetailList.getClaimable().equalsIgnoreCase("0")) {
                         if (!searchdetailList.isWaitlistEnabled() && !searchdetailList.isApptEnabled()) {
@@ -289,27 +272,31 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         myViewHolder.tvText.setText("Book Service");
                         myViewHolder.llEstTime.setVisibility(View.GONE);
                         myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+                        setServices(myViewHolder, searchdetailList.getServices());
 
-                    } else if (searchdetailList.isWaitlistEnabled() && searchdetailList.isApptEnabled()) {
-
-                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
-                        myViewHolder.tvText.setText("Book Service");
-                        myViewHolder.llEstTime.setVisibility(View.GONE);
-                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
-
-                    } else if (searchdetailList.isWaitlistEnabled() && searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1")) {
+                    } else if (searchdetailList.isWaitlistEnabled() && searchdetailList.isApptEnabled() && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1"))) {
 
                         myViewHolder.cvAction.setVisibility(View.VISIBLE);
                         myViewHolder.tvText.setText("Book Service");
                         myViewHolder.llEstTime.setVisibility(View.GONE);
                         myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+                        setServices(myViewHolder, searchdetailList.getServices());
 
-                    } else if (searchdetailList.isApptEnabled() && searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1")) {
+                    } else if (searchdetailList.isWaitlistEnabled() && searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1") && !searchdetailList.isApptEnabled()) {
 
                         myViewHolder.cvAction.setVisibility(View.VISIBLE);
                         myViewHolder.tvText.setText("Book Service");
                         myViewHolder.llEstTime.setVisibility(View.GONE);
                         myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+                        setServices(myViewHolder,searchdetailList.getServices());
+
+                    } else if (searchdetailList.isApptEnabled() && searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1") && !searchdetailList.isWaitlistEnabled()) {
+
+                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
+                        myViewHolder.tvText.setText("Book Service");
+                        myViewHolder.llEstTime.setVisibility(View.GONE);
+                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+                        setServices(myViewHolder,searchdetailList.getAppt_services());
 
                     } else if (searchdetailList.isWaitlistEnabled() && !searchdetailList.isApptEnabled() && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1"))) {
 
@@ -319,6 +306,8 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         } else {
                             myViewHolder.tvText.setText("CheckIn");
                         }
+
+                        setServices(myViewHolder,searchdetailList.getServices());
 
                         if (searchdetailList.getAvail_date() != null) {
 
@@ -359,6 +348,8 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         myViewHolder.tvText.setText("Get Appointment");
                         myViewHolder.llEstTime.setVisibility(View.VISIBLE);
                         myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+
+                        setServices(myViewHolder,searchdetailList.getAppt_services());
 
                         if (searchdetailList.getAvailableDate() != null) {
 
@@ -493,16 +484,16 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
 
-    private void setServices(MyViewHolder myViewHolder, SearchListModel searchdetailList) {
+    private void setServices(MyViewHolder myViewHolder, ArrayList servicesList) {
 
-        if (searchdetailList.getAppt_services() != null) {
+        if (servicesList != null) {
             final ArrayList serviceNames = new ArrayList();
             final ArrayList serviceTypes = new ArrayList();
             final ArrayList serviceIds = new ArrayList();
             serviceNames.clear();
             try {
                 try {
-                    JSONArray jsonArray = new JSONArray(searchdetailList.getServices());
+                    JSONArray jsonArray = new JSONArray(servicesList);
                     String jsonArry = jsonArray.getString(0);
                     JSONArray jsonArray1 = new JSONArray(jsonArry);
                     for (int i = 0; i < jsonArray1.length(); i++) {
@@ -753,7 +744,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         private RelativeLayout rlStatus;
         private CustomTextViewItalicSemiBold tvServiceOne, tvServiceTwo, tvServiceThree;
         private CustomTextViewSemiBold tvText;
-        private CardView cvClaimNow, cvAction,cvCard,cvImage;
+        private CardView cvClaimNow, cvAction, cvCard, cvImage;
 
         public MyViewHolder(View view) {
             super(view);
