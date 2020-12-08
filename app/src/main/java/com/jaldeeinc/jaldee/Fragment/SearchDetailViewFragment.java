@@ -2,6 +2,7 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -3849,4 +3850,5 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         return super.onBackPressed();
     }
+
 }
