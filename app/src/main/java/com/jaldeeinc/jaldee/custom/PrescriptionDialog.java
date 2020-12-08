@@ -85,7 +85,7 @@ public class PrescriptionDialog extends Dialog {
             public void onClick(View view) {
 
                         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                        sharingIntent.setType("application/pdf");
+                        sharingIntent.setType("text/html");
                         String shareBody = url;
                         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Prescription details");
                         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);

@@ -66,9 +66,9 @@
             <com.hbb20.CountryCodePicker
                 android:id="@+id/ccp"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/dimen_50dp"
                 android:layout_gravity="center"
-                android:layout_weight="0.4"
+                android:layout_weight="0.5"
                 android:background="#F2F2F2"
                 android:paddingStart="@dimen/dimen_10dp"
                 android:paddingTop="@dimen/dimen_12dp"

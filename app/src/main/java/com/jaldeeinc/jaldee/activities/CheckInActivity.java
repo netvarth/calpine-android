@@ -521,7 +521,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         tvEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(tvEmail.getText().toString().contains("Enter your Mail Id")) {
+                if(tvEmail.getText().toString().equalsIgnoreCase("")) {
                     familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode);
                     familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
