@@ -16,7 +16,7 @@
         android:layout_marginBottom="@dimen/dimen_15dp"
         android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_12dp"
@@ -24,11 +24,12 @@
 
             <LinearLayout
                 android:id="@+id/ll_layoutOne"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_12dp"
                 android:orientation="vertical"
                 app:layout_constrainedWidth="true"
+                android:layout_weight="0.6"
                 app:layout_constraintEnd_toStartOf="@id/ll_image"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -140,10 +141,11 @@
 
             <LinearLayout
                 android:id="@+id/ll_image"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:orientation="vertical"
+                android:layout_weight="0.2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 card_view:cardPreventCornerOverlap="false">
@@ -179,7 +181,7 @@
             </LinearLayout>
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
 
         <RelativeLayout
@@ -433,6 +435,14 @@
 
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_loader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:background="#66FBFBFB"/>
 
 </androidx.cardview.widget.CardView>
 

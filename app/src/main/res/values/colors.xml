@@ -78,6 +78,19 @@
     <color name="donation_theme">#FDD219</color>
     <color name="new_light_background">#f1f0f0</color>
 
+    <color name="chat_background">#EEF2F9</color>
+
+    <color name="sender_color">#24509E</color>
+
+    <color name="receiver_color">#E2F3FC</color>
+
+    <color name="dark_black">#0F0C08</color>
+
+
+
+
+
+
 
 
 

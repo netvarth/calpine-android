@@ -23,7 +23,7 @@
         android:layout_gravity="end"
         android:gravity="end"
         android:layout_marginEnd="@dimen/dimen_8dp"
-        android:textColor="@color/title_color"
+        android:textColor="@color/white"
        >
 
     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
@@ -35,7 +35,7 @@
         android:gravity="end"
         android:padding="@dimen/dimen_10dp"
         android:layout_gravity="end"
-        android:visibility="gone"
+        android:visibility="v"
         android:background="@color/white">
 
         <ImageView
@@ -64,7 +64,7 @@
             android:id="@+id/tv_attach_sent"
             android:gravity="center"
             android:layout_gravity="center"
-            android:textColor="@color/yellow"
+            android:textColor="@color/sender_color"
             android:layout_marginRight="@dimen/dimen_5dp"
             android:textSize="@dimen/dimen_12sp"
             android:visibility="gone">

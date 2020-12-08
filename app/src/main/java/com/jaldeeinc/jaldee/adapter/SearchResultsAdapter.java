@@ -610,12 +610,14 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private void showClaimInfo(MyViewHolder myViewHolder, SearchListModel searchdetailList) {
         if (searchdetailList.getClaimable() != null) {
             if (searchdetailList.getClaimable().equals("1")) {
-                myViewHolder.cvCard.setCardBackgroundColor(context.getResources().getColor(R.color.unclaimed));
+//                myViewHolder.cvCard.setCardBackgroundColor(context.getResources().getColor(R.color.unclaimed));
                 myViewHolder.cvClaimNow.setVisibility(View.VISIBLE);
                 myViewHolder.rlStatus.setVisibility(View.GONE);
                 myViewHolder.llServices.setVisibility(View.GONE);
+                myViewHolder.llLoader.setVisibility(View.VISIBLE);
             } else {
-                myViewHolder.cvCard.setCardBackgroundColor(context.getResources().getColor(R.color.white));
+//                myViewHolder.cvCard.setCardBackgroundColor(context.getResources().getColor(R.color.white));
+                myViewHolder.llLoader.setVisibility(View.GONE);
                 myViewHolder.cvClaimNow.setVisibility(View.GONE);
                 myViewHolder.rlStatus.setVisibility(View.VISIBLE);
             }
@@ -740,7 +742,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         private CustomTextViewItalicSemiBold tvTime, tvWaitingCount, tvWaitingCountHint;
         private CustomTextViewMedium tvLocationName, tvEstWaitTime, tvSpOne, tvSpTwo, tvWaitingInLine;
         private RatingBar ratingBar;
-        private LinearLayout llServices, llSpecializations, llWaitingInLine, llEstTime;
+        private LinearLayout llServices, llSpecializations, llWaitingInLine, llEstTime,llLoader;
         private RelativeLayout rlStatus;
         private CustomTextViewItalicSemiBold tvServiceOne, tvServiceTwo, tvServiceThree;
         private CustomTextViewSemiBold tvText;
@@ -775,6 +777,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             llEstTime = view.findViewById(R.id.ll_estTime);
             cvCard = view.findViewById(R.id.cv_card);
             cvImage = view.findViewById(R.id.cv_image);
+            llLoader = view.findViewById(R.id.ll_loader);
 
         }
     }
