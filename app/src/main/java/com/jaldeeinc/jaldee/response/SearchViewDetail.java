@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Created by sharmila on 24/7/18.
  */
 
-public class SearchViewDetail implements Serializable {
+public class  SearchViewDetail implements Serializable {
 
     String label;
     String resource;

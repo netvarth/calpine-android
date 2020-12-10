@@ -69,6 +69,7 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
     Context mContext;
     static SimpleDateFormat simpleDateFormat;
     LinearLayout Llayout;
+    String countryCode ="";
 
     private static final String DATE_PATTERN =
             "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";
@@ -112,6 +113,8 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
+
+        countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
 
 
         btn_edtSubmit.setOnClickListener(new View.OnClickListener() {
@@ -289,7 +292,7 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
         }
         txtfirstname.setText(getProfile.getFirstName());
         txtlastname.setText(getProfile.getLastName());
-        tv_phone.setText(getProfile.getCountryCode() + " " +  getProfile.getPrimaryMobileNo());
+        tv_phone.setText(countryCode + " " +  getProfile.getPrimaryMobileNo());
         tv_email.setText(getProfile.getEmail());
 
         String selectedDate = getProfile.getDob();

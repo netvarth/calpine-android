@@ -261,7 +261,7 @@ public class Config {
     }
 
 
-    public static void ApiSessionResetLogin(String loginId, String password, final Context context) {
+    public static void ApiSessionResetLogin(String loginId, String password, final Context context, String countryCode) {
 
         ApiInterface apiService =
                 ApiClient.getClient(context).create(ApiInterface.class);
@@ -276,6 +276,7 @@ public class Config {
             jsonObj.put("loginId", loginId);
             jsonObj.put("password", password);
             jsonObj.put("mUniqueId", regId);
+            jsonObj.put("countryCode", countryCode);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -336,6 +337,8 @@ public class Config {
                         SharedPreference.getInstance(context).setValue("s3Url", response.body().getS3Url());
 
                         SharedPreference.getInstance(context).setValue("mobile", response.body().getPrimaryPhoneNumber());
+                        SharedPreference.getInstance(context).setValue("countryCode", countryCode);
+
                         Intent iReg = new Intent(context, Home.class);
                         iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         context.startActivity(iReg);

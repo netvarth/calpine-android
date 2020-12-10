@@ -167,7 +167,7 @@ public class ChangePhoneFragment extends RootFragment {
                         Config.logV("Response--mob-------------------------" + response.body().getUserprofile().getPrimaryMobileNo());
 
                         SharedPreference.getInstance(mContext).setValue("mobile", response.body().getUserprofile().getPrimaryMobileNo());
-                        SharedPreference.getInstance(mContext).setValue("countryCode", response.body().getUserprofile().getCountryCode());
+                       // SharedPreference.getInstance(mContext).setValue("countryCode","");
 
                         String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
                         String countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");

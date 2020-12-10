@@ -260,6 +260,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     @BindView(R.id.tv_addNote)
     CustomTextViewMedium tvAddNotes;
 
+    @BindView(R.id.et_countryCode)
+    EditText et_countryCode;
+
     String mFirstName, mLastName;
     int consumerID;
     private int uniqueId;
@@ -1023,9 +1026,10 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         profileDetails = response.body();
                         if (profileDetails != null) {
                             tvConsumerName.setText(profileDetails.getUserprofile().getFirstName() + " " + profileDetails.getUserprofile().getLastName());
-                            countryCode = profileDetails.getUserprofile().getCountryCode();
+                            countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
                             phoneNumber =  profileDetails.getUserprofile().getPrimaryMobileNo();
                             tvNumber.setText(countryCode + " " + phoneNumber);
+                            et_countryCode.setText(countryCode);
                             etVirtualNumber.setText(profileDetails.getUserprofile().getPrimaryMobileNo());
 
 
@@ -2472,6 +2476,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         emailId = email;
         countryCode = conCode;
         tvNumber.setText(countryCode + " " +  phoneNumber);
+        et_countryCode.setText(countryCode);
+        etVirtualNumber.setText(phoneNumber);
+
         if(!emailId.equalsIgnoreCase("")) {
             tvEmail.setText(emailId);
         }

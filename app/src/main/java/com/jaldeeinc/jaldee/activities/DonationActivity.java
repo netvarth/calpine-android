@@ -299,7 +299,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                         profileDetails = response.body();
                         if (profileDetails != null) {
                             tvConsumerName.setText(profileDetails.getUserprofile().getFirstName() + " " + profileDetails.getUserprofile().getLastName());
-                            countryCode = profileDetails.getUserprofile().getCountryCode();
+                            countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
                             phoneNumber = profileDetails.getUserprofile().getPrimaryMobileNo();
                             tvNumber.setText(countryCode + " " + phoneNumber );
 

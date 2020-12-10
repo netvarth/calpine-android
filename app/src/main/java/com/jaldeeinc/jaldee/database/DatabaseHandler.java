@@ -124,8 +124,7 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
                 + "emailVerified boolean,"
                 + "phoneVerified boolean,"
                 + "gender TEXT,"
-                + "dob TEXT,"
-                + "countryCode TEXT)";
+                + "dob TEXT)";
 
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_userinfo) + tblFields;
@@ -807,7 +806,6 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
             values.put("phoneVerified", profileModel.getPhoneVerified());
             values.put("gender", profileModel.getGender());
             values.put("dob", profileModel.getDob());
-            values.put("countryCode", profileModel.getCountryCode());
 
 
             db.insert(mContext.getString(R.string.db_table_userinfo), null, values);
@@ -840,7 +838,6 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
             values.put("phoneVerified", profileModel.getPhoneVerified());
             values.put("gender", profileModel.getGender());
             values.put("dob", profileModel.getDob());
-            values.put("countryCode", profileModel.getCountryCode());
 
 
             db.update(mContext.getString(R.string.db_table_userinfo), values, "id=" + profileModel.getId(), null);
@@ -873,7 +870,7 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
 
         String table = mContext.getString(R.string.db_table_userinfo);
-        String[] columns = {"id", "firstname", "lastname", "email", "primaryMobNo", "emailVerified", "phoneVerified", "gender", "dob", "countryCode"};
+        String[] columns = {"id", "firstname", "lastname", "email", "primaryMobNo", "emailVerified", "phoneVerified", "gender", "dob"};
 
         String selection = " id =?";
         String[] selectionArgs = new String[]{String.valueOf(consumerID)};
@@ -893,7 +890,6 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
         profile.setPhoneVerified(Boolean.parseBoolean(cursor.getString(6)));
         profile.setGender(cursor.getString(7));
         profile.setDob(cursor.getString(8));
-        profile.setCountryCode(cursor.getString(9));
 
         db.setTransactionSuccessful();
         db.endTransaction();

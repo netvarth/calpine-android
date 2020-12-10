@@ -237,6 +237,7 @@ public class Register extends AppCompatActivity {
                         Config.logV("Response123---------------------------");
                         if (response.body().string().equalsIgnoreCase("false")) {
                             SharedPreference.getInstance(mContext).setValue("mobno", mEdtMobno.getText().toString());
+                            SharedPreference.getInstance(mContext).setValue("countryCode", countryCode);
                             Intent iReg = new Intent(mContext, Signup.class);
                             if (detail != null) {
                                 iReg.putExtra("detail_id", (detail));
@@ -246,6 +247,7 @@ public class Register extends AppCompatActivity {
 
                         } else {
                             SharedPreference.getInstance(mContext).setValue("mobno", mEdtMobno.getText().toString());
+                            SharedPreference.getInstance(mContext).setValue("countryCode", countryCode);
                             Intent iReg = new Intent(mContext, Login.class);
                             if (detail != null) {
                                 iReg.putExtra("detail_id", (detail));

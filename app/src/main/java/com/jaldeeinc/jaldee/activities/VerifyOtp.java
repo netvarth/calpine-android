@@ -45,7 +45,6 @@ public class VerifyOtp extends AppCompatActivity {
     TextInputEditText editotp;
     Context mContext;
     TextView txtResendOtp, txtResendEmail;
-
     EditText edtEmail;
     TextInputLayout txt_input_layout_otp;
     TextView txt_ynw;

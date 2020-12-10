@@ -24,7 +24,7 @@
         android:gravity="end"
         android:layout_marginEnd="@dimen/dimen_8dp"
         android:textColor="@color/white"
-       >
+        >
 
     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
     <LinearLayout

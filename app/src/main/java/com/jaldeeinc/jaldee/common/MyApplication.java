@@ -65,9 +65,11 @@ public class MyApplication extends Application implements AppLifeCycleHandler.Ap
 
         String loginId = SharedPreference.getInstance(this).getStringValue("mobno", "");
         String password = SharedPreference.getInstance(this).getStringValue("password", "");
+        String countryCode = SharedPreference.getInstance(this).getStringValue("countryCode","");
+
         if(!loginId.equalsIgnoreCase("")&&!password.equalsIgnoreCase("")) {
             Config.logV("App@@@ ForeBackGround Reset");
-            Config.ApiSessionResetLogin(loginId, password,this);
+            Config.ApiSessionResetLogin(loginId, password,this, countryCode);
 
         }
     }

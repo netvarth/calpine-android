@@ -67,6 +67,7 @@ public class Password extends AppCompatActivity {
     Button btn_pwd_submit;
     ImageView img_indicator;
     String detail;
+    String countryCode="";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +92,10 @@ public class Password extends AppCompatActivity {
                 "fonts/Montserrat_Medium.otf");
         btn_pwd_submit.setTypeface(tyface_btn);
 
+        countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
+
+
+
 
         if (from.equalsIgnoreCase("login")) {
             img_indicator.setVisibility(View.GONE);
@@ -110,6 +115,8 @@ public class Password extends AppCompatActivity {
             Typeface tyface = Typeface.createFromAsset(getAssets(),
                     "fonts/Montserrat_Bold.otf");
             tv_title.setTypeface(tyface);
+
+
 
 
 
@@ -451,6 +458,7 @@ public class Password extends AppCompatActivity {
             jsonObj.put("loginId", loginId);
             jsonObj.put("password", password);
             jsonObj.put("mUniqueId", regId);
+            jsonObj.put("countryCode", countryCode);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -505,6 +513,7 @@ public class Password extends AppCompatActivity {
                         SharedPreference.getInstance(mContext).setValue("register", "success");
                         SharedPreference.getInstance(mContext).setValue("mobile", response.body().getPrimaryPhoneNumber());
                         SharedPreference.getInstance(mContext).setValue("s3Url", response.body().getS3Url());
+                        SharedPreference.getInstance(mContext).setValue("countryCode", countryCode);
 
                         Intent iReg = new Intent(mContext, Home.class);
                         iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

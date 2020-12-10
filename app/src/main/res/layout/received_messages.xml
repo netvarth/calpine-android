@@ -23,7 +23,9 @@
         android:gravity="start"
         android:padding="@dimen/dimen_10dp"
         android:layout_marginEnd="@dimen/dimen_8dp"
-        android:textColor="@color/dark_black">
+        android:textColor="@color/dark_black"
+
+        >
 
     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 

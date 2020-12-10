@@ -82,7 +82,8 @@ public class ResponseInteceptor implements Interceptor {
 
             String loginId = SharedPreference.getInstance(context).getStringValue("mobno", "");
             String password = SharedPreference.getInstance(context).getStringValue("password", "");
-            ApiLogin(loginId,password);
+            String countryCode = SharedPreference.getInstance(context).getStringValue("countryCode", "");
+            ApiLogin(loginId,password, countryCode);
 
 
 
@@ -112,7 +113,7 @@ public class ResponseInteceptor implements Interceptor {
 
 
 
-    public void ApiLogin(String loginId, String password) {
+    public void ApiLogin(String loginId, String password, String countryCode) {
 
         ApiInterface apiService =
                 ApiClient.getClient(context).create(ApiInterface.class);
@@ -130,6 +131,7 @@ public class ResponseInteceptor implements Interceptor {
             jsonObj.put("loginId", loginId);
             jsonObj.put("password", password);
             jsonObj.put("mUniqueId", regId);
+            jsonObj.put("countryCode", countryCode);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -195,6 +197,8 @@ public class ResponseInteceptor implements Interceptor {
                         SharedPreference.getInstance(context).setValue("s3Url", response.body().getS3Url());
 
                         SharedPreference.getInstance(context).setValue("mobile", response.body().getPrimaryPhoneNumber());
+                        SharedPreference.getInstance(context).setValue("countryCode", countryCode);
+
                         Intent iReg = new Intent(context, Home.class);
                         iReg.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         context.startActivity(iReg);
