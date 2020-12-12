@@ -64,9 +64,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.gson.JsonArray;
 import com.jaldeeinc.jaldee.Interface.ISelectedPopularSearch;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.JdnActivity;
 import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
 import com.jaldeeinc.jaldee.activities.SearchResultsActivity;
+import com.jaldeeinc.jaldee.activities.Utilss;
 import com.jaldeeinc.jaldee.adapter.PopularSearchAdapter;
 import com.jaldeeinc.jaldee.adapter.SearchListAdpter;
 import com.jaldeeinc.jaldee.adapter.SearchResultsAdapter;
@@ -89,6 +91,7 @@ import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.utils.AppPreferences;
+import com.jaldeeinc.jaldee.utils.DialogUtilsKt;
 import com.jaldeeinc.jaldee.utils.EmptySubmitSearchView;
 import com.jaldeeinc.jaldee.utils.PaginationScrollListener;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
@@ -99,6 +102,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import kotlin.Unit;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -312,7 +316,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
             @Override
             public void onClick(View v) {
 
-                Intent iLoc = new Intent(mContext, SearchLocationActivity.class);
+                Intent iLoc = new Intent(getActivity(), SearchLocationActivity.class);
                 iLoc.putExtra("from", "dashboard");
                 startActivityForResult(iLoc, REQUEST_GET_DATA_FROM_SOME_ACTIVITY);
 
@@ -703,7 +707,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                 bundle.putString("url", pass);
 
                 if (Config.isOnline(mContext)) {
-                    Intent intent = new Intent(mContext, SearchResultsActivity.class);
+                    Intent intent = new Intent(getActivity(), SearchResultsActivity.class);
                     bundle.putString("subdomain_select", "true");
                     bundle.putString("locName", tvLocation.getText().toString());
                     bundle.putString("latitude", String.valueOf(latitude));
@@ -2047,7 +2051,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
         bundle.putString("url", pass);
         if (Config.isOnline(mContext)) {
-            Intent intent = new Intent(mContext, SearchResultsActivity.class);
+            Intent intent = new Intent(getActivity(), SearchResultsActivity.class);
             bundle.putString("locName", tvLocation.getText().toString());
             bundle.putString("latitude", String.valueOf(latitude));
             bundle.putString("longitude", String.valueOf(longitude));
@@ -2090,7 +2094,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
         bundle.putString("url", pass);
         if (Config.isOnline(mContext)) {
-            Intent intent = new Intent(mContext, SearchResultsActivity.class);
+            Intent intent = new Intent(getActivity(), SearchResultsActivity.class);
             bundle.putString("locName", tvLocation.getText().toString());
             bundle.putString("latitude", String.valueOf(latitude));
             bundle.putString("longitude", String.valueOf(longitude));
@@ -2165,9 +2169,6 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                     String query = "(and location1:" + locationRange + " " + ")";
                     String url = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
                     String sort = "claimable asc,distance asc, ynw_verified_level desc";
-
-//                    ApiSEARCHAWSLoadFirstData(query,url,sort);
-                    //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
                 } catch (Exception e) {
                 }
             } else {
@@ -2179,30 +2180,14 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         return true;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        Activity a;
-        if (context instanceof Activity){
-            a=(Activity) context;
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mContext = null;
-    }
-
-
     public void DefaultLocation() {
         Config.logV("Google DEFAULT LOCATION" + tvLocation.getText().toString());
-        //if (mCurrentLoc.getText().toString().equalsIgnoreCase("Locating...")) {
+
         latitude = 12.971599;
         longitude = 77.594563;
         Config.logV("Not Google DEFAULT LOCATION @@@ YES");
         try {
-            if (Config.isOnline(getActivity())) {
+            if (Config.isOnline((Activity)mContext)) {
                 Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
                 List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
                 tvLocation.setVisibility(View.VISIBLE);
@@ -2212,7 +2197,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                 tvLocation.setVisibility(View.VISIBLE);
                 tvLocation.setText("Bengaluru");
             }
-            //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2245,73 +2230,81 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
     }
 
     private void checkPermissions() {
-        int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION);
-        List<String> listPermissionsNeeded = new ArrayList<>();
-        if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
-            Config.logV("Google Not Granted" + permissionLocation);
-            listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
-            if (!listPermissionsNeeded.isEmpty()) {
-               /*requestPermissions(getActivity(),
-                        listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);*/
-                requestPermissions(new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ID_MULTIPLE_PERMISSIONS);
-                Config.logV("GoogleNot Granted" + permissionLocation);
+        try {
+            int permissionLocation = ContextCompat.checkSelfPermission((Activity)mContext,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION);
+            List<String> listPermissionsNeeded = new ArrayList<>();
+            if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
+                Config.logV("Google Not Granted" + permissionLocation);
+                listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
+                if (!listPermissionsNeeded.isEmpty()) {
+
+                    requestPermissions(new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ID_MULTIPLE_PERMISSIONS);
+                    Config.logV("GoogleNot Granted" + permissionLocation);
+                }
+            } else {
+                getMyLocation();
             }
-        } else {
-            getMyLocation();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
 
     private Location getMyLocation() {
-        if (googleApiClient != null) {
-            if (googleApiClient.isConnected()) {
-                Config.logV("Google api connected granted");
-                int permissionLocation = ContextCompat.checkSelfPermission(mContext,
-                        Manifest.permission.ACCESS_FINE_LOCATION);
-                if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
-                    Config.logV("Google api connected granted@2@@@");
-                    LocationRequest locationRequest = LocationRequest.create();
-                    locationRequest.setInterval(10 * 1000);
-                    locationRequest.setFastestInterval(5 * 1000);
-                    locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        try {
+            if (googleApiClient != null) {
+                if (googleApiClient.isConnected()) {
+                    Config.logV("Google api connected granted");
+                    int permissionLocation = ContextCompat.checkSelfPermission((Activity)mContext,
+                            Manifest.permission.ACCESS_FINE_LOCATION);
+                    if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
+                        Config.logV("Google api connected granted@2@@@");
+                        LocationRequest locationRequest = LocationRequest.create();
+                        locationRequest.setInterval(10 * 1000);
+                        locationRequest.setFastestInterval(5 * 1000);
+                        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-                    LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-                    builder.addLocationRequest(locationRequest); // locationRequest is a Object of LocationRequest
-                    builder.addLocationRequest(LocationRequest.create().setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY));
-                    builder.setAlwaysShow(true);
+                        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+                        builder.addLocationRequest(locationRequest); // locationRequest is a Object of LocationRequest
+                        builder.addLocationRequest(LocationRequest.create().setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY));
+                        builder.setAlwaysShow(true);
 
-                    SettingsClient settingsClient = LocationServices.getSettingsClient(mContext);
-                    Task<LocationSettingsResponse> result = settingsClient.checkLocationSettings(builder.build());
+                        SettingsClient settingsClient = LocationServices.getSettingsClient((Activity)mContext);
+                        Task<LocationSettingsResponse> result = settingsClient.checkLocationSettings(builder.build());
 
-                    result.addOnCompleteListener(task -> {
-                        try {
-                            LocationSettingsResponse response = task.getResult(ApiException.class);
-                            updateRequestLocation();
-                        } catch (ApiException exception) {
-                            exception.printStackTrace();
-                            switch (exception.getStatusCode()) {
-                                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                                    try {
-                                        ResolvableApiException resolvable = (ResolvableApiException) exception;
+                        result.addOnCompleteListener(task -> {
+                            try {
+                                LocationSettingsResponse response = task.getResult(ApiException.class);
+                                updateRequestLocation();
+                            } catch (ApiException exception) {
+                                exception.printStackTrace();
+                                switch (exception.getStatusCode()) {
+                                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                                        try {
+                                            ResolvableApiException resolvable = (ResolvableApiException) exception;
 //                                        resolvable.startResolutionForResult((Activity)mContext, REQUEST_CHECK_SETTINGS);
-                                        startIntentSenderForResult(resolvable.getResolution().getIntentSender(), REQUEST_CHECK_SETTINGS, null, 0, 0, 0, null);
-                                    } catch (IntentSender.SendIntentException e) {
-                                        e.printStackTrace();
-                                    } catch (ClassCastException e) {
-                                        e.printStackTrace();
-                                    }
-                                    break;
-                                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                                            startIntentSenderForResult(resolvable.getResolution().getIntentSender(), REQUEST_CHECK_SETTINGS, null, 0, 0, 0, null);
+                                        } catch (IntentSender.SendIntentException e) {
+                                            e.printStackTrace();
+                                        } catch (ClassCastException e) {
+                                            e.printStackTrace();
+                                        }
+                                        break;
+                                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
 
-                                    break;
+                                        break;
+                                }
                             }
-                        }
-                    });
+                        });
 
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return mylocation;
@@ -2480,25 +2473,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                         .checkSelfPermission(mContext,
                                 Manifest.permission.ACCESS_FINE_LOCATION);
                 if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
-//                                mylocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-
                     updateRequestLocation();
-//                    fusedLocationClient.getLastLocation()
-//                            .addOnSuccessListener((Activity) mContext, new OnSuccessListener<Location>() {
-//                                @Override
-//                                public void onSuccess(Location location) {
-//                                    // Got last known location. In some rare situations this can be null.
-//                                    if (location == null) {
-//                                        // Logic to handle location object
-//                                        return;
-//                                    } else {
-//                                        mylocation = location;
-//                                        getNearbyProviders(mylocation);
-//                                    }
-//                                }
-//                            });
-
-
                 }
 
                 break;
@@ -2517,10 +2492,22 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         }
     }
 
-
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        //You can display a message here
+
+        try {
+            //You can display a message here
+            DialogUtilsKt.showUIDialog(mContext, "", "Unable to access location", () -> {
+
+                Intent intent = new Intent(getActivity(), Home.class);
+                startActivity(intent);
+                return Unit.INSTANCE;
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     public static Fragment getHomeFragment() {
@@ -2600,7 +2587,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         Config.logV("Popular Text__________@@@Del111e");
         mSearchView.setQuery("", false);
         if (Config.isOnline(getActivity())) {
-            Intent intent = new Intent(mContext, SearchResultsActivity.class);
+            Intent intent = new Intent(getActivity(), SearchResultsActivity.class);
             bundle.putString("locName", tvLocation.getText().toString());
             bundle.putString("latitude", String.valueOf(latitude));
             bundle.putString("longitude", String.valueOf(longitude));
@@ -2630,11 +2617,11 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
             SharedPreference.getInstance(mContext).setValue("longitu", longitude);
             Log.e("$$$$$$$$$$toooooppped", String.valueOf(latitude));
 
-            Geocoder geocoder = new Geocoder((Activity)mContext, Locale.getDefault());
+            Geocoder geocoder = new Geocoder((Activity) mContext, Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(mylocation.getLatitude(), mylocation.getLongitude(), 1);
             tvLocation.setVisibility(View.VISIBLE);
             Log.e("$$$$$$$$$$toooooppped", addresses.toString());
-            if (addresses.size()>0) {
+            if (addresses.size() > 0) {
                 SharedPreference.getInstance(mContext).setValue("locnme", addresses.get(0).getLocality());
                 tvLocation.setText(addresses.get(0).getLocality());
             } else {
@@ -2743,7 +2730,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
     @Override
     public void onMethodJdn(String uniqueid) {
 
-        Intent jdnIntent = new Intent(mContext, JdnActivity.class);
+        Intent jdnIntent = new Intent(getActivity(), JdnActivity.class);
         jdnIntent.putExtra("uniqueID", uniqueid);
         mContext.startActivity(jdnIntent);
     }

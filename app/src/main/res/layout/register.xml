@@ -68,9 +68,8 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dimen_50dp"
                 android:layout_gravity="center"
-                android:layout_weight="0.5"
+                android:layout_weight="0.3"
                 android:background="#F2F2F2"
-                android:paddingStart="@dimen/dimen_10dp"
                 android:paddingTop="@dimen/dimen_12dp"
                 android.support.design:ccp_textSize="@dimen/dimen_12dp"
                 app:ccp_autoDetectCountry="true" />
@@ -80,7 +79,7 @@
                 android:id="@+id/text_input_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.8"
+                android:layout_weight="0.7"
                 android:textColorHint="@color/title_grey"
                 android.support.design:hintTextAppearance="@style/GreyTextInputLayout">
 
@@ -92,6 +91,8 @@
                     android:hint="@string/hint_mobile"
                     android:inputType="number"
                     android:maxLength="10"
+                    android:maxLines="1"
+                    android:layout_marginBottom="@dimen/dimen_1dp"
                     android:textAppearance="@style/GreyTextInputLayoutHint"
                     android:textColor="@color/title_grey" />
             </com.google.android.material.textfield.TextInputLayout>

@@ -91,7 +91,9 @@ public class CustomPageAdapter extends PagerAdapter {
             public void onError() {
 
                 PicassoTrustAll.getInstance(mContext).load(finalUrl).placeholder(R.drawable.icon_noimage).into(imageView);
+
             }
+
         });
 
         cv_download.setOnClickListener(new View.OnClickListener() {

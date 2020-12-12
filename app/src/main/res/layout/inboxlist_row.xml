@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="@dimen/dimen_5dp"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
@@ -11,18 +12,17 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding3"
         android:layout_marginRight="@dimen/padding3"
-        android:layout_marginTop="@dimen/padding7"
-        android:background="@color/app_background"
-        card_view:cardCornerRadius="10dp"
-        card_view:cardElevation="0dp"
-        card_view:cardUseCompatPadding="true">
+        android:layout_marginTop="@dimen/dimen_5dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp"
+        app:cardUseCompatPadding="true">
 
 
         <LinearLayout
             android:id="@+id/inbox_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/app_background"
             android:orientation="vertical"
             android:padding="@dimen/default_padding">
 
@@ -31,18 +31,17 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                     android:id="@+id/txt_provider"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
-
                     android:text="Head ss"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_hint"
                     android:textStyle="bold" />
 
-                <TextView
+                <com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal
                     android:id="@+id/txt_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -53,7 +52,7 @@
                     android:textSize="@dimen/txtsize_title_term_small" />
             </LinearLayout>
 
-            <TextView
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                 android:id="@+id/txt_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -68,20 +67,16 @@
 
     </androidx.cardview.widget.CardView>
 
-    <!-- <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:background="@drawable/roundedrect_shade"
-         android:layout_marginLeft="@dimen/padding20"
-         android:layout_marginTop="-10dp"
-         android:layout_marginRight="@dimen/padding20">-->
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/padding7"
         android:layout_marginLeft="@dimen/padding20"
         android:layout_marginRight="@dimen/padding20"
-        android:layout_marginTop="-7dp"
+        android:layout_marginTop="-12dp"
+        android:elevation="@dimen/dimen_5dp"
         android:background="@drawable/roundedrect_shade"
+        android:backgroundTint="@color/special_background"
 
         />
 

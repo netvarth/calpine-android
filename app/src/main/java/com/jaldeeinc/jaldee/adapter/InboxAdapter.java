@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +23,6 @@ import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.response.InboxModel;
 
 
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,30 +37,32 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
     private List<InboxModel> mInboxCompleteList;
     private List<InboxModel> mInboxList;
     Context mContext;
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tv_provider,tv_date,tv_message;
+        TextView tv_provider, tv_date, tv_message;
         LinearLayout linear_inbox_layout;
         RecyclerView recylce_inbox_detail;
+
         public MyViewHolder(View view) {
             super(view);
-            tv_provider=(TextView)view.findViewById(R.id.txt_provider);
-            tv_date=(TextView)view.findViewById(R.id.txt_date);
-            tv_message=(TextView)view.findViewById(R.id.txt_message);
-            linear_inbox_layout=(LinearLayout) view.findViewById(R.id.inbox_layout);
-
+            tv_provider = (TextView) view.findViewById(R.id.txt_provider);
+            tv_date = (TextView) view.findViewById(R.id.txt_date);
+            tv_message = (TextView) view.findViewById(R.id.txt_message);
+            linear_inbox_layout = (LinearLayout) view.findViewById(R.id.inbox_layout);
 
 
         }
     }
 
     Activity activity;
-    ArrayList<InboxModel> mDetailInboxList=new ArrayList<>();
-    public InboxAdapter(List<InboxModel> mInboxList, Context mContext, Activity mActivity,List<InboxModel> mInboxCompleteList) {
+    ArrayList<InboxModel> mDetailInboxList = new ArrayList<>();
+
+    public InboxAdapter(List<InboxModel> mInboxList, Context mContext, Activity mActivity, List<InboxModel> mInboxCompleteList) {
         this.mContext = mContext;
         this.mInboxList = mInboxList;
         this.activity = mActivity;
-        this.mInboxCompleteList=mInboxCompleteList;
+        this.mInboxCompleteList = mInboxCompleteList;
 
     }
 
@@ -71,6 +74,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
 
         return new InboxAdapter.MyViewHolder(itemView);
     }
+
     public static String toTitleCase(String str) {
 
         if (str == null) {
@@ -98,6 +102,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
 
         return builder.toString();
     }
+
     @Override
     public void onBindViewHolder(final InboxAdapter.MyViewHolder myViewHolder, final int position) {
         final InboxModel inboxList = mInboxList.get(position);
@@ -108,13 +113,12 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), ChatActivity.class);
-                intent.putExtra("uuid",inboxList.getWaitlistId());
+                intent.putExtra("uuid", inboxList.getWaitlistId());
                 intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
-                intent.putExtra("name",inboxList.getAccountName());
-                if(inboxList.getWaitlistId().contains("_wl")){
+                intent.putExtra("name", inboxList.getAccountName());
+                if (inboxList.getWaitlistId().contains("_wl")) {
                     intent.putExtra("from", Constants.CHECKIN);
-                }
-                else if(inboxList.getWaitlistId().contains("_appt")){
+                } else if (inboxList.getWaitlistId().contains("_appt")) {
                     intent.putExtra("from", Constants.APPOINTMENT);
                 }
                 view.getContext().startActivity(intent);
@@ -131,99 +135,36 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.tv_provider.setTypeface(tyface);
 
-       /* String[] strArray = inboxList.getUserName().split(" ");
-        StringBuilder builder = new StringBuilder();
-        for (String s : strArray) {
-            String cap = s.substring(0, 1).toUpperCase() + s.substring(1);
-            builder.append(cap + " ");
-        }*/
 
-
-       // String cap_Provider = inboxList.getUserName().substring(0, 1).toUpperCase() + inboxList.getUserName().substring(1);
+        // String cap_Provider = inboxList.getUserName().substring(0, 1).toUpperCase() + inboxList.getUserName().substring(1);
         myViewHolder.tv_provider.setText(toTitleCase(inboxList.getAccountName()));
         myViewHolder.linear_inbox_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
 
-               /* String mKey= inboxList.getId() + "_" + inboxList.getUserName();
-                Config.logV("mInboxCompleteList-----------"+mInboxCompleteList.size());
-                mDetailInboxList.clear();
-                for(int i=0;i<mInboxCompleteList.size();i++){
-                    //String mChkKey= mInboxCompleteList.get(i).getId() + "_" + String.valueOf(mInboxCompleteList.get(i).getUserName()).toLowerCase();
-
-                    int activeConsumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
-
-                    String senderName = String.valueOf(mInboxCompleteList.get(i).getUserName()).toLowerCase();
-
-                    int senderId = mInboxCompleteList.get(i).getId();
-                    String messageStatus = "in";
-
-                    if (senderId == activeConsumerId) {
-
-                        senderId = mInboxCompleteList.get(i).getReceiverId();
-                        senderName = String.valueOf(mInboxCompleteList.get(i).getReceiverName()).toLowerCase();
-                        messageStatus = "out";
-                    }
-
-                    Config.logV("SenderID------------" + senderId);
-                    String mChkKey = senderId + "_" + senderName;
-
-                    if(mKey.equalsIgnoreCase(mChkKey)) {
-                        InboxModel inbox = new InboxModel();
-                        inbox.setKey(mChkKey);
-                        inbox.setMsg(mInboxCompleteList.get(i).getMsg());
-                        inbox.setUserName(mInboxCompleteList.get(i).getUserName());
-                        inbox.setTimeStamp(mInboxCompleteList.get(i).getTimeStamp());
-                        inbox.setId(mInboxCompleteList.get(i).getId());
-                        inbox.setIs_see(false);
-                        inbox.setWaitlistId(mInboxCompleteList.get(i).getWaitlistId());
-                        inbox.setMessageStatus(messageStatus);
-
-                        mDetailInboxList.add(inbox);
-                        DetailInboxList.setInboxList(mDetailInboxList);
-
-
-                    }
-                    if(i==mInboxCompleteList.size()-1){
-                        Config.logV("Detail list--------------"+mDetailInboxList.size());
-                        Intent iInbox=new Intent(v.getContext(),DetailInboxList.class);
-                        iInbox.putExtra("provider",inboxList.getUserName());
-                        mContext.startActivity(iInbox);
-                    }
-                }*/
-
-
-                DatabaseHandler db=new DatabaseHandler(mContext);
+                DatabaseHandler db = new DatabaseHandler(mContext);
                 //Config.logV("inboxList.getUniqueID()"+inboxList.getUniqueID());
-                mDetailInboxList= db.getInboxDetail(inboxList.getUniqueID());
-               if(DetailInboxList.setInboxList(mDetailInboxList))
+                mDetailInboxList = db.getInboxDetail(inboxList.getUniqueID());
+                if (DetailInboxList.setInboxList(mDetailInboxList)) {
+                    Intent intent = new Intent(v.getContext(), ChatActivity.class);
+                    intent.putExtra("uuid", inboxList.getWaitlistId());
+                    intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
+                    intent.putExtra("name", inboxList.getAccountName());
+                    if (inboxList.getWaitlistId() != null) {
+                        if (inboxList.getWaitlistId().contains("_wl")) {
+                            intent.putExtra("from", Constants.CHECKIN);
+                        } else if (inboxList.getWaitlistId().contains("_appt")) {
+                            intent.putExtra("from", Constants.APPOINTMENT);
+                        }
+                    }
+                    mContext.startActivity(intent);
 
-               {
-                   Intent intent = new Intent(v.getContext(), ChatActivity.class);
-                   intent.putExtra("uuid",inboxList.getWaitlistId());
-                   intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
-                   intent.putExtra("name",inboxList.getAccountName());
-                   if(inboxList.getWaitlistId().contains("_wl")){
-                       intent.putExtra("from", Constants.CHECKIN);
-                   }
-                   else if(inboxList.getWaitlistId().contains("_appt")){
-                       intent.putExtra("from", Constants.APPOINTMENT);
-                   }
-                   mContext.startActivity(intent);
-
-
-
-//                   Intent iInbox = new Intent(v.getContext(), DetailInboxList.class);
-//                   iInbox.putExtra("provider",inboxList.getAccountName());
-//                   mContext.startActivity(iInbox);
-               }
+                }
 
 
             }
         });
-
-
 
 
     }

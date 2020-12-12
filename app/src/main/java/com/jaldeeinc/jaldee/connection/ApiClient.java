@@ -23,13 +23,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiClient {
 
 
-//    public static final String BASE_URL ="https://scale.jaldee.com/v1/rest/";
-//public static final String BASE_URL ="http://940356aad08c.ngrok.io/v1/rest/";
-        public static final String BASE_URL ="https://scale.jaldee.com/v1/rest/";
-//    "https://test.jaldee.com/v1/rest/"
-//    "https://test.jaldee.com/v1/rest/"
-            //"http://54.215.5.201:8181/v1/rest/";
-            //"http://35.154.241.175/v1/rest/";
+    public static final String BASE_URL = "https://scale.jaldee.com/v1/rest/";
+
 
     private static Retrofit retrofit = null;
     private static Retrofit retrofitAWS = null;
@@ -39,9 +34,7 @@ public class ApiClient {
     public static Context context;
 
     public static Retrofit getClient(Context mContext) {
-       /* Gson gson = new GsonBuilder()
-                .registerTypeAdapterFactory(new ItemTypeAdapterFactory())
-                .create();*/
+
         context = mContext;
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
@@ -97,7 +90,7 @@ public class ApiClient {
         context = mContext;
         if (retrofitCloud == null) {
             //String url = "https://s3-us-west-1.amazonaws.com/ynwtest.youneverwait.com/";
-            String url=SharedPreference.getInstance(mContext).getStringValue("s3Url", "")+"/";
+            String url = SharedPreference.getInstance(mContext).getStringValue("s3Url", "") + "/";
             retrofitCloud = new Retrofit.Builder()
                     .baseUrl(url)
                     .addConverterFactory(GsonConverterFactory.create())
@@ -107,11 +100,12 @@ public class ApiClient {
         }
         return retrofitCloud;
     }
+
     public static Retrofit getClientS3CloudObservable(Context mContext) {
         context = mContext;
         if (retrofitCloudObs == null) {
             //String url = "https://s3-us-west-1.amazonaws.com/ynwtest.youneverwait.com/";
-            String url=SharedPreference.getInstance(mContext).getStringValue("s3Url", "")+"/";
+            String url = SharedPreference.getInstance(mContext).getStringValue("s3Url", "") + "/";
             retrofitCloudObs = new Retrofit.Builder()
                     .baseUrl(url)
                     .addConverterFactory(GsonConverterFactory.create())

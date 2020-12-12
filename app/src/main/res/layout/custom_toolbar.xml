@@ -17,7 +17,7 @@
         android:paddingLeft="@dimen/default_padding"
         android:src="@drawable/icon_back" />
 
-    <TextView
+    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
         android:id="@+id/toolbartitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

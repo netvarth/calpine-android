@@ -2,12 +2,12 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools"
+    android:id="@+id/cv_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/dimen_5dp"
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="@dimen/dimen_30dp"
-    android:id="@+id/cv_card"
     app:cardElevation="@dimen/dimen_8dp">
 
     <LinearLayout
@@ -27,9 +27,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_12dp"
+                android:layout_weight="0.6"
                 android:orientation="vertical"
                 app:layout_constrainedWidth="true"
-                android:layout_weight="0.6"
                 app:layout_constraintEnd_toStartOf="@id/ll_image"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -44,11 +44,11 @@
                         android:id="@+id/tv_spName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/padding3"
                         android:ellipsize="end"
                         android:maxLines="2"
                         android:padding="2dp"
                         android:text=""
-                        android:layout_marginEnd="@dimen/padding3"
                         android:textColor="#0F0C08"
                         android:textSize="@dimen/dimen_18dp">
 
@@ -63,8 +63,6 @@
                         android:visibility="visible">
 
                     </ImageView>
-
-
 
 
                 </LinearLayout>
@@ -138,14 +136,13 @@
             </LinearLayout>
 
 
-
             <LinearLayout
                 android:id="@+id/ll_image"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dimen_10dp"
-                android:orientation="vertical"
                 android:layout_weight="0.2"
+                android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 card_view:cardPreventCornerOverlap="false">
@@ -166,16 +163,17 @@
 
                 </androidx.cardview.widget.CardView>
 
-                <RatingBar
-                    android:id="@+id/rb_ratingBar"
-                    style="?android:attr/ratingBarStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_10dp"
-                    android:numStars="5"
-                    android:progressDrawable="@drawable/rating_display"
-                    android:rating="4"
-                    android:visibility="gone" />
+                    <RatingBar
+                        android:id="@+id/rb_ratingBar"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:numStars="5"
+                        android:layout_gravity="center"
+                        android:progressDrawable="@drawable/rating_display"
+                        android:rating="4"
+                        android:visibility="gone" />
 
 
             </LinearLayout>
@@ -201,15 +199,15 @@
                 android:background="@drawable/difference_background"
                 android:paddingStart="@dimen/dimen_10dp"
                 android:paddingTop="@dimen/dimen_5dp"
-                android:visibility="gone"
-                android:paddingBottom="@dimen/dimen_5dp">
+                android:paddingBottom="@dimen/dimen_5dp"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/ll_services"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
                         android:id="@+id/tv_serviceOne"
@@ -440,9 +438,9 @@
         android:id="@+id/ll_loader"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#66FBFBFB"
         android:orientation="horizontal"
-        android:visibility="gone"
-        android:background="#66FBFBFB"/>
+        android:visibility="gone" />
 
 </androidx.cardview.widget.CardView>
 

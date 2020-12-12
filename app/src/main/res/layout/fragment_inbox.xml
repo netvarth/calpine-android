@@ -4,7 +4,7 @@
     android:id="@+id/mainlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/spinnerbg"
+    android:background="@color/white"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content">
     </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
-    <TextView
+    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
         android:textColor="@color/black"
         android:letterSpacing="0.03"
         android:textStyle="bold"
