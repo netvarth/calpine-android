@@ -117,7 +117,6 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
             if (servicesInfoList.get(position).getName() != null) {
 
                 String name = servicesInfoList.get(position).getName();
-                name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
                 viewHolder.tvName.setText(name);
             }
 
@@ -326,16 +325,14 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
 
                                 if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.CHECKIN) || servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
-                                    DynamicToast.make(context, "Selected Service is not available at the moment", AppCompatResources.getDrawable(
-                                            context, R.drawable.ic_info_black),
+                                    DynamicToast.make(context, "Selected Service is not available at the moment",
                                             ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
                     } else {
 
-                        DynamicToast.make(context, "Provider is offline at the moment", AppCompatResources.getDrawable(
-                                context, R.drawable.ic_info_black),
+                        DynamicToast.make(context, "Provider is offline at the moment",
                                 ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
                     }
                 }

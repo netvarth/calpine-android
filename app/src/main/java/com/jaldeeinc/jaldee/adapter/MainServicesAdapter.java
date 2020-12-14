@@ -121,8 +121,8 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
             if (servicesInfoList.get(position).getName() != null) {
 
                 String name = servicesInfoList.get(position).getName();
-                name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
                 viewHolder.tvName.setText(name);
+
             }
 
             // to set next available time if available
@@ -154,7 +154,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                     viewHolder.llDonationRange.setVisibility(View.GONE);
                     int number = servicesInfoList.get(position).getPeopleInLine();
                     if (number >= 0) {
-                        String changedtext = "People waiting in line : "+"<b>" + servicesInfoList.get(position).getPeopleInLine() + "</b> ";
+                        String changedtext = "People waiting in line : " + "<b>" + servicesInfoList.get(position).getPeopleInLine() + "</b> ";
                         viewHolder.tvPeopleAhead.setText(Html.fromHtml(changedtext));
                     }
                 } else {
@@ -174,15 +174,14 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
 
             if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.CHECKIN)) {
                 if (servicesInfoList.get(position).getNextAvailableDate() != null) {
-                    if(!servicesInfoList.get(position).getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                    if (!servicesInfoList.get(position).getCalculationMode().equalsIgnoreCase("NoCalc")) {
                         viewHolder.llEstwaitTime.setVisibility(View.VISIBLE);
                         viewHolder.llDonationRange.setVisibility(View.GONE);
                         viewHolder.llTime.setVisibility(View.GONE);
                         String time = getWaitingTime(servicesInfoList.get(position).getNextAvailableDate(), servicesInfoList.get(position).getNextAvailableTime(), servicesInfoList.get(position).getEstTime());
                         viewHolder.tvEstWaitTime.setText(time.split("-")[1]);
                         viewHolder.tvTimeHint.setText(time.split("-")[0]);
-                    }
-                    else{
+                    } else {
                         viewHolder.llEstwaitTime.setVisibility(View.GONE);
                         viewHolder.llTime.setVisibility(View.GONE);
                     }
@@ -277,10 +276,9 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                                 viewHolder.ivTeleService.setImageResource(R.drawable.googlemeet);
 
                             } else if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                if(servicesInfoList.get(position).getVirtualServiceType()!=null && servicesInfoList.get(position).getVirtualServiceType().equalsIgnoreCase("videoService")){
+                                if (servicesInfoList.get(position).getVirtualServiceType() != null && servicesInfoList.get(position).getVirtualServiceType().equalsIgnoreCase("videoService")) {
                                     viewHolder.ivTeleService.setImageResource(R.drawable.whatsapp_videoicon);
-                                }
-                                else {
+                                } else {
                                     viewHolder.ivTeleService.setImageResource(R.drawable.whatsapp_icon);
                                 }
 
@@ -357,8 +355,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
 
                             if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.CHECKIN) || servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
-                                DynamicToast.make(context, "Selected Service is not available at the moment", AppCompatResources.getDrawable(
-                                        context, R.drawable.ic_info_black),
+                                DynamicToast.make(context, "Selected Service is not available at the moment",
                                         ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -431,8 +428,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
 
     private void showProviderUnavailable() {
 
-        DynamicToast.make(context, "Provider is offline at the moment", AppCompatResources.getDrawable(
-                context, R.drawable.ic_info_black),
+        DynamicToast.make(context, "Provider is offline at the moment",
                 ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
     }
 

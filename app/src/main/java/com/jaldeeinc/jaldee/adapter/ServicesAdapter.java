@@ -95,8 +95,9 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
         // to set name of service/provider
         String name = child.getName();
-        name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-        viewHolder.tvName.setText(name);
+        if (name != null) {
+            viewHolder.tvName.setText(name);
+        }
 
         setAnimation(viewHolder.cvCard, childPosition);
 
@@ -148,7 +149,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                 viewHolder.llDonationRange.setVisibility(View.GONE);
                 int number = child.getPeopleInLine();
                 if (number >= 0) {
-                    String changedtext = "People waiting in line : "+"<b>" + child.getPeopleInLine() + "</b> ";
+                    String changedtext = "People waiting in line : " + "<b>" + child.getPeopleInLine() + "</b> ";
                     viewHolder.tvPeopleAhead.setText(Html.fromHtml(changedtext));
                 }
             } else {
@@ -168,7 +169,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
         if (child.getType().equalsIgnoreCase(Constants.CHECKIN)) {
             if (child.getNextAvailableDate() != null && child.getNextAvailableTime() != null || child.getEstTime() != null) {
                 // to set est waitTime if available
-                if(!child.getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                if (!child.getCalculationMode().equalsIgnoreCase("NoCalc")) {
                     viewHolder.llEstwaitTime.setVisibility(View.VISIBLE);
                     viewHolder.llDonationRange.setVisibility(View.GONE);
                     viewHolder.llTime.setVisibility(View.GONE);
@@ -176,8 +177,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                     viewHolder.tvEstWaitTime.setText(time.split("-")[1]);
                     viewHolder.tvTimeHint.setText(time.split("-")[0]);
 
-                }
-                else{
+                } else {
                     viewHolder.llEstwaitTime.setVisibility(View.GONE);
                     viewHolder.llTime.setVisibility(View.GONE);
                 }
@@ -273,10 +273,9 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                             viewHolder.ivTeleService.setImageResource(R.drawable.new_gmeet);
 
                         } else if (child.getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                            if(child.getVirtualServiceType()!=null && child.getVirtualServiceType().equalsIgnoreCase("videoService")){
+                            if (child.getVirtualServiceType() != null && child.getVirtualServiceType().equalsIgnoreCase("videoService")) {
                                 viewHolder.ivTeleService.setImageResource(R.drawable.whatsapp_videoicon);
-                            }
-                            else {
+                            } else {
                                 viewHolder.ivTeleService.setImageResource(R.drawable.whatsapp_icon);
                             }
 
@@ -351,8 +350,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
                         if (child.getType().equalsIgnoreCase(Constants.CHECKIN) || child.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
-                            DynamicToast.make(context, "Selected Service is not available at the moment", AppCompatResources.getDrawable(
-                                    context, R.drawable.ic_info_black),
+                            DynamicToast.make(context, "Selected Service is not available at the moment",
                                     ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -417,8 +415,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
     private void showProviderUnavailable() {
 
-        DynamicToast.make(context, "Provider is offline at the moment", AppCompatResources.getDrawable(
-                context, R.drawable.ic_info_black),
+        DynamicToast.make(context, "Provider is offline at the moment",
                 ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
     }
 
