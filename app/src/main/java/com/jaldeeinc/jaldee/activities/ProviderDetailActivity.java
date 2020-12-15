@@ -194,6 +194,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     boolean isToken;
     private String sharingId = "";
     private boolean onlinePresence = false;
+    private boolean orderEnabled = false;
     private List<SearchAWsResponse> mSearchRespPass;
     private ArrayList<SearchViewDetail> mSearchGallery;
     private SearchViewDetail mBusinessDataList = new SearchViewDetail();
@@ -265,6 +266,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             }
             claimable = intent.getStringExtra("claimable");
             claimable = "0";
+            orderEnabled = intent.getBooleanExtra("isOrderEnabled",false);
             if(mFrom!=null && mFrom.equalsIgnoreCase("checkin")){
                 location_Id = intent.getStringExtra("locationId");
                 place = intent.getStringExtra("place");

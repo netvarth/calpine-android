@@ -127,6 +127,16 @@ public class SearchListModel implements Serializable {
     private ArrayList donation_services;
     private ArrayList providers;
     private String altemergencyservices_location1;
+    private int orderEnabled;
+
+    public int getOrderEnabled() {
+        return orderEnabled;
+    }
+
+    public void setOrderEnabled(int orderEnabled) {
+        this.orderEnabled = orderEnabled;
+    }
+
 
     public String getAvailableDate() {
         return availableDate;

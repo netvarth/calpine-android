@@ -12,6 +12,7 @@ import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.ActiveDonation;
 import com.jaldeeinc.jaldee.response.AppointmentSchedule;
+import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
@@ -561,5 +562,9 @@ public interface ApiInterface {
 
     @GET("consumer/appointment/history")
     Observable<ArrayList<ActiveAppointment>> getHistoryAppointments(@QueryMap(encoded = true) Map<String, String> query);
+
+    @GET("consumer/orders/catalogs/{id}")
+    Observable<ArrayList<Catalog>> getCatalog(@Path("id") int id);
+
 
 }

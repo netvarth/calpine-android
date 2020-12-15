@@ -1,5 +1,6 @@
 package com.jaldeeinc.jaldee.response;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -602,6 +603,18 @@ public class SearchAWsResponse  {
 
     @SerializedName("availableSlots")
     private SlotsData slotsData;
+
+    @SerializedName("order_enabled")
+    @Expose
+    private int ordersEnabled;
+
+    public int getOrdersEnabled() {
+        return ordersEnabled;
+    }
+
+    public void setOrdersEnabled(int ordersEnabled) {
+        this.ordersEnabled = ordersEnabled;
+    }
 
     public String getAltemergencyservices_location1() {
         return altemergencyservices_location1;

@@ -410,8 +410,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                             dialog.dismiss();
                         } else {
 
-                            DynamicToast.make(SearchResultsActivity.this, "No Filters selected", AppCompatResources.getDrawable(
-                                    SearchResultsActivity.this, R.drawable.ic_info_black),
+                            DynamicToast.make(SearchResultsActivity.this, "No Filters selected",
                                     ContextCompat.getColor(SearchResultsActivity.this, R.color.white), ContextCompat.getColor(SearchResultsActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -742,6 +741,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                                 search.setLocation_id1(response.body().getHits().getHit().get(i).getFields().getLocation_id1());
                                 search.setSector(response.body().getHits().getHit().get(i).getFields().getSector());
                                 search.setSub_sector(response.body().getHits().getHit().get(i).getFields().getSub_sector());
+                                search.setOrdersEnabled(response.body().getHits().getHit().get(i).getFields().getOrdersEnabled());
                                 if (response.body().getHits().getHit().get(i).getFields().getYnw_verified() != null) {
                                     search.setYnw_verified(response.body().getHits().getHit().get(i).getFields().getYnw_verified());
                                 }
@@ -959,6 +959,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                                 search.setBranch_name(response.body().getHits().getHit().get(i).getFields().getBranch_name());
                                 search.setToday_appt(response.body().getHits().getHit().get(i).getFields().getToday_appt());
                                 search.setFuture_appt(response.body().getHits().getHit().get(i).getFields().getFuture_appt());
+                                search.setOrdersEnabled(response.body().getHits().getHit().get(i).getFields().getOrdersEnabled());
 
                                 if (response.body().getHits().getHit().get(i).getFields().getYnw_verified() != null) {
                                     search.setYnw_verified(response.body().getHits().getHit().get(i).getFields().getYnw_verified());
@@ -1188,6 +1189,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                                     searchList.setLocation_id1(mSearchRespPass.get(i).getLocation_id1());
                                     searchList.setSpecialization_displayname(mSearchRespPass.get(i).getSpecialization_displayname());
                                     searchList.setVirtual_service_status(mSearchRespPass.get(i).getVirtual_service_status());
+                                    searchList.setOrderEnabled(mSearchRespPass.get(i).getOrdersEnabled());
                                     String qualify = "";
                                     if (mSearchRespPass.get(i).getQualification() != null) {
                                         for (int l = 0; l < mSearchRespPass.get(i).getQualification().size(); l++) {
@@ -1366,6 +1368,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                                     searchList.setFuture_appt(mSearchRespPass.get(i).getFuture_appt());
                                     searchList.setSpecialization_displayname(mSearchRespPass.get(i).getSpecialization_displayname());
                                     searchList.setVirtual_service_status(mSearchRespPass.get(i).getVirtual_service_status());
+                                    searchList.setOrderEnabled(mSearchRespPass.get(i).getOrdersEnabled());
                                     String qualify = "";
                                     if (mSearchRespPass.get(i).getQualification() != null) {
                                         for (int l = 0; l < mSearchRespPass.get(i).getQualification().size(); l++) {

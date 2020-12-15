@@ -407,6 +407,11 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         iCheckIn.putExtra("getAvail_date", searchdetailList.getAvail_date());
                         iCheckIn.putExtra("virtualservice", searchdetailList.getVirtual_service_status());
                         iCheckIn.putExtra("locationId", searchdetailList.getLocation_id1());
+                        if (searchdetailList.getOrderEnabled() == 1){
+                            iCheckIn.putExtra("isOrderEnabled",true);
+                        } else {
+                            iCheckIn.putExtra("isOrderEnabled",false);
+                        }
                         context.startActivity(iCheckIn);
                     }
                 });
