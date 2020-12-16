@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.Fragment.AppointmentMyJaldee;
 import com.jaldeeinc.jaldee.Fragment.CheckinsMyJaldee;
+import com.jaldeeinc.jaldee.Fragment.MyJaldee;
 import com.jaldeeinc.jaldee.Fragment.Tab1Fragment;
 import com.jaldeeinc.jaldee.Fragment.TokensMyJaldee;
 import com.jaldeeinc.jaldee.R;
@@ -31,52 +32,52 @@ public class NotificationActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putBoolean("toHome", true);
             bundle.putString("message",message);
-            AppointmentMyJaldee afFragment = new AppointmentMyJaldee();
-            afFragment.setArguments(bundle);
+            MyJaldee myJaldee = new MyJaldee();
+            myJaldee.setArguments(bundle);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
             // Store the Fragment in stack
             transaction.addToBackStack(null);
-            transaction.replace(R.id.notifycontainer, afFragment).commit();
+            transaction.replace(R.id.notifycontainer, myJaldee).commit();
         }
         else if (message.contains("check-in")){
 
             Bundle bundle = new Bundle();
             bundle.putBoolean("toHome", true);
             bundle.putString("message",message);
-            CheckinsMyJaldee pfFragment = new CheckinsMyJaldee();
-            pfFragment.setArguments(bundle);
+            MyJaldee myJaldee = new MyJaldee();
+            myJaldee.setArguments(bundle);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
             // Store the Fragment in stack
             transaction.addToBackStack(null);
-            transaction.replace(R.id.notifycontainer, pfFragment).commit();
+            transaction.replace(R.id.notifycontainer, myJaldee).commit();
         }
         else if (message.contains("token")){
 
             Bundle bundle = new Bundle();
             bundle.putBoolean("toHome", true);
             bundle.putString("message",message);
-            TokensMyJaldee pfFfragment = new TokensMyJaldee();
-            pfFfragment.setArguments(bundle);
+            MyJaldee myJaldee = new MyJaldee();
+            myJaldee.setArguments(bundle);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
             // Store the Fragment in stack
             transaction.addToBackStack(null);
-            transaction.replace(R.id.notifycontainer, pfFfragment).commit();
+            transaction.replace(R.id.notifycontainer, myJaldee).commit();
         }
         else {
 
             Bundle bundle = new Bundle();
             bundle.putBoolean("toHome", true);
             bundle.putString("message",message);
-            Tab1Fragment tab1Fragment = new Tab1Fragment();
-            tab1Fragment.setArguments(bundle);
+            MyJaldee myJaldee = new MyJaldee();
+            myJaldee.setArguments(bundle);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
             // Store the Fragment in stack
             transaction.addToBackStack(null);
-            transaction.replace(R.id.notifycontainer, tab1Fragment).commit();
+            transaction.replace(R.id.notifycontainer, myJaldee).commit();
         }
     }
 

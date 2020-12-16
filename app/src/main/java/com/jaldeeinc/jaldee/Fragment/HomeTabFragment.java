@@ -88,7 +88,7 @@ public class HomeTabFragment extends Fragment {
 
             String content = bundle.getString("message");
             if (content != null) {
-                if (content.length() > 40) {
+                if (content.length() > 25) {
 
                     message = content;
                 }
