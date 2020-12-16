@@ -95,7 +95,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
             setAnimation(viewHolder.cvCard, position);
 
             // to set Provider image
-            if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.PROVIDER)) {
+            if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.PROVIDER) || servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.ORDERS)) {
                 viewHolder.cvImage.setVisibility(View.VISIBLE);
                 viewHolder.llTime.setVisibility(View.GONE);
                 viewHolder.llDonationRange.setVisibility(View.GONE);
@@ -336,6 +336,12 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
 
                                 if (servicesInfoList.get(position).getProviderInfo() != null) {
                                     iSelectedService.onProviderSelected(servicesInfoList.get(position).getProviderInfo());
+                                }
+
+                            } else if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.ORDERS)) {
+
+                                if (servicesInfoList.get(position).getCatalogInfo() != null) {
+                                    iSelectedService.onCatalogSelected(servicesInfoList.get(position).getCatalogInfo());
                                 }
 
                             } else if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.DONATION)) {

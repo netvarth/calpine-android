@@ -18,16 +18,16 @@ public class CatalogItem implements Serializable {
 
     @SerializedName("item")
     @Expose
-    private ArrayList<Item> itemsList;
+    private Item items;
 
-    public CatalogItem(){
+    public CatalogItem() {
 
     }
 
-    public CatalogItem(int id, int catalogId, ArrayList<Item> itemsList) {
+    public CatalogItem(int id, int catalogId, Item items) {
         this.id = id;
         this.catalogId = catalogId;
-        this.itemsList = itemsList;
+        this.items = items;
     }
 
     public int getId() {
@@ -46,11 +46,11 @@ public class CatalogItem implements Serializable {
         this.catalogId = catalogId;
     }
 
-    public ArrayList<Item> getItemsList() {
-        return itemsList;
+    public Item getItems() {
+        return items;
     }
 
-    public void setItemsList(ArrayList<Item> itemsList) {
-        this.itemsList = itemsList;
+    public void setItems(Item items) {
+        this.items = items;
     }
 }

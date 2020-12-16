@@ -72,6 +72,10 @@ public class Catalog implements Serializable {
     @Expose
     private ArrayList<CatalogItem> catalogItemsList;
 
+    @SerializedName("catalogImages")
+    @Expose
+    private ArrayList<ItemImages> catalogImagesList;
+
     @SerializedName("minNumberItem")
     @Expose
     private int minNumberItem;
@@ -300,5 +304,13 @@ public class Catalog implements Serializable {
 
     public void setNextAvailableDeliveryDetails(NextAvailableDeliveryDetails nextAvailableDeliveryDetails) {
         this.nextAvailableDeliveryDetails = nextAvailableDeliveryDetails;
+    }
+
+    public ArrayList<ItemImages> getCatalogImagesList() {
+        return catalogImagesList;
+    }
+
+    public void setCatalogImagesList(ArrayList<ItemImages> catalogImagesList) {
+        this.catalogImagesList = catalogImagesList;
     }
 }

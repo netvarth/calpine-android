@@ -57,6 +57,7 @@ import com.jaldeeinc.jaldee.custom.LocationsDialog;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.ResizableCustomView;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
+import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.DepServiceInfo;
 import com.jaldeeinc.jaldee.response.DepartmentInfo;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
@@ -266,12 +267,11 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             }
             claimable = intent.getStringExtra("claimable");
             claimable = "0";
-            orderEnabled = intent.getBooleanExtra("isOrderEnabled",false);
-            if(mFrom!=null && mFrom.equalsIgnoreCase("checkin")){
+            orderEnabled = intent.getBooleanExtra("isOrderEnabled", false);
+            if (mFrom != null && mFrom.equalsIgnoreCase("checkin")) {
                 location_Id = intent.getStringExtra("locationId");
                 place = intent.getStringExtra("place");
-            }
-            else {
+            } else {
                 locationId = intent.getIntExtra("locationId", 0);
             }
         }
@@ -462,21 +462,19 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                 rlLocation.setVisibility(View.GONE);
                             }
 
-                            if(mFrom!=null && mFrom.equalsIgnoreCase("checkin")){
-                               locationId = Integer.parseInt(location_Id);
-                               location = place;
-                                for(int i = 0;i<mSearchLocList.size();i++){
-                                    if(locationId == mSearchLocList.get(i).getId()){
+                            if (mFrom != null && mFrom.equalsIgnoreCase("checkin")) {
+                                locationId = Integer.parseInt(location_Id);
+                                location = place;
+                                for (int i = 0; i < mSearchLocList.size(); i++) {
+                                    if (locationId == mSearchLocList.get(i).getId()) {
                                         tvLocation.setText(mSearchLocList.get(i).getAddress());
                                     }
                                 }
 
-                            }
-                            else {
+                            } else {
                                 locationId = mSearchLocList.get(0).getId();
                                 location = mSearchLocList.get(0).getPlace();
                             }
-
 
 
                             apiSearchViewDetail(uniqueId);
@@ -527,16 +525,13 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
 //
 //
-                            if(mBusinessDataList.getCustomId()!=null){
+                            if (mBusinessDataList.getCustomId() != null) {
                                 sharingId = mBusinessDataList.getCustomId();
-                            }
-                            else if (mBusinessDataList.getAccEncUid() != null) {
+                            } else if (mBusinessDataList.getAccEncUid() != null) {
                                 sharingId = mBusinessDataList.getAccEncUid();
-                            }
-                           else if (mBusinessDataList.getAccEncUid() != null) {
-                               sharingId = mBusinessDataList.getAccEncUid();
-                            }
-                            else {
+                            } else if (mBusinessDataList.getAccEncUid() != null) {
+                                sharingId = mBusinessDataList.getAccEncUid();
+                            } else {
                                 sharingId = mBusinessDataList.getUniqueId();
                             }
 
@@ -1007,22 +1002,50 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             List<Observable<?>> requests = new ArrayList<>();
 
             // Make a collection of all requests you need to call at once, there can be any number of requests, not only 3. You can have 2 or 5, or 100.
-            requests.add(apiService.getCheckInsSchedule(provid + "-" + locid));
-            requests.add(apiService.getAppointmentSchedule(provid + "-" + locid));
-            requests.add(apiService.getCheckInServices(locid));
-            requests.add(apiService.getAppointmentServices(locid));
-            requests.add(s3ApiService.getDonationServices(unqId, sdf.format(currentTime)));
+            if (orderEnabled) {  // if order manager is enabled then making an additional api call to get catalogs
+
+                requests.add(apiService.getCheckInsSchedule(provid + "-" + locid));
+                requests.add(apiService.getAppointmentSchedule(provid + "-" + locid));
+                requests.add(apiService.getCheckInServices(locid));
+                requests.add(apiService.getAppointmentServices(locid));
+                requests.add(s3ApiService.getDonationServices(unqId, sdf.format(currentTime)));
+                requests.add(apiService.getCatalog(provid));
+
+            } else {
+                requests.add(apiService.getCheckInsSchedule(provid + "-" + locid));
+                requests.add(apiService.getAppointmentSchedule(provid + "-" + locid));
+                requests.add(apiService.getCheckInServices(locid));
+                requests.add(apiService.getAppointmentServices(locid));
+                requests.add(s3ApiService.getDonationServices(unqId, sdf.format(currentTime)));
+            }
 
             // Zip all requests with the Function, which will receive the results.
             Observable.zip(requests, new Function<Object[], Object>() {
                 @Override
                 public Object apply(Object[] objects) throws Exception {
                     // Objects[] is an array of combined results of completed requests
-                    ArrayList<QueueList> queueList = (ArrayList<QueueList>) objects[0];
-                    ArrayList<ScheduleList> schedulesList = (ArrayList<ScheduleList>) objects[1];
-                    ArrayList<SearchService> checkInServList = (ArrayList<SearchService>) objects[2];
-                    ArrayList<SearchAppoinment> apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
-                    ArrayList<SearchDonation> donationServices = (ArrayList<SearchDonation>) objects[4];
+                    ArrayList<QueueList> queueList = new ArrayList<>();
+                    ArrayList<ScheduleList> schedulesList = new ArrayList<>();
+                    ArrayList<SearchService> checkInServList = new ArrayList<>();
+                    ArrayList<SearchAppoinment> apptServicesList = new ArrayList<>();
+                    ArrayList<SearchDonation> donationServices = new ArrayList<>();
+                    ArrayList<Catalog> catalogs = new ArrayList<>();
+                    if (orderEnabled) {
+
+                        queueList = (ArrayList<QueueList>) objects[0];
+                        schedulesList = (ArrayList<ScheduleList>) objects[1];
+                        checkInServList = (ArrayList<SearchService>) objects[2];
+                        apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
+                        donationServices = (ArrayList<SearchDonation>) objects[4];
+                        catalogs = (ArrayList<Catalog>) objects[5];
+
+                    } else {
+                        queueList = (ArrayList<QueueList>) objects[0];
+                        schedulesList = (ArrayList<ScheduleList>) objects[1];
+                        checkInServList = (ArrayList<SearchService>) objects[2];
+                        apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
+                        donationServices = (ArrayList<SearchDonation>) objects[4];
+                    }
 
                     queueList = queueList == null ? new ArrayList<QueueList>() : queueList;
 
@@ -1034,6 +1057,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                     donationServices = donationServices == null ? new ArrayList<SearchDonation>() : donationServices;
 
+                    catalogs = catalogs == null ? new ArrayList<Catalog>() : catalogs;
+
                     serviceInfoList.clear();
                     DepartmentInfo departmentInfo = new DepartmentInfo();
                     ArrayList<DepServiceInfo> services = new ArrayList<DepServiceInfo>();
@@ -1041,7 +1066,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     if (queueList.get(0).isWaitlistEnabled()) {
                         for (SearchService checkInService : checkInServList) {
 
-                            if(checkInService.getCheckInServiceAvailability() != null) {
+                            if (checkInService.getCheckInServiceAvailability() != null) {
 
                                 DepServiceInfo serviceInfo = new DepServiceInfo();
                                 serviceInfo.setDepartmentId(0);
@@ -1078,7 +1103,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                     if (schedulesList.get(0).isApptEnabled()) {
                         for (SearchAppoinment appt : apptServicesList) {
-                            if(appt.getAppointServiceAvailability() != null) {
+                            if (appt.getAppointServiceAvailability() != null) {
                                 DepServiceInfo serviceInfo = new DepServiceInfo();
                                 serviceInfo.setDepartmentId(0);
                                 serviceInfo.setDepartmentName("");
@@ -1137,6 +1162,35 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         }
                     }
 
+                    if (onlinePresence) {
+
+                        if (catalogs.size() > 0) {
+
+                            for (Catalog catalog : catalogs) {
+
+                                DepServiceInfo serviceInfo = new DepServiceInfo();
+                                if (catalog.getCatLogName() != null) {
+                                    serviceInfo.setName(catalog.getCatLogName());
+                                }
+                                if (catalog.getCatalogImagesList() != null && catalog.getCatalogImagesList().size() > 0) {
+                                    serviceInfo.setProviderImage(catalog.getCatalogImagesList().get(0).getUrl());
+                                }
+                                serviceInfo.setType(Constants.ORDERS);
+                                serviceInfo.setEstTime("");
+                                serviceInfo.setPeopleInLine(0);
+                                serviceInfo.setCalculationMode("");
+                                serviceInfo.setServiceMode("");
+                                serviceInfo.setAvailability(true);
+                                serviceInfo.setCallingMode("");
+                                serviceInfo.setNextAvailableTime("");
+                                serviceInfo.setCatalogInfo(catalog); // adding all the catalog info
+                                services.add(serviceInfo);
+
+                            }
+
+                        }
+                    }
+
                     serviceInfoList.addAll(services);
                     //do something with those results and emit new event
                     return serviceInfoList;
@@ -1186,7 +1240,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             }
                     );
 
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             e.printStackTrace();
         }
 
@@ -1209,23 +1264,52 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             List<Observable<?>> requests = new ArrayList<>();
 
             // Make a collection of all requests you need to call at once, there can be any number of requests, not only 3. You can have 2 or 5, or 100.
-            requests.add(apiService.getCheckInsSchedule(provid + "-" + locid));
-            requests.add(apiService.getAppointmentSchedule(provid + "-" + locid));
-            requests.add(apiService.getCheckInServices(locid));
-            requests.add(apiService.getAppointmentServices(locid));
-            requests.add(s3ApiService.getDonationServices(unqId, sdf.format(currentTime)));
+            if (orderEnabled) { // if order manager is enabled then making an additional api call to get catalogs
+
+                requests.add(apiService.getCheckInsSchedule(provid + "-" + locid));
+                requests.add(apiService.getAppointmentSchedule(provid + "-" + locid));
+                requests.add(apiService.getCheckInServices(locid));
+                requests.add(apiService.getAppointmentServices(locid));
+                requests.add(s3ApiService.getDonationServices(unqId, sdf.format(currentTime)));
+                requests.add(apiService.getCatalog(provid));
+
+            } else {
+                requests.add(apiService.getCheckInsSchedule(provid + "-" + locid));
+                requests.add(apiService.getAppointmentSchedule(provid + "-" + locid));
+                requests.add(apiService.getCheckInServices(locid));
+                requests.add(apiService.getAppointmentServices(locid));
+                requests.add(s3ApiService.getDonationServices(unqId, sdf.format(currentTime)));
+            }
 
             // Zip all requests with the Function, which will receive the results.
             Observable.zip(requests, new Function<Object[], Object>() {
                 @Override
                 public Object apply(Object[] objects) throws Exception {
                     // Objects[] is an array of combined results of completed requests
+                    ArrayList<QueueList> queueList = new ArrayList<>();
+                    ArrayList<ScheduleList> schedulesList = new ArrayList<>();
+                    ArrayList<SearchService> checkInServList = new ArrayList<>();
+                    ArrayList<SearchAppoinment> apptServicesList = new ArrayList<>();
+                    ArrayList<SearchDonation> donationServices = new ArrayList<>();
+                    ArrayList<Catalog> catalogs = new ArrayList<>();
 
-                    ArrayList<QueueList> queueList = (ArrayList<QueueList>) objects[0];
-                    ArrayList<ScheduleList> schedulesList = (ArrayList<ScheduleList>) objects[1];
-                    ArrayList<SearchService> checkInServList = (ArrayList<SearchService>) objects[2];
-                    ArrayList<SearchAppoinment> apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
-                    ArrayList<SearchDonation> donationServices = (ArrayList<SearchDonation>) objects[4];
+                    if (orderEnabled) {
+
+                        queueList = (ArrayList<QueueList>) objects[0];
+                        schedulesList = (ArrayList<ScheduleList>) objects[1];
+                        checkInServList = (ArrayList<SearchService>) objects[2];
+                        apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
+                        donationServices = (ArrayList<SearchDonation>) objects[4];
+                        catalogs = (ArrayList<Catalog>) objects[5];
+
+                    } else {
+
+                        queueList = (ArrayList<QueueList>) objects[0];
+                        schedulesList = (ArrayList<ScheduleList>) objects[1];
+                        checkInServList = (ArrayList<SearchService>) objects[2];
+                        apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
+                        donationServices = (ArrayList<SearchDonation>) objects[4];
+                    }
 
                     queueList = queueList == null ? new ArrayList<QueueList>() : queueList;
 
@@ -1239,6 +1323,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                     donationServices = donationServices == null ? new ArrayList<SearchDonation>() : donationServices;
 
+                    catalogs = catalogs == null ? new ArrayList<Catalog>() : catalogs;
+
                     serviceInfoList.clear();
                     DepartmentInfo departmentInfo = new DepartmentInfo();
                     ArrayList<DepServiceInfo> services = new ArrayList<DepServiceInfo>();
@@ -1248,7 +1334,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                             if (checkInService.getProvider() == null) {  // adding only Sp level services
 
-                                if(checkInService.getCheckInServiceAvailability() != null) {
+                                if (checkInService.getCheckInServiceAvailability() != null) {
 
                                     DepServiceInfo serviceInfo = new DepServiceInfo();
                                     serviceInfo.setDepartmentId(0);
@@ -1289,7 +1375,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         for (SearchAppoinment appt : apptServicesList) {
 
                             if (appt.getProvider() == null) {  // adding only Sp level services
-                                if(appt.getAppointServiceAvailability() != null) {
+                                if (appt.getAppointServiceAvailability() != null) {
 
                                     DepServiceInfo serviceInfo = new DepServiceInfo();
                                     serviceInfo.setDepartmentId(0);
@@ -1380,6 +1466,36 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         }
                     }
 
+                    if (onlinePresence) {
+
+                        if (catalogs.size() > 0) {
+
+                            for (Catalog catalog : catalogs) {
+
+                                DepServiceInfo serviceInfo = new DepServiceInfo();
+                                if (catalog.getCatLogName() != null) {
+                                    serviceInfo.setName(catalog.getCatLogName());
+                                }
+                                if (catalog.getCatalogImagesList() != null && catalog.getCatalogImagesList().size() > 0) {
+                                    serviceInfo.setProviderImage(catalog.getCatalogImagesList().get(0).getUrl());
+                                }
+                                serviceInfo.setType(Constants.ORDERS);
+                                serviceInfo.setEstTime("");
+                                serviceInfo.setPeopleInLine(0);
+                                serviceInfo.setCalculationMode("");
+                                serviceInfo.setServiceMode("");
+                                serviceInfo.setAvailability(true);
+                                serviceInfo.setCallingMode("");
+                                serviceInfo.setNextAvailableTime("");
+                                serviceInfo.setCatalogInfo(catalog); // adding all the catalog info
+                                services.add(serviceInfo);
+
+                            }
+
+                        }
+                    }
+
+
                     serviceInfoList.addAll(services);
                     //do something with those results and emit new event
                     return serviceInfoList;
@@ -1450,26 +1566,57 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             List<Observable<?>> requests = new ArrayList<>();
 
             // Make a collection of all requests you need to call at once, there can be any number of requests, not only 3. You can have 2 or 5, or 100.
-            requests.add(s3ApiService.getDepartmentProviders(unqId, sdf.format(currentTime)));
-            requests.add(apiService.getCheckInsSchedule(provId + "-" + locid));
-            requests.add(apiService.getAppointmentSchedule(provId + "-" + locid));
-            requests.add(apiService.getCheckInServices(locid));
-            requests.add(apiService.getAppointmentServices(locid));
-            requests.add(s3ApiService.getDonationServices(unqId, sdf.format(currentTime)));
+            if (orderEnabled) {
+
+                requests.add(s3ApiService.getDepartmentProviders(unqId, sdf.format(currentTime)));
+                requests.add(apiService.getCheckInsSchedule(provId + "-" + locid));
+                requests.add(apiService.getAppointmentSchedule(provId + "-" + locid));
+                requests.add(apiService.getCheckInServices(locid));
+                requests.add(apiService.getAppointmentServices(locid));
+                requests.add(s3ApiService.getDonationServices(unqId, sdf.format(currentTime)));
+                requests.add(apiService.getCatalog(provId));
+
+            } else {
+                requests.add(s3ApiService.getDepartmentProviders(unqId, sdf.format(currentTime)));
+                requests.add(apiService.getCheckInsSchedule(provId + "-" + locid));
+                requests.add(apiService.getAppointmentSchedule(provId + "-" + locid));
+                requests.add(apiService.getCheckInServices(locid));
+                requests.add(apiService.getAppointmentServices(locid));
+                requests.add(s3ApiService.getDonationServices(unqId, sdf.format(currentTime)));
+            }
 
             // Zip all requests with the Function, which will receive the results.
             Observable.zip(requests, new Function<Object[], Object>() {
                 @Override
                 public Object apply(Object[] objects) throws Exception {
                     // Objects[] is an array of combined results of completed requests
+                    ArrayList<SearchDepartmentServices> deptCheckinsList = new ArrayList<>();
+                    ArrayList<QueueList> queueList = new ArrayList<>();
+                    ArrayList<ScheduleList> schedulesList = new ArrayList<>();
+                    ArrayList<SearchService> checkInServicesList = new ArrayList<>();
+                    ArrayList<SearchAppoinment> apptServicesList = new ArrayList<>();
+                    ArrayList<SearchDonation> donationServices = new ArrayList<>();
+                    ArrayList<Catalog> catalogs = new ArrayList<>();
 
-                    ArrayList<SearchDepartmentServices> deptCheckinsList = (ArrayList<SearchDepartmentServices>) objects[0];
-                    ArrayList<QueueList> queueList = (ArrayList<QueueList>) objects[1];
-                    ArrayList<ScheduleList> schedulesList = (ArrayList<ScheduleList>) objects[2];
-                    ArrayList<SearchService> checkInServicesList = (ArrayList<SearchService>) objects[3];
-                    ArrayList<SearchAppoinment> apptServicesList = (ArrayList<SearchAppoinment>) objects[4];
+                    if (orderEnabled) {
 
-                    ArrayList<SearchDonation> donationServices = (ArrayList<SearchDonation>) objects[5];
+                        deptCheckinsList = (ArrayList<SearchDepartmentServices>) objects[0];
+                        queueList = (ArrayList<QueueList>) objects[1];
+                        schedulesList = (ArrayList<ScheduleList>) objects[2];
+                        checkInServicesList = (ArrayList<SearchService>) objects[3];
+                        apptServicesList = (ArrayList<SearchAppoinment>) objects[4];
+                        donationServices = (ArrayList<SearchDonation>) objects[5];
+                        catalogs = (ArrayList<Catalog>) objects[6];
+
+                    } else {
+
+                        deptCheckinsList = (ArrayList<SearchDepartmentServices>) objects[0];
+                        queueList = (ArrayList<QueueList>) objects[1];
+                        schedulesList = (ArrayList<ScheduleList>) objects[2];
+                        checkInServicesList = (ArrayList<SearchService>) objects[3];
+                        apptServicesList = (ArrayList<SearchAppoinment>) objects[4];
+                        donationServices = (ArrayList<SearchDonation>) objects[5];
+                    }
 
                     deptCheckinsList = deptCheckinsList == null ? new ArrayList<SearchDepartmentServices>() : deptCheckinsList;
 
@@ -1497,7 +1644,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                                     if (checkInService.getProvider() == null) {  // adding only Sp level services
 
-                                        if(checkInService.getCheckInServiceAvailability() != null) {
+                                        if (checkInService.getCheckInServiceAvailability() != null) {
 
                                             DepServiceInfo serviceInfo = new DepServiceInfo();
                                             serviceInfo.setDepartmentId(checkInService.getDepartment());
@@ -1542,7 +1689,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                                     if (appt.getProvider() == null) {  // adding only Sp level services
 
-                                        if(appt.getAppointServiceAvailability() != null) {
+                                        if (appt.getAppointServiceAvailability() != null) {
 
                                             DepServiceInfo serviceInfo = new DepServiceInfo();
                                             serviceInfo.setDepartmentId(appt.getDepartment());
@@ -1656,6 +1803,42 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         }
                     }
 
+                    if (onlinePresence) {
+
+                        if (catalogs.size() > 0) {
+                            DepartmentInfo catalogDepartment = new DepartmentInfo();
+                            ArrayList<DepServiceInfo> catalogsList = new ArrayList<DepServiceInfo>();
+                            catalogDepartment.setDepartmentName("Donations");
+
+                            for (Catalog catalog : catalogs) {
+
+                                DepServiceInfo serviceInfo = new DepServiceInfo();
+                                if (catalog.getCatLogName() != null) {
+                                    serviceInfo.setName(catalog.getCatLogName());
+                                }
+                                if (catalog.getCatalogImagesList() != null && catalog.getCatalogImagesList().size() > 0) {
+                                    serviceInfo.setProviderImage(catalog.getCatalogImagesList().get(0).getUrl());
+                                }
+                                serviceInfo.setType(Constants.ORDERS);
+                                serviceInfo.setEstTime("");
+                                serviceInfo.setPeopleInLine(0);
+                                serviceInfo.setCalculationMode("");
+                                serviceInfo.setServiceMode("");
+                                serviceInfo.setAvailability(true);
+                                serviceInfo.setCallingMode("");
+                                serviceInfo.setNextAvailableTime("");
+                                serviceInfo.setCatalogInfo(catalog); // adding all the catalog info
+                                catalogsList.add(serviceInfo);
+                            }
+
+                            if (catalogsList.size() > 0){
+                                catalogDepartment.setDeptServicesList(catalogsList);
+                                departmentsList.add(catalogDepartment);
+                            }
+
+                        }
+                    }
+
                     // do something with those results and emit new event
                     return departmentsList;
                 }
@@ -1715,7 +1898,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             }
                     );
 
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             e.printStackTrace();
         }
 
@@ -1748,17 +1932,17 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                 }
                             }
                         }
-                            ivfav.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if (favFlag) {
-                                        ApiRemoveFavo(mBusinessDataList.getId());
+                        ivfav.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (favFlag) {
+                                    ApiRemoveFavo(mBusinessDataList.getId());
 
-                                    } else {
-                                        ApiAddFavo(mBusinessDataList.getId());
-                                    }
+                                } else {
+                                    ApiAddFavo(mBusinessDataList.getId());
                                 }
-                            });
+                            }
+                        });
 
                     }
                 } catch (Exception e) {
@@ -1887,12 +2071,11 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                     if (terminology != null) {
                                         String firstWord = "You have ";
                                         String secondWord = "";
-                                        if(mSearchmCheckMessageList.get(i).getmAllSearch_checkIn().size()>1) {
+                                        if (mSearchmCheckMessageList.get(i).getmAllSearch_checkIn().size() > 1) {
                                             secondWord = mSearchmCheckMessageList.get(i).getmAllSearch_checkIn().size() + " " + "Bookings";
+                                        } else {
+                                            secondWord = mSearchmCheckMessageList.get(i).getmAllSearch_checkIn().size() + " " + "Booking";
                                         }
-                                        else{
-                                               secondWord = mSearchmCheckMessageList.get(i).getmAllSearch_checkIn().size() + " " + "Booking";
-                                            }
                                         String thirdword = " at this location";
                                         Spannable spannable = new SpannableString(firstWord + secondWord + thirdword);
                                         Typeface tyface_edittext2 = Typeface.createFromAsset(mContext.getAssets(),
@@ -1914,10 +2097,10 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                     TextView tv_token = (TextView) dialog.findViewById(R.id.tv_token);
                                     String firstWord = "";
                                     if (mSearchSettings.isShowTokenId()) {
-                                         firstWord = "Your " + "Token" + " at ";
+                                        firstWord = "Your " + "Token" + " at ";
                                         tv_token.setVisibility(View.VISIBLE);
                                     } else {
-                                         firstWord = "Your " + terminology + " at ";
+                                        firstWord = "Your " + terminology + " at ";
                                         tv_token.setVisibility(View.GONE);
                                     }
 
@@ -2116,6 +2299,18 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         intent.putExtra("providerId", providerId);
         intent.putExtra("donationInfo", donationServiceInfo);
         startActivity(intent);
+    }
+
+    @Override
+    public void onCatalogSelected(Catalog catalogInfo) {
+
+        Intent catalogIntent = new Intent(ProviderDetailActivity.this,ItemsActivity.class);
+        if (mBusinessDataList != null && mBusinessDataList.getBusinessName() != null){
+            catalogIntent.putExtra("businessName",mBusinessDataList.getBusinessName());
+        }
+        catalogIntent.putExtra("catalogInfo",catalogInfo);
+        startActivity(catalogIntent);
+
     }
 
     @Override

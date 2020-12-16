@@ -31,6 +31,8 @@ public class Constants {
     public static final String TOKEN = "Tokens";
     public static final String DONATION = "Donation";
     public static final String PROVIDER = "Provider";
+    public static final String ORDERS = "Orders";
+
 
     public static final String CONFIRMED = "Confirmed";
     public static final String ARRIVED = "Arrived";

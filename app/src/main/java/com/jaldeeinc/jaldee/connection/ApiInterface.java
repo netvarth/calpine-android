@@ -563,8 +563,7 @@ public interface ApiInterface {
     @GET("consumer/appointment/history")
     Observable<ArrayList<ActiveAppointment>> getHistoryAppointments(@QueryMap(encoded = true) Map<String, String> query);
 
-    @GET("consumer/orders/catalogs/{id}")
-    Observable<ArrayList<Catalog>> getCatalog(@Path("id") int id);
-
+    @GET("consumer/orders/catalogs/{accountId}")
+    Observable<ArrayList<Catalog>> getCatalog(@Path("accountId") int id);
 
 }

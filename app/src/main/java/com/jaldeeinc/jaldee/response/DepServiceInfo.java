@@ -26,6 +26,7 @@ public class DepServiceInfo {
     SearchAppoinment appointmentServiceInfo;
     SearchDonation donationServiceInfo;
     ProviderUserModel providerInfo;
+    Catalog catalogInfo;
     private boolean isOnline;
     String virtualServiceType;
 
@@ -240,5 +241,13 @@ public class DepServiceInfo {
 
     public void setVirtualServiceType(String virtualServiceType) {
         this.virtualServiceType = virtualServiceType;
+    }
+
+    public Catalog getCatalogInfo() {
+        return catalogInfo;
+    }
+
+    public void setCatalogInfo(Catalog catalogInfo) {
+        this.catalogInfo = catalogInfo;
     }
 }

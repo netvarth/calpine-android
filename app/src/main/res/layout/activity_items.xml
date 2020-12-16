@@ -1,0 +1,78 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_60dp"
+        android:background="@color/white"
+        android:paddingEnd="@dimen/dimen_10dp">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_back"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="@dimen/padding3">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding5"
+                android:src="@mipmap/img_back_arrow"
+                app:tint="@color/dark_blue">
+
+            </ImageView>
+
+        </androidx.cardview.widget.CardView>
+
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+            android:id="@+id/tv_spName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Krishna Bakers and Sweets"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dimen_18dp"
+            android:layout_marginEnd="@dimen/dimen_5dp"
+            android:textSize="14dp"
+            android:textColor="@color/dark_black">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+
+
+    </LinearLayout>
+
+    <soup.neumorphism.NeumorphCardView
+        android:id="@+id/pressed_card"
+        style="@style/Widget.Neumorph.CardView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dimen_60dp"
+        app:neumorph_backgroundColor="@color/white"
+        app:neumorph_insetBottom="@dimen/dimen_0dp"
+        app:neumorph_insetEnd="@dimen/dimen_1dp"
+        app:neumorph_insetStart="@dimen/dimen_1dp"
+        app:neumorph_insetTop="@dimen/dimen_1dp"
+        app:neumorph_shadowColorDark="#BEF2F2F2"
+        app:neumorph_shadowColorLight="#BEF2F2F2"
+        app:neumorph_shapeType="pressed">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+
+
+        </RelativeLayout>
+
+
+    </soup.neumorphism.NeumorphCardView>
+</RelativeLayout>
