@@ -443,7 +443,8 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
                 + "provider TEXT,"
                 + "checkinEncId TEXT,"
                 + "location TEXT,"
-                + "email TEXT)";
+                + "email TEXT,"
+                + "countryCode TEXT)";
 
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_checkin) + tblFields;
@@ -495,7 +496,8 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
                 + "provider TEXT,"
                 + "checkinEncId TEXT,"
                 + "location TEXT,"
-                + "email TEXT)";
+                + "email TEXT,"
+                + "countryCode TEXT)";
 
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_mycheckin) + tblFields;
@@ -551,6 +553,7 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
                 values.put("checkinEncId",activeCheckIn.getCheckinEncId());
                 values.put("location",(new Gson().toJson(activeCheckIn.getQueue().getLocation())));
                 values.put("email", activeCheckIn.getWaitlistingFor().get(0).getEmail());
+                values.put("countryCode", activeCheckIn.getCountryCode());
 
                 db.insert(mContext.getString(R.string.db_table_checkin), null, values);
             }
@@ -575,7 +578,7 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime","queueEndTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating","checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack","showToken","consumer", "service", "virtualService", "provider", "checkinEncId","location","email"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime","queueEndTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating","checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack","showToken","consumer", "service", "virtualService", "provider", "checkinEncId","location","email", "countryCode"};
 
         db.beginTransaction();
 
@@ -630,6 +633,7 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setCheckinEncId((cursor.getString(40)));
                 activeModel.setLocation(new Gson().fromJson(cursor.getString(41), LocationDetails.class));
                 activeModel.setEmail((cursor.getString(42)));
+                activeModel.setCountryCode((cursor.getString(43)));
 
 
 
@@ -695,6 +699,7 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
                 values.put("checkinEncId",activeCheckIn.getCheckinEncId());
                 values.put("location",  new Gson().toJson(activeCheckIn.getQueue().getLocation()));
                 values.put("email", activeCheckIn.getWaitlistingFor().get(0).getEmail());
+                values.put("countryCode", activeCheckIn.getCountryCode());
                 db.insert(mContext.getString(R.string.db_table_mycheckin), null, values);
             }
 
@@ -716,7 +721,7 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
 
         String table = mContext.getString(R.string.db_table_mycheckin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime", "distance", "jaldeeStartTimeType", "rating", "queueEndTime", "checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack","showToken","consumer","service", "virtualService", "provider", "checkinEncId", "location", "email"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime", "distance", "jaldeeStartTimeType", "rating", "queueEndTime", "checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack","showToken","consumer","service", "virtualService", "provider", "checkinEncId", "location", "email", "countryCode"};
         String selection = "";
         String[] selectionArgs = null;
         selectionArgs = new String[]{Config.getTodaysDateString()};
@@ -778,6 +783,7 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setCheckinEncId((cursor.getString(40)));
                 activeModel.setLocation(new Gson().fromJson(cursor.getString(41),LocationDetails.class));
                 activeModel.setEmail((cursor.getString(42)));
+                activeModel.setCountryCode((cursor.getString(43)));
 
                 checkin.add(activeModel);
             } while (cursor.moveToNext());

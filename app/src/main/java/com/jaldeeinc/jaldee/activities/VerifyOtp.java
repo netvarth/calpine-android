@@ -51,6 +51,7 @@ public class VerifyOtp extends AppCompatActivity {
     Button btn_verify;
     TextView txt_enterotp,txtproceed;
     String detail;
+    String countryCode ="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +62,8 @@ public class VerifyOtp extends AppCompatActivity {
         if (extras != null) {
 
             detail = extras.getString("detail_id");
+            countryCode = extras.getString("countryCode");
+
 
         }
 
@@ -86,6 +89,7 @@ public class VerifyOtp extends AppCompatActivity {
                 "fonts/Montserrat_Light.otf");
         txtproceed.setTypeface(tyface_p);
         final String mobno = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
+        String countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
 
         mContext = this;
 
@@ -145,7 +149,14 @@ public class VerifyOtp extends AppCompatActivity {
 //        String secondWord = "OTP";
 
         String firstWord = "OTP has been sent to ";
-        String secondWord = mobno;
+        String secondWord ="";
+
+        if(!countryCode.equalsIgnoreCase("+91")){
+            secondWord = "your email";
+        }
+        else {
+            secondWord = countryCode + " " + mobno;
+        }
 
 
         Spannable spannable = new SpannableString(firstWord+secondWord);
@@ -185,6 +196,8 @@ public class VerifyOtp extends AppCompatActivity {
         ApiInterface apiService =
                 ApiClient.getClient(this).create(ApiInterface.class);
         final String mobno = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
+        String countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
+
 
         JSONObject userProfile = new JSONObject();
         JSONObject jsonObj = new JSONObject();
@@ -192,7 +205,7 @@ public class VerifyOtp extends AppCompatActivity {
             jsonObj.put("firstName", firstname);
             jsonObj.put("lastName", lastname);
             jsonObj.put("primaryMobileNo", mobno);
-            jsonObj.put("countryCode", "+91");
+            jsonObj.put("countryCode", countryCode);
             if (check.equalsIgnoreCase("email")) {
                 jsonObj.put("email", email);
             }
@@ -222,7 +235,7 @@ public class VerifyOtp extends AppCompatActivity {
 
                           //  Toast.makeText(mContext, "OTP resend", Toast.LENGTH_LONG).show();
 
-                            Toast.makeText(mContext,"Otp has been resent to  "+ mobno,Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext,"Otp has been resent to  "+ countryCode + " "  + mobno,Toast.LENGTH_LONG).show();
                         }
 
                     }

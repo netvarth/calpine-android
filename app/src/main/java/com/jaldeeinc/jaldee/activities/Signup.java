@@ -41,13 +41,13 @@ import retrofit2.Response;
  */
 
 public class Signup extends AppCompatActivity {
-    TextInputEditText firstName, Lastname;
-    TextInputLayout mInputFirst, mInputLast;
+    TextInputEditText firstName, Lastname, email;
+    TextInputLayout mInputFirst, mInputLast, mEmail;
     TextView tv_createaccc, tv_ynw, tv_needynw;
     Context mContext;
     Button btn_signup;
     TextView tv_terms;
-    String detail;
+    String detail, countryCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +58,7 @@ public class Signup extends AppCompatActivity {
         if (extras != null) {
 
             detail = extras.getString("detail_id");
+            countryCode = extras.getString("countryCode");
 
         }
 
@@ -66,9 +67,11 @@ public class Signup extends AppCompatActivity {
         firstName = findViewById(R.id.firstname);
       //  firstName.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         Lastname = findViewById(R.id.lastname);
+        email = findViewById(R.id.email);
       //  Lastname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         mInputFirst = findViewById(R.id.text_input_layout_first);
         mInputLast = findViewById(R.id.text_input_layout_last);
+        mEmail = findViewById(R.id.text_input_layout_email);
         tv_createaccc = findViewById(R.id.txtcreate_acc);
         tv_ynw = findViewById(R.id.txt_ynw);
         tv_needynw = findViewById(R.id.txt_needynw);
@@ -86,6 +89,7 @@ public class Signup extends AppCompatActivity {
                 "fonts/Montserrat_Bold.otf");
         firstName.setTypeface(tyface_edittext);
         Lastname.setTypeface(tyface_edittext);
+        email.setTypeface(tyface_edittext);
 
         Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Light.otf");
@@ -94,6 +98,8 @@ public class Signup extends AppCompatActivity {
         Typeface tyface_edittext_hintlast = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Light.otf");
         mInputLast.setTypeface(tyface_edittext_hintlast);
+
+        mEmail.setTypeface(tyface_edittext_hintlast);
 
         Typeface tyface_btn = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Medium.otf");
@@ -118,6 +124,15 @@ public class Signup extends AppCompatActivity {
 
         tv_terms.setText(spannable);
 
+        if(!countryCode.equalsIgnoreCase("+91")){
+            mEmail.setVisibility(View.VISIBLE);
+            email.setVisibility(View.VISIBLE);
+        }
+        else{
+            mEmail.setVisibility(View.GONE);
+            email.setVisibility(View.GONE);
+        }
+
         tv_terms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,27 +144,63 @@ public class Signup extends AppCompatActivity {
     }
 
     public void BtnSignUp(View view) {
-        if (!firstName.getText().toString().equalsIgnoreCase("") && !Lastname.getText().toString().equalsIgnoreCase("")) {
-
-            ApiSIgnup(firstName.getText().toString(), Lastname.getText().toString());
-        } else {
-            if (firstName.getText().toString().equalsIgnoreCase("")) {
-                // firstName.setError("Please enter firstname");
-                Config.logV("Firstname-----------1111");
-                SpannableString s = new SpannableString("Please enter firstname");
-                Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-                        "fonts/Montserrat_Light.otf");
-                s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                mInputFirst.setError(s);
+        if(!countryCode.equalsIgnoreCase("+91")){
+            if (!firstName.getText().toString().equalsIgnoreCase("") && !Lastname.getText().toString().equalsIgnoreCase("") && !email.getText().toString().equalsIgnoreCase("")) {
+                isEmailValid(email.getText().toString());
+                ApiSIgnup(firstName.getText().toString(), Lastname.getText().toString());
             }
-            if (Lastname.getText().toString().equalsIgnoreCase("")) {
-                // Lastname.setError("Please enter lastname");
-                Config.logV("Lastname-----------1111");
-                SpannableString s = new SpannableString("Please enter lastname");
-                Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-                        "fonts/Montserrat_Light.otf");
-                s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                mInputLast.setError(s);
+            else{
+
+                if (firstName.getText().toString().equalsIgnoreCase("")) {
+                    // firstName.setError("Please enter firstname");
+                    Config.logV("Firstname-----------1111");
+                    SpannableString s = new SpannableString("Please enter firstname");
+                    Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
+                            "fonts/Montserrat_Light.otf");
+                    s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    mInputFirst.setError(s);
+                }
+                if (Lastname.getText().toString().equalsIgnoreCase("")) {
+                    // Lastname.setError("Please enter lastname");
+                    Config.logV("Lastname-----------1111");
+                    SpannableString s = new SpannableString("Please enter lastname");
+                    Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
+                            "fonts/Montserrat_Light.otf");
+                    s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    mInputLast.setError(s);
+                }
+                if (email.getText().toString().equalsIgnoreCase("")) {
+                    SpannableString s = new SpannableString("Please enter email");
+                    Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
+                            "fonts/Montserrat_Light.otf");
+                    s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    mEmail.setError(s);
+                }
+
+            }
+        }
+        else {
+            if (!firstName.getText().toString().equalsIgnoreCase("") && !Lastname.getText().toString().equalsIgnoreCase("")) {
+                ApiSIgnup(firstName.getText().toString(), Lastname.getText().toString());
+            } else {
+                if (firstName.getText().toString().equalsIgnoreCase("")) {
+                    // firstName.setError("Please enter firstname");
+                    Config.logV("Firstname-----------1111");
+                    SpannableString s = new SpannableString("Please enter firstname");
+                    Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
+                            "fonts/Montserrat_Light.otf");
+                    s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    mInputFirst.setError(s);
+                }
+                if (Lastname.getText().toString().equalsIgnoreCase("")) {
+                    // Lastname.setError("Please enter lastname");
+                    Config.logV("Lastname-----------1111");
+                    SpannableString s = new SpannableString("Please enter lastname");
+                    Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
+                            "fonts/Montserrat_Light.otf");
+                    s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    mInputLast.setError(s);
+                }
             }
         }
     }
@@ -159,6 +210,7 @@ public class Signup extends AppCompatActivity {
         ApiInterface apiService =
                 ApiClient.getClient(this).create(ApiInterface.class);
         final String mobno = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
+              String countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
 
         JSONObject userProfile = new JSONObject();
         JSONObject jsonObj = new JSONObject();
@@ -166,7 +218,10 @@ public class Signup extends AppCompatActivity {
             jsonObj.put("firstName", firstname);
             jsonObj.put("lastName", lastname);
             jsonObj.put("primaryMobileNo", mobno);
-            jsonObj.put("countryCode", "+91");
+            jsonObj.put("countryCode", countryCode);
+            if(!countryCode.equalsIgnoreCase("+91")){
+                jsonObj.put("email", email.getText().toString());
+            }
             userProfile.putOpt("userProfile", jsonObj);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -191,12 +246,15 @@ public class Signup extends AppCompatActivity {
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
 
-                            Toast.makeText(mContext, "Otp has been sent to  " + mobno, Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, "Otp has been sent to  " + countryCode + " " + mobno, Toast.LENGTH_LONG).show();
                             SharedPreference.getInstance(mContext).setValue("firstName", firstname);
                             SharedPreference.getInstance(mContext).setValue("LastName", lastname);
                             Intent iReg = new Intent(mContext, VerifyOtp.class);
                             if(detail!=null){
                                 iReg.putExtra("detail_id", (detail));
+                                if(countryCode!=null) {
+                                    iReg.putExtra("countryCode", countryCode);
+                                }
                             }
                             startActivity(iReg);
                             finish();
@@ -249,5 +307,9 @@ public class Signup extends AppCompatActivity {
             }
         });
 
+    }
+    boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email)
+                .matches();
     }
 }

@@ -30,6 +30,10 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,7 +52,7 @@ public class ChangePhoneFragment extends RootFragment {
     TextInputLayout text_input_phone;
     TextView txtmobile;
     CountryCodePicker cCodePicker;
-    String countryCode = "";
+    String countryCode = "+91";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,17 +71,17 @@ public class ChangePhoneFragment extends RootFragment {
 
         ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
 
-        cCodePicker = row.findViewById(R.id.ccp);
-
-        cCodePicker.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
-            @Override
-            public void onCountrySelected() {
-
-                countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
-            }
-        });
-
-        countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
+//        cCodePicker = row.findViewById(R.id.ccp);
+//
+//        cCodePicker.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
+//            @Override
+//            public void onCountrySelected() {
+//
+//                countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
+//            }
+//        });
+//
+//        countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
 
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,8 +241,16 @@ public class ChangePhoneFragment extends RootFragment {
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("countryCode", "+91");
 
-        Call<ResponseBody> call = apiService.ChangePhone(mPhone);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+
+        Call<ResponseBody> call = apiService.ChangePhone(mPhone, body);
 
 
         call.enqueue(new Callback<ResponseBody>() {

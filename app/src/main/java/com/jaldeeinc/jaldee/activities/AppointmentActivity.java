@@ -263,6 +263,14 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     @BindView(R.id.et_countryCode)
     EditText et_countryCode;
 
+    @BindView(R.id.txtservicepayment)
+    CustomTextViewMedium txtservicepayment;
+
+    static CustomTextViewMedium txtserviceamount;
+
+    static LinearLayout LPrepay;
+    static LinearLayout LserviceAmount;
+
     String mFirstName, mLastName;
     int consumerID;
     private int uniqueId;
@@ -362,6 +370,10 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         tvConsumerName = findViewById(R.id.tv_consumerName);
         list = findViewById(R.id.list);
         recycle_family = findViewById(R.id.recycle_family);
+        LservicePrepay = findViewById(R.id.LservicePrepay);
+        LPrepay = findViewById(R.id.ll_prepay);
+        LserviceAmount = findViewById(R.id.ll_serviceamount);
+        txtserviceamount = findViewById(R.id.txtserviceamount);
 
         int consumerId = SharedPreference.getInstance(AppointmentActivity.this).getIntValue("consumerId", 0);
         familyMEmID = consumerId;
@@ -947,6 +959,25 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         });
 
 
+        if(serviceInfo.getTotalAmount()!=null && !serviceInfo.getTotalAmount().equalsIgnoreCase("0.0")){
+            LservicePrepay.setVisibility(View.VISIBLE);
+            LserviceAmount.setVisibility(View.VISIBLE);
+            Typeface tyface = Typeface.createFromAsset(getAssets(),
+                    "fonts/Montserrat_Bold.otf");
+            txtservicepayment.setTypeface(tyface);
+            txtserviceamount.setTypeface(tyface);
+            String firstWord = " - ";
+            String thirdWord;
+            thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getTotalAmount()));
+
+
+            Spannable spannable = new SpannableString(firstWord + thirdWord);
+            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
+                    firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            txtserviceamount.setText(spannable);
+        }
+
+
     }
 
 
@@ -1320,16 +1351,26 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         if ((showPayU) || showPaytmWallet) {
                             Config.logV("URL----%%%%%---@@--");
                             LservicePrepay.setVisibility(View.VISIBLE);
+                            LPrepay.setVisibility(View.VISIBLE);
                             Typeface tyface = Typeface.createFromAsset(getAssets(),
                                     "fonts/Montserrat_Bold.otf");
                             txtprepay.setTypeface(tyface);
                             txtprepayamount.setTypeface(tyface);
-                            String firstWord = "";
+                            txtservicepayment.setTypeface(tyface);
+                            txtserviceamount.setTypeface(tyface);
+                            String firstWord = " - ";
                             String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinPrePaymentAmount()));
+                            String thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getTotalAmount()));
+
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             txtprepayamount.setText(spannable);
+
+                            Spannable spannable1 = new SpannableString(firstWord + thirdWord);
+                            spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
+                                    firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            txtserviceamount.setText(spannable1);
                         }
 
                     } else {
@@ -1361,6 +1402,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
         String number = tvNumber.getText().toString();
         uuid = UUID.randomUUID().toString();
+        String virtual_code = et_countryCode.getText().toString();
+        String countryVirtualCode = virtual_code.substring(1);
 
 
         ApiInterface apiService =
@@ -1390,6 +1433,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             sjsonobj.put("id", scheduleId);
             queueobj.put("consumerNote", txt_addnote);
             queueobj.put("phonenumber", phoneNumber);
+            qjsonObj.put("countryCode", countryCode);
             if (serviceInfo.isUser()) {
                 pjsonobj.put("id", providerId);
             } else {
@@ -1408,13 +1452,13 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
             if (etVirtualNumber.getText().toString().trim().length() > 9) {
                 if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("whatsApp")) {
-                    virtualService.put("WhatsApp", etVirtualNumber.getText());
+                    virtualService.put("WhatsApp", countryVirtualCode + etVirtualNumber.getText());
                 } else if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("GoogleMeet")) {
                     virtualService.put("GoogleMeet", serviceInfo.getVirtualCallingValue());
                 } else if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("Zoom")) {
                     virtualService.put("Zoom", serviceInfo.getVirtualCallingValue());
                 } else if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("Phone")) {
-                    virtualService.put("Phone", etVirtualNumber.getText());
+                    virtualService.put("Phone", countryVirtualCode + etVirtualNumber.getText());
                 }
             } else {
                 DynamicToast.make(AppointmentActivity.this, "Invalid phone number", AppCompatResources.getDrawable(
@@ -1689,6 +1733,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                 b.putString("accountID", String.valueOf(providerId));
                             }
                             b.putString("livetrack", serviceInfo.getLivetrack());
+                            b.putString("confId", value);
                             Intent checkin = new Intent(AppointmentActivity.this, AppointmentConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);
@@ -1754,7 +1799,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                                         TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
 
-                                        txtprepayment.setText("Prepayment Amount ");
+                                        txtprepayment.setText(R.string.serve_prepay);
 
                                         txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(prepayAmount))));
                                         Typeface tyface1 = Typeface.createFromAsset(AppointmentActivity.this.getAssets(),

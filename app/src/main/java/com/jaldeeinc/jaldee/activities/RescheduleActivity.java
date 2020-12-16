@@ -385,10 +385,16 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                 tvConsumerName.setText(cName);
                 if (appointmentInfo.getPhoneNumber() != null) {
                     tvNumber.setVisibility(View.VISIBLE);
-                    tvNumber.setText(appointmentInfo.getPhoneNumber());
+                    if(appointmentInfo.getCountryCode()!=null) {
+                        tvNumber.setText(appointmentInfo.getCountryCode() + " " + appointmentInfo.getPhoneNumber());
+                    }
+                    else{
+                        tvNumber.setText(appointmentInfo.getPhoneNumber());
+                    }
                 } else {
                     tvNumber.setVisibility(View.GONE);
                 }
+
                 if (appointmentInfo.getAppmtFor().get(0).getEmail() != null) {
                     tvEmail.setVisibility(View.VISIBLE);
                     tvEmail.setText(appointmentInfo.getAppmtFor().get(0).getEmail());

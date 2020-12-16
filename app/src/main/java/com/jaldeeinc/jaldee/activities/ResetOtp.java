@@ -74,6 +74,7 @@ public class ResetOtp extends AppCompatActivity {
         img_indicator.setVisibility(View.GONE);
         txtproceed = (TextView) findViewById(R.id.txtproceed);
         final String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
+        String countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
 
        // txtproceed.setText("OTP has been sent to " + loginId);
         Typeface tyface_p = Typeface.createFromAsset(getAssets(),
@@ -128,7 +129,7 @@ public class ResetOtp extends AppCompatActivity {
 //        String secondWord = "OTP";
 
         String firstWord = "OTP has been sent to ";
-        String secondWord = loginId;
+        String secondWord = countryCode + " " + loginId;
 
         txt_enterotp = (TextView) findViewById(R.id.txt_enterotp);
         Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -171,6 +172,8 @@ public class ResetOtp extends AppCompatActivity {
                 ApiClient.getClient(this).create(ApiInterface.class);
 
         final String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
+        String countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
+
 
         final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
@@ -189,7 +192,7 @@ public class ResetOtp extends AppCompatActivity {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext,"Otp has been resent to "+loginId,Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext,"Otp has been resent to "+ countryCode + " " +loginId,Toast.LENGTH_LONG).show();
                     }
 
 

@@ -392,6 +392,7 @@ public class Password extends AppCompatActivity {
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("password", pwd);
+            jsonObj.put("countryCode", countryCode);
         } catch (JSONException e) {
             e.printStackTrace();
         }

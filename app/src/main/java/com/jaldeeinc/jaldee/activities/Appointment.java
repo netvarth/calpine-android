@@ -4878,7 +4878,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                                     TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
 
-                                    txtprepayment.setText("Prepayment Amount ");
+                                    txtprepayment.setText(R.string.serve_prepay);
 
 //                                    DecimalFormat format = new DecimalFormat("0.00");
                                     txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(sAmountPay))));

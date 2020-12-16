@@ -340,6 +340,33 @@
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
+            <LinearLayout
+                android:id="@+id/ll_note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding15"
+                android:layout_marginTop="@dimen/padding5"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:background="@drawable/donate_edittext"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/tv_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Add Note"
+                    android:inputType="text"
+                    android:background="@color/white"
+                    android:layout_margin="@dimen/padding5"
+                    android:textColor="@color/title_color"
+                    android:textSize="@dimen/dimen_15sp"
+                    android:textStyle="bold"
+                    android:maxLines="10">
+
+                </EditText>
+
+            </LinearLayout>
+
 
 
 

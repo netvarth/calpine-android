@@ -76,16 +76,16 @@
             android.support.design:hintTextAppearance="@style/GreyTextInputLayout"
             android:layout_height="wrap_content">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/firstname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:textColor="@color/title_grey"
-            android:textColorHint="@color/title_grey"
-            android:textAppearance="@style/GreyTextInputLayoutHint"
-            android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            android:hint="@string/hint_firstname" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/firstname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                android:hint="@string/hint_firstname"
+                android:inputType="textPersonName"
+                android:textAppearance="@style/GreyTextInputLayoutHint"
+                android:textColor="@color/title_grey"
+                android:textColorHint="@color/title_grey" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -105,6 +105,26 @@
             android:textAppearance="@style/GreyTextInputLayoutHint"
             android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:hint="@string/hint_lastname" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_email"
+            android:layout_width="match_parent"
+            android.support.design:hintTextAppearance="@style/GreyTextInputLayout"
+            android:textColorHint="@color/title_grey"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/title_grey"
+                android:textColorHint="@color/title_grey"
+                android:textAppearance="@style/GreyTextInputLayoutHint"
+                android:hint="Email"
+                android:visibility="gone"/>
         </com.google.android.material.textfield.TextInputLayout>
 
 

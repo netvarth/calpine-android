@@ -151,7 +151,7 @@ public class MobileNumberDialog extends Dialog {
         if (phoneNumber.trim().length() > 9) {
             Toast.makeText(context, "Mobile number has been updated successfully ", Toast.LENGTH_LONG).show();
             SharedPreference.getInstance(context).setValue("mobile", phoneNumber);
-            SharedPreference.getInstance(context).setValue("countryCode",countryCode);
+            SharedPreference.getInstance(context).setValue("cCodeDonation",countryCode);
             iMobileSubmit.mobileUpdated();
             dismiss();
 

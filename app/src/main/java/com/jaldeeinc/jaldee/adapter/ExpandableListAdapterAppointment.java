@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckinShareLocationAppointment;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.activities.RescheduleActivity;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
@@ -2092,7 +2093,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                                     @Override
                                     public void onClick(View v) {
 
-                                        meetingInfo = new MeetingInfo(mContext, activelist.getApptTime(), activelist.getService().getName(), whatsappResponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode(),activelist.getVirtualService().getWhatsApp(),activelist.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
+                                        meetingInfo = new MeetingInfo(mContext, activelist.getApptTime(), activelist.getService().getName(), whatsappResponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode(),activelist.getVirtualService().getWhatsApp(),activelist.getService().getVirtualCallingModes().get(0).getVirtualServiceType(),activelist.getCountryCode(), Constants.APPOINTMENT);
                                         meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                         meetingInfo.show();
                                         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
@@ -2110,7 +2111,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                                     @Override
                                     public void onClick(View v) {
 
-                                        meetingInfo = new MeetingInfo(mContext, activelist.getApptTime(), activelist.getService().getName(), phoneresponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getVirtualService().getPhone(),activelist.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
+                                        meetingInfo = new MeetingInfo(mContext, activelist.getApptTime(), activelist.getService().getName(), phoneresponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getVirtualService().getPhone(),activelist.getService().getVirtualCallingModes().get(0).getVirtualServiceType(),activelist.getCountryCode(),Constants.APPOINTMENT);
                                         meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                         meetingInfo.show();
                                         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();

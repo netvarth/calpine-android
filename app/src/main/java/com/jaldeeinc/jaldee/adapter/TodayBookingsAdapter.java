@@ -24,11 +24,14 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.Bookings;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+
+import static com.jaldeeinc.jaldee.activities.CheckInDetails.convertAmountToDecimals;
 
 public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdapter.ViewHolder> {
 
@@ -197,11 +200,25 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                             viewHolder.ivServiceIcon.setImageResource(R.drawable.whatsapp_icon);
                         }
                     } else if (bookings.getCallingType().equalsIgnoreCase("phone")) {
-                        viewHolder.ivServiceIcon.setImageResource(R.drawable.phone_icon);
+                        viewHolder.ivServiceIcon.setImageResource(R.drawable.phoneicon_sized);
                     }
                 } else {
                     viewHolder.ivServiceIcon.setVisibility(View.GONE);
                 }
+
+                if(bookings.getBookingType().equalsIgnoreCase(Constants.CHECKIN) || bookings.getBookingType().equalsIgnoreCase(Constants.TOKEN)){
+                    if(bookings.getCheckInInfo()!=null && bookings.getCheckInInfo().getAmountPaid()!=0.0) {
+                        viewHolder.tvpayment.setVisibility(View.VISIBLE);
+                        viewHolder.tvpayment.setText("PAID" + " " + "₹" + " " + convertAmountsToDecimals(bookings.getCheckInInfo().getAmountPaid()));
+                    }
+                }
+                else if(bookings.getBookingType().equalsIgnoreCase(Constants.APPOINTMENT)){
+                    if(bookings.getAppointmentInfo()!=null && bookings.getAppointmentInfo().getAmountPaid()!=null && !bookings.getAppointmentInfo().getAmountPaid().equalsIgnoreCase("0.0")){
+                        viewHolder.tvpayment.setVisibility(View.VISIBLE);
+                        viewHolder.tvpayment.setText("PAID" + " "   + "₹" + " " + convertAmountToDecimals(bookings.getAppointmentInfo().getAmountPaid()) );
+                    }
+                }
+
 
                 viewHolder.cvBooking.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -232,6 +249,25 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
         }
     }
 
+    public static String convertAmountsToDecimals(double price) {
+
+        DecimalFormat decim = new DecimalFormat("0.00");
+        Double price2 = Double.parseDouble(decim.format(price));
+        String amount = decim.format(price2);
+        return amount;
+
+    }
+
+    public static String convertAmountToDecimals(String price) {
+
+        double a = Double.parseDouble(price);
+        DecimalFormat decim = new DecimalFormat("0.00");
+        Double price2 = Double.parseDouble(decim.format(a));
+        String amount = decim.format(price2);
+        return amount;
+
+    }
+
     @Override
     public int getItemCount() {
 
@@ -243,7 +279,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
         ImageView ivBookingType, ivServiceIcon, ivMore;
         CustomTextViewBold tvSpName;
         CustomTextViewSemiBold tvProviderName;
-        CustomTextViewMedium tvStatus, tvServiceName, tvDateAndTime;
+        CustomTextViewMedium tvStatus, tvServiceName, tvDateAndTime, tvpayment;
         CardView cvBooking;
         RelativeLayout rlStatus;
 
@@ -263,6 +299,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                 cvBooking = itemView.findViewById(R.id.cv_booking);
                 ivMore = itemView.findViewById(R.id.iv_more);
                 rlStatus = itemView.findViewById(R.id.rl_status);
+                tvpayment = itemView.findViewById(R.id.tv_payment);
 
             }
 

@@ -1577,7 +1577,12 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                                     tvConsumerName.setText(cName);
                                     if (checkInInfo.getWaitlistingFor().get(0).getPhoneNo() != null) {
                                         tvNumber.setVisibility(View.VISIBLE);
-                                        tvNumber.setText(checkInInfo.getWaitlistingFor().get(0).getPhoneNo());
+                                        if(checkInInfo.getCountryCode()!=null) {
+                                            tvNumber.setText(checkInInfo.getCountryCode() + " " + checkInInfo.getWaitlistingFor().get(0).getPhoneNo());
+                                        }
+                                        else{
+                                            tvNumber.setText(checkInInfo.getWaitlistingFor().get(0).getPhoneNo());
+                                        }
                                     } else {
                                         tvNumber.setVisibility(View.GONE);
                                     }

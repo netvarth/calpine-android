@@ -28,6 +28,7 @@ import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.RatingResponse;
 import com.jaldeeinc.jaldee.response.RefinedFilters;
+import com.jaldeeinc.jaldee.response.RefundDetails;
 import com.jaldeeinc.jaldee.response.ScheduleId;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
@@ -81,7 +82,7 @@ import retrofit2.http.QueryMap;
 public interface ApiInterface {
 
     @GET("consumer/{mobile}/check")
-    Call<ResponseBody> chkNewUser(@Path("mobile") String mobile);
+    Call<ResponseBody> chkNewUser(@Path("mobile") String mobile, @Query("countryCode") String countryCode);
 
     @Headers({"Accept: application/json", "User-Agent: android"})
     @POST("consumer")
@@ -94,6 +95,7 @@ public interface ApiInterface {
     @Headers({"Accept: application/json", "User-Agent: android"})
     @PUT("consumer/{otp}/activate")
     Call<ResponseBody> SetPassword(@Path("otp") String otp, @Body RequestBody jsonObj);
+
 
 
     @Headers({"Accept: application/json","User-Agent: android"})
@@ -130,7 +132,7 @@ public interface ApiInterface {
     Call<ResponseBody> ChangeEmail(@Path("email") String email);
 
     @POST("consumer/login/verifyLogin/{phone}")
-    Call<ResponseBody> ChangePhone(@Path("phone") String phone);
+    Call<ResponseBody> ChangePhone(@Path("phone") String phone, @Body RequestBody jsonObj);
 
     @POST("consumer/waitlist/saveMyLoc/{uuid}")
     Call<ShareLocation> ShareLiveLocation(@Path("uuid") String uuid, @Query("account") String account, @Body RequestBody jsonObj);
@@ -212,6 +214,9 @@ public interface ApiInterface {
 
     @GET("consumer/appointment")
     Call<ArrayList<ActiveAppointment>> getActiveAppointment(@QueryMap(encoded = true) Map<String, String> query);
+
+    @GET("consumer/payment/details/{uuid}")
+    Call<ArrayList<RefundDetails>> getRefundDetails(@Path("uuid") String uuid);
 
 
     @GET("consumer/waitlist/{uuid}")

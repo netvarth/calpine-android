@@ -52,7 +52,7 @@ public class Register extends AppCompatActivity {
     Button btn_reg_submit;
     TextView tv_terms, tv_provider, tv_download;
     String sforceupdate = "";
-    String detail;
+    String detail = "";
     CountryCodePicker cCodePicker;
     String countryCode = "";
 
@@ -221,7 +221,7 @@ public class Register extends AppCompatActivity {
 
         final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ResponseBody> call = apiService.chkNewUser(mobileno);
+        Call<ResponseBody> call = apiService.chkNewUser(mobileno, countryCode);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -241,6 +241,9 @@ public class Register extends AppCompatActivity {
                             Intent iReg = new Intent(mContext, Signup.class);
                             if (detail != null) {
                                 iReg.putExtra("detail_id", (detail));
+                                if(countryCode!=null){
+                                    iReg.putExtra("countryCode", countryCode);
+                                }
                             }
                             startActivity(iReg);
                             //  finish();
@@ -252,7 +255,9 @@ public class Register extends AppCompatActivity {
                             if (detail != null) {
                                 iReg.putExtra("detail_id", (detail));
                             }
-                            iReg.putExtra("countryCode",countryCode);
+                            if(countryCode!=null) {
+                                iReg.putExtra("countryCode", countryCode);
+                            }
                             startActivity(iReg);
                             // finish();
                         }

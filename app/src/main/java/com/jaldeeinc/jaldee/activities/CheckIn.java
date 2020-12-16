@@ -3367,7 +3367,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                                     TextView txtprepayment = (TextView) dialogPayment.findViewById(R.id.txtprepayment);
 
-                                    txtprepayment.setText("Prepayment Amount ");
+                                    txtprepayment.setText(R.string.serve_prepay);
 
 //                                    DecimalFormat format = new DecimalFormat("0.00");
 //                                    if(MultiplefamilyList.size()>1){

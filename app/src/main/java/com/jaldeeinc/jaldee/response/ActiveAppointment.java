@@ -139,6 +139,16 @@ public class ActiveAppointment implements Serializable {
     boolean prescShared;
     String prescUrl;
 
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    String countryCode;
+
     public boolean isPrescShared() {
         return prescShared;
     }

@@ -22,6 +22,7 @@ public class Bookings implements Serializable {
     private int waitingTime;
     private String calculationMode;
     private int tokenNo;
+    private String amountPaid;
     private ActiveAppointment appointmentInfo;
     private ActiveCheckIn checkInInfo;
 
@@ -178,5 +179,13 @@ public class Bookings implements Serializable {
 
     public void setTokenNo(int tokenNo) {
         this.tokenNo = tokenNo;
+    }
+
+    public String getAmountPaid() {
+        return amountPaid;
+    }
+
+    public void setAmountPaid(String amountPaid) {
+        this.amountPaid = amountPaid;
     }
 }

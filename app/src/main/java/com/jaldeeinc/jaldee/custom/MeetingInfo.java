@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 
 public class MeetingInfo extends Dialog {
@@ -21,18 +22,20 @@ public class MeetingInfo extends Dialog {
     Context context;
     String phoneNumber;
     String virtualServiceType;
+    String countryCode,bookingType;
 
 
-    public MeetingInfo(@NonNull Context context, String checkInTime, String name, TeleServiceCheckIn teleServiceCheckInResponse, String callingMode, String waitlistPhoneNumber, String virtualServiceType) {
+    public MeetingInfo(@NonNull Context context, String checkInTime, String name, TeleServiceCheckIn teleServiceCheckInResponse, String callingMode, String waitlistPhoneNumber, String virtualServiceType, String countryCode, String bookingType) {
         super(context);
         this.context = context;
-        this.context =context;
         this.time = checkInTime;
         this.serviceName = name;
         this.teleServiceCheckInResponse = teleServiceCheckInResponse;
         this.phoneNumber = waitlistPhoneNumber;
         this.callingMode = callingMode;
         this.virtualServiceType = virtualServiceType;
+        this.countryCode = countryCode;
+        this.bookingType = bookingType;
     }
 
     @Override
@@ -83,10 +86,17 @@ public class MeetingInfo extends Dialog {
             tvTime.setText(time);
         }
 
-        if (phoneNumber != null){
-
-            tvPhoneNumber.setText(phoneNumber);
+        if(phoneNumber!=null){
+            tvPhoneNumber.setText("+" + phoneNumber);
         }
+
+//        if(phoneNumber!=null&& countryCode!=null && bookingType.equalsIgnoreCase(Constants.CHECKIN)){
+//            tvPhoneNumber.setText(countryCode + phoneNumber);
+//        }
+//        else if(phoneNumber!=null && bookingType.equalsIgnoreCase(Constants.APPOINTMENT)){
+//            tvPhoneNumber.setText("+" + phoneNumber);
+//        }
+
 
 
         tvOK.setOnClickListener(new View.OnClickListener() {

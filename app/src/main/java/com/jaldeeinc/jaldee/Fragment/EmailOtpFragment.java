@@ -171,6 +171,7 @@ public class EmailOtpFragment extends RootFragment {
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("loginId", email);
+            jsonObj.put("countryCode", "+91");
 
         } catch (JSONException e) {
             e.printStackTrace();
