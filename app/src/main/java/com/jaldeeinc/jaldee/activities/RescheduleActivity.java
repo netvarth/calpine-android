@@ -1534,6 +1534,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                             b.putString("terminology", mSearchTerminology.getProvider());
                             b.putString("from", "Reschedule");
                             b.putString("livetrack", activeAppointment.getLivetrack());
+                            b.putString("confId", activeAppointment.getUid());
                             Intent checkin = new Intent(RescheduleActivity.this, AppointmentConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);

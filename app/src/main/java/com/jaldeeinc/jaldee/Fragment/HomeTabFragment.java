@@ -203,7 +203,7 @@ public class HomeTabFragment extends Fragment {
         tab1Fragment = new Tab1Fragment();
         myJaldeeFragment = new MyJaldee();
         Bundle bundle = new Bundle();
-        if (message != null) {
+        if (message != null && !message.equalsIgnoreCase("")) {
             bundle.putString("message", message);
             tab1Fragment.setArguments(bundle);
             myJaldeeFragment.setArguments(bundle);

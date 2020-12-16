@@ -92,6 +92,8 @@ public class AppointmentConfirmation extends AppCompatActivity {
 
         if(value!=null && providerId!=null){
             getConfirmationDetails(Integer.parseInt(providerId));
+        } else {
+            UpdateMainUI();
         }
 
 
@@ -140,12 +142,16 @@ public class AppointmentConfirmation extends AppCompatActivity {
 
     private void getConfirmationDetails(int userId) {
 
+        final Dialog mDialog = Config.getProgressDialog(AppointmentConfirmation.this, AppointmentConfirmation.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
         final ApiInterface apiService =
                 ApiClient.getClient(AppointmentConfirmation.this).create(ApiInterface.class);
         Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(value, String.valueOf(userId));
         call.enqueue(new Callback<ActiveAppointment>() {
             @Override
             public void onResponse(Call<ActiveAppointment> call, Response<ActiveAppointment> response) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
                 try {
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
@@ -162,6 +168,8 @@ public class AppointmentConfirmation extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ActiveAppointment> call, Throwable t) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
             }
         });
 

@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -33,6 +35,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.InstructionsDialog;
 import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
+
 import java.text.ParseException;
 
 import retrofit2.Call;
@@ -49,15 +52,15 @@ public class CheckInConfirmation extends AppCompatActivity {
     ActiveCheckIn activeCheckInInfo = new ActiveCheckIn();
     private TextView tvTimeWindow;
     String terminology;
-    ImageView icon_service,ivQR;
+    ImageView icon_service, ivQR;
     private String from;
-    Button btnOk,btnOk1;
-    CustomTextViewSemiBold tvViewMore,tvViewLess;
-    CustomTextViewMedium tvProviderName,tvServiceName,tvLocation;
-    CustomTextViewBold tvProvider,tvConfirmationNumber,tvConsumerName,tvStatus,tvDate,tvTime,tvBatchNo,tvAmount,tv_heading;
+    Button btnOk, btnOk1;
+    CustomTextViewSemiBold tvViewMore, tvViewLess;
+    CustomTextViewMedium tvProviderName, tvServiceName, tvLocation;
+    CustomTextViewBold tvProvider, tvConfirmationNumber, tvConsumerName, tvStatus, tvDate, tvTime, tvBatchNo, tvAmount, tv_heading;
     Context mContext;
-    LinearLayout llPayment,llBatchNo;
-    CardView cvBack,cvShare;
+    LinearLayout llPayment, llBatchNo;
+    CardView cvBack, cvShare;
     NeomorphFrameLayout llMoreDetails;
     LinearLayout llMessage, llInstructions, llViewMore, llViewLess;
     private String uuid;
@@ -80,7 +83,7 @@ public class CheckInConfirmation extends AppCompatActivity {
         terminology = i.getStringExtra("terminology");
         from = i.getStringExtra("from");
         phoneNumber = i.getStringExtra("waitlistPhonenumber");
-        livetrack = i.getBooleanExtra("livetrack",false);
+        livetrack = i.getBooleanExtra("livetrack", false);
         providerId = i.getStringExtra("accountID");
         value = i.getStringExtra("confId");
 
@@ -96,8 +99,10 @@ public class CheckInConfirmation extends AppCompatActivity {
             }
         });
 
-        if(value!=null && providerId!=null){
+        if (value != null && providerId != null) {
             getConfirmationDetails(Integer.parseInt(providerId));
+        } else {
+            UpdateMainUI();
         }
 
 
@@ -530,7 +535,6 @@ public class CheckInConfirmation extends AppCompatActivity {
     }
 
 
-
     @Override
     public void onBackPressed() {
         Intent home = new Intent(CheckInConfirmation.this, Home.class);
@@ -549,13 +553,16 @@ public class CheckInConfirmation extends AppCompatActivity {
     }
 
     private void getConfirmationDetails(int id) {
-
+        final Dialog mDialog = Config.getProgressDialog(CheckInConfirmation.this, CheckInConfirmation.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(value, String.valueOf(id));
         call.enqueue(new Callback<ActiveCheckIn>() {
             @Override
             public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
                 try {
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
@@ -571,7 +578,8 @@ public class CheckInConfirmation extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
-
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
             }
         });
 
