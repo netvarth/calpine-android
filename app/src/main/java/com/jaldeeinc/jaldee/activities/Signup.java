@@ -246,7 +246,14 @@ public class Signup extends AppCompatActivity {
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
 
-                            Toast.makeText(mContext, "Otp has been sent to  " + countryCode + " " + mobno, Toast.LENGTH_LONG).show();
+                            if(countryCode.equalsIgnoreCase("+91")){
+                                Toast.makeText(mContext, "Otp has been sent to  " + countryCode + " " + mobno, Toast.LENGTH_LONG).show();
+                            }
+                            else{
+                                Toast.makeText(mContext, "Otp has been sent to  " + "your email", Toast.LENGTH_LONG).show();
+                            }
+
+
                             SharedPreference.getInstance(mContext).setValue("firstName", firstname);
                             SharedPreference.getInstance(mContext).setValue("LastName", lastname);
                             Intent iReg = new Intent(mContext, VerifyOtp.class);
