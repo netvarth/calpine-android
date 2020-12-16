@@ -93,29 +93,30 @@
 
             <com.hbb20.CountryCodePicker
                 android:id="@+id/ccp"
-                android:layout_width="@dimen/dimen_65dp"
+                android:layout_width="0dp"
                 android:layout_height="@dimen/padding40"
                 android:layout_marginLeft="@dimen/dimen_5dp"
                 android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_weight="0.3"
                 android:background="@drawable/edittext_color"
                 app:ccp_showFlag="false"
                 app:ccp_showNameCode="false"
-                android.support.design:ccp_textSize="@dimen/dimen_12dp"
+                app:ccp_textSize="@dimen/dimen_15dp"
                 app:ccp_autoDetectCountry="true"
                 android:visibility="gone"/>
 
             <EditText
                 android:id="@+id/edt_Ccode"
-                android:layout_width="@dimen/dimen_25dp"
+                android:layout_width="0dp"
                 android:layout_height="@dimen/padding40"
-                android:layout_weight="1"
+                android:layout_weight="0.3"
                 android:layout_marginLeft="@dimen/dimen_5dp"
                 android:layout_marginEnd="@dimen/dimen_5dp"
                 android:background="@drawable/edittext_color"
                 android:hint="Enter Country Code"
                 android:inputType="phone"
                 android:maxLength="4"
+                android:visibility="visible"
                 android:paddingStart="@dimen/padding3"
                 android:paddingEnd="@dimen/padding3"
                 android:textColor="@color/black"
@@ -125,9 +126,9 @@
 
             <EditText
                 android:id="@+id/edtPhone"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="@dimen/padding40"
-                android:layout_weight="1"
+                android:layout_weight="0.7"
                 android:layout_marginLeft="@dimen/dimen_5dp"
                 android:background="@drawable/edittext_color"
                 android:hint="Enter Phone Number"
