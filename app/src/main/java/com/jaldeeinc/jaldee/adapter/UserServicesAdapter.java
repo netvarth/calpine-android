@@ -149,8 +149,9 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
                     viewHolder.llDonationRange.setVisibility(View.GONE);
                     int number = servicesInfoList.get(position).getPeopleInLine();
                     if (number >= 0) {
-                        String changedtext = "People waiting in line : "+"<b>" + servicesInfoList.get(position).getPeopleInLine() + "</b> ";
-                        viewHolder.tvPeopleAhead.setText(Html.fromHtml(changedtext));                    }
+                        String changedtext = "People waiting in line : " + "<b>" + servicesInfoList.get(position).getPeopleInLine() + "</b> ";
+                        viewHolder.tvPeopleAhead.setText(Html.fromHtml(changedtext));
+                    }
                 } else {
 
                     viewHolder.llDonationRange.setVisibility(View.GONE);
@@ -168,20 +169,19 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
 
             if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.CHECKIN)) {
                 if (servicesInfoList.get(position).getNextAvailableDate() != null) {
-                    if(!servicesInfoList.get(position).getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                    if (!servicesInfoList.get(position).getCalculationMode().equalsIgnoreCase("NoCalc")) {
                         viewHolder.llEstwaitTime.setVisibility(View.VISIBLE);
                         viewHolder.llDonationRange.setVisibility(View.GONE);
                         viewHolder.llTime.setVisibility(View.GONE);
                         String time = getWaitingTime(servicesInfoList.get(position).getNextAvailableDate(), servicesInfoList.get(position).getNextAvailableTime(), servicesInfoList.get(position).getEstTime());
                         viewHolder.tvEstWaitTime.setText(time.split("-")[1]);
                         viewHolder.tvTimeHint.setText(time.split("-")[0]);
-                    }
-                    else{
+                    } else {
                         viewHolder.llEstwaitTime.setVisibility(View.GONE);
                         viewHolder.llTime.setVisibility(View.GONE);
                     }
 
-                     } else {
+                } else {
                     viewHolder.llEstwaitTime.setVisibility(View.GONE);
                     viewHolder.llTime.setVisibility(View.GONE);
                 }
@@ -196,8 +196,8 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
                         viewHolder.llDonationRange.setVisibility(View.VISIBLE);
                         viewHolder.llTime.setVisibility(View.GONE);
                         viewHolder.llEstwaitTime.setVisibility(View.GONE);
-                        viewHolder.tvMinAmount.setText("₹"+getMoneyFormat(servicesInfoList.get(position).getMinDonationAmount()));
-                        viewHolder.tvMaxAmount.setText("₹"+getMoneyFormat(servicesInfoList.get(position).getMaxDonationAmount()));
+                        viewHolder.tvMinAmount.setText("₹" + getMoneyFormat(servicesInfoList.get(position).getMinDonationAmount()));
+                        viewHolder.tvMaxAmount.setText("₹" + getMoneyFormat(servicesInfoList.get(position).getMaxDonationAmount()));
                     } else {
                         viewHolder.llDonationRange.setVisibility(View.GONE);
                     }
@@ -270,10 +270,9 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
                                 viewHolder.ivTeleService.setImageResource(R.drawable.googlemeet);
 
                             } else if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                if(servicesInfoList.get(position).getVirtualServiceType()!=null && servicesInfoList.get(position).getVirtualServiceType().equalsIgnoreCase("videoService")){
+                                if (servicesInfoList.get(position).getVirtualServiceType() != null && servicesInfoList.get(position).getVirtualServiceType().equalsIgnoreCase("videoService")) {
                                     viewHolder.ivTeleService.setImageResource(R.drawable.whatsapp_videoicon);
-                                }
-                                else {
+                                } else {
                                     viewHolder.ivTeleService.setImageResource(R.drawable.whatsapp_icon);
                                 }
 
@@ -495,7 +494,7 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
 
 
-        private ImageView ivImage, ivTeleService,ivMore;
+        private ImageView ivImage, ivTeleService, ivMore;
         private CardView cvImage, cvCard;
         private CustomTextViewBold tvName, tvEstWaitTime, tvMinAmount, tvMaxAmount, tvNextAvailableTime;
         private LinearLayout llTime, llEstwaitTime, llDonationRange;

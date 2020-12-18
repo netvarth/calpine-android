@@ -1,654 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/dimen_25dp"
-    android:columnCount="2"
-    android:padding="5dp">
+    android:id="@+id/cv_card"
+    android:layout_width="wrap_content"
+    android:layout_height="200dp"
+    android:layout_margin="6dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardElevation="6dp">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv_card"
-        android:layout_width="190dp"
-        android:layout_height="200dp"
-        android:layout_margin="6dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardElevation="6dp">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.jaldeeinc.jaldee.custom.BorderImageView
+            android:id="@+id/iv_itemImage"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginStart="@dimen/dimen_4dp"
+            android:layout_marginTop="@dimen/dimen_4dp"
+            android:layout_marginEnd="@dimen/dimen_4dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/costa_rica">
+
+        </com.jaldeeinc.jaldee.custom.BorderImageView>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_below="@id/iv_itemImage"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:orientation="vertical">
 
-            <com.jaldeeinc.jaldee.custom.BorderImageView
-                android:id="@+id/iv_itemImage"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginStart="@dimen/dimen_4dp"
-                android:layout_marginTop="@dimen/dimen_4dp"
-                android:layout_marginEnd="@dimen/dimen_4dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/chicken_biryani_recipe">
+            <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                android:id="@+id/tv_itemName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_marginEnd="@dimen/dimen_5dp"
+                android:ellipsize="end"
+                android:letterSpacing="0.03"
+                android:maxLines="2"
+                android:text=""
+                android:textColor="@color/dark_black"
+                android:textSize="14dp">
 
-            </com.jaldeeinc.jaldee.custom.BorderImageView>
+            </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Short Description here"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/dimen_12dp"
+                android:layout_below="@id/tv_itemName"
+                android:layout_marginTop="6dp"
+                android:visibility="gone"
+                android:layout_marginStart="@dimen/dimen_5dp">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/iv_itemImage"
-                android:layout_marginTop="@dimen/dimen_5dp"
-                android:orientation="vertical">
-
-                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-                    android:id="@+id/tv_itemName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_5dp"
-                    android:layout_marginEnd="@dimen/dimen_5dp"
-                    android:ellipsize="end"
-                    android:letterSpacing="0.03"
-                    android:maxLines="2"
-                    android:text="Veg Biriyani with Masala dosa"
-                    android:textColor="@color/dark_black"
-                    android:textSize="14dp">
-
-                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_marginEnd="@dimen/dimen_5dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/dimen_5dp"
-                    android:layout_marginEnd="@dimen/dimen_5dp"
-                    android:layout_marginBottom="@dimen/dimen_10dp">
+                    android:layout_centerVertical="true">
 
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                        android:id="@+id/tv_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="$259"
+                        android:text=""
                         android:textColor="@color/title_color"
-                        android:textSize="@dimen/dimen_16dp">
+                        android:textSize="14dp">
 
                     </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
                     <LinearLayout
                         android:layout_width="@dimen/dimen_1dp"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/dimen_20dp"
-                        android:layout_marginTop="@dimen/dimen_8dp"
-                        android:layout_marginEnd="@dimen/dimen_10dp"
-                        android:layout_marginBottom="@dimen/dimen_8dp"
+                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:layout_marginTop="@dimen/dimen_4dp"
+                        android:layout_marginEnd="@dimen/dimen_5dp"
+                        android:layout_marginBottom="@dimen/dimen_4dp"
                         android:background="@color/light_grey">
 
                     </LinearLayout>
 
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/border_items"
-                        android:layout_marginStart="@dimen/dimen_18dp">
-
-                        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="ADD"
-                            android:textSize="@dimen/dimen_15dp"
-                            android:textColor="@color/appoint_theme"
-                            android:layout_centerInParent="true"
-                            android:paddingTop="@dimen/dimen_4dp"
-                            android:paddingBottom="@dimen/dimen_4dp">
-
-                        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
-                    </RelativeLayout>
-
-
-
-                    <com.jaldeeinc.jaldee.custom.ElegantNumberButton
-                        android:id="@+id/number_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:visibility="gone"
-                        android:layout_marginStart="@dimen/dimen_18dp"
-                        app:backgroundDrawable="@drawable/border_items"
-                        app:textSize="6dp" />
-
                 </LinearLayout>
 
-
-            </RelativeLayout>
-
-        </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="190dp"
-        android:layout_height="200dp"
-        android:layout_margin="6dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardElevation="6dp">
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.jaldeeinc.jaldee.custom.BorderImageView
-                android:id="@+id/iv_itemImage1"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginStart="@dimen/dimen_4dp"
-                android:layout_marginTop="@dimen/dimen_4dp"
-                android:layout_marginEnd="@dimen/dimen_4dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/chicken_biryani_recipe">
-
-            </com.jaldeeinc.jaldee.custom.BorderImageView>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/iv_itemImage1"
-                android:layout_marginTop="@dimen/dimen_5dp"
-                android:orientation="vertical">
-
-                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                <RelativeLayout
+                    android:id="@+id/rl_add"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_5dp"
-                    android:layout_marginEnd="@dimen/dimen_5dp"
-                    android:ellipsize="end"
-                    android:letterSpacing="0.03"
-                    android:maxLines="2"
-                    android:text="Veg Biriyani with Masala dosa"
-                    android:textColor="@color/dark_black"
-                    android:textSize="14dp">
+                    android:layout_height="@dimen/dimen_25dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/border_items"
+                    android:visibility="visible">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/dimen_5dp"
-                    android:layout_marginEnd="@dimen/dimen_5dp"
-                    android:layout_marginBottom="@dimen/dimen_10dp">
-
-
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="$259"
-                        android:textColor="@color/title_color"
-                        android:textSize="@dimen/dimen_16dp">
+                        android:paddingTop="@dimen/dimen_2dp"
+                        android:paddingBottom="@dimen/dimen_4dp"
+                        android:paddingStart="@dimen/dimen_15dp"
+                        android:paddingEnd="@dimen/dimen_15dp"
+                        android:text="ADD"
+                        android:textColor="@color/appoint_theme"
+                        android:textSize="@dimen/dimen_15dp">
 
-                    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
-                    <LinearLayout
-                        android:layout_width="@dimen/dimen_1dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/dimen_20dp"
-                        android:layout_marginTop="@dimen/dimen_8dp"
-                        android:layout_marginEnd="@dimen/dimen_10dp"
-                        android:layout_marginBottom="@dimen/dimen_8dp"
-                        android:background="@color/light_grey">
-
-                    </LinearLayout>
+                </RelativeLayout>
 
 
-                    <com.jaldeeinc.jaldee.custom.ElegantNumberButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/dimen_18dp"
-                        app:backgroundDrawable="@drawable/border_items"
-                        app:textSize="6dp" />
-
-                </LinearLayout>
-
-
-            </RelativeLayout>
-
-        </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
-
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="190dp"
-        android:layout_height="200dp"
-        android:layout_margin="6dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardElevation="6dp">
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.jaldeeinc.jaldee.custom.BorderImageView
-                android:id="@+id/iv_itemImage2"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginStart="@dimen/dimen_4dp"
-                android:layout_marginTop="@dimen/dimen_4dp"
-                android:layout_marginEnd="@dimen/dimen_4dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/chicken_biryani_recipe">
-
-            </com.jaldeeinc.jaldee.custom.BorderImageView>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/iv_itemImage2"
-                android:layout_marginTop="@dimen/dimen_5dp"
-                android:orientation="vertical">
-
-                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                <com.jaldeeinc.jaldee.custom.ElegantNumberButton
+                    android:id="@+id/number_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_5dp"
-                    android:layout_marginEnd="@dimen/dimen_5dp"
-                    android:ellipsize="end"
-                    android:letterSpacing="0.03"
-                    android:maxLines="2"
-                    android:text="Veg Biriyani with Masala dosa"
-                    android:textColor="@color/dark_black"
-                    android:textSize="14dp">
-
-                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/dimen_5dp"
-                    android:layout_marginEnd="@dimen/dimen_5dp"
-                    android:layout_marginBottom="@dimen/dimen_10dp">
-
-
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="$259"
-                        android:textColor="@color/title_color"
-                        android:textSize="@dimen/dimen_16dp">
-
-                    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
-
-                    <LinearLayout
-                        android:layout_width="@dimen/dimen_1dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/dimen_20dp"
-                        android:layout_marginTop="@dimen/dimen_8dp"
-                        android:layout_marginEnd="@dimen/dimen_10dp"
-                        android:layout_marginBottom="@dimen/dimen_8dp"
-                        android:background="@color/light_grey">
-
-                    </LinearLayout>
-
-
-                    <com.jaldeeinc.jaldee.custom.ElegantNumberButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/dimen_18dp"
-                        app:backgroundDrawable="@drawable/border_items"
-                        app:textSize="6dp" />
-
-                </LinearLayout>
-
+                    android:layout_alignParentEnd="true"
+                    android:visibility="gone"
+                    app:initialNumber="1"
+                    app:backgroundDrawable="@drawable/border_items"
+                    app:textSize="6dp" />
 
             </RelativeLayout>
 
-        </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="190dp"
-        android:layout_height="200dp"
-        android:layout_margin="6dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardElevation="6dp">
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.jaldeeinc.jaldee.custom.BorderImageView
-                android:id="@+id/iv_itemImage3"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginStart="@dimen/dimen_4dp"
-                android:layout_marginTop="@dimen/dimen_4dp"
-                android:layout_marginEnd="@dimen/dimen_4dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/chicken_biryani_recipe">
-
-            </com.jaldeeinc.jaldee.custom.BorderImageView>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/iv_itemImage3"
-                android:layout_marginTop="@dimen/dimen_5dp"
-                android:orientation="vertical">
-
-                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_5dp"
-                    android:layout_marginEnd="@dimen/dimen_5dp"
-                    android:ellipsize="end"
-                    android:letterSpacing="0.03"
-                    android:maxLines="2"
-                    android:text="Veg Biriyani with Masala dosa"
-                    android:textColor="@color/dark_black"
-                    android:textSize="14dp">
-
-                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/dimen_5dp"
-                    android:layout_marginEnd="@dimen/dimen_5dp"
-                    android:layout_marginBottom="@dimen/dimen_10dp">
-
-
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="$259"
-                        android:textColor="@color/title_color"
-                        android:textSize="@dimen/dimen_16dp">
-
-                    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
-
-                    <LinearLayout
-                        android:layout_width="@dimen/dimen_1dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/dimen_20dp"
-                        android:layout_marginTop="@dimen/dimen_8dp"
-                        android:layout_marginEnd="@dimen/dimen_10dp"
-                        android:layout_marginBottom="@dimen/dimen_8dp"
-                        android:background="@color/light_grey">
-
-                    </LinearLayout>
-
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/border_items"
-                        android:layout_marginStart="@dimen/dimen_18dp">
-
-                        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="ADD"
-                            android:textSize="@dimen/dimen_15dp"
-                            android:textColor="@color/appoint_theme"
-                            android:layout_centerInParent="true"
-                            android:paddingTop="@dimen/dimen_4dp"
-                            android:paddingBottom="@dimen/dimen_4dp">
-
-                        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
-                    </RelativeLayout>
-
-
-                    <com.jaldeeinc.jaldee.custom.ElegantNumberButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:visibility="gone"
-                        android:layout_marginStart="@dimen/dimen_18dp"
-                        app:backgroundDrawable="@drawable/border_items"
-                        app:textSize="6dp" />
-
-                </LinearLayout>
-
-
-            </RelativeLayout>
 
         </RelativeLayout>
 
-    </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="190dp"
-        android:layout_height="200dp"
-        android:layout_margin="6dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardElevation="6dp">
+</androidx.cardview.widget.CardView>
 
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.jaldeeinc.jaldee.custom.BorderImageView
-                android:id="@+id/iv_itemImage4"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginStart="@dimen/dimen_4dp"
-                android:layout_marginTop="@dimen/dimen_4dp"
-                android:layout_marginEnd="@dimen/dimen_4dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/chicken_biryani_recipe">
-
-            </com.jaldeeinc.jaldee.custom.BorderImageView>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/iv_itemImage4"
-                android:layout_marginTop="@dimen/dimen_5dp"
-                android:orientation="vertical">
-
-                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_5dp"
-                    android:layout_marginEnd="@dimen/dimen_5dp"
-                    android:ellipsize="end"
-                    android:letterSpacing="0.03"
-                    android:maxLines="2"
-                    android:text="Veg Biriyani with Masala dosa"
-                    android:textColor="@color/dark_black"
-                    android:textSize="14dp">
-
-                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/dimen_5dp"
-                    android:layout_marginEnd="@dimen/dimen_5dp"
-                    android:layout_marginBottom="@dimen/dimen_10dp">
-
-
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="$259"
-                        android:textColor="@color/title_color"
-                        android:textSize="@dimen/dimen_16dp">
-
-                    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
-
-                    <LinearLayout
-                        android:layout_width="@dimen/dimen_1dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/dimen_20dp"
-                        android:layout_marginTop="@dimen/dimen_8dp"
-                        android:layout_marginEnd="@dimen/dimen_10dp"
-                        android:layout_marginBottom="@dimen/dimen_8dp"
-                        android:background="@color/light_grey">
-
-                    </LinearLayout>
-
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/border_items"
-                        android:layout_marginStart="@dimen/dimen_18dp">
-
-                        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="ADD"
-                            android:textSize="@dimen/dimen_15dp"
-                            android:textColor="@color/appoint_theme"
-                            android:layout_centerInParent="true"
-                            android:paddingTop="@dimen/dimen_4dp"
-                            android:paddingBottom="@dimen/dimen_4dp">
-
-                        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
-                    </RelativeLayout>
-
-
-                    <com.jaldeeinc.jaldee.custom.ElegantNumberButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:visibility="gone"
-                        android:layout_marginStart="@dimen/dimen_18dp"
-                        app:backgroundDrawable="@drawable/border_items"
-                        app:textSize="6dp" />
-
-                </LinearLayout>
-
-
-            </RelativeLayout>
-
-        </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="190dp"
-        android:layout_height="200dp"
-        android:layout_margin="6dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardElevation="6dp">
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.jaldeeinc.jaldee.custom.BorderImageView
-                android:id="@+id/iv_itemImage5"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:scaleType="centerCrop"
-                android:layout_marginStart="@dimen/dimen_4dp"
-                android:layout_marginTop="@dimen/dimen_4dp"
-                android:layout_marginEnd="@dimen/dimen_4dp">
-
-            </com.jaldeeinc.jaldee.custom.BorderImageView>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/iv_itemImage5"
-                android:layout_marginTop="@dimen/dimen_5dp"
-                android:orientation="vertical">
-
-                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_5dp"
-                    android:layout_marginEnd="@dimen/dimen_5dp"
-                    android:ellipsize="end"
-                    android:letterSpacing="0.03"
-                    android:maxLines="2"
-                    android:text="Veg Biriyani with Masala dosa"
-                    android:textColor="@color/dark_black"
-                    android:textSize="14dp">
-
-                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/dimen_5dp"
-                    android:layout_marginEnd="@dimen/dimen_5dp"
-                    android:layout_marginBottom="@dimen/dimen_10dp">
-
-
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="$259"
-                        android:textColor="@color/title_color"
-                        android:textSize="@dimen/dimen_16dp">
-
-                    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
-
-                    <LinearLayout
-                        android:layout_width="@dimen/dimen_1dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/dimen_20dp"
-                        android:layout_marginTop="@dimen/dimen_8dp"
-                        android:layout_marginEnd="@dimen/dimen_10dp"
-                        android:layout_marginBottom="@dimen/dimen_8dp"
-                        android:background="@color/light_grey">
-
-                    </LinearLayout>
-
-
-                    <com.jaldeeinc.jaldee.custom.ElegantNumberButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/dimen_18dp"
-                        app:backgroundDrawable="@drawable/border_items"
-                        app:textSize="6dp" />
-
-                </LinearLayout>
-
-
-            </RelativeLayout>
-
-        </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
-
-
-
-</GridLayout>
 
