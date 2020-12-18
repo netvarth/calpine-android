@@ -562,24 +562,68 @@
                 android:padding="@dimen/default_padding"
                 android:visibility="gone">
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                    android:id="@+id/txtprepay"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/serve_prepay"
+                    android:orientation="horizontal"
+                    android:id="@+id/ll_serviceamount"
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/padding2">
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:id="@+id/txtservicepayment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/serve_pay"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_marginLeft="@dimen/padding2"
+                        android:layout_weight="0.7"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_hint_11" />
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                    android:id="@+id/txtprepayamount"
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:id="@+id/txtserviceamount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding5"
-                    android:gravity="center"
+                        android:layout_weight="0.3"
                     android:text=" "
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_hint_11" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/ll_prepay"
+                    android:visibility="gone">
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:id="@+id/txtprepay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.7"
+                        android:layout_gravity="center"
+                        android:gravity="end"
+
+                        android:text="@string/serve_prepay"
+                        android:textColor="@color/title_grey"
+                        android:textSize="@dimen/txtsize_hint_11" />
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:id="@+id/txtprepayamount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text=""
+                        android:textColor="@color/title_grey"
+                        android:textSize="@dimen/txtsize_hint_11" />
+
+                </LinearLayout>
+
+
             </LinearLayout>
 
 

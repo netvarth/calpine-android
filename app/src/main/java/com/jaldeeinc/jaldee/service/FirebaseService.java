@@ -20,6 +20,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -62,16 +63,12 @@ public class FirebaseService extends FirebaseMessagingService {
         // Notify UI that registration has completed, so the progress indicator can be hidden.
 
         Config.logV("TOKEN REFRESH #################__________________" + refreshedToken);
-        //LogUtil.writeLogTest("Token@@"+refreshedToken);
 
         Config.ApiUpdateToken(this);
 
-       /* String loginId = SharedPreference.getInstance(this).getStringValue("mobno", "");
-        String password = SharedPreference.getInstance(this).getStringValue("password", "");
-        if(!loginId.equalsIgnoreCase("")&&!password.equalsIgnoreCase("")) {
-            Config.ApiSessionResetLogin(loginId,password,this);
-        }*/
+
     }
+
 
     private void storeRegIdInPref(String token) {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
@@ -183,7 +180,7 @@ public class FirebaseService extends FirebaseMessagingService {
 
     public void sendNotification(String title, String messageBody) {
 
-        final Intent intent = new Intent(this, NotificationActivity.class);
+        final Intent intent = new Intent(this, Home.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.putExtra("message", messageBody);
         final Random randomGenerator = new Random();

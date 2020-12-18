@@ -163,7 +163,7 @@ public class ActionsDialog extends Dialog {
                                     ivMeetIcon.setImageResource(R.drawable.whatsapp_icon);
                                 }
                             } else if (bookings.getAppointmentInfo().getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
-                                ivMeetIcon.setImageResource(R.drawable.phone_icon);
+                                ivMeetIcon.setImageResource(R.drawable.phoneicon_sized);
                             }
                         } else {
                             hideView(llMeetingDetails);
@@ -310,7 +310,7 @@ public class ActionsDialog extends Dialog {
                                     ivMeetIcon.setImageResource(R.drawable.whatsapp_icon);
                                 }
                             } else if (bookings.getCheckInInfo().getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
-                                ivMeetIcon.setImageResource(R.drawable.phone_icon);
+                                ivMeetIcon.setImageResource(R.drawable.phoneicon_sized);
                             }
                         } else {
                             hideView(llMeetingDetails);
@@ -412,7 +412,7 @@ public class ActionsDialog extends Dialog {
             // To show Bill details
             if(bookings.getAppointmentInfo()!=null) {
 
-                if (bookings.getAppointmentInfo().getPaymentStatus().equalsIgnoreCase("FullyPaid") || bookings.getAppointmentInfo().getPaymentStatus().equalsIgnoreCase("FullyRefunded")) {
+                if (bookings.getAppointmentInfo().getPaymentStatus().equalsIgnoreCase("FullyPaid") || bookings.getAppointmentInfo().getPaymentStatus().equalsIgnoreCase("Refund")) {
                     ivBillIcon.setVisibility(View.VISIBLE);
                     tvBillText.setText("Receipt");
                 } else {
@@ -455,7 +455,7 @@ public class ActionsDialog extends Dialog {
                 });
             }
             else if(bookings.getCheckInInfo()!=null){
-                if (bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("FullyPaid") || bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("FullyRefunded")) {
+                if (bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("FullyPaid") || bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("Refund")) {
                     ivBillIcon.setVisibility(View.VISIBLE);
                     tvBillText.setText("Receipt");
                 } else {
@@ -860,9 +860,9 @@ public class ActionsDialog extends Dialog {
     public void showMeetingWindow(ActiveAppointment activeAppointment, String mode, TeleServiceCheckIn meetingDetails) {
 
         if (mode.equalsIgnoreCase("WhatsApp")) {
-            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getWhatsApp(), activeAppointment.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
+            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getWhatsApp(), activeAppointment.getService().getVirtualCallingModes().get(0).getVirtualServiceType(), activeAppointment.getCountryCode(),Constants.APPOINTMENT);
         } else {
-            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getPhoneNo(),"");
+            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getPhone(),"", activeAppointment.getCountryCode(),Constants.APPOINTMENT);
         }
         meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
         meetingInfo.show();
@@ -938,9 +938,9 @@ public class ActionsDialog extends Dialog {
     public void showCheckInMeetingWindow(ActiveCheckIn activeCheckIn, String mode, TeleServiceCheckIn meetingDetails) {
 
         if (mode.equalsIgnoreCase("WhatsApp")) {
-            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getWhatsApp(),activeCheckIn.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
+            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getWhatsApp(),activeCheckIn.getService().getVirtualCallingModes().get(0).getVirtualServiceType(),activeCheckIn.getCountryCode(),Constants.CHECKIN);
         } else {
-            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getPhone(),"");
+            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getPhone(),"",activeCheckIn.getCountryCode(),Constants.CHECKIN);
         }
         meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
         meetingInfo.show();

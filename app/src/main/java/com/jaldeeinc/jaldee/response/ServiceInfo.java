@@ -32,12 +32,13 @@ public class ServiceInfo implements Serializable {
     String calculationMode;
     boolean isUser;
     boolean noteManidtory;
+    String totalAmount;
 
     public ServiceInfo(){
 
     }
 
-    public ServiceInfo(int serviceId, String serviceName, String description, String virtualServiceType, String minPrePaymentAmount, String isPrePayment, String serviceType, int multiples, String livetrack, boolean preInfoEnabled, String preInfoTitle, String preInfoText, boolean postInfoEnabled, String postInfoTitle, String postInfoText, String consumerNoteTitle) {
+    public ServiceInfo(int serviceId, String serviceName, String description, String virtualServiceType, String minPrePaymentAmount, String isPrePayment, String serviceType, int multiples, String livetrack, boolean preInfoEnabled, String preInfoTitle, String preInfoText, boolean postInfoEnabled, String postInfoTitle, String postInfoText, String consumerNoteTitle, String totalAmount) {
         this.serviceId = serviceId;
         this.serviceName = serviceName;
         this.description = description;
@@ -54,6 +55,7 @@ public class ServiceInfo implements Serializable {
         this.postInfoTitle = postInfoTitle;
         this.postInfoText = postInfoText;
         this.consumerNoteTitle = consumerNoteTitle;
+        this.totalAmount = totalAmount;
     }
 
     public int getServiceId() {
@@ -278,5 +280,13 @@ public class ServiceInfo implements Serializable {
 
     public void setNoteManidtory(boolean noteManidtory) {
         this.noteManidtory = noteManidtory;
+    }
+
+    public String getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(String totalAmount) {
+        this.totalAmount = totalAmount;
     }
 }

@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -18,6 +19,9 @@ import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.connection.ApiClient;
+import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.Contents;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
@@ -26,6 +30,11 @@ import com.jaldeeinc.jaldee.custom.InstructionsDialog;
 import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import java.text.ParseException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static com.jaldeeinc.jaldee.activities.BookingDetails.convertAmountToDecimals;
 import static com.jaldeeinc.jaldee.activities.BookingDetails.convertTime;
 import static com.jaldeeinc.jaldee.activities.BookingDetails.convertToTitleForm;
@@ -50,7 +59,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
     LinearLayout llMessage, llInstructions, llViewMore, llViewLess;
     private String uuid;
     private InstructionsDialog instructionsDialog;
-    private String phoneNumber, providerId, livetrack;
+    private String phoneNumber, providerId, livetrack, value;
 
 
     @Override
@@ -67,18 +76,10 @@ public class AppointmentConfirmation extends AppCompatActivity {
             phoneNumber = extras.getString("waitlistPhonenumber");
             livetrack = extras.getString("livetrack");
             providerId = extras.getString("accountID");
+            value = extras.getString("confId");
         }
 
         initializations();
-
-        if(from!=null && activeCheckInInfo!=null){
-            if(from.equalsIgnoreCase("Reschedule")){
-                tv_heading.setText("Appointment Rescheduled!");
-            }
-            else{
-                tv_heading.setText("Booking Confirmed!");
-            }
-        }
 
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +89,101 @@ public class AppointmentConfirmation extends AppCompatActivity {
                 finish();
             }
         });
+
+        if(value!=null && providerId!=null){
+            getConfirmationDetails(Integer.parseInt(providerId));
+        } else {
+            UpdateMainUI();
+        }
+
+
+
+    }
+    private void openMapView(String latitude, String longitude, String locationName) {
+        Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude + "?q=" + locationName);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(mapIntent);
+        }
+    }
+
+    private void initializations() {
+
+        tvProviderName = findViewById(R.id.tv_providerName);
+        tvServiceName = findViewById(R.id.tv_serviceName);
+        tvProvider = findViewById(R.id.tv_doctorName);
+        tvConfirmationNumber = findViewById(R.id.tv_confirmationNumber);
+        btnOk = findViewById(R.id.cv_ok);
+        btnOk1 = findViewById(R.id.cv_ok1);
+        icon_service = findViewById(R.id.iv_teleService);
+        tv_consumer = findViewById(R.id.tv_consumerName);
+        tv_location = findViewById(R.id.tv_locationName);
+        tv_heading = findViewById(R.id.tv_heading);
+        tvBatchNo = findViewById(R.id.tv_batchNo);
+        llBatchNo = findViewById(R.id.ll_batch);
+        tvStatus = findViewById(R.id.tv_status);
+        tvDate = findViewById(R.id.tv_date);
+        tvTime = findViewById(R.id.tv_time);
+        llPayment = findViewById(R.id.ll_payment);
+        tvAmount = findViewById(R.id.tv_amount);
+        cvBack = findViewById(R.id.cv_back);
+        cvShare = findViewById(R.id.cv_share);
+        ivQR = findViewById(R.id.iv_Qr);
+        llMoreDetails = findViewById(R.id.ll_moreDetails);
+        llMessage = findViewById(R.id.ll_message);
+        llInstructions = findViewById(R.id.ll_instructions);
+        tvViewMore = findViewById(R.id.tv_viewMore);
+        tvViewLess = findViewById(R.id.tv_viewLess);
+        llViewMore = findViewById(R.id.ll_viewMore);
+        llViewLess = findViewById(R.id.ll_viewLess);
+
+    }
+
+    private void getConfirmationDetails(int userId) {
+
+        final Dialog mDialog = Config.getProgressDialog(AppointmentConfirmation.this, AppointmentConfirmation.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        final ApiInterface apiService =
+                ApiClient.getClient(AppointmentConfirmation.this).create(ApiInterface.class);
+        Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(value, String.valueOf(userId));
+        call.enqueue(new Callback<ActiveAppointment>() {
+            @Override
+            public void onResponse(Call<ActiveAppointment> call, Response<ActiveAppointment> response) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                try {
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        activeCheckInInfo = response.body();
+                        UpdateMainUI();
+
+                    }
+                } catch (Exception e) {
+                    Log.i("mnbbnmmnbbnm", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveAppointment> call, Throwable t) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+
+    }
+
+    public void UpdateMainUI() {
+
+        if (from != null && activeCheckInInfo != null) {
+            if (from.equalsIgnoreCase("Reschedule")) {
+                tv_heading.setText("Appointment Rescheduled!");
+            } else {
+                tv_heading.setText("Booking Confirmed!");
+            }
+        }
 
         if (activeCheckInInfo != null) {
 
@@ -176,7 +272,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
                                 icon_service.setImageResource(R.drawable.whatsapp_icon);
                             }
                         } else if (activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
-                            icon_service.setImageResource(R.drawable.phone_icon);
+                            icon_service.setImageResource(R.drawable.phoneicon_sized);
                         }
                     } else {
                         icon_service.setVisibility(View.GONE);
@@ -216,8 +312,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
                 if (activeCheckInInfo.getApptStatus().equalsIgnoreCase("Cancelled")) {
                     tvStatus.setTextColor(mContext.getResources().getColor(R.color.red));
 
-                }
-                else {
+                } else {
                     tvStatus.setTextColor(mContext.getResources().getColor(R.color.location_theme));
                 }
                 tvStatus.setText(convertToTitleForm(activeCheckInInfo.getApptStatus()));
@@ -316,9 +411,8 @@ public class AppointmentConfirmation extends AppCompatActivity {
             // hide instructions link when there are no post instructions
             if (activeCheckInInfo.getService() != null && activeCheckInInfo.getService().isPostInfoEnabled()) {
                 llInstructions.setVisibility(View.VISIBLE);
-                }
-             else {
-                 llInstructions.setVisibility(View.GONE);
+            } else {
+                llInstructions.setVisibility(View.GONE);
             }
 
             llInstructions.setOnClickListener(new View.OnClickListener() {
@@ -349,16 +443,15 @@ public class AppointmentConfirmation extends AppCompatActivity {
 
                     try {
                         Intent intent = new Intent(AppointmentConfirmation.this, ChatActivity.class);
-                        if(activeCheckInInfo.getUid().contains("h_")){
-                            uuid = activeCheckInInfo.getUid().replace("h_","");
+                        if (activeCheckInInfo.getUid().contains("h_")) {
+                            uuid = activeCheckInInfo.getUid().replace("h_", "");
                             intent.putExtra("uuid", uuid);
-                        }
-                        else {
+                        } else {
                             intent.putExtra("uuid", activeCheckInInfo.getUid());
                         }
                         intent.putExtra("accountId", activeCheckInInfo.getProviderAccount().getId());
                         intent.putExtra("name", activeCheckInInfo.getProviderAccount().getBusinessName());
-                        intent.putExtra("from",Constants.APPOINTMENT);
+                        intent.putExtra("from", Constants.APPOINTMENT);
                         startActivity(intent);
 
                     } catch (Exception e) {
@@ -373,38 +466,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
             btnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                  if(livetrack!=null && livetrack.equalsIgnoreCase("true")) {
-                      Intent checkinShareLocations = new Intent(AppointmentConfirmation.this, CheckinShareLocationAppointment.class);
-                      checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
-                      checkinShareLocations.putExtra("uuid", activeCheckInInfo.getUid());
-                      checkinShareLocations.putExtra("accountID", providerId);
-                      checkinShareLocations.putExtra("title", activeCheckInInfo.getProviderAccount().getBusinessName());
-                      checkinShareLocations.putExtra("terminology", terminology);
-                      checkinShareLocations.putExtra("calcMode", "");
-                      checkinShareLocations.putExtra("queueStartTime", "");
-                      checkinShareLocations.putExtra("queueEndTime", "");
-                      checkinShareLocations.putExtra("from", "appt");
-                      startActivity(checkinShareLocations);
-
-
-                  }
-                  else {
-                      Intent home = new Intent(AppointmentConfirmation.this, Home.class);
-                      startActivity(home);
-                      finish();
-                  }
-
-                }
-            });
-
-
-
-
-            btnOk1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(livetrack!=null && livetrack.equalsIgnoreCase("true")) {
+                    if (livetrack != null && livetrack.equalsIgnoreCase("true")) {
                         Intent checkinShareLocations = new Intent(AppointmentConfirmation.this, CheckinShareLocationAppointment.class);
                         checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
                         checkinShareLocations.putExtra("uuid", activeCheckInInfo.getUid());
@@ -418,8 +480,35 @@ public class AppointmentConfirmation extends AppCompatActivity {
                         startActivity(checkinShareLocations);
 
 
+                    } else {
+                        Intent home = new Intent(AppointmentConfirmation.this, Home.class);
+                        startActivity(home);
+                        finish();
                     }
-                    else {
+
+                }
+            });
+
+
+            btnOk1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (livetrack != null && livetrack.equalsIgnoreCase("true")) {
+                        Intent checkinShareLocations = new Intent(AppointmentConfirmation.this, CheckinShareLocationAppointment.class);
+                        checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
+                        checkinShareLocations.putExtra("uuid", activeCheckInInfo.getUid());
+                        checkinShareLocations.putExtra("accountID", providerId);
+                        checkinShareLocations.putExtra("title", activeCheckInInfo.getProviderAccount().getBusinessName());
+                        checkinShareLocations.putExtra("terminology", terminology);
+                        checkinShareLocations.putExtra("calcMode", "");
+                        checkinShareLocations.putExtra("queueStartTime", "");
+                        checkinShareLocations.putExtra("queueEndTime", "");
+                        checkinShareLocations.putExtra("from", "appt");
+                        startActivity(checkinShareLocations);
+
+
+                    } else {
                         Intent home = new Intent(AppointmentConfirmation.this, Home.class);
                         startActivity(home);
                         finish();
@@ -430,47 +519,6 @@ public class AppointmentConfirmation extends AppCompatActivity {
 
 
         }
-
-    }
-    private void openMapView(String latitude, String longitude, String locationName) {
-        Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude + "?q=" + locationName);
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-        mapIntent.setPackage("com.google.android.apps.maps");
-        if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
-            context.startActivity(mapIntent);
-        }
-    }
-
-    private void initializations() {
-
-        tvProviderName = findViewById(R.id.tv_providerName);
-        tvServiceName = findViewById(R.id.tv_serviceName);
-        tvProvider = findViewById(R.id.tv_doctorName);
-        tvConfirmationNumber = findViewById(R.id.tv_confirmationNumber);
-        btnOk = findViewById(R.id.cv_ok);
-        btnOk1 = findViewById(R.id.cv_ok1);
-        icon_service = findViewById(R.id.iv_teleService);
-        tv_consumer = findViewById(R.id.tv_consumerName);
-        tv_location = findViewById(R.id.tv_locationName);
-        tv_heading = findViewById(R.id.tv_heading);
-        tvBatchNo = findViewById(R.id.tv_batchNo);
-        llBatchNo = findViewById(R.id.ll_batch);
-        tvStatus = findViewById(R.id.tv_status);
-        tvDate = findViewById(R.id.tv_date);
-        tvTime = findViewById(R.id.tv_time);
-        llPayment = findViewById(R.id.ll_payment);
-        tvAmount = findViewById(R.id.tv_amount);
-        cvBack = findViewById(R.id.cv_back);
-        cvShare = findViewById(R.id.cv_share);
-        ivQR = findViewById(R.id.iv_Qr);
-        llMoreDetails = findViewById(R.id.ll_moreDetails);
-        llMessage = findViewById(R.id.ll_message);
-        llInstructions = findViewById(R.id.ll_instructions);
-        tvViewMore = findViewById(R.id.tv_viewMore);
-        tvViewLess = findViewById(R.id.tv_viewLess);
-        llViewMore = findViewById(R.id.ll_viewMore);
-        llViewLess = findViewById(R.id.ll_viewLess);
-
     }
 
 }

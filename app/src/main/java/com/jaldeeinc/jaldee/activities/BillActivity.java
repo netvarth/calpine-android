@@ -38,6 +38,7 @@ import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
+import com.jaldeeinc.jaldee.response.RefundDetails;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneySdkInitializer;
@@ -71,7 +72,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     TextView tv_provider, tv_customer, tv_date, tv_gstn, tv_bill;
     EditText mbill_coupon_edit;
     BillModel mBillData;
-    TextView tv_paid, tv_totalamt, tv_jaldeeCouponLabel, gstLabel;
+    TextView tv_paid, tv_totalamt, tv_jaldeeCouponLabel, gstLabel, tv_refundamount;
     RecyclerView recycle_item, recycle_discount_total, coupon_added, recycle_display_notes;
     BillServiceAdapter billServiceAdapter;
     BillCouponAdapter billCouponAdapter;
@@ -84,8 +85,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     ArrayList<BillModel> coupanArrayList = new ArrayList<>();
 
     Button btn_pay, mbill_applybtn;
-    TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax, billLabel, jdnLabel, jdnValue;
-    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin, jcLayout, jdnLayout;
+    TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax, billLabel, jdnLabel, jdnValue, txtrefund;
+    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin, jcLayout, jdnLayout, refundLayout;
     String sAmountPay;
     String accountID;
     String payStatus, consumer;
@@ -143,6 +144,9 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         jdnLayout = findViewById(R.id.jdnLayout);
         jdnValue = findViewById(R.id.jdnValue);
         txttotal = findViewById(R.id.txttotal);
+        txtrefund = findViewById(R.id.txtrefund);
+        tv_refundamount = findViewById(R.id.refundamt);
+        refundLayout = findViewById(R.id.refundlayout);
         recycle_display_notes = findViewById(R.id.recycle_display_notes_demand);
 
         tv_totalamt.setTypeface(tyface);
@@ -201,6 +205,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             }
         });*/
         APIPayment(accountID);
+        APIRefundInfo(ynwUUID);
 
         mbill_applybtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -293,6 +298,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     boolean showPaytmWallet = false;
     boolean showPayU = false;
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
+    ArrayList<RefundDetails> refundData = new ArrayList<>();
 
     private void APIPayment(String accountID) {
 
@@ -356,6 +362,69 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             }
         });
     }
+
+
+    private void APIRefundInfo(String ynwUUID) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mCOntext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mCOntext, mCOntext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        Call<ArrayList<RefundDetails>> call = apiService.getRefundDetails(ynwUUID);
+
+        call.enqueue(new Callback<ArrayList<RefundDetails>>() {
+            @Override
+            public void onResponse(Call<ArrayList<RefundDetails>> call, Response<ArrayList<RefundDetails>> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+                        refundData = response.body();
+                        if(refundData.get(0).getRefundDetails().size()>0) {
+                            if (refundData.get(0).getRefundDetails().get(0).getStatus().equalsIgnoreCase("Processed")) {
+                                refundLayout.setVisibility(View.VISIBLE);
+                                tv_refundamount.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(refundData.get(0).getRefundDetails().get(0).getAmount())));
+                                tv_totalamt.setText("₹ " + Config.getAmountinTwoDecimalPoints(mBillData.getNetRate()));
+                            } else {
+                                refundLayout.setVisibility(View.GONE);
+                            }
+                        }
+                        else{
+                            refundLayout.setVisibility(View.GONE);
+                        }
+
+                    } else {
+
+                        if (response.code() != 419)
+                            Toast.makeText(mCOntext, response.errorBody().string(), Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<RefundDetails>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+    }
+
 
     // Dialog mDialog1 = null;
 
@@ -556,7 +625,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 //                            tv_totalamt.setText("₹ " + String.valueOf(total));
                             tv_totalamt.setText("₹ " + Config.getAmountinTwoDecimalPoints(total));
                             txttotal.setText("Amount Due");
-                        } else if(total < 0) {
+                        }
+                        else if(total < 0) {
                             tv_totalamt.setVisibility(View.VISIBLE);
                             txttotal.setVisibility(View.VISIBLE);
 //                            DecimalFormat format = new DecimalFormat("0.00");
@@ -564,7 +634,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             txttotal.setText("Refund Amount");
                             btn_pay.setVisibility(View.INVISIBLE);
                             couponCheckin.setVisibility(View.INVISIBLE);
-                        } else{
+                        }
+                        else{
                             tv_totalamt.setVisibility(View.INVISIBLE);
                             txttotal.setVisibility(View.INVISIBLE);
 //                            DecimalFormat format = new DecimalFormat("0.00");

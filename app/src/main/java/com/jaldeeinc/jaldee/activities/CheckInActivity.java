@@ -252,9 +252,15 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     @BindView(R.id.et_countryCode)
     EditText et_countryCode;
 
+    @BindView(R.id.txtservicepayment)
+    CustomTextViewMedium txtservicepayment;
+
     static CustomTextViewMedium txtprepayamount;
+    static CustomTextViewMedium txtserviceamount;
 
     static LinearLayout LservicePrepay;
+    static LinearLayout LPrepay;
+    static LinearLayout LserviceAmount;
 
     @BindView(R.id.cv_back)
     CardView cvBack;
@@ -309,6 +315,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     static ArrayList<FamilyArrayModel> MultiplefamilyList = new ArrayList<>();
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
     static String totalAmountPay;
+    static String totalServicePay;
     static ArrayList<QueueTimeSlotModel> mQueueTimeSlotList = new ArrayList<>();
 
     //files related
@@ -364,8 +371,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         tvConsumerName = findViewById(R.id.tv_consumerName);
         txtprepayamount = findViewById(R.id.txtprepayamount);
         LservicePrepay = findViewById(R.id.LservicePrepay);
+        LPrepay = findViewById(R.id.ll_prepay);
+        LserviceAmount = findViewById(R.id.ll_serviceamount);
+
         list = findViewById(R.id.list);
         recycle_family = findViewById(R.id.recycle_family);
+        txtserviceamount = findViewById(R.id.txtserviceamount);
 
         MultiplefamilyList.clear();
 
@@ -943,6 +954,24 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             }
         });
 
+        if(checkInInfo.getTotalAmount()!=null && !checkInInfo.getTotalAmount().equalsIgnoreCase("0.0")){
+            LservicePrepay.setVisibility(View.VISIBLE);
+            LserviceAmount.setVisibility(View.VISIBLE);
+            Typeface tyface = Typeface.createFromAsset(getAssets(),
+                    "fonts/Montserrat_Bold.otf");
+            txtservicepayment.setTypeface(tyface);
+            txtserviceamount.setTypeface(tyface);
+            String firstWord = " - ";
+            String thirdWord;
+            thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(checkInInfo.getTotalAmount()));
+
+
+            Spannable spannable = new SpannableString(firstWord + thirdWord);
+            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
+                    firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            txtserviceamount.setText(spannable);
+        }
+
     }
 
     private void ApiSearchViewTerminology(int muniqueID) {
@@ -1331,21 +1360,32 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         if ((showPayU) || showPaytmWallet) {
                             Config.logV("URL----%%%%%---@@--");
                             LservicePrepay.setVisibility(View.VISIBLE);
+                            LPrepay.setVisibility(View.VISIBLE);
                             Typeface tyface = Typeface.createFromAsset(getAssets(),
                                     "fonts/Montserrat_Bold.otf");
                             txtprepay.setTypeface(tyface);
+                            txtservicepayment.setTypeface(tyface);
+                            txtserviceamount.setTypeface(tyface);
                             txtprepayamount.setTypeface(tyface);
-                            String firstWord = "";
+                            String firstWord = " - ";
                             String secondWord;
+                            String thirdWord;
                             if (MultiplefamilyList.size() > 1) {
                                 secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
+                                thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalServicePay));
                             } else {
                                 secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(checkInInfo.getMinPrePaymentAmount()));
+                                thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(checkInInfo.getTotalAmount()));
                             }
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             txtprepayamount.setText(spannable);
+
+                            Spannable spannable1 = new SpannableString(firstWord + thirdWord);
+                            spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
+                                    firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            txtserviceamount.setText(spannable1);
                         }
 
                     } else {
@@ -1376,6 +1416,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
         String number = etVirtualNumber.getText().toString();
         uuid = UUID.randomUUID().toString();
+        String virtual_code = et_countryCode.getText().toString();
+        String countryVirtualCode = virtual_code.substring(1);
 
 
         ApiInterface apiService =
@@ -1399,6 +1441,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             queueobj.put("date", apiDate);
             queueobj.put("consumerNote", txt_addnote);
             queueobj.put("waitlistPhonenumber", phoneNumber);
+            queueobj.put("countryCode", countryCode);
+
             if (isUser) {
                 pjsonobj.put("id", providerId);
             }
@@ -1415,13 +1459,14 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
             if (etVirtualNumber.getText().toString().trim().length() > 9) {
                 if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("whatsApp")) {
-                    virtualService.put("WhatsApp", etVirtualNumber.getText());
+                    virtualService.put("WhatsApp", countryVirtualCode + etVirtualNumber.getText());
                 } else if (checkInInfo.getVirtualCallingModes() != null &&  checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
                     virtualService.put("GoogleMeet", checkInInfo.getVirtualCallingModes().get(0).getValue());
                 } else if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
                     virtualService.put("Zoom", checkInInfo.getVirtualCallingModes().get(0).getValue());
                 } else if (checkInInfo.getVirtualCallingModes()!= null &&  checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Phone")) {
-                    virtualService.put("Phone", etVirtualNumber.getText());
+                    virtualService.put("Phone", countryVirtualCode + etVirtualNumber.getText());
+
                 }
             } else {
                 DynamicToast.make(CheckInActivity.this, "Invalid phone number", AppCompatResources.getDrawable(
@@ -1667,6 +1712,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                 } else {
                                     checkin.putExtra("accountID", String.valueOf(providerId));
                                 }
+                            checkin.putExtra("confId",value);
                             startActivity(checkin);
                         }
 
@@ -1782,7 +1828,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                                         TextView txtprepayment = (TextView) dialogPayment.findViewById(R.id.txtprepayment);
 
-                                        txtprepayment.setText("Prepayment Amount ");
+                                        txtprepayment.setText(R.string.serve_prepay);
 
                                         if (MultiplefamilyList.size() > 1) {
                                             txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(totalAmountPay))));
@@ -1886,15 +1932,27 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         MultiplefamilyList.clear();
         MultiplefamilyList.addAll(familyList);
         recycle_family.setVisibility(View.VISIBLE);
+        if(checkInInfo.getTotalAmount()!=null && !checkInInfo.getTotalAmount().equalsIgnoreCase("0.0")) {
+            totalServicePay = String.valueOf(Double.parseDouble(checkInInfo.getTotalAmount()) * MultiplefamilyList.size());
+            String firstWord = " - ";
+            String thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalServicePay));
+            Spannable spannable1 = new SpannableString(firstWord + thirdWord);
+            spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
+                    firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            txtserviceamount.setText(spannable1);
+        }
         if (checkInInfo.isPrePayment()) {
             totalAmountPay = String.valueOf(Double.parseDouble(checkInInfo.getMinPrePaymentAmount()) * MultiplefamilyList.size());
             LservicePrepay.setVisibility(View.VISIBLE);
+            LPrepay.setVisibility(View.VISIBLE);
+
 //        Typeface tyface = Typeface.createFromAsset(getAssets(),
 //                "fonts/Montserrat_Bold.otf");
 //        txtprepay.setTypeface(tyface);
 //        txtprepayamount.setTypeface(tyface);
-            String firstWord = "";
+            String firstWord = " - ";
             String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
+
             Spannable spannable = new SpannableString(firstWord + secondWord);
             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

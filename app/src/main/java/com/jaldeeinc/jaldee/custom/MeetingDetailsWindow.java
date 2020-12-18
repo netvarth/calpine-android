@@ -23,9 +23,9 @@ public class MeetingDetailsWindow extends Dialog {
     String serviceName, callingMode;
     TeleServiceCheckIn teleServiceCheckInResponse;
     Context context;
-    String virtualServiceType;
+    String virtualServiceType,countryCode;
 
-    public MeetingDetailsWindow(@NonNull Context context, String checkInTime, String name, TeleServiceCheckIn teleServiceCheckInResponse, String callingMode, String virtualServiceType) {
+    public MeetingDetailsWindow(@NonNull Context context, String checkInTime, String name, TeleServiceCheckIn teleServiceCheckInResponse, String callingMode, String countryCode) {
         super(context);
         this.context =context;
         this.time = checkInTime;
@@ -33,6 +33,7 @@ public class MeetingDetailsWindow extends Dialog {
         this.teleServiceCheckInResponse = teleServiceCheckInResponse;
         this.callingMode = callingMode;
         this.virtualServiceType = virtualServiceType;
+        this.countryCode = countryCode;
     }
 
     @Override

@@ -88,7 +88,7 @@ public class HomeTabFragment extends Fragment {
 
             String content = bundle.getString("message");
             if (content != null) {
-                if (content.length() > 40) {
+                if (content.length() > 25) {
 
                     message = content;
                 }
@@ -203,7 +203,7 @@ public class HomeTabFragment extends Fragment {
         tab1Fragment = new Tab1Fragment();
         myJaldeeFragment = new MyJaldee();
         Bundle bundle = new Bundle();
-        if (message != null) {
+        if (message != null && !message.equalsIgnoreCase("")) {
             bundle.putString("message", message);
             tab1Fragment.setArguments(bundle);
             myJaldeeFragment.setArguments(bundle);

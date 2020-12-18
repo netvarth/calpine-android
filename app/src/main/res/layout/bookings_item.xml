@@ -147,7 +147,26 @@
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_marginTop="@dimen/padding3">
 
+
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:id="@+id/tv_payment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textSize="14dp"
+                        android:layout_alignParentStart="true"
+                        android:textColor="@color/colorAccent"
+                        android:layout_marginEnd="@dimen/dimen_40dp"
+                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:layout_marginTop="@dimen/padding3"
+                        android:visibility="gone"/>
 
 
                 <ImageView
@@ -162,8 +181,9 @@
                     app:tint="@color/title_color">
 
                 </ImageView>
-
             </RelativeLayout>
+
+
 
         </LinearLayout>
 

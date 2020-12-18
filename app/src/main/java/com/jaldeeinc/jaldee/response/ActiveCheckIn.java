@@ -54,6 +54,16 @@ public class ActiveCheckIn implements Serializable {
     int parent;
     int jaldeeConsumer;
 
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    String countryCode;
+
     public ServiceDetails getService() {
         return service;
     }

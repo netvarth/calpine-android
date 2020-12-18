@@ -123,6 +123,12 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     @BindView(R.id.tv_email)
     CustomTextViewMedium tvEmail;
 
+    @BindView(R.id.ll_note)
+    LinearLayout ll_note;
+
+    @BindView(R.id.tv_note)
+    EditText et_note;
+
     private IPaymentResponse paymentResponse;
     private int locationId;
     private int uniqueId;
@@ -510,6 +516,11 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
             queueobj.putOpt("providerConsumer", providerConsumer);
             queueobj.putOpt("location", location);
             queueobj.putOpt("donorPhoneNumber",SharedPreference.getInstance(mContext).getStringValue("mobile", ""));
+            queueobj.putOpt("countryCode", countryCode);
+            queueobj.putOpt("donorEmail", tvEmail.getText().toString() );
+            queueobj.putOpt("note", et_note.getText().toString());
+
+
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -812,7 +823,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     public void mobileUpdated() {
 
         String phone = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
-        countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode","");
+        countryCode = SharedPreference.getInstance(mContext).getStringValue("cCodeDonation","");
         phoneNumber = phone;
         tvNumber.setText(countryCode + " " + phone);
     }

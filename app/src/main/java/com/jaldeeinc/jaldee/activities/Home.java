@@ -121,7 +121,7 @@ public class Home extends AppCompatActivity {
     private void initScreen() {
         // Creating the ViewPager container fragment once
 
-        if (message != null) {
+        if (message != null && !message.equalsIgnoreCase("")) {
 
             Intent notifyIntent = new Intent(Home.this,NotificationActivity.class);
             notifyIntent.putExtra("message",message);
@@ -129,7 +129,7 @@ public class Home extends AppCompatActivity {
 
         }
         else {
-            if (detail != null) {
+            if (detail != null && !detail.equalsIgnoreCase("")) {
                 if (path.contains("status")) {
                     mHomeTab = new HomeTabFragment();
                     final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -166,7 +166,7 @@ public class Home extends AppCompatActivity {
             mHomeTab = new HomeTabFragment();
             Bundle bundle = new Bundle();
             bundle.putString("tab", "1");
-            if (message != null) {
+            if (message != null && !message.equalsIgnoreCase("")) {
                 bundle.putString("message", message);
             }else {
                 bundle.putString("message", intent.getStringExtra("message"));

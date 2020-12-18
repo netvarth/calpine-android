@@ -564,8 +564,8 @@ public class BookingDetails extends AppCompatActivity {
                                     ivMeetingIcon.setImageResource(R.drawable.whatsapp_icon);
                                 }
                             } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
-                                ivTeleService.setImageResource(R.drawable.phone_icon);
-                                ivMeetingIcon.setImageResource(R.drawable.phone_icon);
+                                ivTeleService.setImageResource(R.drawable.phoneicon_sized);
+                                ivMeetingIcon.setImageResource(R.drawable.phoneicon_sized);
                             }
                         } else {
                             ivTeleService.setVisibility(View.GONE);
@@ -878,9 +878,9 @@ public class BookingDetails extends AppCompatActivity {
     public void showMeetingWindow(ActiveAppointment activeAppointment, String mode, TeleServiceCheckIn meetingDetails) {
 
         if (mode.equalsIgnoreCase("WhatsApp")) {
-            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getWhatsApp(),activeAppointment.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
+            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getWhatsApp(),activeAppointment.getService().getVirtualCallingModes().get(0).getVirtualServiceType(), activeAppointment.getCountryCode(),Constants.APPOINTMENT);
         } else {
-            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getPhoneNo(),"");
+            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getPhone(),"",activeAppointment.getCountryCode(), Constants.APPOINTMENT);
         }
         meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
         meetingInfo.show();

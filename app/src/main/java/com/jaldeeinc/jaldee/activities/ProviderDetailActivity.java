@@ -2270,6 +2270,10 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 serviceInfo.setTime(appointmentServiceInfo.getAppointServiceAvailability().getNextAvailable());
             }
 
+            if(appointmentServiceInfo.getTotalAmount()!=null){
+                serviceInfo.setTotalAmount(appointmentServiceInfo.getTotalAmount());
+            }
+
             intent.putExtra("serviceInfo", serviceInfo);
 
             startActivity(intent);

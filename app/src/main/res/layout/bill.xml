@@ -444,6 +444,42 @@
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>
 
+
+                    <LinearLayout
+                        android:id="@+id/refundlayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding5"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:gravity="left"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+                        <TextView
+
+                            android:id="@+id/txtrefund"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:text="Amount Refunded"
+                            android:gravity="right"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+
+                        <TextView
+                            android:id="@+id/refundamt"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.3"
+                            android:gravity="right"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+
+                    </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -475,6 +511,7 @@
                             android:gravity="right"
                             android:textColor="@color/colorAccent"
                             android:textSize="@dimen/txtsize_hint" />
+
                     </LinearLayout>
 
                     <LinearLayout

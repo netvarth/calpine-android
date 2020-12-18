@@ -575,8 +575,8 @@ public class CheckInDetails extends AppCompatActivity {
                                     ivMeetingIcon.setImageResource(R.drawable.whatsapp_icon);
                                 }
                             } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
-                                ivTeleService.setImageResource(R.drawable.phone_icon);
-                                ivMeetingIcon.setImageResource(R.drawable.phone_icon);
+                                ivTeleService.setImageResource(R.drawable.phoneicon_sized);
+                                ivMeetingIcon.setImageResource(R.drawable.phoneicon_sized);
                             }
                         } else {
                             ivTeleService.setVisibility(View.GONE);
@@ -647,12 +647,17 @@ public class CheckInDetails extends AppCompatActivity {
                         tvHint.setText("Token #");
                         tvTime.setText(String.valueOf(checkInInfo.getToken()));
                         tvTime.setGravity(Gravity.CENTER_HORIZONTAL);
-                        tvTokenWaitTime.setVisibility(View.VISIBLE);
+                        if (!checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("done") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("started")){
+                            tvTokenWaitTime.setVisibility(View.VISIBLE);
                         if (checkInInfo.getAppxWaitingTime() == 1) {
                             tvTokenWaitTime.setText("Est wait time : " + checkInInfo.getAppxWaitingTime() + " Min");
 
                         } else {
                             tvTokenWaitTime.setText("Est wait time : " + checkInInfo.getAppxWaitingTime() + " Mins");
+                        }
+                    }
+                        else{
+                            tvTokenWaitTime.setVisibility(View.GONE);
                         }
 
                     } else {
@@ -1028,9 +1033,9 @@ public class CheckInDetails extends AppCompatActivity {
     public void showMeetingWindow(ActiveCheckIn activeCheckIn, String mode, TeleServiceCheckIn meetingDetails) {
 
         if (mode.equalsIgnoreCase("WhatsApp")) {
-            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getWhatsApp(),activeCheckIn.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
+            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getWhatsApp(),activeCheckIn.getService().getVirtualCallingModes().get(0).getVirtualServiceType(),activeCheckIn.getCountryCode(), Constants.CHECKIN);
         } else {
-            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getPhone(),"");
+            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getPhone(),"", activeCheckIn.getCountryCode(),Constants.CHECKIN);
         }
         meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
         meetingInfo.show();

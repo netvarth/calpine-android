@@ -126,6 +126,7 @@ public class CustomPopUpWindow {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         String mobno = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
+        String countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
 
         JSONObject userProfile = new JSONObject();
         JSONObject jsonObj = new JSONObject();
@@ -133,7 +134,7 @@ public class CustomPopUpWindow {
             jsonObj.put("firstName", firstname);
             jsonObj.put("lastName", lastname);
             jsonObj.put("primaryMobileNo", mobno);
-            jsonObj.put("countryCode", "+91");
+            jsonObj.put("countryCode", countryCode);
             if (check.equalsIgnoreCase("email")) {
                 jsonObj.put("email", email);
             }

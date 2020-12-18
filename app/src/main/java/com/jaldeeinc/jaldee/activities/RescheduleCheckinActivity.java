@@ -124,7 +124,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RescheduleCheckinActivity extends AppCompatActivity implements ISelectQ,ISelectedQueue,ISendMessage {
+public class RescheduleCheckinActivity extends AppCompatActivity implements ISelectQ, ISelectedQueue, ISendMessage {
 
 
     @BindView(R.id.tv_spName)
@@ -185,7 +185,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
     CustomTextViewMedium tv_labelprovider;
 
     @BindView(R.id.cv_addNote)
-    CardView  cvAddNote;
+    CardView cvAddNote;
 
     @BindView(R.id.cv_attachFile)
     CardView cvAttachFile;
@@ -206,11 +206,11 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
     CustomTextViewMedium tvAddNotes;
 
 
-    int queueId,serviceId,locationId,accountId;
+    int queueId, serviceId, locationId, accountId;
     String apiDate;
     private CheckInSlotsDialog slotsDialog;
     private RecyclerView rvSlots;
-    private LinearLayout llNoSlots,llChangeTo;
+    private LinearLayout llNoSlots, llChangeTo;
     private NeomorphFrameLayout cvCalender;
     QueuesAdapter queuesAdapter;
     private LinearLayout llSeeMoreHint;
@@ -238,11 +238,11 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
     private Uri mImageUri;
     Bitmap bitmap;
     File file;
-    String value,user;
+    String value, user;
     ActiveCheckIn activeCheckIn = new ActiveCheckIn();
     SearchTerminology mSearchTerminology;
     int userId;
-    String uniqueId,ynwuuid;
+    String uniqueId, ynwuuid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -257,18 +257,17 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         initializations();
 
         Intent i = getIntent();
-        uniqueId =  i.getStringExtra("uniqueId");
-        ynwuuid  =  i.getStringExtra("ynwuuid");
-        userId   =   i.getIntExtra("providerId",0);
+        uniqueId = i.getStringExtra("uniqueId");
+        ynwuuid = i.getStringExtra("ynwuuid");
+        userId = i.getIntExtra("providerId", 0);
 
-        if(ynwuuid!=null){
-            getCheckInInfo(ynwuuid,userId);
+        if (ynwuuid != null) {
+            getCheckInInfo(ynwuuid, userId);
         }
 
-        if(uniqueId!=null) {
+        if (uniqueId != null) {
             ApiSearchViewTerminology(Integer.parseInt(uniqueId));
         }
-
 
 
         // click actions
@@ -313,8 +312,8 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
             public void onClick(View view) {
 
                 try {
-                    if (checkInInfo.getDate() != null && checkInInfo.getService() != null && checkInInfo.getQueue() != null ) {
-                        slotsDialog = new CheckInSlotsDialog(RescheduleCheckinActivity.this, checkInInfo.getService().getId(), checkInInfo.getQueue().getLocation().getId(), iSelectQ, checkInInfo.getProviderAccount().getId(),checkInInfo.getDate());
+                    if (checkInInfo.getDate() != null && checkInInfo.getService() != null && checkInInfo.getQueue() != null) {
+                        slotsDialog = new CheckInSlotsDialog(RescheduleCheckinActivity.this, checkInInfo.getService().getId(), checkInInfo.getQueue().getLocation().getId(), iSelectQ, checkInInfo.getProviderAccount().getId(), checkInInfo.getDate());
                         slotsDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                         slotsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         slotsDialog.show();
@@ -329,7 +328,6 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
             }
         });
-
 
 
         cvAddNote.setOnClickListener(new View.OnClickListener() {
@@ -507,10 +505,9 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(imagePathList.size()>0){
+                        if (imagePathList.size() > 0) {
                             tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
-                        }
-                        else {
+                        } else {
                             tvAttachFileSize.setText("Attach File");
                         }
                         dialog.dismiss();
@@ -625,7 +622,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
             tvDate.setText(getCustomDateString(pickedDate));
             UpdateDAte(mDate);
             apiDate = pickedDate;
-            ApiQueueTimeSlot(String.valueOf(locationId),String.valueOf(serviceId),String.valueOf(accountId),pickedDate);
+            ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(serviceId), String.valueOf(accountId), pickedDate);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -642,7 +639,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        ApiQueueTimeSlot(String.valueOf(locationId),String.valueOf(serviceId),String.valueOf(accountId),sDate);
+        ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(serviceId), String.valueOf(accountId), sDate);
 
         Calendar cal = Calendar.getInstance();
         Date today = cal.getTime();
@@ -669,10 +666,10 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
         JSONObject body = new JSONObject();
         try {
-            body.put("ynwUuid",ynwuuid);
-            body.put("date",apiDate);
-            body.put("queue",queueId);
-            body.put("consumerNote",userMessage);
+            body.put("ynwUuid", ynwuuid);
+            body.put("date", apiDate);
+            body.put("queue", queueId);
+            body.put("consumerNote", userMessage);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -680,7 +677,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         final Dialog mDialog = Config.getProgressDialog(RescheduleCheckinActivity.this, RescheduleCheckinActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), body.toString());
-        Call<ResponseBody> call = apiService.reScheduleCheckin(id,requestBody);
+        Call<ResponseBody> call = apiService.reScheduleCheckin(id, requestBody);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -695,26 +692,24 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
 
-                        if(checkInInfo.getShowToken()!=null && checkInInfo.getShowToken().equalsIgnoreCase("true")){
+                        if (checkInInfo.getShowToken() != null && checkInInfo.getShowToken().equalsIgnoreCase("true")) {
                             Toast.makeText(RescheduleCheckinActivity.this, "Token rescheduled successfully", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                             Toast.makeText(RescheduleCheckinActivity.this, "Checkin rescheduled successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(RescheduleCheckinActivity.this, "Checkin rescheduled successfully", Toast.LENGTH_SHORT).show();
                         }
 
                         if (imagePathList.size() > 0) {
-                            if(checkInInfo.getYnwUuid()!=null) {
+                            if (checkInInfo.getYnwUuid() != null) {
                                 ApiCommunicateCheckin(ynwuuid, String.valueOf(id), userMessage, dialog);
                             }
-                        }
-                        else{
+                        } else {
                             getConfirmationDetails(id);
                         }
 
 
-                    } else if (response.code() == 422){
+                    } else if (response.code() == 422) {
 
-                        if(response.errorBody()!=null) {
+                        if (response.errorBody() != null) {
                             String errorString = response.errorBody().string();
 
 
@@ -863,6 +858,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
 
     }
+
     private void showAlert(String msg) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setMessage(msg);
@@ -975,7 +971,6 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
     }
 
 
-
     private void requestMultiplePermissions() {
         Dexter.withActivity(this)
                 .withPermissions(
@@ -1012,6 +1007,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                 .onSameThread()
                 .check();
     }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
 
@@ -1069,10 +1065,9 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                         }
 
                         imagePathList.add(orgFilePath);
-                        if(imagePathList.size()>0){
+                        if (imagePathList.size() > 0) {
                             tvErrorMessage.setVisibility(View.GONE);
-                        }
-                        else{
+                        } else {
                             tvErrorMessage.setVisibility(View.VISIBLE);
                         }
 
@@ -1082,8 +1077,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
 
-                    }
-                    else if (data.getClipData() != null) {
+                    } else if (data.getClipData() != null) {
                         ClipData mClipData = data.getClipData();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
@@ -1110,10 +1104,9 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                                 return;
                             }
                             imagePathList.add(orgFilePath);
-                            if(imagePathList.size()>0){
+                            if (imagePathList.size() > 0) {
                                 tvErrorMessage.setVisibility(View.GONE);
-                            }
-                            else{
+                            } else {
                                 tvErrorMessage.setVisibility(View.VISIBLE);
                             }
                         }
@@ -1142,10 +1135,9 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                 if (path != null) {
                     mImageUri = Uri.parse(path);
                     imagePathList.add(mImageUri.toString());
-                    if(imagePathList.size()>0){
+                    if (imagePathList.size() > 0) {
                         tvErrorMessage.setVisibility(View.GONE);
-                    }
-                    else{
+                    } else {
                         tvErrorMessage.setVisibility(View.VISIBLE);
                     }
                 }
@@ -1162,8 +1154,9 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
             }
         }
     }
+
     private void ApiCommunicateCheckin(String waitListId, String accountID, String message,
-                                           final BottomSheetDialog dialog) {
+                                       final BottomSheetDialog dialog) {
 
 
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1181,8 +1174,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
             if (bitmap != null) {
                 path = saveImage(bitmap);
                 file = new File(path);
-            }
-            else {
+            } else {
                 file = new File(imagePathList.get(i));
             }
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
@@ -1240,6 +1232,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         });
 
     }
+
     private void getConfirmationDetails(int userId) {
 
         final ApiInterface apiService =
@@ -1257,8 +1250,11 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                             Bundle b = new Bundle();
                             b.putSerializable("BookingDetails", activeCheckIn);
                             b.putString("terminology", mSearchTerminology.getProvider());
-                            b.putString("from","Reschedule");
+                            b.putString("from", "Reschedule");
                             b.putBoolean("livetrack", Boolean.parseBoolean(activeCheckIn.getLivetrack()));
+                            if (activeCheckIn.getYnwUuid() != null) {
+                                b.putString("confId", activeCheckIn.getYnwUuid());
+                            }
                             Intent checkin = new Intent(RescheduleCheckinActivity.this, CheckInConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);
@@ -1277,6 +1273,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         });
 
     }
+
     private void ApiSearchViewTerminology(int muniqueID) {
 
 
@@ -1343,7 +1340,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                     Config.logV("Response--code-------------------------" + response.code());
                     Config.logV("mQueueTimeSlotList--------11111-----------------" + response.code());
                     if (response.code() == 200) {
-                       queuesData = response.body();
+                        queuesData = response.body();
 
                         if (queuesData != null) {
                             if (queuesData.size() > 0) {
@@ -1355,10 +1352,9 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                                 cvSubmit.setClickable(true);
                                 cvSubmit.setEnabled(true);
                                 cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.location_theme));
-                                if (queuesData.size()>4){
+                                if (queuesData.size() > 4) {
                                     llSeeMoreHint.setVisibility(View.VISIBLE);
-                                }
-                                else {
+                                } else {
                                     llSeeMoreHint.setVisibility(View.GONE);
                                 }
                                 queueId = queuesData.get(0).getId();
@@ -1402,7 +1398,6 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
     }
 
 
-
     private void getCheckInInfo(String uid, int id) {
 
         final ApiInterface apiService =
@@ -1418,7 +1413,8 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                         checkInInfo = response.body();
                         if (checkInInfo != null && checkInInfo.getDate() != null) {
 
-                            Date sDate = null;String dtStart =checkInInfo.getDate();
+                            Date sDate = null;
+                            String dtStart = checkInInfo.getDate();
                             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                             try {
                                 sDate = format.parse(dtStart);
@@ -1448,11 +1444,10 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
                         if (checkInInfo != null) {
 
-                            if(checkInInfo.getShowToken()!=null && checkInInfo.getShowToken().equalsIgnoreCase("true")){
+                            if (checkInInfo.getShowToken() != null && checkInInfo.getShowToken().equalsIgnoreCase("true")) {
                                 tv_title.setText("Reschedule a token");
                                 tv_bookingFor.setText("Token for");
-                            }
-                            else{
+                            } else {
                                 tv_title.setText("Reschedule a checkin");
                                 tv_bookingFor.setText("Checkin for");
                             }
@@ -1472,16 +1467,14 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                                 tv_userName.setVisibility(View.VISIBLE);
                                 tvSpName.setTextSize(16);
                                 userId = checkInInfo.getProvider().getId();
-                            }
-                            else {
+                            } else {
                                 userId = checkInInfo.getId();
                             }
 
 
-                            if(checkInInfo.getService()!=null && checkInInfo.getService().getConsumerNoteTitle()!=null && !checkInInfo.getService().getConsumerNoteTitle().equalsIgnoreCase("")){
+                            if (checkInInfo.getService() != null && checkInInfo.getService().getConsumerNoteTitle() != null && !checkInInfo.getService().getConsumerNoteTitle().equalsIgnoreCase("")) {
                                 tvAddNotes.setText(checkInInfo.getService().getConsumerNoteTitle());
-                            }
-                            else{
+                            } else {
                                 tvAddNotes.setText("Add Note");
                             }
 
@@ -1489,12 +1482,12 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 //                                user = tv_userName.getText().toString();
 //                            }
 //                            else{
-                                user = tvSpName.getText().toString();
+                            user = tvSpName.getText().toString();
 //                            }
 
 
                             try {
-                                if(checkInInfo.getQueue()!=null) {
+                                if (checkInInfo.getQueue() != null) {
                                     if (checkInInfo.getQueue().getLocation().getGoogleMapUrl() != null) {
                                         String geoUri = checkInInfo.getQueue().getLocation().getGoogleMapUrl();
                                         if (geoUri != null) {
@@ -1567,17 +1560,21 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                                 locationId = checkInInfo.getQueue().getLocation().getId();
                                 accountId = checkInInfo.getProviderAccount().getId();
                                 // api call to get slots on default date (checkin date)
-                                ApiQueueTimeSlot(String.valueOf(locationId),String.valueOf(serviceId),String.valueOf(accountId),apiDate);
+                                ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(serviceId), String.valueOf(accountId), apiDate);
 
                             }
 
-                            if(checkInInfo.getWaitlistingFor()!=null) {
+                            if (checkInInfo.getWaitlistingFor() != null) {
                                 if (checkInInfo.getWaitlistingFor().get(0).getFirstName() != null && checkInInfo.getWaitlistingFor().get(0).getLastName() != null) {
                                     String cName = Config.toTitleCase(checkInInfo.getWaitlistingFor().get(0).getFirstName()) + " " + Config.toTitleCase(checkInInfo.getWaitlistingFor().get(0).getLastName());
                                     tvConsumerName.setText(cName);
                                     if (checkInInfo.getWaitlistingFor().get(0).getPhoneNo() != null) {
                                         tvNumber.setVisibility(View.VISIBLE);
-                                        tvNumber.setText(checkInInfo.getWaitlistingFor().get(0).getPhoneNo());
+                                        if (checkInInfo.getCountryCode() != null) {
+                                            tvNumber.setText(checkInInfo.getCountryCode() + " " + checkInInfo.getWaitlistingFor().get(0).getPhoneNo());
+                                        } else {
+                                            tvNumber.setText(checkInInfo.getWaitlistingFor().get(0).getPhoneNo());
+                                        }
                                     } else {
                                         tvNumber.setVisibility(View.GONE);
                                     }
