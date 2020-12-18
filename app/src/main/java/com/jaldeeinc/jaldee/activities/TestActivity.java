@@ -19,28 +19,7 @@ public class TestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.item_card);
-
-        borderImageView = findViewById(R.id.iv_itemImage);
-        bi1 = findViewById(R.id.iv_itemImage1);
-        bi2 = findViewById(R.id.iv_itemImage2);
-        bi3 = findViewById(R.id.iv_itemImage3);
-        bi4 = findViewById(R.id.iv_itemImage4);
-        bi5 = findViewById(R.id.iv_itemImage5);
-
-        String url = "https://www.thespruceeats.com/thmb/8tdgBGq--fpTdfXayB6WjS6Vdn8=/3435x2576/smart/filters:no_upscale()/roast-chicken-wings-on-cutting-board-644202006-5b170ddafa6bcc00369c17ae.jpg";
-
-        PicassoTrustAll.getInstance(TestActivity.this).load("https://content3.jdmagicbox.com/comp/jaipur/n9/0141px141.x141.151031230321.c8n9/catalogue/lazeez-chicken-food-restaurant-jhotwara-jaipur-restaurants-34wllox.jpg").into(borderImageView);
-
-        PicassoTrustAll.getInstance(TestActivity.this).load("https://c.ndtvimg.com/2020-01/jeinftq8_kadhai-chicken_625x300_22_January_20.jpg").into(bi1);
-
-        PicassoTrustAll.getInstance(TestActivity.this).load("https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/easy_spanish_chicken_09987_16x9.jpg").into(bi2);
-
-        PicassoTrustAll.getInstance(TestActivity.this).load("https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2013/04/veg-salad-recipe-1.jpg").into(bi3);
-
-        PicassoTrustAll.getInstance(TestActivity.this).load("https://www.tarladalal.com/category/Low-Carb-Salads.jpg").into(bi4);
-
-        PicassoTrustAll.getInstance(TestActivity.this).load("https://www.whiskaffair.com/wp-content/uploads/2019/02/Mutton-Biryani-1.jpg").into(bi5);
+        setContentView(R.layout.search_card);
 
 
 //        myJaldee = new HomeSearchFragment();

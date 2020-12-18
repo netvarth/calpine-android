@@ -460,8 +460,6 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
 
                 Config.logV("Load More-----------------------");
                 isLoading = true;
-                Config.logV("CURRENT PAGE***************" + currentPage);
-                Config.logV("CURRENT PAGE**111*************" + TOTAL_PAGES);
                 currentPage += 10;
 
                 // mocking network delay for API call
@@ -469,7 +467,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                     @Override
                     public void run() {
                         Config.logV("loadNextPage--------------------" + query);
-                        loadNextPage(query, url);
+                        loadNextPage(query, url,sort);
                     }
                 }, 1000);
 
@@ -677,8 +675,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
 
     }
 
-    private void loadNextPage(String mQueryPass, String mPass) {
-        Log.d("", "loadNextPage: " + currentPage);
+    private void loadNextPage(String mQueryPass, String mPass, String sort) {
 
         final ApiInterface apiService =
                 ApiClient.getClientAWS(mContext).create(ApiInterface.class);
@@ -698,7 +695,8 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
         Map<String, String> params = new HashMap<>();
         params.put("size", "10");
         params.put("q.parser", "structured");
-        params.put("sort", "claimable asc, ynw_verified_level desc, distance asc");
+        params.put("sort", sort);
+//        params.put("sort", "claimable asc, ynw_verified_level desc, distance asc");
         params.put("expr.distance", mPass);
         params.put("return", "_all_fields,distance");
         Call<SearchAWsResponse> call = apiService.getSearchAWS(query, params);
@@ -1158,7 +1156,6 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                             if (mCheck.equalsIgnoreCase("next")) {
                                 Config.logV("TOTAL PAGES_--------------" + TOTAL_PAGES);
                                 Config.logV("CURRENT PAGE**22222**555***********" + TOTAL_PAGES);
-                                Config.logV("CURRENT PAGE**333*****5555********" + currentPage);
                                 searchResultsAdapter.removeLoadingFooter();
                                 isLoading = false;
                                 mSearchListModel.clear();
@@ -1515,7 +1512,6 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                                 Config.logV("QUEUELIST @@@@@@@@@@@@@@@@@@@@@@ RESUlt" + results.size());
                                 Config.logV("Results@@@@@@@@@@@@@@@@@" + results.size());
                                 Config.logV("CURRENT PAGE**22222*************" + TOTAL_PAGES);
-                                Config.logV("CURRENT PAGE**333*************" + currentPage);
                                 if (TOTAL_PAGES > 0 && total_foundcount > 10) {
                                     Config.logV("First ADD Footer");
                                     searchResultsAdapter.addLoadingFooter();
