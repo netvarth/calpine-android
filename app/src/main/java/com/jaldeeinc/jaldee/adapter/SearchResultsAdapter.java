@@ -201,6 +201,8 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 // to set specializations
                 setSpecializations(myViewHolder, searchdetailList);
 
+                myViewHolder.ivSpImage.setImageDrawable(null);
+
                 // to set provider image
                 if (searchdetailList.getLogo() != null) {
                     ((Activity) context).runOnUiThread(new Runnable() {
@@ -462,6 +464,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if (list_spec.size() == 1) {
                     myViewHolder.tvSpOne.setVisibility(View.VISIBLE);
                     myViewHolder.tvSpOne.setText(list_spec.get(0));
+                    myViewHolder.tvSpTwo.setVisibility(View.GONE);
                 } else if (list_spec.size() == 2) {
                     myViewHolder.tvSpOne.setVisibility(View.VISIBLE);
                     myViewHolder.tvSpOne.setText(list_spec.get(0) + ", ");

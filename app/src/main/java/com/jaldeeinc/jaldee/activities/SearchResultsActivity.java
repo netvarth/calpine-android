@@ -469,7 +469,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                     @Override
                     public void run() {
                         Config.logV("loadNextPage--------------------" + query);
-                        loadNextPage(query, url);
+                        loadNextPage(query, url,sort);
                     }
                 }, 1000);
 
@@ -677,7 +677,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
 
     }
 
-    private void loadNextPage(String mQueryPass, String mPass) {
+    private void loadNextPage(String mQueryPass, String mPass, String sort) {
         Log.d("", "loadNextPage: " + currentPage);
 
         final ApiInterface apiService =
@@ -698,7 +698,8 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
         Map<String, String> params = new HashMap<>();
         params.put("size", "10");
         params.put("q.parser", "structured");
-        params.put("sort", "claimable asc, ynw_verified_level desc, distance asc");
+        params.put("sort", sort);
+//        params.put("sort", "claimable asc, ynw_verified_level desc, distance asc");
         params.put("expr.distance", mPass);
         params.put("return", "_all_fields,distance");
         Call<SearchAWsResponse> call = apiService.getSearchAWS(query, params);
