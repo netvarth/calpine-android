@@ -1,12 +1,17 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
+import android.graphics.Paint;
+import android.os.Handler;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
@@ -21,8 +26,9 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
+import com.jaldeeinc.jaldee.database.DatabaseHandler;
+import com.jaldeeinc.jaldee.model.CartItemModel;
 import com.jaldeeinc.jaldee.response.CatalogItem;
-import com.jaldeeinc.jaldee.response.Item;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -35,13 +41,22 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     private boolean isLoading = true;
     private int lastPosition = -1;
     private IItemInterface iItemInterface;
+    private DatabaseHandler db;
+    private int accountId;
+    Vibrator vibe;
+    ProgressBar progressBar;
+    private CardView cvPlus;
 
 
-    public ItemsAdapter(ArrayList<CatalogItem> itemsList, ItemsActivity context, boolean isLoading, IItemInterface iItemInterface) {
+    public ItemsAdapter(ArrayList<CatalogItem> itemsList, ItemsActivity context, boolean isLoading, IItemInterface iItemInterface, int accountId) {
         this.itemsList = itemsList;
         this.context = context;
         this.isLoading = isLoading;
         this.iItemInterface = iItemInterface;
+        db = new DatabaseHandler(context);
+        this.accountId = accountId;
+        vibe = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+
     }
 
     @NonNull
@@ -68,6 +83,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
             setAnimation(viewHolder.cvCard, position);
 
+            if (catalogItem.getItems().getItemQuantity() == 0) {
+                viewHolder.numberButton.setVisibility(View.GONE);
+                viewHolder.flAdd.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.flAdd.setVisibility(View.GONE);
+                viewHolder.numberButton.setVisibility(View.VISIBLE);
+                viewHolder.numberButton.setNumber(String.valueOf(catalogItem.getItems().getItemQuantity()));
+            }
+
             // to set itemName
             if (catalogItem.getItems().getDisplayName() != null) {
 
@@ -89,17 +113,100 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             }
 
             // to set itemPrice
-            if (catalogItem.getItems().getPrice() != null){
 
-                viewHolder.tvPrice.setText("₹"+catalogItem.getItems().getPrice());
+            if (!catalogItem.getItems().getPromotionalPriceType().equalsIgnoreCase("NONE")) {
+
+                viewHolder.tvPrice.setVisibility(View.VISIBLE);
+                viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
+                viewHolder.tvPrice.setText("₹" + catalogItem.getItems().getPrice());
+                viewHolder.tvPrice.setPaintFlags(viewHolder.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                String price = String.valueOf(catalogItem.getItems().getDiscountedPrice());
+                viewHolder.tvDiscountedPrice.setText("₹" + price);
+
+            } else {
+                viewHolder.tvPrice.setVisibility(View.VISIBLE);
+                viewHolder.tvPrice.setText("₹" + catalogItem.getItems().getPrice());
+                viewHolder.tvDiscountedPrice.setVisibility(View.GONE);
+
             }
 
-            viewHolder.rlAdd.setOnClickListener(new View.OnClickListener() {
+            viewHolder.flAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    viewHolder.rlAdd.setVisibility(View.GONE);
+                    viewHolder.flAdd.setVisibility(View.GONE);
                     viewHolder.numberButton.setVisibility(View.VISIBLE);
+                    viewHolder.numberButton.setNumber("1");
+
+                    CartItemModel item = new CartItemModel();
+                    item.setItemId(catalogItem.getItems().getItemId());
+                    item.setAccountId(accountId);
+                    item.setCatalogId(catalogItem.getCatalogId());
+                    item.setItemName(catalogItem.getItems().getItemName());
+                    item.setImageUrl(catalogItem.getItems().getDisplayImage());
+                    item.setItemPrice(catalogItem.getItems().getPrice());
+                    item.setMaxQuantity(catalogItem.getMaxQuantity());
+                    item.setQuantity(1);
+                    item.setPromotionalType(catalogItem.getItems().getPromotionalPriceType());
+                    item.setDiscount(catalogItem.getItems().getPromotionalPrice());
+                    item.setDiscountedPrice(catalogItem.getItems().getDiscountedPrice());
+                    if (catalogItem.getItems().isShowPromotionalPrice()) {
+                        item.setIsPromotional(1);
+                    } else {
+                        item.setIsPromotional(0);
+                    }
+
+                    db.insertItemToCart(item);
+
+                    iItemInterface.checkItemQuantity();
+                }
+            });
+
+            viewHolder.numberButton.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
+                @Override
+                public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
+
+                    cvPlus = view.findViewById(R.id.cv_add);
+
+                    if (newValue < 1) {
+
+                        db.addQuantity(catalogItem.getItems().getItemId(), 0);
+                        viewHolder.numberButton.setVisibility(View.GONE);
+                        viewHolder.flAdd.setVisibility(View.VISIBLE);
+                        iItemInterface.checkItemQuantity();
+
+                    } else if (newValue <= catalogItem.getMaxQuantity()) {
+
+                        // fadein cardview here
+                        cvPlus.setBackgroundResource(R.drawable.plus_background);
+                        cvPlus.setClickable(true);
+                        progressBar = view.findViewById(R.id.myProgress);
+                        progressBar.setVisibility(View.VISIBLE);
+                        vibe.vibrate(100);
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                //Do something after 100ms
+
+                                db.addQuantity(catalogItem.getItems().getItemId(), newValue);
+                                iItemInterface.checkItemQuantity();
+
+                                progressBar.setVisibility(View.GONE);
+
+                            }
+                        }, 500);
+                        // plus and minus icons are disabled based on minQuantity and new value
+
+                    } else {
+
+                        // give fadeout color for plus
+                        cvPlus.setBackgroundResource(R.drawable.disabled_plus);
+                        cvPlus.setClickable(false);
+                        iItemInterface.checkItemQuantity();
+
+                    }
+
                 }
             });
 
@@ -107,10 +214,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 @Override
                 public void onClick(View v) {
 
-                    iItemInterface.onItemClick(catalogItem);
+                    if (catalogItem.getItems() != null) {
+                        iItemInterface.onItemClick(catalogItem);
+                    }
                 }
             });
-
 
 
         } else {
@@ -131,11 +239,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private CustomTextViewBold tvItemName;
-        private CustomTextViewSemiBold tvPrice;
+        private CustomTextViewSemiBold tvPrice, tvDiscountedPrice;
         private BorderImageView bIvItemImage;
         private ElegantNumberButton numberButton;
         private CardView cvCard;
-        private RelativeLayout rlAdd;
+        private FrameLayout flAdd;
 
         public ViewHolder(@NonNull View itemView, boolean isLoading) {
 
@@ -148,8 +256,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 tvItemName = itemView.findViewById(R.id.tv_itemName);
                 tvPrice = itemView.findViewById(R.id.tv_price);
                 numberButton = itemView.findViewById(R.id.number_button);
-                rlAdd = itemView.findViewById(R.id.rl_add);
-
+                flAdd = itemView.findViewById(R.id.fl_add);
+                tvDiscountedPrice = itemView.findViewById(R.id.tv_discountedPrice);
 
             }
         }

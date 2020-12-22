@@ -2313,6 +2313,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             catalogIntent.putExtra("businessName",mBusinessDataList.getBusinessName());
         }
         catalogIntent.putExtra("catalogInfo",catalogInfo);
+        catalogIntent.putExtra("accountId",providerId);
         startActivity(catalogIntent);
 
     }

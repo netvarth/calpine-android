@@ -22,7 +22,7 @@ public class Item implements Serializable {
 
     @SerializedName("price")
     @Expose
-    private String price;
+    private double price;
 
     @SerializedName("taxable")
     @Expose
@@ -56,9 +56,9 @@ public class Item implements Serializable {
     @Expose
     private ArrayList<ItemImages> itemImagesList;
 
-    @SerializedName("promotionalPrcnt")
+    @SerializedName("promotionalPrice")
     @Expose
-    private String promotionalPrcnt;
+    private double promotionalPrice;
 
     @SerializedName("showPromotionalPrice")
     @Expose
@@ -68,11 +68,17 @@ public class Item implements Serializable {
     @Expose
     private String itemCode;
 
+    private String displayImage ="";
+
+    private double discountedPrice = 0;
+
+    private int itemQuantity = 0; // not a response param
+
     public Item(){
 
     }
 
-    public Item(int itemId, String displayName, String itemDescription, String price, boolean taxable, String status, boolean adhoc, String itemName, boolean isShowOnLandingPage, boolean isStockAvailable, String promotionalPriceType, ArrayList<ItemImages> itemImagesList, String promotionalPrcnt, boolean showPromotionalPrice, String itemCode) {
+    public Item(int itemId, String displayName, String itemDescription, double price, boolean taxable, String status, boolean adhoc, String itemName, boolean isShowOnLandingPage, boolean isStockAvailable, String promotionalPriceType, ArrayList<ItemImages> itemImagesList, double promotionalPrcnt, boolean showPromotionalPrice, String itemCode) {
         this.itemId = itemId;
         this.displayName = displayName;
         this.itemDescription = itemDescription;
@@ -85,7 +91,7 @@ public class Item implements Serializable {
         this.isStockAvailable = isStockAvailable;
         this.promotionalPriceType = promotionalPriceType;
         this.itemImagesList = itemImagesList;
-        this.promotionalPrcnt = promotionalPrcnt;
+        this.promotionalPrice = promotionalPrcnt;
         this.showPromotionalPrice = showPromotionalPrice;
         this.itemCode = itemCode;
     }
@@ -114,13 +120,6 @@ public class Item implements Serializable {
         this.itemDescription = itemDescription;
     }
 
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
 
     public boolean isTaxable() {
         return taxable;
@@ -186,14 +185,6 @@ public class Item implements Serializable {
         this.itemImagesList = itemImagesList;
     }
 
-    public String getPromotionalPrcnt() {
-        return promotionalPrcnt;
-    }
-
-    public void setPromotionalPrcnt(String promotionalPrcnt) {
-        this.promotionalPrcnt = promotionalPrcnt;
-    }
-
     public boolean isShowPromotionalPrice() {
         return showPromotionalPrice;
     }
@@ -208,5 +199,45 @@ public class Item implements Serializable {
 
     public void setItemCode(String itemCode) {
         this.itemCode = itemCode;
+    }
+
+    public int getItemQuantity() {
+        return itemQuantity;
+    }
+
+    public void setItemQuantity(int itemQuantity) {
+        this.itemQuantity = itemQuantity;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public double getDiscountedPrice() {
+        return discountedPrice;
+    }
+
+    public void setDiscountedPrice(double discountedPrice) {
+        this.discountedPrice = discountedPrice;
+    }
+
+    public double getPromotionalPrice() {
+        return promotionalPrice;
+    }
+
+    public void setPromotionalPrice(double promotionalPrice) {
+        this.promotionalPrice = promotionalPrice;
+    }
+
+    public String getDisplayImage() {
+        return displayImage;
+    }
+
+    public void setDisplayImage(String displayImage) {
+        this.displayImage = displayImage;
     }
 }

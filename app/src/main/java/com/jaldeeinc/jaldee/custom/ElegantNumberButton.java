@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,9 +32,10 @@ public class ElegantNumberButton extends RelativeLayout {
     private int lastNumber;
     private int currentNumber;
     private int finalNumber;
-    private CustomTextViewItalicSemiBold textView;
+    private CustomTextViewSemiBold textView;
     private OnValueChangeListener mOnValueChangeListener;
     private CardView cvAdd;
+    private ProgressBar progressBar;
 
     public ImageView subtractBtn;
 
@@ -78,6 +80,7 @@ public class ElegantNumberButton extends RelativeLayout {
         subtractBtn = findViewById(R.id.subtract_btn);
         cvAdd = findViewById(R.id.cv_add);
         textView = findViewById(R.id.number_counter);
+        progressBar = findViewById(R.id.myProgress);
         ConstraintLayout mLayout = findViewById(R.id.layout);
 
         textView.setTextColor(textColor);

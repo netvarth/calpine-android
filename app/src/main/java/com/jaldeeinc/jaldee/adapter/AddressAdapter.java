@@ -1,0 +1,121 @@
+package com.jaldeeinc.jaldee.adapter;
+
+import android.content.Context;
+import android.graphics.Paint;
+import android.os.Handler;
+import android.os.Vibrator;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.jaldeeinc.jaldee.Interface.IAddressInterface;
+import com.jaldeeinc.jaldee.Interface.ICartInterface;
+import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
+import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
+import com.jaldeeinc.jaldee.database.DatabaseHandler;
+import com.jaldeeinc.jaldee.model.Address;
+import com.jaldeeinc.jaldee.model.CartItemModel;
+
+import java.util.ArrayList;
+
+public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHolder> {
+
+    ArrayList<Address> addressList = new ArrayList<>();
+    public Context context;
+    private boolean isLoading = true;
+    private int lastPosition = -1;
+    private int selectedPosition = 0;
+    private IAddressInterface iAddressInterface;
+
+    public AddressAdapter(ArrayList<Address> addressList, Context context, boolean isLoading, IAddressInterface iAddressInterface) {
+        this.addressList = addressList;
+        this.context = context;
+        this.isLoading = isLoading;
+        this.iAddressInterface = iAddressInterface;
+           }
+
+    @NonNull
+    @Override
+    public AddressAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        if (isLoading) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_line_shimmer, parent, false);
+            return new AddressAdapter.ViewHolder(v, true);
+
+        } else {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.address, parent, false);
+            return new AddressAdapter.ViewHolder(v, false);
+
+        }
+
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull AddressAdapter.ViewHolder viewHolder, int position) {
+
+        if (!isLoading) {
+            final Address address = addressList.get(position);
+
+            setAnimation(viewHolder.llLayout, position);
+
+
+
+
+        } else {
+
+            AddressAdapter.ViewHolder skeletonViewHolder = (AddressAdapter.ViewHolder) viewHolder;
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            skeletonViewHolder.itemView.setLayoutParams(params);
+
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return isLoading ? 10 : addressList.size();
+    }
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+       private CustomTextViewSemiBold tvHeader;
+       private CustomTextViewMedium tvName,tvAddress,tvMobileNumber,tvEmail;
+       private LinearLayout llLayout;
+
+        public ViewHolder(@NonNull View itemView, boolean isLoading) {
+
+            super(itemView);
+
+            if (!isLoading) {
+
+                tvHeader = itemView.findViewById(R.id.tv_header);
+                tvName = itemView.findViewById(R.id.tv_name);
+                tvAddress = itemView.findViewById(R.id.tv_address);
+                tvMobileNumber = itemView.findViewById(R.id.tv_number);
+                tvEmail = itemView.findViewById(R.id.tv_mailId);
+                llLayout = itemView.findViewById(R.id.ll_layout);
+
+            }
+        }
+    }
+
+    private void setAnimation(View viewToAnimate, int position) {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.bounce);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+    }
+}

@@ -20,8 +20,7 @@
             android:layout_marginStart="@dimen/dimen_4dp"
             android:layout_marginTop="@dimen/dimen_4dp"
             android:layout_marginEnd="@dimen/dimen_4dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/costa_rica">
+            android:scaleType="centerCrop">
 
         </com.jaldeeinc.jaldee.custom.BorderImageView>
 
@@ -77,6 +76,11 @@
                     android:layout_centerVertical="true">
 
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
                     <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                         android:id="@+id/tv_price"
                         android:layout_width="wrap_content"
@@ -87,6 +91,19 @@
                         android:textSize="14dp">
 
                     </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                        android:id="@+id/tv_discountedPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text=""
+                        android:textColor="@color/title_color"
+                        android:textSize="14dp">
+
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="@dimen/dimen_1dp"
@@ -101,13 +118,26 @@
 
                 </LinearLayout>
 
-                <RelativeLayout
-                    android:id="@+id/rl_add"
+                <FrameLayout
+                    android:id="@+id/fl_add"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/dimen_25dp"
                     android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:background="@drawable/border_items"
                     android:visibility="visible">
+
+                    <ImageView
+                        android:layout_width="@dimen/dimen_5dp"
+                        android:layout_height="@dimen/dimen_5dp"
+                        android:src="@drawable/add"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:layout_marginEnd="@dimen/dimen_8dp"
+                        app:tint="@color/location_theme">
+
+                    </ImageView>
+
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                         android:layout_width="wrap_content"
@@ -117,12 +147,12 @@
                         android:paddingStart="@dimen/dimen_15dp"
                         android:paddingEnd="@dimen/dimen_15dp"
                         android:text="ADD"
-                        android:textColor="@color/appoint_theme"
+                        android:textColor="@color/dark_blue"
                         android:textSize="@dimen/dimen_15dp">
 
                     </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
-                </RelativeLayout>
+                </FrameLayout>
 
 
                 <com.jaldeeinc.jaldee.custom.ElegantNumberButton
@@ -130,8 +160,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:visibility="gone"
-                    app:initialNumber="1"
                     app:backgroundDrawable="@drawable/border_items"
                     app:textSize="6dp" />
 

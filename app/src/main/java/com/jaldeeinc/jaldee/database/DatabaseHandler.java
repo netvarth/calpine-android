@@ -7,6 +7,7 @@ package com.jaldeeinc.jaldee.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -14,7 +15,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.model.CartItemModel;
 import com.jaldeeinc.jaldee.model.FileAttachment;
+import com.jaldeeinc.jaldee.model.OrderItem;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.ConsumerDetails;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
@@ -33,7 +36,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class  DatabaseHandler extends SQLiteOpenHelper {
+public class DatabaseHandler extends SQLiteOpenHelper {
 
     private Context mContext;
     private static DatabaseHandler mInstance = null;
@@ -75,6 +78,7 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
         createTableFavour(db);
         createTableMyCheckin(db);
         createTableFavID(db);
+        createTableCart(db);
 
     }
 
@@ -96,6 +100,8 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + mContext.getString(R.string.db_table_mfavID));
 
         db.execSQL("DROP TABLE IF EXISTS " + mContext.getString(R.string.db_table_subdomain));
+
+        db.execSQL("DROP TABLE IF EXISTS " + mContext.getString(R.string.db_table_cart));
 
         // Create tables again
         onCreate(db);
@@ -166,6 +172,324 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(tblCreateStr);
     }
 
+    private void createTableCart(SQLiteDatabase db) {
+        try {
+
+            String tblFields, tblCreateStr;
+
+            tblFields = "( itemId INTEGER,"
+                    + "accountId INTEGER,"
+                    + "catalogId INTEGER,"
+                    + "itemName TEXT,"
+                    + "imageUrl TEXT,"
+                    + "quantity INTEGER,"
+                    + "itemPrice REAL,"
+                    + "price REAL,"
+                    + "instruction TEXT,"
+                    + "discountedPrice REAL,"
+                    + "discount REAL,"
+                    + "promotionalType TEXT,"
+                    + "isPromotional NUMERIC,"
+                    + "maxQuantity INTEGER )";
+
+
+            //create table
+            tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_cart) + tblFields;
+            db.execSQL(tblCreateStr);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void insertItemToCart(CartItemModel cartItemModel) {
+
+        try {
+
+            SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+            db.beginTransaction();
+            try {
+
+                ContentValues values = new ContentValues();
+                values.put("itemId", cartItemModel.getItemId());
+                values.put("accountId", cartItemModel.getAccountId());
+                values.put("catalogId", cartItemModel.getCatalogId());
+                values.put("itemName", cartItemModel.getItemName());
+                values.put("imageUrl", cartItemModel.getImageUrl());
+                values.put("quantity", cartItemModel.getQuantity());
+                values.put("itemPrice", cartItemModel.getItemPrice());
+                values.put("price", cartItemModel.getQuantity() * cartItemModel.getDiscountedPrice());
+                values.put("instruction", cartItemModel.getInstruction());
+                values.put("discountedPrice", cartItemModel.getDiscountedPrice());
+                values.put("discount", cartItemModel.getDiscountedPrice());
+                values.put("promotionalType", cartItemModel.getPromotionalType());
+                values.put("isPromotional", cartItemModel.getIsPromotional());
+                values.put("maxQuantity", cartItemModel.getMaxQuantity());
+
+                db.insert(mContext.getString(R.string.db_table_cart), null, values);
+
+                db.setTransactionSuccessful();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                db.endTransaction();
+                db.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void removeItemFromCart(int itemId) {
+        try {
+            SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+            db.execSQL("delete from " + mContext.getString(R.string.db_table_cart) + " where itemId = " + itemId);
+            db.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void addQuantity(int itemId,int quantity) {
+        try {
+            SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+            db.execSQL("update  " + mContext.getString(R.string.db_table_cart) + " set quantity = "+ quantity +" where itemId = " + itemId);
+            db.execSQL("update  " + mContext.getString(R.string.db_table_cart) + " set price = (discountedPrice * quantity) where itemId = " + itemId);
+            db.execSQL("delete from " + mContext.getString(R.string.db_table_cart) + " where quantity < 1 ");
+            db.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void addInstructions(int itemId,String instruction) {
+        try {
+            SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+            db.execSQL("update  " + mContext.getString(R.string.db_table_cart) + " set instruction = "+ instruction +" where itemId = " + itemId);
+            db.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getCartCount() {
+
+        try {
+            int cartSize = 0;
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+            db.beginTransaction();
+            Cursor cursor = db.rawQuery("SELECT sum(quantity) as cartCount FROM " + mContext.getString(R.string.db_table_cart), null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    cartSize = cursor.getInt(0);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+            return cartSize;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+    }
+
+    public int getItemQuantity(int itemId) {
+
+        try {
+            int quantity = 0;
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+            db.beginTransaction();
+            Cursor cursor = db.rawQuery("SELECT sum(quantity) FROM " + mContext.getString(R.string.db_table_cart)+" WHERE itemId = "+ itemId, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    quantity = cursor.getInt(0);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+            return quantity;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+    }
+
+    public ArrayList<OrderItem> getOrderItems() {
+
+        try {
+
+            ArrayList<OrderItem> orderItemsList = new ArrayList<>();
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+            db.beginTransaction();
+            Cursor cursor = db.rawQuery("SELECT itemId, sum(quantity) FROM " + mContext.getString(R.string.db_table_cart)+" GROUP BY itemId ", null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    int itemId = cursor.getInt(0);
+                    int quantity = cursor.getInt(1);
+                    orderItemsList.add(new OrderItem(itemId,quantity));
+
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+            return orderItemsList;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+
+    }
+
+    public int getAccountId() {
+
+        try {
+            int accountId = 0;
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+            db.beginTransaction();
+            Cursor cursor = db.rawQuery("SELECT accountId FROM " + mContext.getString(R.string.db_table_cart)+" LIMIT 1", null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    accountId = cursor.getInt(0);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+            return accountId;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+    }
+
+    public double getCartPrice() {
+
+        try {
+            double cartPrice = 0;
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+            db.beginTransaction();
+            Cursor cursor = db.rawQuery("SELECT sum(price * quantity) as cartCount FROM " + mContext.getString(R.string.db_table_cart), null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    cartPrice = cursor.getDouble(0);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+            return cartPrice;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+    }
+
+    public double getCartDiscountedPrice() {
+
+        try {
+            double cartDiscountPrice = 0;
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+            db.beginTransaction();
+            Cursor cursor = db.rawQuery("SELECT sum(discountedPrice * quantity) as cartCount FROM " + mContext.getString(R.string.db_table_cart), null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    cartDiscountPrice = cursor.getDouble(0);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+            return cartDiscountPrice;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+    }
+
+
+    public ArrayList<CartItemModel> getCartItems() {
+
+        try {
+            ArrayList<CartItemModel> cartItemsList = new ArrayList<CartItemModel>();
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+
+            String table = mContext.getString(R.string.db_table_cart);
+            String[] columns = { "itemId", "accountId", "catalogId", "itemName", "imageUrl", "quantity", "itemPrice", "price", "instruction","discountedPrice","discount","promotionalType","maxQuantity","isPromotional"};
+            String selection = " quantity >?";
+            String[] selectionArgs = new String[]{"0"};
+            db.beginTransaction();
+
+            Cursor cursor = db.query(table, columns, selection, selectionArgs, null, null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    CartItemModel cartItem = new CartItemModel();
+                    cartItem.setItemId(cursor.getInt(0));
+                    cartItem.setAccountId(cursor.getInt(1));
+                    cartItem.setCatalogId(cursor.getInt(2));
+                    cartItem.setItemName(cursor.getString(3));
+                    cartItem.setImageUrl(cursor.getString(4));
+                    cartItem.setQuantity(cursor.getInt(5));
+                    cartItem.setItemPrice(cursor.getDouble(6));
+                    cartItem.setPrice(cursor.getDouble(7));
+                    cartItem.setInstruction(cursor.getString(8));
+                    cartItem.setDiscountedPrice(cursor.getDouble(9));
+                    cartItem.setDiscount(cursor.getDouble(10));
+                    cartItem.setPromotionalType(cursor.getString(11));
+                    cartItem.setMaxQuantity(cursor.getInt(12));
+                    cartItem.setIsPromotional(cursor.getInt(13));
+
+                    cartItemsList.add(cartItem);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+            return cartItemsList;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<CartItemModel>();
+        }
+
+    }   // to get list fo items in cart
+
     private void createTableFavour(SQLiteDatabase db) {
         String tblFields, tblCreateStr;
 
@@ -201,7 +525,7 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
             values.put("place", favorite.getPlace());
             values.put("onlinePresence", favorite.getOnlinePresence());
             values.put("donationServiceStatus", favorite.getDonationServiceStatus());
-            values.put("googleMapUrl",favorite.getGoogleMapUrl());
+            values.put("googleMapUrl", favorite.getGoogleMapUrl());
 
 
             db.insert(mContext.getString(R.string.db_table_fav), null, values);
@@ -362,7 +686,6 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-
     public ArrayList<FavouriteModel> getFavouriteID() {
         SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
         ArrayList<FavouriteModel> favData = new ArrayList<FavouriteModel>();
@@ -395,7 +718,6 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
 
 
     }
-
 
     /*Table userInfo*/
     private void createTableCheckin(SQLiteDatabase db) {
@@ -536,22 +858,22 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
                 values.put("serviceTime", activeCheckIn.getServiceTime());
                 values.put("statusUpdatedTime", activeCheckIn.getStatusUpdatedTime());
 
-                values.put("checkInTime",activeCheckIn.getCheckInTime());
-                values.put("token",activeCheckIn.getToken());
-                values.put("batchName",activeCheckIn.getBatchName());
-                values.put("parentUUid",activeCheckIn.getParentUuid());
-                values.put("lattitude",activeCheckIn.getQueue().getLocation().getLattitude());
-                values.put("longitude",activeCheckIn.getQueue().getLocation().getLongitude());
-                values.put("primaryMobileNo",activeCheckIn.getWaitlistingFor().get(0).getPhoneNo());
-                values.put("calculationMode",activeCheckIn.getCalculationMode());
-                values.put("livetrack",activeCheckIn.getService().getLivetrack());
-                values.put("showToken",activeCheckIn.getShowToken());
-                values.put("consumer",(new Gson().toJson(activeCheckIn.getConsumer())));
-                values.put("service",(new Gson().toJson(activeCheckIn.getService())));
-                values.put("virtualService",(new Gson().toJson(activeCheckIn.getVirtualService())));
+                values.put("checkInTime", activeCheckIn.getCheckInTime());
+                values.put("token", activeCheckIn.getToken());
+                values.put("batchName", activeCheckIn.getBatchName());
+                values.put("parentUUid", activeCheckIn.getParentUuid());
+                values.put("lattitude", activeCheckIn.getQueue().getLocation().getLattitude());
+                values.put("longitude", activeCheckIn.getQueue().getLocation().getLongitude());
+                values.put("primaryMobileNo", activeCheckIn.getWaitlistingFor().get(0).getPhoneNo());
+                values.put("calculationMode", activeCheckIn.getCalculationMode());
+                values.put("livetrack", activeCheckIn.getService().getLivetrack());
+                values.put("showToken", activeCheckIn.getShowToken());
+                values.put("consumer", (new Gson().toJson(activeCheckIn.getConsumer())));
+                values.put("service", (new Gson().toJson(activeCheckIn.getService())));
+                values.put("virtualService", (new Gson().toJson(activeCheckIn.getVirtualService())));
                 values.put("provider", (new Gson().toJson((activeCheckIn.getProvider()))));
-                values.put("checkinEncId",activeCheckIn.getCheckinEncId());
-                values.put("location",(new Gson().toJson(activeCheckIn.getQueue().getLocation())));
+                values.put("checkinEncId", activeCheckIn.getCheckinEncId());
+                values.put("location", (new Gson().toJson(activeCheckIn.getQueue().getLocation())));
                 values.put("email", activeCheckIn.getWaitlistingFor().get(0).getEmail());
                 values.put("countryCode", activeCheckIn.getCountryCode());
 
@@ -578,7 +900,7 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime","queueEndTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating","checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack","showToken","consumer", "service", "virtualService", "provider", "checkinEncId","location","email", "countryCode"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "queueEndTime", "statusUpdatedTime", "distance", "jaldeeStartTimeType", "rating", "checkInTime", "token", "batchName", "parentUuid", "lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack", "showToken", "consumer", "service", "virtualService", "provider", "checkinEncId", "location", "email", "countryCode"};
 
         db.beginTransaction();
 
@@ -636,7 +958,6 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setCountryCode((cursor.getString(43)));
 
 
-
                 checkin.add(activeModel);
             } while (cursor.moveToNext());
         }
@@ -647,7 +968,6 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
 
         return checkin;
     }
-
 
     public void insertMyCheckinInfo(List<ActiveCheckIn> activeCheckInModel) {
 
@@ -696,8 +1016,8 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
                 values.put("service", new Gson().toJson(activeCheckIn.getService()));
                 values.put("virtualService", new Gson().toJson(activeCheckIn.getVirtualService()));
                 values.put("provider", new Gson().toJson(activeCheckIn.getProvider()));
-                values.put("checkinEncId",activeCheckIn.getCheckinEncId());
-                values.put("location",  new Gson().toJson(activeCheckIn.getQueue().getLocation()));
+                values.put("checkinEncId", activeCheckIn.getCheckinEncId());
+                values.put("location", new Gson().toJson(activeCheckIn.getQueue().getLocation()));
                 values.put("email", activeCheckIn.getWaitlistingFor().get(0).getEmail());
                 values.put("countryCode", activeCheckIn.getCountryCode());
                 db.insert(mContext.getString(R.string.db_table_mycheckin), null, values);
@@ -721,7 +1041,7 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
 
         String table = mContext.getString(R.string.db_table_mycheckin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime", "distance", "jaldeeStartTimeType", "rating", "queueEndTime", "checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack","showToken","consumer","service", "virtualService", "provider", "checkinEncId", "location", "email", "countryCode"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime", "distance", "jaldeeStartTimeType", "rating", "queueEndTime", "checkInTime", "token", "batchName", "parentUuid", "lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack", "showToken", "consumer", "service", "virtualService", "provider", "checkinEncId", "location", "email", "countryCode"};
         String selection = "";
         String[] selectionArgs = null;
         selectionArgs = new String[]{Config.getTodaysDateString()};
@@ -777,11 +1097,11 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setLivetrack((cursor.getString(34)));
                 activeModel.setShowToken((cursor.getString(35)));
                 activeModel.setConsumer(new Gson().fromJson(cursor.getString(36), ConsumerDetails.class));
-                activeModel.setService(new Gson().fromJson(cursor.getString(37),  ServiceDetails.class));
-                activeModel.setVirtualService(new Gson().fromJson(cursor.getString(38),  VirtualServiceDetails.class));
+                activeModel.setService(new Gson().fromJson(cursor.getString(37), ServiceDetails.class));
+                activeModel.setVirtualService(new Gson().fromJson(cursor.getString(38), VirtualServiceDetails.class));
                 activeModel.setProvider(new Gson().fromJson(cursor.getString(39), ProviderDetails.class));
                 activeModel.setCheckinEncId((cursor.getString(40)));
-                activeModel.setLocation(new Gson().fromJson(cursor.getString(41),LocationDetails.class));
+                activeModel.setLocation(new Gson().fromJson(cursor.getString(41), LocationDetails.class));
                 activeModel.setEmail((cursor.getString(42)));
                 activeModel.setCountryCode((cursor.getString(43)));
 
@@ -933,7 +1253,6 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
         return searchModelList;
     }
 
-
     public ArrayList<Domain_Spinner> getDomain() {
         ArrayList<Domain_Spinner> domainSpinnerList = new ArrayList<Domain_Spinner>();
         SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
@@ -994,7 +1313,6 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-
     public Domain_Spinner getDomainByPosition(int position) {
 
         try {
@@ -1033,7 +1351,7 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
 
     public SearchModel getSubDomainsByFilter(String domainName, int position) {
         try {
-            position = position-1;
+            position = position - 1;
             ArrayList<SearchModel> subDomainsList = new ArrayList<SearchModel>();
             SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
 
@@ -1059,9 +1377,8 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
             db.close();
 
             return subDomainsList.get(position);
-        }
-        catch (Exception e){
-             return null;
+        } catch (Exception e) {
+            return null;
 
         }
 
@@ -1199,6 +1516,11 @@ public class  DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void DeleteCart() {
+        SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+        db.execSQL("delete from " + mContext.getString(R.string.db_table_cart));
+        db.close();
+    }
 
     public void DeleteInbox() {
         SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();

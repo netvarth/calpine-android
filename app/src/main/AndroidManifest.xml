@@ -22,6 +22,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".common.MyApplication"
@@ -36,7 +37,10 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.ItemsActivity"></activity>
+        <activity android:name=".activities.CheckoutActivity"></activity>
+        <activity android:name=".activities.CartActivity" />
+        <activity android:name=".activities.ItemDetailAcitvity" />
+        <activity android:name=".activities.ItemsActivity" />
         <activity android:name=".activities.JdnActivity" />
         <activity android:name=".activities.SearchResultsActivity" />
         <activity android:name=".activities.CheckInDetails" />

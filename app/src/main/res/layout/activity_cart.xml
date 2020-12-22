@@ -1,0 +1,191 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_60dp"
+        android:background="@color/white"
+        android:paddingEnd="@dimen/dimen_10dp">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_back"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="@dimen/padding3">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding5"
+                android:src="@mipmap/img_back_arrow"
+                app:tint="@color/dark_blue">
+
+            </ImageView>
+
+        </androidx.cardview.widget.CardView>
+
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+            android:id="@+id/tv_spName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_18dp"
+            android:layout_marginEnd="@dimen/dimen_5dp"
+            android:text="Cart"
+            android:layout_centerInParent="true"
+            android:textAllCaps="true"
+            android:letterSpacing="0.03"
+            android:textColor="@color/dark_black"
+            android:textSize="@dimen/dimen_16dp">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+
+    </RelativeLayout>
+
+    <soup.neumorphism.NeumorphCardView
+        android:id="@+id/pressed_card"
+        style="@style/Widget.Neumorph.CardView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/cv_itemsCart"
+        android:layout_marginTop="@dimen/dimen_60dp"
+        android:layout_marginBottom="-10dp"
+        app:neumorph_backgroundColor="@color/white"
+        app:neumorph_insetBottom="@dimen/dimen_0dp"
+        app:neumorph_insetEnd="@dimen/dimen_1dp"
+        app:neumorph_insetStart="@dimen/dimen_1dp"
+        app:neumorph_insetTop="@dimen/dimen_1dp"
+        app:neumorph_shadowColorDark="#BEF2F2F2"
+        app:neumorph_shadowColorLight="#BEF2F2F2"
+        app:neumorph_shapeType="pressed">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_items"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+
+        </RelativeLayout>
+
+    </soup.neumorphism.NeumorphCardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_itemsCart"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_65dp"
+        android:layout_alignParentBottom="true"
+        android:visibility="visible"
+        app:cardBackgroundColor="@color/special_background"
+        app:cardElevation="@dimen/dimen_50dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginEnd="@dimen/dimen_10dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:orientation="vertical">
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SubTotal"
+                        android:layout_gravity="center"
+                        android:textColor="@color/location_theme"
+                        android:textSize="@dimen/dimen_12dp">
+
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                        android:id="@+id/tv_subTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="8000"
+                        android:layout_gravity="center"
+                        android:textColor="@color/location_theme"
+                        android:textSize="@dimen/dimen_18dp">
+
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="@dimen/dimen_1dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:background="@color/light_grey">
+
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_checkOut"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="@dimen/dimen_10dp"
+                    android:layout_centerInParent="true"
+                    app:cardBackgroundColor="@color/location_theme"
+                    app:cardElevation="@dimen/dimen_5dp">
+
+
+                <com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/dimen_15dp"
+                    android:layout_marginEnd="@dimen/dimen_15dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
+                    android:text="CHECKOUT"
+                    android:letterSpacing="0.03"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/dimen_16dp">
+
+                </com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal>
+
+                </androidx.cardview.widget.CardView>
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

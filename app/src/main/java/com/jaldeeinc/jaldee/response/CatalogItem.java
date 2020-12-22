@@ -16,6 +16,14 @@ public class CatalogItem implements Serializable {
     @Expose
     private int catalogId;
 
+    @SerializedName("minQuantity")
+    @Expose
+    private int minQuantity;
+
+    @SerializedName("maxQuantity")
+    @Expose
+    private int maxQuantity;
+
     @SerializedName("item")
     @Expose
     private Item items;
@@ -52,5 +60,21 @@ public class CatalogItem implements Serializable {
 
     public void setItems(Item items) {
         this.items = items;
+    }
+
+    public int getMinQuantity() {
+        return minQuantity;
+    }
+
+    public void setMinQuantity(int minQuantity) {
+        this.minQuantity = minQuantity;
+    }
+
+    public int getMaxQuantity() {
+        return maxQuantity;
+    }
+
+    public void setMaxQuantity(int maxQuantity) {
+        this.maxQuantity = maxQuantity;
     }
 }

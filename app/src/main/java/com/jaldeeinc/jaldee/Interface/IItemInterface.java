@@ -6,4 +6,6 @@ public interface IItemInterface {
 
 
     void onItemClick(CatalogItem catalogItem);
+
+    void checkItemQuantity();
 }

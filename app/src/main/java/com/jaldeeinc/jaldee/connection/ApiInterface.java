@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.connection;
 
 
+import com.jaldeeinc.jaldee.model.Address;
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
@@ -570,5 +571,8 @@ public interface ApiInterface {
 
     @GET("consumer/orders/catalogs/{accountId}")
     Observable<ArrayList<Catalog>> getCatalog(@Path("accountId") int id);
+
+    @PUT("consumer/deliveryAddress")
+    Call<ArrayList<Address>> getDeliveryAddress(@Body ArrayList<Address> addressList);
 
 }

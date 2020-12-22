@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout"
-    android:layout_width="@dimen/dimen_80dp"
+    android:layout_width="@dimen/dimen_85dp"
     android:layout_height="@dimen/dimen_28dp"
     android:layout_margin="@dimen/dimen_5dp"
     android:background="@drawable/border_items"
@@ -13,24 +13,45 @@
         android:layout_width="@dimen/dimen_15dp"
         android:layout_height="@dimen/dimen_12dp"
         android:layout_marginStart="@dimen/dimen_8dp"
+        android:src="@drawable/minus"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:src="@drawable/minus"
-        app:tint="@color/appoint_theme"/>
+        app:tint="@color/dark_blue" />
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
-        android:id="@+id/number_counter"
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/subtract_btn"
         app:layout_constraintEnd_toStartOf="@id/cv_add"
-        android:layout_marginStart="-4dp"
-        android:layout_marginBottom="@dimen/dimen_4dp"
-        android:text="0"
-        android:textSize="@dimen/dimen_18dp"/>
+        app:layout_constraintStart_toEndOf="@id/subtract_btn"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            android:id="@+id/myProgress"
+            android:layout_width="@dimen/dimen_25dp"
+            android:layout_height="@dimen/dimen_25dp"
+            android:indeterminateTint="@color/dark_blue"
+            android:visibility="gone"/>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            android:id="@+id/number_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding3"
+            android:layout_alignLeft="@id/myProgress"
+            android:layout_alignTop="@id/myProgress"
+            android:layout_alignRight="@id/myProgress"
+            android:layout_alignBottom="@id/myProgress"
+            android:text="0"
+            android:gravity="center"
+            android:textColor="@color/dark_blue"
+            android:background="@color/transparent"
+            android:textSize="@dimen/dimen_16dp" />
+
+    </RelativeLayout>
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_add"
@@ -39,19 +60,19 @@
         android:layout_marginTop="@dimen/dimen_4dp"
         android:layout_marginEnd="@dimen/dimen_5dp"
         android:layout_marginBottom="@dimen/dimen_4dp"
+        app:cardBackgroundColor="@color/dark_blue"
         app:cardCornerRadius="@dimen/dimen_10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:cardBackgroundColor="@color/appoint_theme">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/iv_add"
             android:layout_width="@dimen/dimen_8dp"
             android:layout_height="@dimen/dimen_8dp"
+            android:layout_gravity="center"
             android:layout_marginStart="@dimen/dimen_8dp"
             android:layout_marginEnd="@dimen/dimen_8dp"
-            android:layout_gravity="center"
             android:src="@drawable/plus"
             app:tint="@color/white" />
 
