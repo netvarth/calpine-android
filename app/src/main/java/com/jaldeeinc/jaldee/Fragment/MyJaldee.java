@@ -26,6 +26,7 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.AppointmentActivity;
 import com.jaldeeinc.jaldee.activities.HistoryActivity;
 import com.jaldeeinc.jaldee.activities.Home;
+import com.jaldeeinc.jaldee.activities.OrdersHistoryActivity;
 import com.jaldeeinc.jaldee.adapter.JaldeeTabs;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
@@ -45,7 +46,7 @@ public class MyJaldee extends RootFragment {
     Activity mActivity;
     private CustomTextViewMedium tvConsumerName;
     String mFirstName,mLastName;
-    private CustomTextViewSemiBold tvHistory;
+    private CustomTextViewSemiBold tvHistory, tvOrdersHistory;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Animation slideUp, slideRight;
@@ -96,6 +97,7 @@ public class MyJaldee extends RootFragment {
         slideUp = AnimationUtils.loadAnimation(mContext, R.anim.slide_up_in);
         slideRight = AnimationUtils.loadAnimation(mContext, R.anim.slide_up_out);
         tvHistory = view.findViewById(R.id.tv_history);
+        tvOrdersHistory = view.findViewById(R.id.tv_Orderhistory);
 
         if (message != null) {
 
@@ -129,6 +131,14 @@ public class MyJaldee extends RootFragment {
 
                 Intent historyIntent = new Intent(getContext(), HistoryActivity.class);
                 startActivity(historyIntent);
+            }
+        });
+
+        tvOrdersHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent ordersHistoryIntent = new Intent(getContext(), OrdersHistoryActivity.class);
+                startActivity(ordersHistoryIntent);
             }
         });
 

@@ -188,8 +188,8 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/icon_receipt"
                     android:visibility="gone"
-                    android:layout_marginTop="@dimen/dimen_10dp"
                     android:layout_marginRight="@dimen/dimen_15dp"
+                    android:layout_toLeftOf="@+id/tv_payment"
                     android:layout_alignParentEnd="true"
                     app:tint="@color/title_color">
 
@@ -200,7 +200,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/billLabel"
-                android:layout_marginTop="@dimen/padding5"
                 android:text=""
                 android:layout_gravity="end"
                 android:gravity="end"

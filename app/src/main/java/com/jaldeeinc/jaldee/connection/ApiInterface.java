@@ -582,4 +582,7 @@ public interface ApiInterface {
     @GET("consumer/orders/future")
     Call<ArrayList<ActiveOrders>> getOrdersFuture();
 
+    @GET("consumer/orders/history")
+    Call<ArrayList<ActiveOrders>> getOrdersHistory();
+
 }

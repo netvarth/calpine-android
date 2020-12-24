@@ -19,18 +19,13 @@ import com.jaldeeinc.jaldee.adapter.TodayOrdersAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.ActionsDialog;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.model.Bookings;
-import com.jaldeeinc.jaldee.response.ActiveAppointment;
-import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import retrofit2.Call;
@@ -40,26 +35,19 @@ import retrofit2.Response;
 public class MyOrders extends RootFragment implements ISelectedBooking {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
     private String mParam1;
     private String mParam2;
-
     private Context mContext;
     private Activity mActivity;
     private CustomTextViewItalicSemiBold tvToday, tvUpcoming;
     private LinearLayout llNoBookingsForToday, llNoBookingsForFuture, llNoBookings, llBookings;
     private RecyclerView rvTodays, rvUpcomings;
     private TodayOrdersAdapter todayOrdersAdapter;
-    private LinearLayoutManager linearLayoutManager, futureLayoutManager;
+    private LinearLayoutManager linearLayoutManager;
     private ISelectedBooking iSelectedBooking;
-    ArrayList<ActiveAppointment> mAppointmentTodayList = new ArrayList<>();
-    ArrayList<ActiveAppointment> mAppointmentFutureList = new ArrayList<>();
-    ArrayList<Bookings> bookingsList = new ArrayList<>();
     ArrayList<ActiveOrders> ordersList = new ArrayList<>();
     ArrayList<ActiveOrders> ordersListFuture = new ArrayList<>();
-    List<ActiveCheckIn> allCheckInsOffline = new ArrayList<>();
     Animation slideUp, slideRight;
-    private ActionsDialog actionsDialog;
     boolean hideMoreInfo = false;
 
 
@@ -165,7 +153,6 @@ public class MyOrders extends RootFragment implements ISelectedBooking {
                         if(ordersList.size()>0) {
                             llNoBookingsForToday.setVisibility(View.GONE);
                             linearLayoutManager = new LinearLayoutManager(getContext());
-                            futureLayoutManager = new LinearLayoutManager(getContext());
                             rvTodays.setLayoutManager(linearLayoutManager);
                             todayOrdersAdapter = new TodayOrdersAdapter(ordersList, getContext(), false, iSelectedBooking, hideMoreInfo);
                             rvTodays.setAdapter(todayOrdersAdapter);
@@ -173,14 +160,6 @@ public class MyOrders extends RootFragment implements ISelectedBooking {
                         else{
                             llNoBookingsForToday.setVisibility(View.VISIBLE);
                         }
-
-
-
-                        if (response.body() != null) {
-
-                        }
-
-                    } else {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -229,7 +208,6 @@ public class MyOrders extends RootFragment implements ISelectedBooking {
                         if(ordersListFuture.size()>0) {
                             llNoBookingsForFuture.setVisibility(View.GONE);
                             linearLayoutManager = new LinearLayoutManager(getContext());
-                            futureLayoutManager = new LinearLayoutManager(getContext());
                             rvUpcomings.setLayoutManager(linearLayoutManager);
                             todayOrdersAdapter = new TodayOrdersAdapter(ordersListFuture, getContext(), false, iSelectedBooking, hideMoreInfo);
                             rvUpcomings.setAdapter(todayOrdersAdapter);
@@ -271,49 +249,6 @@ public class MyOrders extends RootFragment implements ISelectedBooking {
 
 
 
-    }
-
-
-
-
-
-
-
-    public static String getCustomDateString(String d) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date date1 = format.parse(d);
-        String date = format.format(date1);
-
-        if (date.endsWith("1") && !date.endsWith("11"))
-            format = new SimpleDateFormat("d'st' MMM, yyyy");
-
-        else if (date.endsWith("2") && !date.endsWith("12"))
-            format = new SimpleDateFormat("d'nd' MMM, yyyy");
-
-        else if (date.endsWith("3") && !date.endsWith("13"))
-            format = new SimpleDateFormat("d'rd' MMM, yyyy");
-
-        else
-            format = new SimpleDateFormat("d'th' MMM, yyyy");
-
-        String yourDate = format.format(date1);
-
-        return yourDate;
-    }
-
-    public static String convertTime(String time) {
-
-        String formattedTime = "";
-        try {
-            final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            final Date dateObj = sdf.parse(time);
-            time = new SimpleDateFormat("hh:mm aa").format(dateObj);
-            formattedTime = time.replace("am", "AM").replace("pm", "PM");
-
-        } catch (final ParseException e) {
-            e.printStackTrace();
-        }
-        return formattedTime;
     }
 
     @Override
