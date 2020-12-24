@@ -144,8 +144,8 @@
     <string name="db_table_fav">tb_favour</string>
     <string name="db_table_mycheckin">tb_mycheckin</string>
     <string name="db_table_mfavID">tb_favID</string>
-    <string name="serve_prepay">Booking Fee </string>
-    <string name="serve_pay">Service Fee </string>
+    <string name="serve_prepay">Booking Fee : </string>
+    <string name="serve_pay">Service Fee : </string>
     <string name="terms"><![CDATA[T & C]]></string>
     <string name="err_pwd_valid_login">Invalid password</string>
     <string name="tab6">Appointment</string>

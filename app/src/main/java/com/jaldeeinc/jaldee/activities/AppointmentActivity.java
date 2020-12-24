@@ -966,7 +966,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     "fonts/Montserrat_Bold.otf");
 //            txtservicepayment.setTypeface(tyface);
 //            txtserviceamount.setTypeface(tyface);
-            String firstWord = " : ";
+            String firstWord = "";
             String thirdWord;
             thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getTotalAmount()));
 
@@ -1358,7 +1358,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 //                            txtprepayamount.setTypeface(tyface);
 //                            txtservicepayment.setTypeface(tyface);
 //                            txtserviceamount.setTypeface(tyface);
-                            String firstWord = " : ";
+                            String firstWord = "";
                             String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinPrePaymentAmount()));
                             String thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getTotalAmount()));
 

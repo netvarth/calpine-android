@@ -961,7 +961,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     "fonts/Montserrat_Bold.otf");
 //            txtservicepayment.setTypeface(tyface);
 //            txtserviceamount.setTypeface(tyface);
-            String firstWord = " : ";
+            String firstWord = "";
             String thirdWord;
             thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(checkInInfo.getTotalAmount()));
 
@@ -1367,7 +1367,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 //                            txtservicepayment.setTypeface(tyface);
 //                            txtserviceamount.setTypeface(tyface);
 //                            txtprepayamount.setTypeface(tyface);
-                            String firstWord = " : ";
+                            String firstWord = "";
                             String secondWord;
                             String thirdWord;
                             if (MultiplefamilyList.size() > 1) {
@@ -1942,7 +1942,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         recycle_family.setVisibility(View.VISIBLE);
         if(checkInInfo.getTotalAmount()!=null && !checkInInfo.getTotalAmount().equalsIgnoreCase("0.0")) {
             totalServicePay = String.valueOf(Double.parseDouble(checkInInfo.getTotalAmount()) * MultiplefamilyList.size());
-            String firstWord = " : ";
+            String firstWord = "";
             String thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalServicePay));
             Spannable spannable1 = new SpannableString(firstWord + thirdWord);
             spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
@@ -1958,7 +1958,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 //                "fonts/Montserrat_Bold.otf");
 //        txtprepay.setTypeface(tyface);
 //        txtprepayamount.setTypeface(tyface);
-            String firstWord = " : ";
+            String firstWord = "";
             String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
 
             Spannable spannable = new SpannableString(firstWord + secondWord);
