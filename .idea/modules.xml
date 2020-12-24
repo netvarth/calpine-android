@@ -14,6 +14,8 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/1.4.5JaldeeAndroid-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/1.4.5JaldeeAndroid-app.iml" group="1.4.5JaldeeAndroid/app" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/1.4.7JaldeeAndroid.iml" filepath="$PROJECT_DIR$/.idea/modules/1.4.7JaldeeAndroid.iml" group="1.4.7JaldeeAndroid" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/1.4.7JaldeeAndroid-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/1.4.7JaldeeAndroid-app.iml" group="1.4.7JaldeeAndroid/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/JaldeeAndroidOrder.iml" filepath="$PROJECT_DIR$/.idea/modules/JaldeeAndroidOrder.iml" group="JaldeeAndroidOrder" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/JaldeeAndroidOrder-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/JaldeeAndroidOrder-app.iml" group="JaldeeAndroidOrder/app" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="calpine-android/app" />
       <module fileurl="file://$PROJECT_DIR$/.idea/calpine-android.iml" filepath="$PROJECT_DIR$/.idea/calpine-android.iml" group="calpine-android" />
     </modules>

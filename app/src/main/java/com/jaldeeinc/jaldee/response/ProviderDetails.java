@@ -42,4 +42,14 @@ public class ProviderDetails implements Serializable {
     }
 
     String businessName;
+
+    public int getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(int uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
+    int uniqueId;
 }

@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.jaldeeinc.jaldee.Fragment.MyBookings;
+import com.jaldeeinc.jaldee.Fragment.MyOrders;
 import com.jaldeeinc.jaldee.Fragment.MyPaymentsFragment;
 import com.jaldeeinc.jaldee.Fragment.Tab2Fragment;
 
@@ -30,6 +31,9 @@ public class JaldeeTabs extends FragmentPagerAdapter {
             case 1:
                 Tab2Fragment tab2Fragment = new Tab2Fragment();
                 return tab2Fragment;
+            case 2:
+                MyOrders orders = new MyOrders();
+                return orders;
             default:
                 return null;
         }

@@ -12,6 +12,7 @@ import com.jaldeeinc.jaldee.model.TestModel;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.ActiveDonation;
+import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.AppointmentSchedule;
 import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
@@ -574,5 +575,11 @@ public interface ApiInterface {
 
     @PUT("consumer/deliveryAddress")
     Call<ArrayList<Address>> getDeliveryAddress(@Body ArrayList<Address> addressList);
+
+    @GET("consumer/orders")
+    Call<ArrayList<ActiveOrders>> getOrders(@QueryMap(encoded = true) Map<String, String> query);
+
+    @GET("consumer/orders/future")
+    Call<ArrayList<ActiveOrders>> getOrdersFuture();
 
 }

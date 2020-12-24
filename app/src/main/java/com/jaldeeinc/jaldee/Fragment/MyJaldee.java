@@ -1,5 +1,6 @@
 package com.jaldeeinc.jaldee.Fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -74,6 +75,7 @@ public class MyJaldee extends RootFragment {
         }
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -132,6 +134,7 @@ public class MyJaldee extends RootFragment {
 
         tabLayout.addTab(tabLayout.newTab().setText("My Bookings"));
         tabLayout.addTab(tabLayout.newTab().setText("My Payments"));
+        tabLayout.addTab(tabLayout.newTab().setText("My Orders"));
         tabLayout.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
         tabLayout.setTextDirection(View.TEXT_ALIGNMENT_TEXT_START);
         final JaldeeTabs adapter = new JaldeeTabs(getContext(),getChildFragmentManager(), tabLayout.getTabCount());
