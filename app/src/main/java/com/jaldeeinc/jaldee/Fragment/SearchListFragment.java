@@ -383,8 +383,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                 Config.logV("Load More-----------------------");
                 isLoading = true;
-                Config.logV("CURRENT PAGE***************" + currentPage);
-                Config.logV("CURRENT PAGE**111*************" + TOTAL_PAGES);
                 currentPage += 10;
 
                 // mocking network delay for API call
@@ -1199,8 +1197,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
     private void loadNextPage(String mQueryPass, String mPass) {
-        Log.d("", "loadNextPage: " + currentPage);
-
         final ApiInterface apiService =
                 ApiClient.getClientAWS(mContext).create(ApiInterface.class);
 
@@ -1618,7 +1614,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             pageadapter.addAll(results);
 
                             Config.logV("CURRENT PAGE**22222*************" + TOTAL_PAGES);
-                            Config.logV("CURRENT PAGE**333*************" + currentPage);
                             if (TOTAL_PAGES > 0) {
                                 pageadapter.addLoadingFooter();
                             } else {
@@ -1703,7 +1698,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             if (mCheck.equalsIgnoreCase("next")) {
                                 Config.logV("TOTAL PAGES_--------------" + TOTAL_PAGES);
                                 Config.logV("CURRENT PAGE**22222**555***********" + TOTAL_PAGES);
-                                Config.logV("CURRENT PAGE**333*****5555********" + currentPage);
                                 searchResultsAdapter.removeLoadingFooter();
                                 isLoading = false;
                                 mSearchListModel.clear();
@@ -2060,7 +2054,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 Config.logV("QUEUELIST @@@@@@@@@@@@@@@@@@@@@@ RESUlt" + results.size());
                                 Config.logV("Results@@@@@@@@@@@@@@@@@" + results.size());
                                 Config.logV("CURRENT PAGE**22222*************" + TOTAL_PAGES);
-                                Config.logV("CURRENT PAGE**333*************" + currentPage);
                                 if (TOTAL_PAGES > 0 && total_foundcount > 10) {
                                     Config.logV("First ADD Footer");
                                     searchResultsAdapter.addLoadingFooter();
