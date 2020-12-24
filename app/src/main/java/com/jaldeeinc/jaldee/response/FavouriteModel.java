@@ -30,8 +30,15 @@ public class FavouriteModel {
 
     String donationServiceStatus;
 
+    public String getCountryCode() {
+        return countryCode;
+    }
 
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
 
+    String countryCode;
 
     public String getOnlinePresence() {
         return onlinePresence;

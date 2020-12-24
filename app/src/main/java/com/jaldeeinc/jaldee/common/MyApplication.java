@@ -70,7 +70,6 @@ public class MyApplication extends Application implements AppLifeCycleHandler.Ap
         if(!loginId.equalsIgnoreCase("")&&!password.equalsIgnoreCase("")) {
             Config.logV("App@@@ ForeBackGround Reset");
             Config.ApiSessionResetLogin(loginId, password,this, countryCode);
-
         }
     }
 

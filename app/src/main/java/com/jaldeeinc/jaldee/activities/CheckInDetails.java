@@ -604,7 +604,13 @@ public class CheckInDetails extends AppCompatActivity {
                         tvStatus.setTextColor(mContext.getResources().getColor(R.color.red));
                         tvStatus.setText(convertToTitleForm(checkInInfo.getWaitlistStatus()));
 
-                    } else {
+                    }
+                    else if(checkInInfo.getWaitlistStatus().equalsIgnoreCase("done")) {
+                        tvStatus.setText("Completed");
+                        tvStatus.setTextColor(mContext.getResources().getColor(R.color.location_theme));
+                    }
+
+                    else {
                         tvStatus.setTextColor(mContext.getResources().getColor(R.color.location_theme));
                         tvStatus.setText(convertToTitleForm(checkInInfo.getWaitlistStatus()));
                     }
@@ -624,7 +630,6 @@ public class CheckInDetails extends AppCompatActivity {
 
                 // to set consumer name
                 if (checkInInfo.getWaitlistingFor() != null) {
-
                     tvConsumerName.setText(checkInInfo.getWaitlistingFor().get(0).getFirstName() + " " + checkInInfo.getWaitlistingFor().get(0).getLastName());
 
                 }
@@ -650,10 +655,10 @@ public class CheckInDetails extends AppCompatActivity {
                         if (!checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("done") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("started")){
                             tvTokenWaitTime.setVisibility(View.VISIBLE);
                         if (checkInInfo.getAppxWaitingTime() == 1) {
-                            tvTokenWaitTime.setText("Est wait time : " + checkInInfo.getAppxWaitingTime() + " Min");
+                            tvTokenWaitTime.setText("Est wait time : " + Config.getTimeinHourMinutes(checkInInfo.getAppxWaitingTime()));
 
                         } else {
-                            tvTokenWaitTime.setText("Est wait time : " + checkInInfo.getAppxWaitingTime() + " Mins");
+                            tvTokenWaitTime.setText("Est wait time : " + Config.getTimeinHourMinutes(checkInInfo.getAppxWaitingTime()));
                         }
                     }
                         else{
@@ -670,7 +675,15 @@ public class CheckInDetails extends AppCompatActivity {
                     tvTitle.setText("CheckIn Details");
                     isToken = false;
                     tvHint.setText("Est wait time");
-                    tvTime.setText(checkInInfo.getAppxWaitingTime() + " Minutes");
+                    if (!checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("done") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("started")){
+                        tvTime.setVisibility(View.VISIBLE);
+                        tvHint.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        tvTime.setVisibility(View.GONE);
+                        tvHint.setVisibility(View.GONE);
+                    }
+                    tvTime.setText(Config.getTimeinHourMinutes(checkInInfo.getAppxWaitingTime()));
                 }
 
 
@@ -1024,6 +1037,7 @@ public class CheckInDetails extends AppCompatActivity {
         meetingDetailsWindow = new MeetingDetailsWindow(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(),activeCheckIn.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
         meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
         meetingDetailsWindow.show();
+        meetingDetailsWindow.setCancelable(false);
         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
         int width = (int) (metrics.widthPixels * 1);
         meetingDetailsWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -1039,6 +1053,7 @@ public class CheckInDetails extends AppCompatActivity {
         }
         meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
         meetingInfo.show();
+        meetingInfo.setCancelable(false);
         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
         int width = (int) (metrics.widthPixels * 1);
         meetingInfo.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);

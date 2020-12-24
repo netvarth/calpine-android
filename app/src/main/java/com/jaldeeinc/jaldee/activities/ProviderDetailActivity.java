@@ -970,7 +970,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         providersList = response.body();
                         apiGetProviders(uniqueId, mProviderId, mlocationId);
 
-                    } else if (response.code() == 404) {
+                    } else if (response.code() == 404 || response.code() == 403) {
 
                         apiGetProviders(uniqueId, mProviderId, mlocationId);
 

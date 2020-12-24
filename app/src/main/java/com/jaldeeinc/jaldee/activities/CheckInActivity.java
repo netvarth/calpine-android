@@ -959,9 +959,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             LserviceAmount.setVisibility(View.VISIBLE);
             Typeface tyface = Typeface.createFromAsset(getAssets(),
                     "fonts/Montserrat_Bold.otf");
-            txtservicepayment.setTypeface(tyface);
-            txtserviceamount.setTypeface(tyface);
-            String firstWord = " - ";
+//            txtservicepayment.setTypeface(tyface);
+//            txtserviceamount.setTypeface(tyface);
+            String firstWord = " : ";
             String thirdWord;
             thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(checkInInfo.getTotalAmount()));
 
@@ -1363,11 +1363,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             LPrepay.setVisibility(View.VISIBLE);
                             Typeface tyface = Typeface.createFromAsset(getAssets(),
                                     "fonts/Montserrat_Bold.otf");
-                            txtprepay.setTypeface(tyface);
-                            txtservicepayment.setTypeface(tyface);
-                            txtserviceamount.setTypeface(tyface);
-                            txtprepayamount.setTypeface(tyface);
-                            String firstWord = " - ";
+//                            txtprepay.setTypeface(tyface);
+//                            txtservicepayment.setTypeface(tyface);
+//                            txtserviceamount.setTypeface(tyface);
+//                            txtprepayamount.setTypeface(tyface);
+                            String firstWord = " : ";
                             String secondWord;
                             String thirdWord;
                             if (MultiplefamilyList.size() > 1) {
@@ -1417,7 +1417,16 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         String number = etVirtualNumber.getText().toString();
         uuid = UUID.randomUUID().toString();
         String virtual_code = et_countryCode.getText().toString();
-        String countryVirtualCode = virtual_code.substring(1);
+        String countryVirtualCode ="";
+        if(!virtual_code.equalsIgnoreCase("")) {
+            countryVirtualCode = virtual_code.substring(1);
+        }
+        else{
+            DynamicToast.make(CheckInActivity.this, "Country code needed", AppCompatResources.getDrawable(
+                    CheckInActivity.this, R.drawable.ic_info_black),
+                    ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+            return;
+        }
 
 
         ApiInterface apiService =
@@ -1450,7 +1459,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             if (imagePathList != null && imagePathList.size() > 0) {
 
                 if (userMessage != null && userMessage.trim().equalsIgnoreCase("")) {
-
                     mDialog.dismiss();
                     showToolTip();
                     return;
@@ -1470,9 +1478,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 }
             } else {
                 DynamicToast.make(CheckInActivity.this, "Invalid phone number", AppCompatResources.getDrawable(
-                        CheckInActivity.this, R.drawable.ic_info_black),
-                        ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
-                return;
+                            CheckInActivity.this, R.drawable.ic_info_black),
+                            ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+                    return;
             }
 
             JSONArray couponList = new JSONArray();
@@ -1934,7 +1942,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         recycle_family.setVisibility(View.VISIBLE);
         if(checkInInfo.getTotalAmount()!=null && !checkInInfo.getTotalAmount().equalsIgnoreCase("0.0")) {
             totalServicePay = String.valueOf(Double.parseDouble(checkInInfo.getTotalAmount()) * MultiplefamilyList.size());
-            String firstWord = " - ";
+            String firstWord = " : ";
             String thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalServicePay));
             Spannable spannable1 = new SpannableString(firstWord + thirdWord);
             spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
@@ -1950,7 +1958,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 //                "fonts/Montserrat_Bold.otf");
 //        txtprepay.setTypeface(tyface);
 //        txtprepayamount.setTypeface(tyface);
-            String firstWord = " - ";
+            String firstWord = " : ";
             String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
 
             Spannable spannable = new SpannableString(firstWord + secondWord);

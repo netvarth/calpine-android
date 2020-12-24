@@ -5,6 +5,18 @@
     android:padding="@dimen/padding20"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/close"
+        android:padding="@dimen/padding5"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/padding5"
+        app:tint="@color/gray">
+
+    </ImageView>
+
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewBold
         android:id="@+id/info"
@@ -12,7 +24,7 @@
         android:layout_height="wrap_content"
         android:text="Meeting Details"
         android:textStyle="bold"
-        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_40dp"
         android:layout_marginStart="@dimen/dimen_15dp"
         android:textSize="@dimen/dimen_16sp"
         android:textColor="@color/dark_blue">

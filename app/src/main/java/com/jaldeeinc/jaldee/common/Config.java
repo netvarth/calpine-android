@@ -278,7 +278,8 @@ public class Config {
             jsonObj.put("mUniqueId", regId);
             jsonObj.put("countryCode", countryCode);
 
-        } catch (JSONException e) {
+        }
+        catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
@@ -299,8 +300,6 @@ public class Config {
 
 
                         // get header value
-
-
                         List<String> cookiess = response.headers().values("Set-Cookie");
                         StringBuffer Cookie_header = new StringBuffer();
 
@@ -333,9 +332,7 @@ public class Config {
                         SharedPreference.getInstance(context).setValue("register", "success");
                         SharedPreference.getInstance(context).setValue("firstname", response.body().getFirstName());
                         SharedPreference.getInstance(context).setValue("lastname", response.body().getLastName());
-
                         SharedPreference.getInstance(context).setValue("s3Url", response.body().getS3Url());
-
                         SharedPreference.getInstance(context).setValue("mobile", response.body().getPrimaryPhoneNumber());
                         SharedPreference.getInstance(context).setValue("countryCode", countryCode);
 

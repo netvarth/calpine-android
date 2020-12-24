@@ -37,8 +37,10 @@ public class Constants {
     public static final String COMPLETED = "Completed";
     public static final String CANCELLED = "cancelled";
     public static final String CHECKEDIN = "Checkedin";
+    public static final String DONE = "done";
     public static final String CHAT = "ChatSection";
     public static final String COUNTRY_CODE = "countryCode";
+    public static final String INBOX = "inbox";
 
 
 

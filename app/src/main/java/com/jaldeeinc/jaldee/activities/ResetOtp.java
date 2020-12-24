@@ -129,7 +129,14 @@ public class ResetOtp extends AppCompatActivity {
 //        String secondWord = "OTP";
 
         String firstWord = "OTP has been sent to ";
-        String secondWord = countryCode + " " + loginId;
+        String secondWord = "";
+        if(countryCode.equalsIgnoreCase("+91")){
+            secondWord = countryCode + " " + loginId;
+        }
+        else{
+            secondWord = "your mail";
+        }
+
 
         txt_enterotp = (TextView) findViewById(R.id.txt_enterotp);
         Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -177,7 +184,7 @@ public class ResetOtp extends AppCompatActivity {
 
         final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ResponseBody> call = apiService.ForgotPwdResponse(loginId);
+        Call<ResponseBody> call = apiService.ForgotPwdResponse(loginId, countryCode);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -192,7 +199,14 @@ public class ResetOtp extends AppCompatActivity {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext,"Otp has been resent to "+ countryCode + " " +loginId,Toast.LENGTH_LONG).show();
+                        if(!countryCode.equalsIgnoreCase("+91")){
+                            Toast.makeText(mContext,"Otp has been resent to "+ "your email",Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(mContext,"Otp has been resent to "+ countryCode + " " +loginId,Toast.LENGTH_LONG).show();
+                        }
+
+
                     }
 
 

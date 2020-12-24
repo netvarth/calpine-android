@@ -28,6 +28,7 @@ public class Fav_ContactAdapter extends RecyclerView.Adapter<Fav_ContactAdapter.
 
     private List<ContactModel> contactDetail = new ArrayList<>();
     Context mContext;
+    private String countryCode;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         CustomTextViewSemiBold name;
@@ -47,12 +48,13 @@ public class Fav_ContactAdapter extends RecyclerView.Adapter<Fav_ContactAdapter.
     Activity mActivity;
     ContactAdapterCallback mInterface;
 
-    public Fav_ContactAdapter(List<ContactModel> mcontactDetail, Context mContext,ContactAdapterCallback mInterface) {
+    public Fav_ContactAdapter(List<ContactModel> mcontactDetail, Context mContext,ContactAdapterCallback mInterface, String countryCode) {
         this.mContext = mContext;
         this.contactDetail = mcontactDetail;
         this.mInterface=mInterface;
         Config.logV("Contact Detail @@@@@@@@@@@" + contactDetail.size());
         Config.logV("Contact Detail @@@@@@@@@@@" + contactDetail.get(0).getInstance());
+        this.countryCode = countryCode;
 
     }
 
@@ -77,7 +79,12 @@ public class Fav_ContactAdapter extends RecyclerView.Adapter<Fav_ContactAdapter.
         } else {
             myViewHolder.name.setVisibility(View.GONE);
         }
-        myViewHolder.txtcontact_value.setText(mcontactDetail.getInstance());
+        if(countryCode!=null){
+            myViewHolder.txtcontact_value.setText(countryCode + " " +  mcontactDetail.getInstance());
+        }
+        else {
+            myViewHolder.txtcontact_value.setText(mcontactDetail.getInstance());
+        }
         Config.logV("Contact Detail @@@@@@@@333333@@@" + mcontactDetail.getInstance());
         myViewHolder.contact_list_row_item.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ import com.jaldeeinc.jaldee.adapter.MyPaymentAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.response.MyPayments;
 
 import java.util.ArrayList;
@@ -45,7 +47,7 @@ public class Tab2Fragment extends RootFragment  {
     ListView payments_listview;
     String uniqueid;
     private MyPaymentAdapter mAdapter;
-
+    LinearLayout ll_nopayments;
     Context mContext;
     Dialog mDialog;
 
@@ -61,6 +63,8 @@ public class Tab2Fragment extends RootFragment  {
                              Bundle savedInstanceState) {
         View row = inflater.inflate(R.layout.fragment_tab2, container, false);
         payments_listview = row.findViewById(R.id.payment_inner_list);
+        ll_nopayments = row.findViewById(R.id.ll_noPayments);
+
         mContext = getActivity();
         Home.doubleBackToExitPressedOnce = false;
         mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
@@ -112,8 +116,16 @@ public class Tab2Fragment extends RootFragment  {
                     if (response.code() == 200) {
 
                         paymentsList = response.body();
-                        mAdapter = new MyPaymentAdapter(mContext,0, paymentsList);
-                        payments_listview.setAdapter(mAdapter);
+                        if(paymentsList.size()>0) {
+                            ll_nopayments.setVisibility(View.GONE);
+                            payments_listview.setVisibility(View.VISIBLE);
+                            mAdapter = new MyPaymentAdapter(mContext, 0, paymentsList);
+                            payments_listview.setAdapter(mAdapter);
+                        }
+                        else{
+                            ll_nopayments.setVisibility(View.VISIBLE);
+                            payments_listview.setVisibility(View.GONE);
+                        }
 
 
 //                        Log.i("paymentsRes",new Gson().toJson(response.body()));
