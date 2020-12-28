@@ -3,17 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/dimen_80dp"
     android:id="@+id/ll_layout"
+    android:paddingBottom="@dimen/dimen_10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:layout_marginStart="@dimen/dimen_15dp"
-        android:layout_marginEnd="@dimen/dimen_15dp"
-        android:background="@drawable/dash_gap">
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +23,7 @@
             android:textColor="@color/dark_black"
             android:layout_marginStart="@dimen/dimen_10dp"
             android:layout_gravity="center"
-            android:text="Burger with onionssss and veg fries on it">
+            android:text="">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
@@ -82,12 +74,20 @@
                 android:layout_centerHorizontal="true"
                 android:visibility="visible"
                 app:backgroundDrawable="@drawable/border_items"
-                app:initialNumber="1"
                 app:textSize="6dp" />
 
 
         </RelativeLayout>
 
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginStart="@dimen/dimen_15dp"
+        android:layout_marginEnd="@dimen/dimen_15dp"
+        android:background="@drawable/dash_gap">
 
     </LinearLayout>
 

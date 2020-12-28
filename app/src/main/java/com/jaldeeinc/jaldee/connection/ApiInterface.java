@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.connection;
 
 
+import com.google.android.gms.common.api.Response;
 import com.jaldeeinc.jaldee.model.Address;
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
@@ -8,6 +9,7 @@ import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
+import com.jaldeeinc.jaldee.model.StoreOrderBody;
 import com.jaldeeinc.jaldee.model.TestModel;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
@@ -23,6 +25,7 @@ import com.jaldeeinc.jaldee.response.JdnResponse;
 import com.jaldeeinc.jaldee.response.LocationResponse;
 import com.jaldeeinc.jaldee.response.LoginResponse;
 import com.jaldeeinc.jaldee.response.MyPayments;
+import com.jaldeeinc.jaldee.response.OrderResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.PaytmChecksum;
 import com.jaldeeinc.jaldee.response.ProfileModel;
@@ -31,6 +34,7 @@ import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.RatingResponse;
 import com.jaldeeinc.jaldee.response.RefinedFilters;
 import com.jaldeeinc.jaldee.response.RefundDetails;
+import com.jaldeeinc.jaldee.response.Schedule;
 import com.jaldeeinc.jaldee.response.ScheduleId;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
@@ -572,7 +576,25 @@ public interface ApiInterface {
     @GET("consumer/orders/catalogs/{accountId}")
     Observable<ArrayList<Catalog>> getCatalog(@Path("accountId") int id);
 
+    @GET("consumer/orders/catalogs/{accountId}")
+    Call<ArrayList<Catalog>> getListOfCatalogs(@Path("accountId") int id);
+
     @PUT("consumer/deliveryAddress")
-    Call<ArrayList<Address>> getDeliveryAddress(@Body ArrayList<Address> addressList);
+    Call<ResponseBody> getDeliveryAddress(@Body ArrayList<Address> addressList);
+
+    @GET("consumer/deliveryAddress")
+    Call<ArrayList<Address>> getDeliveryAddress();
+
+    @GET("consumer/orders/settings")
+    Call<OrderResponse> getOrderEnabledStatus(@Query("account") int accountId);
+
+    @GET("consumer/orders/catalogs/pickUp/dates/{catalogId}")
+    Call<ArrayList<Schedule>> getPickUpSchedule(@Path("catalogId") int catalogId, @Query("account") int accountId);
+
+    @GET("consumer/orders/catalogs/delivery/dates/{catalogId}")
+    Call<ArrayList<Schedule>> getHomeDeliverySchedule(@Path("catalogId") int catalogId, @Query("account") int accountId);
+
+    @POST("consumer/orders")
+    Call<ResponseBody> order(@Query("account") int account, @Body StoreOrderBody orderBody);
 
 }

@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -29,6 +30,8 @@ import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.CartItemModel;
 import com.jaldeeinc.jaldee.response.CatalogItem;
+import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
+import com.squareup.picasso.Callback;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -83,6 +86,18 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
             setAnimation(viewHolder.cvCard, position);
 
+//            if (catalogItem.getItems().getStatus().equalsIgnoreCase("ACTIVE")) {
+//
+//                viewHolder.llLoader.setVisibility(View.GONE);
+//                viewHolder.cvCard.setClickable(true);
+//                viewHolder.flAdd.setClickable(true);
+//            } else {
+//
+//                viewHolder.llLoader.setVisibility(View.VISIBLE);
+//                viewHolder.cvCard.setClickable(false);
+//                viewHolder.flAdd.setClickable(false);
+//            }
+
             if (catalogItem.getItems().getItemQuantity() == 0) {
                 viewHolder.numberButton.setVisibility(View.GONE);
                 viewHolder.flAdd.setVisibility(View.VISIBLE);
@@ -106,7 +121,23 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
                     if (catalogItem.getItems().getItemImagesList().get(i).isDisplayImage()) {
 
-                        PicassoTrustAll.getInstance(context).load(catalogItem.getItems().getItemImagesList().get(i).getUrl()).into(viewHolder.bIvItemImage);
+                        viewHolder.bIvItemImage.setVisibility(View.GONE);
+                        viewHolder.shimmer.setVisibility(View.VISIBLE);
+                        PicassoTrustAll.getInstance(context).load(catalogItem.getItems().getItemImagesList().get(i).getUrl()).into(viewHolder.bIvItemImage, new Callback() {
+                            @Override
+                            public void onSuccess() {
+
+                                viewHolder.shimmer.setVisibility(View.GONE);
+                                viewHolder.bIvItemImage.setVisibility(View.VISIBLE);
+                            }
+
+                            @Override
+                            public void onError() {
+
+                                viewHolder.bIvItemImage.setVisibility(View.VISIBLE);
+                                viewHolder.bIvItemImage.setImageResource(R.drawable.icon_noimage);
+                            }
+                        });
 
                     }
                 }
@@ -114,13 +145,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
             // to set itemPrice
 
-            if (!catalogItem.getItems().getPromotionalPriceType().equalsIgnoreCase("NONE")) {
+            if (catalogItem.getItems().isShowPromotionalPrice()) {
 
                 viewHolder.tvPrice.setVisibility(View.VISIBLE);
                 viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
                 viewHolder.tvPrice.setText("₹" + catalogItem.getItems().getPrice());
                 viewHolder.tvPrice.setPaintFlags(viewHolder.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                String price = String.valueOf(catalogItem.getItems().getDiscountedPrice());
+                String price = String.valueOf(catalogItem.getItems().getPromotionalPrice());
                 viewHolder.tvDiscountedPrice.setText("₹" + price);
 
             } else {
@@ -134,31 +165,37 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 @Override
                 public void onClick(View v) {
 
-                    viewHolder.flAdd.setVisibility(View.GONE);
-                    viewHolder.numberButton.setVisibility(View.VISIBLE);
-                    viewHolder.numberButton.setNumber("1");
+                    if (db.getAccountId() == accountId) {
 
-                    CartItemModel item = new CartItemModel();
-                    item.setItemId(catalogItem.getItems().getItemId());
-                    item.setAccountId(accountId);
-                    item.setCatalogId(catalogItem.getCatalogId());
-                    item.setItemName(catalogItem.getItems().getItemName());
-                    item.setImageUrl(catalogItem.getItems().getDisplayImage());
-                    item.setItemPrice(catalogItem.getItems().getPrice());
-                    item.setMaxQuantity(catalogItem.getMaxQuantity());
-                    item.setQuantity(1);
-                    item.setPromotionalType(catalogItem.getItems().getPromotionalPriceType());
-                    item.setDiscount(catalogItem.getItems().getPromotionalPrice());
-                    item.setDiscountedPrice(catalogItem.getItems().getDiscountedPrice());
-                    if (catalogItem.getItems().isShowPromotionalPrice()) {
-                        item.setIsPromotional(1);
+                        viewHolder.flAdd.setVisibility(View.GONE);
+                        viewHolder.numberButton.setVisibility(View.VISIBLE);
+                        viewHolder.numberButton.setNumber("1");
+
+                        CartItemModel item = new CartItemModel();
+                        item.setItemId(catalogItem.getItems().getItemId());
+                        item.setAccountId(accountId);
+                        item.setCatalogId(catalogItem.getCatalogId());
+                        item.setItemName(catalogItem.getItems().getItemName());
+                        item.setImageUrl(catalogItem.getItems().getDisplayImage());
+                        item.setItemPrice(catalogItem.getItems().getPrice());
+                        item.setMaxQuantity(catalogItem.getMaxQuantity());
+                        item.setQuantity(1);
+                        item.setPromotionalType(catalogItem.getItems().getPromotionalPriceType());
+                        item.setDiscount(catalogItem.getItems().getPromotionalPrice());
+                        item.setDiscountedPrice(catalogItem.getItems().getDiscountedPrice());
+                        if (catalogItem.getItems().isShowPromotionalPrice()) {
+                            item.setIsPromotional(1);
+                        } else {
+                            item.setIsPromotional(0);
+                        }
+
+                        db.insertItemToCart(item);
+
+                        iItemInterface.checkItemQuantity();
                     } else {
-                        item.setIsPromotional(0);
+
+                        Toast.makeText(context, "Clear cart to add new items", Toast.LENGTH_SHORT).show();
                     }
-
-                    db.insertItemToCart(item);
-
-                    iItemInterface.checkItemQuantity();
                 }
             });
 
@@ -183,6 +220,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                         progressBar = view.findViewById(R.id.myProgress);
                         progressBar.setVisibility(View.VISIBLE);
                         vibe.vibrate(100);
+
+                        if (newValue == catalogItem.getMaxQuantity()) {
+
+                            // give fadeout color for plus
+                            cvPlus.setBackgroundResource(R.drawable.disabled_plus);
+                            cvPlus.setClickable(false);
+                        }
 
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -209,6 +253,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
                 }
             });
+
+            if (catalogItem.getMaxQuantity() == Integer.parseInt(viewHolder.numberButton.getNumber())) {
+                cvPlus = viewHolder.numberButton.findViewById(R.id.cv_add);
+                cvPlus.setBackgroundResource(R.drawable.disabled_plus);
+                cvPlus.setClickable(false);
+            }
 
             viewHolder.cvCard.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -244,6 +294,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         private ElegantNumberButton numberButton;
         private CardView cvCard;
         private FrameLayout flAdd;
+        private SkeletonLoadingView shimmer;
+        private LinearLayout llLoader;
 
         public ViewHolder(@NonNull View itemView, boolean isLoading) {
 
@@ -258,6 +310,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 numberButton = itemView.findViewById(R.id.number_button);
                 flAdd = itemView.findViewById(R.id.fl_add);
                 tvDiscountedPrice = itemView.findViewById(R.id.tv_discountedPrice);
+                shimmer = itemView.findViewById(R.id.shimmer);
+                llLoader = itemView.findViewById(R.id.ll_loader);
 
             }
         }

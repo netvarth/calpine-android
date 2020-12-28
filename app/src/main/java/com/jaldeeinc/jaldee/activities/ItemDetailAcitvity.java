@@ -93,7 +93,10 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
     CustomTextViewSemiBold tvItemsCount;
 
     @BindView(R.id.tv_subTotal)
-    CustomTextViewSemiBold tvSubTotal;
+    CustomTextViewMedium tvSubTotal;
+
+    @BindView(R.id.tv_totalDiscount)
+    CustomTextViewSemiBold tvTotalDiscount;
 
     private int accountId;
     private CardView cvPlus;
@@ -125,30 +128,8 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
         itemDetails = (CatalogItem) intent.getSerializableExtra("itemInfo");
         accountId = intent.getIntExtra("accountId", 0);
 
-        // to get quantity from previous activity
-        int itemQuantity = db.getItemQuantity(itemDetails.getItems().getItemId());
-        itemDetails.getItems().setItemQuantity(itemQuantity);
-
-        if (itemDetails.getItems().getItemQuantity() > 0) {
-
-            flAdd.setVisibility(View.GONE);
-            numberButton.setVisibility(View.VISIBLE);
-            numberButton.setNumber(String.valueOf(itemQuantity));
-        } else {
-
-            numberButton.setVisibility(View.GONE);
-            flAdd.setVisibility(View.VISIBLE);
-        }
-
-        if (accountId == db.getAccountId()) {
-            cvItemsCart.setVisibility(View.VISIBLE);
-            tvItemsCount.setText("Your Order " + "(" + db.getCartCount() + ")");
-            tvSubTotal.setText("₹" + db.getCartPrice());
-
-        } else {
-
-            cvItemsCart.setVisibility(View.GONE);
-        }
+        // to update UI
+        checkCart();
 
 
         if (itemDetails != null) {
@@ -186,13 +167,13 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
                     rvImages.setAdapter(itemImagesAdapter);
                 }
 
-                if (!itemDetails.getItems().getPromotionalPriceType().equalsIgnoreCase("NONE")) {
+                if (itemDetails.getItems().isShowPromotionalPrice()) {
 
                     tvPrice.setVisibility(View.VISIBLE);
                     tvDiscountedPrice.setVisibility(View.VISIBLE);
                     tvPrice.setText("₹" + itemDetails.getItems().getPrice());
                     tvPrice.setPaintFlags(tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    String price = String.valueOf(itemDetails.getItems().getDiscountedPrice());
+                    String price = String.valueOf(itemDetails.getItems().getPromotionalPrice());
                     tvDiscountedPrice.setText("₹" + price);
 
                 } else {
@@ -214,6 +195,7 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
 
                 flAdd.setVisibility(View.GONE);
                 numberButton.setVisibility(View.VISIBLE);
+                numberButton.setNumber("1");
 
                 CartItemModel item = new CartItemModel();
                 item.setItemId(itemDetails.getItems().getItemId());
@@ -262,6 +244,13 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
                     progressBar.setVisibility(View.VISIBLE);
                     vibe.vibrate(100);
 
+                    if (newValue == itemDetails.getMaxQuantity()) {
+
+                        // give fadeout color for plus
+                        cvPlus.setBackgroundResource(R.drawable.disabled_plus);
+                        cvPlus.setClickable(false);
+                    }
+
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -287,6 +276,12 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
 
             }
         });
+
+        if (itemDetails.getMaxQuantity() == Integer.parseInt(numberButton.getNumber())) {
+            cvPlus = numberButton.findViewById(R.id.cv_add);
+            cvPlus.setBackgroundResource(R.drawable.disabled_plus);
+            cvPlus.setClickable(false);
+        }
 
 
         cvBack.setOnClickListener(new View.OnClickListener() {
@@ -327,15 +322,61 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
 
     }
 
+    private void checkCart() {
+
+        // to get quantity from previous activity
+        int itemQuantity = db.getItemQuantity(itemDetails.getItems().getItemId());
+        itemDetails.getItems().setItemQuantity(itemQuantity);
+
+        if (itemDetails.getItems().getItemQuantity() > 0) {
+
+            flAdd.setVisibility(View.GONE);
+            numberButton.setVisibility(View.VISIBLE);
+            numberButton.setNumber(String.valueOf(itemQuantity));
+        } else {
+
+            numberButton.setVisibility(View.GONE);
+            flAdd.setVisibility(View.VISIBLE);
+        }
+
+
+        if (accountId == db.getAccountId()) {
+            cvItemsCart.setVisibility(View.VISIBLE);
+            tvItemsCount.setText("Your Order " + "(" + db.getCartCount() + ")");
+            tvSubTotal.setText("₹" + db.getCartPrice());
+
+        } else {
+
+            cvItemsCart.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        checkCart();
+    }
+
     private void checkCartCount() {
 
         if (db.getCartCount() > 0) {
 
             cvItemsCart.setVisibility(View.VISIBLE);
-
             tvItemsCount.setText("Your Order " + "(" + db.getCartCount() + ")");
-            tvSubTotal.setText("₹" + db.getCartPrice());
+            if (db.getCartPrice() == db.getCartDiscountedPrice()) {
 
+                tvSubTotal.setVisibility(View.GONE);
+                tvTotalDiscount.setVisibility(View.VISIBLE);
+                tvTotalDiscount.setText("₹" + db.getCartPrice());
+
+            } else {
+
+                tvSubTotal.setVisibility(View.VISIBLE);
+                tvSubTotal.setText("₹" + db.getCartPrice());
+                tvTotalDiscount.setVisibility(View.VISIBLE);
+                tvTotalDiscount.setText("₹" + db.getCartDiscountedPrice());
+            }
         } else {
 
             cvItemsCart.setVisibility(View.GONE);
@@ -365,12 +406,14 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
     @Override
     public void onContinueClick() {
 
+        checkCart();
+
     }
 
     @Override
     public void onClearClick() {
 
-
+        checkCart();
 
     }
 }

@@ -12,18 +12,49 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_35dp"
         android:layout_gravity="center"
-        android:background="@color/special_background">
+        android:layout_marginTop="@dimen/dimen_15dp">
 
         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/dimen_12dp"
             android:text="Choose a delivery address"
             android:textColor="@color/dark_black"
-            android:textSize="@dimen/dimen_15dp">
+            android:textSize="@dimen/dimen_15dp"
+            android:visibility="visible">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+        <LinearLayout
+            android:id="@+id/ll_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:layout_marginStart="@dimen/dimen_12dp">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_15dp"
+                android:layout_height="@dimen/dimen_15dp"
+                android:src="@drawable/left_icon"
+                android:layout_gravity="center">
+
+            </ImageView>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Back"
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_gravity="center"
+                android:textColor="@color/dark_blue"
+                android:textSize="14dp">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -47,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_2dp"
                 android:scrollbars="vertical"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintBottom_toBottomOf="@+id/Id_const_layout"
                 app:layout_constraintEnd_toEndOf="@+id/Id_const_layout"
@@ -64,7 +95,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -206,6 +237,9 @@
                     android:id="@+id/tv_save"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/dimen_15dp"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
                     android:background="@drawable/border_red"
                     android:backgroundTint="@color/dark_blue"
                     android:paddingStart="@dimen/dimen_18dp"
@@ -213,9 +247,6 @@
                     android:paddingEnd="@dimen/dimen_18dp"
                     android:paddingBottom="@dimen/dimen_8dp"
                     android:text="Save address"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/dimen_10dp"
-                    android:layout_marginTop="@dimen/dimen_15dp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/dimen_15dp">
 

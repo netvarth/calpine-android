@@ -341,7 +341,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     String appEncId;
     private FamilyMemberDialog familyMemberDialog;
     private IFamilyMemberDetails iFamilyMemberDetails;
-    private String prepayAmount ="";
+    private String prepayAmount = "";
     private String countryCode;
 
 
@@ -386,20 +386,17 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             tvProviderName.setText(providerName);
         }
 
-        if(serviceInfo.getIsPrePayment().equalsIgnoreCase("true")){
+        if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
             tvButtonName.setText("Proceed to Payment");
-        }
-        else{
+        } else {
             tvButtonName.setText("Confirm Appointment");
         }
 
-        if(serviceInfo.getConsumerNoteTitle()!=null && !serviceInfo.getConsumerNoteTitle().equalsIgnoreCase("")){
+        if (serviceInfo.getConsumerNoteTitle() != null && !serviceInfo.getConsumerNoteTitle().equalsIgnoreCase("")) {
             tvAddNotes.setText(serviceInfo.getConsumerNoteTitle());
+        } else {
+            tvAddNotes.setText("Add Note");
         }
-        else{
-           tvAddNotes.setText("Add Note");
-        }
-
 
 
         if (serviceInfo != null) {
@@ -540,7 +537,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         tvEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(tvEmail.getText().toString().equalsIgnoreCase("")) {
+                if (tvEmail.getText().toString().equalsIgnoreCase("")) {
                     familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, serviceInfo.getIsPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode);
                     familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -586,23 +583,14 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         llEditDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this,familyMEmID,tvEmail.getText().toString(),phoneNumber,serviceInfo.getIsPrePayment(),iFamilyMemberDetails,profileDetails,multiplemem,0,countryCode);
-                 familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
-                 familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                 familyMemberDialog.show();
-                 DisplayMetrics metrics = AppointmentActivity.this.getResources().getDisplayMetrics();
-                 int width = (int) (metrics.widthPixels * 1);
-                 familyMemberDialog.setCancelable(false);
-                 familyMemberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-//                Intent familyIntent = new Intent(AppointmentActivity.this, CheckinFamilyMemberAppointment.class);
-//                familyIntent.putExtra("firstname", mFirstName);
-//                familyIntent.putExtra("lastname", mLastName);
-//                familyIntent.putExtra("consumerID", consumerID);
-//                familyIntent.putExtra("multiple", multiplemem);
-//                familyIntent.putExtra("memberID", familyMEmID);
-//                familyIntent.putExtra("update", 0);
-//                startActivity(familyIntent);
+                familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, serviceInfo.getIsPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode);
+                familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+                familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                familyMemberDialog.show();
+                DisplayMetrics metrics = AppointmentActivity.this.getResources().getDisplayMetrics();
+                int width = (int) (metrics.widthPixels * 1);
+                familyMemberDialog.setCancelable(false);
+                familyMemberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
 
             }
         });
@@ -844,8 +832,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 });
 
 
-
-
                 requestMultiplePermissions();
                 tv_attach.setVisibility(View.VISIBLE);
                 tv_camera.setVisibility(View.VISIBLE);
@@ -946,10 +932,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(imagePathList.size()>0){
+                        if (imagePathList.size() > 0) {
                             tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
-                        }
-                        else {
+                        } else {
                             tvAttachFileSize.setText("Attach File");
                         }
                         dialog.dismiss();
@@ -959,7 +944,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         });
 
 
-        if(serviceInfo.getTotalAmount()!=null && !serviceInfo.getTotalAmount().equalsIgnoreCase("0.0")){
+        if (serviceInfo.getTotalAmount() != null && !serviceInfo.getTotalAmount().equalsIgnoreCase("0.0")) {
             LservicePrepay.setVisibility(View.VISIBLE);
             LserviceAmount.setVisibility(View.VISIBLE);
             Typeface tyface = Typeface.createFromAsset(getAssets(),
@@ -1058,7 +1043,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         if (profileDetails != null) {
                             tvConsumerName.setText(profileDetails.getUserprofile().getFirstName() + " " + profileDetails.getUserprofile().getLastName());
                             countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
-                            phoneNumber =  profileDetails.getUserprofile().getPrimaryMobileNo();
+                            phoneNumber = profileDetails.getUserprofile().getPrimaryMobileNo();
                             tvNumber.setText(countryCode + " " + phoneNumber);
                             et_countryCode.setText(countryCode);
                             etVirtualNumber.setText(profileDetails.getUserprofile().getPrimaryMobileNo());
@@ -1171,7 +1156,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                             sector = mBusinessDataList.getServiceSector().getDomain();
                             subsector = mBusinessDataList.getServiceSubSector().getSubDomain();
-                        //
+                            //
                             //    APISector(sector, subsector);
                         }
 
@@ -1411,7 +1396,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
 
         final Dialog mDialog = Config.getProgressDialog(AppointmentActivity.this, AppointmentActivity.this.getResources().getString(R.string.dialog_log_in));
-          mDialog.show();
+        mDialog.show();
 
         JSONObject qjsonObj = new JSONObject();
         JSONObject queueobj = new JSONObject();
@@ -1440,9 +1425,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 pjsonobj.put("id", 0);
             }
 
-            if (imagePathList!= null && imagePathList.size()>0){
+            if (imagePathList != null && imagePathList.size() > 0) {
 
-                if (userMessage != null && userMessage.trim().equalsIgnoreCase("")){
+                if (userMessage != null && userMessage.trim().equalsIgnoreCase("")) {
 
                     showToolTip();
                     mDialog.dismiss();
@@ -1557,18 +1542,17 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             String getJsonObj = (String) iteratorObj.next();
                             System.out.println("KEY: " + "------>" + getJsonObj);
                             value = reader.getString(getJsonObj);
-                            if(serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
+                            if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
                                 prepayAmount = reader.getString("_prepaymentAmount");
                             }
 
                         }
 
-                                if (serviceInfo.isUser()) {
-                                    getConfirmationId(userId,txt_addnote,id);
-                                }
-                                else{
-                                    getConfirmationId(providerId,txt_addnote,id);
-                                }
+                        if (serviceInfo.isUser()) {
+                            getConfirmationId(userId, txt_addnote, id);
+                        } else {
+                            getConfirmationId(providerId, txt_addnote, id);
+                        }
 
                     } else {
                         if (response.code() == 422) {
@@ -1649,8 +1633,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             if (bitmap != null) {
                 path = saveImage(bitmap);
                 file = new File(path);
-            }
-            else {
+            } else {
                 file = new File(imagePathList.get(i));
             }
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
@@ -1725,11 +1708,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             Bundle b = new Bundle();
                             b.putSerializable("BookingDetails", activeAppointment);
                             b.putString("terminology", mSearchTerminology.getProvider());
-                            b.putString("from","");
+                            b.putString("from", "");
                             b.putString("waitlistPhonenumber", phoneNumber);
-                            if (serviceInfo.isUser()){
+                            if (serviceInfo.isUser()) {
                                 b.putString("accountID", String.valueOf(userId));
-                            }else {
+                            } else {
                                 b.putString("accountID", String.valueOf(providerId));
                             }
                             b.putString("livetrack", serviceInfo.getLivetrack());
@@ -1753,7 +1736,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     }
 
-    private void getConfirmationId(int userId, String txt_addnote,int id) {
+    private void getConfirmationId(int userId, String txt_addnote, int id) {
 
         final ApiInterface apiService =
                 ApiClient.getClient(AppointmentActivity.this).create(ApiInterface.class);
@@ -1827,7 +1810,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                             public void onClick(View v) {
 
                                                 PaytmPayment payment = new PaytmPayment(AppointmentActivity.this, paymentResponse);
-                                                payment.ApiGenerateHashPaytm(value,prepayAmount, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, AppointmentActivity.this, AppointmentActivity.this, "", familyMEmID,appEncId);
+                                                payment.ApiGenerateHashPaytm(value, prepayAmount, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, AppointmentActivity.this, AppointmentActivity.this, "", familyMEmID, appEncId);
                                                 //payment.generateCheckSum(sAmountPay);
                                                 dialog.dismiss();
 
@@ -1839,45 +1822,23 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                 }
 
 
-                            }
-                            else {
+                            } else {
 
                                 if (serviceInfo.isUser()) {
                                     if (imagePathList.size() > 0) {
                                         ApiCommunicateAppointment(value, String.valueOf(userId), txt_addnote, dialog);
                                     }
-//                                    if (!serviceInfo.getLivetrack().equalsIgnoreCase("true")) {
-                                        getConfirmationDetails(userId);
-                                  //  }
+                                    getConfirmationDetails(userId);
 
                                 } else {
 
                                     if (imagePathList.size() > 0) {
                                         ApiCommunicateAppointment(value, String.valueOf(providerId), txt_addnote, dialog);
                                     }
-//                                    if (!serviceInfo.getLivetrack().equalsIgnoreCase("true")) {
-                                        getConfirmationDetails(providerId);
-                                 //   }
+                                    getConfirmationDetails(providerId);
 
                                 }
                             }
-//                            if (serviceInfo.getLivetrack().equalsIgnoreCase("true")) {
-//                                Intent checkinShareLocations = new Intent(AppointmentActivity.this, CheckinShareLocationAppointment.class);
-//                                checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
-//                                checkinShareLocations.putExtra("uuid", value);
-//                                if (serviceInfo.isUser()){
-//                                    checkinShareLocations.putExtra("accountID", String.valueOf(userId));
-//                                }else {
-//                                    checkinShareLocations.putExtra("accountID", String.valueOf(providerId));
-//                                }
-//                                checkinShareLocations.putExtra("title", providerName);
-//                                checkinShareLocations.putExtra("terminology", mSearchTerminology.getWaitlist());
-//                                checkinShareLocations.putExtra("calcMode", calcMode);
-//                                checkinShareLocations.putExtra("queueStartTime", "");
-//                                checkinShareLocations.putExtra("queueEndTime", "");
-//                                checkinShareLocations.putExtra("from", "appt");
-//                                startActivity(checkinShareLocations);
-//                            }
 
                         }
 
@@ -1972,7 +1933,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             firstWord = "Est wait time";
             secondWord = Config.getTimeinHourMinutes(Integer.parseInt(estTime));
         }
-      return firstWord + "-" + secondWord;
+        return firstWord + "-" + secondWord;
     }
 
     private String getDisplayTime(String slotTime) {
@@ -2387,10 +2348,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                         imagePathList.add(orgFilePath);
 
-                        if(imagePathList.size()>0){
+                        if (imagePathList.size() > 0) {
                             tvErrorMessage.setVisibility(View.GONE);
-                        }
-                        else{
+                        } else {
                             tvErrorMessage.setVisibility(View.VISIBLE);
                         }
 
@@ -2400,8 +2360,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
 
-                    }
-                    else if (data.getClipData() != null) {
+                    } else if (data.getClipData() != null) {
                         ClipData mClipData = data.getClipData();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
@@ -2430,10 +2389,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             imagePathList.add(orgFilePath);
 
 
-                            if(imagePathList.size()>0){
+                            if (imagePathList.size() > 0) {
                                 tvErrorMessage.setVisibility(View.GONE);
-                            }
-                            else{
+                            } else {
                                 tvErrorMessage.setVisibility(View.VISIBLE);
                             }
 
@@ -2462,10 +2420,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 if (path != null) {
                     mImageUri = Uri.parse(path);
                     imagePathList.add(mImageUri.toString());
-                    if(imagePathList.size()>0){
+                    if (imagePathList.size() > 0) {
                         tvErrorMessage.setVisibility(View.GONE);
-                    }
-                    else{
+                    } else {
                         tvErrorMessage.setVisibility(View.VISIBLE);
                     }
                 }
@@ -2506,7 +2463,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     }
 
-    private void showToolTip(){
+    private void showToolTip() {
 
         CustomToolTip tipWindow = new CustomToolTip(AppointmentActivity.this, CustomToolTip.DRAW_TOP, "Please add notes");
         tipWindow.showToolTip(cvAddNote, CustomToolTip.DRAW_ARROW_DEFAULT_CENTER, false);
@@ -2520,14 +2477,13 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         familyMEmID = consumerId;
         emailId = email;
         countryCode = conCode;
-        tvNumber.setText(countryCode + " " +  phoneNumber);
+        tvNumber.setText(countryCode + " " + phoneNumber);
         et_countryCode.setText(countryCode);
         etVirtualNumber.setText(phoneNumber);
 
-        if(!emailId.equalsIgnoreCase("")) {
+        if (!emailId.equalsIgnoreCase("")) {
             tvEmail.setText(emailId);
-        }
-        else{
+        } else {
             tvEmail.setText("");
         }
         tvConsumerName.setText(mFirstName);

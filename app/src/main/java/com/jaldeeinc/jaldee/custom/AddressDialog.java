@@ -4,9 +4,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -15,38 +15,32 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.Interface.IAddressInterface;
-import com.jaldeeinc.jaldee.Interface.ISendMessage;
+import com.jaldeeinc.jaldee.Interface.IEditAddress;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.ItemsActivity;
-import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.adapter.AddressAdapter;
-import com.jaldeeinc.jaldee.adapter.SelectedItemsAdapter;
-import com.jaldeeinc.jaldee.adapter.VirtualFieldAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.Address;
-import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddressDialog extends Dialog {
+public class AddressDialog extends Dialog implements IEditAddress {
 
     private Context context;
     private IAddressInterface iAddressInterface;
+    private IEditAddress iEditAddress;
     ArrayList<Address> addressList = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
     private AddressAdapter addressAdapter;
+    private int position;
 
     @BindView(R.id.rv_address)
     RecyclerView rvAddress;
@@ -59,6 +53,9 @@ public class AddressDialog extends Dialog {
 
     @BindView(R.id.tv_save)
     CustomTextViewSemiBold tvSave;
+
+    @BindView(R.id.tv_title)
+    CustomTextViewSemiBold tvTitle;
 
     @BindView(R.id.et_firstName)
     CustomEditTextRegular etFirstName;
@@ -87,10 +84,14 @@ public class AddressDialog extends Dialog {
     @BindView(R.id.tv_errorMessage)
     CustomTextViewItalicSemiBold tvErrorMessage;
 
+    @BindView(R.id.ll_back)
+    LinearLayout llBack;
+
     Animation animShake, slideUp, slideRight;
+    private boolean isEdit = false;
 
 
-    public AddressDialog(@NonNull Context context, ArrayList<Address> addressList) {
+    public AddressDialog(@NonNull Context context, ArrayList<Address> addressList, IAddressInterface iAddressInterface) {
         super(context);
         this.context = context;
         this.addressList = addressList;
@@ -102,53 +103,88 @@ public class AddressDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.address_dialog);
         ButterKnife.bind(this);
+        iEditAddress = this;
+        iAddressInterface = (IAddressInterface) this;
 
         animShake = AnimationUtils.loadAnimation(context, R.anim.shake);
         slideUp = AnimationUtils.loadAnimation(context, R.anim.slide_in_left);
         slideRight = AnimationUtils.loadAnimation(context, R.anim.slide_out_right);
-        linearLayoutManager = new LinearLayoutManager(context);
-        rvAddress.setLayoutManager(linearLayoutManager);
-        addressAdapter = new AddressAdapter(addressList, context, true, iAddressInterface);
-        rvAddress.setAdapter(addressAdapter);
 
+        if (addressList != null && addressList.size() > 0) {
+            linearLayoutManager = new LinearLayoutManager(context);
+            rvAddress.setLayoutManager(linearLayoutManager);
+            addressAdapter = new AddressAdapter(addressList, context, false, iEditAddress);
+            rvAddress.setAdapter(addressAdapter);
+            showListOfAddresses();
 
-        // api call
-        getAddressList();
+        } else {
+
+            showAddNewAddress();
+        }
+
 
         llAddNewAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                updateUI();
+                isEdit = false;
+                showAddNewAddress();
             }
         });
+
+        llBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                getAddressList();
+
+            }
+        });
+
 
         tvSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String firstName = etFirstName.getText().toString();
-                String lastName = etLastName.getText().toString();
-                String email = etMailId.getText().toString();
-                String mobileNumber = etMobile.getText().toString();
-                String address = etAreaAndFlat.getText().toString();
-                String city = etCity.getText().toString();
-                String pinCode = etPinCode.getText().toString();
-                String landMark = etLandMark.getText().toString();
+                if (isEdit) {
 
-                if (!firstName.trim().equalsIgnoreCase("") && !lastName.trim().equalsIgnoreCase("") && !email.trim().equalsIgnoreCase("") && !mobileNumber.trim().equalsIgnoreCase("") && !address.trim().equalsIgnoreCase("") && !city.trim().equalsIgnoreCase("") && !pinCode.trim().equalsIgnoreCase("") && !landMark.trim().equalsIgnoreCase("")) {
+                    validation(true);
 
-                    tvErrorMessage.setVisibility(View.GONE);
-                    saveAddress(firstName, lastName, email, mobileNumber, address, city, pinCode, landMark);
                 } else {
 
-                    tvErrorMessage.setVisibility(View.VISIBLE);
-                    tvErrorMessage.setAnimation(animShake);
+                    validation(false);
                 }
-
             }
         });
 
+    }
+
+    private void validation(boolean isEdit) {
+
+        String firstName = etFirstName.getText().toString();
+        String lastName = etLastName.getText().toString();
+        String email = etMailId.getText().toString();
+        String mobileNumber = etMobile.getText().toString();
+        String address = etAreaAndFlat.getText().toString();
+        String city = etCity.getText().toString();
+        String pinCode = etPinCode.getText().toString();
+        String landMark = etLandMark.getText().toString();
+
+        if (!firstName.trim().equalsIgnoreCase("") && !lastName.trim().equalsIgnoreCase("") && !email.trim().equalsIgnoreCase("") && !mobileNumber.trim().equalsIgnoreCase("") && !address.trim().equalsIgnoreCase("") && !city.trim().equalsIgnoreCase("") && !pinCode.trim().equalsIgnoreCase("") && !landMark.trim().equalsIgnoreCase("")) {
+
+            tvErrorMessage.setVisibility(View.GONE);
+            if (isEdit) {
+
+                saveEditedAddress(firstName, lastName, email, mobileNumber, address, city, pinCode, landMark);
+
+            } else {
+                saveAddress(firstName, lastName, email, mobileNumber, address, city, pinCode, landMark);
+            }
+        } else {
+
+            tvErrorMessage.setVisibility(View.VISIBLE);
+            tvErrorMessage.setAnimation(animShake);
+        }
     }
 
     private void saveAddress(String firstName, String lastName, String email, String mobileNumber, String address, String city, String pinCode, String landMark) {
@@ -165,35 +201,66 @@ public class AddressDialog extends Dialog {
         addressList.add(obj);
 
         ApiInterface apiService = ApiClient.getClient(context).create(ApiInterface.class);
-        Call<ArrayList<Address>> call = apiService.getDeliveryAddress(addressList);
-        call.enqueue(new Callback<ArrayList<Address>>() {
+        Call<ResponseBody> call = apiService.getDeliveryAddress(addressList);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ArrayList<Address>> call, Response<ArrayList<Address>> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 try {
 
                     if (response.code() == 200) {
-                        addressList = response.body();
-
-                        if (addressList != null && addressList.size() > 0) {
-
-                            linearLayoutManager = new LinearLayoutManager(context);
-                            rvAddress.setLayoutManager(linearLayoutManager);
-                            addressAdapter = new AddressAdapter(addressList, context, false, iAddressInterface);
-                            rvAddress.setAdapter(addressAdapter);
-
-                            updateUI();
-                        }
-
+                        getAddressList();
+                        clearAllEditTexts();
                     }
 
-                } catch (Exception e) {
+                } catch (
+                        Exception e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Address>> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+
+            }
+        });
+
+    }
+
+    private void saveEditedAddress(String firstName, String lastName, String email, String mobileNumber, String address, String city, String pinCode, String landMark) {
+
+        addressList.get(position).setFirstName(firstName);
+        addressList.get(position).setLastName(lastName);
+        addressList.get(position).setEmail(email);
+        addressList.get(position).setPhoneNumber(mobileNumber);
+        addressList.get(position).setAddress(address);
+        addressList.get(position).setCity(city);
+        addressList.get(position).setPostalCode(pinCode);
+        addressList.get(position).setLandMark(landMark);
+
+        ApiInterface apiService = ApiClient.getClient(context).create(ApiInterface.class);
+        Call<ResponseBody> call = apiService.getDeliveryAddress(addressList);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (response.code() == 200) {
+                        getAddressList();
+                        clearAllEditTexts();
+                    }
+
+                } catch (
+                        Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
 
@@ -204,7 +271,7 @@ public class AddressDialog extends Dialog {
 
     private void getAddressList() {
         ApiInterface apiService = ApiClient.getClient(context).create(ApiInterface.class);
-        Call<ArrayList<Address>> call = apiService.getDeliveryAddress(addressList);
+        Call<ArrayList<Address>> call = apiService.getDeliveryAddress();
         call.enqueue(new Callback<ArrayList<Address>>() {
             @Override
             public void onResponse(Call<ArrayList<Address>> call, Response<ArrayList<Address>> response) {
@@ -212,16 +279,18 @@ public class AddressDialog extends Dialog {
                 try {
 
                     if (response.code() == 200) {
+                        addressList.clear();
                         addressList = response.body();
 
                         if (addressList != null && addressList.size() > 0) {
 
+                            showListOfAddresses();
+
                             linearLayoutManager = new LinearLayoutManager(context);
                             rvAddress.setLayoutManager(linearLayoutManager);
-                            addressAdapter = new AddressAdapter(addressList, context, false, iAddressInterface);
+                            addressAdapter = new AddressAdapter(addressList, context, false, iEditAddress);
                             rvAddress.setAdapter(addressAdapter);
 
-                            updateUI();
                         }
 
                     }
@@ -240,25 +309,63 @@ public class AddressDialog extends Dialog {
         });
     }
 
-    private void updateUI() {
 
-        if (addressList != null && addressList.size() > 0) {
+    private void showListOfAddresses() {
 
-            llNewAddressLayout.startAnimation(slideRight);
-            llNewAddressLayout.setVisibility(View.GONE);
-            rvAddress.setVisibility(View.VISIBLE);
-            llAddNewAddress.setVisibility(View.VISIBLE);
-            rvAddress.startAnimation(slideUp);
-
-        } else {
-
-            rvAddress.setVisibility(View.GONE);
-            rvAddress.startAnimation(slideRight);
-            llAddNewAddress.setVisibility(View.GONE);
-            llNewAddressLayout.setVisibility(View.VISIBLE);
-            llNewAddressLayout.startAnimation(slideUp);
-
-        }
+        llNewAddressLayout.startAnimation(slideRight);
+        llNewAddressLayout.setVisibility(View.GONE);
+        rvAddress.setVisibility(View.VISIBLE);
+        llAddNewAddress.setVisibility(View.VISIBLE);
+        rvAddress.startAnimation(slideUp);
+        llBack.setVisibility(View.GONE);
+        tvTitle.setVisibility(View.VISIBLE);
     }
 
+    private void showAddNewAddress() {
+
+        rvAddress.setVisibility(View.GONE);
+        rvAddress.startAnimation(slideRight);
+        llAddNewAddress.setVisibility(View.GONE);
+        llNewAddressLayout.setVisibility(View.VISIBLE);
+        llNewAddressLayout.startAnimation(slideUp);
+        tvTitle.setVisibility(View.GONE);
+        llBack.setVisibility(View.VISIBLE);
+    }
+
+
+    @Override
+    public void onAddressClick(Address address) {
+
+        iAddressInterface.onSelectAddress(address);
+    }
+
+    @Override
+    public void onEditClick(Address address, int addressPosition) {
+
+        position = addressPosition;   // this position is the position where we have to save the data in list
+        isEdit = true;  // to check if it is from edit or add New
+        showAddNewAddress();
+        etFirstName.setText(address.getFirstName());
+        etLastName.setText(address.getLastName());
+        etAreaAndFlat.setText(address.getAddress());
+        etCity.setText(address.getCity());
+        etLandMark.setText(address.getLandMark());
+        etPinCode.setText(address.getPostalCode());
+        etMailId.setText(address.getEmail());
+        etMobile.setText(address.getPhoneNumber());
+
+
+    }
+
+    private void clearAllEditTexts() {
+
+        etFirstName.setText("");
+        etLastName.setText("");
+        etAreaAndFlat.setText("");
+        etMobile.setText("");
+        etMailId.setText("");
+        etPinCode.setText("");
+        etLandMark.setText("");
+        etCity.setText("");
+    }
 }

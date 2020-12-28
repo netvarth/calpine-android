@@ -2,22 +2,17 @@ package com.jaldeeinc.jaldee.model;
 
 import java.io.Serializable;
 
-public class OrderItem implements Serializable {
+public class OrderItemBody implements Serializable {
 
     private int id;
     private int quantity;
     private String consumerNote;
 
-    public OrderItem(){
+    public OrderItemBody(){
 
     }
 
-    public OrderItem(int id, int quantity) {
-        this.id = id;
-        this.quantity = quantity;
-    }
-
-    public OrderItem(int id, int quantity, String consumerNote) {
+    public OrderItemBody(int id, int quantity, String consumerNote) {
         this.id = id;
         this.quantity = quantity;
         this.consumerNote = consumerNote;

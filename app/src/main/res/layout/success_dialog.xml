@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/top_curved"
+    android:orientation="vertical">
+
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_50dp"
+        android:text=""
+        android:textColor="@color/dark_black"
+        android:textSize="@dimen/dimen_16dp">
+
+    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <pl.droidsonroids.gif.GifImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/success_green">
+
+        </pl.droidsonroids.gif.GifImageView>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:id="@+id/tv_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your order has been placed successfully"
+            android:layout_gravity="bottom|center"
+            android:textSize="@dimen/dimen_15dp"
+            android:textColor="@color/title_color"
+            android:layout_marginBottom="150dp">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+
+
+    </FrameLayout>
+
+</LinearLayout>

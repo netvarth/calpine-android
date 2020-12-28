@@ -1,21 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/dimen_10dp"
-    android:id="@+id/ll_layout"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_2dp"
-        android:background="@color/light_grey"
-        android:layout_marginTop="@dimen/dimen_5dp"
-        android:layout_marginStart="@dimen/dimen_25dp"
-        android:layout_marginEnd="@dimen/dimen_25dp">
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,26 +27,43 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginStart="@dimen/dimen_12dp">
+            android:layout_marginStart="@dimen/dimen_12dp"
+            android:orientation="vertical">
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                android:id="@+id/tv_header"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Address 1"
-                android:textColor="@color/dark_blue"
-                android:textSize="14dp">
+                android:layout_marginEnd="@dimen/dimen_15dp">
 
-            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                    android:id="@+id/tv_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/dark_blue"
+                    android:textSize="14dp">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                <ImageView
+                    android:id="@+id/iv_edit"
+                    android:layout_width="@dimen/dimen_20dp"
+                    android:layout_height="@dimen/dimen_20dp"
+                    android:src="@drawable/edit_icon"
+                    android:layout_alignParentEnd="true"
+                    app:tint="@color/dark_blue">
+
+                </ImageView>
+
+            </RelativeLayout>
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sravan kumar"
-                android:textSize="14dp"
-                android:textColor="@color/title_color">
+                android:text=""
+                android:textColor="@color/title_color"
+                android:textSize="14dp">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -64,9 +71,9 @@
                 android:id="@+id/tv_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Full Address"
-                android:maxLines="1"
                 android:ellipsize="end"
+                android:maxLines="1"
+                android:text=""
                 android:textColor="@color/title_color"
                 android:textSize="@dimen/dimen_12dp">
 
@@ -76,22 +83,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                android:id="@+id/tv_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mobile number"
-                android:textColor="@color/title_color"
-                android:textSize="@dimen/dimen_10dp">
+                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:id="@+id/tv_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/title_color"
+                    android:textSize="@dimen/dimen_10dp">
 
-            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                     android:id="@+id/tv_mailId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimen_10dp"
-                    android:text="sravanworkinfo@gmail.com"
+                    android:text=""
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/dimen_10dp">
 
@@ -102,5 +109,17 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_2dp"
+        android:layout_marginStart="@dimen/dimen_25dp"
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:layout_marginEnd="@dimen/dimen_25dp"
+        android:layout_marginBottom="@dimen/dimen_10dp"
+        android:background="#31CCCCCC">
+
+    </LinearLayout>
+
 
 </LinearLayout>

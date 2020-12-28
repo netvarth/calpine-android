@@ -24,8 +24,20 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="/private/var/folders/lh/d05mc20s4nv4gytqx_gq9h100000gn/T/ic_android_black_24dp.xml" />
-                                                <entry key="opacityPercent" value="60" />
+                                                <entry key="imagePath" value="/private/var/folders/lh/d05mc20s4nv4gytqx_gq9h100000gn/T/baseline_keyboard_arrow_left_24.xml" />
+                                                <entry key="opacityPercent" value="80" />
+                                                <entry key="trimmed" value="true" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                      <entry key="clipartAsset">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material/icons/materialicons/keyboard_arrow_left/baseline_keyboard_arrow_left_24.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -71,11 +83,10 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="assetType" value="IMAGE" />
                                       <entry key="imageAsset" value="$USER_HOME$/Desktop/iconfinder_Home_51304-2.png" />
-                                      <entry key="outputName" value="home_filled" />
+                                      <entry key="outputName" value="left_icon" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="0b1f84" />
+                                      <entry key="themeColor" value="045185" />
                                     </map>
                                   </option>
                                 </PersistentState>

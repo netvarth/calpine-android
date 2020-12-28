@@ -105,6 +105,7 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
 
                         db.addQuantity(cartItem.getItemId(), 0);
                         viewHolder.numberButton.setVisibility(View.GONE);
+                        iCartInterface.checkCartCount();
 
                     } else if (newValue <= cartItem.getMaxQuantity()) {
 
@@ -129,6 +130,7 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
 
                                 db.addQuantity(cartItem.getItemId(), newValue);
                                 progressBar.setVisibility(View.GONE);
+                                iCartInterface.checkCartCount();
 
                                 if (cartItem.getIsPromotional() == 1) {
 
@@ -154,13 +156,19 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
                         // give fadeout color for plus
                         cvPlus.setBackgroundResource(R.drawable.disabled_plus);
                         cvPlus.setClickable(false);
+                        iCartInterface.checkCartCount();
+
                     }
                 }
             });
 
             viewHolder.numberButton.setNumber(String.valueOf(cartItem.getQuantity()));
 
-
+            if (cartItem.getMaxQuantity() == Integer.parseInt(viewHolder.numberButton.getNumber())){
+                cvPlus = viewHolder.numberButton.findViewById(R.id.cv_add);
+                cvPlus.setBackgroundResource(R.drawable.disabled_plus);
+                cvPlus.setClickable(false);
+            }
 
         } else {
 

@@ -9,20 +9,32 @@
     app:cardElevation="6dp">
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <com.jaldeeinc.jaldee.custom.BorderImageView
             android:id="@+id/iv_itemImage"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:visibility="visible"
             android:layout_marginStart="@dimen/dimen_4dp"
             android:layout_marginTop="@dimen/dimen_4dp"
             android:layout_marginEnd="@dimen/dimen_4dp"
             android:scaleType="centerCrop">
 
         </com.jaldeeinc.jaldee.custom.BorderImageView>
+
+        <com.omjoonkim.skeletonloadingview.SkeletonLoadingView
+            android:id="@+id/shimmer"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:visibility="gone"
+            app:baseColor="#F4F4F4"
+            app:deepColor="@color/white">
+
+        </com.omjoonkim.skeletonloadingview.SkeletonLoadingView>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -170,7 +182,15 @@
 
         </RelativeLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_loader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#95ffffff"
+        android:orientation="horizontal"
+        android:visibility="gone" />
 
 </androidx.cardview.widget.CardView>
 

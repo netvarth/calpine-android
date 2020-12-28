@@ -91,4 +91,30 @@ public class SelectedItemsDialog extends Dialog implements ICartInterface {
     }
 
 
+    public void onRefresh() {
+
+        db = new DatabaseHandler(mContext);
+        cartItemsList.clear();
+        cartItemsList = db.getCartItems();
+
+        if (cartItemsList != null && cartItemsList.size() > 0) {
+
+            linearLayoutManager = new LinearLayoutManager(mContext);
+            rvItems.setLayoutManager(linearLayoutManager);
+            selectedItemsAdapter = new SelectedItemsAdapter(cartItemsList, mContext, false, iCartInterface);
+            rvItems.setAdapter(selectedItemsAdapter);
+
+        }
+    }
+
+
+    @Override
+    public void checkCartCount() {
+        if (db.getCartCount() <= 0) {
+            iDialogInterface.onClearClick();
+            dismiss();
+        } else {
+            onRefresh();
+        }
+    }
 }

@@ -33,13 +33,13 @@ public class HomeDelivery implements Serializable {
 
     @SerializedName("deliveryCharge")
     @Expose
-    private String deliveryCharge;
+    private double deliveryCharge;
 
     public HomeDelivery(){
 
     }
 
-    public HomeDelivery(boolean homeDelivery, CatalogSchedule deliverySchedule, boolean deliveryOtpVerification, String deliveryRadius, boolean scheduledHomeDeliveryAllowed, boolean asapHomeDeliveryAllowed, String deliveryCharge) {
+    public HomeDelivery(boolean homeDelivery, CatalogSchedule deliverySchedule, boolean deliveryOtpVerification, String deliveryRadius, boolean scheduledHomeDeliveryAllowed, boolean asapHomeDeliveryAllowed, double deliveryCharge) {
         this.homeDelivery = homeDelivery;
         this.deliverySchedule = deliverySchedule;
         this.deliveryOtpVerification = deliveryOtpVerification;
@@ -98,11 +98,11 @@ public class HomeDelivery implements Serializable {
         this.asapHomeDeliveryAllowed = asapHomeDeliveryAllowed;
     }
 
-    public String getDeliveryCharge() {
+    public double getDeliveryCharge() {
         return deliveryCharge;
     }
 
-    public void setDeliveryCharge(String deliveryCharge) {
+    public void setDeliveryCharge(double deliveryCharge) {
         this.deliveryCharge = deliveryCharge;
     }
 }

@@ -336,12 +336,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             ArrayList<OrderItem> orderItemsList = new ArrayList<>();
             SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
             db.beginTransaction();
-            Cursor cursor = db.rawQuery("SELECT itemId, sum(quantity) FROM " + mContext.getString(R.string.db_table_cart)+" GROUP BY itemId ", null);
+            Cursor cursor = db.rawQuery("SELECT itemId, sum(quantity), instruction FROM " + mContext.getString(R.string.db_table_cart)+" GROUP BY itemId ", null);
 
             if (cursor.moveToFirst()) {
                 do {
                     int itemId = cursor.getInt(0);
                     int quantity = cursor.getInt(1);
+                    String instruction = cursor.getString(2);
                     orderItemsList.add(new OrderItem(itemId,quantity));
 
                 } while (cursor.moveToNext());
@@ -387,13 +388,40 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    public int getCatalogId() {
+
+        try {
+            int catalogId = 0;
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+            db.beginTransaction();
+            Cursor cursor = db.rawQuery("SELECT catalogId FROM " + mContext.getString(R.string.db_table_cart)+" LIMIT 1", null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    catalogId = cursor.getInt(0);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+            return catalogId;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+    }
+
     public double getCartPrice() {
 
         try {
             double cartPrice = 0;
             SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
             db.beginTransaction();
-            Cursor cursor = db.rawQuery("SELECT sum(price * quantity) as cartCount FROM " + mContext.getString(R.string.db_table_cart), null);
+            Cursor cursor = db.rawQuery("SELECT sum(itemPrice * quantity) as cartCount FROM " + mContext.getString(R.string.db_table_cart), null);
 
             if (cursor.moveToFirst()) {
                 do {

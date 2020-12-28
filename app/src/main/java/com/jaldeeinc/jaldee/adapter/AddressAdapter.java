@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.Interface.IAddressInterface;
 import com.jaldeeinc.jaldee.Interface.ICartInterface;
+import com.jaldeeinc.jaldee.Interface.IEditAddress;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
@@ -36,13 +38,13 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
     private boolean isLoading = true;
     private int lastPosition = -1;
     private int selectedPosition = 0;
-    private IAddressInterface iAddressInterface;
+    private IEditAddress iEditAddress;
 
-    public AddressAdapter(ArrayList<Address> addressList, Context context, boolean isLoading, IAddressInterface iAddressInterface) {
+    public AddressAdapter(ArrayList<Address> addressList, Context context, boolean isLoading, IEditAddress iEditAddress) {
         this.addressList = addressList;
         this.context = context;
         this.isLoading = isLoading;
-        this.iAddressInterface = iAddressInterface;
+        this.iEditAddress = iEditAddress;
            }
 
     @NonNull
@@ -69,6 +71,36 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
 
             setAnimation(viewHolder.llLayout, position);
 
+            int number = position +1;
+            viewHolder.tvHeader.setText("Address "+ number);
+
+            viewHolder.tvName.setText(address.getFirstName()+" "+ address.getLastName());
+
+            String fullAddress = addressList.get(0).getLandMark()+","+ addressList.get(0).getAddress()+","+ addressList.get(0).getCity()+ ","+ addressList.get(0).getPostalCode();
+
+            viewHolder.tvAddress.setText(fullAddress);
+
+            viewHolder.tvMobileNumber.setText(address.getPhoneNumber());
+
+            viewHolder.tvEmail.setText(address.getEmail());
+
+            viewHolder.ivEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    iEditAddress.onEditClick(address,position);
+                }
+            });
+
+            viewHolder.llLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    iEditAddress.onAddressClick(address);
+
+                }
+            });
+
 
 
 
@@ -92,6 +124,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
        private CustomTextViewSemiBold tvHeader;
        private CustomTextViewMedium tvName,tvAddress,tvMobileNumber,tvEmail;
        private LinearLayout llLayout;
+       private ImageView ivEdit;
 
         public ViewHolder(@NonNull View itemView, boolean isLoading) {
 
@@ -105,6 +138,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
                 tvMobileNumber = itemView.findViewById(R.id.tv_number);
                 tvEmail = itemView.findViewById(R.id.tv_mailId);
                 llLayout = itemView.findViewById(R.id.ll_layout);
+                ivEdit = itemView.findViewById(R.id.iv_edit);
 
             }
         }

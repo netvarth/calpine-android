@@ -61,6 +61,7 @@ import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.DepServiceInfo;
 import com.jaldeeinc.jaldee.response.DepartmentInfo;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
+import com.jaldeeinc.jaldee.response.OrderResponse;
 import com.jaldeeinc.jaldee.response.ProfilePicture;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.ScheduleList;
@@ -245,6 +246,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     private SearchLocationAdpterCallback adaptercallback;
     private String location_Id;
     private String place;
+    private OrderResponse orderResponse = new OrderResponse();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -870,21 +872,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         mSearchSettings = response.body();
                         if (mSearchSettings != null) {
 
-                            isToken = mSearchSettings.isShowTokenId();
-                            if (!accountType.equalsIgnoreCase("INDEPENDENT_SP")) {
-                                if (mSearchSettings.isFilterByDept()) {
-                                    // To check if there are any users created -  if no users or departments are created.. even in 404 we have to proceed to next step
-                                    getProviderWithDepartments(uniqueId, mProviderId, mlocationId);
-                                } else {
-                                    //get only providers when there are no departments
-                                    // To check if there are any users created -  if no users are created.. even in 404 we have to proceed to next step
-                                    getProvidersNew(uniqueId, mProviderId, mlocationId);
-                                }
-                            } else {
-
-                                getOnlyServices(uniqueId, mlocationId, mProviderId);
-                            }
-                            ApiCheckInMessage(mlocationId, location);
+                            // to check if the provider has order enabled, if it is order enabled
+                            checkOrderEnabled(mSearchSettings, uniqueId, mProviderId, mlocationId);
                         }
 
                     }
@@ -901,6 +890,74 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     Config.closeDialog(ProviderDetailActivity.this, mDialog);
             }
         });
+    }
+
+    private void checkOrderEnabled(SearchSetting mSearchSettings, int uniqueId, int mProviderId, int mlocationId) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<OrderResponse> call = apiService.getOrderEnabledStatus(mProviderId);
+        call.enqueue(new Callback<OrderResponse>() {
+            @Override
+            public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
+                try {
+
+                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Setting-------------------" + response.code());
+                    if (response.code() == 200) {
+
+                        orderResponse = response.body();
+
+                        if (orderResponse != null) {
+                            orderEnabled = orderResponse.isOrderEnabled();
+                        }
+
+                        isToken = mSearchSettings.isShowTokenId();
+                        if (!accountType.equalsIgnoreCase("INDEPENDENT_SP")) {
+                            if (mSearchSettings.isFilterByDept()) {
+                                // To check if there are any users created -  if no users or departments are created.. even in 404 we have to proceed to next step
+                                getProviderWithDepartments(uniqueId, mProviderId, mlocationId);
+                            } else {
+                                //get only providers when there are no departments
+                                // To check if there are any users created -  if no users are created.. even in 404 we have to proceed to next step
+                                getProvidersNew(uniqueId, mProviderId, mlocationId);
+                            }
+                        } else {
+
+                            getOnlyServices(uniqueId, mlocationId, mProviderId);
+                        }
+                        ApiCheckInMessage(mlocationId, location);
+
+                    } else {
+
+                        isToken = mSearchSettings.isShowTokenId();
+                        if (!accountType.equalsIgnoreCase("INDEPENDENT_SP")) {
+                            if (mSearchSettings.isFilterByDept()) {
+                                // To check if there are any users created -  if no users or departments are created.. even in 404 we have to proceed to next step
+                                getProviderWithDepartments(uniqueId, mProviderId, mlocationId);
+                            } else {
+                                //get only providers when there are no departments
+                                // To check if there are any users created -  if no users are created.. even in 404 we have to proceed to next step
+                                getProvidersNew(uniqueId, mProviderId, mlocationId);
+                            }
+                        } else {
+
+                            getOnlyServices(uniqueId, mlocationId, mProviderId);
+                        }
+                        ApiCheckInMessage(mlocationId, location);
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OrderResponse> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+
     }
 
 
@@ -1831,7 +1888,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                 catalogsList.add(serviceInfo);
                             }
 
-                            if (catalogsList.size() > 0){
+                            if (catalogsList.size() > 0) {
                                 catalogDepartment.setDeptServicesList(catalogsList);
                                 departmentsList.add(catalogDepartment);
                             }
@@ -2270,7 +2327,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 serviceInfo.setTime(appointmentServiceInfo.getAppointServiceAvailability().getNextAvailable());
             }
 
-            if(appointmentServiceInfo.getTotalAmount()!=null){
+            if (appointmentServiceInfo.getTotalAmount() != null) {
                 serviceInfo.setTotalAmount(appointmentServiceInfo.getTotalAmount());
             }
 
@@ -2308,12 +2365,12 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @Override
     public void onCatalogSelected(Catalog catalogInfo) {
 
-        Intent catalogIntent = new Intent(ProviderDetailActivity.this,ItemsActivity.class);
-        if (mBusinessDataList != null && mBusinessDataList.getBusinessName() != null){
-            catalogIntent.putExtra("businessName",mBusinessDataList.getBusinessName());
+        Intent catalogIntent = new Intent(ProviderDetailActivity.this, ItemsActivity.class);
+        if (mBusinessDataList != null && mBusinessDataList.getBusinessName() != null) {
+            catalogIntent.putExtra("providerInfo", mBusinessDataList);
         }
-        catalogIntent.putExtra("catalogInfo",catalogInfo);
-        catalogIntent.putExtra("accountId",providerId);
+        catalogIntent.putExtra("catalogInfo", catalogInfo);
+        catalogIntent.putExtra("accountId", providerId);
         startActivity(catalogIntent);
 
     }
