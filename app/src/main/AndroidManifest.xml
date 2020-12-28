@@ -45,6 +45,7 @@
             android:screenOrientation="portrait" />
         <activity android:name=".activities.ItemsActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".activities.OrdersHistoryActivity"></activity>
         <activity android:name=".activities.JdnActivity" />
         <activity android:name=".activities.SearchResultsActivity"
             android:screenOrientation="portrait" />

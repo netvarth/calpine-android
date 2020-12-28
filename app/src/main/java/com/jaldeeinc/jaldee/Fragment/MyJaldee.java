@@ -1,5 +1,6 @@
 package com.jaldeeinc.jaldee.Fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.AppointmentActivity;
 import com.jaldeeinc.jaldee.activities.HistoryActivity;
 import com.jaldeeinc.jaldee.activities.Home;
+import com.jaldeeinc.jaldee.activities.OrdersHistoryActivity;
 import com.jaldeeinc.jaldee.adapter.JaldeeTabs;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
@@ -44,7 +46,7 @@ public class MyJaldee extends RootFragment {
     Activity mActivity;
     private CustomTextViewMedium tvConsumerName;
     String mFirstName,mLastName;
-    private CustomTextViewSemiBold tvHistory;
+    private CustomTextViewSemiBold tvHistory, tvOrdersHistory;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Animation slideUp, slideRight;
@@ -74,6 +76,7 @@ public class MyJaldee extends RootFragment {
         }
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -94,6 +97,7 @@ public class MyJaldee extends RootFragment {
         slideUp = AnimationUtils.loadAnimation(mContext, R.anim.slide_up_in);
         slideRight = AnimationUtils.loadAnimation(mContext, R.anim.slide_up_out);
         tvHistory = view.findViewById(R.id.tv_history);
+        tvOrdersHistory = view.findViewById(R.id.tv_Orderhistory);
 
         if (message != null) {
 
@@ -130,8 +134,17 @@ public class MyJaldee extends RootFragment {
             }
         });
 
+        tvOrdersHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent ordersHistoryIntent = new Intent(getContext(), OrdersHistoryActivity.class);
+                startActivity(ordersHistoryIntent);
+            }
+        });
+
         tabLayout.addTab(tabLayout.newTab().setText("My Bookings"));
         tabLayout.addTab(tabLayout.newTab().setText("My Payments"));
+        tabLayout.addTab(tabLayout.newTab().setText("My Orders"));
         tabLayout.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
         tabLayout.setTextDirection(View.TEXT_ALIGNMENT_TEXT_START);
         final JaldeeTabs adapter = new JaldeeTabs(getContext(),getChildFragmentManager(), tabLayout.getTabCount());
