@@ -117,7 +117,7 @@ public interface ApiInterface {
 
 
     @POST("consumer/login/reset/{loginId}")
-    Call<ResponseBody> ForgotPwdResponse(@Path("loginId") String loginId);
+    Call<ResponseBody> ForgotPwdResponse(@Path("loginId") String loginId, @Body String countryCode);
 
     @POST("consumer/login/reset/{otp}/validate")
     Call<String> ForgotResetOtp(@Path("otp") String otp);

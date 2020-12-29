@@ -99,7 +99,7 @@ public class ChatActivity extends AppCompatActivity {
     ArrayList<String> imagePathLists = new ArrayList<>();
     Bitmap bitmap;
     File f, file;
-    String path,from;
+    String path,from,from1 = "";
     private LinearLayout llNoHistory;
     private ImageView iv_attach;
     BottomSheetDialog dialog;
@@ -123,6 +123,7 @@ public class ChatActivity extends AppCompatActivity {
         accountID = i.getIntExtra("accountId", 0);
         providerName = i.getStringExtra("name");
         from = i.getStringExtra("from");
+        from1 = i.getStringExtra("from1");
         rvChatMessages = findViewById(R.id.rv_chatMessages);
         etMessage = findViewById(R.id.et_message);
         ivSend = findViewById(R.id.iv_submit_message);
@@ -831,9 +832,13 @@ public class ChatActivity extends AppCompatActivity {
                             for (int i = 0; i < mInboxList.size(); i++) {
 
                                 if (mInboxList.get(i).getWaitlistId() != null) {
-                                    if (mInboxList.get(i).getWaitlistId().equalsIgnoreCase(uuId)) {
-
+                                    if (from1 != null && from1.equalsIgnoreCase(Constants.INBOX)) {
                                         inboxModels.add(mInboxList.get(i));
+                                    } else {
+                                        if (mInboxList.get(i).getWaitlistId().equalsIgnoreCase(uuId)) {
+
+                                            inboxModels.add(mInboxList.get(i));
+                                        }
                                     }
                                 }
                             }

@@ -2,8 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="@dimen/dimen_20dp">
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/close"
+        android:padding="@dimen/padding5"
+        android:layout_gravity="end"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/padding5"
+        app:tint="@color/gray">
+
+    </ImageView>
+
+
 
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewBold

@@ -546,7 +546,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 if(mFavList.get(i).getPhoneNumbers()!=null){
                     if(mFavList.get(i).getPhoneNumbers().size()>0 && mFavList.get(i).getPhoneNumbers().get(0).getPermission().equalsIgnoreCase("all")){
                         myViewHolder.recycleview_contact.setVisibility(View.VISIBLE);
-                        Fav_ContactAdapter checkAdapter = new Fav_ContactAdapter(mFavList.get(i).getPhoneNumbers(), mContext,contactAdapterCallback);
+                        Fav_ContactAdapter checkAdapter = new Fav_ContactAdapter(mFavList.get(i).getPhoneNumbers(), mContext,contactAdapterCallback, mFavList.get(i).getCountryCode());
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                         myViewHolder.recycleview_contact.setLayoutManager(mLayoutManager);
                         myViewHolder.recycleview_contact.setAdapter(checkAdapter);

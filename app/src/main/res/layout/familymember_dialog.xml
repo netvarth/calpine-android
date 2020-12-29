@@ -230,7 +230,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dimen_5dp"
-                android:text="First Name"
+                android:text="First Name*"
                 android:textSize="@dimen/dimen_15sp" />
 
             <EditText
@@ -272,7 +272,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dimen_5dp"
-                android:text="Last Name"
+                android:text="Last Name*"
                 android:textSize="@dimen/dimen_15sp" />
 
             <EditText

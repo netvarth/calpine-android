@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
@@ -109,6 +110,12 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                             }
 
                         } else if (bookings.getBookingType().equalsIgnoreCase(Constants.CHECKIN)) {
+                            if (!bookings.getBookingStatus().equalsIgnoreCase("Done") && !bookings.getBookingStatus().equalsIgnoreCase("started") && !bookings.getBookingStatus().equalsIgnoreCase(Constants.CANCELLED)) {
+                                viewHolder.tvDateAndTime.setVisibility(View.VISIBLE);
+                            }
+                            else{
+                                viewHolder.tvDateAndTime.setVisibility(View.GONE);
+                            }
 
                             if (bookings.getCalculationMode() != null && !bookings.getCalculationMode().equalsIgnoreCase("NoCalc")) {
 
@@ -116,10 +123,10 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                                 if (waitTime == 0) {
                                     viewHolder.tvDateAndTime.setText(R.string.now);
                                 } else if (waitTime == 1) {
-                                    String minuteText = "In " + "<b>" + waitTime + "</b>" + " Minute";
+                                    String minuteText = "In " + "<b>" + Config.getTimeinHourMinutes(waitTime) + "</b>";
                                     viewHolder.tvDateAndTime.setText(Html.fromHtml(minuteText));
                                 } else {
-                                    String minutesText = "In " + "<b>" + waitTime + "</b>" + " Minutes";
+                                    String minutesText = "In " + "<b>" + Config.getTimeinHourMinutes(waitTime) + "</b>";
                                     viewHolder.tvDateAndTime.setText(Html.fromHtml(minutesText));
                                 }
                             } else {
@@ -175,7 +182,11 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                         viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.cb_errorRed));
                     } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.CHECKEDIN)) {
                         viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
-                    } else {
+                    }
+                    else if(bookings.getBookingStatus().equalsIgnoreCase(Constants.DONE)){
+                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.location_theme));
+                    }
+                    else {
                         viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.orange));
                     }
                 } else {

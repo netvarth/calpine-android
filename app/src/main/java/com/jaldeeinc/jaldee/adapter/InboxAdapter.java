@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -107,7 +108,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
     public void onBindViewHolder(final InboxAdapter.MyViewHolder myViewHolder, final int position) {
         final InboxModel inboxList = mInboxList.get(position);
 
-        myViewHolder.tv_message.setText(inboxList.getMsg());
+        myViewHolder.tv_message.setText(Html.fromHtml(inboxList.getMsg()));
 //        Log.i("kingiii",new Gson().toJson(inboxList.getAttachments()));
         myViewHolder.tv_message.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +122,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
                 } else if (inboxList.getWaitlistId().contains("_appt")) {
                     intent.putExtra("from", Constants.APPOINTMENT);
                 }
+                intent.putExtra("from1", Constants.INBOX);
                 view.getContext().startActivity(intent);
             }
         });
@@ -157,6 +159,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
                         } else if (inboxList.getWaitlistId().contains("_appt")) {
                             intent.putExtra("from", Constants.APPOINTMENT);
                         }
+                        intent.putExtra("from1",Constants.INBOX);
                     }
                     mContext.startActivity(intent);
 

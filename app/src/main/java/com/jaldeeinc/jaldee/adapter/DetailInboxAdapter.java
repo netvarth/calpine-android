@@ -122,7 +122,8 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
         myViewHolder.tv_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), ChatActivity.class);
+                Intent intent = new Intent(view.getContext(),
+                        ChatActivity.class);
                 intent.putExtra("uuid",inboxList.getWaitlistId());
                 intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
                 intent.putExtra("name",inboxList.getAccountName());

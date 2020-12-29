@@ -92,7 +92,6 @@ public class ChatHistory extends Dialog {
 
                                 if (mInboxList.get(i).getWaitlistId() != null) {
                                     if (mInboxList.get(i).getWaitlistId().equalsIgnoreCase(encId)) {
-
                                         inboxModels.add(mInboxList.get(i));
                                     }
                                 }

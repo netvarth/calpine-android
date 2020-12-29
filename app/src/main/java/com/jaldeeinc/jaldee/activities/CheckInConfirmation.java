@@ -385,10 +385,10 @@ public class CheckInConfirmation extends AppCompatActivity {
                     tvTime.setGravity(Gravity.CENTER_HORIZONTAL);
                     tvTokenWaitTime.setVisibility(View.VISIBLE);
                     if (activeCheckInInfo.getAppxWaitingTime() == 1) {
-                        tvTokenWaitTime.setText("Est wait time : " + activeCheckInInfo.getAppxWaitingTime() + " Min");
+                        tvTokenWaitTime.setText("Est wait time : " + Config.getTimeinHourMinutes(activeCheckInInfo.getAppxWaitingTime()));
 
                     } else {
-                        tvTokenWaitTime.setText("Est wait time : " + activeCheckInInfo.getAppxWaitingTime() + " Mins");
+                        tvTokenWaitTime.setText("Est wait time : " + Config.getTimeinHourMinutes(activeCheckInInfo.getAppxWaitingTime()));
                     }
 
                 } else {
@@ -399,7 +399,7 @@ public class CheckInConfirmation extends AppCompatActivity {
                 }
             } else {
                 tvHint.setText("Est wait time");
-                tvTime.setText(activeCheckInInfo.getAppxWaitingTime() + " Minutes");
+                tvTime.setText(Config.getTimeinHourMinutes(activeCheckInInfo.getAppxWaitingTime()));
             }
 
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ public class MeetingInfo extends Dialog {
     String phoneNumber;
     String virtualServiceType;
     String countryCode,bookingType;
+    ImageView ivClose;
 
 
     public MeetingInfo(@NonNull Context context, String checkInTime, String name, TeleServiceCheckIn teleServiceCheckInResponse, String callingMode, String waitlistPhoneNumber, String virtualServiceType, String countryCode, String bookingType) {
@@ -47,6 +49,7 @@ public class MeetingInfo extends Dialog {
         tvTime = findViewById(R.id.tv_timeInfo);
         tvOK = findViewById(R.id.tv_ok);
         tvPhoneNumber = findViewById(R.id.tv_phoneNumber);
+        ivClose = findViewById(R.id.iv_close);
 
 
 
@@ -97,6 +100,12 @@ public class MeetingInfo extends Dialog {
 //            tvPhoneNumber.setText("+" + phoneNumber);
 //        }
 
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
 
 
         tvOK.setOnClickListener(new View.OnClickListener() {

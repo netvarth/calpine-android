@@ -949,9 +949,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             LserviceAmount.setVisibility(View.VISIBLE);
             Typeface tyface = Typeface.createFromAsset(getAssets(),
                     "fonts/Montserrat_Bold.otf");
-            txtservicepayment.setTypeface(tyface);
-            txtserviceamount.setTypeface(tyface);
-            String firstWord = " - ";
+//            txtservicepayment.setTypeface(tyface);
+//            txtserviceamount.setTypeface(tyface);
+            String firstWord = "";
             String thirdWord;
             thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getTotalAmount()));
 
@@ -1339,11 +1339,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             LPrepay.setVisibility(View.VISIBLE);
                             Typeface tyface = Typeface.createFromAsset(getAssets(),
                                     "fonts/Montserrat_Bold.otf");
-                            txtprepay.setTypeface(tyface);
-                            txtprepayamount.setTypeface(tyface);
-                            txtservicepayment.setTypeface(tyface);
-                            txtserviceamount.setTypeface(tyface);
-                            String firstWord = " - ";
+//                            txtprepay.setTypeface(tyface);
+//                            txtprepayamount.setTypeface(tyface);
+//                            txtservicepayment.setTypeface(tyface);
+//                            txtserviceamount.setTypeface(tyface);
+                            String firstWord = "";
                             String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinPrePaymentAmount()));
                             String thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getTotalAmount()));
 
@@ -1388,7 +1388,16 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         String number = tvNumber.getText().toString();
         uuid = UUID.randomUUID().toString();
         String virtual_code = et_countryCode.getText().toString();
-        String countryVirtualCode = virtual_code.substring(1);
+        String countryVirtualCode ="";
+        if(!virtual_code.equalsIgnoreCase("")) {
+             countryVirtualCode = virtual_code.substring(1);
+        }
+        else{
+            DynamicToast.make(AppointmentActivity.this, "Countrycode needed", AppCompatResources.getDrawable(
+                    AppointmentActivity.this, R.drawable.ic_info_black),
+                    ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+            return;
+        }
 
 
         ApiInterface apiService =

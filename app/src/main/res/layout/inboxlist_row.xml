@@ -60,7 +60,8 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="message"
-                android:textSize="@dimen/txtsize_12" />
+                android:textSize="@dimen/txtsize_12"
+                android:autoLink="web"/>
 
 
         </LinearLayout>

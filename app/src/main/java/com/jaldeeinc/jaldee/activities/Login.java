@@ -342,7 +342,7 @@ public class Login extends AppCompatActivity {
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ResponseBody> call = apiService.ForgotPwdResponse(loginId);
+        Call<ResponseBody> call = apiService.ForgotPwdResponse(loginId, countryCode);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

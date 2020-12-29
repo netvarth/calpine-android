@@ -529,7 +529,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "place TEXT,"
                 + "onlinePresence TEXT,"
                 + "donationServiceStatus TEXT,"
-                + "googleMapUrl TEXT)";
+                + "googleMapUrl TEXT,"
+                + "countryCode TEXT)";
 
 
         //create table
@@ -553,8 +554,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put("place", favorite.getPlace());
             values.put("onlinePresence", favorite.getOnlinePresence());
             values.put("donationServiceStatus", favorite.getDonationServiceStatus());
-            values.put("googleMapUrl", favorite.getGoogleMapUrl());
-
+            values.put("googleMapUrl",favorite.getGoogleMapUrl());
+            values.put("countryCode", favorite.getCountryCode());
 
             db.insert(mContext.getString(R.string.db_table_fav), null, values);
             // }
@@ -677,7 +678,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<FavouriteModel> favData = new ArrayList<FavouriteModel>();
         String table = mContext.getString(R.string.db_table_fav);
         /* String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message","receiverName", "messageStatus","waitlistId"};*/
-        String[] columns = {"id", "businessname", "locid", "uniqueid", "isRevelPhoneno", "place", "onlinePresence", "donationServiceStatus", "googleMapUrl"};
+        String[] columns = {"id", "businessname", "locid", "uniqueid", "isRevelPhoneno", "place", "onlinePresence", "donationServiceStatus", "googleMapUrl", "countryCode"};
 
 
         //String timestamp="timestamp";
@@ -700,6 +701,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 fav.setOnlinePresence(cursor.getString(6));
                 fav.setDonationServiceStatus(cursor.getString(7));
                 fav.setGoogleMapUrl(cursor.getString(8));
+                fav.setCountryCode(cursor.getString(9));
 
                 favData.add(fav);
             } while (cursor.moveToNext());

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ public class MeetingDetailsWindow extends Dialog {
     TeleServiceCheckIn teleServiceCheckInResponse;
     Context context;
     String virtualServiceType,countryCode;
+    ImageView ivClose;
 
     public MeetingDetailsWindow(@NonNull Context context, String checkInTime, String name, TeleServiceCheckIn teleServiceCheckInResponse, String callingMode, String countryCode) {
         super(context);
@@ -45,10 +47,18 @@ public class MeetingDetailsWindow extends Dialog {
         tvServiceName = findViewById(R.id.tv_serviceName);
         tvTime = findViewById(R.id.tv_timeInfo);
         btJoin = findViewById(R.id.bt_join);
+        ivClose = findViewById(R.id.iv_close);
 
         Typeface tyface = Typeface.createFromAsset(context.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         btJoin.setTypeface(tyface);
+
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
 
         if (serviceName != null){
             String name = serviceName;
