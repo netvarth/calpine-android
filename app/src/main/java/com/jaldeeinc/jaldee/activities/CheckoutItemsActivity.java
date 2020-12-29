@@ -1,5 +1,6 @@
 package com.jaldeeinc.jaldee.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
@@ -9,25 +10,36 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaldeeinc.jaldee.Interface.IAddressInterface;
+import com.jaldeeinc.jaldee.Interface.IEditContact;
+import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.Interface.ISelectedTime;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.AddressAdapter;
@@ -40,24 +52,38 @@ import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomEditTextRegular;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.custom.EditContactDialog;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.SlotSelection;
+import com.jaldeeinc.jaldee.custom.SuccessDialog;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.Address;
 import com.jaldeeinc.jaldee.model.CartItemModel;
 import com.jaldeeinc.jaldee.model.CatalogBody;
+import com.jaldeeinc.jaldee.model.DeliveryBody;
 import com.jaldeeinc.jaldee.model.OrderForBody;
 import com.jaldeeinc.jaldee.model.OrderItem;
-import com.jaldeeinc.jaldee.model.OrderItemBody;
+import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.model.StoreOrderBody;
+import com.jaldeeinc.jaldee.payment.PaymentGateway;
+import com.jaldeeinc.jaldee.payment.PaytmPayment;
+import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CatalogTimeSlot;
 import com.jaldeeinc.jaldee.response.OrderResponse;
+import com.jaldeeinc.jaldee.response.PaymentModel;
+import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.Schedule;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
+import com.jaldeeinc.jaldee.response.TimeSlot;
+import com.jaldeeinc.jaldee.utils.DialogUtilsKt;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
+import com.razorpay.PaymentData;
+import com.razorpay.PaymentResultWithDataListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
@@ -66,16 +92,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kotlin.Unit;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CheckoutItemsActivity extends AppCompatActivity implements IAddressInterface, ISelectedTime {
+public class CheckoutItemsActivity extends AppCompatActivity implements IAddressInterface, ISelectedTime, IPaymentResponse, PaymentResultWithDataListener, IEditContact {
 
     private Context mContext;
     private IAddressInterface iAddressInterface;
@@ -131,6 +159,9 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     @BindView(R.id.rl_deliveryFee)
     RelativeLayout rlDeliveryFee;
 
+    @BindView(R.id.rl_prepayment)
+    RelativeLayout rlPrepayment;
+
     @BindView(R.id.tv_itemsBill)
     CustomTextViewMedium tvItemsBill;
 
@@ -164,6 +195,9 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     @BindView(R.id.tv_contactNumber)
     CustomTextViewSemiBold tvContactNumber;
 
+    @BindView(R.id.tv_advance)
+    CustomTextViewSemiBold tvAdvance;
+
     @BindView(R.id.tv_contactEmail)
     CustomTextViewSemiBold tvContactEmail;
 
@@ -180,8 +214,11 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     private DatabaseHandler db;
     private String selectedDate;
     private String selectedTime = "";
+    private String value = null;
+    private String prepayAmount = "";
     private int accountId, catalogId;
     private AddressDialog addressDialog;
+    private IPaymentResponse paymentResponse;
     private CheckoutItemsAdapter checkoutItemsAdapter;
     ArrayList<Catalog> catalogs = new ArrayList<>();
     private ArrayList<CartItemModel> cartItemsList = new ArrayList<>();
@@ -191,7 +228,15 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     private ArrayList<Schedule> homeDeliverySchedulesList = new ArrayList<>();
     private SlotSelection slotSelection;
     private ISelectedTime iSelectedTime;
+    private BottomSheetDialog dialog;
     private String phoneNumber = "", countryCode = "", email = "";
+    private ActiveOrders activeOrders = new ActiveOrders();
+    private SuccessDialog successDialog;
+    ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
+    private ProfileModel profileDetails = new ProfileModel();
+    private EditContactDialog editContactDialog;
+    private IEditContact iEditContact;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,6 +246,8 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         mContext = CheckoutItemsActivity.this;
         iAddressInterface = (IAddressInterface) this;
         iSelectedTime = (ISelectedTime) this;
+        paymentResponse = (IPaymentResponse) this;
+        iEditContact = (IEditContact) this;
         db = new DatabaseHandler(mContext);
 
         Intent intent = getIntent();
@@ -211,6 +258,10 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         getCatalogDetails(accountId);
         // to fetch user addresses list
         getAddressList();
+
+        Typeface font_style = Typeface.createFromAsset(mContext.getAssets(), "fonts/JosefinSans-SemiBold.ttf");
+        rbHome.setTypeface(font_style);
+        rbStore.setTypeface(font_style);
 
         tvChangeAddress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -251,6 +302,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     rbStore.setChecked(true);
                     rbHome.setChecked(false);
                     getStorePickupSchedules(catalogId, accountId);
+                    updateBill();
 
                 } else {
                     isStore = false;
@@ -271,6 +323,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     rbHome.setChecked(true);
                     rbStore.setChecked(false);
                     getHomeDeliverySchedules(catalogId, accountId);
+                    updateBill();
                 } else {
                     isStore = true;
                     rbHome.setChecked(false);
@@ -307,6 +360,17 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             @Override
             public void onClick(View v) {
 
+                editContactDialog = new EditContactDialog(mContext, iEditContact, phoneNumber, email, countryCode);
+                editContactDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+                editContactDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                editContactDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                editContactDialog.show();
+                editContactDialog.setCancelable(true);
+                DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                int width = (int) (metrics.widthPixels * 1);
+                editContactDialog.getWindow().setGravity(Gravity.BOTTOM);
+                editContactDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
 
             }
         });
@@ -319,6 +383,9 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             }
         });
 
+        // to get payment modes
+        APIPayment(String.valueOf(accountId));
+        ApiGetProfileDetail();
 
     }
 
@@ -331,38 +398,73 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         final Dialog mDialog = Config.getProgressDialog(CheckoutItemsActivity.this, CheckoutItemsActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
-        StoreOrderBody storeOrderBody = new StoreOrderBody();
-        if (isStore) {
-            storeOrderBody.setStorePickup(true);
-        } else {
-            storeOrderBody.setHomeDelivery(true);
-            storeOrderBody.setHomeDeliveryAddress(tvDeliveryAddress.getText().toString());
+        JSONObject inputObj = new JSONObject();
+        JSONObject itemsObj = new JSONObject();
+        JSONObject catalog = new JSONObject();
+        JSONObject orderFor = new JSONObject();
+        JSONObject timeSlot = new JSONObject();
+        JSONArray itemsArray = new JSONArray();
+
+        ArrayList<OrderItem> itemsList = new ArrayList<>();
+        itemsList = db.getOrderItems();
+
+
+        try {
+            if (isStore) {
+                inputObj.put("storePickup", true);
+            } else {
+                inputObj.put("homeDelivery", true);
+                inputObj.put("homeDeliveryAddress", tvDeliveryAddress.getText().toString());
+            }
+            inputObj.put("orderDate", selectedDate);
+            inputObj.put("countryCode", countryCode);
+            inputObj.put("phoneNumber", phoneNumber);
+            inputObj.put("email", email);
+            inputObj.put("orderNote", etSpecialNotes.getText().toString());
+            if (itemsList != null && itemsList.size() > 0) {
+
+                for (int i = 0; i < itemsList.size(); i++) {
+
+                    itemsObj.put("id", itemsList.get(i).getId());
+                    itemsObj.put("quantity", itemsList.get(i).getQuantity());
+                    itemsObj.put("consumerNote", itemsList.get(i).getConsumerNote());
+
+                }
+
+                itemsArray.put(itemsObj);
+            }
+            inputObj.put("orderItem", itemsArray);
+
+            catalog.put("id", catalogId);
+            inputObj.put("catalog", catalog);
+            orderFor.put("id", 0);
+            inputObj.put("orderFor", orderFor);
+            if (selectedTime != null && !selectedTime.trim().equalsIgnoreCase("")) {
+                if (isStore) {
+                    timeSlot.put("sTime", catalogs.get(0).getPickUp().getPickUpSchedule().getCatLogTimeSlotsList().get(0).getStartTime());
+                    timeSlot.put("eTime", catalogs.get(0).getPickUp().getPickUpSchedule().getCatLogTimeSlotsList().get(0).getEndTime());
+                    inputObj.put("timeSlot", timeSlot);
+                } else {
+
+                    timeSlot.put("sTime", catalogs.get(0).getHomeDelivery().getDeliverySchedule().getCatLogTimeSlotsList().get(0).getStartTime());
+                    timeSlot.put("eTime", catalogs.get(0).getHomeDelivery().getDeliverySchedule().getCatLogTimeSlotsList().get(0).getEndTime());
+                    inputObj.put("timeSlot", timeSlot);
+                }
+            } else {
+
+                DialogUtilsKt.showUIDialog(mContext, "", "Please select a time slot", () -> {
+                    return Unit.INSTANCE;
+                });
+                mDialog.dismiss();
+                return;
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        // to send catalogId
-        CatalogBody catalogBody = new CatalogBody(catalogId);
-        storeOrderBody.setCatalogBody(catalogBody);
-
-        // to send orderFor
-        OrderForBody orderForBody = new OrderForBody(0);
-        storeOrderBody.setOrderForBody(orderForBody);
-
-        // to set timeSlot
-        if (selectedTime != null) {
-            CatalogTimeSlot catalogTimeSlot = new CatalogTimeSlot(selectedTime.split("-")[0], selectedTime.split("-")[1]);
-            storeOrderBody.setCatalogTimeSlot(catalogTimeSlot);
-        }
-
-        // to set items
-        storeOrderBody.setOrderItemsList(db.getOrderItems());
-        storeOrderBody.setOrderDate(selectedDate);
-        storeOrderBody.setCountryCode(countryCode);
-        storeOrderBody.setPhoneNumber(phoneNumber);
-        storeOrderBody.setEmail(email);
-        if (!etSpecialNotes.getText().toString().trim().equalsIgnoreCase("")) {
-            storeOrderBody.setOrderNote(etSpecialNotes.getText().toString());
-        }
-
-        Call<ResponseBody> call = apiService.order(accountId, storeOrderBody);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), inputObj.toString());
+        Call<ResponseBody> call = apiService.order(accountId, body);
         call.enqueue(new Callback<okhttp3.ResponseBody>() {
             @Override
             public void onResponse
@@ -376,17 +478,37 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
                         if (response.body() != null) {
 
-                            if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().equalsIgnoreCase("0.0")) {
+                            JSONObject reader = new JSONObject(response.body().string());
+                            Iterator iteratorObj = reader.keys();
 
+                            while (iteratorObj.hasNext()) {
+                                String getJsonObj = (String) iteratorObj.next();
+                                System.out.println("KEY: " + "------>" + getJsonObj);
+                                if (reader.getString(getJsonObj).trim().length() > 7) {
+                                    value = reader.getString(getJsonObj);
+                                }
+                                if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().equalsIgnoreCase("0.0")) {
+                                    prepayAmount = reader.getString("_prepaymentAmount");
+                                }
 
-                            } else {
-
-                                onOrderSuccess(response.body());
-
+                                getConfirmationId(value, accountId);
                             }
 
                         }
 
+                    } else {
+
+                        if (response.code() == 422) {
+
+                            String errorString = response.errorBody().string();
+
+                            Toast.makeText(CheckoutItemsActivity.this, errorString, Toast.LENGTH_LONG).show();
+                        } else {
+                            String responseerror = response.errorBody().string();
+                            Config.logV("Response--error-------------------------" + responseerror);
+                            if (response.code() != 419)
+                                Toast.makeText(CheckoutItemsActivity.this, responseerror, Toast.LENGTH_LONG).show();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -403,7 +525,219 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         });
     }
 
-    private void onOrderSuccess(ResponseBody body) {
+    private void getConfirmationId(String value, int acctId) {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(CheckoutItemsActivity.this).create(ApiInterface.class);
+        Call<ActiveOrders> call = apiService.getOrderDetails(value, acctId);
+        call.enqueue(new Callback<ActiveOrders>() {
+            @Override
+            public void onResponse(Call<ActiveOrders> call, Response<ActiveOrders> response) {
+                try {
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        activeOrders = response.body();
+                        if (activeOrders != null) {
+                            String orderId = activeOrders.getOrderNumber();
+                            if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().equalsIgnoreCase("0.0")) {
+                                if (!showPaytmWallet && !showPayU) {
+
+                                    //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
+                                } else {
+                                    try {
+                                        dialog = new BottomSheetDialog(CheckoutItemsActivity.this);
+                                        dialog.setContentView(R.layout.prepayment);
+                                        dialog.setCancelable(false);
+                                        dialog.show();
+
+                                        Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
+                                        Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
+                                        ImageView ivClose = dialog.findViewById(R.id.iv_close);
+                                        ivClose.setVisibility(View.VISIBLE);
+                                        if (showPaytmWallet) {
+                                            btn_paytm.setVisibility(View.VISIBLE);
+                                        } else {
+                                            btn_paytm.setVisibility(View.GONE);
+                                        }
+                                        if (showPayU) {
+                                            btn_payu.setVisibility(View.VISIBLE);
+                                        } else {
+                                            btn_payu.setVisibility(View.GONE);
+                                        }
+                                        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+                                        TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+
+                                        TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
+
+                                        txtprepayment.setText(R.string.serve_prepay);
+
+                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(prepayAmount))));
+                                        Typeface tyface1 = Typeface.createFromAsset(CheckoutItemsActivity.this.getAssets(),
+                                                "fonts/JosefinSans-SemiBold.ttf");
+                                        txtamt.setTypeface(tyface1);
+                                        ivClose.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+
+                                                finish();
+                                            }
+                                        });
+                                        btn_payu.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+
+                                                new PaymentGateway(CheckoutItemsActivity.this, CheckoutItemsActivity.this).ApiGenerateHash1(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, "checkin", 0, Constants.SOURCE_PAYMENT);
+                                                dialog.dismiss();
+
+                                            }
+                                        });
+
+                                        btn_paytm.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+
+                                                PaytmPayment payment = new PaytmPayment(CheckoutItemsActivity.this, paymentResponse);
+                                                payment.ApiGenerateHashPaytm(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, CheckoutItemsActivity.this, CheckoutItemsActivity.this, "", 0, orderId);
+                                                //payment.generateCheckSum(sAmountPay);
+                                                dialog.dismiss();
+
+                                            }
+                                        });
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+
+                            } else {
+
+                                onOrderSuccess(acctId);
+
+                            }
+                        }
+
+                    }
+
+                } catch (
+                        Exception e) {
+                    Log.i("mnbbnmmnbbnm", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveOrders> call, Throwable t) {
+            }
+        });
+
+    }
+
+    private void onOrderSuccess(int acctId) {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(CheckoutItemsActivity.this).create(ApiInterface.class);
+        Call<ActiveOrders> call = apiService.getOrderDetails(value, acctId);
+        call.enqueue(new Callback<ActiveOrders>() {
+            @Override
+            public void onResponse(Call<ActiveOrders> call, Response<ActiveOrders> response) {
+                try {
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        activeOrders = response.body();
+                        if (activeOrders != null) {
+
+                            successDialog = new SuccessDialog(mContext);
+                            successDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+                            successDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            successDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            successDialog.setCancelable(false);
+                            successDialog.show();
+                            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            successDialog.getWindow().setGravity(Gravity.BOTTOM);
+                            successDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    successDialog.dismiss();
+                                    db.DeleteCart();
+                                    Intent checkin = new Intent(CheckoutItemsActivity.this, Home.class);
+//                                    checkin.putExtra("activeOrder", activeOrders);
+                                    startActivity(checkin);
+                                }
+                            }, 8000);
+
+
+                        }
+
+                    }
+                } catch (Exception e) {
+                    Log.i("mnbbnmmnbbnm", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveOrders> call, Throwable t) {
+            }
+        });
+    }
+
+
+    private void ApiGetProfileDetail() {
+
+        ApiInterface apiService =
+                ApiClient.getClient(CheckoutItemsActivity.this).create(ApiInterface.class);
+
+        final int consumerId = SharedPreference.getInstance(CheckoutItemsActivity.this).getIntValue("consumerId", 0);
+
+        final Dialog mDialog = Config.getProgressDialog(CheckoutItemsActivity.this, CheckoutItemsActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ProfileModel> call = apiService.getProfileDetail(consumerId);
+
+        call.enqueue(new Callback<ProfileModel>() {
+            @Override
+            public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        profileDetails = response.body();
+                        if (profileDetails != null) {
+
+                            if (profileDetails.getUserprofile().getEmail() != null) {
+                                email = profileDetails.getUserprofile().getEmail();
+                                tvContactEmail.setText(email);
+                            } else {
+                                tvContactEmail.setHint("Enter your Mail Id");
+                            }
+                        }
+                    } else {
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<ProfileModel> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+
 
     }
 
@@ -492,11 +826,16 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
                             selectedDate = storePickupSchedulesList.get(0).getDate();
                             String date = convertDate(storePickupSchedulesList.get(0).getDate());
-                            String startTime = convertTime(storePickupSchedulesList.get(0).getCatalogTimeSlotList().get(0).getStartTime());
-                            String endTime = convertTime(storePickupSchedulesList.get(0).getCatalogTimeSlotList().get(0).getEndTime());
-                            tvTimeSlot.setText(date + " " + startTime + "-" + endTime);
-                            selectedTime = startTime + "-" + endTime;
+                            if (storePickupSchedulesList.get(0).getCatalogTimeSlotList() != null) {
+                                String startTime = storePickupSchedulesList.get(0).getCatalogTimeSlotList().get(0).getStartTime();
+                                String endTime = storePickupSchedulesList.get(0).getCatalogTimeSlotList().get(0).getEndTime();
+                                tvTimeSlot.setText(date + " " + startTime + "-" + endTime);
+                                selectedTime = startTime + "-" + endTime;
+                            } else {
+                                tvTimeSlot.setText(storePickupSchedulesList.get(0).getReason());
+                            }
                             llDelivery.setVisibility(View.GONE);
+                            rlDeliveryFee.setVisibility(View.GONE);
                             llContactDetails.setVisibility(View.VISIBLE);
 
                         }
@@ -541,12 +880,17 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                             if (!isStore) {
                                 selectedDate = homeDeliverySchedulesList.get(0).getDate();
                                 String date = convertDate(homeDeliverySchedulesList.get(0).getDate());
-                                String startTime = convertTime(homeDeliverySchedulesList.get(0).getCatalogTimeSlotList().get(0).getStartTime());
-                                String endTime = convertTime(homeDeliverySchedulesList.get(0).getCatalogTimeSlotList().get(0).getEndTime());
-                                tvTimeSlot.setText(date + " " + startTime + "-" + endTime);
-                                selectedTime = startTime + "-" + endTime;
+                                if (homeDeliverySchedulesList.get(0).getCatalogTimeSlotList() != null) {
+                                    String startTime = homeDeliverySchedulesList.get(0).getCatalogTimeSlotList().get(0).getStartTime();
+                                    String endTime = homeDeliverySchedulesList.get(0).getCatalogTimeSlotList().get(0).getEndTime();
+                                    tvTimeSlot.setText(date + " " + startTime + "-" + endTime);
+                                    selectedTime = startTime + "-" + endTime;
+                                } else {
+                                    tvTimeSlot.setText(homeDeliverySchedulesList.get(0).getReason());
+                                }
                                 llContactDetails.setVisibility(View.GONE);
                                 llDelivery.setVisibility(View.VISIBLE);
+                                rlDeliveryFee.setVisibility(View.VISIBLE);
                             }
 
                         }
@@ -645,7 +989,6 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             }
         }
 
-        email = SharedPreference.getInstance(mContext).getStringValue("email", "");
         countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
         phoneNumber = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
         tvContactNumber.setText(phoneNumber);
@@ -665,42 +1008,10 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
         }
 
-        if (catalogs != null && catalogs.size() > 0) {
-            Catalog catalog = new Catalog();
-            catalog = catalogs.get(0);
-            if (catalog.getHomeDelivery() != null) {
 
-                if (catalog.getHomeDelivery().isHomeDelivery()) {
+        updateBill();
+        // to set total bill value
 
-                    rlDeliveryFee.setVisibility(View.VISIBLE);
-
-                    String deliveryCharge = convertAmountToDecimals(String.valueOf(catalog.getHomeDelivery().getDeliveryCharge()));
-                    tvDeliveryBill.setText("₹" + deliveryCharge);
-
-
-                }
-            }
-
-            // to set total bill value
-            try {
-
-                if (catalog.getHomeDelivery() != null && catalog.getHomeDelivery().isHomeDelivery()) {
-
-                    double totalBill = db.getCartDiscountedPrice() + catalog.getHomeDelivery().getDeliveryCharge();
-                    tvBill.setText("₹" + convertAmountToDecimals(String.valueOf(totalBill)));
-
-                } else {
-
-                    double bill = db.getCartDiscountedPrice();
-                    tvBill.setText("₹" + convertAmountToDecimals(String.valueOf(bill)));
-                }
-
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-
-
-        }
 
         // to fetch items in cart
         cartItemsList.clear();
@@ -713,6 +1024,52 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             rvItems.setAdapter(checkoutItemsAdapter);
         }
 
+    }
+
+    private void updateBill() {
+
+        try {
+
+            if (catalogs != null && catalogs.size() > 0) {
+                Catalog catalog = new Catalog();
+                catalog = catalogs.get(0);
+                if (catalog.getHomeDelivery() != null) {
+
+                    if (catalog.getHomeDelivery().isHomeDelivery()) {
+
+                        rlDeliveryFee.setVisibility(View.VISIBLE);
+
+                        String deliveryCharge = convertAmountToDecimals(String.valueOf(catalog.getHomeDelivery().getDeliveryCharge()));
+                        tvDeliveryBill.setText("₹" + deliveryCharge);
+
+
+                    }
+                }
+
+                if (!isStore) {
+
+                    if (catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
+
+                        double totalBill = db.getCartDiscountedPrice() + catalogs.get(0).getHomeDelivery().getDeliveryCharge();
+                        tvBill.setText("₹" + convertAmountToDecimals(String.valueOf(totalBill)));
+
+                    } else {
+
+                        double totalBill = db.getCartDiscountedPrice();
+                        tvBill.setText("₹" + convertAmountToDecimals(String.valueOf(totalBill)));
+
+                    }
+
+                } else {
+
+                    double bill = db.getCartDiscountedPrice();
+                    tvBill.setText("₹" + convertAmountToDecimals(String.valueOf(bill)));
+                }
+            }
+
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -804,21 +1161,6 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         return finalDate;
     }
 
-    public static String convertTime(String time) {
-
-        String formattedTime = "";
-        try {
-            final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            final Date dateObj = sdf.parse(time);
-            time = new SimpleDateFormat("hh:mm aa").format(dateObj);
-            formattedTime = time.replace("am", "AM").replace("pm", "PM");
-
-        } catch (final ParseException e) {
-            e.printStackTrace();
-        }
-        return formattedTime;
-    }
-
 
     public Schedule getSlotsByDate(ArrayList<Schedule> objList, String date) {
         for (Schedule obj : objList) {
@@ -842,5 +1184,144 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
         ColorStateList darkStateList = ContextCompat.getColorStateList(mContext, R.color.dark_blue);
         CompoundButtonCompat.setButtonTintList(checkBox, darkStateList);
+    }
+
+    @Override
+    public void sendPaymentResponse() {
+
+        onOrderSuccess(accountId);
+    }
+
+    @Override
+    public void onPaymentSuccess(String s, PaymentData paymentData) {
+
+        try {
+            RazorpayModel razorpayModel = new RazorpayModel(paymentData);
+            new PaymentGateway(mContext, CheckoutItemsActivity.this).sendPaymentStatus(razorpayModel, "SUCCESS");
+            Toast.makeText(mContext, "Payment Successful", Toast.LENGTH_LONG).show();
+            paymentFinished(razorpayModel);
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentSuccess", e);
+        }
+    }
+
+    @Override
+    public void onPaymentError(int i, String s, PaymentData paymentData) {
+
+        try {
+            AlertDialog alertDialog = new AlertDialog.Builder(CheckoutItemsActivity.this).create();
+            alertDialog.setTitle("Payment Failed");
+            alertDialog.setMessage("Unable to process your request.Please try again after some time");
+            alertDialog.setCancelable(false);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+                            Intent homeIntent = new Intent(CheckoutItemsActivity.this, Home.class);
+                            startActivity(homeIntent);
+                            finish();
+
+                        }
+                    });
+            alertDialog.show();
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentError..", e);
+        }
+    }
+
+    public void paymentFinished(RazorpayModel razorpayModel) {
+
+        onOrderSuccess(accountId);
+    }
+
+    private void APIPayment(String accountID) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
+
+        call.enqueue(new Callback<ArrayList<PaymentModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<PaymentModel>> call, Response<ArrayList<PaymentModel>> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL----%%%%%-----------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        mPaymentData = response.body();
+
+                        for (int i = 0; i < mPaymentData.size(); i++) {
+                            if (mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")) {
+                                showPaytmWallet = true;
+                            }
+
+                            if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
+                                showPayU = true;
+                            }
+                        }
+
+                        if ((showPayU) || showPaytmWallet) {
+                            Config.logV("URL----%%%%%---@@--");
+                            if (catalogs != null && catalogs.size() > 0) {
+
+                                if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().equalsIgnoreCase("0.0")) {
+                                    rlPrepayment.setVisibility(View.VISIBLE);
+                                    String amount = "₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(catalogs.get(0).getAdvanceAmount()));
+                                    tvAdvance.setText(amount);
+                                } else {
+                                    rlPrepayment.setVisibility(View.GONE);
+                                }
+                            }
+
+
+                        }
+
+                    } else {
+                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<PaymentModel>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+
+            }
+        });
+
+    }
+
+
+    @Override
+    public void onEdit(String cCode, String number, String mail) {
+
+        countryCode = cCode;
+        phoneNumber = number;
+        email = mail;
+        tvContactEmail.setText(email);
+        tvContactNumber.setText(phoneNumber);
+        tvCountryCode.setText(countryCode);
     }
 }

@@ -37,17 +37,23 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.CheckoutItemsActivity"
-            android:screenOrientation="portrait" ></activity>
-        <activity android:name=".activities.CartActivity"
+        <activity android:name=".activities.OrderConfirmation"></activity>
+        <activity
+            android:name=".activities.CheckoutItemsActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.ItemDetailAcitvity"
+        <activity
+            android:name=".activities.CartActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.ItemsActivity"
+        <activity
+            android:name=".activities.ItemDetailAcitvity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.OrdersHistoryActivity"></activity>
+        <activity
+            android:name=".activities.ItemsActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.OrdersHistoryActivity" />
         <activity android:name=".activities.JdnActivity" />
-        <activity android:name=".activities.SearchResultsActivity"
+        <activity
+            android:name=".activities.SearchResultsActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".activities.CheckInDetails" />
         <activity android:name=".activities.ChatActivity" />

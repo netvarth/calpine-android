@@ -1,12 +1,17 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
@@ -18,8 +23,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.Interface.ICartInterface;
 import com.jaldeeinc.jaldee.Interface.IImageInterface;
+import com.jaldeeinc.jaldee.Interface.ISaveNotes;
+import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.custom.AddressDialog;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
+import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
@@ -32,7 +41,7 @@ import com.squareup.picasso.Callback;
 
 import java.util.ArrayList;
 
-public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdapter.ViewHolder> {
+public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdapter.ViewHolder> implements ISaveNotes {
 
     ArrayList<CartItemModel> cartItemsList = new ArrayList<>();
     public Context context;
@@ -44,12 +53,17 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
     private DatabaseHandler db;
     ProgressBar progressBar;
     private CardView cvPlus;
+    private boolean isAddNote = false;
+    private CustomNotes customNotes;
+    private ISaveNotes iSaveNotes;
 
-    public SelectedItemsAdapter(ArrayList<CartItemModel> cartItemsList, Context context, boolean isLoading, ICartInterface iCartInterface) {
+    public SelectedItemsAdapter(ArrayList<CartItemModel> cartItemsList, Context context, boolean isLoading, ICartInterface iCartInterface,boolean isAddNote) {
         this.cartItemsList = cartItemsList;
         this.context = context;
         this.isLoading = isLoading;
         this.iCartInterface = iCartInterface;
+        this.isAddNote = isAddNote;
+        this.iSaveNotes = this;
         db = new DatabaseHandler(context);
         vibe = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
     }
@@ -79,6 +93,12 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
             setAnimation(viewHolder.llLayout, position);
 
             viewHolder.tvItemName.setText(cartItem.getItemName());
+
+            if (isAddNote){
+                viewHolder.llAddNote.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.llAddNote.setVisibility(View.GONE);
+            }
 
             if (cartItem.getIsPromotional() == 1) {
 
@@ -170,6 +190,24 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
                 cvPlus.setClickable(false);
             }
 
+            viewHolder.llAddNote.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    customNotes = new CustomNotes(context, cartItem.getItemId(), iSaveNotes);
+                    customNotes.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+                    customNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    customNotes.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    customNotes.setCancelable(false);
+                    customNotes.show();
+                    DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+                    int width = (int) (metrics.widthPixels * 1);
+                    customNotes.getWindow().setGravity(Gravity.BOTTOM);
+                    customNotes.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                }
+            });
+
         } else {
 
             SelectedItemsAdapter.ViewHolder skeletonViewHolder = (SelectedItemsAdapter.ViewHolder) viewHolder;
@@ -184,6 +222,12 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
         return isLoading ? 10 : cartItemsList.size();
     }
 
+    @Override
+    public void saveMessage(String instruction, int itemId) {
+
+        db.addInstructions(itemId,instruction);
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -191,6 +235,7 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
         private CustomTextViewItalicSemiBold tvPrice, tvDiscountedPrice;
         private ElegantNumberButton numberButton;
         private LinearLayout llLayout;
+        private LinearLayout llAddNote;
 
         public ViewHolder(@NonNull View itemView, boolean isLoading) {
 
@@ -202,6 +247,7 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
                 tvDiscountedPrice = itemView.findViewById(R.id.tv_discountedPrice);
                 numberButton = itemView.findViewById(R.id.number_button);
                 llLayout = itemView.findViewById(R.id.ll_layout);
+                llAddNote = itemView.findViewById(R.id.ll_note);
             }
         }
     }

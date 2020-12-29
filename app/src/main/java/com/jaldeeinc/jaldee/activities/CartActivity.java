@@ -98,7 +98,7 @@ public class CartActivity extends AppCompatActivity implements ICartInterface {
             rvItems.setVisibility(View.VISIBLE);
             linearLayoutManager = new LinearLayoutManager(mContext);
             rvItems.setLayoutManager(linearLayoutManager);
-            selectedItemsAdapter = new SelectedItemsAdapter(cartItemsList, mContext, false, iCartInterface);
+            selectedItemsAdapter = new SelectedItemsAdapter(cartItemsList, mContext, false, iCartInterface,true);
             rvItems.setAdapter(selectedItemsAdapter);
 
             if (db.getCartPrice() == db.getCartDiscountedPrice()) {

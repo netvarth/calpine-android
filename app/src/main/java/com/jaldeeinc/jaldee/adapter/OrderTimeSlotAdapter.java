@@ -69,8 +69,8 @@ public class OrderTimeSlotAdapter extends RecyclerView.Adapter<OrderTimeSlotAdap
 
         final CatalogTimeSlot schedule = schedulesList.get(position);
 
-        String startTime = convertTime(schedule.getStartTime());
-        String endTime = convertTime(schedule.getEndTime());
+        String startTime = schedule.getStartTime();
+        String endTime = schedule.getEndTime();
         String displayTime = startTime+" - "+endTime;
 
         myViewHolder.tvTimeSlot.setText(displayTime);
@@ -141,18 +141,4 @@ public class OrderTimeSlotAdapter extends RecyclerView.Adapter<OrderTimeSlotAdap
         }
     }
 
-    public static String convertTime(String time) {
-
-        String formattedTime = "";
-        try {
-            final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            final Date dateObj = sdf.parse(time);
-            time = new SimpleDateFormat("hh:mm aa").format(dateObj);
-            formattedTime = time.replace("am", "AM").replace("pm", "PM");
-
-        } catch (final ParseException e) {
-            e.printStackTrace();
-        }
-        return formattedTime;
-    }
 }

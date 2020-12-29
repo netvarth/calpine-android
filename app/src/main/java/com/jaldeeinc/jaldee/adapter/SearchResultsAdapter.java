@@ -290,7 +290,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         myViewHolder.tvText.setText("Book Service");
                         myViewHolder.llEstTime.setVisibility(View.GONE);
                         myViewHolder.llWaitingInLine.setVisibility(View.GONE);
-                        setServices(myViewHolder,searchdetailList.getServices());
+                        setServices(myViewHolder, searchdetailList.getServices());
 
                     } else if (searchdetailList.isApptEnabled() && searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1") && !searchdetailList.isWaitlistEnabled()) {
 
@@ -298,7 +298,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         myViewHolder.tvText.setText("Book Service");
                         myViewHolder.llEstTime.setVisibility(View.GONE);
                         myViewHolder.llWaitingInLine.setVisibility(View.GONE);
-                        setServices(myViewHolder,searchdetailList.getAppt_services());
+                        setServices(myViewHolder, searchdetailList.getAppt_services());
 
                     } else if (searchdetailList.isWaitlistEnabled() && !searchdetailList.isApptEnabled() && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1"))) {
 
@@ -309,7 +309,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             myViewHolder.tvText.setText("CheckIn");
                         }
 
-                        setServices(myViewHolder,searchdetailList.getServices());
+                        setServices(myViewHolder, searchdetailList.getServices());
 
                         if (searchdetailList.getAvail_date() != null) {
 
@@ -351,7 +351,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         myViewHolder.llEstTime.setVisibility(View.VISIBLE);
                         myViewHolder.llWaitingInLine.setVisibility(View.GONE);
 
-                        setServices(myViewHolder,searchdetailList.getAppt_services());
+                        setServices(myViewHolder, searchdetailList.getAppt_services());
 
                         if (searchdetailList.getAvailableDate() != null) {
 
@@ -376,6 +376,13 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                         myViewHolder.cvAction.setVisibility(View.VISIBLE);
                         myViewHolder.tvText.setText("Donate");
+                        myViewHolder.llEstTime.setVisibility(View.GONE);
+                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+
+                    } else if (searchdetailList.getOrderEnabled() == 1 && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1")) && !searchdetailList.isWaitlistEnabled() && !searchdetailList.isApptEnabled()) {
+
+                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
+                        myViewHolder.tvText.setText("Order");
                         myViewHolder.llEstTime.setVisibility(View.GONE);
                         myViewHolder.llWaitingInLine.setVisibility(View.GONE);
 
@@ -409,10 +416,10 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         iCheckIn.putExtra("getAvail_date", searchdetailList.getAvail_date());
                         iCheckIn.putExtra("virtualservice", searchdetailList.getVirtual_service_status());
                         iCheckIn.putExtra("locationId", searchdetailList.getLocation_id1());
-                        if (searchdetailList.getOrderEnabled() == 1){
-                            iCheckIn.putExtra("isOrderEnabled",true);
+                        if (searchdetailList.getOrderEnabled() == 1) {
+                            iCheckIn.putExtra("isOrderEnabled", true);
                         } else {
-                            iCheckIn.putExtra("isOrderEnabled",false);
+                            iCheckIn.putExtra("isOrderEnabled", false);
                         }
                         context.startActivity(iCheckIn);
                     }
@@ -750,7 +757,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         private CustomTextViewItalicSemiBold tvTime, tvWaitingCount, tvWaitingCountHint;
         private CustomTextViewMedium tvLocationName, tvEstWaitTime, tvSpOne, tvSpTwo, tvWaitingInLine;
         private RatingBar ratingBar;
-        private LinearLayout llServices, llSpecializations, llWaitingInLine, llEstTime,llLoader;
+        private LinearLayout llServices, llSpecializations, llWaitingInLine, llEstTime, llLoader;
         private RelativeLayout rlStatus;
         private CustomTextViewItalicSemiBold tvServiceOne, tvServiceTwo, tvServiceThree;
         private CustomTextViewSemiBold tvText;

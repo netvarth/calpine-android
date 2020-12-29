@@ -114,7 +114,7 @@
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:maxLines="2"
-                            android:text="Krishna bakers and sweetsssss"
+                            android:text=""
                             android:textColor="@color/dark_black"
                             android:textSize="@dimen/dimen_15dp">
 
@@ -133,7 +133,7 @@
                                 android:layout_weight="0.6"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:text="Location name"
+                                android:text=""
                                 android:textColor="@color/title_color"
                                 android:textSize="14dp">
 
@@ -284,6 +284,7 @@
                         android:hint="Add special instructions"
                         android:paddingStart="@dimen/dimen_8dp"
                         android:paddingTop="@dimen/dimen_8dp"
+                        android:inputType="text"
                         android:paddingBottom="@dimen/dimen_8dp"
                         android:textSize="14dp">
 
@@ -412,7 +413,7 @@
                             android:layout_marginStart="@dimen/dimen_10dp"
                             android:paddingTop="@dimen/dimen_10dp"
                             android:paddingBottom="@dimen/dimen_10dp"
-                            android:text="03 Nov, 12:45 AM  - 12:55 PM"
+                            android:text=""
                             android:textColor="@color/dark_blue"
                             android:textSize="@dimen/dimen_16dp">
 
@@ -493,7 +494,7 @@
                             android:id="@+id/tv_countryCode"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="+91 "
+                            android:text=""
                             android:textColor="@color/title_color"
                             android:textSize="@dimen/dimen_15dp">
 
@@ -503,7 +504,7 @@
                             android:id="@+id/tv_contactNumber"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="9491913907"
+                            android:text=""
                             android:textColor="@color/title_color"
                             android:textSize="@dimen/dimen_15dp">
 
@@ -540,7 +541,7 @@
                             android:id="@+id/tv_contactEmail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="sravanworkinfo@gmail.com"
+                            android:text=""
                             android:textColor="@color/title_color"
                             android:textSize="@dimen/dimen_15dp">
 
@@ -704,7 +705,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:text="$6000"
+                            android:text=""
                             android:textColor="@color/title_color"
                             android:textSize="14dp">
 
@@ -735,7 +736,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:text="$60"
+                            android:text=""
                             android:textColor="@color/title_color"
                             android:textSize="14dp">
 
@@ -776,8 +777,39 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:text="$6000"
+                            android:text=""
                             android:textColor="@color/dark_black"
+                            android:textSize="14dp">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_prepayment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:layout_marginEnd="@dimen/dimen_15dp"
+                        android:layout_marginBottom="@dimen/dimen_15dp">
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Advance payment"
+                            android:textColor="@color/dark_black"
+                            android:textSize="13dp">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                            android:id="@+id/tv_advance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text=""
+                            android:textColor="@color/dark_blue"
                             android:textSize="14dp">
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>

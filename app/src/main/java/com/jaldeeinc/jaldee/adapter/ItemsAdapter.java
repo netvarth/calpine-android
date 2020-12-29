@@ -1,12 +1,18 @@
 package com.jaldeeinc.jaldee.adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
@@ -24,6 +30,7 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.ItemsActivity;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
@@ -98,6 +105,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 //                viewHolder.flAdd.setClickable(false);
 //            }
 
+            if (catalogItem.getItems().isShowPromotionalPrice()){
+
+                viewHolder.rlTag.setVisibility(View.VISIBLE);
+                viewHolder.tvTag.setText(catalogItem.getItems().getPromotionLabel());
+            } else {
+
+                viewHolder.rlTag.setVisibility(View.GONE);
+            }
+
             if (catalogItem.getItems().getItemQuantity() == 0) {
                 viewHolder.numberButton.setVisibility(View.GONE);
                 viewHolder.flAdd.setVisibility(View.VISIBLE);
@@ -165,7 +181,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 @Override
                 public void onClick(View v) {
 
-                    if (db.getAccountId() == accountId) {
+                    if (db.getAccountId() == 0 || db.getAccountId() == accountId) {
 
                         viewHolder.flAdd.setVisibility(View.GONE);
                         viewHolder.numberButton.setVisibility(View.VISIBLE);
@@ -194,7 +210,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                         iItemInterface.checkItemQuantity();
                     } else {
 
-                        Toast.makeText(context, "Clear cart to add new items", Toast.LENGTH_SHORT).show();
+                        showAlertDialog();
+
                     }
                 }
             });
@@ -280,6 +297,38 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         }
     }
 
+    private void showAlertDialog() {
+
+        Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.order_conflict);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels * 1);
+        dialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+        CardView cvYes = dialog.findViewById(R.id.cv_yes);
+        CardView cvNo = dialog.findViewById(R.id.cv_no);
+
+        cvNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        cvYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                db.DeleteCart();
+                iItemInterface.checkItemQuantity();
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
     @Override
     public int getItemCount() {
         return isLoading ? 10 : itemsList.size();
@@ -296,6 +345,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         private FrameLayout flAdd;
         private SkeletonLoadingView shimmer;
         private LinearLayout llLoader;
+        private RelativeLayout rlTag;
+        private CustomTextViewMedium tvTag;
 
         public ViewHolder(@NonNull View itemView, boolean isLoading) {
 
@@ -312,6 +363,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 tvDiscountedPrice = itemView.findViewById(R.id.tv_discountedPrice);
                 shimmer = itemView.findViewById(R.id.shimmer);
                 llLoader = itemView.findViewById(R.id.ll_loader);
+                tvTag = itemView.findViewById(R.id.tv_tag);
+                rlTag = itemView.findViewById(R.id.rl_tag);
 
             }
         }

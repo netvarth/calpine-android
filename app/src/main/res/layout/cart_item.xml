@@ -12,20 +12,58 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4">
+
         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
             android:id="@+id/tv_itemName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:ellipsize="end"
-            android:layout_weight="0.4"
+            android:layout_centerVertical="true"
             android:textSize="@dimen/dimen_16dp"
             android:textColor="@color/dark_black"
             android:layout_marginStart="@dimen/dimen_10dp"
-            android:layout_gravity="center"
-            android:text="">
+            android:text="efvrvrev">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+            <LinearLayout
+                android:id="@+id/ll_note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:layout_below="@id/tv_itemName">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_15dp"
+                    android:layout_height="@dimen/dimen_15dp"
+                    android:src="@drawable/edit_icon"
+                    android:layout_gravity="center"
+                    app:tint="@color/dark_blue">
+
+                </ImageView>
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add note"
+                    android:layout_marginStart="@dimen/dimen_2dp"
+                    android:textColor="@color/dark_blue"
+                    android:textSize="@dimen/dimen_12dp">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
+
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
 
         <RelativeLayout
@@ -79,15 +117,6 @@
 
         </RelativeLayout>
 
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:layout_marginStart="@dimen/dimen_15dp"
-        android:layout_marginEnd="@dimen/dimen_15dp"
-        android:background="@drawable/dash_gap">
 
     </LinearLayout>
 

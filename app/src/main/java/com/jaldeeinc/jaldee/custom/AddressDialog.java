@@ -95,6 +95,7 @@ public class AddressDialog extends Dialog implements IEditAddress {
         super(context);
         this.context = context;
         this.addressList = addressList;
+        this.iAddressInterface = iAddressInterface;
 
     }
 

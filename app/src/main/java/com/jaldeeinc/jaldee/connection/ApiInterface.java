@@ -58,6 +58,8 @@ import com.jaldeeinc.jaldee.response.SlotsData;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -596,7 +598,7 @@ public interface ApiInterface {
     Call<ArrayList<Schedule>> getHomeDeliverySchedule(@Path("catalogId") int catalogId, @Query("account") int accountId);
 
     @POST("consumer/orders")
-    Call<ResponseBody> order(@Query("account") int account, @Body StoreOrderBody orderBody);
+    Call<ResponseBody> order(@Query("account") int account,  @Body RequestBody jsonObj);
 
     @GET("consumer/orders")
     Call<ArrayList<ActiveOrders>> getOrders(@QueryMap(encoded = true) Map<String, String> query);
@@ -607,4 +609,6 @@ public interface ApiInterface {
     @GET("consumer/orders/history")
     Call<ArrayList<ActiveOrders>> getOrdersHistory();
 
+    @GET("consumer/orders/{uuid}")
+    Call<ActiveOrders> getOrderDetails(@Path("uuid") String uuid, @Query("account") int account);
 }

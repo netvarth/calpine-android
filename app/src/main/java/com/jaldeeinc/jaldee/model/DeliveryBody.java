@@ -1,24 +1,17 @@
 package com.jaldeeinc.jaldee.model;
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import com.jaldeeinc.jaldee.response.CatalogTimeSlot;
 import com.jaldeeinc.jaldee.response.TimeSlot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-
-public class StoreOrderBody implements Serializable {
-
-    @SerializedName("storePickup")
-    @Expose
-    private boolean pickup;
-
+public class DeliveryBody implements Serializable {
 
     private boolean homeDelivery;
     private String homeDeliveryAddress;
-
     @SerializedName("catalog")
     @Expose
     private CatalogBody catalogBody;
@@ -41,12 +34,13 @@ public class StoreOrderBody implements Serializable {
     private String email;
     private String orderNote;
 
-    public StoreOrderBody() {
+    public DeliveryBody(){
 
     }
 
-    public StoreOrderBody(boolean pickup, CatalogBody catalogBody, OrderForBody orderForBody, TimeSlot timeSlot, ArrayList<OrderItem> orderItemsList, String orderDate, String countryCode, String phoneNumber, String email, String orderNote) {
-        this.pickup = pickup;
+    public DeliveryBody(boolean homeDelivery, String homeDeliveryAddress, CatalogBody catalogBody, OrderForBody orderForBody, TimeSlot timeSlot, ArrayList<OrderItem> orderItemsList, String orderDate, String countryCode, String phoneNumber, String email, String orderNote) {
+        this.homeDelivery = homeDelivery;
+        this.homeDeliveryAddress = homeDeliveryAddress;
         this.catalogBody = catalogBody;
         this.orderForBody = orderForBody;
         this.timeSlot = timeSlot;
@@ -59,12 +53,20 @@ public class StoreOrderBody implements Serializable {
     }
 
 
-    public boolean isPickup() {
-        return pickup;
+    public boolean isHomeDelivery() {
+        return homeDelivery;
     }
 
-    public void setPickup(boolean pickup) {
-        this.pickup = pickup;
+    public void setHomeDelivery(boolean homeDelivery) {
+        this.homeDelivery = homeDelivery;
+    }
+
+    public String getHomeDeliveryAddress() {
+        return homeDeliveryAddress;
+    }
+
+    public void setHomeDeliveryAddress(String homeDeliveryAddress) {
+        this.homeDeliveryAddress = homeDeliveryAddress;
     }
 
     public CatalogBody getCatalogBody() {
@@ -137,21 +139,5 @@ public class StoreOrderBody implements Serializable {
 
     public void setOrderNote(String orderNote) {
         this.orderNote = orderNote;
-    }
-
-    public boolean isHomeDelivery() {
-        return homeDelivery;
-    }
-
-    public void setHomeDelivery(boolean homeDelivery) {
-        this.homeDelivery = homeDelivery;
-    }
-
-    public String getHomeDeliveryAddress() {
-        return homeDeliveryAddress;
-    }
-
-    public void setHomeDeliveryAddress(String homeDeliveryAddress) {
-        this.homeDeliveryAddress = homeDeliveryAddress;
     }
 }

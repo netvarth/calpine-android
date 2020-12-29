@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -40,6 +41,7 @@ import com.jaldeeinc.jaldee.model.CartItemModel;
 import com.jaldeeinc.jaldee.response.CatalogItem;
 import com.jaldeeinc.jaldee.response.Item;
 import com.jaldeeinc.jaldee.response.ItemImages;
+import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
 import com.squareup.picasso.Callback;
 
@@ -111,6 +113,7 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
     ProgressBar progressBar;
     private IDialogInterface iDialogInterface;
     private SelectedItemsDialog selectedItemsDialog;
+    private SearchViewDetail mBusinessDataList = new SearchViewDetail();
 
 
     @Override
@@ -127,6 +130,7 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
         Intent intent = getIntent();
         itemDetails = (CatalogItem) intent.getSerializableExtra("itemInfo");
         accountId = intent.getIntExtra("accountId", 0);
+        mBusinessDataList = (SearchViewDetail) intent.getSerializableExtra("providerInfo");
 
         // to update UI
         checkCart();
@@ -193,32 +197,40 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
             @Override
             public void onClick(View v) {
 
-                flAdd.setVisibility(View.GONE);
-                numberButton.setVisibility(View.VISIBLE);
-                numberButton.setNumber("1");
+                if (db.getAccountId() == 0 || db.getAccountId() == accountId) {
 
-                CartItemModel item = new CartItemModel();
-                item.setItemId(itemDetails.getItems().getItemId());
-                item.setAccountId(accountId);
-                item.setCatalogId(itemDetails.getCatalogId());
-                item.setItemName(itemDetails.getItems().getItemName());
-                if (itemDetails.getItems().getItemImagesList() != null && itemDetails.getItems().getItemImagesList().size() > 0) {
-                    for (int i = 0; i < itemDetails.getItems().getItemImagesList().size(); i++) {
-                        if (itemDetails.getItems().getItemImagesList().get(i).isDisplayImage()) {
-                            item.setImageUrl(itemDetails.getItems().getItemImagesList().get(i).getUrl());
+
+                    flAdd.setVisibility(View.GONE);
+                    numberButton.setVisibility(View.VISIBLE);
+                    numberButton.setNumber("1");
+
+                    CartItemModel item = new CartItemModel();
+                    item.setItemId(itemDetails.getItems().getItemId());
+                    item.setAccountId(accountId);
+                    item.setCatalogId(itemDetails.getCatalogId());
+                    item.setItemName(itemDetails.getItems().getItemName());
+                    if (itemDetails.getItems().getItemImagesList() != null && itemDetails.getItems().getItemImagesList().size() > 0) {
+                        for (int i = 0; i < itemDetails.getItems().getItemImagesList().size(); i++) {
+                            if (itemDetails.getItems().getItemImagesList().get(i).isDisplayImage()) {
+                                item.setImageUrl(itemDetails.getItems().getItemImagesList().get(i).getUrl());
+                            }
                         }
                     }
+                    item.setItemPrice(itemDetails.getItems().getPrice());
+                    item.setMaxQuantity(itemDetails.getMaxQuantity());
+                    item.setQuantity(1);
+                    item.setPromotionalType(itemDetails.getItems().getPromotionalPriceType());
+                    item.setDiscount(itemDetails.getItems().getPromotionalPrice());
+                    item.setDiscountedPrice(itemDetails.getItems().getDiscountedPrice());
+
+                    db.insertItemToCart(item);
+
+                    checkCartCount();
+                } else {
+
+                    showAlertDialog();
+
                 }
-                item.setItemPrice(itemDetails.getItems().getPrice());
-                item.setMaxQuantity(itemDetails.getMaxQuantity());
-                item.setQuantity(1);
-                item.setPromotionalType(itemDetails.getItems().getPromotionalPriceType());
-                item.setDiscount(itemDetails.getItems().getPromotionalPrice());
-                item.setDiscountedPrice(itemDetails.getItems().getDiscountedPrice());
-
-                db.insertItemToCart(item);
-
-                checkCartCount();
             }
         });
 
@@ -314,12 +326,46 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
             public void onClick(View v) {
 
                 Intent intent = new Intent(ItemDetailAcitvity.this, CartActivity.class);
+                intent.putExtra("accountId", accountId);
+                intent.putExtra("providerInfo", mBusinessDataList);
                 startActivity(intent);
 
             }
         });
 
 
+    }
+
+    private void showAlertDialog() {
+
+        Dialog dialog = new Dialog(mContext);
+        dialog.setContentView(R.layout.order_conflict);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels * 1);
+        dialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+        CardView cvYes = dialog.findViewById(R.id.cv_yes);
+        CardView cvNo = dialog.findViewById(R.id.cv_no);
+
+        cvNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        cvYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                db.DeleteCart();
+                checkCartCount();
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     private void checkCart() {

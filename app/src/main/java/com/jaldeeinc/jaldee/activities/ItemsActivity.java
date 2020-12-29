@@ -315,6 +315,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         Intent intent = new Intent(ItemsActivity.this, ItemDetailAcitvity.class);
         intent.putExtra("itemInfo", catalogItem);
         intent.putExtra("accountId", accountId);
+        intent.putExtra("providerInfo",mBusinessDataList);
         startActivity(intent);
 
     }

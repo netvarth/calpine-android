@@ -64,7 +64,7 @@ public class SelectedItemsDialog extends Dialog implements ICartInterface {
 
             linearLayoutManager = new LinearLayoutManager(mContext);
             rvItems.setLayoutManager(linearLayoutManager);
-            selectedItemsAdapter = new SelectedItemsAdapter(cartItemsList, mContext, false, iCartInterface);
+            selectedItemsAdapter = new SelectedItemsAdapter(cartItemsList, mContext, false, iCartInterface,false);
             rvItems.setAdapter(selectedItemsAdapter);
 
         }
@@ -101,7 +101,7 @@ public class SelectedItemsDialog extends Dialog implements ICartInterface {
 
             linearLayoutManager = new LinearLayoutManager(mContext);
             rvItems.setLayoutManager(linearLayoutManager);
-            selectedItemsAdapter = new SelectedItemsAdapter(cartItemsList, mContext, false, iCartInterface);
+            selectedItemsAdapter = new SelectedItemsAdapter(cartItemsList, mContext, false, iCartInterface,false);
             rvItems.setAdapter(selectedItemsAdapter);
 
         }

@@ -217,8 +217,8 @@ public class SlotSelection extends Dialog implements ITimeSlot {
             timeSlots = schedule.getCatalogTimeSlotList();
             selectedDate = schedule.getDate();
             if (timeSlots != null && timeSlots.size() > 0) {
-                String startTime = convertTime(timeSlots.get(0).getStartTime());
-                String endTime = convertTime(timeSlots.get(0).getEndTime());
+                String startTime = timeSlots.get(0).getStartTime();
+                String endTime = timeSlots.get(0).getEndTime();
                 selectedTime = startTime + " - " + endTime;
                 llNoSlots.setVisibility(View.GONE);
                 rvSlots.setVisibility(View.VISIBLE);
@@ -377,20 +377,6 @@ public class SlotSelection extends Dialog implements ITimeSlot {
         return cal.getTime();
     }
 
-    public static String convertTime(String time) {
-
-        String formattedTime = "";
-        try {
-            final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            final Date dateObj = sdf.parse(time);
-            time = new SimpleDateFormat("hh:mm aa").format(dateObj);
-            formattedTime = time.replace("am", "AM").replace("pm", "PM");
-
-        } catch (final ParseException e) {
-            e.printStackTrace();
-        }
-        return formattedTime;
-    }
 
 
     @Override

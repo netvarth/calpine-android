@@ -8,181 +8,233 @@
     app:cardBackgroundColor="@color/white"
     app:cardElevation="6dp">
 
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <com.jaldeeinc.jaldee.custom.BorderImageView
-            android:id="@+id/iv_itemImage"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:visibility="visible"
-            android:layout_marginStart="@dimen/dimen_4dp"
-            android:layout_marginTop="@dimen/dimen_4dp"
-            android:layout_marginEnd="@dimen/dimen_4dp"
-            android:scaleType="centerCrop">
-
-        </com.jaldeeinc.jaldee.custom.BorderImageView>
-
-        <com.omjoonkim.skeletonloadingview.SkeletonLoadingView
-            android:id="@+id/shimmer"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:visibility="gone"
-            app:baseColor="#F4F4F4"
-            app:deepColor="@color/white">
-
-        </com.omjoonkim.skeletonloadingview.SkeletonLoadingView>
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/iv_itemImage"
-            android:layout_marginTop="@dimen/dimen_5dp"
             android:orientation="vertical">
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-                android:id="@+id/tv_itemName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_5dp"
-                android:layout_marginEnd="@dimen/dimen_5dp"
-                android:ellipsize="end"
-                android:letterSpacing="0.03"
-                android:maxLines="2"
-                android:text=""
-                android:textColor="@color/dark_black"
-                android:textSize="14dp">
+            <com.jaldeeinc.jaldee.custom.BorderImageView
+                android:id="@+id/iv_itemImage"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginStart="@dimen/dimen_4dp"
+                android:layout_marginTop="@dimen/dimen_4dp"
+                android:layout_marginEnd="@dimen/dimen_4dp"
+                android:scaleType="centerCrop"
+                android:visibility="visible">
 
-            </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+            </com.jaldeeinc.jaldee.custom.BorderImageView>
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Short Description here"
-                android:textColor="@color/title_grey"
-                android:textSize="@dimen/dimen_12dp"
-                android:layout_below="@id/tv_itemName"
-                android:layout_marginTop="6dp"
+
+            <com.omjoonkim.skeletonloadingview.SkeletonLoadingView
+                android:id="@+id/shimmer"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
                 android:visibility="gone"
-                android:layout_marginStart="@dimen/dimen_5dp">
+                app:baseColor="#F4F4F4"
+                app:deepColor="@color/white">
 
-            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
-
+            </com.omjoonkim.skeletonloadingview.SkeletonLoadingView>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_5dp"
-                android:layout_marginEnd="@dimen/dimen_5dp"
-                android:layout_marginBottom="@dimen/dimen_10dp"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:layout_below="@id/iv_itemImage"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:orientation="vertical">
 
-                <LinearLayout
+                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                    android:id="@+id/tv_itemName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true">
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
+                    android:ellipsize="end"
+                    android:letterSpacing="0.03"
+                    android:maxLines="2"
+                    android:text=""
+                    android:textColor="@color/dark_black"
+                    android:textSize="14dp">
 
+                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_itemName"
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:layout_marginTop="6dp"
+                    android:text="Short Description here"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/dimen_12dp"
+                    android:visibility="gone">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:layout_centerVertical="true">
 
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                        android:id="@+id/tv_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text=""
-                        android:textColor="@color/title_color"
-                        android:textSize="14dp">
 
-                    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                        android:id="@+id/tv_discountedPrice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text=""
-                        android:textColor="@color/title_color"
-                        android:textSize="14dp">
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                                android:id="@+id/tv_price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text=""
+                                android:textColor="@color/title_color"
+                                android:textSize="14dp">
 
-                    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+                            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                                android:id="@+id/tv_discountedPrice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text=""
+                                android:textColor="@color/title_color"
+                                android:textSize="14dp">
+
+                            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="@dimen/dimen_1dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/dimen_10dp"
+                            android:layout_marginTop="@dimen/dimen_4dp"
+                            android:layout_marginEnd="@dimen/dimen_5dp"
+                            android:layout_marginBottom="@dimen/dimen_4dp"
+                            android:background="@color/light_grey">
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="@dimen/dimen_1dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/dimen_10dp"
-                        android:layout_marginTop="@dimen/dimen_4dp"
-                        android:layout_marginEnd="@dimen/dimen_5dp"
-                        android:layout_marginBottom="@dimen/dimen_4dp"
-                        android:background="@color/light_grey">
+                    <FrameLayout
+                        android:id="@+id/fl_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimen_25dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/border_items"
+                        android:visibility="visible">
 
-                    </LinearLayout>
+                        <ImageView
+                            android:layout_width="@dimen/dimen_5dp"
+                            android:layout_height="@dimen/dimen_5dp"
+                            android:layout_gravity="end"
+                            android:layout_marginTop="@dimen/dimen_5dp"
+                            android:layout_marginEnd="@dimen/dimen_8dp"
+                            android:src="@drawable/add"
+                            app:tint="@color/location_theme">
 
-                </LinearLayout>
-
-                <FrameLayout
-                    android:id="@+id/fl_add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dimen_25dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/border_items"
-                    android:visibility="visible">
-
-                    <ImageView
-                        android:layout_width="@dimen/dimen_5dp"
-                        android:layout_height="@dimen/dimen_5dp"
-                        android:src="@drawable/add"
-                        android:layout_gravity="end"
-                        android:layout_marginTop="@dimen/dimen_5dp"
-                        android:layout_marginEnd="@dimen/dimen_8dp"
-                        app:tint="@color/location_theme">
-
-                    </ImageView>
+                        </ImageView>
 
 
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/dimen_15dp"
+                            android:paddingTop="@dimen/dimen_2dp"
+                            android:paddingEnd="@dimen/dimen_15dp"
+                            android:paddingBottom="@dimen/dimen_4dp"
+                            android:text="ADD"
+                            android:textColor="@color/dark_blue"
+                            android:textSize="@dimen/dimen_15dp">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+                    </FrameLayout>
+
+
+                    <com.jaldeeinc.jaldee.custom.ElegantNumberButton
+                        android:id="@+id/number_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/dimen_2dp"
-                        android:paddingBottom="@dimen/dimen_4dp"
-                        android:paddingStart="@dimen/dimen_15dp"
-                        android:paddingEnd="@dimen/dimen_15dp"
-                        android:text="ADD"
-                        android:textColor="@color/dark_blue"
-                        android:textSize="@dimen/dimen_15dp">
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:visibility="gone"
+                        app:backgroundDrawable="@drawable/border_items"
+                        app:textSize="6dp" />
 
-                    </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+                </RelativeLayout>
 
-                </FrameLayout>
-
-
-                <com.jaldeeinc.jaldee.custom.ElegantNumberButton
-                    android:id="@+id/number_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:visibility="gone"
-                    app:backgroundDrawable="@drawable/border_items"
-                    app:textSize="6dp" />
 
             </RelativeLayout>
 
+        </LinearLayout>
 
-        </RelativeLayout>
 
-    </LinearLayout>
+        <com.jaldeeinc.jaldee.custom.ShimmerFrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:shimmer_duration="3000"
+            app:shimmer_base_alpha="0.9"
+            app:shimmer_highlight_color="@color/white">
+
+            <RelativeLayout
+                android:id="@+id/rl_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="-4dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_80dp"
+                    android:layout_height="@dimen/dimen_50dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ribbon_new">
+
+                </ImageView>
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:id="@+id/tv_tag"
+                    android:layout_width="@dimen/dimen_80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/dimen_10dp"
+                    android:paddingEnd="@dimen/dimen_5dp"
+                    android:text="On sale"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/dimen_10dp">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+            </RelativeLayout>
+        </com.jaldeeinc.jaldee.custom.ShimmerFrameLayout>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/ll_loader"

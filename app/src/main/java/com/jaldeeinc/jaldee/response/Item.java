@@ -64,6 +64,14 @@ public class Item implements Serializable {
     @Expose
     private boolean showPromotionalPrice;
 
+    @SerializedName("promotionLabelType")
+    @Expose
+    private String promotionLabelType;
+
+    @SerializedName("promotionLabel")
+    @Expose
+    private String promotionLabel;
+
     @SerializedName("itemCode")
     @Expose
     private String itemCode;
@@ -239,5 +247,21 @@ public class Item implements Serializable {
 
     public void setDisplayImage(String displayImage) {
         this.displayImage = displayImage;
+    }
+
+    public String getPromotionLabelType() {
+        return promotionLabelType;
+    }
+
+    public void setPromotionLabelType(String promotionLabelType) {
+        this.promotionLabelType = promotionLabelType;
+    }
+
+    public String getPromotionLabel() {
+        return promotionLabel;
+    }
+
+    public void setPromotionLabel(String promotionLabel) {
+        this.promotionLabel = promotionLabel;
     }
 }

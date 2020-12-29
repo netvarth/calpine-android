@@ -2,9 +2,10 @@ package com.jaldeeinc.jaldee.response;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ActiveOrders {
+public class ActiveOrders implements Serializable {
     int accesScope;
     public int getAccesScope() {
         return accesScope;

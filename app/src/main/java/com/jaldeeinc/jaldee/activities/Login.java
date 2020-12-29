@@ -280,6 +280,7 @@ public class Login extends AppCompatActivity {
 
                         SharedPreference.getInstance(mContext).setValue("mobile", response.body().getPrimaryPhoneNumber());
                         SharedPreference.getInstance(mContext).setValue("countryCode", countryCode);
+
                         Intent iReg = new Intent(mContext, Home.class);
                         if(detail!=null){
                             iReg.putExtra("detail_id", (detail));
