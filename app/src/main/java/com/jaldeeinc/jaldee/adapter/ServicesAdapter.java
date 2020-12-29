@@ -102,7 +102,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
         setAnimation(viewHolder.cvCard, childPosition);
 
         // to set Provider image
-        if (child.getType().equalsIgnoreCase(Constants.PROVIDER)) {
+        if (child.getType().equalsIgnoreCase(Constants.PROVIDER) || child.getType().equalsIgnoreCase(Constants.ORDERS)) {
             viewHolder.cvImage.setVisibility(View.VISIBLE);
             viewHolder.llTime.setVisibility(View.GONE);
             viewHolder.llDonationRange.setVisibility(View.GONE);
@@ -330,6 +330,12 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
                             if (child.getProviderInfo() != null) {
                                 iSelectedService.onProviderSelected(child.getProviderInfo());
+                            }
+                        }
+                        if (child.getType().equalsIgnoreCase(Constants.ORDERS)) {
+
+                            if (child.getCatalogInfo() != null) {
+                                iSelectedService.onCatalogSelected(child.getCatalogInfo());
                             }
                         } else if (child.getType().equalsIgnoreCase(Constants.DONATION)) {
 

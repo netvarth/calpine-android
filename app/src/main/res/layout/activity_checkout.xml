@@ -282,9 +282,9 @@
                         android:background="@drawable/edittext"
                         android:backgroundTint="@color/special_background"
                         android:hint="Add special instructions"
+                        android:inputType="text"
                         android:paddingStart="@dimen/dimen_8dp"
                         android:paddingTop="@dimen/dimen_8dp"
-                        android:inputType="text"
                         android:paddingBottom="@dimen/dimen_8dp"
                         android:textSize="14dp">
 
@@ -433,8 +433,8 @@
                 android:layout_margin="@dimen/dimen_10dp"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:visibility="gone"
-                android:paddingBottom="@dimen/dimen_15dp">
+                android:paddingBottom="@dimen/dimen_15dp"
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -504,6 +504,7 @@
                             android:id="@+id/tv_contactNumber"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimen_4dp"
                             android:text=""
                             android:textColor="@color/title_color"
                             android:textSize="@dimen/dimen_15dp">
@@ -560,10 +561,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_10dp"
-                android:visibility="gone"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:paddingBottom="@dimen/dimen_15dp">
+                android:paddingBottom="@dimen/dimen_15dp"
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -630,15 +631,34 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                            android:id="@+id/tv_number"
+                        <LinearLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Mobile number"
-                            android:textColor="@color/title_color"
-                            android:textSize="@dimen/dimen_10dp">
+                            android:layout_height="wrap_content">
 
-                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                                android:id="@+id/tv_cCode"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="+91"
+                                android:textColor="@color/title_color"
+                                android:textSize="@dimen/dimen_10dp">
+
+                            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                                android:id="@+id/tv_number"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Mobile number"
+                                android:layout_marginStart="@dimen/dimen_4dp"
+                                android:textColor="@color/title_color"
+                                android:textSize="@dimen/dimen_10dp">
+
+                            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                        </LinearLayout>
+
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                             android:id="@+id/tv_mailId"
@@ -789,9 +809,9 @@
                         android:id="@+id/rl_prepayment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
                         android:layout_marginEnd="@dimen/dimen_15dp"
-                        android:layout_marginBottom="@dimen/dimen_15dp">
+                        android:layout_marginBottom="@dimen/dimen_15dp"
+                        android:visibility="gone">
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                             android:layout_width="wrap_content"

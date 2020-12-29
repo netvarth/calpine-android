@@ -210,6 +210,9 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     @BindView(R.id.cv_placeOrder)
     CardView cvPlaceOrder;
 
+    @BindView(R.id.cv_back)
+    CardView cvBack;
+
     private boolean isStore = true;
     private DatabaseHandler db;
     private String selectedDate;
@@ -279,6 +282,14 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             }
         });
 
+        cvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                finish();
+            }
+        });
+
         tvStoreDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -338,20 +349,22 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             @Override
             public void onClick(View v) {
 
-                if (isStore) {
-                    slotSelection = new SlotSelection(mContext, storePickupSchedulesList, iSelectedTime, selectedDate);
-                } else {
-                    slotSelection = new SlotSelection(mContext, homeDeliverySchedulesList, iSelectedTime, selectedDate);
+                if (selectedDate != null && !selectedDate.trim().equalsIgnoreCase("")) {
+                    if (isStore) {
+                        slotSelection = new SlotSelection(mContext, storePickupSchedulesList, iSelectedTime, selectedDate);
+                    } else {
+                        slotSelection = new SlotSelection(mContext, homeDeliverySchedulesList, iSelectedTime, selectedDate);
+                    }
+                    slotSelection.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+                    slotSelection.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    slotSelection.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    slotSelection.show();
+                    slotSelection.setCancelable(true);
+                    DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                    int width = (int) (metrics.widthPixels * 1);
+                    slotSelection.getWindow().setGravity(Gravity.BOTTOM);
+                    slotSelection.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                 }
-                slotSelection.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
-                slotSelection.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                slotSelection.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                slotSelection.show();
-                slotSelection.setCancelable(true);
-                DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-                int width = (int) (metrics.widthPixels * 1);
-                slotSelection.getWindow().setGravity(Gravity.BOTTOM);
-                slotSelection.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
 
             }
         });
@@ -770,7 +783,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                 getStorePickupSchedules(catalogs.get(0).getCatLogId(), accountId);
                                 getHomeDeliverySchedules(catalogs.get(0).getCatLogId(), accountId);
 
-                            } else if (catalogs.get(0).getPickUp() != null && catalogs.get(0).getPickUp().isOrderPickUp() && catalogs.get(0).getHomeDelivery() != null && !catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
+                            } else if (catalogs.get(0).getPickUp() != null && catalogs.get(0).getPickUp().isOrderPickUp() && catalogs.get(0).getHomeDelivery() == null) {
 
                                 rbHome.setVisibility(View.GONE);
                                 rbStore.setVisibility(View.VISIBLE);
@@ -778,7 +791,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                 rbHome.setChecked(false);
                                 getStorePickupSchedules(catalogs.get(0).getCatLogId(), accountId);
 
-                            } else if (catalogs.get(0).getPickUp() != null && !catalogs.get(0).getPickUp().isOrderPickUp() && catalogs.get(0).getHomeDelivery() != null && !catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
+                            } else if (catalogs.get(0).getPickUp() == null  && catalogs.get(0).getHomeDelivery() != null && !catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
 
                                 rbStore.setVisibility(View.GONE);
                                 rbHome.setVisibility(View.VISIBLE);
@@ -840,6 +853,9 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
                         }
 
+                    } else {
+
+                        tvTimeSlot.setText("Not available");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -895,6 +911,9 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
                         }
 
+                    } else {
+
+                        tvTimeSlot.setText("Not available");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

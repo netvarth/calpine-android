@@ -105,7 +105,6 @@ public class AddressDialog extends Dialog implements IEditAddress {
         setContentView(R.layout.address_dialog);
         ButterKnife.bind(this);
         iEditAddress = this;
-        iAddressInterface = (IAddressInterface) this;
 
         animShake = AnimationUtils.loadAnimation(context, R.anim.shake);
         slideUp = AnimationUtils.loadAnimation(context, R.anim.slide_in_left);

@@ -5,6 +5,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -171,13 +172,13 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                     tvDescription.setText(catalogInfo.getCatalogDescription());
                 }
 
-                if (catalogInfo.getHomeDelivery().isHomeDelivery()) {
+                if (catalogInfo.getHomeDelivery() != null && catalogInfo.getHomeDelivery().isHomeDelivery()) {
                     llHomeDelivery.setVisibility(View.VISIBLE);
                 } else {
                     llHomeDelivery.setVisibility(View.GONE);
                 }
 
-                if (catalogInfo.getPickUp().isOrderPickUp()) {
+                if (catalogInfo.getPickUp() != null && catalogInfo.getPickUp().isOrderPickUp()) {
                     llStorePickup.setVisibility(View.VISIBLE);
                 } else {
                     llStorePickup.setVisibility(View.GONE);
@@ -218,10 +219,10 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(ItemsActivity.this, CartActivity.class);
-                intent.putExtra("accountId", accountId);
-                intent.putExtra("providerInfo",mBusinessDataList);
-                startActivity(intent);
+                    Intent intent = new Intent(ItemsActivity.this, CartActivity.class);
+                    intent.putExtra("accountId", accountId);
+                    intent.putExtra("providerInfo", mBusinessDataList);
+                    startActivity(intent);
 
             }
         });
@@ -315,7 +316,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         Intent intent = new Intent(ItemsActivity.this, ItemDetailAcitvity.class);
         intent.putExtra("itemInfo", catalogItem);
         intent.putExtra("accountId", accountId);
-        intent.putExtra("providerInfo",mBusinessDataList);
+        intent.putExtra("providerInfo", mBusinessDataList);
         startActivity(intent);
 
     }
@@ -378,6 +379,8 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         }
         refreshData();
     }
+
+
 
 
 }

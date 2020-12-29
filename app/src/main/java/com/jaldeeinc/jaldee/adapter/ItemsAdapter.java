@@ -191,7 +191,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                         item.setItemId(catalogItem.getItems().getItemId());
                         item.setAccountId(accountId);
                         item.setCatalogId(catalogItem.getCatalogId());
-                        item.setItemName(catalogItem.getItems().getItemName());
+                        item.setItemName(catalogItem.getItems().getDisplayName());
                         item.setImageUrl(catalogItem.getItems().getDisplayImage());
                         item.setItemPrice(catalogItem.getItems().getPrice());
                         item.setMaxQuantity(catalogItem.getMaxQuantity());

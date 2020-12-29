@@ -22,6 +22,7 @@ import com.jaldeeinc.jaldee.model.CartItemModel;
 import com.jaldeeinc.jaldee.response.CatalogItem;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -46,6 +47,9 @@ public class CartActivity extends AppCompatActivity implements ICartInterface {
 
     @BindView(R.id.cv_itemsCart)
     CardView cvItemsCart;
+
+    @BindView(R.id.cv_back)
+    CardView cvBack;
 
     private Context mContext;
     private int accountId;
@@ -83,6 +87,14 @@ public class CartActivity extends AppCompatActivity implements ICartInterface {
             }
         });
 
+        cvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                finish();
+            }
+        });
+
     }
 
     private void updateUI() {
@@ -104,14 +116,17 @@ public class CartActivity extends AppCompatActivity implements ICartInterface {
             if (db.getCartPrice() == db.getCartDiscountedPrice()) {
                 tvSubTotal.setVisibility(View.GONE);
                 tvDiscountedPrice.setVisibility(View.VISIBLE);
-                tvDiscountedPrice.setText("₹" + db.getCartPrice());
+                String discountedPrice = convertAmountToDecimals(String.valueOf(db.getCartPrice()));
+                tvDiscountedPrice.setText("₹" +discountedPrice);
             } else {
 
                 tvSubTotal.setVisibility(View.VISIBLE);
-                tvSubTotal.setText("₹" + db.getCartPrice());
+                String amount = convertAmountToDecimals(String.valueOf(db.getCartPrice()));
+                tvSubTotal.setText("₹" + amount);
                 tvSubTotal.setPaintFlags(tvSubTotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 tvDiscountedPrice.setVisibility(View.VISIBLE);
-                tvDiscountedPrice.setText("₹" + db.getCartDiscountedPrice());
+                String discountedPrice = convertAmountToDecimals(String.valueOf(db.getCartDiscountedPrice()));
+                tvDiscountedPrice.setText("₹" + discountedPrice);
             }
 
         } else {
@@ -128,6 +143,16 @@ public class CartActivity extends AppCompatActivity implements ICartInterface {
     public void checkCartCount() {
 
         updateUI();
+
+    }
+
+    public static String convertAmountToDecimals(String price) {
+
+        double a = Double.parseDouble(price);
+        DecimalFormat decim = new DecimalFormat("0.00");
+        Double price2 = Double.parseDouble(decim.format(a));
+        String amount = decim.format(price2);
+        return amount;
 
     }
 }

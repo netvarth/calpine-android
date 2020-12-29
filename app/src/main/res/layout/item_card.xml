@@ -192,8 +192,8 @@
         <com.jaldeeinc.jaldee.custom.ShimmerFrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:shimmer_duration="3000"
-            app:shimmer_base_alpha="0.9"
+            app:shimmer_duration="2000"
+            app:shimmer_base_alpha="0.8"
             app:shimmer_highlight_color="@color/white">
 
             <RelativeLayout
@@ -202,7 +202,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="-4dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <ImageView
                     android:layout_width="@dimen/dimen_80dp"

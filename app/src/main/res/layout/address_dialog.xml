@@ -32,23 +32,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="gone"
-            android:layout_marginStart="@dimen/dimen_12dp">
+            android:layout_marginStart="@dimen/dimen_12dp"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="@dimen/dimen_15dp"
                 android:layout_height="@dimen/dimen_15dp"
-                android:src="@drawable/left_icon"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:src="@drawable/left_icon">
 
             </ImageView>
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Back"
-                android:layout_marginStart="@dimen/dimen_5dp"
                 android:layout_gravity="center"
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:text="Back"
                 android:textColor="@color/dark_blue"
                 android:textSize="14dp">
 
@@ -202,19 +202,35 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <com.jaldeeinc.jaldee.custom.CustomEditTextRegular
-                        android:id="@+id/et_mobile"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/dimen_15dp"
-                        android:layout_weight="0.5"
-                        android:backgroundTint="@color/light_grey"
-                        android:hint="Mobile Number"
-                        android:inputType="number"
-                        android:textColor="@color/title_color"
-                        android:textSize="@dimen/dimen_15dp">
+                        android:layout_weight="0.5">
 
-                    </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
+                        <com.jaldeeinc.jaldee.custom.CustomEditTextRegular
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="+91"
+                            android:backgroundTint="@color/light_grey"
+                            android:textColor="@color/title_color"
+                            android:textSize="@dimen/dimen_15dp">
+
+                        </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
+
+                        <com.jaldeeinc.jaldee.custom.CustomEditTextRegular
+                            android:id="@+id/et_mobile"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dimen_15dp"
+                            android:backgroundTint="@color/light_grey"
+                            android:hint="Mobile Number"
+                            android:inputType="number"
+                            android:textColor="@color/title_color"
+                            android:textSize="@dimen/dimen_15dp">
+
+                        </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
+
+                    </LinearLayout>
 
                     <com.jaldeeinc.jaldee.custom.CustomEditTextRegular
                         android:id="@+id/et_email"

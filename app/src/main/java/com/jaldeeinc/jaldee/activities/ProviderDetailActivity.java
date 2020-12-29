@@ -1865,7 +1865,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         if (catalogs.size() > 0) {
                             DepartmentInfo catalogDepartment = new DepartmentInfo();
                             ArrayList<DepServiceInfo> catalogsList = new ArrayList<DepServiceInfo>();
-                            catalogDepartment.setDepartmentName("Donations");
+                            catalogDepartment.setDepartmentName("Catalog");
 
                             for (Catalog catalog : catalogs) {
 

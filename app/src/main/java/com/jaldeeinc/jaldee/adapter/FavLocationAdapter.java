@@ -370,7 +370,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                                 }
                             }
                             //Future Checkin
-                            if (searchSetting.isFutureDateWaitlist() && queueList.getNextAvailableQueue().getAvailableDate() != null) {
+                            if (searchSetting != null && searchSetting.isFutureDateWaitlist() && queueList.getNextAvailableQueue().getAvailableDate() != null) {
 //                                    myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
 //                                    myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
                                 if (queueList.getNextAvailableQueue().isShowToken()) {

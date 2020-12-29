@@ -208,7 +208,7 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
                     item.setItemId(itemDetails.getItems().getItemId());
                     item.setAccountId(accountId);
                     item.setCatalogId(itemDetails.getCatalogId());
-                    item.setItemName(itemDetails.getItems().getItemName());
+                    item.setItemName(itemDetails.getItems().getDisplayName());
                     if (itemDetails.getItems().getItemImagesList() != null && itemDetails.getItems().getItemImagesList().size() > 0) {
                         for (int i = 0; i < itemDetails.getItems().getItemImagesList().size(); i++) {
                             if (itemDetails.getItems().getItemImagesList().get(i).isDisplayImage()) {
