@@ -45,6 +45,7 @@ import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
 import com.squareup.picasso.Callback;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -175,14 +176,16 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
 
                     tvPrice.setVisibility(View.VISIBLE);
                     tvDiscountedPrice.setVisibility(View.VISIBLE);
-                    tvPrice.setText("₹" + itemDetails.getItems().getPrice());
+                    String amount = String.valueOf(itemDetails.getItems().getPrice());
+                    tvPrice.setText("₹" + convertAmountToDecimals(amount));
                     tvPrice.setPaintFlags(tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     String price = String.valueOf(itemDetails.getItems().getPromotionalPrice());
-                    tvDiscountedPrice.setText("₹" + price);
+                    tvDiscountedPrice.setText("₹" + convertAmountToDecimals(price));
 
                 } else {
                     tvPrice.setVisibility(View.VISIBLE);
-                    tvPrice.setText("₹" + itemDetails.getItems().getPrice());
+                    String amount = String.valueOf(itemDetails.getItems().getPrice());
+                    tvPrice.setText("₹" + convertAmountToDecimals(amount));
                     tvDiscountedPrice.setVisibility(View.GONE);
 
                 }
@@ -389,7 +392,19 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
         if (accountId == db.getAccountId()) {
             cvItemsCart.setVisibility(View.VISIBLE);
             tvItemsCount.setText("Your Order " + "(" + db.getCartCount() + ")");
-            tvSubTotal.setText("₹" + db.getCartPrice());
+            if (db.getCartPrice() == db.getCartDiscountedPrice()) {
+
+                tvSubTotal.setVisibility(View.GONE);
+                tvTotalDiscount.setVisibility(View.VISIBLE);
+                tvTotalDiscount.setText("₹" + db.getCartPrice());
+
+            } else {
+
+                tvSubTotal.setVisibility(View.VISIBLE);
+                tvSubTotal.setText("₹" + db.getCartPrice());
+                tvTotalDiscount.setVisibility(View.VISIBLE);
+                tvTotalDiscount.setText("₹" + db.getCartDiscountedPrice());
+            }
 
         } else {
 
@@ -420,6 +435,7 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
 
                 tvSubTotal.setVisibility(View.VISIBLE);
                 tvSubTotal.setText("₹" + db.getCartPrice());
+                tvSubTotal.setPaintFlags(tvSubTotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 tvTotalDiscount.setVisibility(View.VISIBLE);
                 tvTotalDiscount.setText("₹" + db.getCartDiscountedPrice());
             }
@@ -460,6 +476,16 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
     public void onClearClick() {
 
         checkCart();
+
+    }
+
+    public static String convertAmountToDecimals(String price) {
+
+        double a = Double.parseDouble(price);
+        DecimalFormat decim = new DecimalFormat("0.00");
+        Double price2 = Double.parseDouble(decim.format(a));
+        String amount = decim.format(price2);
+        return amount;
 
     }
 }

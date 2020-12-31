@@ -39,6 +39,7 @@ import com.jaldeeinc.jaldee.response.ItemImages;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
 import com.squareup.picasso.Callback;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdapter.ViewHolder> {
@@ -107,13 +108,16 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
 
                 viewHolder.tvPrice.setVisibility(View.VISIBLE);
                 viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
-                viewHolder.tvPrice.setText("₹" + cartItem.getItemPrice() * cartItem.getQuantity());
+                double amount = cartItem.getItemPrice() * cartItem.getQuantity();
+                viewHolder.tvPrice.setText("₹" + convertAmountToDecimals(String.valueOf(amount)));
                 viewHolder.tvPrice.setPaintFlags(viewHolder.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                viewHolder.tvDiscountedPrice.setText("₹"+ cartItem.getDiscountedPrice() * cartItem.getQuantity());
+                double discountAmount = cartItem.getDiscountedPrice() * cartItem.getQuantity();
+                viewHolder.tvDiscountedPrice.setText("₹"+ convertAmountToDecimals(String.valueOf(discountAmount)));
 
             } else {
                 viewHolder.tvPrice.setVisibility(View.VISIBLE);
-                viewHolder.tvPrice.setText("₹" + cartItem.getItemPrice() * cartItem.getQuantity());
+                double amount = cartItem.getItemPrice() * cartItem.getQuantity();
+                viewHolder.tvPrice.setText("₹" +convertAmountToDecimals(String.valueOf(amount)) );
                 viewHolder.tvDiscountedPrice.setVisibility(View.GONE);
 
             }
@@ -159,13 +163,16 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
 
                                     viewHolder.tvPrice.setVisibility(View.VISIBLE);
                                     viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
-                                    viewHolder.tvPrice.setText("₹" + cartItem.getItemPrice() * newValue);
+                                    double amount = cartItem.getItemPrice() * newValue;
+                                    viewHolder.tvPrice.setText("₹" + convertAmountToDecimals(String.valueOf(amount)));
                                     viewHolder.tvPrice.setPaintFlags(viewHolder.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                                    viewHolder.tvDiscountedPrice.setText("₹"+ cartItem.getDiscountedPrice() * newValue);
+                                    double discountPrice = cartItem.getDiscountedPrice() * newValue;
+                                    viewHolder.tvDiscountedPrice.setText("₹"+ convertAmountToDecimals(String.valueOf(discountPrice)));
 
                                 } else {
                                     viewHolder.tvPrice.setVisibility(View.VISIBLE);
-                                    viewHolder.tvPrice.setText("₹" + cartItem.getItemPrice() * newValue);
+                                    double amount = cartItem.getItemPrice() * newValue;
+                                    viewHolder.tvPrice.setText("₹" + convertAmountToDecimals(String.valueOf(amount)));
                                     viewHolder.tvDiscountedPrice.setVisibility(View.GONE);
 
                                 }
@@ -252,5 +259,15 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }
+    }
+
+    public static String convertAmountToDecimals(String price) {
+
+        double a = Double.parseDouble(price);
+        DecimalFormat decim = new DecimalFormat("0.00");
+        Double price2 = Double.parseDouble(decim.format(a));
+        String amount = decim.format(price2);
+        return amount;
+
     }
 }

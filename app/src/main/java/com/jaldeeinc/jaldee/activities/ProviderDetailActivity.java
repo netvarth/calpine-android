@@ -826,7 +826,21 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             }
             Config.logV("Bussiness logo @@@@@@@@@@" + mBusinessDataList.getLogo());
             if (mBusinessDataList.getLogo() != null) {
-                PicassoTrustAll.getInstance(context).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(ivSpImage);
+                String url = mBusinessDataList.getLogo().getUrl();
+                url = url.replaceAll(" ", "%20");
+                String finalUrl = url;
+                PicassoTrustAll.getInstance(context).load(url).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(ivSpImage, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+
+                        PicassoTrustAll.getInstance(context).load(finalUrl).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(ivSpImage);
+                    }
+                });
             } else {
                 //Toast.makeText(mContext, "There is no Profile Pic", Toast.LENGTH_SHORT).show();
                 // Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
