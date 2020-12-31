@@ -17,10 +17,13 @@ public class CartItemModel {
     private double discountedPrice;
     private String promotionalType;
     private int isPromotional;
+    private int isExpired = 0;
+
 
     public CartItemModel(){
 
     }
+
 
     public CartItemModel(int id, int itemId, int accountId, int catalogId, String itemName, String imageUrl, int quantity, double itemPrice, double price, String instruction, int maxQuantity, double discount, double discountedPrice, String promotionalType) {
         this.id = id;
@@ -37,6 +40,14 @@ public class CartItemModel {
         this.discount = discount;
         this.discountedPrice = discountedPrice;
         this.promotionalType = promotionalType;
+    }
+
+    public CartItemModel(int itemId, double itemPrice, int maxQuantity, double discountedPrice) {
+        this.itemId = itemId;
+        this.itemPrice = itemPrice;
+        this.maxQuantity = maxQuantity;
+        this.discountedPrice = discountedPrice;
+        this.isPromotional = 0;
     }
 
 
@@ -158,5 +169,13 @@ public class CartItemModel {
 
     public void setIsPromotional(int isPromotional) {
         this.isPromotional = isPromotional;
+    }
+
+    public int isExpired() {
+        return isExpired;
+    }
+
+    public void setExpired(int expired) {
+        isExpired = expired;
     }
 }

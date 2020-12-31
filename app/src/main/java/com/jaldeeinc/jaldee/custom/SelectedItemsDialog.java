@@ -117,4 +117,9 @@ public class SelectedItemsDialog extends Dialog implements ICartInterface {
             onRefresh();
         }
     }
+
+    @Override
+    public void openNotes(int itemId, String instruction) {
+
+    }
 }

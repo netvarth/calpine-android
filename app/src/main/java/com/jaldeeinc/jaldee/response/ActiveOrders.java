@@ -1,5 +1,6 @@
 package com.jaldeeinc.jaldee.response;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -69,6 +70,7 @@ public class ActiveOrders implements Serializable {
 
 
     @SerializedName("consumer")
+    @Expose
     private ConsumerDetails consumer;
 
     public ConsumerDetails getConsumer() {
@@ -119,6 +121,7 @@ public class ActiveOrders implements Serializable {
     }
 
     @SerializedName("orderFor")
+    @Expose
     private CustomerDetails orderFor;
 
     public ArrayList<OrderDetails> getOrderDetails() {
@@ -170,6 +173,7 @@ public class ActiveOrders implements Serializable {
     }
 
     @SerializedName("providerAccount")
+    @Expose
     private ProviderDetails providerAccount;
 
     public String getUid() {
@@ -222,4 +226,28 @@ public class ActiveOrders implements Serializable {
 
     private BillDetails bill;
 
+
+    @SerializedName("timeSlot")
+    @Expose
+    private TimeSlot timeSlot;
+
+    @SerializedName("orderItem")
+    @Expose
+    private ArrayList<ItemDetails> itemsList;
+
+    public TimeSlot getTimeSlot() {
+        return timeSlot;
+    }
+
+    public void setTimeSlot(TimeSlot timeSlot) {
+        this.timeSlot = timeSlot;
+    }
+
+    public ArrayList<ItemDetails> getItemsList() {
+        return itemsList;
+    }
+
+    public void setItemsList(ArrayList<ItemDetails> itemsList) {
+        this.itemsList = itemsList;
+    }
 }

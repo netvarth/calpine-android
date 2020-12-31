@@ -7,14 +7,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.widget.LinearLayout;
 
 import com.jaldeeinc.jaldee.Interface.ICartInterface;
+import com.jaldeeinc.jaldee.Interface.ISaveNotes;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.SelectedItemsAdapter;
+import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
@@ -28,7 +35,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CartActivity extends AppCompatActivity implements ICartInterface {
+public class CartActivity extends AppCompatActivity implements ICartInterface,ISaveNotes {
 
     @BindView(R.id.rv_items)
     RecyclerView rvItems;
@@ -58,6 +65,8 @@ public class CartActivity extends AppCompatActivity implements ICartInterface {
     private SelectedItemsAdapter selectedItemsAdapter;
     private ICartInterface iCartInterface;
     DatabaseHandler db;
+    private ISaveNotes iSaveNotes;
+    private CustomNotes customNotes;
     private SearchViewDetail mBusinessDataList = new SearchViewDetail();
     ArrayList<CartItemModel> cartItemsList = new ArrayList<>();
 
@@ -68,6 +77,7 @@ public class CartActivity extends AppCompatActivity implements ICartInterface {
         ButterKnife.bind(CartActivity.this);
         mContext = CartActivity.this;
         iCartInterface = (ICartInterface) this;
+        iSaveNotes = (ISaveNotes)this;
 
         Intent intent = getIntent();
         accountId = intent.getIntExtra("accountId",0);
@@ -146,6 +156,22 @@ public class CartActivity extends AppCompatActivity implements ICartInterface {
 
     }
 
+    @Override
+    public void openNotes(int itemId, String instruction) {
+
+        customNotes = new CustomNotes(mContext, itemId, iSaveNotes,instruction);
+        customNotes.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+        customNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        customNotes.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        customNotes.setCancelable(false);
+        customNotes.show();
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels * 1);
+        customNotes.getWindow().setGravity(Gravity.BOTTOM);
+        customNotes.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+    }
+
     public static String convertAmountToDecimals(String price) {
 
         double a = Double.parseDouble(price);
@@ -154,5 +180,12 @@ public class CartActivity extends AppCompatActivity implements ICartInterface {
         String amount = decim.format(price2);
         return amount;
 
+    }
+
+    @Override
+    public void saveMessage(String message, int itemId) {
+
+        db.addInstructions(itemId,message);
+        updateUI();
     }
 }

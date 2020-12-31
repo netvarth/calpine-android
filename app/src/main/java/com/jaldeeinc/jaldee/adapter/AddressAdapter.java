@@ -76,7 +76,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
 
             viewHolder.tvName.setText(address.getFirstName()+" "+ address.getLastName());
 
-            String fullAddress = addressList.get(0).getLandMark()+","+ addressList.get(0).getAddress()+","+ addressList.get(0).getCity()+ ","+ addressList.get(0).getPostalCode();
+            String fullAddress = addressList.get(position).getLandMark()+","+ addressList.get(position).getAddress()+","+ addressList.get(position).getCity()+ ","+ addressList.get(position).getPostalCode();
 
             viewHolder.tvAddress.setText(fullAddress);
 

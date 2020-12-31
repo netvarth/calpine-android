@@ -219,10 +219,10 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
             @Override
             public void onClick(View v) {
 
-                    Intent intent = new Intent(ItemsActivity.this, CartActivity.class);
-                    intent.putExtra("accountId", accountId);
-                    intent.putExtra("providerInfo", mBusinessDataList);
-                    startActivity(intent);
+                Intent intent = new Intent(ItemsActivity.this, CartActivity.class);
+                intent.putExtra("accountId", accountId);
+                intent.putExtra("providerInfo", mBusinessDataList);
+                startActivity(intent);
 
             }
         });
@@ -284,6 +284,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         ArrayList<CartItemModel> cartItemsList = new ArrayList<>();
         catalogItemsList = catalogItemsList == null ? new ArrayList<>() : catalogItemsList;
         cartItemsList = db.getCartItems();
+        db.markItemsAsExpired();
 
         for (CartItemModel cartItem : cartItemsList) {
 
@@ -292,6 +293,12 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                 if (cartItem.getItemId() == catalogItem.getItems().getItemId()) {
 
                     catalogItem.getItems().setItemQuantity(cartItem.getQuantity());
+                    CartItemModel item = new CartItemModel(catalogItem.getItems().getItemId(), catalogItem.getItems().getPrice(), catalogItem.getMaxQuantity(), catalogItem.getItems().getDiscountedPrice());
+                    item.setQuantity(cartItem.getQuantity());
+                    if (catalogItem.getItems().isShowPromotionalPrice()) {
+                        item.setIsPromotional(1);
+                    }
+                    db.updateCartItem(item);
                 }
             }
         }
@@ -379,8 +386,6 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         }
         refreshData();
     }
-
-
 
 
 }

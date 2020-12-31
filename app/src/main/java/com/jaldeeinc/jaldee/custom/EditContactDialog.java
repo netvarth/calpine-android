@@ -102,15 +102,23 @@ public class EditContactDialog extends Dialog {
         String number = etPhone.getText().toString();
         String mail = etMail.getText().toString();
 
-        if (!countryCode.trim().equalsIgnoreCase("")&& !number.trim().equalsIgnoreCase("") && !mail.trim().equalsIgnoreCase("")){
+        if (!countryCode.trim().equalsIgnoreCase("") && !mail.trim().equalsIgnoreCase("")) {
 
-            tvError.setVisibility(View.GONE);
-            iEditContact.onEdit(countryCode,number,mail);
-            dismiss();
+            if (number.trim().length() > 9) {
+
+                tvError.setVisibility(View.GONE);
+                iEditContact.onEdit(countryCode, number, mail);
+                dismiss();
+            } else {
+
+                tvError.setVisibility(View.VISIBLE);
+                tvError.setText("* Enter valid mobile number");
+            }
 
         } else {
 
             tvError.setVisibility(View.VISIBLE);
+            tvError.setText("* All fields are mandatory");
             tvError.startAnimation(animShake);
         }
 

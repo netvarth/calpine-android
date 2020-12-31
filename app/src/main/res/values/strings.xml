@@ -65,7 +65,7 @@
     <string name="logout">Logout</string>
     <!--        db                   -->
     <string name="db_name">Jaldee_db</string>
-    <string name="db_version">14</string>
+    <string name="db_version">16</string>
 
     <string name="db_table_userinfo">USERINFO_TB</string>
     <string name="db_table_inbox">table_inbox</string>
@@ -173,5 +173,8 @@
     <string name="make_sure_you_never_miss_your_turn">Make sure you never miss your turn ! Let your provider know your arrival time</string>
     <string name="_09_15_09_45_am">Earliest available \n 09:15 - 09:45 AM</string>
 
+
+    <string name="dsv_ex_msg_dont_set_lm">You should not set LayoutManager on DiscreteScrollView.class instance. Library uses a special one. Just don\'t call the method.</string>
+    <string name="dsv_ex_msg_adapter_wrong_recycler">InfiniteScrollAdapter is supposed to work only with DiscreteScrollView</string>
 
 </resources>

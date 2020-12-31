@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
+import com.jaldeeinc.jaldee.Interface.ISelectedOrder;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
@@ -35,15 +36,15 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
     private boolean isLoading = true;
     public Context context;
     private int lastPosition = -1;
-    private ISelectedBooking iSelectedBooking;
+    private ISelectedOrder iSelectedOrder;
     private boolean hideMoreInfo = false;
 
 
-    public TodayOrdersAdapter(ArrayList<ActiveOrders> ordersList, Context context, boolean isLoading, ISelectedBooking iSelectedBooking, boolean hideMoreInfo) {
+    public TodayOrdersAdapter(ArrayList<ActiveOrders> ordersList, Context context, boolean isLoading, ISelectedOrder iSelectedOrder, boolean hideMoreInfo) {
         this.context = context;
         this.ordersList = ordersList;
         this.isLoading = isLoading;
-        this.iSelectedBooking = iSelectedBooking;
+        this.iSelectedOrder = iSelectedOrder;
         this.hideMoreInfo = hideMoreInfo;
     }
 
@@ -185,6 +186,16 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
 
                     }
                 });
+
+
+                viewHolder.cvBooking.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        iSelectedOrder.onOrderClick(orders);
+                    }
+                });
+
 
 
             } catch (Exception e) {

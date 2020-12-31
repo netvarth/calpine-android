@@ -97,6 +97,7 @@ import java.util.Iterator;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import kotlin.Unit;
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -210,6 +211,12 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     @BindView(R.id.cv_placeOrder)
     CardView cvPlaceOrder;
 
+    @BindView(R.id.ll_address)
+    LinearLayout llAddress;
+
+    @BindView(R.id.ll_addNew)
+    LinearLayout llAddNew;
+
     @BindView(R.id.cv_back)
     CardView cvBack;
 
@@ -239,6 +246,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     private ProfileModel profileDetails = new ProfileModel();
     private EditContactDialog editContactDialog;
     private IEditContact iEditContact;
+    private String homeDeliveryEmail, homeDeliveryNumber;
 
 
     @Override
@@ -260,7 +268,6 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         catalogId = db.getCatalogId();
         getCatalogDetails(accountId);
         // to fetch user addresses list
-        getAddressList();
 
         Typeface font_style = Typeface.createFromAsset(mContext.getAssets(), "fonts/JosefinSans-SemiBold.ttf");
         rbHome.setTypeface(font_style);
@@ -270,15 +277,17 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             @Override
             public void onClick(View v) {
 
-                addressDialog = new AddressDialog(mContext, addressList, iAddressInterface);
-                addressDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
-                addressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                addressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                addressDialog.show();
-                DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-                int width = (int) (metrics.widthPixels * 1);
-                addressDialog.getWindow().setGravity(Gravity.BOTTOM);
-                addressDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                showAddressDialog();
+
+            }
+        });
+
+        llAddNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                showAddressDialog();
+
             }
         });
 
@@ -425,14 +434,55 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         try {
             if (isStore) {
                 inputObj.put("storePickup", true);
+
+                if (phoneNumber != null && !phoneNumber.trim().equalsIgnoreCase("")) {
+                    inputObj.put("phoneNumber", phoneNumber);
+                } else {
+                    showAlert("Please enter valid mobile number");
+                    mDialog.dismiss();
+                    return;
+                }
+
+                if (email != null && !email.trim().equalsIgnoreCase("")) { // to check email address
+                    inputObj.put("email", email);
+                } else {
+                    showAlert("Please enter valid Email address");
+                    mDialog.dismiss();
+                    return;
+                }
+
             } else {
-                inputObj.put("homeDelivery", true);
-                inputObj.put("homeDeliveryAddress", tvDeliveryAddress.getText().toString());
+                if (!tvDeliveryAddress.getText().toString().trim().equalsIgnoreCase("")) {  // to check delivery address
+                    inputObj.put("homeDelivery", true);
+                    inputObj.put("homeDeliveryAddress", tvDeliveryAddress.getText().toString());
+
+                    if (homeDeliveryNumber != null && !homeDeliveryNumber.trim().equalsIgnoreCase("")) {
+                        inputObj.put("phoneNumber", homeDeliveryNumber);
+                    } else {
+                        showAlert("Please enter valid mobile number");
+                        mDialog.dismiss();
+                        return;
+                    }
+
+                    if (homeDeliveryEmail != null && !homeDeliveryEmail.trim().equalsIgnoreCase("")) {
+                        inputObj.put("email", homeDeliveryEmail);
+                    } else {
+                        showAlert("Please enter valid Email address");
+                        mDialog.dismiss();
+                        return;
+                    }
+
+                } else {
+
+                    showAlert("Please select an address to deliver");
+                    mDialog.dismiss();
+                    return;
+                }
+
+
             }
             inputObj.put("orderDate", selectedDate);
             inputObj.put("countryCode", countryCode);
-            inputObj.put("phoneNumber", phoneNumber);
-            inputObj.put("email", email);
             inputObj.put("orderNote", etSpecialNotes.getText().toString());
             if (itemsList != null && itemsList.size() > 0) {
 
@@ -465,9 +515,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                 }
             } else {
 
-                DialogUtilsKt.showUIDialog(mContext, "", "Please select a time slot", () -> {
-                    return Unit.INSTANCE;
-                });
+                showAlert("Please select a time slot");
                 mDialog.dismiss();
                 return;
             }
@@ -476,12 +524,12 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), inputObj.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), inputObj.toString());
         Call<ResponseBody> call = apiService.order(accountId, body);
-        call.enqueue(new Callback<okhttp3.ResponseBody>() {
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse
-                    (Call<okhttp3.ResponseBody> call, Response<ResponseBody> response) {
+                    (Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (mDialog.isShowing())
                     Config.closeDialog(getParent(), mDialog);
                 try {
@@ -535,6 +583,13 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                 if (mDialog.isShowing())
                     Config.closeDialog(getParent(), mDialog);
             }
+        });
+    }
+
+    private void showAlert(String message) {
+
+        DialogUtilsKt.showUIDialog(mContext, "", message, () -> {
+            return Unit.INSTANCE;
         });
     }
 
@@ -791,7 +846,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                 rbHome.setChecked(false);
                                 getStorePickupSchedules(catalogs.get(0).getCatLogId(), accountId);
 
-                            } else if (catalogs.get(0).getPickUp() == null  && catalogs.get(0).getHomeDelivery() != null && !catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
+                            } else if (catalogs.get(0).getPickUp() == null && catalogs.get(0).getHomeDelivery() != null && !catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
 
                                 rbStore.setVisibility(View.GONE);
                                 rbHome.setVisibility(View.VISIBLE);
@@ -894,6 +949,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         if (homeDeliverySchedulesList != null && homeDeliverySchedulesList.size() > 0) {
 
                             if (!isStore) {
+                                getAddressList();
                                 selectedDate = homeDeliverySchedulesList.get(0).getDate();
                                 String date = convertDate(homeDeliverySchedulesList.get(0).getDate());
                                 if (homeDeliverySchedulesList.get(0).getCatalogTimeSlotList() != null) {
@@ -1111,6 +1167,13 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
                             updateUI(addressList.get(0));
 
+                        } else {
+
+                            tvChangeAddress.setVisibility(View.GONE);
+                            llAddress.setVisibility(View.GONE);
+                            llAddNew.setVisibility(View.VISIBLE);
+                            showAddressDialog();
+
                         }
 
                     }
@@ -1130,10 +1193,30 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         });
     }
 
+    private void showAddressDialog() {
+
+        addressDialog = new AddressDialog(mContext, addressList, iAddressInterface);
+        addressDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+        addressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        addressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        addressDialog.show();
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels * 1);
+        addressDialog.getWindow().setGravity(Gravity.BOTTOM);
+        addressDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+    }
+
     private void updateUI(Address address) {
 
         if (address != null) {
 
+            llAddNew.setVisibility(View.GONE);
+            tvChangeAddress.setVisibility(View.VISIBLE);
+            llAddress.setVisibility(View.VISIBLE);
+
+            homeDeliveryEmail = address.getEmail();
+            homeDeliveryNumber = address.getPhoneNumber();
             tvName.setText(address.getFirstName() + " " + address.getLastName());
             tvEmailId.setText(address.getEmail());
             tvMobileNumber.setText(address.getPhoneNumber());
@@ -1142,6 +1225,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
         }
     }
+
 
     @Override
     public void onSelectAddress(Address address) {

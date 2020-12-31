@@ -78,7 +78,12 @@ public class Home extends AppCompatActivity {
             // restoring the previously created fragment
             // and getting the reference
             Config.logV("RESTORE@@@@@@@@@@@@@@@@@");
-            mHomeTab = (HomeTabFragment) getSupportFragmentManager().getFragments().get(0);
+            try {
+                mHomeTab = (HomeTabFragment) getSupportFragmentManager().getFragments().get(0);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         SharedPreferences pref = mContext.getSharedPreferences(Config.SHARED_PREF, 0);

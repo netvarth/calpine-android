@@ -268,7 +268,9 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                     myViewHolder.rlStatus.setVisibility(View.VISIBLE);
 
-                    if (searchdetailList.isWaitlistEnabled() && searchdetailList.isApptEnabled() && searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1")) {
+                    String actionName = getActionType(searchdetailList);
+
+                    if (actionName.equalsIgnoreCase("bookservice")) {
 
                         myViewHolder.cvAction.setVisibility(View.VISIBLE);
                         myViewHolder.tvText.setText("Book Service");
@@ -276,31 +278,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         myViewHolder.llWaitingInLine.setVisibility(View.GONE);
                         setServices(myViewHolder, searchdetailList.getServices());
 
-                    } else if (searchdetailList.isWaitlistEnabled() && searchdetailList.isApptEnabled() && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1"))) {
-
-                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
-                        myViewHolder.tvText.setText("Book Service");
-                        myViewHolder.llEstTime.setVisibility(View.GONE);
-                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
-                        setServices(myViewHolder, searchdetailList.getServices());
-
-                    } else if (searchdetailList.isWaitlistEnabled() && searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1") && !searchdetailList.isApptEnabled()) {
-
-                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
-                        myViewHolder.tvText.setText("Book Service");
-                        myViewHolder.llEstTime.setVisibility(View.GONE);
-                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
-                        setServices(myViewHolder, searchdetailList.getServices());
-
-                    } else if (searchdetailList.isApptEnabled() && searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1") && !searchdetailList.isWaitlistEnabled()) {
-
-                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
-                        myViewHolder.tvText.setText("Book Service");
-                        myViewHolder.llEstTime.setVisibility(View.GONE);
-                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
-                        setServices(myViewHolder, searchdetailList.getAppt_services());
-
-                    } else if (searchdetailList.isWaitlistEnabled() && !searchdetailList.isApptEnabled() && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1"))) {
+                    } else if (actionName.equalsIgnoreCase("waitlist")) {
 
                         myViewHolder.cvAction.setVisibility(View.VISIBLE);
                         if (searchdetailList.isShowToken()) {
@@ -343,8 +321,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             myViewHolder.llWaitingInLine.setVisibility(View.GONE);
 
                         }
-
-                    } else if (searchdetailList.isApptEnabled() && !searchdetailList.isWaitlistEnabled() && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1"))) {
+                    } else if (actionName.equalsIgnoreCase("appointment")) {
 
                         myViewHolder.cvAction.setVisibility(View.VISIBLE);
                         myViewHolder.tvText.setText("Get Appointment");
@@ -371,29 +348,151 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             myViewHolder.llEstTime.setVisibility(View.GONE);
                             myViewHolder.llWaitingInLine.setVisibility(View.GONE);
                         }
-
-                    } else if (searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1") && !searchdetailList.isWaitlistEnabled() && !searchdetailList.isApptEnabled()) {
+                    } else if (actionName.equalsIgnoreCase("donation")) {
 
                         myViewHolder.cvAction.setVisibility(View.VISIBLE);
                         myViewHolder.tvText.setText("Donate");
                         myViewHolder.llEstTime.setVisibility(View.GONE);
                         myViewHolder.llWaitingInLine.setVisibility(View.GONE);
 
-                    } else if (searchdetailList.getOrderEnabled() == 1 && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1")) && !searchdetailList.isWaitlistEnabled() && !searchdetailList.isApptEnabled()) {
+                    } else if (actionName.equalsIgnoreCase("order")) {
 
                         myViewHolder.cvAction.setVisibility(View.VISIBLE);
                         myViewHolder.tvText.setText("Order");
                         myViewHolder.llEstTime.setVisibility(View.GONE);
                         myViewHolder.llWaitingInLine.setVisibility(View.GONE);
-
                     } else {
 
                         myViewHolder.rlStatus.setVisibility(View.GONE);
                     }
 
+//                    if (searchdetailList.isWaitlistEnabled() && searchdetailList.isApptEnabled() && searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1")) {
+//
+//                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
+//                        myViewHolder.tvText.setText("Book Service");
+//                        myViewHolder.llEstTime.setVisibility(View.GONE);
+//                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+//                        setServices(myViewHolder, searchdetailList.getServices());
+//
+//                    } else if (searchdetailList.isWaitlistEnabled() && searchdetailList.isApptEnabled() && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1"))) {
+//
+//                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
+//                        myViewHolder.tvText.setText("Book Service");
+//                        myViewHolder.llEstTime.setVisibility(View.GONE);
+//                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+//                        setServices(myViewHolder, searchdetailList.getServices());
+//
+//                    } else if (searchdetailList.isWaitlistEnabled() && searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1") && !searchdetailList.isApptEnabled()) {
+//
+//                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
+//                        myViewHolder.tvText.setText("Book Service");
+//                        myViewHolder.llEstTime.setVisibility(View.GONE);
+//                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+//                        setServices(myViewHolder, searchdetailList.getServices());
+//
+//                    } else if (searchdetailList.isApptEnabled() && searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1") && !searchdetailList.isWaitlistEnabled()) {
+//
+//                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
+//                        myViewHolder.tvText.setText("Book Service");
+//                        myViewHolder.llEstTime.setVisibility(View.GONE);
+//                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+//                        setServices(myViewHolder, searchdetailList.getAppt_services());
+//
+//                    } else if (searchdetailList.isWaitlistEnabled() && !searchdetailList.isApptEnabled() && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1"))) {
+//
+//                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
+//                        if (searchdetailList.isShowToken()) {
+//                            myViewHolder.tvText.setText("Get Token");
+//                        } else {
+//                            myViewHolder.tvText.setText("CheckIn");
+//                        }
+//
+//                        setServices(myViewHolder, searchdetailList.getServices());
+//
+//                        if (searchdetailList.getAvail_date() != null) {
+//
+//                            // est wait time or Date
+//                            if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())) {
+//                                myViewHolder.llWaitingInLine.setVisibility(View.VISIBLE);
+//                                if (!searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc")) {
+//                                    myViewHolder.llEstTime.setVisibility(View.VISIBLE);
+//                                    showWaitingTime(myViewHolder, searchdetailList, null);
+//                                } else {
+//                                    myViewHolder.llEstTime.setVisibility(View.GONE);
+//                                }
+//
+//                                // people waiting in Line
+//                                myViewHolder.tvWaitingCount.setText(String.valueOf(searchdetailList.getPersonAhead()));
+//                                if (searchdetailList.getPersonAhead() == 1) {
+//                                    myViewHolder.tvWaitingCountHint.setText("Person");
+//                                } else {
+//                                    myViewHolder.tvWaitingCountHint.setText("People");
+//                                }
+//
+//                            } else {
+//                                myViewHolder.llEstTime.setVisibility(View.VISIBLE);
+//                                myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+//                                showWaitingTime(myViewHolder, searchdetailList, "future");
+//                            }
+//
+//                        } else {
+//
+//                            myViewHolder.llEstTime.setVisibility(View.GONE);
+//                            myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+//
+//                        }
+//
+//                    } else if (searchdetailList.isApptEnabled() && !searchdetailList.isWaitlistEnabled() && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1"))) {
+//
+//                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
+//                        myViewHolder.tvText.setText("Get Appointment");
+//                        myViewHolder.llEstTime.setVisibility(View.VISIBLE);
+//                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+//
+//                        setServices(myViewHolder, searchdetailList.getAppt_services());
+//
+//                        if (searchdetailList.getAvailableDate() != null) {
+//
+//                            if (formattedDate.equalsIgnoreCase(searchdetailList.getAvailableDate())) {
+//
+//                                myViewHolder.tvEstWaitTime.setText("Next available on");
+//                                String time = convertSlotTime(searchdetailList.getAvailableTime().split("-")[0]);
+//                                myViewHolder.tvTime.setText("Today, " + time);
+//                            } else {
+//                                myViewHolder.tvEstWaitTime.setText("Next available on");
+//                                String time = convertSlotTime(searchdetailList.getAvailableTime().split("-")[0]);
+//                                myViewHolder.tvTime.setText(convertDate(searchdetailList.getAvailableDate()) + " " + time);
+//
+//                            }
+//                        } else {
+//
+//                            myViewHolder.llEstTime.setVisibility(View.GONE);
+//                            myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+//                        }
+//
+//                    } else if (searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1") && !searchdetailList.isWaitlistEnabled() && !searchdetailList.isApptEnabled()) {
+//
+//                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
+//                        myViewHolder.tvText.setText("Donate");
+//                        myViewHolder.llEstTime.setVisibility(View.GONE);
+//                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+//
+//                    } else if (searchdetailList.getOrderEnabled() == 1 && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1")) && !searchdetailList.isWaitlistEnabled() && !searchdetailList.isApptEnabled()) {
+//
+//                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
+//                        myViewHolder.tvText.setText("Order");
+//                        myViewHolder.llEstTime.setVisibility(View.GONE);
+//                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
+//
+//                    } else {
+//
+//                        myViewHolder.rlStatus.setVisibility(View.GONE);
+//                    }
+
                 } else {
                     myViewHolder.rlStatus.setVisibility(View.GONE);
                 }
+
 
                 myViewHolder.cvCard.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -433,6 +532,46 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 break;
         }
     }
+
+    private String getActionType(SearchListModel searchList) {
+
+        int actionsCount = 0;
+        String actionName = "";
+
+        if (searchList.isWaitlistEnabled()) {
+
+            actionName = "waitlist";
+            actionsCount = actionsCount + 1;
+        }
+
+        if (searchList.isApptEnabled()) {
+
+            actionName = "appointment";
+            actionsCount = actionsCount + 1;
+
+        }
+
+        if (searchList.getDonation_status() != null && searchList.getDonation_status().equalsIgnoreCase("1")) {
+
+            actionName = "donation";
+            actionsCount = actionsCount + 1;
+
+        }
+
+        if (searchList.getOrderEnabled() == 1) {
+
+            actionName = "order";
+            actionsCount = actionsCount + 1;
+
+        }
+        if (actionsCount > 1) {
+
+            actionName = "bookservice";
+        }
+
+        return actionName;
+    }
+
 
     private void handleJaldeeVerification(MyViewHolder myViewHolder, final SearchListModel searchdetailList) {
         if (searchdetailList.getYnw_verified_level() != null) {
@@ -805,6 +944,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             super(itemView);
             loadmore_progress = itemView.findViewById(R.id.loadmore_progress);
         }
+
     }
 
     public String convertSlotTime(String date) {

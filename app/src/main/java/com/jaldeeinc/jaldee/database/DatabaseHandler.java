@@ -19,6 +19,7 @@ import com.jaldeeinc.jaldee.model.CartItemModel;
 import com.jaldeeinc.jaldee.model.FileAttachment;
 import com.jaldeeinc.jaldee.model.OrderItem;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
+import com.jaldeeinc.jaldee.response.CatalogItem;
 import com.jaldeeinc.jaldee.response.ConsumerDetails;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.InboxModel;
@@ -190,6 +191,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     + "discount REAL,"
                     + "promotionalType TEXT,"
                     + "isPromotional NUMERIC,"
+                    + "isExpired NUMERIC,"
                     + "maxQuantity INTEGER )";
 
 
@@ -224,6 +226,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("discount", cartItemModel.getDiscountedPrice());
                 values.put("promotionalType", cartItemModel.getPromotionalType());
                 values.put("isPromotional", cartItemModel.getIsPromotional());
+                values.put("isExpired", cartItemModel.isExpired());
                 values.put("maxQuantity", cartItemModel.getMaxQuantity());
 
                 db.insert(mContext.getString(R.string.db_table_cart), null, values);
@@ -252,10 +255,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public void addQuantity(int itemId,int quantity) {
+    public void addQuantity(int itemId, int quantity) {
         try {
             SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
-            db.execSQL("update  " + mContext.getString(R.string.db_table_cart) + " set quantity = "+ quantity +" where itemId = " + itemId);
+            db.execSQL("update  " + mContext.getString(R.string.db_table_cart) + " set quantity = " + quantity + " where itemId = " + itemId);
             db.execSQL("update  " + mContext.getString(R.string.db_table_cart) + " set price = (discountedPrice * quantity) where itemId = " + itemId);
             db.execSQL("delete from " + mContext.getString(R.string.db_table_cart) + " where quantity < 1 ");
             db.close();
@@ -264,11 +267,38 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
     }
 
-
-    public void addInstructions(int itemId,String instruction) {
+    public void updateCartItem(CartItemModel item) {
         try {
             SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
-            db.execSQL("update  " + mContext.getString(R.string.db_table_cart) + " set instruction = "+ instruction +" where itemId = " + itemId);
+            ContentValues values = new ContentValues();
+            values.put("isExpired", 0);
+            values.put("itemPrice", item.getItemPrice());
+            values.put("discountedPrice", item.getDiscountedPrice());
+            values.put("isPromotional", item.getIsPromotional());
+            values.put("maxQuantity", item.getMaxQuantity());
+            values.put("price", item.getDiscountedPrice() * item.getQuantity());
+            String[] args = new String[]{String.valueOf(item.getItemId())};
+            db.update(mContext.getString(R.string.db_table_cart), values, "itemId = ?", args);
+            db.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void markItemsAsExpired() {
+        try {
+            SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+            db.execSQL("update " + mContext.getString(R.string.db_table_cart) + " set isExpired = 1 ");
+            db.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addInstructions(int itemId, String instruction) {
+        try {
+            SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+            db.execSQL("update  " + mContext.getString(R.string.db_table_cart) + " set instruction = '" + instruction + "' where itemId = " + itemId);
             db.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -302,13 +332,46 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    public int getExpiredItemsCount() {
+
+        try {
+            int expiryCount = 0;
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+            db.beginTransaction();
+            Cursor cursor = db.rawQuery("SELECT sum(isExpired) as expiredCount FROM " + mContext.getString(R.string.db_table_cart), null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    expiryCount = cursor.getInt(0);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+            return expiryCount;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+    }
+
+    public void removeExpiredItems() {
+        SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+        db.execSQL("delete from " + mContext.getString(R.string.db_table_cart) + " WHERE isExpired = 1");
+        db.close();
+    }
+
     public int getItemQuantity(int itemId) {
 
         try {
             int quantity = 0;
             SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
             db.beginTransaction();
-            Cursor cursor = db.rawQuery("SELECT sum(quantity) FROM " + mContext.getString(R.string.db_table_cart)+" WHERE itemId = "+ itemId, null);
+            Cursor cursor = db.rawQuery("SELECT sum(quantity) FROM " + mContext.getString(R.string.db_table_cart) + " WHERE itemId = " + itemId, null);
 
             if (cursor.moveToFirst()) {
                 do {
@@ -336,14 +399,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             ArrayList<OrderItem> orderItemsList = new ArrayList<>();
             SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
             db.beginTransaction();
-            Cursor cursor = db.rawQuery("SELECT itemId, sum(quantity), instruction FROM " + mContext.getString(R.string.db_table_cart)+" GROUP BY itemId ", null);
+            Cursor cursor = db.rawQuery("SELECT itemId, sum(quantity), instruction FROM " + mContext.getString(R.string.db_table_cart) + " GROUP BY itemId ", null);
 
             if (cursor.moveToFirst()) {
                 do {
                     int itemId = cursor.getInt(0);
                     int quantity = cursor.getInt(1);
                     String instruction = cursor.getString(2);
-                    orderItemsList.add(new OrderItem(itemId,quantity));
+                    orderItemsList.add(new OrderItem(itemId, quantity));
 
                 } while (cursor.moveToNext());
             }
@@ -367,7 +430,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             int accountId = 0;
             SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
             db.beginTransaction();
-            Cursor cursor = db.rawQuery("SELECT accountId FROM " + mContext.getString(R.string.db_table_cart)+" LIMIT 1", null);
+            Cursor cursor = db.rawQuery("SELECT accountId FROM " + mContext.getString(R.string.db_table_cart) + " LIMIT 1", null);
 
             if (cursor.moveToFirst()) {
                 do {
@@ -394,7 +457,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             int catalogId = 0;
             SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
             db.beginTransaction();
-            Cursor cursor = db.rawQuery("SELECT catalogId FROM " + mContext.getString(R.string.db_table_cart)+" LIMIT 1", null);
+            Cursor cursor = db.rawQuery("SELECT catalogId FROM " + mContext.getString(R.string.db_table_cart) + " LIMIT 1", null);
 
             if (cursor.moveToFirst()) {
                 do {
@@ -477,7 +540,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
 
             String table = mContext.getString(R.string.db_table_cart);
-            String[] columns = { "itemId", "accountId", "catalogId", "itemName", "imageUrl", "quantity", "itemPrice", "price", "instruction","discountedPrice","discount","promotionalType","maxQuantity","isPromotional"};
+            String[] columns = {"itemId", "accountId", "catalogId", "itemName", "imageUrl", "quantity", "itemPrice", "price", "instruction", "discountedPrice", "discount", "promotionalType", "maxQuantity", "isPromotional","isExpired"};
             String selection = " quantity >?";
             String[] selectionArgs = new String[]{"0"};
             db.beginTransaction();
@@ -500,6 +563,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     cartItem.setPromotionalType(cursor.getString(11));
                     cartItem.setMaxQuantity(cursor.getInt(12));
                     cartItem.setIsPromotional(cursor.getInt(13));
+                    cartItem.setExpired(cursor.getInt(14));
 
                     cartItemsList.add(cartItem);
                 } while (cursor.moveToNext());
@@ -554,7 +618,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put("place", favorite.getPlace());
             values.put("onlinePresence", favorite.getOnlinePresence());
             values.put("donationServiceStatus", favorite.getDonationServiceStatus());
-            values.put("googleMapUrl",favorite.getGoogleMapUrl());
+            values.put("googleMapUrl", favorite.getGoogleMapUrl());
             values.put("countryCode", favorite.getCountryCode());
 
             db.insert(mContext.getString(R.string.db_table_fav), null, values);

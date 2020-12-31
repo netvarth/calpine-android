@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.Fragment;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +14,10 @@ import android.widget.LinearLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
+import com.jaldeeinc.jaldee.Interface.ISelectedOrder;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Home;
+import com.jaldeeinc.jaldee.activities.OrderDetailActivity;
 import com.jaldeeinc.jaldee.adapter.TodayOrdersAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -32,7 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyOrders extends RootFragment implements ISelectedBooking {
+public class MyOrders extends RootFragment implements ISelectedOrder {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
@@ -44,7 +47,7 @@ public class MyOrders extends RootFragment implements ISelectedBooking {
     private RecyclerView rvTodays, rvUpcomings;
     private TodayOrdersAdapter todayOrdersAdapter;
     private LinearLayoutManager linearLayoutManager;
-    private ISelectedBooking iSelectedBooking;
+    private ISelectedOrder iSelectedOrder;
     ArrayList<ActiveOrders> ordersList = new ArrayList<>();
     ArrayList<ActiveOrders> ordersListFuture = new ArrayList<>();
     Animation slideUp, slideRight;
@@ -99,7 +102,7 @@ public class MyOrders extends RootFragment implements ISelectedBooking {
 
         View view = inflater.inflate(R.layout.fragment_my_orders, container, false);
         mContext = getActivity();
-        iSelectedBooking = (ISelectedBooking) this;
+        iSelectedOrder = (ISelectedOrder) this;
         Home.doubleBackToExitPressedOnce = false;
         initializations(view);
 
@@ -134,8 +137,7 @@ public class MyOrders extends RootFragment implements ISelectedBooking {
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd");
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         Map<String, String> orderFilter = new HashMap<String, String>();
         orderFilter.put("orderDate-eq", sdf.format(currentTime));
@@ -150,11 +152,12 @@ public class MyOrders extends RootFragment implements ISelectedBooking {
                     if (response.code() == 200) {
                         ordersList = response.body();
 
-                        if(ordersList.size()>0) {
+
+                        if(ordersList != null && ordersList.size()>0) {
                             llNoBookingsForToday.setVisibility(View.GONE);
                             linearLayoutManager = new LinearLayoutManager(getContext());
                             rvTodays.setLayoutManager(linearLayoutManager);
-                            todayOrdersAdapter = new TodayOrdersAdapter(ordersList, getContext(), false, iSelectedBooking, hideMoreInfo);
+                            todayOrdersAdapter = new TodayOrdersAdapter(ordersList, getContext(), false, iSelectedOrder, hideMoreInfo);
                             rvTodays.setAdapter(todayOrdersAdapter);
                         }
                         else{
@@ -176,10 +179,7 @@ public class MyOrders extends RootFragment implements ISelectedBooking {
             }
         });
 
-
-
     }
-
 
     private void apiGetAllOrdersFuture() {
 
@@ -205,11 +205,11 @@ public class MyOrders extends RootFragment implements ISelectedBooking {
                     if (response.code() == 200) {
                         ordersListFuture = response.body();
 
-                        if(ordersListFuture.size()>0) {
+                        if(ordersListFuture != null && ordersListFuture.size()>0) {
                             llNoBookingsForFuture.setVisibility(View.GONE);
                             linearLayoutManager = new LinearLayoutManager(getContext());
                             rvUpcomings.setLayoutManager(linearLayoutManager);
-                            todayOrdersAdapter = new TodayOrdersAdapter(ordersListFuture, getContext(), false, iSelectedBooking, hideMoreInfo);
+                            todayOrdersAdapter = new TodayOrdersAdapter(ordersListFuture, getContext(), false, iSelectedOrder, hideMoreInfo);
                             rvUpcomings.setAdapter(todayOrdersAdapter);
                         }
                         else{
@@ -259,12 +259,10 @@ public class MyOrders extends RootFragment implements ISelectedBooking {
 
 
     @Override
-    public void sendBookingInfo(Bookings bookings) {
+    public void onOrderClick(ActiveOrders orders) {
 
-    }
-
-    @Override
-    public void sendSelectedBookingActions(Bookings bookings) {
-
+        Intent intent = new Intent(getActivity(),OrderDetailActivity.class);
+        intent.putExtra("orderInfo",orders);
+        startActivity(intent);
     }
 }

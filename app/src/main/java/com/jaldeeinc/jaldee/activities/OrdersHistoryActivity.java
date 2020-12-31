@@ -3,6 +3,8 @@ package com.jaldeeinc.jaldee.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Dialog;
 import android.os.Bundle;
+
+import com.jaldeeinc.jaldee.Interface.ISelectedOrder;
 import com.jaldeeinc.jaldee.R;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,14 +29,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import static com.jaldeeinc.jaldee.common.MyApplication.getContext;
 
-public class OrdersHistoryActivity extends AppCompatActivity implements ISelectedBooking {
+public class OrdersHistoryActivity extends AppCompatActivity implements ISelectedOrder {
 
     RecyclerView rvHistory;
     CardView cvBack;
     LinearLayout llNoBookings;
     ArrayList<ActiveOrders> ordersList = new ArrayList<>();
     LinearLayoutManager linearLayoutManager;
-    private ISelectedBooking iSelectedBooking;
+    private ISelectedOrder iSelectedOrder;
     private TodayOrdersAdapter todayOrdersAdapter;
     boolean hideMoreInfo = true;
 
@@ -42,12 +44,12 @@ public class OrdersHistoryActivity extends AppCompatActivity implements ISelecte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders_history);
-        iSelectedBooking = this;
+        iSelectedOrder = (ISelectedOrder) this;
         initializations();
 
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvHistory.setLayoutManager(linearLayoutManager);
-        todayOrdersAdapter = new TodayOrdersAdapter(ordersList, OrdersHistoryActivity.this, true, iSelectedBooking, hideMoreInfo);
+        todayOrdersAdapter = new TodayOrdersAdapter(ordersList, OrdersHistoryActivity.this, true, iSelectedOrder, hideMoreInfo);
         rvHistory.setAdapter(todayOrdersAdapter);
 
         cvBack.setOnClickListener(new View.OnClickListener() {
@@ -101,23 +103,17 @@ public class OrdersHistoryActivity extends AppCompatActivity implements ISelecte
                     if (response.code() == 200) {
                         ordersList = response.body();
 
-                        if(ordersList.size()>0) {
+                        if(ordersList != null && ordersList.size()>0) {
                             llNoBookings.setVisibility(View.GONE);
                             linearLayoutManager = new LinearLayoutManager(OrdersHistoryActivity.this);
                             rvHistory.setLayoutManager(linearLayoutManager);
-                            todayOrdersAdapter = new TodayOrdersAdapter(ordersList, OrdersHistoryActivity.this, false, iSelectedBooking, hideMoreInfo);
+                            todayOrdersAdapter = new TodayOrdersAdapter(ordersList, OrdersHistoryActivity.this, false, iSelectedOrder, hideMoreInfo);
                             rvHistory.setAdapter(todayOrdersAdapter);
-                        }
+                        } else {
 
-
-                        if(ordersList.size()==0 ){
                             llNoBookings.setVisibility(View.VISIBLE);
-
                         }
-                        else{
-                            llNoBookings.setVisibility(View.GONE);
 
-                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -134,18 +130,11 @@ public class OrdersHistoryActivity extends AppCompatActivity implements ISelecte
             }
         });
 
-
-
     }
 
-    @Override
-    public void sendBookingInfo(Bookings bookings) {
-
-
-    }
 
     @Override
-    public void sendSelectedBookingActions(Bookings bookings) {
+    public void onOrderClick(ActiveOrders orders) {
 
     }
 }

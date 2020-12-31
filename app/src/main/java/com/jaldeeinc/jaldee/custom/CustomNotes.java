@@ -58,11 +58,12 @@ public class CustomNotes extends Dialog {
     Animation animShake;
     private ImageView ivClose;
 
-    public CustomNotes(Context context, int itemId, ISaveNotes iSaveNotes) {
+    public CustomNotes(Context context, int itemId, ISaveNotes iSaveNotes, String instruction) {
         super(context);
         this.context = context;
         this.itemId = itemId;
         this.iSaveNotes = iSaveNotes;
+        this.message = instruction;
     }
 
     @Override
@@ -78,6 +79,13 @@ public class CustomNotes extends Dialog {
         cvYes = findViewById(R.id.cv_yes);
         tvErrorMessage = findViewById(R.id.tv_errorMessage);
 
+        if (message != null && !message.trim().equalsIgnoreCase("")) {
+
+            etMessage.setText(message);
+        } else {
+
+            etMessage.setText("");
+        }
 
         cvYes.setOnClickListener(new View.OnClickListener() {
             @Override

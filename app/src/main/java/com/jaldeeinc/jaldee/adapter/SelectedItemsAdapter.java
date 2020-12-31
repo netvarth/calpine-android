@@ -41,7 +41,7 @@ import com.squareup.picasso.Callback;
 
 import java.util.ArrayList;
 
-public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdapter.ViewHolder> implements ISaveNotes {
+public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdapter.ViewHolder> {
 
     ArrayList<CartItemModel> cartItemsList = new ArrayList<>();
     public Context context;
@@ -54,7 +54,6 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
     ProgressBar progressBar;
     private CardView cvPlus;
     private boolean isAddNote = false;
-    private CustomNotes customNotes;
     private ISaveNotes iSaveNotes;
 
     public SelectedItemsAdapter(ArrayList<CartItemModel> cartItemsList, Context context, boolean isLoading, ICartInterface iCartInterface,boolean isAddNote) {
@@ -63,7 +62,6 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
         this.isLoading = isLoading;
         this.iCartInterface = iCartInterface;
         this.isAddNote = isAddNote;
-        this.iSaveNotes = this;
         db = new DatabaseHandler(context);
         vibe = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
     }
@@ -96,6 +94,11 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
 
             if (isAddNote){
                 viewHolder.llAddNote.setVisibility(View.VISIBLE);
+                if (cartItem.getInstruction() != null && !cartItem.getInstruction().trim().equalsIgnoreCase("")){
+                    viewHolder.tvNote.setText("Edit note");
+                } else {
+                    viewHolder.tvNote.setText("Add note");
+                }
             } else {
                 viewHolder.llAddNote.setVisibility(View.GONE);
             }
@@ -194,16 +197,9 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
                 @Override
                 public void onClick(View v) {
 
-                    customNotes = new CustomNotes(context, cartItem.getItemId(), iSaveNotes);
-                    customNotes.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
-                    customNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    customNotes.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    customNotes.setCancelable(false);
-                    customNotes.show();
-                    DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-                    int width = (int) (metrics.widthPixels * 1);
-                    customNotes.getWindow().setGravity(Gravity.BOTTOM);
-                    customNotes.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    iCartInterface.openNotes(cartItem.getItemId(),cartItem.getInstruction());
+
+
 
                 }
             });
@@ -222,11 +218,6 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
         return isLoading ? 10 : cartItemsList.size();
     }
 
-    @Override
-    public void saveMessage(String instruction, int itemId) {
-
-        db.addInstructions(itemId,instruction);
-    }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -236,6 +227,7 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
         private ElegantNumberButton numberButton;
         private LinearLayout llLayout;
         private LinearLayout llAddNote;
+        private CustomTextViewItalicSemiBold tvNote;
 
         public ViewHolder(@NonNull View itemView, boolean isLoading) {
 
@@ -248,6 +240,7 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
                 numberButton = itemView.findViewById(R.id.number_button);
                 llLayout = itemView.findViewById(R.id.ll_layout);
                 llAddNote = itemView.findViewById(R.id.ll_note);
+                tvNote = itemView.findViewById(R.id.tv_note);
             }
         }
     }

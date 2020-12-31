@@ -172,17 +172,25 @@ public class AddressDialog extends Dialog implements IEditAddress {
 
         if (!firstName.trim().equalsIgnoreCase("") && !lastName.trim().equalsIgnoreCase("") && !email.trim().equalsIgnoreCase("") && !mobileNumber.trim().equalsIgnoreCase("") && !address.trim().equalsIgnoreCase("") && !city.trim().equalsIgnoreCase("") && !pinCode.trim().equalsIgnoreCase("") && !landMark.trim().equalsIgnoreCase("")) {
 
-            tvErrorMessage.setVisibility(View.GONE);
-            if (isEdit) {
+            if (mobileNumber.trim().length() > 9) {
+                tvErrorMessage.setVisibility(View.GONE);
+                if (isEdit) {
 
-                saveEditedAddress(firstName, lastName, email, mobileNumber, address, city, pinCode, landMark);
+                    saveEditedAddress(firstName, lastName, email, mobileNumber, address, city, pinCode, landMark);
 
+                } else {
+                    saveAddress(firstName, lastName, email, mobileNumber, address, city, pinCode, landMark);
+                }
             } else {
-                saveAddress(firstName, lastName, email, mobileNumber, address, city, pinCode, landMark);
+
+                tvErrorMessage.setVisibility(View.VISIBLE);
+                tvErrorMessage.setText("Enter valid mobile number");
+                tvErrorMessage.setAnimation(animShake);
             }
         } else {
 
             tvErrorMessage.setVisibility(View.VISIBLE);
+            tvErrorMessage.setText("* All fields are mandatory");
             tvErrorMessage.setAnimation(animShake);
         }
     }
@@ -337,6 +345,7 @@ public class AddressDialog extends Dialog implements IEditAddress {
     public void onAddressClick(Address address) {
 
         iAddressInterface.onSelectAddress(address);
+        dismiss();
     }
 
     @Override
