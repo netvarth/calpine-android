@@ -98,10 +98,6 @@ public class OrderDetailActivity extends AppCompatActivity {
         ButterKnife.bind(OrderDetailActivity.this);
         mContext = OrderDetailActivity.this;
 
-//        gridLayoutManager = new GridLayoutManager(mContext, 2);
-//        ordersAdapter = new OrdersAdapter(orderInfo.getItemsList(), mContext, true);
-//        rvItems.setLayoutManager(gridLayoutManager);
-//        rvItems.setAdapter(ordersAdapter);
 
         Intent intent = getIntent();
         orderInfo = (ActiveOrders) intent.getSerializableExtra("orderInfo");

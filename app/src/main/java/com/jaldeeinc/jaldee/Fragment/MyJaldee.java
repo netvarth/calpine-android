@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,22 +17,31 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.tabs.TabLayout;
 import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.AppointmentActivity;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.HistoryActivity;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.OrdersHistoryActivity;
 import com.jaldeeinc.jaldee.adapter.JaldeeTabs;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.NotificationDialog;
 import com.jaldeeinc.jaldee.model.Bookings;
+import com.jaldeeinc.jaldee.payment.PaymentGateway;
+import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 public class MyJaldee extends RootFragment {
@@ -45,11 +55,12 @@ public class MyJaldee extends RootFragment {
     Context mContext;
     Activity mActivity;
     private CustomTextViewMedium tvConsumerName;
-    String mFirstName,mLastName;
-    private CustomTextViewSemiBold tvHistory, tvOrdersHistory;
+    String mFirstName, mLastName;
+    private CustomTextViewSemiBold tvHistory;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Animation slideUp, slideRight;
+    private BottomSheetDialog bottomSheetDialog;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -81,7 +92,7 @@ public class MyJaldee extends RootFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.my_jaldee, container, false);
+        View view = inflater.inflate(R.layout.my_jaldee, container, false);
         mContext = getActivity();
         mActivity = getActivity();
         Home.doubleBackToExitPressedOnce = false;
@@ -91,13 +102,12 @@ public class MyJaldee extends RootFragment {
             message = bundle.getString("message");
         }
 
-        tabLayout=(TabLayout)view.findViewById(R.id.tabLayout);
-        viewPager=(ViewPager)view.findViewById(R.id.viewPager);
+        tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
+        viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         tvConsumerName = view.findViewById(R.id.tv_consumerName);
         slideUp = AnimationUtils.loadAnimation(mContext, R.anim.slide_up_in);
         slideRight = AnimationUtils.loadAnimation(mContext, R.anim.slide_up_out);
         tvHistory = view.findViewById(R.id.tv_history);
-        tvOrdersHistory = view.findViewById(R.id.tv_Orderhistory);
 
         if (message != null) {
 
@@ -116,9 +126,9 @@ public class MyJaldee extends RootFragment {
 
         mFirstName = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
         mLastName = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
-        String name = mFirstName + " "+ mLastName+"!";
+        String name = mFirstName + " " + mLastName + "!";
 
-        if (name.trim().length() < 18){
+        if (name.trim().length() < 18) {
             tvConsumerName.setTextSize(30);
         } else {
             tvConsumerName.setTextSize(25);
@@ -129,25 +139,18 @@ public class MyJaldee extends RootFragment {
             @Override
             public void onClick(View view) {
 
-                Intent historyIntent = new Intent(getContext(), HistoryActivity.class);
-                startActivity(historyIntent);
+                showBottomSheet();
+
             }
         });
 
-        tvOrdersHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent ordersHistoryIntent = new Intent(getContext(), OrdersHistoryActivity.class);
-                startActivity(ordersHistoryIntent);
-            }
-        });
 
         tabLayout.addTab(tabLayout.newTab().setText("My Bookings"));
         tabLayout.addTab(tabLayout.newTab().setText("My Payments"));
         tabLayout.addTab(tabLayout.newTab().setText("My Orders"));
         tabLayout.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
         tabLayout.setTextDirection(View.TEXT_ALIGNMENT_TEXT_START);
-        final JaldeeTabs adapter = new JaldeeTabs(getContext(),getChildFragmentManager(), tabLayout.getTabCount());
+        final JaldeeTabs adapter = new JaldeeTabs(getContext(), getChildFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(2);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -171,6 +174,53 @@ public class MyJaldee extends RootFragment {
 
 
         return view;
+    }
+
+
+    public void showBottomSheet() {
+
+        try {
+            bottomSheetDialog = new BottomSheetDialog(mContext);
+            bottomSheetDialog.setContentView(R.layout.history_options);
+            bottomSheetDialog.setCancelable(false);
+            bottomSheetDialog.show();
+
+
+            LinearLayout llBHistory = (LinearLayout) bottomSheetDialog.findViewById(R.id.ll_bHistory);
+            LinearLayout llOHistory = (LinearLayout) bottomSheetDialog.findViewById(R.id.ll_oHistory);
+            ImageView ivClose = bottomSheetDialog.findViewById(R.id.iv_close);
+
+            ivClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    bottomSheetDialog.dismiss();
+                }
+            });
+            llBHistory.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent historyIntent = new Intent(getContext(), HistoryActivity.class);
+                    startActivity(historyIntent);
+                    bottomSheetDialog.dismiss();
+
+                }
+            });
+
+            llOHistory.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent ordersHistoryIntent = new Intent(getContext(), OrdersHistoryActivity.class);
+                    startActivity(ordersHistoryIntent);
+                    bottomSheetDialog.dismiss();
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

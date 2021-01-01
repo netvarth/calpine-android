@@ -129,22 +129,6 @@
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                android:id="@+id/tv_Orderhistory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Orders History"
-                android:textAllCaps="true"
-                android:layout_marginTop="@dimen/padding5"
-                android:layout_marginEnd="@dimen/dimen_10dp"
-                android:textSize="@dimen/txtsize_12"
-                android:layout_marginBottom="@dimen/padding5"
-                android:textColor="@color/location_theme"
-                android:layout_toLeftOf="@id/tv_history"
-                android:layout_below="@id/tv_consumerName"
-                >
-
-            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"

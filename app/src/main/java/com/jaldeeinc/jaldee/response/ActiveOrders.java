@@ -33,38 +33,38 @@ public class ActiveOrders implements Serializable {
     public void setActive(boolean active) {
         this.active = active;
     }
-    int amountDue;
-    public int getAmountDue() {
+    double amountDue;
+    public double getAmountDue() {
         return amountDue;
     }
 
-    public void setAmountDue(int amountDue) {
+    public void setAmountDue(double amountDue) {
         this.amountDue = amountDue;
     }
 
-    int cartAmount;
-    public int getCartAmount() {
+    double cartAmount;
+    public double getCartAmount() {
         return cartAmount;
     }
 
-    public void setCartAmount(int cartAmount) {
+    public void setCartAmount(double cartAmount) {
         this.cartAmount = cartAmount;
     }
 
-    int advanceAmountPaid;
-    public int getAdvanceAmountPaid() {
+    double advanceAmountPaid;
+    public double getAdvanceAmountPaid() {
         return advanceAmountPaid;
     }
 
-    public void setAdvanceAmountPaid(int advanceAmountPaid) {
+    public void setAdvanceAmountPaid(double advanceAmountPaid) {
         this.advanceAmountPaid = advanceAmountPaid;
     }
-    int advanceAmountToPay;
-    public int getAdvanceAmountToPay() {
+    double advanceAmountToPay;
+    public double getAdvanceAmountToPay() {
         return advanceAmountToPay;
     }
 
-    public void setAdvanceAmountToPay(int advanceAmountToPay) {
+    public void setAdvanceAmountToPay(double advanceAmountToPay) {
         this.advanceAmountToPay = advanceAmountToPay;
     }
 

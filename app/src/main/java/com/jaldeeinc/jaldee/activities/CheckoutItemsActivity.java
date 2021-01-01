@@ -561,8 +561,8 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                     prepayAmount = reader.getString("_prepaymentAmount");
                                 }
 
-                                getConfirmationId(value, accountId);
                             }
+                            getConfirmationId(value, accountId);
 
                         }
 
@@ -705,6 +705,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
             @Override
             public void onFailure(Call<ActiveOrders> call, Throwable t) {
+                Config.logV("Fail---------------" + t.toString());
             }
         });
 
