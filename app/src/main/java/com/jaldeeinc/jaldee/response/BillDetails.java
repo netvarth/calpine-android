@@ -1,6 +1,10 @@
 package com.jaldeeinc.jaldee.response;
 
-public class BillDetails {
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
+public class BillDetails implements Serializable {
     public double getAmountPaid() {
         return amountPaid;
     }

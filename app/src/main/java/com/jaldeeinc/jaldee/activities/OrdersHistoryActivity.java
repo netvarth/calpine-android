@@ -46,12 +46,7 @@ public class OrdersHistoryActivity extends AppCompatActivity implements ISelecte
         setContentView(R.layout.activity_orders_history);
         iSelectedOrder = (ISelectedOrder) this;
         initializations();
-
-        linearLayoutManager = new LinearLayoutManager(getContext());
-        rvHistory.setLayoutManager(linearLayoutManager);
-        todayOrdersAdapter = new TodayOrdersAdapter(ordersList, OrdersHistoryActivity.this, true, iSelectedOrder, hideMoreInfo);
-        rvHistory.setAdapter(todayOrdersAdapter);
-
+        
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

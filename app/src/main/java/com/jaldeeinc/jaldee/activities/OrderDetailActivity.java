@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -28,8 +29,10 @@ import com.jaldeeinc.jaldee.custom.Contents;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
+import com.jaldeeinc.jaldee.custom.StoreDetailsDialog;
 import com.jaldeeinc.jaldee.model.Address;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
+import com.jaldeeinc.jaldee.response.StoreDetails;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -90,6 +93,8 @@ public class OrderDetailActivity extends AppCompatActivity {
     private GridLayoutManager gridLayoutManager;
     private OrdersAdapter ordersAdapter;
     private ActiveOrders orderInfo = new ActiveOrders();
+    private StoreDetails storeInfo = new StoreDetails();
+    private StoreDetailsDialog storeDetailsDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +125,13 @@ public class OrderDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 finish();
+            }
+        });
+
+        llStoreDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getStoreDetails(accountId);
             }
         });
 
@@ -170,6 +182,51 @@ public class OrderDetailActivity extends AppCompatActivity {
         });
     }
 
+
+    private void getStoreDetails(int accountId) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(OrderDetailActivity.this, OrderDetailActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<StoreDetails> call = apiService.getStoreDetails(accountId);
+        call.enqueue(new Callback<StoreDetails>() {
+            @Override
+            public void onResponse(Call<StoreDetails> call, Response<StoreDetails> response) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                try {
+                    if (response.code() == 200) {
+
+                        storeInfo = response.body();
+                        if (storeInfo != null) {
+                            storeDetailsDialog = new StoreDetailsDialog(mContext,storeInfo);
+                            storeDetailsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            storeDetailsDialog.show();
+                            storeDetailsDialog.setCancelable(false);
+                            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            storeDetailsDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+
+
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StoreDetails> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+    }
+
     private void updateUI(ActiveOrders orderInfo) {
 
         try {
@@ -179,6 +236,18 @@ public class OrderDetailActivity extends AppCompatActivity {
                 if (orderInfo.getProviderAccount() != null && orderInfo.getProviderAccount().getBusinessName() != null) {
                     tvSpName.setText(orderInfo.getProviderAccount().getBusinessName());
                 }
+
+                tvSpName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent orderIntent = new Intent(view.getContext(), ProviderDetailActivity.class);
+                        if (orderInfo.getProviderAccount() != null && orderInfo.getProviderAccount().getUniqueId() != 0) {
+                            orderIntent.putExtra("uniqueID", orderInfo.getProviderAccount().getUniqueId());
+                        }
+                        orderIntent.putExtra("from", "order");
+                        view.getContext().startActivity(orderIntent);
+                    }
+                });
 
                 tvOrderNO.setText(orderInfo.getOrderNumber());
                 tvStatus.setText(orderInfo.getOrderStatus());

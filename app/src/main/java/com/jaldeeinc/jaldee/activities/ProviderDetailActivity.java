@@ -262,7 +262,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         Intent intent = getIntent();
         if (intent != null) {
             mFrom = intent.getStringExtra("from");
-            if (mFrom != null && mFrom.equalsIgnoreCase("fav")) {
+            if (mFrom != null && mFrom.equalsIgnoreCase("fav") || mFrom.equalsIgnoreCase("order")) {
                 uniqueId = intent.getIntExtra("uniqueID", 0);
             } else {
                 uniqueId = Integer.parseInt(intent.getStringExtra("uniqueID"));

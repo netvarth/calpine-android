@@ -85,8 +85,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     ArrayList<BillModel> coupanArrayList = new ArrayList<>();
 
     Button btn_pay, mbill_applybtn;
-    TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax, billLabel, jdnLabel, jdnValue, txtrefund;
-    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin, jcLayout, jdnLayout, refundLayout;
+    TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax, billLabel, jdnLabel, jdnValue, txtrefund, txtdelivery, tv_deliveryCharge;
+    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin, jcLayout, jdnLayout, refundLayout, deliveryLayout;
     String sAmountPay;
     String accountID;
     String payStatus, consumer;
@@ -148,6 +148,9 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         txtrefund = findViewById(R.id.txtrefund);
         tv_refundamount = findViewById(R.id.refundamt);
         refundLayout = findViewById(R.id.refundlayout);
+        deliveryLayout = findViewById(R.id.deliveryLayout);
+        txtdelivery = findViewById(R.id.tv_deliveryCharges);
+        tv_deliveryCharge = findViewById(R.id.grossDelivery);
         recycle_display_notes = findViewById(R.id.recycle_display_notes_demand);
 
         tv_totalamt.setTypeface(tyface);
@@ -605,6 +608,14 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         } else {
 
                             amountlayout.setVisibility(View.GONE);
+                        }
+
+                        if(mBillData.getDeliveryCharges()!=0){
+                            deliveryLayout.setVisibility(View.VISIBLE);
+                            tv_deliveryCharge.setText("(" + "+" + ")" + mBillData.getDeliveryCharges());
+                        }
+                        else{
+                            deliveryLayout.setVisibility(View.GONE);
                         }
 
 
