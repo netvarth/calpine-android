@@ -199,6 +199,40 @@
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>
                     <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/deliveryLayout"
+                        android:layout_marginTop="@dimen/padding7"
+                        android:visibility="gone"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:gravity="left"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+                        <TextView
+                            android:id="@+id/tv_deliveryCharges"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:gravity="right"
+                            android:text="Delivery Charge"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+
+                        <TextView
+                            android:id="@+id/grossDelivery"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.3"
+                            android:gravity="right"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:visibility="gone"
                         android:id="@+id/jdnLayout"
                         android:layout_width="match_parent"

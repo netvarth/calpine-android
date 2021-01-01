@@ -21,13 +21,18 @@ import com.jaldeeinc.jaldee.Interface.ISelectedOrder;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.ViewHolder> {
@@ -83,12 +88,42 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
 
                 }
 
+                viewHolder.tvSpName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (orders.getUid().contains("h_")){
+                            Intent orderIntent = new Intent(view.getContext(), ProviderDetailActivity.class);
+                        if (orders.getProviderAccount() != null && orders.getProviderAccount().getUniqueId() != 0) {
+                            orderIntent.putExtra("uniqueID", orders.getProviderAccount().getUniqueId());
+                        }
+                        orderIntent.putExtra("from", "order");
+                        view.getContext().startActivity(orderIntent);
+                    }
+                    }
+                });
+
                 if (orders.getOrderNumber() != null && !orders.getOrderNumber().equalsIgnoreCase("")) {
                     viewHolder.tvServiceName.setText("#" + orders.getOrderNumber());
                 }
 
                 if (orders.getTotalItemQuantity() != 0) {
-                    viewHolder.tvDateAndTime.setText(String.valueOf(orders.getTotalItemQuantity()));
+                    viewHolder.tvQuantity.setText(String.valueOf(orders.getTotalItemQuantity()));
+                }
+
+
+
+                if(orders.getOrderDate()!=null){
+                    String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                    String time ="";
+                    if(orders.getTimeSlot()!=null && orders.getTimeSlot().getsTime()!=null && orders.getTimeSlot().geteTime()!=null){
+                         time = orders.getTimeSlot().getsTime() + " - " + orders.getTimeSlot().geteTime();
+                    }
+                    if(date.equalsIgnoreCase(orders.getOrderDate())){
+                        viewHolder.tvDateAndTime.setText("Today," + " " + time );
+                    }
+                    else {
+                        viewHolder.tvDateAndTime.setText(getCustomDateString(orders.getOrderDate()) + "," + " " + time);
+                    }
                 }
 
 
@@ -134,7 +169,6 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                     viewHolder.tvpayment.setText("PAID" + " " + "₹" + " " + convertAmountsToDecimals(orders.getBill().getAmountPaid()));
                 }
 
-                if (!orders.getUid().contains("h_")) {
                     if (orders.getBill() != null) {
                         if (orders.getBill().getBillPaymentStatus().equalsIgnoreCase("FullyPaid") || orders.getBill().getBillPaymentStatus().equalsIgnoreCase("Refund")) {
                             viewHolder.ivBill.setVisibility(View.VISIBLE);
@@ -146,7 +180,7 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                             viewHolder.tvBillText.setText("Pay Bill");
                         }
 
-                        if (orders.getBill().getBillViewStatus() != null && !orders.getOrderStatus().equalsIgnoreCase("cancelled")) {
+                        if (orders.getBill().getBillViewStatus() != null ) {
                             if (orders.getBill().getBillViewStatus().equalsIgnoreCase("Show")) {
                                 viewHolder.ivBill.setVisibility(View.VISIBLE);
                                 viewHolder.tvBillText.setVisibility(View.VISIBLE);
@@ -168,7 +202,7 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                         viewHolder.ivBill.setVisibility(View.GONE);
                         viewHolder.tvBillText.setVisibility(View.GONE);
                     }
-                }
+
 
                 viewHolder.ivBill.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -230,7 +264,7 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
         ImageView ivBookingType, ivBill;
         CustomTextViewBold tvSpName;
         CustomTextViewSemiBold tvProviderName, ivOrderNo;
-        CustomTextViewMedium tvStatus, tvServiceName, tvDateAndTime, tvpayment, tvBillText;
+        CustomTextViewMedium tvStatus, tvServiceName, tvDateAndTime, tvpayment, tvBillText, tvQuantity;
         CardView cvBooking;
         RelativeLayout rlStatus;
 
@@ -252,6 +286,7 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                 rlStatus = itemView.findViewById(R.id.rl_status);
                 tvpayment = itemView.findViewById(R.id.tv_payment);
                 tvBillText = itemView.findViewById(R.id.billLabel);
+                tvQuantity = itemView.findViewById(R.id.tv_quantityValue);
 
             }
 
@@ -273,5 +308,27 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }
+    }
+
+    public static String getCustomDateString(String d) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date1 = format.parse(d);
+        String date = format.format(date1);
+
+        if (date.endsWith("1") && !date.endsWith("11"))
+            format = new SimpleDateFormat("d'st' MMM, yyyy");
+
+        else if (date.endsWith("2") && !date.endsWith("12"))
+            format = new SimpleDateFormat("d'nd' MMM, yyyy");
+
+        else if (date.endsWith("3") && !date.endsWith("13"))
+            format = new SimpleDateFormat("d'rd' MMM, yyyy");
+
+        else
+            format = new SimpleDateFormat("d'th' MMM, yyyy");
+
+        String yourDate = format.format(date1);
+
+        return yourDate;
     }
 }

@@ -7,14 +7,11 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-
 import com.jaldeeinc.jaldee.Interface.IEditContact;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.R;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

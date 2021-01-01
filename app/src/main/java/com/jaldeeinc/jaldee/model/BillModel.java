@@ -221,5 +221,16 @@ public class BillModel {
     }
 
 
+    public int getDeliveryCharges() {
+        return deliveryCharges;
+    }
+
+    public void setDeliveryCharges(int deliveryCharges) {
+        this.deliveryCharges = deliveryCharges;
+    }
+
+    private int deliveryCharges;
+
+
 
 }

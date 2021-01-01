@@ -149,7 +149,7 @@
                 </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                    android:id="@+id/tv_dateAndTime"
+                    android:id="@+id/tv_quantityValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
@@ -163,6 +163,21 @@
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
             </RelativeLayout>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_dateAndTime"
+                android:text=""
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/padding3"
+                android:layout_marginEnd="@dimen/dimen_40dp"
+                android:textSize="14dp"
+                android:textColor="@color/location_theme"
+                >
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
 
             <RelativeLayout
                 android:layout_width="match_parent"

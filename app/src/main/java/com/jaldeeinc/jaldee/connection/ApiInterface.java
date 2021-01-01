@@ -55,6 +55,7 @@ import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.response.ShareLocation;
 import com.jaldeeinc.jaldee.response.SlotsData;
+import com.jaldeeinc.jaldee.response.StoreDetails;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 
 
@@ -611,4 +612,7 @@ public interface ApiInterface {
 
     @GET("consumer/orders/{uuid}")
     Call<ActiveOrders> getOrderDetails(@Path("uuid") String uuid, @Query("account") int account);
+
+    @GET("consumer/orders/settings/store/contact/info/{id}")
+    Call<StoreDetails> getStoreDetails(@Path("id") int id);
 }
