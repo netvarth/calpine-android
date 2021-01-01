@@ -5,6 +5,7 @@ public class CartItemModel {
     private int id;
     private int itemId;
     private int accountId;
+    private int uniqueId;
     private int catalogId;
     private String itemName;
     private String imageUrl;
@@ -177,5 +178,21 @@ public class CartItemModel {
 
     public void setExpired(int expired) {
         isExpired = expired;
+    }
+
+    public int getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(int uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
+    public int getIsExpired() {
+        return isExpired;
+    }
+
+    public void setIsExpired(int isExpired) {
+        this.isExpired = isExpired;
     }
 }

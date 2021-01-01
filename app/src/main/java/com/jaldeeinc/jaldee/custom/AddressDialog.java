@@ -206,6 +206,7 @@ public class AddressDialog extends Dialog implements IEditAddress {
         obj.setCity(city);
         obj.setPostalCode(pinCode);
         obj.setLandMark(landMark);
+        obj.setCountryCode("+91");
         addressList.add(obj);
 
         ApiInterface apiService = ApiClient.getClient(context).create(ApiInterface.class);
@@ -247,6 +248,7 @@ public class AddressDialog extends Dialog implements IEditAddress {
         addressList.get(position).setCity(city);
         addressList.get(position).setPostalCode(pinCode);
         addressList.get(position).setLandMark(landMark);
+        addressList.get(position).setCountryCode("+91");
 
         ApiInterface apiService = ApiClient.getClient(context).create(ApiInterface.class);
         Call<ResponseBody> call = apiService.getDeliveryAddress(addressList);

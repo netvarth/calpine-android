@@ -101,7 +101,7 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
     @BindView(R.id.tv_totalDiscount)
     CustomTextViewSemiBold tvTotalDiscount;
 
-    private int accountId;
+    private int accountId,uniqueId;
     private CardView cvPlus;
     private Context mContext;
     private CatalogItem itemDetails;
@@ -131,6 +131,7 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
         Intent intent = getIntent();
         itemDetails = (CatalogItem) intent.getSerializableExtra("itemInfo");
         accountId = intent.getIntExtra("accountId", 0);
+        uniqueId = intent.getIntExtra("uniqueId",0);
         mBusinessDataList = (SearchViewDetail) intent.getSerializableExtra("providerInfo");
 
         // to update UI
@@ -222,6 +223,7 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
                     item.setItemPrice(itemDetails.getItems().getPrice());
                     item.setMaxQuantity(itemDetails.getMaxQuantity());
                     item.setQuantity(1);
+                    item.setUniqueId(uniqueId);
                     item.setPromotionalType(itemDetails.getItems().getPromotionalPriceType());
                     item.setDiscount(itemDetails.getItems().getPromotionalPrice());
                     item.setDiscountedPrice(itemDetails.getItems().getDiscountedPrice());

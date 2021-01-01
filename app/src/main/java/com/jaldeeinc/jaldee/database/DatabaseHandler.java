@@ -192,6 +192,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     + "promotionalType TEXT,"
                     + "isPromotional NUMERIC,"
                     + "isExpired NUMERIC,"
+                    + "uniqueId INTEGER,"
                     + "maxQuantity INTEGER )";
 
 
@@ -216,6 +217,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("itemId", cartItemModel.getItemId());
                 values.put("accountId", cartItemModel.getAccountId());
                 values.put("catalogId", cartItemModel.getCatalogId());
+                values.put("uniqueId", cartItemModel.getUniqueId());
                 values.put("itemName", cartItemModel.getItemName());
                 values.put("imageUrl", cartItemModel.getImageUrl());
                 values.put("quantity", cartItemModel.getQuantity());
@@ -451,6 +453,33 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    public int getUniqueId() {
+
+        try {
+            int uniqueId = 0;
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+            db.beginTransaction();
+            Cursor cursor = db.rawQuery("SELECT uniqueId FROM " + mContext.getString(R.string.db_table_cart) + " LIMIT 1", null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    uniqueId = cursor.getInt(0);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+            return uniqueId;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+    }
+
     public int getCatalogId() {
 
         try {
@@ -540,7 +569,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
 
             String table = mContext.getString(R.string.db_table_cart);
-            String[] columns = {"itemId", "accountId", "catalogId", "itemName", "imageUrl", "quantity", "itemPrice", "price", "instruction", "discountedPrice", "discount", "promotionalType", "maxQuantity", "isPromotional","isExpired"};
+            String[] columns = {"itemId", "accountId", "catalogId", "itemName", "imageUrl", "quantity", "itemPrice", "price", "instruction", "discountedPrice", "discount", "promotionalType", "maxQuantity", "isPromotional","isExpired","uniqueId"};
             String selection = " quantity >?";
             String[] selectionArgs = new String[]{"0"};
             db.beginTransaction();
@@ -564,6 +593,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     cartItem.setMaxQuantity(cursor.getInt(12));
                     cartItem.setIsPromotional(cursor.getInt(13));
                     cartItem.setExpired(cursor.getInt(14));
+                    cartItem.setUniqueId(cursor.getInt(15));
 
                     cartItemsList.add(cartItem);
                 } while (cursor.moveToNext());

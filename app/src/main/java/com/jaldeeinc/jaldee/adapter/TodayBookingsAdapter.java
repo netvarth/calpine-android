@@ -85,16 +85,16 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
 
                 if (bookings.getProviderName() != null && !bookings.getProviderName().equalsIgnoreCase("")) {
 
-                    viewHolder.tvSpName.setText(convertToTitleForm(bookings.getProviderName()));
+                    viewHolder.tvSpName.setText(bookings.getProviderName());
                     viewHolder.tvProviderName.setVisibility(View.VISIBLE);
-                    viewHolder.tvProviderName.setText(convertToTitleForm(bookings.getSpName()));
+                    viewHolder.tvProviderName.setText(bookings.getSpName());
                 } else {
                     viewHolder.tvProviderName.setVisibility(View.GONE);
-                    viewHolder.tvSpName.setText(convertToTitleForm(bookings.getSpName()));
+                    viewHolder.tvSpName.setText(bookings.getSpName());
 
                 }
 
-                viewHolder.tvServiceName.setText(convertToTitleForm(bookings.getServiceName()));
+                viewHolder.tvServiceName.setText(bookings.getServiceName());
                 String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
                 if (bookings.getBookingOn() != null && bookings.getBookingType() != null) {

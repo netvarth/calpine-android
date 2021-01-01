@@ -10,6 +10,7 @@ public class Address {
     private String city;
     private String postalCode;
     private String landMark;
+    private String countryCode;
 
     public Address(){
 
@@ -89,5 +90,13 @@ public class Address {
 
     public void setLandMark(String landMark) {
         this.landMark = landMark;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
     }
 }

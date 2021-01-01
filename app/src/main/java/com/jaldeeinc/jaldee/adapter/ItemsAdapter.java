@@ -40,6 +40,7 @@ import com.jaldeeinc.jaldee.response.CatalogItem;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
 import com.squareup.picasso.Callback;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -52,19 +53,20 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     private int lastPosition = -1;
     private IItemInterface iItemInterface;
     private DatabaseHandler db;
-    private int accountId;
+    private int accountId,uniqueId;
     Vibrator vibe;
     ProgressBar progressBar;
     private CardView cvPlus;
 
 
-    public ItemsAdapter(ArrayList<CatalogItem> itemsList, ItemsActivity context, boolean isLoading, IItemInterface iItemInterface, int accountId) {
+    public ItemsAdapter(ArrayList<CatalogItem> itemsList, ItemsActivity context, boolean isLoading, IItemInterface iItemInterface, int accountId,int uniqueId) {
         this.itemsList = itemsList;
         this.context = context;
         this.isLoading = isLoading;
         this.iItemInterface = iItemInterface;
         db = new DatabaseHandler(context);
         this.accountId = accountId;
+        this.uniqueId = uniqueId;
         vibe = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
     }
@@ -92,18 +94,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             final CatalogItem catalogItem = itemsList.get(position);
 
             setAnimation(viewHolder.cvCard, position);
-
-//            if (catalogItem.getItems().getStatus().equalsIgnoreCase("ACTIVE")) {
-//
-//                viewHolder.llLoader.setVisibility(View.GONE);
-//                viewHolder.cvCard.setClickable(true);
-//                viewHolder.flAdd.setClickable(true);
-//            } else {
-//
-//                viewHolder.llLoader.setVisibility(View.VISIBLE);
-//                viewHolder.cvCard.setClickable(false);
-//                viewHolder.flAdd.setClickable(false);
-//            }
 
             if (catalogItem.getItems().isShowPromotionalPrice()){
 
@@ -165,14 +155,16 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
                 viewHolder.tvPrice.setVisibility(View.VISIBLE);
                 viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
-                viewHolder.tvPrice.setText("₹" + catalogItem.getItems().getPrice());
+                String amount = String.valueOf(catalogItem.getItems().getPrice());
+                viewHolder.tvPrice.setText("₹" + amount);
                 viewHolder.tvPrice.setPaintFlags(viewHolder.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 String price = String.valueOf(catalogItem.getItems().getPromotionalPrice());
-                viewHolder.tvDiscountedPrice.setText("₹" + price);
+                viewHolder.tvDiscountedPrice.setText("₹" +price);
 
             } else {
                 viewHolder.tvPrice.setVisibility(View.VISIBLE);
-                viewHolder.tvPrice.setText("₹" + catalogItem.getItems().getPrice());
+                String amount = String.valueOf(catalogItem.getItems().getPrice());
+                viewHolder.tvPrice.setText("₹" + amount);
                 viewHolder.tvDiscountedPrice.setVisibility(View.GONE);
 
             }
@@ -196,6 +188,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                         item.setItemPrice(catalogItem.getItems().getPrice());
                         item.setMaxQuantity(catalogItem.getMaxQuantity());
                         item.setQuantity(1);
+                        item.setUniqueId(uniqueId);
                         item.setPromotionalType(catalogItem.getItems().getPromotionalPriceType());
                         item.setDiscount(catalogItem.getItems().getPromotionalPrice());
                         item.setDiscountedPrice(catalogItem.getItems().getDiscountedPrice());
@@ -389,4 +382,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         }
     }
 
+    public static String convertAmountToDecimals(String price) {
+
+        double a = Double.parseDouble(price);
+        DecimalFormat decim = new DecimalFormat("0.00");
+        Double price2 = Double.parseDouble(decim.format(a));
+        String amount = decim.format(price2);
+        return amount;
+
+    }
 }

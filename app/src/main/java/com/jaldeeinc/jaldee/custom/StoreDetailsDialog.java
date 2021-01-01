@@ -18,7 +18,6 @@ public class StoreDetailsDialog extends Dialog {
     CustomTextViewSemiBold tv_provider;
     CustomTextViewMedium tv_address, tv_phone, tv_email;
     ImageView iv_close;
-    Button btnOk;
     public StoreDetailsDialog(@NonNull Context context, StoreDetails storeDetails) {
         super(context);
         this.context = context;
@@ -35,7 +34,6 @@ public class StoreDetailsDialog extends Dialog {
         tv_phone = findViewById(R.id.phoneNumber);
         tv_email = findViewById(R.id.emailId);
         iv_close = findViewById(R.id.iv_close);
-        btnOk = findViewById(R.id.btn_ok);
 
         iv_close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,19 +42,13 @@ public class StoreDetailsDialog extends Dialog {
             }
         });
 
-        btnOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
 
         if(storeDetails!=null){
             if(storeDetails.getFirstName()!=null && storeDetails.getLastName()!=null){
                 tv_provider.setText(storeDetails.getFirstName() + " " + storeDetails.getLastName());
             }
 
-            if(storeDetails.getAddress()!=null){
+            if(storeDetails.getAddress()!=null && !storeDetails.getAddress().trim().equalsIgnoreCase("")){
                 tv_address.setText(storeDetails.getAddress());
                 tv_address.setVisibility(View.VISIBLE);
             }

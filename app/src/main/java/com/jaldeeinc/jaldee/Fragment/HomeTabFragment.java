@@ -59,6 +59,7 @@ public class HomeTabFragment extends Fragment {
     static Fragment hometabFragment;
     String message;
     String tab;
+    int myJaldeeTab = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,6 +79,7 @@ public class HomeTabFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             tab = bundle.getString("tab");
+            myJaldeeTab = bundle.getInt("myJaldeeTab");
 
         }
         if (bundle != null) {
@@ -203,12 +205,14 @@ public class HomeTabFragment extends Fragment {
         tab1Fragment = new Tab1Fragment();
         myJaldeeFragment = new MyJaldee();
         Bundle bundle = new Bundle();
+        if (myJaldeeTab == 2){
+            bundle.putInt("myJaldeeTab", myJaldeeTab);
+        }
         if (message != null && !message.equalsIgnoreCase("")) {
             bundle.putString("message", message);
-            tab1Fragment.setArguments(bundle);
-            myJaldeeFragment.setArguments(bundle);
         }
-
+        tab1Fragment.setArguments(bundle);
+        myJaldeeFragment.setArguments(bundle);
         // checkinFragment = new CheckinsFragmentCopy();
         favFragment = new FavouriteFragment();
         inboxFragment = new InboxFragment();

@@ -60,6 +60,7 @@ public class MyJaldee extends RootFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Animation slideUp, slideRight;
+    private int myJaldeeTab = 0;
     private BottomSheetDialog bottomSheetDialog;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -100,6 +101,7 @@ public class MyJaldee extends RootFragment {
         if (bundle != null) {
             toHome = bundle.getBoolean("toHome");
             message = bundle.getString("message");
+            myJaldeeTab = bundle.getInt("myJaldeeTab");
         }
 
         tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
@@ -159,6 +161,7 @@ public class MyJaldee extends RootFragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -171,6 +174,7 @@ public class MyJaldee extends RootFragment {
 
             }
         });
+        viewPager.setCurrentItem(myJaldeeTab);
 
 
         return view;

@@ -262,7 +262,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         Intent intent = getIntent();
         if (intent != null) {
             mFrom = intent.getStringExtra("from");
-            if (mFrom != null && mFrom.equalsIgnoreCase("fav") || mFrom.equalsIgnoreCase("order")) {
+            if (mFrom != null && mFrom.equalsIgnoreCase("fav")) {
+                uniqueId = intent.getIntExtra("uniqueID", 0);
+            } else if (mFrom != null && mFrom.equalsIgnoreCase("order")) {
                 uniqueId = intent.getIntExtra("uniqueID", 0);
             } else {
                 uniqueId = Integer.parseInt(intent.getStringExtra("uniqueID"));
@@ -2385,6 +2387,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         }
         catalogIntent.putExtra("catalogInfo", catalogInfo);
         catalogIntent.putExtra("accountId", providerId);
+        catalogIntent.putExtra("uniqueId", uniqueId);
         startActivity(catalogIntent);
 
     }

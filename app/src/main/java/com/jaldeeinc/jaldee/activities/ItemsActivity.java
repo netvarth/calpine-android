@@ -95,7 +95,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
 
     private Catalog catalogInfo;
     private Context mContext;
-    private int catalogId, accountId;
+    private int catalogId, accountId,uniqueId;
     private SearchViewDetail mBusinessDataList = new SearchViewDetail();
     private ItemsAdapter itemsAdapter;
     private IItemInterface iItemInterface;
@@ -119,10 +119,11 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         mBusinessDataList = (SearchViewDetail) i.getSerializableExtra("providerInfo");
         catalogInfo = (Catalog) i.getSerializableExtra("catalogInfo");
         accountId = i.getIntExtra("accountId", 0);
+        uniqueId = i.getIntExtra("uniqueId",0);
 
         gridLayoutManager = new GridLayoutManager(ItemsActivity.this, 2);
         rvItems.setLayoutManager(gridLayoutManager);
-        itemsAdapter = new ItemsAdapter(catalogInfo.getCatalogItemsList(), this, true, iItemInterface, accountId);
+        itemsAdapter = new ItemsAdapter(catalogInfo.getCatalogItemsList(), this, true, iItemInterface, accountId,uniqueId);
         rvItems.setAdapter(itemsAdapter);
 
         if (accountId == db.getAccountId()) {
@@ -236,7 +237,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         catalogItemsList = updateCatalogItemsQuantity(catalogItemsList);
         gridLayoutManager = new GridLayoutManager(ItemsActivity.this, 2);
         rvItems.setLayoutManager(gridLayoutManager);
-        itemsAdapter = new ItemsAdapter(catalogItemsList, this, false, iItemInterface, accountId);
+        itemsAdapter = new ItemsAdapter(catalogItemsList, this, false, iItemInterface, accountId,uniqueId);
         rvItems.setAdapter(itemsAdapter);
         updateCartUI();
     }
@@ -323,6 +324,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         Intent intent = new Intent(ItemsActivity.this, ItemDetailAcitvity.class);
         intent.putExtra("itemInfo", catalogItem);
         intent.putExtra("accountId", accountId);
+        intent.putExtra("uniqueId", uniqueId);
         intent.putExtra("providerInfo", mBusinessDataList);
         startActivity(intent);
 

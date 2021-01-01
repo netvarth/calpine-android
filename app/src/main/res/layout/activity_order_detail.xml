@@ -192,7 +192,7 @@
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:layout_marginStart="@dimen/padding3"
-                                                android:text="Store details"
+                                                android:text="Contact info"
                                                 android:textColor="@color/dark_blue"
                                                 android:textSize="14dp">
                                             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>

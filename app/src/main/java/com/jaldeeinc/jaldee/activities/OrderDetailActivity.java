@@ -9,8 +9,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -196,14 +199,15 @@ public class OrderDetailActivity extends AppCompatActivity {
                         storeInfo = response.body();
                         if (storeInfo != null) {
                             storeDetailsDialog = new StoreDetailsDialog(mContext,storeInfo);
+                            storeDetailsDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
                             storeDetailsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            storeDetailsDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             storeDetailsDialog.show();
-                            storeDetailsDialog.setCancelable(false);
+                            storeDetailsDialog.setCancelable(true);
                             DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
                             int width = (int) (metrics.widthPixels * 1);
+                            storeDetailsDialog.getWindow().setGravity(Gravity.BOTTOM);
                             storeDetailsDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-
 
                         }
                     }

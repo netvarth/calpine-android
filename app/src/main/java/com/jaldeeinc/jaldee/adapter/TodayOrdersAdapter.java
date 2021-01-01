@@ -91,14 +91,13 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                 viewHolder.tvSpName.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (orders.getUid().contains("h_")){
-                            Intent orderIntent = new Intent(view.getContext(), ProviderDetailActivity.class);
+                        Intent orderIntent = new Intent(view.getContext(), ProviderDetailActivity.class);
                         if (orders.getProviderAccount() != null && orders.getProviderAccount().getUniqueId() != 0) {
                             orderIntent.putExtra("uniqueID", orders.getProviderAccount().getUniqueId());
                         }
                         orderIntent.putExtra("from", "order");
-                        view.getContext().startActivity(orderIntent);
-                    }
+                        context.startActivity(orderIntent);
+
                     }
                 });
 
@@ -111,17 +110,15 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                 }
 
 
-
-                if(orders.getOrderDate()!=null){
+                if (orders.getOrderDate() != null) {
                     String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-                    String time ="";
-                    if(orders.getTimeSlot()!=null && orders.getTimeSlot().getsTime()!=null && orders.getTimeSlot().geteTime()!=null){
-                         time = orders.getTimeSlot().getsTime() + " - " + orders.getTimeSlot().geteTime();
+                    String time = "";
+                    if (orders.getTimeSlot() != null && orders.getTimeSlot().getsTime() != null && orders.getTimeSlot().geteTime() != null) {
+                        time = orders.getTimeSlot().getsTime() + " - " + orders.getTimeSlot().geteTime();
                     }
-                    if(date.equalsIgnoreCase(orders.getOrderDate())){
-                        viewHolder.tvDateAndTime.setText("Today," + " " + time );
-                    }
-                    else {
+                    if (date.equalsIgnoreCase(orders.getOrderDate())) {
+                        viewHolder.tvDateAndTime.setText("Today," + " " + time);
+                    } else {
                         viewHolder.tvDateAndTime.setText(getCustomDateString(orders.getOrderDate()) + "," + " " + time);
                     }
                 }
@@ -169,39 +166,39 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                     viewHolder.tvpayment.setText("PAID" + " " + "₹" + " " + convertAmountsToDecimals(orders.getBill().getAmountPaid()));
                 }
 
-                    if (orders.getBill() != null) {
-                        if (orders.getBill().getBillPaymentStatus().equalsIgnoreCase("FullyPaid") || orders.getBill().getBillPaymentStatus().equalsIgnoreCase("Refund")) {
+                if (orders.getBill() != null) {
+                    if (orders.getBill().getBillPaymentStatus().equalsIgnoreCase("FullyPaid") || orders.getBill().getBillPaymentStatus().equalsIgnoreCase("Refund")) {
+                        viewHolder.ivBill.setVisibility(View.VISIBLE);
+                        viewHolder.tvBillText.setVisibility(View.VISIBLE);
+                        viewHolder.tvBillText.setText("Receipt");
+                    } else {
+                        viewHolder.ivBill.setVisibility(View.VISIBLE);
+                        viewHolder.tvBillText.setVisibility(View.GONE);
+                        viewHolder.tvBillText.setText("Pay Bill");
+                    }
+
+                    if (orders.getBill().getBillViewStatus() != null) {
+                        if (orders.getBill().getBillViewStatus().equalsIgnoreCase("Show")) {
                             viewHolder.ivBill.setVisibility(View.VISIBLE);
                             viewHolder.tvBillText.setVisibility(View.VISIBLE);
-                            viewHolder.tvBillText.setText("Receipt");
                         } else {
-                            viewHolder.ivBill.setVisibility(View.VISIBLE);
+                            viewHolder.ivBill.setVisibility(View.GONE);
                             viewHolder.tvBillText.setVisibility(View.GONE);
-                            viewHolder.tvBillText.setText("Pay Bill");
                         }
 
-                        if (orders.getBill().getBillViewStatus() != null ) {
-                            if (orders.getBill().getBillViewStatus().equalsIgnoreCase("Show")) {
-                                viewHolder.ivBill.setVisibility(View.VISIBLE);
-                                viewHolder.tvBillText.setVisibility(View.VISIBLE);
-                            } else {
-                                viewHolder.ivBill.setVisibility(View.GONE);
-                                viewHolder.tvBillText.setVisibility(View.GONE);
-                            }
-
-                        } else {
-                            if (!orders.getBill().getBillPaymentStatus().equalsIgnoreCase("NotPaid")) {
-                                viewHolder.ivBill.setVisibility(View.VISIBLE);
-                                viewHolder.tvBillText.setVisibility(View.VISIBLE);
-                            } else {
-                                viewHolder.ivBill.setVisibility(View.GONE);
-                                viewHolder.tvBillText.setVisibility(View.GONE);
-                            }
-                        }
                     } else {
-                        viewHolder.ivBill.setVisibility(View.GONE);
-                        viewHolder.tvBillText.setVisibility(View.GONE);
+                        if (!orders.getBill().getBillPaymentStatus().equalsIgnoreCase("NotPaid")) {
+                            viewHolder.ivBill.setVisibility(View.VISIBLE);
+                            viewHolder.tvBillText.setVisibility(View.VISIBLE);
+                        } else {
+                            viewHolder.ivBill.setVisibility(View.GONE);
+                            viewHolder.tvBillText.setVisibility(View.GONE);
+                        }
                     }
+                } else {
+                    viewHolder.ivBill.setVisibility(View.GONE);
+                    viewHolder.tvBillText.setVisibility(View.GONE);
+                }
 
 
                 viewHolder.ivBill.setOnClickListener(new View.OnClickListener() {
@@ -229,7 +226,6 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                         iSelectedOrder.onOrderClick(orders);
                     }
                 });
-
 
 
             } catch (Exception e) {

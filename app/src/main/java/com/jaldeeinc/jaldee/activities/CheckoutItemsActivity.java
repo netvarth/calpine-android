@@ -56,6 +56,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.EditContactDialog;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.SlotSelection;
+import com.jaldeeinc.jaldee.custom.StoreDetailsDialog;
 import com.jaldeeinc.jaldee.custom.SuccessDialog;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.Address;
@@ -76,6 +77,7 @@ import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.Schedule;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
+import com.jaldeeinc.jaldee.response.StoreDetails;
 import com.jaldeeinc.jaldee.response.TimeSlot;
 import com.jaldeeinc.jaldee.utils.DialogUtilsKt;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
@@ -94,6 +96,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -227,7 +231,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     private String selectedTime = "";
     private String value = null;
     private String prepayAmount = "";
-    private int accountId, catalogId;
+    private int accountId, catalogId,uniqueId;
     private AddressDialog addressDialog;
     private IPaymentResponse paymentResponse;
     private CheckoutItemsAdapter checkoutItemsAdapter;
@@ -248,6 +252,8 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     private EditContactDialog editContactDialog;
     private IEditContact iEditContact;
     private String homeDeliveryEmail, homeDeliveryNumber;
+    private StoreDetails storeInfo = new StoreDetails();
+    private StoreDetailsDialog storeDetailsDialog;
 
 
     @Override
@@ -262,12 +268,11 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         iEditContact = (IEditContact) this;
         db = new DatabaseHandler(mContext);
 
-        Intent intent = getIntent();
-        accountId = intent.getIntExtra("accountId", 0);
-        mBusinessDataList = (SearchViewDetail) intent.getSerializableExtra("providerInfo");
-
+        uniqueId = db.getUniqueId();
         catalogId = db.getCatalogId();
+        accountId = db.getAccountId();
         getCatalogDetails(accountId);
+        getProviderDetails(uniqueId);
         // to fetch user addresses list
 
         Typeface font_style = Typeface.createFromAsset(mContext.getAssets(), "fonts/JosefinSans-SemiBold.ttf");
@@ -304,12 +309,8 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             @Override
             public void onClick(View v) {
 
-                if (llStoreDetails.getVisibility() != View.VISIBLE) {
-                    llStoreDetails.setVisibility(View.VISIBLE);
-                } else {
+                getStoreDetails(accountId);
 
-                    llStoreDetails.setVisibility(View.GONE);
-                }
             }
         });
 
@@ -743,9 +744,9 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
                                     successDialog.dismiss();
                                     db.DeleteCart();
-                                    Intent checkin = new Intent(CheckoutItemsActivity.this, Home.class);
-//                                    checkin.putExtra("activeOrder", activeOrders);
-                                    startActivity(checkin);
+                                    Intent checkIn = new Intent(CheckoutItemsActivity.this, OrderConfirmation.class);
+                                    checkIn.putExtra("orderInfo", activeOrders);
+                                    startActivity(checkIn);
                                 }
                             }, 8000);
 
@@ -764,6 +765,74 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             }
         });
     }
+
+    private void getProviderDetails(int id) {
+        ApiInterface apiService = ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(CheckoutItemsActivity.this, CheckoutItemsActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        Call<SearchViewDetail> call = apiService.getSearchViewDetail(id, sdf.format(currentTime));
+        call.enqueue(new Callback<SearchViewDetail>() {
+            @Override
+            public void onResponse(Call<SearchViewDetail> call, final Response<SearchViewDetail> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(CheckoutItemsActivity.this, mDialog);
+                    Config.logV("URL-----1111----------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-----detail--------------------" + response.code());
+                    if (response.code() == 200) {
+                        mBusinessDataList = response.body();
+
+                        if (mBusinessDataList != null) {
+
+                            tvSpName.setText(mBusinessDataList.getBusinessName());
+
+                            tvLocationName.setText(mBusinessDataList.getBaseLocation().getPlace());
+
+                            if (mBusinessDataList.getLogo() != null) {
+
+                                shimmer.setVisibility(View.VISIBLE);
+                                PicassoTrustAll.getInstance(CheckoutItemsActivity.this).load(mBusinessDataList.getLogo().getUrl()).into(ivSpImage, new com.squareup.picasso.Callback() {
+                                    @Override
+                                    public void onSuccess() {
+
+                                        shimmer.setVisibility(View.GONE);
+                                        ivSpImage.setVisibility(View.VISIBLE);
+                                    }
+
+                                    @Override
+                                    public void onError() {
+
+                                        shimmer.setVisibility(View.GONE);
+                                        ivSpImage.setVisibility(View.VISIBLE);
+                                        ivSpImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
+                                    }
+                                });
+                            }
+                        }
+
+                    } else {
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchViewDetail> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(CheckoutItemsActivity.this, mDialog);
+            }
+        });
+    }
+
 
 
     private void ApiGetProfileDetail() {
@@ -1035,6 +1104,51 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
     }
 
+    private void getStoreDetails(int accountId) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(CheckoutItemsActivity.this, CheckoutItemsActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<StoreDetails> call = apiService.getStoreDetails(accountId);
+        call.enqueue(new Callback<StoreDetails>() {
+            @Override
+            public void onResponse(Call<StoreDetails> call, Response<StoreDetails> response) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                try {
+                    if (response.code() == 200) {
+
+                        storeInfo = response.body();
+                        if (storeInfo != null) {
+                            storeDetailsDialog = new StoreDetailsDialog(mContext, storeInfo);
+                            storeDetailsDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+                            storeDetailsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            storeDetailsDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            storeDetailsDialog.show();
+                            storeDetailsDialog.setCancelable(true);
+                            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            storeDetailsDialog.getWindow().setGravity(Gravity.BOTTOM);
+                            storeDetailsDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StoreDetails> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+    }
+
 
     private void updateMainUI(OrderResponse orderResponse, ArrayList<Catalog> catalogs) {
 
@@ -1046,33 +1160,6 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
         }
 
-        if (mBusinessDataList != null) {
-
-            tvSpName.setText(mBusinessDataList.getBusinessName());
-
-            tvLocationName.setText(mBusinessDataList.getBaseLocation().getPlace());
-
-            if (mBusinessDataList.getLogo() != null) {
-
-                shimmer.setVisibility(View.VISIBLE);
-                PicassoTrustAll.getInstance(CheckoutItemsActivity.this).load(mBusinessDataList.getLogo().getUrl()).into(ivSpImage, new com.squareup.picasso.Callback() {
-                    @Override
-                    public void onSuccess() {
-
-                        shimmer.setVisibility(View.GONE);
-                        ivSpImage.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onError() {
-
-                        shimmer.setVisibility(View.GONE);
-                        ivSpImage.setVisibility(View.VISIBLE);
-                        ivSpImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
-                    }
-                });
-            }
-        }
 
         countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
         phoneNumber = SharedPreference.getInstance(mContext).getStringValue("mobile", "");

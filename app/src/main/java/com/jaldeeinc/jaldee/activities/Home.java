@@ -37,6 +37,7 @@ public class Home extends AppCompatActivity {
     String detail;
     String path;
     String message = null;
+    String from = null;
 
 
     Intent mLiveTrackClient;
@@ -165,12 +166,19 @@ public class Home extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
+        from = intent.getStringExtra("isOrder");   // to set orders tab by default after completion of placing order.
         String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
         Config.logV("Push Notification Foreground @@@@@@@@@@@@@@@@@@@@@" + loginId);
         if (!loginId.equalsIgnoreCase("")) {
             mHomeTab = new HomeTabFragment();
             Bundle bundle = new Bundle();
             bundle.putString("tab", "1");
+            if (from != null && !from.equalsIgnoreCase("")){
+                if (from.equalsIgnoreCase("ORDER")){
+
+                    bundle.putInt("myJaldeeTab",2);  // to set orders tab by default after completion of placing order.
+                }
+            }
             if (message != null && !message.equalsIgnoreCase("")) {
                 bundle.putString("message", message);
             }else {

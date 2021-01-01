@@ -148,7 +148,7 @@
                                 android:gravity="center"
                                 android:paddingTop="@dimen/dimen_2dp"
                                 android:paddingBottom="@dimen/dimen_2dp"
-                                android:text="Store Details"
+                                android:text="Contact info"
                                 android:textColor="@color/dark_blue"
                                 android:textSize="@dimen/dimen_12dp">
 
