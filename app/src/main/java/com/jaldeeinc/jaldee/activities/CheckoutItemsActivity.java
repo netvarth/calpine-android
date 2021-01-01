@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.JsonArray;
 import com.jaldeeinc.jaldee.Interface.IAddressInterface;
 import com.jaldeeinc.jaldee.Interface.IEditContact;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
@@ -421,7 +422,9 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         mDialog.show();
 
         JSONObject inputObj = new JSONObject();
-        JSONObject itemsObj = new JSONObject();
+        JSONObject itemsObj1 = new JSONObject();
+        JSONObject itemsObj2 = new JSONObject();
+        JSONObject itemsObj3 = new JSONObject();
         JSONObject catalog = new JSONObject();
         JSONObject orderFor = new JSONObject();
         JSONObject timeSlot = new JSONObject();
@@ -488,15 +491,21 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
                 for (int i = 0; i < itemsList.size(); i++) {
 
-                    itemsObj.put("id", itemsList.get(i).getId());
-                    itemsObj.put("quantity", itemsList.get(i).getQuantity());
-                    itemsObj.put("consumerNote", itemsList.get(i).getConsumerNote());
+                    JSONObject obj = new JSONObject();
+                    obj.put("id", itemsList.get(i).getId());
+                    obj.put("quantity", itemsList.get(i).getQuantity());
+                    if (itemsList.get(i).getConsumerNote() != null) {
+                        obj.put("consumerNote", itemsList.get(i).getConsumerNote());
+                    } else {
+                        obj.put("consumerNote", "");
+                    }
+                    itemsArray.put(obj);
 
                 }
 
-                itemsArray.put(itemsObj);
+                inputObj.put("orderItem", itemsArray);
+
             }
-            inputObj.put("orderItem", itemsArray);
 
             catalog.put("id", catalogId);
             inputObj.put("catalog", catalog);

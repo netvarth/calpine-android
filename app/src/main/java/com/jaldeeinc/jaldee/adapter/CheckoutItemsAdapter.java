@@ -25,6 +25,7 @@ import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.CartItemModel;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class CheckoutItemsAdapter extends RecyclerView.Adapter<CheckoutItemsAdapter.ViewHolder> {
@@ -69,7 +70,8 @@ public class CheckoutItemsAdapter extends RecyclerView.Adapter<CheckoutItemsAdap
 
             viewHolder.tvItemName.setText(cartItem.getItemName());
 
-            viewHolder.tvPrice.setText(String.valueOf(cartItem.getPrice()));
+            double amount = cartItem.getDiscountedPrice() * cartItem.getQuantity();
+            viewHolder.tvPrice.setText("₹"+ convertAmountToDecimals(String.valueOf(amount)));
 
             viewHolder.tvQuantity.setText(String.valueOf(cartItem.getQuantity()));
 
@@ -114,5 +116,15 @@ public class CheckoutItemsAdapter extends RecyclerView.Adapter<CheckoutItemsAdap
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }
+    }
+
+    public static String convertAmountToDecimals(String price) {
+
+        double a = Double.parseDouble(price);
+        DecimalFormat decim = new DecimalFormat("0.00");
+        Double price2 = Double.parseDouble(decim.format(a));
+        String amount = decim.format(price2);
+        return amount;
+
     }
 }

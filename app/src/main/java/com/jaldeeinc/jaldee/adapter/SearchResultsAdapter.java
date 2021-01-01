@@ -43,6 +43,7 @@ import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
+import com.squareup.picasso.Callback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -210,7 +211,23 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         public void run() {
                             //Your code to run in GUI thread here
                             myViewHolder.cvImage.setVisibility(View.VISIBLE);
-                            PicassoTrustAll.getInstance(context).load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.ivSpImage);
+                            String url = searchdetailList.getLogo();
+                            if (url.contains(" ")) {
+                                url = url.replaceAll(" ", "%20");
+                            }
+                            String finalUrl = url;
+                            PicassoTrustAll.getInstance(context).load(url).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.ivSpImage, new Callback() {
+                                @Override
+                                public void onSuccess() {
+
+                                }
+
+                                @Override
+                                public void onError() {
+
+                                    PicassoTrustAll.getInstance(context).load(finalUrl).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.ivSpImage);
+                                }
+                            });
                         }
                     });
                 } else {

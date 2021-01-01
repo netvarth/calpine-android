@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:layout_gravity="center"
-            android:text="Chiken biriyani with masala"
+            android:text=""
             android:textColor="@color/title_color">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.2"
-            android:text="5"
+            android:text=""
             android:paddingStart="@dimen/dimen_10dp"
             android:gravity="center"
             android:textColor="@color/title_color"
@@ -42,7 +42,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:layout_weight="0.3"
-            android:text="$3985"
+            android:text=""
             android:paddingStart="@dimen/dimen_20dp"
             android:textColor="@color/title_color"
             android:textSize="@dimen/dimen_15dp">

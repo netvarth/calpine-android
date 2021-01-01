@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/dimen_80dp"
     android:id="@+id/ll_layout"
-    android:paddingBottom="@dimen/dimen_10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
@@ -27,7 +26,7 @@
             android:textSize="@dimen/dimen_16dp"
             android:textColor="@color/dark_black"
             android:layout_marginStart="@dimen/dimen_10dp"
-            android:text="efvrvrev">
+            android:text="">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
