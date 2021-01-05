@@ -178,7 +178,8 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                     }
 
                     if (orders.getBill().getBillViewStatus() != null) {
-                        if (orders.getBill().getBillViewStatus().equalsIgnoreCase("Show")) {
+                        if (orders.getBill().getBillViewStatus().equalsIgnoreCase("Show") && !orders.getOrderStatus().equalsIgnoreCase("Cancelled")) {
+                            // Remove the second condition "orders.getOrderstatus()" if we want to display bill for the orders that were cancelled //
                             viewHolder.ivBill.setVisibility(View.VISIBLE);
                             viewHolder.tvBillText.setVisibility(View.VISIBLE);
                         } else {

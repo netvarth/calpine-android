@@ -396,16 +396,27 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         refundData = response.body();
                         for (int i = 0; i < refundData.size(); i++){
                             if (refundData.get(i).getRefundDetails().size() > 0) {
+                                double totalRefund =0.0;
                                 if (refundData.get(i).getRefundDetails().get(0).getStatus().equalsIgnoreCase("Processed")) {
                                     refundLayout.setVisibility(View.VISIBLE);
-                                    tv_refundamount.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(refundData.get(i).getRefundDetails().get(0).getAmount())));
-                                    total = mBillData.getNetRate() - mBillData.getTotalAmountPaid() + Double.parseDouble(refundData.get(i).getRefundDetails().get(0).getAmount());
+                                    for(int j =0;j<refundData.get(i).getRefundDetails().size();j++){
+                                        totalRefund = totalRefund + Double.parseDouble(refundData.get(i).getRefundDetails().get(j).getAmount());
+                                    }
+                                    tv_refundamount.setText("₹ " + Config.getAmountinTwoDecimalPoints(totalRefund));
+                                    if(total < 0){
+                                        tv_totalamt.setText(Double.parseDouble(String.valueOf(totalRefund)) + "");
+                                        btn_pay.setVisibility(View.GONE);
+                                    }
+                                    else if(total>=0) {
+                                    total = mBillData.getNetRate() - mBillData.getTotalAmountPaid() + Double.parseDouble(String.valueOf(totalRefund));
                                     tv_totalamt.setText("₹ " + Config.getAmountinTwoDecimalPoints(total));
+                                    btn_pay.setVisibility(View.VISIBLE);
+                                    }
                                 } else {
                                     refundLayout.setVisibility(View.GONE);
                                 }
                             } else {
-                                refundLayout.setVisibility(View.GONE);
+                                 refundLayout.setVisibility(View.GONE);
                             }
                     }
 
