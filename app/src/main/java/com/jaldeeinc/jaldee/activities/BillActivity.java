@@ -96,7 +96,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     TextView tv_billnotes, tv_notes;
     int customerId;
     String uniqueId;
-    double total;
+    double total, totalRefund =0.0;;
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     private IPaymentResponse paymentResponse;
     String encId;
@@ -396,7 +396,6 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         refundData = response.body();
                         for (int i = 0; i < refundData.size(); i++){
                             if (refundData.get(i).getRefundDetails().size() > 0) {
-                                double totalRefund =0.0;
                                 if (refundData.get(i).getRefundDetails().get(0).getStatus().equalsIgnoreCase("Processed")) {
                                     refundLayout.setVisibility(View.VISIBLE);
                                     for(int j =0;j<refundData.get(i).getRefundDetails().size();j++){
