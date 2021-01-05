@@ -211,6 +211,7 @@ public class SlotSelection extends Dialog implements ITimeSlot {
     private void getUpdatedData(ArrayList<Schedule> schedulesList, String sDate) {
 
         try {
+            cvConfirm.setClickable(true);
             tvCalenderDate.setText(getCalenderDateFormat(sDate));
             schedule = getSlotsByDate(schedulesList, sDate);
             timeSlots = new ArrayList<>();
@@ -230,6 +231,7 @@ public class SlotSelection extends Dialog implements ITimeSlot {
                 rvSlots.setVisibility(View.GONE);
                 llNoSlots.setVisibility(View.VISIBLE);
                 tvReason.setText(schedule.getReason());
+                cvConfirm.setClickable(false);
 
             }
 

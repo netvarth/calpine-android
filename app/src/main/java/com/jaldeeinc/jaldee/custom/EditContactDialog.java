@@ -3,6 +3,8 @@ package com.jaldeeinc.jaldee.custom;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -104,12 +106,23 @@ public class EditContactDialog extends Dialog {
             if (number.trim().length() > 9) {
 
                 tvError.setVisibility(View.GONE);
-                iEditContact.onEdit(countryCode, number, mail);
-                dismiss();
+
+                if (isValidEmail(mail)){
+                    tvError.setVisibility(View.GONE);
+                    iEditContact.onEdit(countryCode, number, mail);
+                    dismiss();
+                } else {
+
+                    tvError.setVisibility(View.VISIBLE);
+                    tvError.setText("* Enter valid email address");
+                    tvError.startAnimation(animShake);
+                }
+
             } else {
 
                 tvError.setVisibility(View.VISIBLE);
                 tvError.setText("* Enter valid mobile number");
+                tvError.startAnimation(animShake);
             }
 
         } else {
@@ -119,5 +132,9 @@ public class EditContactDialog extends Dialog {
             tvError.startAnimation(animShake);
         }
 
+    }
+
+    public static boolean isValidEmail(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 }

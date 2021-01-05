@@ -102,7 +102,6 @@ dependencies {
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
-
     // picasso with blur effect
     implementation 'jp.wasabeef:picasso-transformations:2.2.1'
     // If you want to use the GPU Filters

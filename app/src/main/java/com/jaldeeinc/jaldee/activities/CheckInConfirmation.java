@@ -244,7 +244,7 @@ public class CheckInConfirmation extends AppCompatActivity {
             }
 
             if (activeCheckInInfo.getService() != null) {
-                tvServiceName.setText(convertToTitleForm(activeCheckInInfo.getService().getName()));
+                tvServiceName.setText(activeCheckInInfo.getService().getName());
 
                 if (activeCheckInInfo.getService().getServiceType() != null && activeCheckInInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
 
@@ -346,7 +346,7 @@ public class CheckInConfirmation extends AppCompatActivity {
 
             if (activeCheckInInfo.getService() != null) {
                 if (activeCheckInInfo.getService().getName() != null) {
-                    tvServiceName.setText(convertToTitleForm(activeCheckInInfo.getService().getName()));
+                    tvServiceName.setText(activeCheckInInfo.getService().getName());
                     try {
                         if (activeCheckInInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
                             icon_service.setVisibility(View.VISIBLE);

@@ -24,6 +24,10 @@ public class ItemDetails implements Serializable {
     @Expose
     private String price;
 
+    @SerializedName("consumerNote")
+    @Expose
+    private String consumerNotes;
+
     @SerializedName("status")
     @Expose
     private String status;
@@ -105,5 +109,13 @@ public class ItemDetails implements Serializable {
 
     public void setItemImagesList(ArrayList<ItemImages> itemImagesList) {
         this.itemImagesList = itemImagesList;
+    }
+
+    public String getConsumerNotes() {
+        return consumerNotes;
+    }
+
+    public void setConsumerNotes(String consumerNotes) {
+        this.consumerNotes = consumerNotes;
     }
 }

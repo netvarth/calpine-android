@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:autofit="http://schemas.android.com/tools"
     android:id="@+id/cv_card"
-    android:layout_width="wrap_content"
+    android:layout_width="200dp"
     android:layout_height="200dp"
-    android:layout_margin="6dp"
+    android:layout_margin="2dp"
+    android:layout_gravity="center"
     app:cardBackgroundColor="@color/white"
     app:cardElevation="6dp">
 
@@ -77,7 +77,7 @@
                 </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
@@ -88,118 +88,101 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:orientation="horizontal"
                         android:layout_centerVertical="true">
 
 
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
-                            <com.jaldeeinc.jaldee.custom.AutofitTextView
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                                 android:id="@+id/tv_price"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:singleLine="true"
-                                android:maxLines="1"
-                                android:textSize="14dp"
-                                autofit:minTextSize="8dp"
+                                android:layout_gravity="center"
                                 android:text=""
                                 android:textColor="@color/title_color"
-                                />
+                                android:textSize="14dp">
 
+                            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
-                            <com.jaldeeinc.jaldee.custom.AutofitTextView
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                                 android:id="@+id/tv_discountedPrice"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:singleLine="true"
-                                android:maxLines="1"
-                                android:visibility="visible"
-                                android:textSize="14dp"
-                                autofit:minTextSize="8dp"
+                                android:layout_gravity="center"
                                 android:text=""
                                 android:textColor="@color/title_color"
-                                />
+                                android:textSize="14dp">
+
+                            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
                         </LinearLayout>
 
-
-
-                    </LinearLayout>
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
-                        android:layout_gravity="center">
-
                         <LinearLayout
                             android:layout_width="@dimen/dimen_1dp"
-                            android:layout_height="@dimen/dimen_25dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/dimen_10dp"
                             android:layout_marginTop="@dimen/dimen_4dp"
-                            android:layout_marginStart="@dimen/dimen_8dp"
                             android:layout_marginEnd="@dimen/dimen_5dp"
-                            android:layout_alignParentStart="true"
                             android:layout_marginBottom="@dimen/dimen_4dp"
                             android:background="@color/light_grey">
 
                         </LinearLayout>
 
-                        <FrameLayout
-                            android:id="@+id/fl_add"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/dimen_25dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:background="@drawable/border_items"
-                            android:visibility="visible">
+                    </LinearLayout>
 
-                            <ImageView
-                                android:layout_width="@dimen/dimen_5dp"
-                                android:layout_height="@dimen/dimen_5dp"
-                                android:layout_gravity="end"
-                                android:layout_marginTop="@dimen/dimen_5dp"
-                                android:layout_marginEnd="@dimen/dimen_8dp"
-                                android:src="@drawable/add"
-                                app:tint="@color/location_theme">
+                    <FrameLayout
+                        android:id="@+id/fl_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimen_25dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/border_items"
+                        android:visibility="visible">
 
-                            </ImageView>
+                        <ImageView
+                            android:layout_width="@dimen/dimen_5dp"
+                            android:layout_height="@dimen/dimen_5dp"
+                            android:layout_gravity="end"
+                            android:layout_marginTop="@dimen/dimen_5dp"
+                            android:layout_marginEnd="@dimen/dimen_8dp"
+                            android:src="@drawable/add"
+                            app:tint="@color/location_theme">
 
-
-                            <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingStart="@dimen/dimen_15dp"
-                                android:paddingTop="@dimen/dimen_2dp"
-                                android:paddingEnd="@dimen/dimen_15dp"
-                                android:paddingBottom="@dimen/dimen_4dp"
-                                android:text="ADD"
-                                android:textColor="@color/dark_blue"
-                                android:textSize="@dimen/dimen_15dp">
-
-                            </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
-                        </FrameLayout>
+                        </ImageView>
 
 
-                        <com.jaldeeinc.jaldee.custom.ElegantNumberButton
-                            android:id="@+id/number_button"
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:visibility="gone"
-                            app:backgroundDrawable="@drawable/border_items"
-                            app:textSize="6dp" />
+                            android:paddingStart="@dimen/dimen_15dp"
+                            android:paddingTop="@dimen/dimen_2dp"
+                            android:paddingEnd="@dimen/dimen_15dp"
+                            android:paddingBottom="@dimen/dimen_4dp"
+                            android:text="ADD"
+                            android:textColor="@color/dark_blue"
+                            android:textSize="@dimen/dimen_15dp">
 
-                    </RelativeLayout>
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
-                </LinearLayout>
+                    </FrameLayout>
+
+
+                    <com.jaldeeinc.jaldee.custom.ElegantNumberButton
+                        android:id="@+id/number_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:visibility="gone"
+                        app:backgroundDrawable="@drawable/border_items"
+                        app:textSize="6dp" />
+
+                </RelativeLayout>
 
 
             </RelativeLayout>
@@ -210,8 +193,8 @@
         <com.jaldeeinc.jaldee.custom.ShimmerFrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:shimmer_base_alpha="0.8"
             app:shimmer_duration="2000"
+            app:shimmer_base_alpha="0.8"
             app:shimmer_highlight_color="@color/white">
 
             <RelativeLayout
@@ -240,9 +223,9 @@
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="1"
+                    android:paddingBottom="@dimen/dimen_2dp"
                     android:paddingStart="@dimen/dimen_10dp"
                     android:paddingEnd="@dimen/dimen_5dp"
-                    android:paddingBottom="@dimen/dimen_2dp"
                     android:text=""
                     android:textColor="@color/white"
                     android:textSize="@dimen/dimen_10dp">

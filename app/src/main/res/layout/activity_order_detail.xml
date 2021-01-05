@@ -72,10 +72,8 @@
             <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_marginTop="@dimen/dimen_20dp"
-                android:layout_marginEnd="@dimen/dimen_10dp"
-                android:layout_marginBottom="@dimen/dimen_40dp"
+                android:layout_marginBottom="@dimen/dimen_20dp"
                 android:layout_weight="0.2"
                 android:visibility="visible"
                 app:neomorph_background_color="#f8f8f8"
@@ -93,7 +91,8 @@
                     android:id="@+id/nested"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:fillViewport="true">
+                    android:fillViewport="true"
+                    android:scrollbars="none">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -479,7 +478,7 @@
                                     android:layout_marginStart="@dimen/dimen_20dp"
                                     android:layout_marginEnd="@dimen/dimen_20dp"
                                     android:layout_marginTop="@dimen/dimen_5dp"
-                                    android:backgroundTint="@color/dark_blue"
+                                    android:backgroundTint="@color/light_gray"
                                     android:background="@drawable/dash_gap">
 
                                 </LinearLayout>

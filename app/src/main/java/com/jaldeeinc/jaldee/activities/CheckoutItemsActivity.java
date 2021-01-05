@@ -407,8 +407,6 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             }
         });
 
-        // to get payment modes
-        APIPayment(String.valueOf(accountId));
         ApiGetProfileDetail();
 
     }
@@ -727,7 +725,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         activeOrders = response.body();
                         if (activeOrders != null) {
 
-                            successDialog = new SuccessDialog(mContext);
+                            successDialog = new SuccessDialog(mContext,activeOrders.getOrderNumber());
                             successDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
                             successDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                             successDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -908,6 +906,8 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         catalogs = response.body();
                         if (catalogs != null && catalogs.size() > 0) {
                             getProviderDetails(accountId, catalogs);
+                            // to get payment modes
+                            APIPayment(String.valueOf(accountId));
 
                             if (catalogs.get(0).getPickUp() != null && catalogs.get(0).getPickUp().isOrderPickUp() && catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
 
@@ -1317,7 +1317,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             tvName.setText(address.getFirstName() + " " + address.getLastName());
             tvEmailId.setText(address.getEmail());
             tvMobileNumber.setText(address.getPhoneNumber());
-            String fullAddress = address.getLandMark() + "," + address.getAddress() + "," + address.getCity() + "," + address.getPostalCode();
+            String fullAddress = address.getAddress()  + ", \n" + address.getLandMark() + ", \n" + address.getCity() + ", " + address.getPostalCode();
             tvDeliveryAddress.setText(fullAddress);
 
         }
@@ -1438,14 +1438,9 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     private void APIPayment(String accountID) {
 
 
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-
         Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
 
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
@@ -1476,14 +1471,19 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
                         if ((showPayU) || showPaytmWallet) {
                             Config.logV("URL----%%%%%---@@--");
+                            Log.e("XXXXXXXXXXX","Executed Advance Amount");
                             if (catalogs != null && catalogs.size() > 0) {
 
                                 if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().equalsIgnoreCase("0.0")) {
                                     rlPrepayment.setVisibility(View.VISIBLE);
                                     String amount = "₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(catalogs.get(0).getAdvanceAmount()));
                                     tvAdvance.setText(amount);
+                                    rlPrepayment.setVisibility(View.GONE);
+                                    Log.e("XXXXXXXXXXX","Executed Advance Amount");
+
                                 } else {
                                     rlPrepayment.setVisibility(View.GONE);
+                                    Log.e("HHHHHHHHHHHHH","Hide Advance Amount");
                                 }
                             }
 

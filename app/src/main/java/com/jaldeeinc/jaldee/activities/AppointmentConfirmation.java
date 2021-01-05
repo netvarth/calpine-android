@@ -255,7 +255,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
             }
 
             if (activeCheckInInfo.getService() != null) {
-                tvServiceName.setText(convertToTitleForm(activeCheckInInfo.getService().getName()));
+                tvServiceName.setText(activeCheckInInfo.getService().getName());
 
                 if (activeCheckInInfo.getService().getServiceType() != null && activeCheckInInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
 

@@ -11,8 +11,10 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
 import com.jaldeeinc.jaldee.Interface.ISelectedOrder;
 import com.jaldeeinc.jaldee.R;
@@ -25,12 +27,15 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -83,14 +88,12 @@ public class MyOrders extends RootFragment implements ISelectedOrder {
         try {
             if (Config.isOnline(mContext)) {
                 apiGetAllOrders();
-                apiGetAllOrdersFuture();
 
-           }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         super.onResume();
     }
@@ -105,9 +108,6 @@ public class MyOrders extends RootFragment implements ISelectedOrder {
         iSelectedOrder = (ISelectedOrder) this;
         Home.doubleBackToExitPressedOnce = false;
         initializations(view);
-
-        apiGetAllOrders();
-        apiGetAllOrdersFuture();
 
         return view;
     }
@@ -150,19 +150,10 @@ public class MyOrders extends RootFragment implements ISelectedOrder {
                     if (mDialog.isShowing())
                         Config.closeDialog(mActivity.getParent(), mDialog);
                     if (response.code() == 200) {
+                        ordersList.clear();
                         ordersList = response.body();
+                        apiGetAllOrdersFuture();
 
-
-                        if(ordersList != null && ordersList.size()>0) {
-                            llNoBookingsForToday.setVisibility(View.GONE);
-                            linearLayoutManager = new LinearLayoutManager(getContext());
-                            rvTodays.setLayoutManager(linearLayoutManager);
-                            todayOrdersAdapter = new TodayOrdersAdapter(ordersList, getContext(), false, iSelectedOrder, hideMoreInfo);
-                            rvTodays.setAdapter(todayOrdersAdapter);
-                        }
-                        else{
-                            llNoBookingsForToday.setVisibility(View.VISIBLE);
-                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -181,16 +172,14 @@ public class MyOrders extends RootFragment implements ISelectedOrder {
 
     }
 
+
     private void apiGetAllOrdersFuture() {
 
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd");
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         Map<String, String> orderFilter = new HashMap<String, String>();
         orderFilter.put("orderDate-eq", sdf.format(currentTime));
@@ -203,34 +192,28 @@ public class MyOrders extends RootFragment implements ISelectedOrder {
                     if (mDialog.isShowing())
                         Config.closeDialog(mActivity.getParent(), mDialog);
                     if (response.code() == 200) {
+                        ordersListFuture.clear();
                         ordersListFuture = response.body();
 
-                        if(ordersListFuture != null && ordersListFuture.size()>0) {
-                            llNoBookingsForFuture.setVisibility(View.GONE);
-                            linearLayoutManager = new LinearLayoutManager(getContext());
-                            rvUpcomings.setLayoutManager(linearLayoutManager);
-                            todayOrdersAdapter = new TodayOrdersAdapter(ordersListFuture, getContext(), false, iSelectedOrder, hideMoreInfo);
-                            rvUpcomings.setAdapter(todayOrdersAdapter);
-                        }
-                        else{
-                            llNoBookingsForFuture.setVisibility(View.VISIBLE);
-                        }
+                        ordersList.removeAll(ordersListFuture);
+                        ordersList.addAll(ordersListFuture);
+                        ArrayList<ActiveOrders> totalOrdersLists = new ArrayList<>(ordersList);
 
-                        if(ordersList.size()==0 && ordersListFuture.size()==0){
+                        if (totalOrdersLists.size() > 0) {
+
+                            llNoBookings.setVisibility(View.GONE);
+                            llBookings.setVisibility(View.VISIBLE);
+                            updateTodayUI(ordersList);
+                            updateFutureUI(ordersListFuture);
+
+                        } else {
+
                             llNoBookings.setVisibility(View.VISIBLE);
                             llBookings.setVisibility(View.GONE);
                         }
-                        else{
-                            llNoBookings.setVisibility(View.GONE);
-                            llBookings.setVisibility(View.VISIBLE);
-                        }
-
-
-                        if (response.body() != null) {
-
-                        }
 
                     } else {
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -248,7 +231,39 @@ public class MyOrders extends RootFragment implements ISelectedOrder {
         });
 
 
+    }
 
+    private void updateTodayUI(ArrayList<ActiveOrders> ordersList) {
+
+        if (ordersList != null && ordersList.size() > 0) {
+            llNoBookings.setVisibility(View.GONE);
+            tvToday.setVisibility(View.VISIBLE);
+            rvTodays.setVisibility(View.VISIBLE);
+            linearLayoutManager = new LinearLayoutManager(getContext());
+            rvTodays.setLayoutManager(linearLayoutManager);
+            todayOrdersAdapter = new TodayOrdersAdapter(ordersList, getContext(), false, iSelectedOrder, hideMoreInfo);
+            rvTodays.setAdapter(todayOrdersAdapter);
+        } else {
+            tvToday.setVisibility(View.GONE);
+            rvTodays.setVisibility(View.GONE);
+        }
+
+    }
+
+    private void updateFutureUI(ArrayList<ActiveOrders> ordersListFuture) {
+
+        if (ordersListFuture != null && ordersListFuture.size() > 0) {
+            llNoBookings.setVisibility(View.GONE);
+            tvUpcoming.setVisibility(View.VISIBLE);
+            rvUpcomings.setVisibility(View.VISIBLE);
+            linearLayoutManager = new LinearLayoutManager(getContext());
+            rvUpcomings.setLayoutManager(linearLayoutManager);
+            todayOrdersAdapter = new TodayOrdersAdapter(ordersListFuture, getContext(), false, iSelectedOrder, hideMoreInfo);
+            rvUpcomings.setAdapter(todayOrdersAdapter);
+        } else {
+            tvUpcoming.setVisibility(View.GONE);
+            rvUpcomings.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -261,8 +276,8 @@ public class MyOrders extends RootFragment implements ISelectedOrder {
     @Override
     public void onOrderClick(ActiveOrders orders) {
 
-        Intent intent = new Intent(getActivity(),OrderDetailActivity.class);
-        intent.putExtra("orderInfo",orders);
+        Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
+        intent.putExtra("orderInfo", orders);
         startActivity(intent);
     }
 }

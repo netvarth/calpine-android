@@ -2,7 +2,11 @@ package com.jaldeeinc.jaldee.custom;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,16 +28,17 @@ import butterknife.ButterKnife;
 public class SuccessDialog extends Dialog {
 
 
-    @BindView(R.id.tv_message)
-    CustomTextViewMedium tvMessage;
+    @BindView(R.id.tv_number)
+    CustomTextViewItalicSemiBold tvOrderNo;
 
     private Context mContext;
+    private String orderNo;
 
 
-
-    public SuccessDialog(Context mContext) {
+    public SuccessDialog(Context mContext, String orderNumber) {
         super(mContext);
         this.mContext = mContext;
+        this.orderNo = orderNumber;
     }
 
     @Override
@@ -41,6 +46,14 @@ public class SuccessDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.success_dialog);
         ButterKnife.bind(this);
+
+        if (orderNo != null) {
+
+            String displayText = "Your order  " + "<b> #" + orderNo + "</b>" + "  has been placed successfully";
+
+            tvOrderNo.setText(Html.fromHtml(displayText));
+
+        }
 
     }
 

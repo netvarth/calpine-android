@@ -209,7 +209,6 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             }
         });*/
         APIPayment(accountID);
-        APIRefundInfo(ynwUUID);
 
         mbill_applybtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -558,6 +557,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                     if (response.code() == 200) {
 
                         mBillData = response.body();
+                        APIRefundInfo(ynwUUID);
 
                         String firstName = SharedPreference.getInstance(mCOntext).getStringValue("firstname", "");
                         String lastNme = SharedPreference.getInstance(mCOntext).getStringValue("lastname", "");

@@ -408,7 +408,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     int itemId = cursor.getInt(0);
                     int quantity = cursor.getInt(1);
                     String instruction = cursor.getString(2);
-                    orderItemsList.add(new OrderItem(itemId, quantity));
+                    orderItemsList.add(new OrderItem(itemId, quantity,instruction));
 
                 } while (cursor.moveToNext());
             }

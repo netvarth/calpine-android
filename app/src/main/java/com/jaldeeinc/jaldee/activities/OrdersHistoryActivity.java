@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.jaldeeinc.jaldee.Interface.ISelectedOrder;
@@ -130,6 +131,10 @@ public class OrdersHistoryActivity extends AppCompatActivity implements ISelecte
 
     @Override
     public void onOrderClick(ActiveOrders orders) {
+
+        Intent intent = new Intent(OrdersHistoryActivity.this,OrderDetailActivity.class);
+        intent.putExtra("orderInfo",orders);
+        startActivity(intent);
 
     }
 }

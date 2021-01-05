@@ -3,6 +3,8 @@ package com.jaldeeinc.jaldee.custom;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -174,13 +176,23 @@ public class AddressDialog extends Dialog implements IEditAddress {
 
             if (mobileNumber.trim().length() > 9) {
                 tvErrorMessage.setVisibility(View.GONE);
-                if (isEdit) {
 
-                    saveEditedAddress(firstName, lastName, email, mobileNumber, address, city, pinCode, landMark);
+                if (isValidEmail(email)){
+                    tvErrorMessage.setVisibility(View.GONE);
+                    if (isEdit) {
 
+                        saveEditedAddress(firstName, lastName, email, mobileNumber, address, city, pinCode, landMark);
+
+                    } else {
+                        saveAddress(firstName, lastName, email, mobileNumber, address, city, pinCode, landMark);
+                    }
                 } else {
-                    saveAddress(firstName, lastName, email, mobileNumber, address, city, pinCode, landMark);
+
+                    tvErrorMessage.setVisibility(View.VISIBLE);
+                    tvErrorMessage.setText("Enter valid email address");
+                    tvErrorMessage.setAnimation(animShake);
                 }
+
             } else {
 
                 tvErrorMessage.setVisibility(View.VISIBLE);
@@ -295,7 +307,7 @@ public class AddressDialog extends Dialog implements IEditAddress {
                         if (addressList != null && addressList.size() > 0) {
 
                             showListOfAddresses();
-
+                            iAddressInterface.onSelectAddress(addressList.get(0));
                             linearLayoutManager = new LinearLayoutManager(context);
                             rvAddress.setLayoutManager(linearLayoutManager);
                             addressAdapter = new AddressAdapter(addressList, context, false, iEditAddress);
@@ -378,5 +390,9 @@ public class AddressDialog extends Dialog implements IEditAddress {
         etPinCode.setText("");
         etLandMark.setText("");
         etCity.setText("");
+    }
+
+    public static boolean isValidEmail(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 }

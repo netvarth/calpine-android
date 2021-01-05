@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/top_curved"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/dimen_30dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_15dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginEnd="@dimen/dimen_10dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="0.9">
+
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notes "
+                android:textColor="@color/dark_black"
+                android:textSize="@dimen/dimen_16dp">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="for "
+                android:textColor="@color/dark_black"
+                android:textSize="@dimen/dimen_16dp">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                android:id="@+id/tv_itemName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Item Name"
+                android:textColor="@color/dark_black"
+                android:textSize="@dimen/dimen_16dp">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/close"
+            android:layout_gravity="end"
+            android:layout_weight="0.1">
+
+        </ImageView>
+
+    </LinearLayout>
+
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        android:id="@+id/tv_notes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_15dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:text=""
+        android:textColor="@color/title_color"
+        android:textSize="14dp">
+
+    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+</LinearLayout>
+

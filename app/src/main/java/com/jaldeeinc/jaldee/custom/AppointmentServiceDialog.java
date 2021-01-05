@@ -72,7 +72,6 @@ public class AppointmentServiceDialog extends Dialog {
             if (searchService.getName() != null) {
                 tv_toolbartitle.setVisibility(View.VISIBLE);
                 String name = searchService.getName();
-                name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
                 tv_toolbartitle.setText(name);
                 try {
                     if (searchService.getServiceType().equalsIgnoreCase("virtualservice")) {

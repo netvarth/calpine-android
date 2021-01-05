@@ -105,13 +105,6 @@
                     android:orientation="vertical"
                     android:visibility="gone">
 
-                    <ImageView
-                        android:id="@+id/no_slots"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:src="@drawable/confused">
-
-                    </ImageView>
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                         android:layout_width="wrap_content"

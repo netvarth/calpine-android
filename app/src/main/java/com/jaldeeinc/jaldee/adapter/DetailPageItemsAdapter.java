@@ -4,23 +4,19 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -28,9 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.Interface.IItemInterface;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.AppointmentActivity;
-import com.jaldeeinc.jaldee.activities.ItemsActivity;
-import com.jaldeeinc.jaldee.custom.AutofitTextView;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
@@ -48,8 +41,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-
-public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> {
+public class DetailPageItemsAdapter extends RecyclerView.Adapter<DetailPageItemsAdapter.ViewHolder> {
 
     private ArrayList<CatalogItem> itemsList;
     public Context context;
@@ -63,7 +55,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     private CardView cvPlus;
 
 
-    public ItemsAdapter(ArrayList<CatalogItem> itemsList, Context context, boolean isLoading, IItemInterface iItemInterface, int accountId,int uniqueId) {
+    public DetailPageItemsAdapter(ArrayList<CatalogItem> itemsList, Context context, boolean isLoading, IItemInterface iItemInterface, int accountId,int uniqueId) {
         this.itemsList = itemsList;
         this.context = context;
         this.isLoading = isLoading;
@@ -77,22 +69,22 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
     @NonNull
     @Override
-    public ItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public DetailPageItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         if (isLoading) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.shimmer, parent, false);
-            return new ItemsAdapter.ViewHolder(v, true);
+            return new DetailPageItemsAdapter.ViewHolder(v, true);
 
         } else {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card, parent, false);
-            return new ItemsAdapter.ViewHolder(v, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.detailpage_itemcard, parent, false);
+            return new DetailPageItemsAdapter.ViewHolder(v, false);
 
         }
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemsAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull DetailPageItemsAdapter.ViewHolder viewHolder, int position) {
 
         if (!isLoading) {
             final CatalogItem catalogItem = itemsList.get(position);
@@ -166,10 +158,10 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 viewHolder.tvDiscountedPrice.setText("₹" +convertAmountToDecimals(price));
 
             } else {
-                viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
+                viewHolder.tvPrice.setVisibility(View.VISIBLE);
                 String amount = String.valueOf(catalogItem.getItems().getPrice());
-                viewHolder.tvDiscountedPrice.setText("₹" + convertAmountToDecimals(amount));
-                viewHolder.tvPrice.setVisibility(View.GONE);
+                viewHolder.tvPrice.setText("₹" + convertAmountToDecimals(amount));
+                viewHolder.tvDiscountedPrice.setVisibility(View.GONE);
 
             }
 
@@ -287,7 +279,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
         } else {
 
-            ItemsAdapter.ViewHolder skeletonViewHolder = (ItemsAdapter.ViewHolder) viewHolder;
+            DetailPageItemsAdapter.ViewHolder skeletonViewHolder = (DetailPageItemsAdapter.ViewHolder) viewHolder;
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
 
@@ -335,7 +327,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private CustomTextViewBold tvItemName;
-        private AutofitTextView tvPrice, tvDiscountedPrice;
+        private CustomTextViewSemiBold tvPrice, tvDiscountedPrice;
         private BorderImageView bIvItemImage;
         private ElegantNumberButton numberButton;
         private CardView cvCard;
@@ -351,8 +343,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
             if (!isLoading) {
 
-                Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/JosefinSans-SemiBold.ttf");
                 cvCard = itemView.findViewById(R.id.cv_card);
                 bIvItemImage = itemView.findViewById(R.id.iv_itemImage);
                 tvItemName = itemView.findViewById(R.id.tv_itemName);
@@ -364,8 +354,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 llLoader = itemView.findViewById(R.id.ll_loader);
                 tvTag = itemView.findViewById(R.id.tv_tag);
                 rlTag = itemView.findViewById(R.id.rl_tag);
-                tvPrice.setTypeface(tyface1);
-                tvDiscountedPrice.setTypeface(tyface1);
 
             }
         }

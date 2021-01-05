@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,11 +25,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView;
+import com.jaldeeinc.jaldee.CustomSwipe.transform.ScaleTransformer;
 import com.jaldeeinc.jaldee.Interface.IDialogInterface;
 import com.jaldeeinc.jaldee.Interface.IImageInterface;
+import com.jaldeeinc.jaldee.Interface.IItemInterface;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.adapter.DetailPageItemsAdapter;
 import com.jaldeeinc.jaldee.adapter.ItemImagesAdapter;
 import com.jaldeeinc.jaldee.adapter.ItemsAdapter;
+import com.jaldeeinc.jaldee.custom.AutofitTextView;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
@@ -38,6 +44,7 @@ import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.SelectedItemsDialog;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.CartItemModel;
+import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CatalogItem;
 import com.jaldeeinc.jaldee.response.Item;
 import com.jaldeeinc.jaldee.response.ItemImages;
@@ -51,7 +58,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ItemDetailAcitvity extends AppCompatActivity implements IImageInterface, IDialogInterface {
+public class ItemDetailAcitvity extends AppCompatActivity implements IImageInterface, IDialogInterface, IItemInterface {
 
     @BindView(R.id.cv_back)
     CardView cvBack;
@@ -95,13 +102,16 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
     @BindView(R.id.tv_itemsCount)
     CustomTextViewSemiBold tvItemsCount;
 
+    @BindView(R.id.rv_items)
+    DiscreteScrollView rvItems;
+
     @BindView(R.id.tv_subTotal)
-    CustomTextViewMedium tvSubTotal;
+    AutofitTextView tvSubTotal;
 
     @BindView(R.id.tv_totalDiscount)
-    CustomTextViewSemiBold tvTotalDiscount;
+    AutofitTextView tvTotalDiscount;
 
-    private int accountId,uniqueId;
+    private int accountId, uniqueId;
     private CardView cvPlus;
     private Context mContext;
     private CatalogItem itemDetails;
@@ -115,7 +125,9 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
     private IDialogInterface iDialogInterface;
     private SelectedItemsDialog selectedItemsDialog;
     private SearchViewDetail mBusinessDataList = new SearchViewDetail();
-
+    private IItemInterface iItemInterface;
+    private DetailPageItemsAdapter detailPageItemsAdapter;
+    ArrayList<CatalogItem> remainingItemsList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +136,7 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
         ButterKnife.bind(ItemDetailAcitvity.this);
         iImageInterface = ItemDetailAcitvity.this;
         iDialogInterface = ItemDetailAcitvity.this;
+        iItemInterface = ItemDetailAcitvity.this;
         mContext = ItemDetailAcitvity.this;
         db = new DatabaseHandler(mContext);
         vibe = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
@@ -131,8 +144,15 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
         Intent intent = getIntent();
         itemDetails = (CatalogItem) intent.getSerializableExtra("itemInfo");
         accountId = intent.getIntExtra("accountId", 0);
-        uniqueId = intent.getIntExtra("uniqueId",0);
+        uniqueId = intent.getIntExtra("uniqueId", 0);
+        remainingItemsList = (ArrayList<CatalogItem>) intent.getSerializableExtra("catalogItems");
         mBusinessDataList = (SearchViewDetail) intent.getSerializableExtra("providerInfo");
+
+        Typeface font_semiBold = Typeface.createFromAsset(mContext.getAssets(), "fonts/JosefinSans-SemiBold.ttf");
+        Typeface font_medium = Typeface.createFromAsset(mContext.getAssets(), "fonts/JosefinSans-Regular.ttf");
+
+        tvSubTotal.setTypeface(font_medium);
+        tvTotalDiscount.setTypeface(font_semiBold);
 
         // to update UI
         checkCart();
@@ -145,12 +165,16 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
                 // to set item Name
                 tvItemName.setText(itemDetails.getItems().getDisplayName());
 
-                tvItemDescription.setText(itemDetails.getItems().getItemDescription());
+                if (itemDetails.getItems().getItemDescription() != null) {
+                    tvItemDescription.setVisibility(View.VISIBLE);
+                    tvItemDescription.setText(itemDetails.getItems().getItemDescription());
+                } else {
+                    tvItemDescription.setVisibility(View.GONE);
+                }
 
                 // to get all the images into list
                 if (itemDetails.getItems().getItemImagesList() != null && itemDetails.getItems().getItemImagesList().size() > 0) {
                     imagesList = itemDetails.getItems().getItemImagesList();
-
 
                     shimmer.setVisibility(View.VISIBLE);
                     PicassoTrustAll.getInstance(mContext).load(imagesList.get(0).getUrl()).into(ivDisplayImage, new Callback() {
@@ -168,9 +192,15 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
                         }
                     });
 
-                    rvImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-                    itemImagesAdapter = new ItemImagesAdapter(imagesList, this, false, iImageInterface);
-                    rvImages.setAdapter(itemImagesAdapter);
+                    if (imagesList.size() > 1) {
+                        rvImages.setVisibility(View.VISIBLE);
+                        rvImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+                        itemImagesAdapter = new ItemImagesAdapter(imagesList, this, false, iImageInterface);
+                        rvImages.setAdapter(itemImagesAdapter);
+                    } else {
+
+                        rvImages.setVisibility(View.GONE);
+                    }
                 }
 
                 if (itemDetails.getItems().isShowPromotionalPrice()) {
@@ -184,10 +214,10 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
                     tvDiscountedPrice.setText("₹" + convertAmountToDecimals(price));
 
                 } else {
-                    tvPrice.setVisibility(View.VISIBLE);
+                    tvDiscountedPrice.setVisibility(View.VISIBLE);
                     String amount = String.valueOf(itemDetails.getItems().getPrice());
-                    tvPrice.setText("₹" + convertAmountToDecimals(amount));
-                    tvDiscountedPrice.setVisibility(View.GONE);
+                    tvDiscountedPrice.setText("₹" + convertAmountToDecimals(amount));
+                    tvPrice.setVisibility(View.GONE);
 
                 }
 
@@ -338,8 +368,117 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
             }
         });
 
-
     }
+
+
+    public void refreshData() {
+
+        ArrayList<CatalogItem> catalogItemsList = new ArrayList<>();
+        catalogItemsList = updateCatalogItemsDiscount(remainingItemsList);
+        catalogItemsList = updateCatalogItemsQuantity(catalogItemsList);
+        detailPageItemsAdapter = new DetailPageItemsAdapter(catalogItemsList, mContext, false, iItemInterface, accountId, uniqueId);
+        rvItems.setAdapter(detailPageItemsAdapter);
+        rvItems.setItemTransformer(new ScaleTransformer.Builder().setMinScale(0.8f).build());
+        updateCartUI();
+    }
+
+    private ArrayList<CatalogItem> updateCatalogItemsDiscount(ArrayList<CatalogItem> catalogItemsList) {
+
+        catalogItemsList = catalogItemsList == null ? new ArrayList<>() : catalogItemsList;
+
+        for (CatalogItem catalogItem : catalogItemsList) {
+
+            if (catalogItem.getItems().isShowPromotionalPrice()) {
+
+                catalogItem.getItems().setDiscountedPrice(catalogItem.getItems().getPromotionalPrice());
+            } else {
+
+                catalogItem.getItems().setDiscountedPrice(catalogItem.getItems().getPrice());
+
+            }
+
+            if (catalogItem.getItems().getItemImagesList() != null && catalogItem.getItems().getItemImagesList().size() > 0) {
+                for (int i = 0; i < catalogItem.getItems().getItemImagesList().size(); i++) {
+                    if (catalogItem.getItems().getItemImagesList().get(i).isDisplayImage()) {
+                        catalogItem.getItems().setDisplayImage(catalogItem.getItems().getItemImagesList().get(i).getUrl());
+                    }
+                }
+            }
+
+
+        }
+
+        return catalogItemsList;
+    }
+
+    private ArrayList<CatalogItem> updateCatalogItemsQuantity(ArrayList<CatalogItem> catalogItemsList) {
+
+        ArrayList<CartItemModel> cartItemsList = new ArrayList<>();
+        catalogItemsList = catalogItemsList == null ? new ArrayList<>() : catalogItemsList;
+        cartItemsList = db.getCartItems();
+        db.markItemsAsExpired();
+
+        for (CartItemModel cartItem : cartItemsList) {
+
+            for (CatalogItem catalogItem : catalogItemsList) {
+
+                if (cartItem.getItemId() == catalogItem.getItems().getItemId()) {
+
+                    catalogItem.getItems().setItemQuantity(cartItem.getQuantity());
+                    CartItemModel item = new CartItemModel(catalogItem.getItems().getItemId(), catalogItem.getItems().getPrice(), catalogItem.getMaxQuantity(), catalogItem.getItems().getDiscountedPrice());
+                    item.setQuantity(cartItem.getQuantity());
+                    if (catalogItem.getItems().isShowPromotionalPrice()) {
+                        item.setIsPromotional(1);
+                    }
+                    db.updateCartItem(item);
+                }
+            }
+        }
+
+        if (cartItemsList.size() == 0) {
+
+            for (CatalogItem catalogItem : catalogItemsList) {
+
+                catalogItem.getItems().setItemQuantity(0);
+
+            }
+
+        }
+
+        return catalogItemsList;
+    }
+
+    private void updateCartUI() {
+
+        if (db.getCartCount() > 0) {
+
+            cvItemsCart.setVisibility(View.VISIBLE);
+
+            tvItemsCount.setText("Your Order " + "(" + db.getCartCount() + ")");
+
+            if (db.getCartPrice() == db.getCartDiscountedPrice()) {
+
+                tvSubTotal.setVisibility(View.GONE);
+                tvTotalDiscount.setVisibility(View.VISIBLE);
+                String amount = String.valueOf(db.getCartPrice());
+                tvTotalDiscount.setText("₹" + convertAmountToDecimals(amount));
+
+            } else {
+
+                tvSubTotal.setVisibility(View.VISIBLE);
+                String amount = String.valueOf(db.getCartPrice());
+                tvSubTotal.setText("₹" + convertAmountToDecimals(amount));
+                tvSubTotal.setPaintFlags(tvSubTotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                tvTotalDiscount.setVisibility(View.VISIBLE);
+                String discountedPrice = String.valueOf(db.getCartDiscountedPrice());
+                tvTotalDiscount.setText("₹" + convertAmountToDecimals(discountedPrice));
+            }
+        } else {
+
+            cvItemsCart.setVisibility(View.GONE);
+        }
+    }
+
 
     private void showAlertDialog() {
 
@@ -375,43 +514,54 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
 
     private void checkCart() {
 
-        // to get quantity from previous activity
-        int itemQuantity = db.getItemQuantity(itemDetails.getItems().getItemId());
-        itemDetails.getItems().setItemQuantity(itemQuantity);
+        try {
 
-        if (itemDetails.getItems().getItemQuantity() > 0) {
+            // to get quantity from previous activity
+            int itemQuantity = db.getItemQuantity(itemDetails.getItems().getItemId());
+            itemDetails.getItems().setItemQuantity(itemQuantity);
 
-            flAdd.setVisibility(View.GONE);
-            numberButton.setVisibility(View.VISIBLE);
-            numberButton.setNumber(String.valueOf(itemQuantity));
-        } else {
+            if (itemDetails.getItems().getItemQuantity() > 0) {
 
-            numberButton.setVisibility(View.GONE);
-            flAdd.setVisibility(View.VISIBLE);
-        }
+                flAdd.setVisibility(View.GONE);
+                numberButton.setVisibility(View.VISIBLE);
+                numberButton.setNumber(String.valueOf(itemQuantity));
+            } else {
+
+                numberButton.setVisibility(View.GONE);
+                flAdd.setVisibility(View.VISIBLE);
+            }
 
 
-        if (accountId == db.getAccountId()) {
-            cvItemsCart.setVisibility(View.VISIBLE);
-            tvItemsCount.setText("Your Order " + "(" + db.getCartCount() + ")");
-            if (db.getCartPrice() == db.getCartDiscountedPrice()) {
+            if (accountId == db.getAccountId()) {
+                cvItemsCart.setVisibility(View.VISIBLE);
+                tvItemsCount.setText("Your Order " + "(" + db.getCartCount() + ")");
+                if (db.getCartPrice() == db.getCartDiscountedPrice()) {
 
-                tvSubTotal.setVisibility(View.GONE);
-                tvTotalDiscount.setVisibility(View.VISIBLE);
-                tvTotalDiscount.setText("₹" + db.getCartPrice());
+                    tvSubTotal.setVisibility(View.GONE);
+                    tvTotalDiscount.setVisibility(View.VISIBLE);
+                    String amount = String.valueOf(db.getCartPrice());
+                    tvTotalDiscount.setText("₹" + convertAmountToDecimals(amount));
+
+                } else {
+
+                    tvSubTotal.setVisibility(View.VISIBLE);
+                    String amount = String.valueOf(db.getCartPrice());
+                    tvSubTotal.setText("₹" + convertAmountToDecimals(amount));
+                    tvSubTotal.setPaintFlags(tvSubTotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    tvTotalDiscount.setVisibility(View.VISIBLE);
+                    String discountedPrice = String.valueOf(db.getCartPrice());
+                    tvTotalDiscount.setText("₹" + convertAmountToDecimals(discountedPrice));
+                }
 
             } else {
 
-                tvSubTotal.setVisibility(View.VISIBLE);
-                tvSubTotal.setText("₹" + db.getCartPrice());
-                tvTotalDiscount.setVisibility(View.VISIBLE);
-                tvTotalDiscount.setText("₹" + db.getCartDiscountedPrice());
+                cvItemsCart.setVisibility(View.GONE);
             }
-
-        } else {
-
-            cvItemsCart.setVisibility(View.GONE);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+
     }
 
     @Override
@@ -419,31 +569,41 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
         super.onResume();
 
         checkCart();
+
+        refreshData();
     }
 
     private void checkCartCount() {
 
-        if (db.getCartCount() > 0) {
+        try {
 
-            cvItemsCart.setVisibility(View.VISIBLE);
-            tvItemsCount.setText("Your Order " + "(" + db.getCartCount() + ")");
-            if (db.getCartPrice() == db.getCartDiscountedPrice()) {
+            if (db.getCartCount() > 0) {
 
-                tvSubTotal.setVisibility(View.GONE);
-                tvTotalDiscount.setVisibility(View.VISIBLE);
-                tvTotalDiscount.setText("₹" + db.getCartPrice());
+                cvItemsCart.setVisibility(View.VISIBLE);
+                tvItemsCount.setText("Your Order " + "(" + db.getCartCount() + ")");
+                if (db.getCartPrice() == db.getCartDiscountedPrice()) {
 
+                    tvSubTotal.setVisibility(View.GONE);
+                    tvTotalDiscount.setVisibility(View.VISIBLE);
+                    String amount = String.valueOf(db.getCartPrice());
+                    tvTotalDiscount.setText("₹" + convertAmountToDecimals(amount));
+
+                } else {
+
+                    tvSubTotal.setVisibility(View.VISIBLE);
+                    String amount = String.valueOf(db.getCartPrice());
+                    tvSubTotal.setText("₹" + convertAmountToDecimals(amount));
+                    tvSubTotal.setPaintFlags(tvSubTotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    tvTotalDiscount.setVisibility(View.VISIBLE);
+                    String discountedPrice = String.valueOf(db.getCartDiscountedPrice());
+                    tvTotalDiscount.setText("₹" + convertAmountToDecimals(discountedPrice));
+                }
             } else {
 
-                tvSubTotal.setVisibility(View.VISIBLE);
-                tvSubTotal.setText("₹" + db.getCartPrice());
-                tvSubTotal.setPaintFlags(tvSubTotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                tvTotalDiscount.setVisibility(View.VISIBLE);
-                tvTotalDiscount.setText("₹" + db.getCartDiscountedPrice());
+                cvItemsCart.setVisibility(View.GONE);
             }
-        } else {
-
-            cvItemsCart.setVisibility(View.GONE);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -471,6 +631,8 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
     public void onContinueClick() {
 
         checkCart();
+        refreshData();
+        updateCartUI();
 
     }
 
@@ -478,6 +640,7 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
     public void onClearClick() {
 
         checkCart();
+        removeQuantity();
 
     }
 
@@ -490,4 +653,27 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
         return amount;
 
     }
+
+    @Override
+    public void onItemClick(CatalogItem catalogItem) {
+
+    }
+
+    @Override
+    public void checkItemQuantity() {
+
+        updateCartUI();
+
+    }
+
+    private void removeQuantity() {
+
+        for (int i = 0; i < remainingItemsList.size(); i++) {
+
+            remainingItemsList.get(i).getItems().setItemQuantity(0);
+        }
+        refreshData();
+    }
+
+
 }

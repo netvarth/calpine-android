@@ -70,9 +70,12 @@
                         android:id="@+id/tv_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Confirmed"
-                        android:padding="@dimen/padding3"
-                        android:layout_centerInParent="true"
+                        android:text=""
+                        android:paddingTop="@dimen/padding3"
+                        android:paddingBottom="@dimen/padding3"
+                        android:paddingStart="@dimen/dimen_8dp"
+                        android:paddingEnd="@dimen/dimen_2dp"
+                        android:layout_centerHorizontal="true"
                         android:textColor="@color/white"
                         android:visibility="visible"
                         android:textSize="@dimen/dimen_10dp"
@@ -113,7 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/dimen_5dp"
-                    android:text="Order No :">
+                    android:text="Order :">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 

@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -24,6 +25,7 @@ import com.jaldeeinc.jaldee.Interface.IDialogInterface;
 import com.jaldeeinc.jaldee.Interface.IItemInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.ItemsAdapter;
+import com.jaldeeinc.jaldee.custom.AutofitTextView;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
@@ -38,6 +40,7 @@ import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
 import com.squareup.picasso.Callback;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -88,14 +91,14 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
     CustomTextViewSemiBold tvItemsCount;
 
     @BindView(R.id.tv_subTotal)
-    CustomTextViewMedium tvSubTotal;
+    AutofitTextView tvSubTotal;
 
-    @BindView(R.id.tv_discountedPrice)
-    CustomTextViewSemiBold tvDisCountedPrice;
+    @BindView(R.id.tv_totalDiscount)
+    AutofitTextView tvDisCountedPrice;
 
     private Catalog catalogInfo;
     private Context mContext;
-    private int catalogId, accountId,uniqueId;
+    private int catalogId, accountId, uniqueId;
     private SearchViewDetail mBusinessDataList = new SearchViewDetail();
     private ItemsAdapter itemsAdapter;
     private IItemInterface iItemInterface;
@@ -103,7 +106,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
     private GridLayoutManager gridLayoutManager;
     private DatabaseHandler db;
     private SelectedItemsDialog selectedItemsDialog;
-
+    Typeface font_style;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,17 +122,24 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         mBusinessDataList = (SearchViewDetail) i.getSerializableExtra("providerInfo");
         catalogInfo = (Catalog) i.getSerializableExtra("catalogInfo");
         accountId = i.getIntExtra("accountId", 0);
-        uniqueId = i.getIntExtra("uniqueId",0);
+        uniqueId = i.getIntExtra("uniqueId", 0);
+
+        Typeface font_semiBold = Typeface.createFromAsset(mContext.getAssets(), "fonts/JosefinSans-SemiBold.ttf");
+        Typeface font_medium = Typeface.createFromAsset(mContext.getAssets(), "fonts/JosefinSans-Regular.ttf");
+
+        tvSubTotal.setTypeface(font_medium);
+        tvDisCountedPrice.setTypeface(font_semiBold);
 
         gridLayoutManager = new GridLayoutManager(ItemsActivity.this, 2);
         rvItems.setLayoutManager(gridLayoutManager);
-        itemsAdapter = new ItemsAdapter(catalogInfo.getCatalogItemsList(), this, true, iItemInterface, accountId,uniqueId);
+        itemsAdapter = new ItemsAdapter(catalogInfo.getCatalogItemsList(), this, true, iItemInterface, accountId, uniqueId);
         rvItems.setAdapter(itemsAdapter);
 
         if (accountId == db.getAccountId()) {
             cvItemsCart.setVisibility(View.VISIBLE);
             tvItemsCount.setText("Your Order " + "(" + db.getCartCount() + ")");
-            tvSubTotal.setText("₹" + db.getCartPrice());
+            String amount = String.valueOf(db.getCartPrice());
+            tvSubTotal.setText("₹" + convertAmountToDecimals(amount));
 
         } else {
 
@@ -169,8 +179,11 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                 }
 
                 if (catalogInfo.getCatalogDescription() != null) {
-
+                    tvDescription.setVisibility(View.VISIBLE);
                     tvDescription.setText(catalogInfo.getCatalogDescription());
+                } else {
+
+                    tvDescription.setVisibility(View.GONE);
                 }
 
                 if (catalogInfo.getHomeDelivery() != null && catalogInfo.getHomeDelivery().isHomeDelivery()) {
@@ -237,7 +250,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         catalogItemsList = updateCatalogItemsQuantity(catalogItemsList);
         gridLayoutManager = new GridLayoutManager(ItemsActivity.this, 2);
         rvItems.setLayoutManager(gridLayoutManager);
-        itemsAdapter = new ItemsAdapter(catalogItemsList, this, false, iItemInterface, accountId,uniqueId);
+        itemsAdapter = new ItemsAdapter(catalogItemsList, this, false, iItemInterface, accountId, uniqueId);
         rvItems.setAdapter(itemsAdapter);
         updateCartUI();
     }
@@ -325,6 +338,16 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         intent.putExtra("itemInfo", catalogItem);
         intent.putExtra("accountId", accountId);
         intent.putExtra("uniqueId", uniqueId);
+        if (catalogInfo != null && catalogInfo.getCatalogItemsList() != null && catalogInfo.getCatalogItemsList().size() > 0) {
+            ArrayList<CatalogItem> updatedList = new ArrayList<>();
+            for (int i = 0; i < catalogInfo.getCatalogItemsList().size(); i++) {
+
+                if (catalogInfo.getCatalogItemsList().get(i).getId() != catalogItem.getId()) {
+                    updatedList.add(catalogInfo.getCatalogItemsList().get(i));
+                }
+            }
+            intent.putExtra("catalogItems", updatedList);
+        }
         intent.putExtra("providerInfo", mBusinessDataList);
         startActivity(intent);
 
@@ -363,15 +386,18 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
 
                 tvSubTotal.setVisibility(View.GONE);
                 tvDisCountedPrice.setVisibility(View.VISIBLE);
-                tvDisCountedPrice.setText("₹" + db.getCartPrice());
+                String amount = String.valueOf(db.getCartPrice());
+                tvDisCountedPrice.setText("₹" + convertAmountToDecimals(amount));
 
             } else {
 
                 tvSubTotal.setVisibility(View.VISIBLE);
-                tvSubTotal.setText("₹" + db.getCartPrice());
+                String amount = String.valueOf(db.getCartPrice());
+                tvSubTotal.setText("₹" + convertAmountToDecimals(amount));
                 tvSubTotal.setPaintFlags(tvSubTotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 tvDisCountedPrice.setVisibility(View.VISIBLE);
-                tvDisCountedPrice.setText("₹" + db.getCartDiscountedPrice());
+                String discountedPrice = String.valueOf(db.getCartDiscountedPrice());
+                tvDisCountedPrice.setText("₹" + convertAmountToDecimals(discountedPrice));
             }
         } else {
 
@@ -389,5 +415,14 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         refreshData();
     }
 
+    public static String convertAmountToDecimals(String price) {
+
+        double a = Double.parseDouble(price);
+        DecimalFormat decim = new DecimalFormat("0.00");
+        Double price2 = Double.parseDouble(decim.format(a));
+        String amount = decim.format(price2);
+        return amount;
+
+    }
 
 }

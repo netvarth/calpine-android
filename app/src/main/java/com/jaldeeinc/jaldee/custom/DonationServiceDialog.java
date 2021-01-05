@@ -76,7 +76,6 @@ public class DonationServiceDialog extends Dialog {
             if (donationInfo.getName() != null) {
                 tv_toolbartitle.setVisibility(View.VISIBLE);
                 String name = donationInfo.getName();
-                name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
                 tv_toolbartitle.setText(name);
             } else {
                 tv_toolbartitle.setVisibility(View.GONE);

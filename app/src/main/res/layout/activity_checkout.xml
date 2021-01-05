@@ -590,10 +590,10 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="@dimen/dimen_8dp"
                         android:text="Change"
-                        android:visibility="visible"
                         android:textAllCaps="true"
                         android:textColor="@color/dark_blue"
-                        android:textSize="@dimen/dimen_12dp">
+                        android:textSize="@dimen/dimen_12dp"
+                        android:visibility="visible">
 
                     </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
@@ -609,16 +609,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dimen_8dp"
-                        android:visibility="visible"
                         android:layout_marginTop="@dimen/dimen_5dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="visible">
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                             android:id="@+id/tv_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text=""
-                            android:textColor="@color/title_color"
+                            android:textColor="@color/black"
                             android:textSize="14dp">
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
@@ -627,8 +627,6 @@
                             android:id="@+id/tv_address"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:maxLines="1"
                             android:text=""
                             android:textColor="@color/title_color"
                             android:textSize="@dimen/dimen_12dp">
@@ -637,7 +635,21 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Phone : "
+                                    android:textColor="@color/title_color"
+                                    android:textSize="@dimen/dimen_12dp">
+
+                                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -649,7 +661,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="+91"
                                     android:textColor="@color/title_color"
-                                    android:textSize="@dimen/dimen_10dp">
+                                    android:textSize="@dimen/dimen_12dp">
 
                                 </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -659,25 +671,40 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/dimen_4dp"
-                                    android:text="Mobile number"
+                                    android:text=""
                                     android:textColor="@color/title_color"
-                                    android:textSize="@dimen/dimen_10dp">
+                                    android:textSize="@dimen/dimen_12dp">
 
                                 </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
                             </LinearLayout>
 
+                            </LinearLayout>
 
-                            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                                android:id="@+id/tv_mailId"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/dimen_10dp"
-                                android:text="Email address"
-                                android:textColor="@color/title_color"
-                                android:textSize="@dimen/dimen_10dp">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
 
-                            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Email : "
+                                    android:textColor="@color/title_color"
+                                    android:textSize="@dimen/dimen_12dp">
+
+                                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                                    android:id="@+id/tv_mailId"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textColor="@color/title_color"
+                                    android:textSize="@dimen/dimen_12dp">
+
+                                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                            </LinearLayout>
 
                         </LinearLayout>
 
@@ -687,9 +714,9 @@
                         android:id="@+id/ll_addNew"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/dimen_10dp"
                         android:background="#95ffffff"
                         android:gravity="center"
-                        android:layout_marginTop="@dimen/dimen_10dp"
                         android:orientation="horizontal"
                         android:visibility="gone">
 
@@ -822,7 +849,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimen_8dp"
                         android:layout_marginEnd="@dimen/dimen_15dp"
-                        android:layout_marginBottom="@dimen/dimen_20dp">
+                        android:layout_marginBottom="@dimen/dimen_15dp">
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                             android:layout_width="wrap_content"
@@ -858,7 +885,7 @@
                         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Advance payment"
+                            android:text="Amount to be paid now"
                             android:textColor="@color/dark_black"
                             android:textSize="13dp">
 

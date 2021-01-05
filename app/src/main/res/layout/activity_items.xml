@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:autofit="http://schemas.android.com/tools"
     android:background="@color/white">
 
     <LinearLayout
@@ -38,9 +39,9 @@
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/dimen_18dp"
             android:layout_marginEnd="@dimen/dimen_5dp"
-            android:text="Krishna Bakers and Sweets"
+            android:text=""
             android:textColor="@color/dark_black"
-            android:textSize="14dp">
+            android:textSize="@dimen/dimen_16dp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
@@ -171,7 +172,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/dimen_8dp"
                                 android:layout_marginTop="@dimen/dimen_8dp"
-                                android:text="This place holder is for the description of catalog which will be given by th eprovider himself"
+                                android:visibility="visible"
                                 android:textColor="@color/title_color"
                                 android:textSize="@dimen/dimen_12dp">
 
@@ -332,7 +333,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
-                android:layout_marginStart="@dimen/dimen_10dp">
+                android:layout_marginStart="@dimen/dimen_5dp">
 
 
                 <androidx.cardview.widget.CardView
@@ -361,7 +362,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:layout_marginStart="@dimen/dimen_4dp"
                     android:orientation="vertical">
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
@@ -380,31 +381,35 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center">
 
-                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        <com.jaldeeinc.jaldee.custom.AutofitTextView
                             android:id="@+id/tv_subTotal"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:maxLines="1"
+                            android:layout_weight="0.4"
+                            android:textSize="@dimen/dimen_12dp"
+                            autofit:minTextSize="8dp"
                             android:text=""
-                            android:layout_gravity="center"
                             android:textColor="@color/white"
-                            android:textSize="14dp">
+                            />
 
-                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                        <com.jaldeeinc.jaldee.custom.AutofitTextView
+                            android:id="@+id/tv_totalDiscount"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:maxLines="1"
+                            android:layout_marginStart="@dimen/dimen_8dp"
+                            android:layout_weight="0.6"
+                            android:textSize="14dp"
+                            autofit:minTextSize="8dp"
+                            android:text=""
+                            android:textColor="@color/white"
+                            />
 
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                        android:id="@+id/tv_discountedPrice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone"
-                        android:layout_marginStart="@dimen/dimen_8dp"
-                        android:layout_gravity="center"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/dimen_16dp">
 
-                    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
-
-                </LinearLayout>
+                    </LinearLayout>
 
                 </LinearLayout>
 
