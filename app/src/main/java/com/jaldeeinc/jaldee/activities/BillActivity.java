@@ -99,7 +99,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     TextView tv_billnotes, tv_notes;
     int customerId;
     String uniqueId;
-    double total;
+    double total, totalRefund =0.0;;
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     private IPaymentResponse paymentResponse;
     String encId;
