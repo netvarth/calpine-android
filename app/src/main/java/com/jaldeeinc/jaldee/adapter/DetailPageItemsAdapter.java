@@ -22,10 +22,12 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.internal.$Gson$Preconditions;
 import com.jaldeeinc.jaldee.Interface.IItemInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
@@ -158,10 +160,10 @@ public class DetailPageItemsAdapter extends RecyclerView.Adapter<DetailPageItems
                 viewHolder.tvDiscountedPrice.setText("₹" +convertAmountToDecimals(price));
 
             } else {
-                viewHolder.tvPrice.setVisibility(View.VISIBLE);
+                viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
                 String amount = String.valueOf(catalogItem.getItems().getPrice());
-                viewHolder.tvPrice.setText("₹" + convertAmountToDecimals(amount));
-                viewHolder.tvDiscountedPrice.setVisibility(View.GONE);
+                viewHolder.tvDiscountedPrice.setText("₹" + convertAmountToDecimals(amount));
+                viewHolder.tvPrice.setVisibility(View.GONE);
 
             }
 
@@ -327,7 +329,8 @@ public class DetailPageItemsAdapter extends RecyclerView.Adapter<DetailPageItems
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private CustomTextViewBold tvItemName;
-        private CustomTextViewSemiBold tvPrice, tvDiscountedPrice;
+        private CustomTextViewLight tvPrice;
+        private CustomTextViewSemiBold tvDiscountedPrice;
         private BorderImageView bIvItemImage;
         private ElegantNumberButton numberButton;
         private CardView cvCard;

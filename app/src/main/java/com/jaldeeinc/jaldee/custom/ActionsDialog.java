@@ -581,6 +581,10 @@ public class ActionsDialog extends Dialog {
                 dialog.show();
                 Button btSend = (Button) dialog.findViewById(R.id.btn_send);
                 Button btCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+                Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
+                        "fonts/JosefinSans-SemiBold.ttf");
+                btSend.setTypeface(tyface1);
+                btCancel.setTypeface(tyface1);
                 final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                 TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
                 if (bookings.getAppointmentInfo() != null) {

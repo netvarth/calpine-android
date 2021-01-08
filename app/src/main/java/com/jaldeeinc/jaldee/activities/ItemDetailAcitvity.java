@@ -37,6 +37,7 @@ import com.jaldeeinc.jaldee.adapter.ItemsAdapter;
 import com.jaldeeinc.jaldee.custom.AutofitTextView;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
@@ -73,7 +74,7 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
     CustomTextViewBold tvItemName;
 
     @BindView(R.id.tv_price)
-    CustomTextViewItalicSemiBold tvPrice;
+    CustomTextViewLight tvPrice;
 
     @BindView(R.id.tv_discountedPrice)
     CustomTextViewItalicSemiBold tvDiscountedPrice;
@@ -257,6 +258,11 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
                     item.setPromotionalType(itemDetails.getItems().getPromotionalPriceType());
                     item.setDiscount(itemDetails.getItems().getPromotionalPrice());
                     item.setDiscountedPrice(itemDetails.getItems().getDiscountedPrice());
+                    if (itemDetails.getItems().isShowPromotionalPrice()) {
+                        item.setIsPromotional(1);
+                    } else {
+                        item.setIsPromotional(0);
+                    }
 
                     db.insertItemToCart(item);
 

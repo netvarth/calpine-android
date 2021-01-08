@@ -7,11 +7,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -224,10 +227,9 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             break;
                         }
                     }
-                    if(found) {
+                    if (found) {
                         ApigetBill(coupon_entered, ynwUUID, accountID);
-                    }
-                    else{
+                    } else {
                         Toast.makeText(BillActivity.this, "Coupon Invalid", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -272,7 +274,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             @Override
                             public void onClick(View v) {
 
-                                new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, purpose, "bill",customerId,Constants.SOURCE_PAYMENT);
+                                new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, purpose, "bill", customerId, Constants.SOURCE_PAYMENT);
 
                                 dialog.dismiss();
                             }
@@ -283,7 +285,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             public void onClick(View v) {
 
                                 PaytmPayment payment = new PaytmPayment(mCOntext, paymentResponse);
-                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, purpose, mCOntext, mActivity, "",customerId,encId);
+                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, purpose, mCOntext, mActivity, "", customerId, encId);
                                 dialog.dismiss();
                             }
                         });
@@ -370,14 +372,10 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     private void APIRefundInfo(String ynwUUID) {
 
 
-        ApiInterface apiService =
-                ApiClient.getClient(mCOntext).create(ApiInterface.class);
-
+        ApiInterface apiService = ApiClient.getClient(mCOntext).create(ApiInterface.class);
 
         final Dialog mDialog = Config.getProgressDialog(mCOntext, mCOntext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-
         Call<ArrayList<RefundDetails>> call = apiService.getRefundDetails(ynwUUID);
 
         call.enqueue(new Callback<ArrayList<RefundDetails>>() {
@@ -394,31 +392,33 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                     if (response.code() == 200) {
                         refundData = response.body();
-                        for (int i = 0; i < refundData.size(); i++){
-                            if (refundData.get(i).getRefundDetails().size() > 0) {
-                                double totalRefund =0.0;
-                                if (refundData.get(i).getRefundDetails().get(0).getStatus().equalsIgnoreCase("Processed")) {
-                                    refundLayout.setVisibility(View.VISIBLE);
-                                    for(int j =0;j<refundData.get(i).getRefundDetails().size();j++){
-                                        totalRefund = totalRefund + Double.parseDouble(refundData.get(i).getRefundDetails().get(j).getAmount());
-                                    }
-                                    tv_refundamount.setText("₹ " + Config.getAmountinTwoDecimalPoints(totalRefund));
-                                    if(total < 0){
-                                        tv_totalamt.setText(Double.parseDouble(String.valueOf(totalRefund)) + "");
-                                        btn_pay.setVisibility(View.GONE);
-                                    }
-                                    else if(total>=0) {
-                                    total = mBillData.getNetRate() - mBillData.getTotalAmountPaid() + Double.parseDouble(String.valueOf(totalRefund));
-                                    tv_totalamt.setText("₹ " + Config.getAmountinTwoDecimalPoints(total));
-                                    btn_pay.setVisibility(View.VISIBLE);
+                        if (refundData != null) {
+                            double totalRefund = 0.0;
+                            for (int i = 0; i < refundData.size(); i++) {
+                                if (refundData.get(i).getRefundDetails().size() > 0) {
+                                    if (refundData.get(i).getRefundDetails().get(0).getStatus().equalsIgnoreCase("Processed") || refundData.get(i).getRefundDetails().get(0).getStatus().equalsIgnoreCase("Pending")) {
+                                        refundLayout.setVisibility(View.VISIBLE);
+                                        for (int j = 0; j < refundData.get(i).getRefundDetails().size(); j++) {
+                                            totalRefund = totalRefund + Double.parseDouble(refundData.get(i).getRefundDetails().get(j).getAmount());
+                                        }
+                                        tv_refundamount.setText("₹ " + Config.getAmountinTwoDecimalPoints(totalRefund));
+                                        if (total < 0) {
+                                            double tRefund = Double.parseDouble(String.valueOf(totalRefund));
+                                            tv_totalamt.setText("₹ " + Config.getAmountinTwoDecimalPoints(tRefund));
+                                            btn_pay.setVisibility(View.GONE);
+                                        } else if (total >= 0) {
+                                            total = mBillData.getNetRate() - mBillData.getTotalAmountPaid() + Double.parseDouble(String.valueOf(totalRefund));
+                                            tv_totalamt.setText("₹ " + Config.getAmountinTwoDecimalPoints(total));
+                                            btn_pay.setVisibility(View.VISIBLE);
+                                        }
+                                    } else {
+                                        refundLayout.setVisibility(View.GONE);
                                     }
                                 } else {
-                                    refundLayout.setVisibility(View.GONE);
+//                                    refundLayout.setVisibility(View.GONE);
                                 }
-                            } else {
-                                 refundLayout.setVisibility(View.GONE);
                             }
-                    }
+                        }
 
                     } else {
 
@@ -549,7 +549,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         final Dialog mDialog = Config.getProgressDialog(mCOntext, mCOntext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
-        Call<BillModel> call = apiService.getBill(ynwuuid,accountID);
+        Call<BillModel> call = apiService.getBill(ynwuuid, accountID);
 
         Config.logV("Request--ynwuuid1-------------------------" + ynwuuid);
 
@@ -568,7 +568,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                     if (response.code() == 200) {
 
                         mBillData = response.body();
-                        APIRefundInfo(ynwUUID);
+//                        APIRefundInfo(ynwUUID);
 
                         String firstName = SharedPreference.getInstance(mCOntext).getStringValue("firstname", "");
                         String lastNme = SharedPreference.getInstance(mCOntext).getStringValue("lastname", "");
@@ -578,7 +578,6 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         Date date = originalFormat.parse(mBillData.getCreatedDate());
                         String formattedDate = targetFormat.format(date);
                         tv_date.setText(formattedDate);
-
 
 
                         Typeface tyface = Typeface.createFromAsset(getAssets(),
@@ -621,14 +620,12 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             amountlayout.setVisibility(View.GONE);
                         }
 
-                        if(mBillData.getDeliveryCharges()!=0){
+                        if (mBillData.getDeliveryCharges() != 0) {
                             deliveryLayout.setVisibility(View.VISIBLE);
                             tv_deliveryCharge.setText("(" + "+" + ")" + mBillData.getDeliveryCharges());
-                        }
-                        else{
+                        } else {
                             deliveryLayout.setVisibility(View.GONE);
                         }
-
 
 
                         if (mBillData.getTotalAmountPaid() != 0) {
@@ -641,7 +638,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         }
 
 
-                          total = mBillData.getNetRate() - mBillData.getTotalAmountPaid();
+                        total = mBillData.getNetRate() - mBillData.getTotalAmountPaid() + mBillData.getRefundedAmount();
 
                         if (total >= 0) {
                             txttotal.setVisibility(View.VISIBLE);
@@ -650,8 +647,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 //                            tv_totalamt.setText("₹ " + String.valueOf(total));
                             tv_totalamt.setText("₹ " + Config.getAmountinTwoDecimalPoints(total));
                             txttotal.setText("Amount Due");
-                        }
-                        else if(total < 0) {
+                        } else if (total < 0) {
                             tv_totalamt.setVisibility(View.VISIBLE);
                             txttotal.setVisibility(View.VISIBLE);
 //                            DecimalFormat format = new DecimalFormat("0.00");
@@ -659,29 +655,42 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             txttotal.setText("Refund Amount");
                             btn_pay.setVisibility(View.INVISIBLE);
                             couponCheckin.setVisibility(View.INVISIBLE);
-                        }
-                        else{
+                        } else {
                             tv_totalamt.setVisibility(View.INVISIBLE);
                             txttotal.setVisibility(View.INVISIBLE);
 //                            DecimalFormat format = new DecimalFormat("0.00");
-                      //      tv_totalamt.setText("₹ " + Config.getAmountinTwoDecimalPoints(Math.abs(total)));
-                          //
+                            //      tv_totalamt.setText("₹ " + Config.getAmountinTwoDecimalPoints(Math.abs(total)));
+                            //
                             //
                             //  txttotal.setText("Refund Amount");
                             btn_pay.setVisibility(View.INVISIBLE);
                             couponCheckin.setVisibility(View.INVISIBLE);
                         }
 
-
-//                        sAmountPay = String.valueOf(total);
                         sAmountPay = Config.getAmountinTwoDecimalPoints(total);
 //                        Config.logV("Amount PAy@@@@@@@@@@@@@@@@@@@@@@@@" + sAmountPay);
 
+                        if (mBillData.getRefundedAmount() > 0) {
+
+                            refundLayout.setVisibility(View.VISIBLE);
+                            tv_refundamount.setText("₹ " + Config.getAmountinTwoDecimalPoints(mBillData.getRefundedAmount()));
+                        } else {
+
+                            refundLayout.setVisibility(View.GONE);
+                        }
+
                         if (total != 0.0 && total > 0) {
-                            if(payStatus.equalsIgnoreCase("FullyPaid") || payStatus.equalsIgnoreCase("FullyRefunded")){
-                                btn_pay.setVisibility(View.GONE);
-                            }
-                            else{
+                            if (payStatus.equalsIgnoreCase("FullyPaid") || payStatus.equalsIgnoreCase("FullyRefunded")) {
+
+
+                                if (mBillData.getAmountDue() > 0) {
+
+                                    btn_pay.setVisibility(View.VISIBLE);
+                                } else {
+                                    btn_pay.setVisibility(View.GONE);
+                                }
+//                                btn_pay.setVisibility(View.GONE);
+                            } else {
                                 btn_pay.setVisibility(View.VISIBLE);
                             }
 
@@ -737,7 +746,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                         try {
 
-                            if (mBillData.getDisplayNotes()!= null && mBillData.getDisplayNotes().getDisplayNotes() != null) {
+                            if (mBillData.getDisplayNotes() != null && mBillData.getDisplayNotes().getDisplayNotes() != null) {
                                 tv_billnotes.setVisibility(View.VISIBLE);
                                 tv_notes.setVisibility(View.VISIBLE);
                                 tv_notes.setText(mBillData.getDisplayNotes().getDisplayNotes());
@@ -746,8 +755,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                                 tv_notes.setVisibility(View.GONE);
 
                             }
-                        }
-                        catch(Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -784,22 +792,19 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         } else {
                             recycle_discount_total.setVisibility(View.GONE);
                         }
-                        if(discountArrayList!=null){
+                        if (discountArrayList != null) {
                             RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(mCOntext);
                             recycle_display_notes.setLayoutManager(mLayoutManager1);
                             if (discountArrayList.size() > 0) {
 
                                 recycle_display_notes.setVisibility(View.VISIBLE);
-                                billDemandDisplayNotesAdapter = new BillDemandDisplayNotesAdapter( discountArrayList, mCOntext, mBillData);
+                                billDemandDisplayNotesAdapter = new BillDemandDisplayNotesAdapter(discountArrayList, mCOntext, mBillData);
                             }
                             recycle_display_notes.setAdapter(billDemandDisplayNotesAdapter);
                             billDemandDisplayNotesAdapter.notifyDataSetChanged();
                         } else {
                             recycle_display_notes.setVisibility(View.GONE);
                         }
-
-
-
 
 
                     }
@@ -822,6 +827,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         });
 
     }
+
     private void ApiJaldeegetS3Coupons(String uniqueID) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mActivity).create(ApiInterface.class);
@@ -841,10 +847,9 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                     if (response.code() == 200) {
                         s3couponList.clear();
                         s3couponList = response.body();
-                        if(s3couponList.size()>0){
+                        if (s3couponList.size() > 0) {
                             couponCheckin.setVisibility(View.VISIBLE);
-                        }
-                        else{
+                        } else {
                             couponCheckin.setVisibility(View.GONE);
                         }
                         Log.i("CouponResponse", s3couponList.toString());
@@ -932,6 +937,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
 
     }
+
     public void paymentFinished(RazorpayModel razorpayModel) {
         Intent intent = new Intent(mCOntext, Home.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -939,9 +945,10 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         startActivity(intent);
         finish();
     }
+
     @Override
     public void onPaymentSuccess(String razorpayPaymentID, PaymentData paymentData) {
-        Log.i("mani","here");
+        Log.i("mani", "here");
         try {
 //            Log.i("Success1111",  new Gson().toJson(paymentData));
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);

@@ -284,6 +284,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 }
             });
 
+            viewHolder.llActionPreventor.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
 
         } else {
 
@@ -341,7 +348,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         private CardView cvCard;
         private FrameLayout flAdd;
         private SkeletonLoadingView shimmer;
-        private LinearLayout llLoader;
+        private LinearLayout llLoader,llActionPreventor;
         private RelativeLayout rlTag;
         private CustomTextViewMedium tvTag;
 
@@ -353,6 +360,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
                 Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                         "fonts/JosefinSans-SemiBold.ttf");
+                Typeface tyface2 = Typeface.createFromAsset(context.getAssets(),
+                        "fonts/JosefinSans-Light.ttf");
                 cvCard = itemView.findViewById(R.id.cv_card);
                 bIvItemImage = itemView.findViewById(R.id.iv_itemImage);
                 tvItemName = itemView.findViewById(R.id.tv_itemName);
@@ -364,8 +373,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 llLoader = itemView.findViewById(R.id.ll_loader);
                 tvTag = itemView.findViewById(R.id.tv_tag);
                 rlTag = itemView.findViewById(R.id.rl_tag);
-                tvPrice.setTypeface(tyface1);
+                tvPrice.setTypeface(tyface2);
                 tvDiscountedPrice.setTypeface(tyface1);
+                llActionPreventor = itemView.findViewById(R.id.ll_actionPreventor);
 
             }
         }

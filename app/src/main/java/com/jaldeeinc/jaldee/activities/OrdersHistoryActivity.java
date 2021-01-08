@@ -137,4 +137,9 @@ public class OrdersHistoryActivity extends AppCompatActivity implements ISelecte
         startActivity(intent);
 
     }
+
+    @Override
+    public void onOptionsClick(ActiveOrders orders) {
+
+    }
 }

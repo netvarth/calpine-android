@@ -537,7 +537,7 @@ public class BookingDetails extends AppCompatActivity {
                 llMoreDetails.setVisibility(View.GONE);
 
                 if (appointmentInfo.getService() != null) {
-                    tvServiceName.setText(convertToTitleForm(appointmentInfo.getService().getName()));
+                    tvServiceName.setText(appointmentInfo.getService().getName());
 
 
                     if (appointmentInfo.getService().getServiceType() != null && appointmentInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {

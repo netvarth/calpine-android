@@ -231,7 +231,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     private String selectedTime = "";
     private String value = null;
     private String prepayAmount = "";
-    private int accountId, catalogId,uniqueId;
+    private int accountId, catalogId, uniqueId;
     private AddressDialog addressDialog;
     private IPaymentResponse paymentResponse;
     private CheckoutItemsAdapter checkoutItemsAdapter;
@@ -345,6 +345,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     rbHome.setChecked(true);
                     rbStore.setChecked(false);
                     getHomeDeliverySchedules(catalogId, accountId);
+                    getAddressList();
                     updateBill();
                 } else {
                     isStore = true;
@@ -605,11 +606,15 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
         final ApiInterface apiService =
                 ApiClient.getClient(CheckoutItemsActivity.this).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(CheckoutItemsActivity.this, CheckoutItemsActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
         Call<ActiveOrders> call = apiService.getOrderDetails(value, acctId);
         call.enqueue(new Callback<ActiveOrders>() {
             @Override
             public void onResponse(Call<ActiveOrders> call, Response<ActiveOrders> response) {
                 try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
@@ -705,6 +710,8 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             @Override
             public void onFailure(Call<ActiveOrders> call, Throwable t) {
                 Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
             }
         });
 
@@ -714,18 +721,22 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
         final ApiInterface apiService =
                 ApiClient.getClient(CheckoutItemsActivity.this).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(CheckoutItemsActivity.this, CheckoutItemsActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
         Call<ActiveOrders> call = apiService.getOrderDetails(value, acctId);
         call.enqueue(new Callback<ActiveOrders>() {
             @Override
             public void onResponse(Call<ActiveOrders> call, Response<ActiveOrders> response) {
                 try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         activeOrders = response.body();
                         if (activeOrders != null) {
 
-                            successDialog = new SuccessDialog(mContext,activeOrders.getOrderNumber());
+                            successDialog = new SuccessDialog(mContext, activeOrders.getOrderNumber());
                             successDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
                             successDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                             successDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -760,6 +771,8 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
             @Override
             public void onFailure(Call<ActiveOrders> call, Throwable t) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
             }
         });
     }
@@ -832,11 +845,9 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     }
 
 
-
     private void ApiGetProfileDetail() {
 
-        ApiInterface apiService =
-                ApiClient.getClient(CheckoutItemsActivity.this).create(ApiInterface.class);
+        ApiInterface apiService = ApiClient.getClient(CheckoutItemsActivity.this).create(ApiInterface.class);
 
         final int consumerId = SharedPreference.getInstance(CheckoutItemsActivity.this).getIntValue("consumerId", 0);
 
@@ -925,7 +936,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                 rbHome.setChecked(false);
                                 getStorePickupSchedules(catalogs.get(0).getCatLogId(), accountId);
 
-                            } else if (catalogs.get(0).getPickUp() == null && catalogs.get(0).getHomeDelivery() != null && !catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
+                            } else if (catalogs.get(0).getPickUp() == null && catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
 
                                 rbStore.setVisibility(View.GONE);
                                 rbHome.setVisibility(View.VISIBLE);
@@ -969,14 +980,36 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     if (response.code() == 200) {
                         storePickupSchedulesList.clear();
                         storePickupSchedulesList = response.body();
-                        if (storePickupSchedulesList != null && storePickupSchedulesList.size() > 0) {
+
+                        // set what is given in the catalog Api
+                        if (catalogs != null && catalogs.get(0).getNextAvailablePickUpDetails() != null) {
+
+                            selectedDate = catalogs.get(0).getNextAvailablePickUpDetails().getAvailableDate();
+                            String date = getCustomDateString(selectedDate);
+                            if (catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots() != null && catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots().size() > 0) {
+
+                                String startTime = catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots().get(0).getStartTime();
+                                String endTime = catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots().get(0).getEndTime();
+                                tvTimeSlot.setText(date + ", " + startTime + "-" + endTime);
+                                selectedTime = startTime + "-" + endTime;
+                            } else {
+
+                                tvTimeSlot.setText("Not available");
+
+                            }
+
+                            llDelivery.setVisibility(View.GONE);
+                            rlDeliveryFee.setVisibility(View.GONE);
+                            llContactDetails.setVisibility(View.VISIBLE);
+
+                        } else if (storePickupSchedulesList != null && storePickupSchedulesList.size() > 0) { // if failed show what is given in Api
 
                             selectedDate = storePickupSchedulesList.get(0).getDate();
-                            String date = convertDate(storePickupSchedulesList.get(0).getDate());
+                            String date = getCustomDateString(storePickupSchedulesList.get(0).getDate());
                             if (storePickupSchedulesList.get(0).getCatalogTimeSlotList() != null) {
                                 String startTime = storePickupSchedulesList.get(0).getCatalogTimeSlotList().get(0).getStartTime();
                                 String endTime = storePickupSchedulesList.get(0).getCatalogTimeSlotList().get(0).getEndTime();
-                                tvTimeSlot.setText(date + " " + startTime + "-" + endTime);
+                                tvTimeSlot.setText(date + ", " + startTime + "-" + endTime);
                                 selectedTime = startTime + "-" + endTime;
                             } else {
                                 tvTimeSlot.setText(storePickupSchedulesList.get(0).getReason());
@@ -1025,16 +1058,37 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     if (response.code() == 200) {
                         homeDeliverySchedulesList.clear();
                         homeDeliverySchedulesList = response.body();
-                        if (homeDeliverySchedulesList != null && homeDeliverySchedulesList.size() > 0) {
 
-                            if (!isStore) {
-                                getAddressList();
+                        if (!isStore) {
+
+                            // set what is given in the catalog Api
+                            if (catalogs != null && catalogs.get(0).getNextAvailableDeliveryDetails() != null) {
+                                selectedDate = catalogs.get(0).getNextAvailableDeliveryDetails().getAvailableDate();
+                                String date = getCustomDateString(selectedDate);
+                                if (catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots() != null && catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots().size() > 0) {
+
+                                    String startTime = catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots().get(0).getStartTime();
+                                    String endTime = catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots().get(0).getEndTime();
+                                    tvTimeSlot.setText(date + ", " + startTime + "-" + endTime);
+                                    selectedTime = startTime + "-" + endTime;
+                                } else {
+
+                                    tvTimeSlot.setText("Not available");
+
+                                }
+
+                                llContactDetails.setVisibility(View.GONE);
+                                llDelivery.setVisibility(View.VISIBLE);
+                                rlDeliveryFee.setVisibility(View.VISIBLE);
+
+                            } else if (homeDeliverySchedulesList != null && homeDeliverySchedulesList.size() > 0) { // if failed show what is given in Api
+
                                 selectedDate = homeDeliverySchedulesList.get(0).getDate();
-                                String date = convertDate(homeDeliverySchedulesList.get(0).getDate());
+                                String date = getCustomDateString(homeDeliverySchedulesList.get(0).getDate());
                                 if (homeDeliverySchedulesList.get(0).getCatalogTimeSlotList() != null) {
                                     String startTime = homeDeliverySchedulesList.get(0).getCatalogTimeSlotList().get(0).getStartTime();
                                     String endTime = homeDeliverySchedulesList.get(0).getCatalogTimeSlotList().get(0).getEndTime();
-                                    tvTimeSlot.setText(date + " " + startTime + "-" + endTime);
+                                    tvTimeSlot.setText(date + ", " + startTime + "-" + endTime);
                                     selectedTime = startTime + "-" + endTime;
                                 } else {
                                     tvTimeSlot.setText(homeDeliverySchedulesList.get(0).getReason());
@@ -1044,8 +1098,8 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                 rlDeliveryFee.setVisibility(View.VISIBLE);
                             }
 
-                        }
 
+                        }
                     } else {
 
                         tvTimeSlot.setText("Not available");
@@ -1271,6 +1325,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                             llAddNew.setVisibility(View.VISIBLE);
                             showAddressDialog();
 
+
                         }
 
                     }
@@ -1317,7 +1372,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             tvName.setText(address.getFirstName() + " " + address.getLastName());
             tvEmailId.setText(address.getEmail());
             tvMobileNumber.setText(address.getPhoneNumber());
-            String fullAddress = address.getAddress()  + ", \n" + address.getLandMark() + ", \n" + address.getCity() + ", " + address.getPostalCode();
+            String fullAddress = address.getAddress() + ", \n" + address.getLandMark() + ", \n" + address.getCity() + ", " + address.getPostalCode();
             tvDeliveryAddress.setText(fullAddress);
 
         }
@@ -1374,9 +1429,16 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     @Override
     public void sendTime(String newTime, String date, String displayDate) {
 
-        selectedDate = date;
-        tvTimeSlot.setText(displayDate + " " + newTime);
-        selectedTime = newTime;
+        try {
+
+            selectedDate = date;
+            String convertedDate = getCustomDateString(date);
+            tvTimeSlot.setText(convertedDate + " " + newTime);
+            selectedTime = newTime;
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -1471,7 +1533,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
                         if ((showPayU) || showPaytmWallet) {
                             Config.logV("URL----%%%%%---@@--");
-                            Log.e("XXXXXXXXXXX","Executed Advance Amount");
+                            Log.e("XXXXXXXXXXX", "Executed Advance Amount");
                             if (catalogs != null && catalogs.size() > 0) {
 
                                 if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().equalsIgnoreCase("0.0")) {
@@ -1479,11 +1541,11 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                     String amount = "₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(catalogs.get(0).getAdvanceAmount()));
                                     tvAdvance.setText(amount);
                                     rlPrepayment.setVisibility(View.GONE);
-                                    Log.e("XXXXXXXXXXX","Executed Advance Amount");
+                                    Log.e("XXXXXXXXXXX", "Executed Advance Amount");
 
                                 } else {
                                     rlPrepayment.setVisibility(View.GONE);
-                                    Log.e("HHHHHHHHHHHHH","Hide Advance Amount");
+                                    Log.e("HHHHHHHHHHHHH", "Hide Advance Amount");
                                 }
                             }
 
@@ -1523,5 +1585,16 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         tvContactEmail.setText(email);
         tvContactNumber.setText(phoneNumber);
         tvCountryCode.setText(countryCode);
+    }
+
+    public static String getCustomDateString(String d) throws ParseException {
+
+        String strCurrentDate = d;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date newDate = format.parse(strCurrentDate);
+        format = new SimpleDateFormat("MMM dd, yyyy");
+        String date = format.format(newDate);
+
+        return date;
     }
 }

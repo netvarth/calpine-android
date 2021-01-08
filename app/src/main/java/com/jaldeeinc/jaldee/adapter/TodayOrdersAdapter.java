@@ -228,6 +228,14 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                     }
                 });
 
+//                viewHolder.ivBill.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                        iSelectedOrder.onOptionsClick(orders);
+//                    }
+//                });
+
 
             } catch (Exception e) {
                 e.printStackTrace();

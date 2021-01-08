@@ -17,8 +17,9 @@
         android:text="Download Prescription"
         android:textAllCaps="false"
         android:gravity="center"
-        android:background="@color/checkin_theme"
-        android:textColor="@color/white">
+        android:background="@drawable/yellow_curved"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/location_theme">
     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
@@ -32,8 +33,9 @@
         android:text="Share Prescription"
         android:textAllCaps="false"
         android:gravity="center"
-        android:background="@color/appoint_theme"
-        android:textColor="@color/white">
+        android:background="@drawable/yellow_curved"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/appoint_theme">
     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
 </LinearLayout>

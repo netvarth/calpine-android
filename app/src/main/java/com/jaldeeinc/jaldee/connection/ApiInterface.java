@@ -615,4 +615,7 @@ public interface ApiInterface {
 
     @GET("consumer/orders/settings/store/contact/info/{id}")
     Call<StoreDetails> getStoreDetails(@Path("id") int id);
+
+    @PUT("consumer/orders/{ynwuuid}")
+    Call<ResponseBody> cancelOrder(@Path("ynwuuid") String uid,  @Query("account") int accountId);
 }

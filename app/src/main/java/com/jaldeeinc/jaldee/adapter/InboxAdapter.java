@@ -5,17 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.ChatActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
@@ -35,80 +36,46 @@ import java.util.List;
  */
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder> {
 
-    private List<InboxModel> mInboxCompleteList;
+
     private List<InboxModel> mInboxList;
     Context mContext;
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-
-        TextView tv_provider, tv_date, tv_message;
-        LinearLayout linear_inbox_layout;
-        RecyclerView recylce_inbox_detail;
-
-        public MyViewHolder(View view) {
-            super(view);
-            tv_provider = (TextView) view.findViewById(R.id.txt_provider);
-            tv_date = (TextView) view.findViewById(R.id.txt_date);
-            tv_message = (TextView) view.findViewById(R.id.txt_message);
-            linear_inbox_layout = (LinearLayout) view.findViewById(R.id.inbox_layout);
-
-
-        }
-    }
-
     Activity activity;
+    private int lastPosition = -1;
     ArrayList<InboxModel> mDetailInboxList = new ArrayList<>();
+    private boolean isLoading;
 
-    public InboxAdapter(List<InboxModel> mInboxList, Context mContext, Activity mActivity, List<InboxModel> mInboxCompleteList) {
+    public InboxAdapter(List<InboxModel> mInboxList, Context mContext, Activity mActivity, boolean isLoading) {
         this.mContext = mContext;
         this.mInboxList = mInboxList;
         this.activity = mActivity;
-        this.mInboxCompleteList = mInboxCompleteList;
-
+        this.isLoading = isLoading;
     }
 
     @Override
-    public InboxAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.inboxlist_row, parent, false);
+    public InboxAdapter.MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
 
-        return new InboxAdapter.MyViewHolder(itemView);
+        if (isLoading) {
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.shimmer_inbox, viewGroup, false);
+            return new InboxAdapter.MyViewHolder(v, true);
+
+        } else {
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.inboxlist_row, viewGroup, false);
+            return new InboxAdapter.MyViewHolder(v, false);
+        }
     }
 
-    public static String toTitleCase(String str) {
-
-        if (str == null) {
-            return null;
-        }
-
-        boolean space = true;
-        StringBuilder builder = new StringBuilder(str);
-        final int len = builder.length();
-
-        for (int i = 0; i < len; ++i) {
-            char c = builder.charAt(i);
-            if (space) {
-                if (!Character.isWhitespace(c)) {
-                    // Convert to title case and switch out of whitespace mode.
-                    builder.setCharAt(i, Character.toTitleCase(c));
-                    space = false;
-                }
-            } else if (Character.isWhitespace(c)) {
-                space = true;
-            } else {
-                builder.setCharAt(i, Character.toLowerCase(c));
-            }
-        }
-
-        return builder.toString();
-    }
 
     @Override
     public void onBindViewHolder(final InboxAdapter.MyViewHolder myViewHolder, final int position) {
+
+        if (!isLoading) {
         final InboxModel inboxList = mInboxList.get(position);
 
-        myViewHolder.tv_message.setText(Html.fromHtml(inboxList.getMsg()));
+            setAnimation(myViewHolder.cvCard, position);
+
+
+            myViewHolder.tv_message.setText(Html.fromHtml(inboxList.getMsg()));
 //        Log.i("kingiii",new Gson().toJson(inboxList.getAttachments()));
         myViewHolder.tv_message.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,12 +136,76 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
             }
         });
 
+        } else {
+            InboxAdapter.MyViewHolder skeletonViewHolder = (InboxAdapter.MyViewHolder) myViewHolder;
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            skeletonViewHolder.itemView.setLayoutParams(params);
+        }
+
 
     }
 
 
     @Override
     public int getItemCount() {
-        return mInboxList.size();
+        return  isLoading ? 15 : mInboxList.size();
     }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+
+        TextView tv_provider, tv_date, tv_message;
+        LinearLayout linear_inbox_layout;
+        private CardView cvCard;
+
+        public MyViewHolder(View view,boolean isLoading) {
+            super(view);
+            tv_provider = (TextView) view.findViewById(R.id.txt_provider);
+            tv_date = (TextView) view.findViewById(R.id.txt_date);
+            tv_message = (TextView) view.findViewById(R.id.txt_message);
+            linear_inbox_layout = (LinearLayout) view.findViewById(R.id.inbox_layout);
+            cvCard = view.findViewById(R.id.card);
+
+
+        }
+    }
+
+    private void setAnimation(View viewToAnimate, int position) {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+    }
+
+
+    public static String toTitleCase(String str) {
+
+        if (str == null) {
+            return null;
+        }
+
+        boolean space = true;
+        StringBuilder builder = new StringBuilder(str);
+        final int len = builder.length();
+
+        for (int i = 0; i < len; ++i) {
+            char c = builder.charAt(i);
+            if (space) {
+                if (!Character.isWhitespace(c)) {
+                    // Convert to title case and switch out of whitespace mode.
+                    builder.setCharAt(i, Character.toTitleCase(c));
+                    space = false;
+                }
+            } else if (Character.isWhitespace(c)) {
+                space = true;
+            } else {
+                builder.setCharAt(i, Character.toLowerCase(c));
+            }
+        }
+
+        return builder.toString();
+    }
+
+
 }

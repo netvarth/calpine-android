@@ -98,16 +98,16 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
-                            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewLight
                                 android:id="@+id/tv_price"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:text=""
-                                android:textColor="@color/title_color"
+                                android:textColor="@color/red"
                                 android:textSize="14dp">
 
-                            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+                            </com.jaldeeinc.jaldee.custom.CustomTextViewLight>
 
                             <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                                 android:id="@+id/tv_discountedPrice"

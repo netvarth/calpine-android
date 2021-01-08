@@ -269,6 +269,15 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_2dp"
+                    android:background="#55EDEDED"
+                    android:layout_marginTop="@dimen/dimen_5dp">
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_8dp"
                     android:layout_marginBottom="@dimen/dimen_8dp">
@@ -382,7 +391,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_marginStart="@dimen/dimen_10dp"
-                                android:text="Date and Time"
+                                android:text="Choose your Date and Time"
                                 android:textColor="@color/title_color"
                                 android:textSize="14dp">
 

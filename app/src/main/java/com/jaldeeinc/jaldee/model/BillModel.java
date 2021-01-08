@@ -231,6 +231,24 @@ public class BillModel {
 
     private int deliveryCharges;
 
+    private double refundedAmount;
+
+    private double amountDue;
 
 
+    public double getRefundedAmount() {
+        return refundedAmount;
+    }
+
+    public void setRefundedAmount(double refundedAmount) {
+        this.refundedAmount = refundedAmount;
+    }
+
+    public double getAmountDue() {
+        return amountDue;
+    }
+
+    public void setAmountDue(double amountDue) {
+        this.amountDue = amountDue;
+    }
 }

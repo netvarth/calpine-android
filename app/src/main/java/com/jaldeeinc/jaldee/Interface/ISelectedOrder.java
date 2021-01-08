@@ -4,4 +4,6 @@ import com.jaldeeinc.jaldee.response.ActiveOrders;
 
 public interface ISelectedOrder {
     void onOrderClick(ActiveOrders orders);
+
+    void onOptionsClick(ActiveOrders orders);
 }

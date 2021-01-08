@@ -215,24 +215,32 @@ public class SlotSelection extends Dialog implements ITimeSlot {
             tvCalenderDate.setText(getCalenderDateFormat(sDate));
             schedule = getSlotsByDate(schedulesList, sDate);
             timeSlots = new ArrayList<>();
-            timeSlots = schedule.getCatalogTimeSlotList();
-            selectedDate = schedule.getDate();
-            if (timeSlots != null && timeSlots.size() > 0) {
-                String startTime = timeSlots.get(0).getStartTime();
-                String endTime = timeSlots.get(0).getEndTime();
-                selectedTime = startTime + " - " + endTime;
-                llNoSlots.setVisibility(View.GONE);
-                rvSlots.setVisibility(View.VISIBLE);
-                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 2);
-                rvSlots.setLayoutManager(mLayoutManager);
-                orderTimeSlotAdapter = new OrderTimeSlotAdapter(context, timeSlots, iTimeSlot);
-                rvSlots.setAdapter(orderTimeSlotAdapter);
-            }  else {
+            if (schedule != null && schedule.getCatalogTimeSlotList() != null) {
+                timeSlots = schedule.getCatalogTimeSlotList();
+                selectedDate = schedule.getDate();
+                if (timeSlots != null && timeSlots.size() > 0) {
+                    String startTime = timeSlots.get(0).getStartTime();
+                    String endTime = timeSlots.get(0).getEndTime();
+                    selectedTime = startTime + " - " + endTime;
+                    llNoSlots.setVisibility(View.GONE);
+                    rvSlots.setVisibility(View.VISIBLE);
+                    RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 2);
+                    rvSlots.setLayoutManager(mLayoutManager);
+                    orderTimeSlotAdapter = new OrderTimeSlotAdapter(context, timeSlots, iTimeSlot);
+                    rvSlots.setAdapter(orderTimeSlotAdapter);
+                } else {
+                    rvSlots.setVisibility(View.GONE);
+                    llNoSlots.setVisibility(View.VISIBLE);
+                    tvReason.setText(schedule.getReason());
+                    cvConfirm.setClickable(false);
+
+                }
+            } else {
+
                 rvSlots.setVisibility(View.GONE);
                 llNoSlots.setVisibility(View.VISIBLE);
-                tvReason.setText(schedule.getReason());
+                tvReason.setText("No Schedule on selected date");
                 cvConfirm.setClickable(false);
-
             }
 
         } catch (ParseException e) {
@@ -378,7 +386,6 @@ public class SlotSelection extends Dialog implements ITimeSlot {
 
         return cal.getTime();
     }
-
 
 
     @Override

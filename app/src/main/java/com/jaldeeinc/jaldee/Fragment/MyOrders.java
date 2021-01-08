@@ -4,10 +4,15 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
@@ -24,7 +29,9 @@ import com.jaldeeinc.jaldee.adapter.TodayOrdersAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.ActionsDialog;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
+import com.jaldeeinc.jaldee.custom.OrderActionsDialog;
 import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
 
@@ -57,6 +64,7 @@ public class MyOrders extends RootFragment implements ISelectedOrder {
     ArrayList<ActiveOrders> ordersListFuture = new ArrayList<>();
     Animation slideUp, slideRight;
     boolean hideMoreInfo = false;
+    private OrderActionsDialog orderActionsDialog;
 
 
     public MyOrders() {
@@ -152,6 +160,9 @@ public class MyOrders extends RootFragment implements ISelectedOrder {
                     if (response.code() == 200) {
                         ordersList.clear();
                         ordersList = response.body();
+                        if (ordersList == null){
+                            ordersList = new ArrayList<>();
+                        }
                         apiGetAllOrdersFuture();
 
                     }
@@ -192,12 +203,15 @@ public class MyOrders extends RootFragment implements ISelectedOrder {
                     if (mDialog.isShowing())
                         Config.closeDialog(mActivity.getParent(), mDialog);
                     if (response.code() == 200) {
-                        ordersListFuture.clear();
+                        ordersListFuture = new ArrayList<>();
                         ordersListFuture = response.body();
+                        ArrayList<ActiveOrders> oList = new ArrayList<>(ordersList);
+                        if (ordersListFuture != null) {
 
-                        ordersList.removeAll(ordersListFuture);
-                        ordersList.addAll(ordersListFuture);
-                        ArrayList<ActiveOrders> totalOrdersLists = new ArrayList<>(ordersList);
+                            oList.removeAll(ordersListFuture);
+                            oList.addAll(ordersListFuture);
+                        }
+                        ArrayList<ActiveOrders> totalOrdersLists = new ArrayList<>(oList);
 
                         if (totalOrdersLists.size() > 0) {
 
@@ -279,5 +293,27 @@ public class MyOrders extends RootFragment implements ISelectedOrder {
         Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
         intent.putExtra("orderInfo", orders);
         startActivity(intent);
+    }
+
+    @Override
+    public void onOptionsClick(ActiveOrders orderInfo) {
+
+
+        boolean isActive = false;
+        if (orderInfo != null && orderInfo.getOrderStatus() != null){
+            if (!orderInfo.getOrderStatus().equalsIgnoreCase("Cancelled") && !orderInfo.getOrderStatus().equalsIgnoreCase("Completed")){
+                isActive = true;
+            }
+        }
+        orderActionsDialog = new OrderActionsDialog(mContext,isActive,orderInfo);
+        orderActionsDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+        orderActionsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        orderActionsDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        orderActionsDialog.show();
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels * 1);
+        orderActionsDialog.getWindow().setGravity(Gravity.BOTTOM);
+        orderActionsDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
     }
 }

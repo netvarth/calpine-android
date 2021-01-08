@@ -549,7 +549,7 @@ public class CheckInDetails extends AppCompatActivity {
                 llMoreDetails.setVisibility(View.GONE);
 
                 if (checkInInfo.getService() != null) {
-                    tvServiceName.setText(convertToTitleForm(checkInInfo.getService().getName()));
+                    tvServiceName.setText(checkInInfo.getService().getName());
 
                     if (checkInInfo.getService().getServiceType() != null && checkInInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
 

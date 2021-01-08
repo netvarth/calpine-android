@@ -26,7 +26,7 @@
             android:gravity="center"
             android:text=" Do you want to cancel this Booking?"
             android:textColor="@color/title_grey"
-            android:textSize="@dimen/txtsize_hint" />
+            android:textSize="@dimen/dimen_15dp" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,7 +43,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:background="@drawable/rounded_lightgrey_bg"
+                android:background="@drawable/curved_save"
+                android:backgroundTint="@color/special_background"
                 android:text="@string/cancel"
                 android:textColor="@color/title_color"
                 android:textSize="@dimen/txtsize_hint" />

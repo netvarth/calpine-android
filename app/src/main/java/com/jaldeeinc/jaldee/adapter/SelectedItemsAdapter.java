@@ -30,6 +30,7 @@ import com.jaldeeinc.jaldee.custom.AddressDialog;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
@@ -230,7 +231,8 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private CustomTextViewSemiBold tvItemName;
-        private CustomTextViewItalicSemiBold tvPrice, tvDiscountedPrice;
+        private CustomTextViewLight tvPrice;
+        private CustomTextViewItalicSemiBold tvDiscountedPrice;
         private ElegantNumberButton numberButton;
         private LinearLayout llLayout;
         private LinearLayout llAddNote;
