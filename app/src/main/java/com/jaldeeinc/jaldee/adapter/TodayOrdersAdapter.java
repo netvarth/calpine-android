@@ -102,7 +102,7 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                 });
 
                 if (orders.getOrderNumber() != null && !orders.getOrderNumber().equalsIgnoreCase("")) {
-                    viewHolder.tvServiceName.setText("#" + orders.getOrderNumber());
+                    viewHolder.tvServiceName.setText(orders.getOrderNumber());
                 }
 
                 if (orders.getTotalItemQuantity() != 0) {
