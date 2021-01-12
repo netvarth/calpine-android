@@ -54,7 +54,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
         CustomTextViewSemiBold tv_removefav, tv_privacy, tv_message, tv_view;
         LinearLayout Lfavlisiting, Layout_fav, llfav, llLocation;
         RecyclerView mrRecylce_fav;
-        ImageView imgarrow, ivPrivacy, ivMessage;
+        ImageView imgarrow, ivPrivacy, ivMessage,ivUnfav;
         ArrayList<SearchLocation> mSearchLocList;
         CustomTextViewBold tv_provider;
         CustomTextViewMedium tvLocationName;
@@ -76,6 +76,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
             tvLocationName = view.findViewById(R.id.tv_locationName);
             ivPrivacy = view.findViewById(R.id.iv_privacy);
             ivMessage = view.findViewById(R.id.iv_message);
+            ivUnfav = view.findViewById(R.id.iv_unFav);
 
             mSearchLocList = new ArrayList<>();
 
@@ -250,7 +251,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
         });
 
 
-        myViewHolder.tv_removefav.setOnClickListener(new View.OnClickListener() {
+        myViewHolder.ivUnfav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

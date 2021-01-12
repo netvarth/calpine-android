@@ -70,7 +70,7 @@ public class OrderActionsDialog extends Dialog {
     CustomTextViewMedium tvBill;
 
 
-    public OrderActionsDialog(@NonNull Context context, boolean isActive, ActiveOrders activeOrder,IActions iActions) {
+    public OrderActionsDialog(@NonNull Context context, boolean isActive, ActiveOrders activeOrder, IActions iActions) {
         super(context);
         this.mContext = context;
         this.isActive = isActive;
@@ -86,14 +86,19 @@ public class OrderActionsDialog extends Dialog {
 
         if (isActive) {
 
-            llCancel.setVisibility(View.VISIBLE);
-            llCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            if (orderInfo.getOrderStatus().equalsIgnoreCase("Order Received") || orderInfo.getOrderStatus().equalsIgnoreCase("Order Acknowledged") || orderInfo.getOrderStatus().equalsIgnoreCase("Order Confirmed")) {
 
-                    showAlertDialog();
-                }
-            });
+                llCancel.setVisibility(View.VISIBLE);
+                llCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        showAlertDialog();
+                    }
+                });
+            } else {
+                llCancel.setVisibility(View.GONE);
+            }
 
         } else {
             llCancel.setVisibility(View.GONE);

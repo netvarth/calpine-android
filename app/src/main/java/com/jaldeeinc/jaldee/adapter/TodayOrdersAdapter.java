@@ -161,9 +161,9 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                 }
 
 
-                if (orders.getBill() != null && orders.getBill().getAmountPaid() != 0.0) {
+                if (orders.getAdvanceAmountPaid() != 0.0) {
                     viewHolder.tvpayment.setVisibility(View.VISIBLE);
-                    viewHolder.tvpayment.setText("PAID" + " " + "₹" + " " + convertAmountsToDecimals(orders.getBill().getAmountPaid()));
+                    viewHolder.tvpayment.setText("PAID" + " " + "₹" + " " + convertAmountsToDecimals(orders.getAdvanceAmountPaid()));
                 }
 
 //
