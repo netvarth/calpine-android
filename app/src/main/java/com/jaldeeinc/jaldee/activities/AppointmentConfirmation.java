@@ -190,13 +190,13 @@ public class AppointmentConfirmation extends AppCompatActivity {
             if (activeCheckInInfo.getProvider() != null) {
 
                 if (activeCheckInInfo.getProvider().getBusinessName() != null && !activeCheckInInfo.getProvider().getBusinessName().equalsIgnoreCase("")) {
-                    tvProvider.setText(convertToTitleForm(activeCheckInInfo.getProvider().getBusinessName()));
+                    tvProvider.setText(activeCheckInInfo.getProvider().getBusinessName());
                 } else {
                     String name = activeCheckInInfo.getProvider().getFirstName() + " " + activeCheckInInfo.getProvider().getLastName();
-                    tvProvider.setText(convertToTitleForm(name));
+                    tvProvider.setText(name);
                 }
                 tvProviderName.setVisibility(View.VISIBLE);
-                tvProviderName.setText(convertToTitleForm(activeCheckInInfo.getProviderAccount().getBusinessName()));
+                tvProviderName.setText(activeCheckInInfo.getProviderAccount().getBusinessName());
                 tvProviderName.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -213,7 +213,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
                 });
             } else {
                 tvProviderName.setVisibility(View.INVISIBLE);
-                tvProvider.setText(convertToTitleForm(activeCheckInInfo.getProviderAccount().getBusinessName()));
+                tvProvider.setText(activeCheckInInfo.getProviderAccount().getBusinessName());
 
                 tvProvider.setOnClickListener(new View.OnClickListener() {
                     @Override

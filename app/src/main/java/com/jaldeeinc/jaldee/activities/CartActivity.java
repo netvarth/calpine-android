@@ -127,16 +127,16 @@ public class CartActivity extends AppCompatActivity implements ICartInterface,IS
                 tvSubTotal.setVisibility(View.GONE);
                 tvDiscountedPrice.setVisibility(View.VISIBLE);
                 String discountedPrice = convertAmountToDecimals(String.valueOf(db.getCartPrice()));
-                tvDiscountedPrice.setText("₹" +discountedPrice);
+                tvDiscountedPrice.setText("₹ " +discountedPrice);
             } else {
 
                 tvSubTotal.setVisibility(View.VISIBLE);
                 String amount = convertAmountToDecimals(String.valueOf(db.getCartPrice()));
-                tvSubTotal.setText("₹" + amount);
+                tvSubTotal.setText("₹ " + amount);
                 tvSubTotal.setPaintFlags(tvSubTotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 tvDiscountedPrice.setVisibility(View.VISIBLE);
                 String discountedPrice = convertAmountToDecimals(String.valueOf(db.getCartDiscountedPrice()));
-                tvDiscountedPrice.setText("₹" + discountedPrice);
+                tvDiscountedPrice.setText("₹ " + discountedPrice);
             }
 
         } else {

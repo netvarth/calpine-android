@@ -4,8 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.net.Uri;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -25,6 +29,7 @@ import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.callback.FavAdapterOnCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.SearchLocation;
@@ -47,26 +52,32 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         CustomTextViewSemiBold tv_removefav, tv_privacy, tv_message, tv_view;
-        LinearLayout Lfavlisiting,Layout_fav;
+        LinearLayout Lfavlisiting, Layout_fav, llfav, llLocation;
         RecyclerView mrRecylce_fav;
-        ImageView imgarrow;
+        ImageView imgarrow, ivPrivacy, ivMessage;
         ArrayList<SearchLocation> mSearchLocList;
         CustomTextViewBold tv_provider;
+        CustomTextViewMedium tvLocationName;
 
 
         public MyViewHolder(View view) {
             super(view);
             tv_provider = view.findViewById(R.id.txt_provider);
             mrRecylce_fav = (RecyclerView) view.findViewById(R.id.recylce_favloc);
-            tv_removefav =  view.findViewById(R.id.txtremovefav);
+            tv_removefav = view.findViewById(R.id.txtremovefav);
             tv_privacy = view.findViewById(R.id.txtprivacy);
-            tv_message =  view.findViewById(R.id.txtmessage);
-            tv_view =  view.findViewById(R.id.txtview);
+            tv_message = view.findViewById(R.id.txtmessage);
+            tv_view = view.findViewById(R.id.txtview);
+            llfav = view.findViewById(R.id.ll_fav);
+            llLocation = view.findViewById(R.id.ll_location);
             Lfavlisiting = (LinearLayout) view.findViewById(R.id.favlisiting);
-            imgarrow=(ImageView) view.findViewById(R.id.imgarrow);
-            Layout_fav=(LinearLayout) view.findViewById(R.id.layout_fav);
-            mSearchLocList = new ArrayList<>();
+            imgarrow = (ImageView) view.findViewById(R.id.imgarrow);
+            Layout_fav = (LinearLayout) view.findViewById(R.id.layout_fav);
+            tvLocationName = view.findViewById(R.id.tv_locationName);
+            ivPrivacy = view.findViewById(R.id.iv_privacy);
+            ivMessage = view.findViewById(R.id.iv_message);
 
+            mSearchLocList = new ArrayList<>();
 
 
         }
@@ -100,28 +111,37 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
     public void onBindViewHolder(final FavouriteAdapter.MyViewHolder myViewHolder, final int position) {
         final FavouriteModel favList = mFavList.get(position);
 
-//        Log.i("popopopo",new Gson().toJson(mFavList.get(position)));
-
-//        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-//                "fonts/Montserrat_Bold.otf");
-//        myViewHolder.tv_provider.setTypeface(tyface);
 
         myViewHolder.tv_provider.setText(favList.getBusinessName());
+
+        if (favList.getPlace() != null) {
+            myViewHolder.tvLocationName.setText(favList.getPlace());
+        }
+
+        myViewHolder.llLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (favList.getGoogleMapUrl() != null) {
+                    Uri uri = Uri.parse(favList.getGoogleMapUrl());
+                    Intent in = new Intent(Intent.ACTION_VIEW, uri);
+                    mContext.startActivity(in);
+                }
+            }
+        });
 
         myViewHolder.imgarrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Config.isOnline(mContext)) {
+                if (Config.isOnline(mContext)) {
                     if (!favList.isExpandFlag()) {
                         favList.setExpandFlag(true);
                         myViewHolder.Lfavlisiting.setVisibility(View.VISIBLE);
                         ids.clear();
-                    /*for (int i = 0; i < favList.getLocations().size(); i++) {
-                        ids.add(favList.getLocations().get(i).getLocId());
-                    }*/
-                    if(favList.getLocationId()!= null){
-                        ids = new ArrayList<String>(Arrays.asList(favList.getLocationId().split(" , ")));
-                    }
+
+                        if (favList.getLocationId() != null) {
+                            ids = new ArrayList<String>(Arrays.asList(favList.getLocationId().split(" , ")));
+                        }
                         places = new ArrayList<String>(Arrays.asList(favList.getPlace().split(" , ")));
 
                         Config.logV("Ids------------" + ids.size());
@@ -142,20 +162,21 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
                 }
             }
         });
-        myViewHolder.tv_provider.setOnClickListener(new View.OnClickListener() {
+
+        myViewHolder.llfav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent detailIntent = new Intent(mContext, ProviderDetailActivity.class);
-                detailIntent.putExtra("uniqueID",favList.getUniqueId());
-                detailIntent.putExtra("from","fav");
+                detailIntent.putExtra("uniqueID", favList.getUniqueId());
+                detailIntent.putExtra("from", "fav");
                 mContext.startActivity(detailIntent);
-               // callback.onMethodSearchDetailCallback(favList.getUniqueId());
+                // callback.onMethodSearchDetailCallback(favList.getUniqueId());
             }
 
 
         });
 
-        myViewHolder.tv_message.setOnClickListener(new View.OnClickListener() {
+        myViewHolder.ivMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
@@ -173,11 +194,11 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
                 edt_message.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable arg0) {
-                        if(edt_message.getText().toString().length()>0&&!edt_message.getText().toString().trim().isEmpty()){
+                        if (edt_message.getText().toString().length() > 0 && !edt_message.getText().toString().trim().isEmpty()) {
                             btn_send.setEnabled(true);
                             btn_send.setClickable(true);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
-                        }else{
+                        } else {
                             btn_send.setEnabled(false);
                             btn_send.setClickable(false);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
@@ -221,10 +242,10 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
             @Override
             public void onClick(View v) {
                 Intent detailIntent = new Intent(mContext, ProviderDetailActivity.class);
-                detailIntent.putExtra("uniqueID",favList.getUniqueId());
-                detailIntent.putExtra("from","fav");
+                detailIntent.putExtra("uniqueID", favList.getUniqueId());
+                detailIntent.putExtra("from", "fav");
                 mContext.startActivity(detailIntent);
-              //  callback.onMethodSearchDetailCallback(favList.getUniqueId());
+                //  callback.onMethodSearchDetailCallback(favList.getUniqueId());
             }
         });
 
@@ -234,38 +255,12 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
             public void onClick(View v) {
 
                 callback.onMethodDeleteFavourite(favList.getId());
-                /*AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
-                        //set message, title, and icon
-                        //.setTitle("Delete")
-                        .setMessage("Do you want to remove "+favList.getBusinessName()+" from favourite list?")
 
-
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                //your deleting code
-                                dialog.dismiss();
-                              callback.onMethodDeleteFavourite(favList.getId());
-                            }
-
-                        })
-
-
-
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                dialog.dismiss();
-
-                            }
-                        })
-                        .create();
-                 myQuittingDialogBox.show();*/
             }
         });
 
 
-        myViewHolder.tv_privacy.setOnClickListener(new View.OnClickListener() {
+        myViewHolder.ivPrivacy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
@@ -276,7 +271,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
                 Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
                 TextView txtmangeprivacy = (TextView) dialog.findViewById(R.id.txtmangeprivacy);
                 final CheckBox chkeprivacy = (CheckBox) dialog.findViewById(R.id.chkphone);
-                Config.logV("Revel Phone--------------"+favList.isRevealPhoneNumber()+"Title"+favList.getBusinessName());
+                Config.logV("Revel Phone--------------" + favList.isRevealPhoneNumber() + "Title" + favList.getBusinessName());
                 chkeprivacy.setChecked(favList.isRevealPhoneNumber());
                 btn_send.setText("SAVE");
                 Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
@@ -304,11 +299,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
         });
 
 
-
-
     }
-
-
 
 
     @Override

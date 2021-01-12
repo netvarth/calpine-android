@@ -201,32 +201,19 @@
 
 
                 <ImageView
-                    android:id="@+id/iv_bill"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/icon_receipt"
-                    android:visibility="gone"
-                    android:layout_marginRight="@dimen/dimen_15dp"
-                    android:layout_toLeftOf="@+id/tv_payment"
+                    android:id="@+id/iv_more"
+                    android:layout_width="30dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/more"
+                    android:visibility="visible"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_marginRight="@dimen/dimen_10dp"
                     android:layout_alignParentEnd="true"
                     app:tint="@color/title_color">
 
                 </ImageView>
 
             </RelativeLayout>
-            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/billLabel"
-                android:text=""
-                android:layout_gravity="end"
-                android:gravity="end"
-                android:layout_marginRight="@dimen/dimen_5dp"
-                android:textColor="@color/title_color"
-                android:textSize="@dimen/txtsize_12"
-                android:visibility="gone">
-
-            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
 
 

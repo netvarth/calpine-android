@@ -110,16 +110,16 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
                 viewHolder.tvPrice.setVisibility(View.VISIBLE);
                 viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
                 double amount = cartItem.getItemPrice() * cartItem.getQuantity();
-                viewHolder.tvPrice.setText("₹" + convertAmountToDecimals(String.valueOf(amount)));
+                viewHolder.tvPrice.setText("₹ " + convertAmountToDecimals(String.valueOf(amount)));
                 viewHolder.tvPrice.setPaintFlags(viewHolder.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 double discountAmount = cartItem.getDiscountedPrice() * cartItem.getQuantity();
-                viewHolder.tvDiscountedPrice.setText("₹"+ convertAmountToDecimals(String.valueOf(discountAmount)));
+                viewHolder.tvDiscountedPrice.setText("₹ "+ convertAmountToDecimals(String.valueOf(discountAmount)));
 
             } else {
-                viewHolder.tvPrice.setVisibility(View.VISIBLE);
+                viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
                 double amount = cartItem.getItemPrice() * cartItem.getQuantity();
-                viewHolder.tvPrice.setText("₹" +convertAmountToDecimals(String.valueOf(amount)) );
-                viewHolder.tvDiscountedPrice.setVisibility(View.GONE);
+                viewHolder.tvDiscountedPrice.setText("₹ " +convertAmountToDecimals(String.valueOf(amount)) );
+                viewHolder.tvPrice.setVisibility(View.GONE);
 
             }
 
@@ -165,15 +165,15 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
                                     viewHolder.tvPrice.setVisibility(View.VISIBLE);
                                     viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
                                     double amount = cartItem.getItemPrice() * newValue;
-                                    viewHolder.tvPrice.setText("₹" + convertAmountToDecimals(String.valueOf(amount)));
+                                    viewHolder.tvPrice.setText("₹ " + convertAmountToDecimals(String.valueOf(amount)));
                                     viewHolder.tvPrice.setPaintFlags(viewHolder.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                                     double discountPrice = cartItem.getDiscountedPrice() * newValue;
-                                    viewHolder.tvDiscountedPrice.setText("₹"+ convertAmountToDecimals(String.valueOf(discountPrice)));
+                                    viewHolder.tvDiscountedPrice.setText("₹ "+ convertAmountToDecimals(String.valueOf(discountPrice)));
 
                                 } else {
                                     viewHolder.tvPrice.setVisibility(View.VISIBLE);
                                     double amount = cartItem.getItemPrice() * newValue;
-                                    viewHolder.tvPrice.setText("₹" + convertAmountToDecimals(String.valueOf(amount)));
+                                    viewHolder.tvPrice.setText("₹ " + convertAmountToDecimals(String.valueOf(amount)));
                                     viewHolder.tvDiscountedPrice.setVisibility(View.GONE);
 
                                 }

@@ -22,9 +22,11 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.jaldeeinc.jaldee.Interface.IActions;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.activities.OrderDetailActivity;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -53,6 +55,7 @@ public class OrderActionsDialog extends Dialog {
     private Context mContext;
     private boolean isActive = false;
     private ActiveOrders orderInfo = new ActiveOrders();
+    private IActions iActions;
 
     @BindView(R.id.ll_cancel)
     LinearLayout llCancel;
@@ -60,15 +63,19 @@ public class OrderActionsDialog extends Dialog {
     @BindView(R.id.ll_bill)
     LinearLayout llBill;
 
+    @BindView(R.id.ll_details)
+    LinearLayout llDetails;
+
     @BindView(R.id.tv_bill)
     CustomTextViewMedium tvBill;
 
 
-    public OrderActionsDialog(@NonNull Context context, boolean isActive, ActiveOrders activeOrder) {
+    public OrderActionsDialog(@NonNull Context context, boolean isActive, ActiveOrders activeOrder,IActions iActions) {
         super(context);
         this.mContext = context;
         this.isActive = isActive;
         this.orderInfo = activeOrder;
+        this.iActions = iActions;
     }
 
     @Override
@@ -130,7 +137,6 @@ public class OrderActionsDialog extends Dialog {
                             iBill.putExtra("consumer", orderInfo.getOrderFor().getFirstName() + " " + orderInfo.getOrderFor().getLastName());
                             iBill.putExtra("uniqueId", String.valueOf(orderInfo.getProviderAccount().getUniqueId()));
                             mContext.startActivity(iBill);
-
                             dismiss();
                         }
                     } catch (Exception e) {
@@ -142,6 +148,17 @@ public class OrderActionsDialog extends Dialog {
 
             hideView(llBill);
         }
+
+        llDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(mContext, OrderDetailActivity.class);
+                intent.putExtra("orderInfo", orderInfo);
+                mContext.startActivity(intent);
+                dismiss();
+            }
+        });
 
 
     }
@@ -197,6 +214,7 @@ public class OrderActionsDialog extends Dialog {
                                 ContextCompat.getColor(mContext, R.color.white), ContextCompat.getColor(mContext, R.color.appoint_theme), Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                         dismiss();
+                        iActions.onCancel();
 
                     }
                 } catch (Exception e) {

@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.model;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
+import com.jaldeeinc.jaldee.response.AccountProfile;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -235,6 +236,8 @@ public class BillModel {
 
     private double amountDue;
 
+    @SerializedName("accountProfile")
+    private AccountProfile accountProfile;
 
     public double getRefundedAmount() {
         return refundedAmount;
@@ -250,5 +253,14 @@ public class BillModel {
 
     public void setAmountDue(double amountDue) {
         this.amountDue = amountDue;
+    }
+
+
+    public AccountProfile getAccountProfile() {
+        return accountProfile;
+    }
+
+    public void setAccountProfile(AccountProfile accountProfile) {
+        this.accountProfile = accountProfile;
     }
 }

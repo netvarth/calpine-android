@@ -71,7 +71,7 @@ public class CheckoutItemsAdapter extends RecyclerView.Adapter<CheckoutItemsAdap
             viewHolder.tvItemName.setText(cartItem.getItemName());
 
             double amount = cartItem.getDiscountedPrice() * cartItem.getQuantity();
-            viewHolder.tvPrice.setText("₹"+ convertAmountToDecimals(String.valueOf(amount)));
+            viewHolder.tvPrice.setText("₹ "+ convertAmountToDecimals(String.valueOf(amount)));
 
             viewHolder.tvQuantity.setText(String.valueOf(cartItem.getQuantity()));
 

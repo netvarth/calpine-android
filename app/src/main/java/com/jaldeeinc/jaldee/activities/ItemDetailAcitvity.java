@@ -209,15 +209,15 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
                     tvPrice.setVisibility(View.VISIBLE);
                     tvDiscountedPrice.setVisibility(View.VISIBLE);
                     String amount = String.valueOf(itemDetails.getItems().getPrice());
-                    tvPrice.setText("₹" + convertAmountToDecimals(amount));
+                    tvPrice.setText("₹ " + convertAmountToDecimals(amount));
                     tvPrice.setPaintFlags(tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     String price = String.valueOf(itemDetails.getItems().getPromotionalPrice());
-                    tvDiscountedPrice.setText("₹" + convertAmountToDecimals(price));
+                    tvDiscountedPrice.setText("₹ " + convertAmountToDecimals(price));
 
                 } else {
                     tvDiscountedPrice.setVisibility(View.VISIBLE);
                     String amount = String.valueOf(itemDetails.getItems().getPrice());
-                    tvDiscountedPrice.setText("₹" + convertAmountToDecimals(amount));
+                    tvDiscountedPrice.setText("₹ " + convertAmountToDecimals(amount));
                     tvPrice.setVisibility(View.GONE);
 
                 }
@@ -467,17 +467,17 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
                 tvSubTotal.setVisibility(View.GONE);
                 tvTotalDiscount.setVisibility(View.VISIBLE);
                 String amount = String.valueOf(db.getCartPrice());
-                tvTotalDiscount.setText("₹" + convertAmountToDecimals(amount));
+                tvTotalDiscount.setText("₹ " + convertAmountToDecimals(amount));
 
             } else {
 
                 tvSubTotal.setVisibility(View.VISIBLE);
                 String amount = String.valueOf(db.getCartPrice());
-                tvSubTotal.setText("₹" + convertAmountToDecimals(amount));
+                tvSubTotal.setText("₹ " + convertAmountToDecimals(amount));
                 tvSubTotal.setPaintFlags(tvSubTotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 tvTotalDiscount.setVisibility(View.VISIBLE);
                 String discountedPrice = String.valueOf(db.getCartDiscountedPrice());
-                tvTotalDiscount.setText("₹" + convertAmountToDecimals(discountedPrice));
+                tvTotalDiscount.setText("₹ " + convertAmountToDecimals(discountedPrice));
             }
         } else {
 

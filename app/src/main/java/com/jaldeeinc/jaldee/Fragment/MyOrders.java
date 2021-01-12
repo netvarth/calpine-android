@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.jaldeeinc.jaldee.Interface.IActions;
 import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
 import com.jaldeeinc.jaldee.Interface.ISelectedOrder;
 import com.jaldeeinc.jaldee.R;
@@ -47,7 +48,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyOrders extends RootFragment implements ISelectedOrder {
+public class MyOrders extends RootFragment implements ISelectedOrder,IActions {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
@@ -64,6 +65,7 @@ public class MyOrders extends RootFragment implements ISelectedOrder {
     ArrayList<ActiveOrders> ordersListFuture = new ArrayList<>();
     Animation slideUp, slideRight;
     boolean hideMoreInfo = false;
+    private IActions iActions;
     private OrderActionsDialog orderActionsDialog;
 
 
@@ -115,6 +117,7 @@ public class MyOrders extends RootFragment implements ISelectedOrder {
         mContext = getActivity();
         iSelectedOrder = (ISelectedOrder) this;
         Home.doubleBackToExitPressedOnce = false;
+        iActions = this;
         initializations(view);
 
         return view;
@@ -305,7 +308,7 @@ public class MyOrders extends RootFragment implements ISelectedOrder {
                 isActive = true;
             }
         }
-        orderActionsDialog = new OrderActionsDialog(mContext,isActive,orderInfo);
+        orderActionsDialog = new OrderActionsDialog(mContext,isActive,orderInfo,iActions);
         orderActionsDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
         orderActionsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         orderActionsDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -315,5 +318,11 @@ public class MyOrders extends RootFragment implements ISelectedOrder {
         orderActionsDialog.getWindow().setGravity(Gravity.BOTTOM);
         orderActionsDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
 
+    }
+
+    @Override
+    public void onCancel() {
+
+        apiGetAllOrders();
     }
 }

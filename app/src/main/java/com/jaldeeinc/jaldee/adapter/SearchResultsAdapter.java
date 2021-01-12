@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -26,6 +27,11 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
@@ -44,6 +50,7 @@ import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -216,7 +223,19 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                 url = url.replaceAll(" ", "%20");
                             }
                             String finalUrl = url;
-                            PicassoTrustAll.getInstance(context).load(url).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.ivSpImage, new Callback() {
+
+//                            Glide.with(context) //1
+//                                    .load(url)
+//                                    .placeholder(R.drawable.icon_noimage)
+//                                    .error(R.drawable.icon_noimage)
+//                                    .skipMemoryCache(true) //2
+//                                    .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+//                                    .transform(new CircleCrop()) //4
+//                                    .into(myViewHolder.ivSpImage);
+
+                            PicassoTrustAll.getInstance(myViewHolder.ivSpImage.getContext()).cancelRequest(myViewHolder.ivSpImage);
+                            PicassoTrustAll.getInstance(context).load(url).placeholder(R.drawable.icon_noimage).networkPolicy(NetworkPolicy.NO_STORE)
+                                    .error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.ivSpImage, new Callback() {
                                 @Override
                                 public void onSuccess() {
 
@@ -253,19 +272,25 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 // to set rating
                 try {
-                    String rating = searchdetailList.getRating();
+                    if (searchdetailList.getRating() != null) {
+                        String rating = searchdetailList.getRating();
 
-                    if (rating != null) {
-                        int rate = Math.round(Float.parseFloat(rating));
-                        if (rate < 4) {
-                            myViewHolder.ratingBar.setVisibility(View.GONE);
+                        if (rating != null) {
+                            int rate = Math.round(Float.parseFloat(rating));
+                            if (rate < 4) {
+                                myViewHolder.ratingBar.setVisibility(View.GONE);
+                            } else {
+                                myViewHolder.ratingBar.setVisibility(View.VISIBLE);
+                                myViewHolder.ratingBar.setRating(rate);
+                            }
                         } else {
-                            myViewHolder.ratingBar.setVisibility(View.VISIBLE);
-                            myViewHolder.ratingBar.setRating(rate);
+                            myViewHolder.ratingBar.setVisibility(View.GONE);
                         }
+                    } else {
+                        myViewHolder.ratingBar.setVisibility(View.GONE);
                     }
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
 
                 Date c = Calendar.getInstance().getTime();
@@ -742,6 +767,9 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             } else {
                 myViewHolder.llServices.setVisibility(View.GONE);
             }
+        } else {
+
+            myViewHolder.llServices.setVisibility(View.GONE);
         }
 
     }
@@ -798,11 +826,22 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse(Constants.URL));
-                context.startActivity(intent);
+                try {
+
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    boolean claimable = false;
+                    if (searchdetailList.getClaimable() != null && searchdetailList.getClaimable().equalsIgnoreCase("1")) {
+                        claimable = true;
+                    }
+                    String accountId = "0";
+                    accountId = searchdetailList.getId().split("-")[0];
+                    intent.setData(Uri.parse(Constants.URL + "business/providersignup?" + "claimable=" + claimable + "&accountId=" + accountId + "&sector=" + searchdetailList.getSector() + "&subSector=" + searchdetailList.getSub_sector()));
+                    context.startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -862,9 +901,24 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public void addAll(List<SearchListModel> moveResults) {
+
+        for (SearchListModel searchResult : this.searchResults) {
+            for (SearchListModel result : moveResults) {
+                if (searchResult.getId().equalsIgnoreCase(result.getId())) {
+                    moveResults.remove(result);
+                }
+            }
+        }
         for (SearchListModel result : moveResults) {
             add(result);
         }
+    }
+
+    public void updateData(List<SearchListModel> results) {
+
+        results = results == null ? new ArrayList<>() : results;
+        this.searchResults = results;
+        notifyDataSetChanged();
     }
 
     public void remove(SearchListModel r) {

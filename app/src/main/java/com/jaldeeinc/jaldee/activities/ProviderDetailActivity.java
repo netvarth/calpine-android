@@ -188,6 +188,24 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @BindView(R.id.checkinsList)
     CustomTextViewMedium tv_checkinsList;
 
+    @BindView(R.id.tv_contactDetails)
+    CustomTextViewMedium tvContactDetails;
+
+    @BindView(R.id.tv_mobileNumber)
+    CustomTextViewMedium tvProviderPhoneNo;
+
+    @BindView(R.id.tv_email)
+    CustomTextViewMedium tvProviderEmail;
+
+    @BindView(R.id.ll_phone)
+    LinearLayout llPhone;
+
+    @BindView(R.id.ll_email)
+    LinearLayout llEmail;
+
+    @BindView(R.id.tv_aboutUsHint)
+    CustomTextViewMedium tvAboutUsHint;
+
     String claimable;
     private int uniqueId;
     private int providerId;
@@ -311,12 +329,12 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                 if (llMore.getVisibility() != View.VISIBLE) {
                     llMore.setVisibility(View.VISIBLE);
-                    int size = domainVirtual.size();
-                    if (size > 0) {
-                        llMore.setVisibility(View.VISIBLE);
-                    } else {
-                        llMore.setVisibility(View.GONE);
-                    }
+//                    int size = domainVirtual.size();
+//                    if (size > 0) {
+//                        llMore.setVisibility(View.VISIBLE);
+//                    } else {
+//                        llMore.setVisibility(View.GONE);
+//                    }
                 } else {
                     llMore.setVisibility(View.GONE);
                 }
@@ -419,6 +437,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     } else {
                         llMore.setVisibility(View.GONE);
                         tvMoreInfo.setVisibility(View.GONE);
+                        updateContactInfo();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -543,6 +562,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                 providerId = mBusinessDataList.getId();
                             }
                             onlinePresence = mBusinessDataList.isOnlinePresence();
+                            onlinePresence = true;   //businessprofile .Json is not getting updated correctly, so we don't need to check this condition..that's why setting it as true.
                             UpdateMainUI(mBusinessDataList);
                             apiSearchGallery(id);
                             apiSettings_Details(id, providerId, locationId, location);
@@ -729,6 +749,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             // About
 
             if (mBusinessDataList.getBusinessDesc() != null) {
+                tvAboutUsHint.setVisibility(View.VISIBLE);
                 tvAbout.setVisibility(View.VISIBLE);
                 tvAbout.setText(mBusinessDataList.getBusinessDesc());
                 tvAbout.post(new Runnable() {
@@ -745,6 +766,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 });
             } else {
                 tvAbout.setVisibility(View.GONE);
+                tvAboutUsHint.setVisibility(View.GONE);
             }
 
 
@@ -791,12 +813,54 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             // Use lineCount here
                         }
                     });
+                } else {
+
+                    if (mBusinessDataList.getServiceSubSector() != null && mBusinessDataList.getServiceSubSector().getDisplayName() != null) {
+                        tvSpOne.setText(mBusinessDataList.getServiceSubSector().getDisplayName());
+                    }
                 }
 
 
+            } else {
+
+                if (mBusinessDataList.getServiceSubSector() != null && mBusinessDataList.getServiceSubSector().getDisplayName() != null) {
+                    tvSpOne.setText(mBusinessDataList.getServiceSubSector().getDisplayName());
+                }
             }
+
+            updateContactInfo();
+
         }
 
+    }
+
+    public void updateContactInfo(){
+
+        if (mBusinessDataList.getPhoneNumbers() != null || mBusinessDataList.getEmails() != null){
+            tvMoreInfo.setVisibility(View.VISIBLE);
+
+            if (mBusinessDataList.getPhoneNumbers() != null && mBusinessDataList.getPhoneNumbers().size() > 0 && mBusinessDataList.getPhoneNumbers().get(0).getInstance() != null){
+                llPhone.setVisibility(View.VISIBLE);
+                tvContactDetails.setVisibility(View.VISIBLE);
+                tvProviderPhoneNo.setText(mBusinessDataList.getPhoneNumbers().get(0).getInstance());
+
+            }  else {
+                llPhone.setVisibility(View.GONE);
+            }
+
+            if (mBusinessDataList.getEmails() != null && mBusinessDataList.getEmails().size() > 0 && mBusinessDataList.getEmails().get(0).getInstance() != null){
+
+                llEmail.setVisibility(View.VISIBLE);
+                tvContactDetails.setVisibility(View.VISIBLE);
+                tvProviderEmail.setText(mBusinessDataList.getEmails().get(0).getInstance());
+            } else {
+                llEmail.setVisibility(View.GONE);
+            }
+        } else {
+
+            tvMoreInfo.setVisibility(View.GONE);
+            tvContactDetails.setVisibility(View.GONE);
+        }
     }
 
     public void UpdateGallery(final ArrayList<SearchViewDetail> mGallery) {
@@ -885,6 +949,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code------Setting-------------------" + response.code());
                     if (response.code() == 200) {
+                        rvServices.setVisibility(View.VISIBLE);
                         mSearchSettings = response.body();
                         if (mSearchSettings != null) {
 
@@ -892,6 +957,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             checkOrderEnabled(mSearchSettings, uniqueId, mProviderId, mlocationId);
                         }
 
+                    } else if (response.code() == 403){
+
+                        rvServices.setVisibility(View.GONE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

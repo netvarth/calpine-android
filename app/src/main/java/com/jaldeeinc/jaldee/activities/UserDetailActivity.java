@@ -342,6 +342,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
 
                             userId = providerDetails.getId();
                             onlinePresence = providerDetails.isOnlinePresence();
+                            onlinePresence = true;   //businessprofile .Json is not getting updated correctly, so we don't need to check this condition..that's why setting it as true.
                             UpdateMainUI(providerDetails);
                             apiGetProviders(uniqueId, providerId, locId, userId);
 

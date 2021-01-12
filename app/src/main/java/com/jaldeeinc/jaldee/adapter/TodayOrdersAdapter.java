@@ -166,58 +166,59 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                     viewHolder.tvpayment.setText("PAID" + " " + "₹" + " " + convertAmountsToDecimals(orders.getBill().getAmountPaid()));
                 }
 
-                if (orders.getBill() != null) {
-                    if (orders.getBill().getBillPaymentStatus().equalsIgnoreCase("FullyPaid") || orders.getBill().getBillPaymentStatus().equalsIgnoreCase("Refund")) {
-                        viewHolder.ivBill.setVisibility(View.VISIBLE);
-                        viewHolder.tvBillText.setVisibility(View.VISIBLE);
-                        viewHolder.tvBillText.setText("Receipt");
-                    } else {
-                        viewHolder.ivBill.setVisibility(View.VISIBLE);
-                        viewHolder.tvBillText.setVisibility(View.GONE);
-                        viewHolder.tvBillText.setText("Pay Bill");
-                    }
-
-                    if (orders.getBill().getBillViewStatus() != null) {
-                        if (orders.getBill().getBillViewStatus().equalsIgnoreCase("Show") && !orders.getOrderStatus().equalsIgnoreCase("Cancelled")) {
-                            // Remove the second condition "orders.getOrderstatus()" if we want to display bill for the orders that were cancelled //
-                            viewHolder.ivBill.setVisibility(View.VISIBLE);
-                            viewHolder.tvBillText.setVisibility(View.VISIBLE);
-                        } else {
-                            viewHolder.ivBill.setVisibility(View.GONE);
-                            viewHolder.tvBillText.setVisibility(View.GONE);
-                        }
-
-                    } else {
-                        if (!orders.getBill().getBillPaymentStatus().equalsIgnoreCase("NotPaid")) {
-                            viewHolder.ivBill.setVisibility(View.VISIBLE);
-                            viewHolder.tvBillText.setVisibility(View.VISIBLE);
-                        } else {
-                            viewHolder.ivBill.setVisibility(View.GONE);
-                            viewHolder.tvBillText.setVisibility(View.GONE);
-                        }
-                    }
-                } else {
-                    viewHolder.ivBill.setVisibility(View.GONE);
-                    viewHolder.tvBillText.setVisibility(View.GONE);
-                }
-
-
-                viewHolder.ivBill.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Intent iBill = new Intent(v.getContext(), BillActivity.class);
-                        iBill.putExtra("ynwUUID", orders.getUid());
-                        iBill.putExtra("provider", orders.getProviderAccount().getBusinessName());
-                        iBill.putExtra("accountID", String.valueOf(orders.getProviderAccount().getId()));
-                        iBill.putExtra("payStatus", orders.getBill().getBillPaymentStatus());
-                        iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
-                        iBill.putExtra("consumer", orders.getOrderFor().getFirstName() + " " + orders.getOrderFor().getLastName());
-                        iBill.putExtra("uniqueId", String.valueOf(orders.getProviderAccount().getUniqueId()));
-                        v.getContext().startActivity(iBill);
-
-                    }
-                });
+//
+// if (orders.getBill() != null) {
+// if (orders.getBill().getBillPaymentStatus().equalsIgnoreCase("FullyPaid") || orders.getBill().getBillPaymentStatus().equalsIgnoreCase("Refund")) {
+// viewHolder.ivBill.setVisibility(View.VISIBLE);
+// viewHolder.tvBillText.setVisibility(View.VISIBLE);
+// viewHolder.tvBillText.setText("Receipt");
+// } else {
+// viewHolder.ivBill.setVisibility(View.VISIBLE);
+// viewHolder.tvBillText.setVisibility(View.GONE);
+// viewHolder.tvBillText.setText("Pay Bill");
+// }
+//
+// if (orders.getBill().getBillViewStatus() != null) {
+// if (orders.getBill().getBillViewStatus().equalsIgnoreCase("Show") && !orders.getOrderStatus().equalsIgnoreCase("Cancelled")) {
+// // Remove the second condition "orders.getOrderstatus()" if we want to display bill for the orders that were cancelled //
+// viewHolder.ivBill.setVisibility(View.VISIBLE);
+// viewHolder.tvBillText.setVisibility(View.VISIBLE);
+// } else {
+// viewHolder.ivBill.setVisibility(View.GONE);
+// viewHolder.tvBillText.setVisibility(View.GONE);
+// }
+//
+// } else {
+// if (!orders.getBill().getBillPaymentStatus().equalsIgnoreCase("NotPaid")) {
+// viewHolder.ivBill.setVisibility(View.VISIBLE);
+// viewHolder.tvBillText.setVisibility(View.VISIBLE);
+// } else {
+// viewHolder.ivBill.setVisibility(View.GONE);
+// viewHolder.tvBillText.setVisibility(View.GONE);
+// }
+// }
+// } else {
+// viewHolder.ivBill.setVisibility(View.GONE);
+// viewHolder.tvBillText.setVisibility(View.GONE);
+// }
+//
+//
+// viewHolder.ivBill.setOnClickListener(new View.OnClickListener() {
+// @Override
+// public void onClick(View v) {
+//
+// Intent iBill = new Intent(v.getContext(), BillActivity.class);
+// iBill.putExtra("ynwUUID", orders.getUid());
+// iBill.putExtra("provider", orders.getProviderAccount().getBusinessName());
+// iBill.putExtra("accountID", String.valueOf(orders.getProviderAccount().getId()));
+// iBill.putExtra("payStatus", orders.getBill().getBillPaymentStatus());
+// iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
+// iBill.putExtra("consumer", orders.getOrderFor().getFirstName() + " " + orders.getOrderFor().getLastName());
+// iBill.putExtra("uniqueId", String.valueOf(orders.getProviderAccount().getUniqueId()));
+// v.getContext().startActivity(iBill);
+//
+// }
+// });
 
 
                 viewHolder.cvBooking.setOnClickListener(new View.OnClickListener() {
@@ -228,14 +229,21 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                     }
                 });
 
-//                viewHolder.ivBill.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                        iSelectedOrder.onOptionsClick(orders);
-//                    }
-//                });
+                if (!hideMoreInfo) {
 
+                    viewHolder.ivMore.setVisibility(View.VISIBLE);
+                    viewHolder.ivMore.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            iSelectedOrder.onOptionsClick(orders);
+                        }
+                    });
+
+                } else {
+
+                    viewHolder.ivMore.setVisibility(View.GONE);
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -266,10 +274,10 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView ivBookingType, ivBill;
+        ImageView ivBookingType, ivMore;
         CustomTextViewBold tvSpName;
         CustomTextViewSemiBold tvProviderName, ivOrderNo;
-        CustomTextViewMedium tvStatus, tvServiceName, tvDateAndTime, tvpayment, tvBillText, tvQuantity;
+        CustomTextViewMedium tvStatus, tvServiceName, tvDateAndTime, tvpayment, tvQuantity;
         CardView cvBooking;
         RelativeLayout rlStatus;
 
@@ -287,10 +295,9 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                 tvServiceName = itemView.findViewById(R.id.tv_serviceName);
                 tvDateAndTime = itemView.findViewById(R.id.tv_dateAndTime);
                 cvBooking = itemView.findViewById(R.id.cv_booking);
-                ivBill = itemView.findViewById(R.id.iv_bill);
+                ivMore = itemView.findViewById(R.id.iv_more);
                 rlStatus = itemView.findViewById(R.id.rl_status);
                 tvpayment = itemView.findViewById(R.id.tv_payment);
-                tvBillText = itemView.findViewById(R.id.billLabel);
                 tvQuantity = itemView.findViewById(R.id.tv_quantityValue);
 
             }
