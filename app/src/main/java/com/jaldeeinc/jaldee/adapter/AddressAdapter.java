@@ -80,7 +80,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
 
             viewHolder.tvAddress.setText(fullAddress);
 
-            viewHolder.tvMobileNumber.setText(address.getPhoneNumber());
+            viewHolder.tvMobileNumber.setText(address.getCountryCode() +" "+ address.getPhoneNumber());
 
             viewHolder.tvEmail.setText(address.getEmail());
 
