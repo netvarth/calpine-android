@@ -59,16 +59,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:paddingLeft="@dimen/dimen_0dp"
+            android:paddingRight="@dimen/dimen_0dp"
             android:layout_marginStart="@dimen/dimen_20dp"
             android:layout_marginEnd="@dimen/dimen_20dp"
             android:background="@drawable/textbox_curved">
 
             <com.hbb20.CountryCodePicker
                 android:id="@+id/ccp"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/dimen_50dp"
                 android:layout_gravity="center"
-                android:layout_weight="0.3"
+                android:layout_weight="0"
                 android:background="#F2F2F2"
                 android:paddingTop="@dimen/dimen_12dp"
                 android.support.design:ccp_textSize="@dimen/dimen_12dp"
@@ -79,7 +81,7 @@
                 android:id="@+id/text_input_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.7"
+                android:layout_weight="1"
                 android:textColorHint="@color/title_grey"
                 android.support.design:hintTextAppearance="@style/GreyTextInputLayout">
 
