@@ -1427,6 +1427,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
             return;
         }
+        if(!virtual_code.matches("^(\\+)?(\\d{1,3})$")){
+            DynamicToast.make(CheckInActivity.this, "Please enter valid Country code", AppCompatResources.getDrawable(
+                    CheckInActivity.this, R.drawable.ic_info_black),
+                    ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+            return;
+        }
 
 
         ApiInterface apiService =
