@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.PaymentDetail;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
@@ -68,7 +69,7 @@ public class MyPaymentAdapter extends ArrayAdapter<MyPayments> {
         }
 
         if (paymentsList.get(position).getAmount() != null) {
-            amount.setText("₹ " + paymentsList.get(position).getAmount());
+            amount.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(paymentsList.get(position).getAmount())));
             amount.setVisibility(View.VISIBLE);
         } else {
             amount.setVisibility(View.INVISIBLE);

@@ -387,17 +387,17 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                 tvSubTotal.setVisibility(View.GONE);
                 tvDisCountedPrice.setVisibility(View.VISIBLE);
                 String amount = String.valueOf(db.getCartPrice());
-                tvDisCountedPrice.setText("₹" + convertAmountToDecimals(amount));
+                tvDisCountedPrice.setText("₹ " + convertAmountToDecimals(amount));
 
             } else {
 
                 tvSubTotal.setVisibility(View.VISIBLE);
                 String amount = String.valueOf(db.getCartPrice());
-                tvSubTotal.setText("₹" + convertAmountToDecimals(amount));
+                tvSubTotal.setText("₹ " + convertAmountToDecimals(amount));
                 tvSubTotal.setPaintFlags(tvSubTotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 tvDisCountedPrice.setVisibility(View.VISIBLE);
                 String discountedPrice = String.valueOf(db.getCartDiscountedPrice());
-                tvDisCountedPrice.setText("₹" + convertAmountToDecimals(discountedPrice));
+                tvDisCountedPrice.setText("₹ " + convertAmountToDecimals(discountedPrice));
             }
         } else {
 

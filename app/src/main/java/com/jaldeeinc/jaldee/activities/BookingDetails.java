@@ -450,13 +450,13 @@ public class BookingDetails extends AppCompatActivity {
                 if (appointmentInfo.getProvider() != null) {
 
                     if (appointmentInfo.getProvider().getBusinessName() != null && !appointmentInfo.getProvider().getBusinessName().equalsIgnoreCase("")) {
-                        tvDoctorName.setText(convertToTitleForm(appointmentInfo.getProvider().getBusinessName()));
+                        tvDoctorName.setText(appointmentInfo.getProvider().getBusinessName());
                     } else {
                         String name = appointmentInfo.getProvider().getFirstName() + " " + appointmentInfo.getProvider().getLastName();
-                        tvDoctorName.setText(convertToTitleForm(name));
+                        tvDoctorName.setText(name);
                     }
                     tvProviderName.setVisibility(View.VISIBLE);
-                    tvProviderName.setText(convertToTitleForm(appointmentInfo.getProviderAccount().getBusinessName()));
+                    tvProviderName.setText(appointmentInfo.getProviderAccount().getBusinessName());
                     tvProviderName.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -473,7 +473,7 @@ public class BookingDetails extends AppCompatActivity {
                     });
                 } else {
                     tvProviderName.setVisibility(View.INVISIBLE);
-                    tvDoctorName.setText(convertToTitleForm(appointmentInfo.getProviderAccount().getBusinessName()));
+                    tvDoctorName.setText(appointmentInfo.getProviderAccount().getBusinessName());
 
                     tvDoctorName.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -879,7 +879,7 @@ public class BookingDetails extends AppCompatActivity {
     public void showMeetingWindow(ActiveAppointment activeAppointment, String mode, TeleServiceCheckIn meetingDetails) {
 
         if (mode.equalsIgnoreCase("WhatsApp")) {
-            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getWhatsApp(),activeAppointment.getService().getVirtualCallingModes().get(0).getVirtualServiceType(), activeAppointment.getCountryCode(),Constants.APPOINTMENT);
+            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getWhatsApp(),activeAppointment.getService().getVirtualServiceType(), activeAppointment.getCountryCode(),Constants.APPOINTMENT);
         } else {
             meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getPhone(),"",activeAppointment.getCountryCode(), Constants.APPOINTMENT);
         }

@@ -1226,11 +1226,11 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         if (db.getCartPrice() == db.getCartDiscountedPrice()) {
 
             amount = convertAmountToDecimals(String.valueOf(db.getCartPrice()));
-            tvItemsBill.setText("₹" + amount);
+            tvItemsBill.setText("₹ " + amount);
 
         } else {
             amount = convertAmountToDecimals(String.valueOf(db.getCartDiscountedPrice()));
-            tvItemsBill.setText("₹" + amount);
+            tvItemsBill.setText("₹ " + amount);
 
         }
 
@@ -1266,7 +1266,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         rlDeliveryFee.setVisibility(View.VISIBLE);
 
                         String deliveryCharge = convertAmountToDecimals(String.valueOf(catalog.getHomeDelivery().getDeliveryCharge()));
-                        tvDeliveryBill.setText("₹" + deliveryCharge);
+                        tvDeliveryBill.setText("₹ " + deliveryCharge);
 
 
                     }
@@ -1277,19 +1277,19 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     if (catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
 
                         double totalBill = db.getCartDiscountedPrice() + catalogs.get(0).getHomeDelivery().getDeliveryCharge();
-                        tvBill.setText("₹" + convertAmountToDecimals(String.valueOf(totalBill)));
+                        tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
 
                     } else {
 
                         double totalBill = db.getCartDiscountedPrice();
-                        tvBill.setText("₹" + convertAmountToDecimals(String.valueOf(totalBill)));
+                        tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
 
                     }
 
                 } else {
 
                     double bill = db.getCartDiscountedPrice();
-                    tvBill.setText("₹" + convertAmountToDecimals(String.valueOf(bill)));
+                    tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(bill)));
                 }
             }
 

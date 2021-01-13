@@ -309,7 +309,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         rvNearByResults.setLayoutManager(linearLayoutManager);
         rvNearByResults.setItemAnimator(new DefaultItemAnimator());
         rvNearByResults.setAdapter(searchResultsAdapter);
-        ViewCompat.setNestedScrollingEnabled(rvNearByResults, false);
+//        ViewCompat.setNestedScrollingEnabled(rvNearByResults, false);
 
 
         tvLocation.setOnClickListener(new View.OnClickListener() {
@@ -731,6 +731,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
             @Override
             protected void loadMoreItems() {
 
+                Log.e("SEARCH ISSUE", "&$$&$&$&$&$&$&$&$&$");
                 if (mtyp == null) {
                     mtyp = "city";
                 }
@@ -756,7 +757,9 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                     public void run() {
                         Config.logV("loadNextPage--------------------" + query);
 
-                        loadNextPage(query, url,sort);
+                        loadNextPage(query, url, sort);
+                        Log.e("SEARCH ISSUE", "#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@");
+
                     }
                 }, 1000);
 
@@ -778,6 +781,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
             }
         });
 
+
         return row;
     }
 
@@ -785,7 +789,6 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
 
         mSpinnerDomain = (Spinner) view.findViewById(R.id.spinnerdomain);
         rvNearByResults = view.findViewById(R.id.rv_nearbyResults);
-        rvNearByResults.setNestedScrollingEnabled(false);
         tvLocation = view.findViewById(R.id.tv_location);
         llPopularSearch = view.findViewById(R.id.ll_popularSearch);
         rvPopularSearch = view.findViewById(R.id.rv_popularSearch);
@@ -1114,6 +1117,12 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         params.put("sort", sort);
         params.put("expr.distance", mPass);
         params.put("return", "_all_fields,distance");
+        isLastPage = false;
+        isLoading = false;
+        PAGE_START = 0;
+        total_foundcount = 0;
+        TOTAL_PAGES = 0;
+        currentPage = PAGE_START;
 
         Call<SearchAWsResponse> call = apiService.getSearchAWS(query, params);
 
@@ -1744,11 +1753,9 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                                     mSearchListModel.add(searchList);
                                 }
                                 final List<SearchListModel> results = mSearchListModel;
-//                                Log.i("FinalResult", new Gson().toJson(results));
                                 progressBar.setVisibility(View.GONE);
                                 searchResultsAdapter.addAll(results);
                                 searchResultsAdapter.notifyDataSetChanged();
-                                ViewCompat.setNestedScrollingEnabled(rvNearByResults, false);
                                 Config.logV("QUEUELIST @@@@@@@@@@@@@@@@@@@@@@ RESUlt" + results.size());
                                 Config.logV("Results@@@@@@@@@@@@@@@@@" + results.size());
                                 Config.logV("CURRENT PAGE**22222*************" + TOTAL_PAGES);
@@ -1824,6 +1831,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
 
     private void loadNextPage(String mQueryPass, String mPass, String sort) {
         Log.d("", "loadNextPage: " + currentPage);
+        Log.e("$$$$$$$$$$toooooppped", "loadNextPage: " + currentPage);
 
         final ApiInterface apiService =
                 ApiClient.getClientAWS(mContext).create(ApiInterface.class);
@@ -2192,7 +2200,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         longitude = 77.594563;
         Config.logV("Not Google DEFAULT LOCATION @@@ YES");
         try {
-            if (Config.isOnline((Activity)mContext)) {
+            if (Config.isOnline((Activity) mContext)) {
                 Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
                 List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
                 tvLocation.setVisibility(View.VISIBLE);
@@ -2236,7 +2244,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
 
     private void checkPermissions() {
         try {
-            int permissionLocation = ContextCompat.checkSelfPermission((Activity)mContext,
+            int permissionLocation = ContextCompat.checkSelfPermission((Activity) mContext,
                     android.Manifest.permission.ACCESS_FINE_LOCATION);
             List<String> listPermissionsNeeded = new ArrayList<>();
             if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
@@ -2263,7 +2271,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
             if (googleApiClient != null) {
                 if (googleApiClient.isConnected()) {
                     Config.logV("Google api connected granted");
-                    int permissionLocation = ContextCompat.checkSelfPermission((Activity)mContext,
+                    int permissionLocation = ContextCompat.checkSelfPermission((Activity) mContext,
                             Manifest.permission.ACCESS_FINE_LOCATION);
                     if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
                         Config.logV("Google api connected granted@2@@@");
@@ -2277,7 +2285,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                         builder.addLocationRequest(LocationRequest.create().setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY));
                         builder.setAlwaysShow(true);
 
-                        SettingsClient settingsClient = LocationServices.getSettingsClient((Activity)mContext);
+                        SettingsClient settingsClient = LocationServices.getSettingsClient((Activity) mContext);
                         Task<LocationSettingsResponse> result = settingsClient.checkLocationSettings(builder.build());
 
                         result.addOnCompleteListener(task -> {

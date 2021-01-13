@@ -89,7 +89,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
             viewHolder.tvItemQuantity.setText(String.valueOf(orderItem.getQuantity()));
 
-            viewHolder.tvItemPrice.setText("₹" + convertAmountToDecimals(orderItem.getTotalPrice()));
+            viewHolder.tvItemPrice.setText("₹ " + convertAmountToDecimals(orderItem.getTotalPrice()));
 
             if (orderItem.getConsumerNotes() != null && !orderItem.getConsumerNotes().trim().equalsIgnoreCase("")) {
 

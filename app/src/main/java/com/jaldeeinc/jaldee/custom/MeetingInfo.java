@@ -55,7 +55,7 @@ public class MeetingInfo extends Dialog {
 
         if (serviceName != null){
             String name = serviceName;
-            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+//            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
             tvServiceName.setText(name);
 
             try {
@@ -68,7 +68,7 @@ public class MeetingInfo extends Dialog {
                         tvServiceName.setCompoundDrawablePadding(15);
                     } else if (callingMode.equalsIgnoreCase("WhatsApp")) {
                         if(virtualServiceType!=null && virtualServiceType.equalsIgnoreCase("videoService")){
-                            tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon, 0, 0, 0);
+                            tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappvide_custom, 0, 0, 0);
                         }
                         else {
                             tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);

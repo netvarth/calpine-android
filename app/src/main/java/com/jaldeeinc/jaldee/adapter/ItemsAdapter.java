@@ -160,15 +160,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 viewHolder.tvPrice.setVisibility(View.VISIBLE);
                 viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
                 String amount = String.valueOf(catalogItem.getItems().getPrice());
-                viewHolder.tvPrice.setText("₹" + convertAmountToDecimals(amount));
+                viewHolder.tvPrice.setText("₹ " + convertAmountToDecimals(amount));
                 viewHolder.tvPrice.setPaintFlags(viewHolder.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 String price = String.valueOf(catalogItem.getItems().getPromotionalPrice());
-                viewHolder.tvDiscountedPrice.setText("₹" +convertAmountToDecimals(price));
+                viewHolder.tvDiscountedPrice.setText("₹ " +convertAmountToDecimals(price));
 
             } else {
                 viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
                 String amount = String.valueOf(catalogItem.getItems().getPrice());
-                viewHolder.tvDiscountedPrice.setText("₹" + convertAmountToDecimals(amount));
+                viewHolder.tvDiscountedPrice.setText("₹ " + convertAmountToDecimals(amount));
                 viewHolder.tvPrice.setVisibility(View.GONE);
 
             }

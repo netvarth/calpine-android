@@ -89,14 +89,14 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
     Button btn_pay, mbill_applybtn;
     TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax, billLabel, jdnLabel, jdnValue, txtrefund, txtdelivery, tv_deliveryCharge;
-    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin, jcLayout, jdnLayout, refundLayout, deliveryLayout;
+    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin, jcLayout, jdnLayout, refundLayout, deliveryLayout,llproviderlayout;
     String sAmountPay;
     String accountID;
     String payStatus, consumer;
     String coupon_entered;
     String purpose;
     String displayNotes;
-    TextView tv_billnotes, tv_notes;
+    TextView tv_billnotes, tv_notes,tvProviderName;
     int customerId;
     String uniqueId;
     double total, totalRefund =0.0;;
@@ -155,7 +155,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         txtdelivery = findViewById(R.id.tv_deliveryCharges);
         tv_deliveryCharge = findViewById(R.id.grossDelivery);
         recycle_display_notes = findViewById(R.id.recycle_display_notes_demand);
-
+        llproviderlayout = findViewById(R.id.ll_providerLayout);
+        tvProviderName = findViewById(R.id.tv_providerName);
         tv_totalamt.setTypeface(tyface);
         txttotal.setTypeface(tyface);
         txtnetRate.setTypeface(tyface);
@@ -569,6 +570,24 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                         mBillData = response.body();
 //                        APIRefundInfo(ynwUUID);
+
+                        if (mBillData == null){
+                            mBillData = new BillModel();
+                        }
+
+                        if (mBillData.getAccountProfile() != null){
+
+                            tv_provider.setText(mBillData.getAccountProfile().getBusinessName());
+
+                            if (mBillData.getAccountProfile().getProviderBusinessName() !=null){
+
+                                llproviderlayout.setVisibility(View.VISIBLE);
+                                tvProviderName.setText(mBillData.getAccountProfile().getProviderBusinessName());
+                            } else {
+
+                                llproviderlayout.setVisibility(View.GONE);
+                            }
+                        }
 
                         String firstName = SharedPreference.getInstance(mCOntext).getStringValue("firstname", "");
                         String lastNme = SharedPreference.getInstance(mCOntext).getStringValue("lastname", "");
