@@ -641,7 +641,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                         if (mBillData.getDeliveryCharges() != 0) {
                             deliveryLayout.setVisibility(View.VISIBLE);
-                            tv_deliveryCharge.setText("(" + "+" + ")" + mBillData.getDeliveryCharges());
+                            tv_deliveryCharge.setText("(" + "+" + ")"+"₹ " + mBillData.getDeliveryCharges());
                         } else {
                             deliveryLayout.setVisibility(View.GONE);
                         }
