@@ -45,7 +45,7 @@
                 android:layout_weight="0.5"
                 android:background="@drawable/curved_save"
                 android:backgroundTint="@color/special_background"
-                android:text="@string/cancel"
+                android:text="@string/btn_no"
                 android:textColor="@color/title_color"
                 android:textSize="@dimen/txtsize_hint" />
 
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:background="@drawable/curved_save"
-                android:text="@string/btn_ok"
+                android:text="@string/btn_yes"
                 android:textAllCaps="true"
                 android:textColor="@color/app_background"
                 android:textSize="@dimen/txtsize_hint" />

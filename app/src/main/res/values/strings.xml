@@ -110,6 +110,8 @@
 
     <string name="error_invalid_phone_number">InvaFlid phone number</string>
     <string name="cancel">Cancel</string>
+    <string name="btn_yes">YES</string>
+    <string name="btn_no">NO</string>
     <string name="popularsearch">Popular Searches</string>
     <string name="sunday">Sunday</string>
     <string name="saturday">Saturday</string>
