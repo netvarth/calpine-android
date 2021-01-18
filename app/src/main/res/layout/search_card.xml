@@ -150,21 +150,45 @@
 
                     </ImageView>
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/cv_image"
+                    <FrameLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:visibility="gone"
-                        app:cardCornerRadius="@dimen/dimen_30dp">
+                        android:layout_height="wrap_content">
 
-                        <ImageView
-                            android:id="@+id/iv_spImage"
-                            android:layout_width="55dp"
-                            android:layout_height="55dp"
-                            android:scaleType="fitXY" />
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cv_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:visibility="gone"
+                            app:cardCornerRadius="@dimen/dimen_30dp">
 
-                    </androidx.cardview.widget.CardView>
+                            <ImageView
+                                android:id="@+id/iv_spImage"
+                                android:layout_width="55dp"
+                                android:layout_height="55dp"
+                                android:scaleType="fitXY" />
+
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cv_shimmer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:visibility="visible"
+                            app:cardCornerRadius="@dimen/dimen_30dp">
+
+                            <com.omjoonkim.skeletonloadingview.SkeletonLoadingView
+                                android:layout_width="55dp"
+                                android:layout_height="55dp"
+                                app:baseColor="#F4F4F4"
+                                app:deepColor="@color/white">
+
+                            </com.omjoonkim.skeletonloadingview.SkeletonLoadingView>
+
+                        </androidx.cardview.widget.CardView>
+
+                    </FrameLayout>
 
 
                 </LinearLayout>

@@ -1,18 +1,22 @@
 package com.jaldeeinc.jaldee.activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -25,6 +29,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView;
 import com.jaldeeinc.jaldee.CustomSwipe.transform.ScaleTransformer;
 import com.jaldeeinc.jaldee.Interface.IDialogInterface;
@@ -177,21 +188,30 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
                 if (itemDetails.getItems().getItemImagesList() != null && itemDetails.getItems().getItemImagesList().size() > 0) {
                     imagesList = itemDetails.getItems().getItemImagesList();
 
-                    shimmer.setVisibility(View.VISIBLE);
-                    PicassoTrustAll.getInstance(mContext).load(imagesList.get(0).getUrl()).into(ivDisplayImage, new Callback() {
-                        @Override
-                        public void onSuccess() {
+                    if (!((Activity) mContext).isFinishing()) {
 
-                            shimmer.setVisibility(View.GONE);
-                        }
+                        shimmer.setVisibility(View.VISIBLE);
+                        Glide.with(mContext)
+                                .load(imagesList.get(0).getUrl())
+                                .apply(new RequestOptions().error(R.drawable.icon_noimage).centerCrop())
+                                .listener(new RequestListener<Drawable>() {
+                                    @Override
+                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                        //on load failed
+                                        shimmer.setVisibility(View.GONE);
+                                        ivDisplayImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
+                                        return false;
+                                    }
 
-                        @Override
-                        public void onError() {
-
-                            shimmer.setVisibility(View.GONE);
-                            ivDisplayImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
-                        }
-                    });
+                                    @Override
+                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                        //on load success
+                                        shimmer.setVisibility(View.GONE);
+                                        return false;
+                                    }
+                                })
+                                .into(ivDisplayImage);
+                    }
 
                     if (imagesList.size() > 1) {
                         rvImages.setVisibility(View.VISIBLE);
@@ -202,6 +222,10 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
 
                         rvImages.setVisibility(View.GONE);
                     }
+                } else {
+
+                    shimmer.setVisibility(View.GONE);
+                    ivDisplayImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
                 }
 
                 if (itemDetails.getItems().isShowPromotionalPrice()) {
@@ -616,21 +640,45 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
     @Override
     public void onImageClick(String url) {
 
-        shimmer.setVisibility(View.VISIBLE);
-        PicassoTrustAll.getInstance(mContext).load(url).into(ivDisplayImage, new Callback() {
-            @Override
-            public void onSuccess() {
+        if (!((Activity) mContext).isFinishing()) {
 
-                shimmer.setVisibility(View.GONE);
-            }
+            shimmer.setVisibility(View.VISIBLE);
+            Glide.with(mContext)
+                    .load(url)
+                    .apply(new RequestOptions().error(R.drawable.icon_noimage).centerCrop())
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            //on load failed
+                            shimmer.setVisibility(View.GONE);
+                            ivDisplayImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
+                            return false;
+                        }
 
-            @Override
-            public void onError() {
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            //on load success
+                            shimmer.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
+                    .into(ivDisplayImage);
+        }
 
-                shimmer.setVisibility(View.GONE);
-                ivDisplayImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
-            }
-        });
+//        PicassoTrustAll.getInstance(mContext).load(url).into(ivDisplayImage, new Callback() {
+//            @Override
+//            public void onSuccess() {
+//
+//                shimmer.setVisibility(View.GONE);
+//            }
+//
+//            @Override
+//            public void onError() {
+//
+//                shimmer.setVisibility(View.GONE);
+//                ivDisplayImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
+//            }
+//        });
     }
 
     @Override

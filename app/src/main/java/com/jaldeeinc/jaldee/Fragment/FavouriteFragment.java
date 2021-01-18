@@ -102,7 +102,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
         iBackPress.setVisibility(View.GONE);
 
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-Bold.ttf");
         tv_title.setText("My Favourites");
         tv_title.setTypeface(tyface);
         callback = (FavAdapterOnCallback) this;

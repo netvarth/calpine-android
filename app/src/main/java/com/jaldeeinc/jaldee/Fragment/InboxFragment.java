@@ -137,18 +137,12 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
 
         ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
 
-        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_title.setTypeface(tyface1);
-
-
         iBackPress.setVisibility(View.GONE);
-
 
         tv_title.setText("Inbox");
 
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-Bold.ttf");
         tv_title.setTypeface(tyface);
 
         return row;

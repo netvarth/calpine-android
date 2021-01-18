@@ -266,6 +266,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     @BindView(R.id.txtservicepayment)
     CustomTextViewMedium txtservicepayment;
 
+    @BindView(R.id.tv_vsHint)
+    CustomTextViewMedium tvVsHint;
+
     static CustomTextViewMedium txtserviceamount;
 
     static LinearLayout LPrepay;
@@ -407,7 +410,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             try {
                 if (serviceInfo.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
                     if (serviceInfo.getAvailableDate() != null) {
-                        tvDate.setText(convertDate(serviceInfo.getAvailableDate()));
+                        tvDate.setText(Config.getCustomDateString(serviceInfo.getAvailableDate()));
                     }
                     if (serviceInfo.getTime() != null) {
                         apiDate = serviceInfo.getAvailableDate();
@@ -446,6 +449,13 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     if (serviceInfo.getCallingMode().equalsIgnoreCase("WhatsApp") || serviceInfo.getCallingMode().equalsIgnoreCase("Phone")) {
 
                         llVirtualNumber.setVisibility(View.VISIBLE);
+
+                        if (serviceInfo.getCallingMode().equalsIgnoreCase("WhatsApp")){
+                            tvVsHint.setText("WhatsApp number");
+                        } else {
+
+                            tvVsHint.setText("Contact number");
+                        }
                     } else {
                         llVirtualNumber.setVisibility(View.GONE);
                     }
@@ -1385,6 +1395,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     private void ApiAppointment(final String txt_addnote, int id) {
 
+        final Dialog mDialog = Config.getProgressDialog(AppointmentActivity.this, AppointmentActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
         String number = tvNumber.getText().toString();
         uuid = UUID.randomUUID().toString();
         String virtual_code = et_countryCode.getText().toString();
@@ -1396,17 +1408,12 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             DynamicToast.make(AppointmentActivity.this, "Countrycode needed", AppCompatResources.getDrawable(
                     AppointmentActivity.this, R.drawable.ic_info_black),
                     ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+            mDialog.dismiss();
             return;
         }
 
 
-        ApiInterface apiService =
-                ApiClient.getClient(AppointmentActivity.this).create(ApiInterface.class);
-
-
-        final Dialog mDialog = Config.getProgressDialog(AppointmentActivity.this, AppointmentActivity.this.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-
+        ApiInterface apiService = ApiClient.getClient(AppointmentActivity.this).create(ApiInterface.class);
         JSONObject qjsonObj = new JSONObject();
         JSONObject queueobj = new JSONObject();
         JSONObject waitobj = new JSONObject();
@@ -1455,9 +1462,17 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     virtualService.put("Phone", countryVirtualCode + etVirtualNumber.getText());
                 }
             } else {
-                DynamicToast.make(AppointmentActivity.this, "Invalid phone number", AppCompatResources.getDrawable(
+
+                String modeOfCalling = "";
+                if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("whatsApp")){
+                    modeOfCalling = "Invalid WhatsApp number";
+                } else {
+                    modeOfCalling = "Invalid Contact number";
+                }
+                DynamicToast.make(AppointmentActivity.this, modeOfCalling, AppCompatResources.getDrawable(
                         AppointmentActivity.this, R.drawable.ic_info_black),
                         ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+                mDialog.dismiss();
                 return;
             }
 
@@ -2488,7 +2503,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         countryCode = conCode;
         tvNumber.setText(countryCode + " " + phoneNumber);
         et_countryCode.setText(countryCode);
-        etVirtualNumber.setText(phoneNumber);
 
         if (!emailId.equalsIgnoreCase("")) {
             tvEmail.setText(emailId);
@@ -2510,4 +2524,5 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         MultiplefamilyList.addAll(familyList);
 
     }
+
 }

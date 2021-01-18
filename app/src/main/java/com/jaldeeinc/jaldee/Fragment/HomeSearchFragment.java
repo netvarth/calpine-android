@@ -2471,7 +2471,16 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                         //getActivity().finish();
                         if (requestCode == REQUEST_GET_DATA_FROM_SOME_ACTIVITY) {
 
-                            updateCurrentLocation();
+                            String isCurrentLocation = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
+
+                            if (isCurrentLocation.trim().equalsIgnoreCase("yes")) {
+
+                                updateCurrentLocation();
+
+                            } else {
+
+
+                            }
 
                         } else {
                             DefaultLocation();

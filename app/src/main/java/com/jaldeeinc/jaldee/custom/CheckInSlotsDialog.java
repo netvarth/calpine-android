@@ -60,7 +60,7 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
     private static CustomTextViewSemiBold tvCalenderDate;
     private RecyclerView rvQueues;
     private CardView cvConfirm;
-    private LinearLayout llNoSlots,llWaiting;
+    private LinearLayout llNoSlots, llWaiting;
     private NeomorphFrameLayout cvCalender;
     final Calendar myCalendar = Calendar.getInstance();
     private int activeScheduleId, serviceId, locationId, providerId;
@@ -165,7 +165,7 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
             public void onClick(View v) {
 
                 if (queueId > 0) {
-                    iSelectQ.sendSelectedQueueInfo(displayTime, queueId, queueDetails,selectedDate);
+                    iSelectQ.sendSelectedQueueInfo(displayTime, queueId, queueDetails, selectedDate);
                     dismiss();
                 } else {
 
@@ -323,15 +323,11 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
                                 rvQueues.setAdapter(qAdapter);
 
                             } else {
-                                rvQueues.setVisibility(View.GONE);
-                                llNoSlots.setVisibility(View.VISIBLE);
-                                llWaiting.setVisibility(View.GONE);
-                                tvDate.setVisibility(View.GONE);
-                                tvTime.setVisibility(View.GONE);
-                                cvConfirm.setVisibility(View.GONE);
+                                showNoSlots();
                             }
+                        } else {
+                            showNoSlots();
                         }
-
 
                     }
                 } catch (Exception e) {
@@ -347,6 +343,16 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
                     Config.closeDialog(getOwnerActivity(), mDialog);
             }
         });
+    }
+
+    public void showNoSlots() {
+
+        rvQueues.setVisibility(View.GONE);
+        llNoSlots.setVisibility(View.VISIBLE);
+        llWaiting.setVisibility(View.GONE);
+        tvDate.setVisibility(View.GONE);
+        tvTime.setVisibility(View.GONE);
+        cvConfirm.setVisibility(View.GONE);
     }
 
     public String UpdateDAte(String sDate) {

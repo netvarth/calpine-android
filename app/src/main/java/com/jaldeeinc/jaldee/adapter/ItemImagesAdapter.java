@@ -1,6 +1,8 @@
 package com.jaldeeinc.jaldee.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
@@ -13,10 +15,17 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.jaldeeinc.jaldee.Interface.IImageInterface;
 import com.jaldeeinc.jaldee.Interface.IItemInterface;
 import com.jaldeeinc.jaldee.R;
@@ -84,21 +93,50 @@ public class ItemImagesAdapter extends RecyclerView.Adapter<ItemImagesAdapter.Vi
             setAnimation(viewHolder.cvCard, position);
 
             if (itemImage.getThumbUrl() != null) {
-                viewHolder.shimmer.setVisibility(View.VISIBLE);
-                PicassoTrustAll.getInstance(context).load(itemImage.getThumbUrl()).into(viewHolder.bIvItemImage, new Callback() {
-                    @Override
-                    public void onSuccess() {
+                if (!((Activity) context).isFinishing()) {
 
-                        viewHolder.shimmer.setVisibility(View.GONE);
-                    }
+                    viewHolder.shimmer.setVisibility(View.VISIBLE);
+                    viewHolder.bIvItemImage.setVisibility(View.VISIBLE);
 
-                    @Override
-                    public void onError() {
+                    Glide.with(context)
+                            .load(itemImage.getThumbUrl())
+                            .apply(new RequestOptions().error(R.drawable.icon_noimage).centerCrop())
+                            .listener(new RequestListener<Drawable>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    //on load failed
+                                    viewHolder.shimmer.setVisibility(View.GONE);
+                                    viewHolder.bIvItemImage.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_noimage));
+                                    return false;
+                                }
 
-                        viewHolder.shimmer.setVisibility(View.GONE);
-                        viewHolder.bIvItemImage.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_noimage));
-                    }
-                });
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    //on load success
+                                    viewHolder.shimmer.setVisibility(View.GONE);
+                                    return false;
+                                }
+                            })
+                            .into(viewHolder.bIvItemImage);
+                }
+
+//                PicassoTrustAll.getInstance(context).load(itemImage.getThumbUrl()).into(viewHolder.bIvItemImage, new Callback() {
+//                    @Override
+//                    public void onSuccess() {
+//
+//                        viewHolder.shimmer.setVisibility(View.GONE);
+//                    }
+//
+//                    @Override
+//                    public void onError() {
+//
+//                        viewHolder.shimmer.setVisibility(View.GONE);
+//                        viewHolder.bIvItemImage.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_noimage));
+//                    }
+//                });
+            } else {
+                viewHolder.shimmer.setVisibility(View.GONE);
+                viewHolder.bIvItemImage.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_noimage));
             }
 
             viewHolder.cvCard.setOnClickListener(new View.OnClickListener() {
@@ -168,5 +206,11 @@ public class ItemImagesAdapter extends RecyclerView.Adapter<ItemImagesAdapter.Vi
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull ItemImagesAdapter.ViewHolder holder) {
+        super.onViewRecycled(holder);
+        Glide.with(context).clear(holder.bIvItemImage);
     }
 }

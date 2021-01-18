@@ -313,14 +313,14 @@
                         android:visibility="gone">
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                            android:id="@+id/tv_vsHint"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Contact for virtual service : "
                             android:textSize="@dimen/txtsize_12">
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-                        <EditText
+                        <com.jaldeeinc.jaldee.custom.CustomEditTextRegular
                             android:id="@+id/et_countryCode"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -330,9 +330,9 @@
                             android:maxLength="4"
                             android:textSize="@dimen/txtsize_14">
 
-                        </EditText>
+                        </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
 
-                        <EditText
+                        <com.jaldeeinc.jaldee.custom.CustomEditTextRegular
                             android:id="@+id/et_virtualNumber"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -342,7 +342,7 @@
                             android:maxLength="10"
                             android:textSize="@dimen/txtsize_14">
 
-                        </EditText>
+                        </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
 
                     </LinearLayout>
 

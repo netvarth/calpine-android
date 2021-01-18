@@ -1,11 +1,13 @@
 package com.jaldeeinc.jaldee.adapter;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.util.DisplayMetrics;
@@ -23,9 +25,16 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.jaldeeinc.jaldee.Interface.IItemInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.AppointmentActivity;
@@ -57,13 +66,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     private int lastPosition = -1;
     private IItemInterface iItemInterface;
     private DatabaseHandler db;
-    private int accountId,uniqueId;
+    private int accountId, uniqueId;
     Vibrator vibe;
     ProgressBar progressBar;
     private CardView cvPlus;
 
 
-    public ItemsAdapter(ArrayList<CatalogItem> itemsList, Context context, boolean isLoading, IItemInterface iItemInterface, int accountId,int uniqueId) {
+    public ItemsAdapter(ArrayList<CatalogItem> itemsList, Context context, boolean isLoading, IItemInterface iItemInterface, int accountId, int uniqueId) {
         this.itemsList = itemsList;
         this.context = context;
         this.isLoading = isLoading;
@@ -99,7 +108,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
             setAnimation(viewHolder.cvCard, position);
 
-            if (catalogItem.getItems().isShowPromotionalPrice()){
+            if (catalogItem.getItems().isShowPromotionalPrice()) {
 
                 viewHolder.rlTag.setVisibility(View.VISIBLE);
                 viewHolder.tvTag.setText(catalogItem.getItems().getPromotionLabel());
@@ -131,26 +140,61 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
                     if (catalogItem.getItems().getItemImagesList().get(i).isDisplayImage()) {
 
-                        viewHolder.bIvItemImage.setVisibility(View.GONE);
-                        viewHolder.shimmer.setVisibility(View.VISIBLE);
-                        PicassoTrustAll.getInstance(context).load(catalogItem.getItems().getItemImagesList().get(i).getUrl()).into(viewHolder.bIvItemImage, new Callback() {
-                            @Override
-                            public void onSuccess() {
+                        if (!((Activity) context).isFinishing()) {
 
-                                viewHolder.shimmer.setVisibility(View.GONE);
-                                viewHolder.bIvItemImage.setVisibility(View.VISIBLE);
-                            }
+                            viewHolder.bIvItemImage.setVisibility(View.VISIBLE);
+                            viewHolder.shimmer.setVisibility(View.VISIBLE);
 
-                            @Override
-                            public void onError() {
+                            Glide.with(context)
+                                    .load(catalogItem.getItems().getItemImagesList().get(i).getUrl())
+                                    .apply(new RequestOptions().error(R.drawable.icon_noimage).centerCrop())
+                                    .listener(new RequestListener<Drawable>() {
+                                        @Override
+                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                            //on load failed
+                                            viewHolder.shimmer.setVisibility(View.GONE);
+                                            viewHolder.bIvItemImage.setVisibility(View.VISIBLE);
+                                            viewHolder.bIvItemImage.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_noimage));
+                                            return false;
+                                        }
 
-                                viewHolder.bIvItemImage.setVisibility(View.VISIBLE);
-                                viewHolder.bIvItemImage.setImageResource(R.drawable.icon_noimage);
-                            }
-                        });
+                                        @Override
+                                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                            //on load success
+                                            viewHolder.shimmer.setVisibility(View.GONE);
+                                            viewHolder.bIvItemImage.setVisibility(View.VISIBLE);
+                                            return false;
+                                        }
+                                    })
+                                    .into(viewHolder.bIvItemImage);
+                        }
+//                        PicassoTrustAll.getInstance(context).load(catalogItem.getItems().getItemImagesList().get(i).getUrl()).into(viewHolder.bIvItemImage, new Callback() {
+//                            @Override
+//                            public void onSuccess() {
+//
+//                                viewHolder.shimmer.setVisibility(View.GONE);
+//                                viewHolder.bIvItemImage.setVisibility(View.VISIBLE);
+//                            }
+//
+//                            @Override
+//                            public void onError() {
+//
+//                                viewHolder.bIvItemImage.setVisibility(View.VISIBLE);
+//                                viewHolder.bIvItemImage.setImageResource(R.drawable.icon_noimage);
+//                            }
+//                        });
+                    } else {
 
+                        viewHolder.shimmer.setVisibility(View.GONE);
+                        viewHolder.bIvItemImage.setVisibility(View.VISIBLE);
+                        viewHolder.bIvItemImage.setImageResource(R.drawable.icon_noimage);
                     }
                 }
+            } else {
+
+                viewHolder.shimmer.setVisibility(View.GONE);
+                viewHolder.bIvItemImage.setVisibility(View.VISIBLE);
+                viewHolder.bIvItemImage.setImageResource(R.drawable.icon_noimage);
             }
 
             // to set itemPrice
@@ -163,7 +207,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 viewHolder.tvPrice.setText("₹ " + convertAmountToDecimals(amount));
                 viewHolder.tvPrice.setPaintFlags(viewHolder.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 String price = String.valueOf(catalogItem.getItems().getPromotionalPrice());
-                viewHolder.tvDiscountedPrice.setText("₹ " +convertAmountToDecimals(price));
+                viewHolder.tvDiscountedPrice.setText("₹ " + convertAmountToDecimals(price));
 
             } else {
                 viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
@@ -338,6 +382,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         return isLoading ? 10 : itemsList.size();
     }
 
+    @Override
+    public void onViewRecycled(@NonNull ViewHolder holder) {
+        super.onViewRecycled(holder);
+        Glide.with(context).clear(holder.bIvItemImage);
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -348,7 +398,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         private CardView cvCard;
         private FrameLayout flAdd;
         private SkeletonLoadingView shimmer;
-        private LinearLayout llLoader,llActionPreventor;
+        private LinearLayout llLoader, llActionPreventor;
         private RelativeLayout rlTag;
         private CustomTextViewMedium tvTag;
 

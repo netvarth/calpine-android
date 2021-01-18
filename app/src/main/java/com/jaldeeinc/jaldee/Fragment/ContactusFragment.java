@@ -58,10 +58,8 @@ public class ContactusFragment extends RootFragment {
             }
         });
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-Bold.ttf");
         tv_title.setTypeface(tyface1);
-        txt_appname.setTypeface(tyface1);
-        txtreach.setTypeface(tyface1);
 
 
         ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);

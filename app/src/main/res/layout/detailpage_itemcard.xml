@@ -4,8 +4,8 @@
     android:id="@+id/cv_card"
     android:layout_width="200dp"
     android:layout_height="200dp"
-    android:layout_margin="2dp"
     android:layout_gravity="center"
+    android:layout_margin="2dp"
     app:cardBackgroundColor="@color/white"
     app:cardElevation="6dp">
 
@@ -18,28 +18,34 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.jaldeeinc.jaldee.custom.BorderImageView
-                android:id="@+id/iv_itemImage"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginStart="@dimen/dimen_4dp"
-                android:layout_marginTop="@dimen/dimen_4dp"
-                android:layout_marginEnd="@dimen/dimen_4dp"
-                android:scaleType="centerCrop"
-                android:visibility="visible">
+                android:layout_height="100dp">
 
-            </com.jaldeeinc.jaldee.custom.BorderImageView>
+                <com.jaldeeinc.jaldee.custom.BorderImageView
+                    android:id="@+id/iv_itemImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_marginStart="@dimen/dimen_4dp"
+                    android:layout_marginTop="@dimen/dimen_4dp"
+                    android:layout_marginEnd="@dimen/dimen_4dp"
+                    android:scaleType="centerCrop"
+                    android:visibility="visible">
+
+                </com.jaldeeinc.jaldee.custom.BorderImageView>
 
 
-            <com.omjoonkim.skeletonloadingview.SkeletonLoadingView
-                android:id="@+id/shimmer"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:visibility="gone"
-                app:baseColor="#F4F4F4"
-                app:deepColor="@color/white">
+                <com.omjoonkim.skeletonloadingview.SkeletonLoadingView
+                    android:id="@+id/shimmer"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:visibility="gone"
+                    app:baseColor="#F4F4F4"
+                    app:deepColor="@color/white">
 
-            </com.omjoonkim.skeletonloadingview.SkeletonLoadingView>
+                </com.omjoonkim.skeletonloadingview.SkeletonLoadingView>
+
+            </FrameLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -193,8 +199,8 @@
         <com.jaldeeinc.jaldee.custom.ShimmerFrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:shimmer_duration="2000"
             app:shimmer_base_alpha="0.8"
+            app:shimmer_duration="2000"
             app:shimmer_highlight_color="@color/white">
 
             <RelativeLayout
@@ -223,9 +229,9 @@
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:paddingBottom="@dimen/dimen_2dp"
                     android:paddingStart="@dimen/dimen_10dp"
                     android:paddingEnd="@dimen/dimen_5dp"
+                    android:paddingBottom="@dimen/dimen_2dp"
                     android:text=""
                     android:textColor="@color/white"
                     android:textSize="@dimen/dimen_10dp">

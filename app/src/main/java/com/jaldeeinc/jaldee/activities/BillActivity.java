@@ -969,10 +969,9 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     public void onPaymentSuccess(String razorpayPaymentID, PaymentData paymentData) {
         Log.i("mani", "here");
         try {
-//            Log.i("Success1111",  new Gson().toJson(paymentData));
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
             new PaymentGateway(mCOntext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
-            Toast.makeText(mCOntext, "Payment Successful. Payment Id:" + razorpayPaymentID, Toast.LENGTH_LONG).show();
+            Toast.makeText(mCOntext, "Payment Successful", Toast.LENGTH_LONG).show();
             paymentFinished(razorpayModel);
 
         } catch (Exception e) {
@@ -983,8 +982,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     @Override
     public void onPaymentError(int code, String response, PaymentData paymentData) {
         try {
-//            Log.i("here.....", new Gson().toJson(paymentData));
-            Toast.makeText(mCOntext, "Payment failed: " + code + " " + response, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mCOntext, "Payment failed ", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
         }

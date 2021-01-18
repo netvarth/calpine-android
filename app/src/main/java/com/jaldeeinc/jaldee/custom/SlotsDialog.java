@@ -361,13 +361,17 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface,OnBottom
                                     rvSlots.setAdapter(sAdapter);
                                 } else {
 
-                                    rvSlots.setVisibility(View.GONE);
-                                    llNoSlots.setVisibility(View.VISIBLE);
-                                    tvDate.setVisibility(View.GONE);
-                                    tvTime.setVisibility(View.GONE);
-                                    cvConfirm.setVisibility(View.GONE);
+                                    showNoSlots();
+
                                 }
+                            } else {
+
+                                showNoSlots();
                             }
+                        } else {
+
+                            showNoSlots();
+
                         }
 
                     } else {
@@ -385,6 +389,16 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface,OnBottom
                     Config.closeDialog(getOwnerActivity(), mDialog);
             }
         });
+    }
+
+    public void showNoSlots(){
+
+        rvSlots.setVisibility(View.GONE);
+        llNoSlots.setVisibility(View.VISIBLE);
+        tvDate.setVisibility(View.GONE);
+        tvTime.setVisibility(View.GONE);
+        cvConfirm.setVisibility(View.GONE);
+
     }
 
     private String getDisplayTime(String slotTime) {

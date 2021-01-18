@@ -255,6 +255,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     @BindView(R.id.txtservicepayment)
     CustomTextViewMedium txtservicepayment;
 
+    @BindView(R.id.tv_vsHint)
+    CustomTextViewMedium tvVsHint;
+
     static CustomTextViewMedium txtprepayamount;
     static CustomTextViewMedium txtserviceamount;
 
@@ -433,6 +436,14 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp") || checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Phone")) {
 
                         llVirtualNumber.setVisibility(View.VISIBLE);
+
+                        if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
+                            tvVsHint.setText("WhatsApp number");
+                        } else {
+
+                            tvVsHint.setText("Contact number");
+                        }
+
                     } else {
                         llVirtualNumber.setVisibility(View.GONE);
                     }
@@ -1414,6 +1425,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
     private void ApiCheckin(final String txt_addnote, int id) {
 
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
         String number = etVirtualNumber.getText().toString();
         uuid = UUID.randomUUID().toString();
         String virtual_code = et_countryCode.getText().toString();
@@ -1425,23 +1438,19 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             DynamicToast.make(CheckInActivity.this, "Country code needed", AppCompatResources.getDrawable(
                     CheckInActivity.this, R.drawable.ic_info_black),
                     ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+            mDialog.dismiss();
             return;
         }
         if(!virtual_code.matches("^(\\+)?(\\d{1,3})$")){
             DynamicToast.make(CheckInActivity.this, "Please enter valid Country code", AppCompatResources.getDrawable(
                     CheckInActivity.this, R.drawable.ic_info_black),
                     ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+            mDialog.dismiss();
             return;
         }
 
 
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
 
         JSONObject qjsonObj = new JSONObject();
         JSONObject queueobj = new JSONObject();
@@ -1483,10 +1492,18 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                 }
             } else {
-                DynamicToast.make(CheckInActivity.this, "Invalid phone number", AppCompatResources.getDrawable(
+
+                String modeOfCalling = "";
+                if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("whatsApp")){
+                    modeOfCalling = "Invalid WhatsApp number";
+                } else {
+                    modeOfCalling = "Invalid Contact number";
+                }
+                DynamicToast.make(CheckInActivity.this, modeOfCalling, AppCompatResources.getDrawable(
                             CheckInActivity.this, R.drawable.ic_info_black),
                             ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
-                    return;
+                mDialog.dismiss();
+                return;
             }
 
             JSONArray couponList = new JSONArray();
@@ -2588,7 +2605,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         countryCode = conCode;
         tvNumber.setText( countryCode + " " + phoneNumber);
         et_countryCode.setText(countryCode);
-        etVirtualNumber.setText(phoneNumber);
 
         if(!emailId.equalsIgnoreCase("")) {
             tvEmail.setText(emailId);
@@ -2632,4 +2648,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 //        tvConsumerName.setVisibility(View.GONE);
 
     }
+
+
 }

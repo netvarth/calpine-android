@@ -27,6 +27,10 @@ android {
         }
     }
 
+    dexOptions {// Prevent OutOfMemory with MultiDex during the build phase
+        javaMaxHeapSize "4g"
+    }
+
 }
 
 dependencies {
