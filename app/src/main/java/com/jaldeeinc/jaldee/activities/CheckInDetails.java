@@ -272,16 +272,15 @@ public class CheckInDetails extends AppCompatActivity {
                 try {
                     Intent intent = new Intent(CheckInDetails.this, ChatActivity.class);
 
-                    if(activeCheckIn.getYnwUuid().contains("h_")){
-                         uuid = activeCheckIn.getYnwUuid().replace("h_","");
+                    if (activeCheckIn.getYnwUuid().contains("h_")) {
+                        uuid = activeCheckIn.getYnwUuid().replace("h_", "");
                         intent.putExtra("uuid", uuid);
-                    }
-                    else {
+                    } else {
                         intent.putExtra("uuid", activeCheckIn.getYnwUuid());
                     }
                     intent.putExtra("accountId", activeCheckIn.getProviderAccount().getId());
                     intent.putExtra("name", activeCheckIn.getProviderAccount().getBusinessName());
-                    intent.putExtra("from",Constants.CHECKIN);
+                    intent.putExtra("from", Constants.CHECKIN);
                     startActivity(intent);
 
                 } catch (Exception e) {
@@ -554,7 +553,11 @@ public class CheckInDetails extends AppCompatActivity {
                     if (checkInInfo.getService().getServiceType() != null && checkInInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
 
                         if (isActive) {
-                            cvMeetingDetails.setVisibility(View.VISIBLE);
+                            if (checkInInfo.getWaitlistStatus() != null && checkInInfo.getWaitlistStatus().equalsIgnoreCase("done")) {
+                                cvMeetingDetails.setVisibility(View.GONE);
+                            } else {
+                                cvMeetingDetails.setVisibility(View.VISIBLE);
+                            }
                         } else {
                             cvMeetingDetails.setVisibility(View.GONE);
                         }
@@ -604,13 +607,10 @@ public class CheckInDetails extends AppCompatActivity {
                         tvStatus.setTextColor(mContext.getResources().getColor(R.color.red));
                         tvStatus.setText(convertToTitleForm(checkInInfo.getWaitlistStatus()));
 
-                    }
-                    else if(checkInInfo.getWaitlistStatus().equalsIgnoreCase("done")) {
+                    } else if (checkInInfo.getWaitlistStatus().equalsIgnoreCase("done")) {
                         tvStatus.setText("Completed");
                         tvStatus.setTextColor(mContext.getResources().getColor(R.color.location_theme));
-                    }
-
-                    else {
+                    } else {
                         tvStatus.setTextColor(mContext.getResources().getColor(R.color.location_theme));
                         tvStatus.setText(convertToTitleForm(checkInInfo.getWaitlistStatus()));
                     }
@@ -652,16 +652,15 @@ public class CheckInDetails extends AppCompatActivity {
                         tvHint.setText("Token #");
                         tvTime.setText(String.valueOf(checkInInfo.getToken()));
                         tvTime.setGravity(Gravity.CENTER_HORIZONTAL);
-                        if (!checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("done") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("started")){
+                        if (!checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("done") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("started")) {
                             tvTokenWaitTime.setVisibility(View.VISIBLE);
-                        if (checkInInfo.getAppxWaitingTime() == 1) {
-                            tvTokenWaitTime.setText("Est wait time : " + Config.getTimeinHourMinutes(checkInInfo.getAppxWaitingTime()));
+                            if (checkInInfo.getAppxWaitingTime() == 1) {
+                                tvTokenWaitTime.setText("Est wait time : " + Config.getTimeinHourMinutes(checkInInfo.getAppxWaitingTime()));
 
+                            } else {
+                                tvTokenWaitTime.setText("Est wait time : " + Config.getTimeinHourMinutes(checkInInfo.getAppxWaitingTime()));
+                            }
                         } else {
-                            tvTokenWaitTime.setText("Est wait time : " + Config.getTimeinHourMinutes(checkInInfo.getAppxWaitingTime()));
-                        }
-                    }
-                        else{
                             tvTokenWaitTime.setVisibility(View.GONE);
                         }
 
@@ -675,11 +674,10 @@ public class CheckInDetails extends AppCompatActivity {
                     tvTitle.setText("CheckIn Details");
                     isToken = false;
                     tvHint.setText("Est wait time");
-                    if (!checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("done") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("started")){
+                    if (!checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("done") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("started")) {
                         tvTime.setVisibility(View.VISIBLE);
                         tvHint.setVisibility(View.VISIBLE);
-                    }
-                    else{
+                    } else {
                         tvTime.setVisibility(View.GONE);
                         tvHint.setVisibility(View.GONE);
                     }
@@ -828,17 +826,16 @@ public class CheckInDetails extends AppCompatActivity {
                     }
                 });
 
-                if(checkInInfo.isPrescShared()){
+                if (checkInInfo.isPrescShared()) {
                     llPrescription.setVisibility(View.VISIBLE);
-                }
-                else{
+                } else {
                     hideView(llPrescription);
                 }
 
                 llPrescription.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        prescriptionDialog = new PrescriptionDialog(mContext,isActive,checkInInfo,"checkin");
+                        prescriptionDialog = new PrescriptionDialog(mContext, isActive, checkInInfo, "checkin");
                         prescriptionDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
                         prescriptionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         prescriptionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -912,7 +909,7 @@ public class CheckInDetails extends AppCompatActivity {
                         edt_message.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void afterTextChanged(Editable arg0) {
-                                if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating!=null && rating.getRating()!=0) {
+                                if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating != null && rating.getRating() != 0) {
                                     btn_rate.setEnabled(true);
                                     btn_rate.setClickable(true);
                                     btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
@@ -936,12 +933,11 @@ public class CheckInDetails extends AppCompatActivity {
                             rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                                 @Override
                                 public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                                    if(edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating.getRating() != 0){
+                                    if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating.getRating() != 0) {
                                         btn_rate.setEnabled(true);
                                         btn_rate.setClickable(true);
                                         btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
-                                    }
-                                    else{
+                                    } else {
                                         btn_rate.setEnabled(false);
                                         btn_rate.setClickable(false);
                                         btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
@@ -1034,7 +1030,7 @@ public class CheckInDetails extends AppCompatActivity {
     // for zoom and GMeet
     public void showMeetingDetailsWindow(ActiveCheckIn activeCheckIn, String mode, TeleServiceCheckIn meetingDetails) {
 
-        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(),activeCheckIn.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
+        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
         meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
         meetingDetailsWindow.show();
         meetingDetailsWindow.setCancelable(false);
@@ -1047,9 +1043,9 @@ public class CheckInDetails extends AppCompatActivity {
     public void showMeetingWindow(ActiveCheckIn activeCheckIn, String mode, TeleServiceCheckIn meetingDetails) {
 
         if (mode.equalsIgnoreCase("WhatsApp")) {
-            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getWhatsApp(),activeCheckIn.getService().getVirtualServiceType(),activeCheckIn.getCountryCode(), Constants.CHECKIN);
+            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getWhatsApp(), activeCheckIn.getService().getVirtualServiceType(), activeCheckIn.getCountryCode(), Constants.CHECKIN);
         } else {
-            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getPhone(),"", activeCheckIn.getCountryCode(),Constants.CHECKIN);
+            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getPhone(), "", activeCheckIn.getCountryCode(), Constants.CHECKIN);
         }
         meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
         meetingInfo.show();

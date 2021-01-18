@@ -543,7 +543,11 @@ public class BookingDetails extends AppCompatActivity {
                     if (appointmentInfo.getService().getServiceType() != null && appointmentInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
 
                         if (isActive) {
-                            cvMeetingDetails.setVisibility(View.VISIBLE);
+                            if (appointmentInfo.getApptStatus() != null && appointmentInfo.getApptStatus().equalsIgnoreCase("done")) {
+                                cvMeetingDetails.setVisibility(View.GONE);
+                            } else {
+                                cvMeetingDetails.setVisibility(View.VISIBLE);
+                            }
                         } else {
                             cvMeetingDetails.setVisibility(View.GONE);
                         }
