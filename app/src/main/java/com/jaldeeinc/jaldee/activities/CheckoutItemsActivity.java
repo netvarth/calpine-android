@@ -282,7 +282,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         tvChangeAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                getAddressList();
                 showAddressDialog();
 
             }
