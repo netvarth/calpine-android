@@ -35,7 +35,7 @@ import retrofit2.Response;
 
 public class MobileNumberDialog extends Dialog {
     Context context;
-    EditText phone, et_countryCode;
+    EditText phone;
     Button btnsave;
     DatabaseHandler db;
     ProfileModel profileDetails;
@@ -60,8 +60,6 @@ public class MobileNumberDialog extends Dialog {
         phone = findViewById(R.id.et_phoneNumber);
         btnsave = findViewById(R.id.btnSave);
         tvErrorMessage = findViewById(R.id.error_mesg);
-        et_countryCode = findViewById(R.id.et_Ccode);
-        cCodePicker = findViewById(R.id.ccp);
 
         Typeface tyface = Typeface.createFromAsset(context.getAssets(),
                 "fonts/JosefinSans-SemiBold.ttf");
@@ -69,29 +67,14 @@ public class MobileNumberDialog extends Dialog {
         phone.setTypeface(tyface);
         btnsave.setTypeface(tyface);
 
-        if(countryCode!=null){
-            et_countryCode.setText(countryCode);
-        }
-
-        et_countryCode.addTextChangedListener(new TextWatcher() {
+        cCodePicker = findViewById(R.id.ccp);
+        cCodePicker.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                 et_countryCode.setVisibility(View.GONE);
-                 cCodePicker.setVisibility(View.VISIBLE);
-                 countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
+            public void onCountrySelected() {
+                countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
             }
         });
-
+        countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
 
 
         cCodePicker.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
@@ -120,7 +103,6 @@ public class MobileNumberDialog extends Dialog {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 cCodePicker.setVisibility(View.VISIBLE);
                 countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
-                et_countryCode.setVisibility(View.GONE);
             }
 
             @Override
