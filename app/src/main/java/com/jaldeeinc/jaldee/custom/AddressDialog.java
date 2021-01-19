@@ -26,6 +26,7 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.Address;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -177,14 +178,22 @@ public class AddressDialog extends Dialog implements IEditAddress {
             if (mobileNumber.trim().length() > 9) {
                 tvErrorMessage.setVisibility(View.GONE);
 
-                if (isValidEmail(email)){
+                if (isValidEmail(email)) {
                     tvErrorMessage.setVisibility(View.GONE);
-                    if (isEdit) {
 
-                        saveEditedAddress(firstName, lastName, email, mobileNumber, address, city, pinCode, landMark);
+                    if (isValidPostalCode(pinCode)) {
+                        tvErrorMessage.setVisibility(View.GONE);
 
-                    } else {
-                        saveAddress(firstName, lastName, email, mobileNumber, address, city, pinCode, landMark);
+                        if (isEdit) {
+                            saveEditedAddress(firstName, lastName, email, mobileNumber, address, city, pinCode, landMark);
+                        } else {
+                            saveAddress(firstName, lastName, email, mobileNumber, address, city, pinCode, landMark);
+                        }
+                    }else {
+
+                        tvErrorMessage.setVisibility(View.VISIBLE);
+                        tvErrorMessage.setText("Enter a valid postal code");
+                        tvErrorMessage.setAnimation(animShake);
                     }
                 } else {
 
@@ -394,5 +403,8 @@ public class AddressDialog extends Dialog implements IEditAddress {
 
     public static boolean isValidEmail(CharSequence target) {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+    }
+    public static boolean isValidPostalCode(CharSequence target) {
+        return (Pattern.matches("^[1-9]{1}[0-9]{2}\\s{0,1}[0-9]{3}$", target));
     }
 }
