@@ -194,6 +194,9 @@ public class CheckInDetails extends AppCompatActivity {
     @BindView(R.id.ll_prescription)
     LinearLayout llPrescription;
 
+    @BindView(R.id.ll_viewMore)
+    LinearLayout llMore;
+
     boolean firstTimeRating = false;
 
     private InstructionsDialog instructionsDialog;
@@ -326,9 +329,16 @@ public class CheckInDetails extends AppCompatActivity {
         tvViewMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (llMoreDetails.getVisibility() != View.VISIBLE) {
 
-                tvViewMore.setVisibility(View.GONE);
-                llMoreDetails.setVisibility(View.VISIBLE);
+                    llMoreDetails.setVisibility(View.VISIBLE);
+                    tvViewMore.setText("View Less");
+
+                }else{
+
+                    llMoreDetails.setVisibility(View.GONE);
+                    tvViewMore.setText("View More");
+                }
             }
         });
 

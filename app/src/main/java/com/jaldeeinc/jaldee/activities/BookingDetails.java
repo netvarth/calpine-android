@@ -318,9 +318,15 @@ public class BookingDetails extends AppCompatActivity {
         tvViewMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (llMoreDetails.getVisibility() != View.VISIBLE) {
 
-                tvViewMore.setVisibility(View.GONE);
-                llMoreDetails.setVisibility(View.VISIBLE);
+                    llMoreDetails.setVisibility(View.VISIBLE);
+                    tvViewMore.setText("View Less");
+                }else {
+
+                    llMoreDetails.setVisibility(View.GONE);
+                    tvViewMore.setText("View More");
+                }
             }
         });
 
