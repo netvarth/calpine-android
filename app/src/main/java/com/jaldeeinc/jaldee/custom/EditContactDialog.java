@@ -103,7 +103,7 @@ public class EditContactDialog extends Dialog {
 
         if (!countryCode.trim().equalsIgnoreCase("") && !mail.trim().equalsIgnoreCase("")) {
 
-            if (number.trim().length() > 9) {
+            if (number.trim().length() > 9 && android.util.Patterns.PHONE.matcher(number).matches()) {
 
                 tvError.setVisibility(View.GONE);
 
