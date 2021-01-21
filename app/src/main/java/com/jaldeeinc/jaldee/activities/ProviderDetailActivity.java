@@ -329,6 +329,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                 if (llMore.getVisibility() != View.VISIBLE) {
                     llMore.setVisibility(View.VISIBLE);
+                    tvMoreInfo.setText("less info");
 //                    int size = domainVirtual.size();
 //                    if (size > 0) {
 //                        llMore.setVisibility(View.VISIBLE);
@@ -337,6 +338,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 //                    }
                 } else {
                     llMore.setVisibility(View.GONE);
+                    tvMoreInfo.setText("more info");
+
                 }
             }
         });
