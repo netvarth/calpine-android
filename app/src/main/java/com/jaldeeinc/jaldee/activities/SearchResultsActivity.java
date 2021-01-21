@@ -903,7 +903,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
 
 //                        Config.logV("Response--Body AWS-------------------------" + new Gson().toJson(response.body()));
 
-                        Config.logV("Status" + response.body().getStatus().getRid());
+//                        Config.logV("Status" + response.body().getStatus().getRid());
 
                         Config.logV("Found @@@@@@@@@@@@@@@@@@" + response.body().getHits().getFound());
                         total_foundcount = response.body().getHits().getFound();

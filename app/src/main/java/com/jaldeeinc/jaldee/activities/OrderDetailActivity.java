@@ -198,7 +198,7 @@ public class OrderDetailActivity extends AppCompatActivity {
 
                         storeInfo = response.body();
                         if (storeInfo != null) {
-                            storeDetailsDialog = new StoreDetailsDialog(mContext,storeInfo);
+                            storeDetailsDialog = new StoreDetailsDialog(mContext, storeInfo);
                             storeDetailsDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
                             storeDetailsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                             storeDetailsDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -273,12 +273,14 @@ public class OrderDetailActivity extends AppCompatActivity {
 
                 // to set items
 //                gridLayoutManager = new GridLayoutManager(mContext, 2);
-                ordersAdapter = new OrdersAdapter(orderInfo.getItemsList(), mContext, false);
+                if (orderInfo.getItemsList() != null) {
+                    ordersAdapter = new OrdersAdapter(orderInfo.getItemsList(), mContext, false);
 //                rvItems.setLayoutManager(gridLayoutManager);
-                rvItems.setAdapter(ordersAdapter);
-                rvItems.setItemTransformer(new ScaleTransformer.Builder()
-                        .setMinScale(0.8f)
-                        .build());
+                    rvItems.setAdapter(ordersAdapter);
+                    rvItems.setItemTransformer(new ScaleTransformer.Builder()
+                            .setMinScale(0.8f)
+                            .build());
+                }
 
 
                 if (orderInfo.getOrderNumber() != null) {

@@ -70,71 +70,72 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
     public void onBindViewHolder(final InboxAdapter.MyViewHolder myViewHolder, final int position) {
 
         if (!isLoading) {
-        final InboxModel inboxList = mInboxList.get(position);
+            final InboxModel inboxList = mInboxList.get(position);
 
             setAnimation(myViewHolder.cvCard, position);
 
 
             myViewHolder.tv_message.setText(Html.fromHtml(inboxList.getMsg()));
 //        Log.i("kingiii",new Gson().toJson(inboxList.getAttachments()));
-        myViewHolder.tv_message.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), ChatActivity.class);
-                intent.putExtra("uuid", inboxList.getWaitlistId());
-                intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
-                intent.putExtra("name", inboxList.getAccountName());
-                if (inboxList.getWaitlistId().contains("_wl")) {
-                    intent.putExtra("from", Constants.CHECKIN);
-                } else if (inboxList.getWaitlistId().contains("_appt")) {
-                    intent.putExtra("from", Constants.APPOINTMENT);
-                }
-                intent.putExtra("from1", Constants.INBOX);
-                view.getContext().startActivity(intent);
-            }
-        });
+            myViewHolder.tv_message.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-
-        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(inboxList.getTimeStamp());
-        myViewHolder.tv_date.setText(formatter.format(calendar.getTime()));
-
-        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        myViewHolder.tv_provider.setTypeface(tyface);
-
-
-        // String cap_Provider = inboxList.getUserName().substring(0, 1).toUpperCase() + inboxList.getUserName().substring(1);
-        myViewHolder.tv_provider.setText(toTitleCase(inboxList.getAccountName()));
-        myViewHolder.linear_inbox_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                DatabaseHandler db = new DatabaseHandler(mContext);
-                //Config.logV("inboxList.getUniqueID()"+inboxList.getUniqueID());
-                mDetailInboxList = db.getInboxDetail(inboxList.getUniqueID());
-                if (DetailInboxList.setInboxList(mDetailInboxList)) {
-                    Intent intent = new Intent(v.getContext(), ChatActivity.class);
-                    intent.putExtra("uuid", inboxList.getWaitlistId());
-                    intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
-                    intent.putExtra("name", inboxList.getAccountName());
                     if (inboxList.getWaitlistId() != null) {
+                        Intent intent = new Intent(view.getContext(), ChatActivity.class);
+                        intent.putExtra("uuid", inboxList.getWaitlistId());
+                        intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
+                        intent.putExtra("name", inboxList.getAccountName());
                         if (inboxList.getWaitlistId().contains("_wl")) {
                             intent.putExtra("from", Constants.CHECKIN);
                         } else if (inboxList.getWaitlistId().contains("_appt")) {
                             intent.putExtra("from", Constants.APPOINTMENT);
                         }
-                        intent.putExtra("from1",Constants.INBOX);
+                        intent.putExtra("from1", Constants.INBOX);
+                        view.getContext().startActivity(intent);
                     }
-                    mContext.startActivity(intent);
-
                 }
+            });
 
 
-            }
-        });
+            DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(inboxList.getTimeStamp());
+            myViewHolder.tv_date.setText(formatter.format(calendar.getTime()));
+
+            Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                    "fonts/Montserrat_Bold.otf");
+            myViewHolder.tv_provider.setTypeface(tyface);
+
+
+            // String cap_Provider = inboxList.getUserName().substring(0, 1).toUpperCase() + inboxList.getUserName().substring(1);
+            myViewHolder.tv_provider.setText(toTitleCase(inboxList.getAccountName()));
+            myViewHolder.linear_inbox_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    DatabaseHandler db = new DatabaseHandler(mContext);
+                    mDetailInboxList = db.getInboxDetail(inboxList.getUniqueID());
+                    if (DetailInboxList.setInboxList(mDetailInboxList)) {
+                        if (inboxList.getWaitlistId() != null) {
+                            Intent intent = new Intent(v.getContext(), ChatActivity.class);
+                            intent.putExtra("uuid", inboxList.getWaitlistId());
+                            intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
+                            intent.putExtra("name", inboxList.getAccountName());
+                            if (inboxList.getWaitlistId() != null) {
+                                if (inboxList.getWaitlistId().contains("_wl")) {
+                                    intent.putExtra("from", Constants.CHECKIN);
+                                } else if (inboxList.getWaitlistId().contains("_appt")) {
+                                    intent.putExtra("from", Constants.APPOINTMENT);
+                                }
+                                intent.putExtra("from1", Constants.INBOX);
+                            }
+                            mContext.startActivity(intent);
+                        }
+                    }
+                }
+            });
 
         } else {
             InboxAdapter.MyViewHolder skeletonViewHolder = (InboxAdapter.MyViewHolder) myViewHolder;
@@ -148,7 +149,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
 
     @Override
     public int getItemCount() {
-        return  isLoading ? 15 : mInboxList.size();
+        return isLoading ? 15 : mInboxList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -157,7 +158,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
         LinearLayout linear_inbox_layout;
         private CardView cvCard;
 
-        public MyViewHolder(View view,boolean isLoading) {
+        public MyViewHolder(View view, boolean isLoading) {
             super(view);
             tv_provider = (TextView) view.findViewById(R.id.txt_provider);
             tv_date = (TextView) view.findViewById(R.id.txt_date);

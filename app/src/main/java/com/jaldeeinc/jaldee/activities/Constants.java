@@ -6,6 +6,8 @@ public class Constants {
     // Must change based on release type
     public static final String URL = "https://scale.jaldee.com/";
 
+//    public static final String URL = "http://103.70.197.233/";
+
 
     // Testing Payment Gateway
     public static final String MONEY_HASH = "https://debajyotibasak.000webhostapp.com/PayUMoneyHash.php";
@@ -44,7 +46,8 @@ public class Constants {
     public static final String COUNTRY_CODE = "countryCode";
     public static final String INBOX = "inbox";
 
-
+    public static final String SHOPPINGCART = "SHOPPINGCART";
+    public static final String SHOPPINGLIST = "SHOPPINGLIST";
 
 
     public static final String DEVICE_NAME = "deviceName";

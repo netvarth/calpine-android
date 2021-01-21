@@ -874,7 +874,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     }
                     String accountId = "0";
                     accountId = searchdetailList.getId().split("-")[0];
-                    intent.setData(Uri.parse(Constants.URL + "business/providersignup?" + "claimable=" + claimable + "&accountId=" + accountId + "&sector=" + searchdetailList.getSector() + "&subSector=" + searchdetailList.getSub_sector()));
+                    intent.setData(Uri.parse(Constants.URL + "business/signup?" + "claimable=" + claimable + "&accountId=" + accountId + "&sector=" + searchdetailList.getSectorname() + "&subSector=" + searchdetailList.getSub_sector()));
                     context.startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();

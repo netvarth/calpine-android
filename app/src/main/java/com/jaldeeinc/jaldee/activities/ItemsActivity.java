@@ -260,7 +260,12 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
     protected void onResume() {
         super.onResume();
 
-        refreshData();
+        if (catalogInfo != null && catalogInfo.getOrderType().equalsIgnoreCase(Constants.SHOPPINGCART)) {
+            refreshData();
+        } else {
+
+            rvItems.setVisibility(View.GONE);
+        }
     }
 
 

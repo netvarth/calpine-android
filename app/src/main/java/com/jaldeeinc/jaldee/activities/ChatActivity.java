@@ -99,7 +99,7 @@ public class ChatActivity extends AppCompatActivity {
     ArrayList<String> imagePathLists = new ArrayList<>();
     Bitmap bitmap;
     File f, file;
-    String path,from,from1 = "";
+    String path, from, from1 = "";
     private LinearLayout llNoHistory;
     private ImageView iv_attach;
     BottomSheetDialog dialog;
@@ -140,7 +140,7 @@ public class ChatActivity extends AppCompatActivity {
         rvChatMessages = (RecyclerView) findViewById(R.id.rv_chatMessages);
         messageListAdapter = new MessageListAdapter(mContext, userMessagesList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
-        linearLayoutManager.scrollToPositionWithOffset(0,userMessagesList.size());
+        linearLayoutManager.scrollToPositionWithOffset(0, userMessagesList.size());
         rvChatMessages.setLayoutManager(linearLayoutManager);
         rvChatMessages.getLayoutManager().scrollToPosition(userMessagesList.size() - 1);
         rvChatMessages.setAdapter(messageListAdapter);
@@ -178,11 +178,10 @@ public class ChatActivity extends AppCompatActivity {
                     public void onClick(View v) {
 
                         if (imagePathList != null && imagePathList.size() > 0) {
-                            if(from!=null && from.equalsIgnoreCase(Constants.APPOINTMENT)) {
+                            if (from != null && from.equalsIgnoreCase(Constants.APPOINTMENT)) {
                                 ApiCommunicateAppointment(uuId, String.valueOf(accountID), etMessage.getText().toString());
-                            }
-                            else if(from!=null && from.equalsIgnoreCase(Constants.CHECKIN)){
-                                ApiCommunicateCheckin(uuId,String.valueOf(accountID),etMessage.getText().toString());
+                            } else if (from != null && from.equalsIgnoreCase(Constants.CHECKIN)) {
+                                ApiCommunicateCheckin(uuId, String.valueOf(accountID), etMessage.getText().toString());
                             }
                             tvErrorMessage.setVisibility(View.GONE);
                             imagePathLists = imagePathList;
@@ -292,11 +291,10 @@ public class ChatActivity extends AppCompatActivity {
 
                         if (imagePathList != null && imagePathList.size() > 0) {
 
-                            if(from!=null && from.equalsIgnoreCase(Constants.APPOINTMENT)) {
+                            if (from != null && from.equalsIgnoreCase(Constants.APPOINTMENT)) {
                                 ApiCommunicateAppointment(uuId, String.valueOf(accountID), etMessage.getText().toString());
-                            }
-                            else if(from!=null && from.equalsIgnoreCase(Constants.CHECKIN)){
-                                ApiCommunicateCheckin(uuId,String.valueOf(accountID),etMessage.getText().toString());
+                            } else if (from != null && from.equalsIgnoreCase(Constants.CHECKIN)) {
+                                ApiCommunicateCheckin(uuId, String.valueOf(accountID), etMessage.getText().toString());
                             }
                             tvErrorMessage.setVisibility(View.GONE);
                             imagePathLists = imagePathList;
@@ -318,8 +316,6 @@ public class ChatActivity extends AppCompatActivity {
             }
 
 
-
-
         });
 
         ivSend.setOnClickListener(new View.OnClickListener() {
@@ -328,11 +324,10 @@ public class ChatActivity extends AppCompatActivity {
 
                 if (!etMessage.getText().toString().trim().equalsIgnoreCase("")) {
 
-                    if(from!=null && from.equalsIgnoreCase(Constants.APPOINTMENT)) {
+                    if (from != null && from.equalsIgnoreCase(Constants.APPOINTMENT)) {
                         ApiCommunicateAppointment(uuId, String.valueOf(accountID), etMessage.getText().toString());
-                    }
-                    else if(from!=null && from.equalsIgnoreCase(Constants.CHECKIN)){
-                        ApiCommunicateCheckin(uuId,String.valueOf(accountID),etMessage.getText().toString());
+                    } else if (from != null && from.equalsIgnoreCase(Constants.CHECKIN)) {
+                        ApiCommunicateCheckin(uuId, String.valueOf(accountID), etMessage.getText().toString());
                     }
 
                 }
@@ -386,6 +381,7 @@ public class ChatActivity extends AppCompatActivity {
                 .onSameThread()
                 .check();
     }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
 
@@ -445,10 +441,9 @@ public class ChatActivity extends AppCompatActivity {
                         imagePathList.add(orgFilePath);
 
 
-                        if(imagePathList.size()>0){
+                        if (imagePathList.size() > 0) {
                             tvErrorMessage.setVisibility(View.GONE);
-                        }
-                        else{
+                        } else {
                             tvErrorMessage.setVisibility(View.VISIBLE);
                         }
 
@@ -458,8 +453,7 @@ public class ChatActivity extends AppCompatActivity {
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
 
-                    }
-                    else if (data.getClipData() != null) {
+                    } else if (data.getClipData() != null) {
                         ClipData mClipData = data.getClipData();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
@@ -487,10 +481,9 @@ public class ChatActivity extends AppCompatActivity {
                             }
                             imagePathList.add(orgFilePath);
 
-                            if(imagePathList.size()>0){
+                            if (imagePathList.size() > 0) {
                                 tvErrorMessage.setVisibility(View.GONE);
-                            }
-                            else{
+                            } else {
                                 tvErrorMessage.setVisibility(View.VISIBLE);
                             }
                         }
@@ -519,10 +512,9 @@ public class ChatActivity extends AppCompatActivity {
                 if (path != null) {
                     mImageUri = Uri.parse(path);
                     imagePathList.add(mImageUri.toString());
-                    if(imagePathList.size()>0){
+                    if (imagePathList.size() > 0) {
                         tvErrorMessage.setVisibility(View.GONE);
-                    }
-                    else{
+                    } else {
                         tvErrorMessage.setVisibility(View.VISIBLE);
                     }
                 }
@@ -652,18 +644,12 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-
     private void ApiCommunicateAppointment(String waitListId, String accId, String message) {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         MediaType type = MediaType.parse("*/*");
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
-        if(message.equalsIgnoreCase("")) {
+        if (message.equalsIgnoreCase("")) {
             message = "Please find the attachments";
         }
 
@@ -733,7 +719,7 @@ public class ChatActivity extends AppCompatActivity {
         MediaType type = MediaType.parse("*/*");
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
-        if(message.equalsIgnoreCase("")) {
+        if (message.equalsIgnoreCase("")) {
             message = "Please find the attachments";
         }
         mBuilder.addFormDataPart("message", message);
@@ -796,9 +782,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-
-
-
     private void ApiInboxList() {
 
         Config.logV("API Call");
@@ -831,14 +814,17 @@ public class ChatActivity extends AppCompatActivity {
 
                             for (int i = 0; i < mInboxList.size(); i++) {
 
-                                if (mInboxList.get(i).getWaitlistId() != null) {
-                                    if (from1 != null && from1.equalsIgnoreCase(Constants.INBOX)) {
-                                        inboxModels.add(mInboxList.get(i));
-                                    } else {
-                                        if (mInboxList.get(i).getWaitlistId().equalsIgnoreCase(uuId)) {
+                                if (accountID == Integer.parseInt(mInboxList.get(i).getAccountId())) {
 
-                                            inboxModels.add(mInboxList.get(i));
-                                        }
+                                    if (mInboxList.get(i).getWaitlistId() != null) {
+//                                    if (from1 != null && from1.equalsIgnoreCase(Constants.INBOX)) {
+//                                        inboxModels.add(mInboxList.get(i));
+//                                    } else {
+//                                        if (mInboxList.get(i).getWaitlistId().equalsIgnoreCase(uuId)) {
+
+                                        inboxModels.add(mInboxList.get(i));
+//                                        }
+//                                    }
                                     }
                                 }
                             }
@@ -865,7 +851,7 @@ public class ChatActivity extends AppCompatActivity {
                                     userMessage.setTimeStamp(inbox.getTimeStamp());
                                     userMessagesList.add(userMessage);
 
-                                    if(inbox.getAttachments()!=null && inbox.getAttachments().size()>0){
+                                    if (inbox.getAttachments() != null && inbox.getAttachments().size() > 0) {
                                         userMessage.setAttachments(inbox.getAttachments());
                                     }
 

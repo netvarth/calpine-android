@@ -2046,15 +2046,19 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
             if (query.equals("")) {
                 querycreate = "sector :'" + mDomainSpinner + "'";
             } else {
-                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' custom_id: " + "'" + query + "' enc_uid: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "') sector :'" + mDomainSpinner + "'";
+                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query +  "' (or (prefix field=title " + "'" + query + "') (phrase field=title " + "'" + query + "'))"
+                        + "(or (prefix field=providers " + "'" + query + "') (phrase field=providers " + "'" + query + "'))" + " services: " + "'" + query + "' custom_id: " + "'" + query + "' enc_uid: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "') sector :'" + mDomainSpinner + "'";
             }
         } else {
             if (!query.equals("")) {
-                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' custom_id: " + "'" + query + "' enc_uid: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "')";
+                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "'(or (prefix field=title " + "'" + query + "') (phrase field=title " + "'" + query + "'))"
+                        + "(or (prefix field=providers " + "'" + query + "') (phrase field=providers " + "'" + query + "'))" + " services: " + "'" + query + "' custom_id: " + "'" + query + "' enc_uid: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "')";
+
             } else {
                 querycreate = "";
             }
         }
+
         // String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
         String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
         Bundle bundle = new Bundle();
