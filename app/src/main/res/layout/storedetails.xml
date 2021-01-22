@@ -1,78 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/dimen_25dp"
     android:background="@drawable/top_curved"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/dimen_25dp">
 
     <ImageView
         android:id="@+id/iv_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/close"
-        android:padding="@dimen/padding5"
         android:layout_gravity="end"
         android:layout_marginTop="@dimen/dimen_10dp"
         android:layout_marginEnd="@dimen/dimen_10dp"
-        app:tint="@color/gray">
-
-    </ImageView>
-
+        android:padding="@dimen/padding5"
+        android:src="@drawable/close"
+        app:tint="@color/gray" />
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+        android:id="@+id/ownerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/ownerName"
-        android:maxLines="2"
-        android:ellipsize="end"
-        android:text=""
-        android:textSize="@dimen/dimen_18dp"
+        android:layout_marginStart="@dimen/dimen_15dp"
         android:layout_marginTop="@dimen/padding3"
-        android:textColor="@color/dark_black"
-        android:layout_marginStart="@dimen/dimen_15dp"
-        android:layout_marginEnd="@dimen/dimen_10dp">
-
-    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
-
-    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/address"
-        android:textSize="14dp"
-        android:layout_marginTop="@dimen/dimen_5dp"
-        android:layout_marginStart="@dimen/dimen_15dp"
         android:layout_marginEnd="@dimen/dimen_10dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text=""
+        android:textColor="@color/dark_black"
+        android:textSize="@dimen/dimen_18dp" />
+
+    <LinearLayout
+        android:id="@+id/ll_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ownerName"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_8dp"
         android:visibility="gone">
 
-    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+        <ImageView
+            android:layout_width="@dimen/dimen_15dp"
+            android:layout_height="@dimen/dimen_15dp"
+            android:layout_gravity="center"
+            android:src="@drawable/address"
+            app:tint="@color/dark_blue" />
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-        android:layout_width="match_parent"
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:id="@+id/address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="clip_vertical"
+            android:layout_marginStart="@dimen/dimen_15dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:textSize="14dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_phoneNumber"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/phoneNumber"
-        android:textSize="@dimen/dimen_14sp"
-        android:layout_marginTop="@dimen/dimen_5dp"
-        android:autoLink="phone"
-        android:layout_marginStart="@dimen/dimen_15dp"
-        android:layout_marginEnd="@dimen/dimen_10dp"
-        >
+        android:layout_below="@+id/ll_address"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        android:visibility="gone">
 
-    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+        <ImageView
+            android:layout_width="@dimen/dimen_15dp"
+            android:layout_height="@dimen/dimen_15dp"
+            android:layout_gravity="center"
+            android:src="@drawable/call_icon"
+            app:tint="@color/dark_blue" />
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-        android:layout_width="match_parent"
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:id="@+id/phoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="clip_vertical"
+            android:layout_marginStart="@dimen/dimen_15dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:autoLink="phone"
+            android:textSize="@dimen/dimen_14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_alternatePhoneNumber"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/emailId"
-        android:textSize="@dimen/dimen_14sp"
-        android:autoLink="email"
-        android:layout_marginTop="@dimen/dimen_5dp"
-        android:layout_marginStart="@dimen/dimen_15dp"
-        android:layout_marginEnd="@dimen/dimen_10dp">
+        android:layout_below="@+id/ll_address"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        android:visibility="gone">
 
-    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+        <ImageView
+            android:layout_width="@dimen/dimen_15dp"
+            android:layout_height="@dimen/dimen_15dp"
+            android:layout_gravity="center"
+            android:src="@drawable/call_icon"
+            app:tint="@color/dark_blue" />
 
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:id="@+id/alternatePhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="clip_vertical"
+            android:layout_marginStart="@dimen/dimen_15dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:autoLink="phone"
+            android:textSize="@dimen/dimen_14sp" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/ll_emailId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_alternatePhoneNumber"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        android:visibility="gone">
 
+        <ImageView
+            android:layout_width="@dimen/dimen_15dp"
+            android:layout_height="@dimen/dimen_15dp"
+            android:layout_gravity="center"
+            android:src="@drawable/emailicon_sized"
+            app:tint="@color/dark_blue" />
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:id="@+id/emailId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="clip_vertical"
+            android:layout_marginStart="@dimen/dimen_15dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:autoLink="email"
+            android:textSize="@dimen/dimen_14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_alternateEmailId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_emailId"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="@dimen/dimen_15dp"
+            android:layout_height="@dimen/dimen_15dp"
+            android:layout_gravity="center"
+            android:src="@drawable/emailicon_sized"
+            app:tint="@color/dark_blue" />
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:id="@+id/alternateEmailId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="clip_vertical"
+            android:layout_marginStart="@dimen/dimen_15dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:autoLink="email"
+            android:textSize="@dimen/dimen_14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_whatsAppNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_alternateEmailId"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="@dimen/dimen_15dp"
+            android:layout_height="@dimen/dimen_15dp"
+            android:layout_gravity="center"
+            android:src="@drawable/whatsappicon"
+            app:tint="@color/dark_blue" />
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:id="@+id/whatsAppNo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="clip_vertical"
+            android:layout_marginStart="@dimen/dimen_15dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:autoLink="email"
+            android:textSize="@dimen/dimen_14sp" />
+    </LinearLayout>
 </LinearLayout>

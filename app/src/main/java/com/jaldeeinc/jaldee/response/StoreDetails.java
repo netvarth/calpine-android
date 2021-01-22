@@ -1,6 +1,34 @@
 package com.jaldeeinc.jaldee.response;
 
 public class StoreDetails {
+    String address;
+    String email;
+    String firstName;
+    String lastName;
+    String phone;
+    String primCountryCode;
+    String secCountryCode;
+    String whatsAppCountryCode;
+    String alternatePhone;
+    String alternateEmail;
+    String whatsappNo;
+
+    public void setWhatsappNo(String whatsappNo) {
+        this.whatsappNo = whatsappNo;
+    }
+
+    public String getWhatsappNo() {
+        return whatsappNo;
+    }
+
+    public void setAlternateEmail(String alternateEmail) {
+        this.alternateEmail = alternateEmail;
+    }
+
+    public String getAlternateEmail() {
+        return alternateEmail;
+    }
+
     public String getAddress() {
         return address;
     }
@@ -8,8 +36,6 @@ public class StoreDetails {
     public void setAddress(String address) {
         this.address = address;
     }
-
-    String address;
 
     public String getEmail() {
         return email;
@@ -19,8 +45,6 @@ public class StoreDetails {
         this.email = email;
     }
 
-    String email;
-
     public String getFirstName() {
         return firstName;
     }
@@ -28,8 +52,6 @@ public class StoreDetails {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
-    String firstName;
 
     public String getLastName() {
         return lastName;
@@ -39,8 +61,6 @@ public class StoreDetails {
         this.lastName = lastName;
     }
 
-    String lastName;
-
     public String getPhone() {
         return phone;
     }
@@ -48,8 +68,6 @@ public class StoreDetails {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
-    String phone;
 
     public String getPrimCountryCode() {
         return primCountryCode;
@@ -59,8 +77,6 @@ public class StoreDetails {
         this.primCountryCode = primCountryCode;
     }
 
-    String primCountryCode;
-
     public String getSecCountryCode() {
         return secCountryCode;
     }
@@ -68,8 +84,6 @@ public class StoreDetails {
     public void setSecCountryCode(String secCountryCode) {
         this.secCountryCode = secCountryCode;
     }
-
-    String secCountryCode;
 
     public String getWhatsAppCountryCode() {
         return whatsAppCountryCode;
@@ -79,5 +93,11 @@ public class StoreDetails {
         this.whatsAppCountryCode = whatsAppCountryCode;
     }
 
-    String whatsAppCountryCode;
+    public String getAlternatePhone() {
+        return alternatePhone;
+    }
+    public void setAlternatePhone(String alternatePhone) {
+        this.alternatePhone = alternatePhone;
+    }
+
 }
