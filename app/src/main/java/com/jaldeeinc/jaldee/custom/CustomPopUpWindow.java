@@ -163,17 +163,16 @@ public class CustomPopUpWindow {
                         if (response.body().string().equalsIgnoreCase("true")) {
 
                             Toast.makeText(mContext, "OTP resent to your email", Toast.LENGTH_LONG).show();
-
-
                         }
-
                     }
+                    if (response.code() == 422) {
 
-
+                        String errorString = response.errorBody().string();
+                        Toast.makeText(mContext, errorString, Toast.LENGTH_LONG).show();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
