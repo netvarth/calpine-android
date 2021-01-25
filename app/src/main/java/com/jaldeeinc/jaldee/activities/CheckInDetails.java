@@ -198,6 +198,7 @@ public class CheckInDetails extends AppCompatActivity {
     LinearLayout llMore;
 
     boolean firstTimeRating = false;
+    boolean isTvViewMore = false;
 
     private InstructionsDialog instructionsDialog;
     private CustomerNotes customerNotes;
@@ -333,11 +334,13 @@ public class CheckInDetails extends AppCompatActivity {
 
                     llMoreDetails.setVisibility(View.VISIBLE);
                     tvViewMore.setText("View Less");
+                    isTvViewMore = true;
 
                 }else{
 
                     llMoreDetails.setVisibility(View.GONE);
                     tvViewMore.setText("View More");
+                    isTvViewMore = false;
                 }
             }
         });
@@ -555,7 +558,12 @@ public class CheckInDetails extends AppCompatActivity {
                 }
 
                 tvViewMore.setVisibility(View.VISIBLE);
-                llMoreDetails.setVisibility(View.GONE);
+                if(isTvViewMore){
+                    llMoreDetails.setVisibility(View.VISIBLE);
+                }
+                else {
+                    llMoreDetails.setVisibility(View.GONE);
+                }
 
                 if (checkInInfo.getService() != null) {
                     tvServiceName.setText(checkInInfo.getService().getName());
