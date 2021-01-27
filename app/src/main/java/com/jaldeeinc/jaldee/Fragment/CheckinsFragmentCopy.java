@@ -1420,6 +1420,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+//        mBuilder.addFormDataPart("captions","",body);
         Call<ResponseBody> call = apiService.AppointmentMessage(waitListId, String.valueOf(accountID), requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override

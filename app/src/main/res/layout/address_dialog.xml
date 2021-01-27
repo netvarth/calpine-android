@@ -213,6 +213,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="+91"
+                            android:inputType="none"
+                            android:enabled="false"
                             android:backgroundTint="@color/light_grey"
                             android:textColor="@color/title_color"
                             android:textSize="@dimen/dimen_15dp">

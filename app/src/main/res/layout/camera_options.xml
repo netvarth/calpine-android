@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:background="@drawable/curved_save"
+    android:backgroundTint="@color/white"
+    android:paddingStart="@dimen/dimen_25dp"
+    android:paddingEnd="@dimen/dimen_25dp">
+
+    <LinearLayout
+        android:id="@+id/ll_camera"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/dimen_35dp"
+            android:layout_height="@dimen/dimen_35dp"
+            android:src="@drawable/camera_icon"
+            app:tint="@color/title_color">
+
+        </ImageView>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Camera"
+            android:textColor="@color/title_color"
+            android:textSize="@dimen/dimen_15dp">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="@dimen/dimen_1dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:background="@color/light_gray">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_gallery"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/dimen_35dp"
+            android:layout_height="@dimen/dimen_35dp"
+            android:src="@drawable/icon_attachments_active_new"
+            android:layout_marginBottom="@dimen/dimen_4dp"
+            app:tint="@color/title_color">
+
+        </ImageView>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gallery"
+            android:textColor="@color/title_color"
+            android:textSize="@dimen/dimen_15dp">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+    </LinearLayout>
+
+
+</LinearLayout>

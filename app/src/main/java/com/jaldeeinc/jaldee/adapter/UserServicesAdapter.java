@@ -218,7 +218,7 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
                     viewHolder.tvServiceType.setText("Get Token");
                 } else {
                     viewHolder.tvServiceType.setVisibility(View.VISIBLE);
-                    viewHolder.tvServiceType.setText("Check In");
+                    viewHolder.tvServiceType.setText("Check-in");
                 }
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
 

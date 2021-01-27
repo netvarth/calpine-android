@@ -363,7 +363,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         if (searchdetailList.isShowToken()) {
                             myViewHolder.tvText.setText("Get Token");
                         } else {
-                            myViewHolder.tvText.setText("CheckIn");
+                            myViewHolder.tvText.setText("Check-in");
                         }
 
                         setServices(myViewHolder, searchdetailList.getServices());
@@ -403,7 +403,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     } else if (actionName.equalsIgnoreCase("appointment")) {
 
                         myViewHolder.cvAction.setVisibility(View.VISIBLE);
-                        myViewHolder.tvText.setText("Get Appointment");
+                        myViewHolder.tvText.setText("Appointment");
                         myViewHolder.llEstTime.setVisibility(View.VISIBLE);
                         myViewHolder.llWaitingInLine.setVisibility(View.GONE);
 

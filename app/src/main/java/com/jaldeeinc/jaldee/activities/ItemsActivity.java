@@ -1,29 +1,49 @@
 package com.jaldeeinc.jaldee.activities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
-import com.jaldeeinc.jaldee.Interface.ICartInterface;
+import com.jaldeeinc.jaldee.Interface.IDeleteImagesInterface;
 import com.jaldeeinc.jaldee.Interface.IDialogInterface;
 import com.jaldeeinc.jaldee.Interface.IItemInterface;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
+import com.jaldeeinc.jaldee.adapter.ImagePreviewAdapter;
 import com.jaldeeinc.jaldee.adapter.ItemsAdapter;
 import com.jaldeeinc.jaldee.custom.AutofitTextView;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
@@ -34,19 +54,37 @@ import com.jaldeeinc.jaldee.custom.SelectedItemsDialog;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.CartItemModel;
+import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CatalogItem;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
 import com.squareup.picasso.Callback;
 
+import org.apache.commons.io.IOUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ItemsActivity extends AppCompatActivity implements IItemInterface, IDialogInterface {
+public class ItemsActivity extends AppCompatActivity implements IItemInterface, IDialogInterface, IDeleteImagesInterface {
 
     @BindView(R.id.cv_back)
     CardView cvBack;
@@ -84,6 +122,15 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
     @BindView(R.id.cv_itemsCart)
     CardView cvItemsCart;
 
+    @BindView(R.id.cv_shoppingList)
+    CardView cvShoppingList;
+
+    @BindView(R.id.cv_listCheckout)
+    CardView cvListCheckOut;
+
+    @BindView(R.id.rv_images)
+    RecyclerView rvImages;
+
     @BindView(R.id.ll_viewcart)
     LinearLayout llViewCart;
 
@@ -107,6 +154,22 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
     private DatabaseHandler db;
     private SelectedItemsDialog selectedItemsDialog;
     Typeface font_style;
+    ArrayList<String> imagePathList = new ArrayList<>();
+    ArrayList<String> uploadedImagesList = new ArrayList<>();
+    ArrayList<ShoppingListModel> itemList = new ArrayList<>();
+    private IDeleteImagesInterface iDeleteImagesInterface;
+    private ImagePreviewAdapter mDetailFileAdapter;
+
+    //files related
+    private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
+    String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
+    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
+    private int GALLERY = 1, CAMERA = 2;
+    private Uri mImageUri;
+    File f;
+    String path;
+    Bitmap bitmap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +179,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         mContext = ItemsActivity.this;
         iItemInterface = this;
         iDialogInterface = this;
+        iDeleteImagesInterface = this;
         db = new DatabaseHandler(ItemsActivity.this);
 
         Intent i = getIntent();
@@ -241,7 +305,76 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
             }
         });
 
+        cvShoppingList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                showOptions();
+            }
+        });
+
+        cvListCheckOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (itemList != null && itemList.size() > 0) {
+
+                    Intent intent = new Intent(ItemsActivity.this, CheckoutListActivity.class);
+                    intent.putExtra("IMAGESLIST", itemList);
+                    intent.putExtra("uniqueId", uniqueId);
+                    intent.putExtra("accountId", accountId);
+                    intent.putExtra("catalogId", catalogInfo.getCatLogId());
+                    startActivity(intent);
+                }
+
+            }
+        });
+
     }
+
+    private void showOptions() {
+
+        try {
+
+            Dialog dialog = new Dialog(ItemsActivity.this);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.camera_options);
+            dialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+            DisplayMetrics metrics = ItemsActivity.this.getResources().getDisplayMetrics();
+            int width = (int) (metrics.widthPixels * 1);
+            dialog.getWindow().setGravity(Gravity.BOTTOM);
+            dialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout llGallery = dialog.findViewById(R.id.ll_gallery);
+            LinearLayout llCamera = dialog.findViewById(R.id.ll_camera);
+
+            llCamera.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    openCamera();
+                    dialog.dismiss();
+                }
+            });
+
+            llGallery.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    openGallery();
+                    dialog.cancel();
+                }
+            });
+
+            dialog.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
 
     public void refreshData() {
 
@@ -261,10 +394,47 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         super.onResume();
 
         if (catalogInfo != null && catalogInfo.getOrderType().equalsIgnoreCase(Constants.SHOPPINGCART)) {
+            cvShoppingList.setVisibility(View.GONE);
+            rvItems.setVisibility(View.VISIBLE);
             refreshData();
         } else {
-
             rvItems.setVisibility(View.GONE);
+            cvItemsCart.setVisibility(View.GONE);
+            cvShoppingList.setVisibility(View.VISIBLE);
+            // set selected images in adapter
+            updateImages();
+
+            if (imagePathList != null && imagePathList.size() > 0) {
+                cvListCheckOut.setVisibility(View.VISIBLE);
+            } else {
+                cvListCheckOut.setVisibility(View.GONE);
+            }
+
+            requestMultiplePermissions();
+
+        }
+    }
+
+    private void updateImages() {
+
+        itemList = new ArrayList<>();
+
+        if (imagePathList != null && imagePathList.size() > 0) {
+
+            for (int i = 0;i<imagePathList.size();i++){
+
+                ShoppingListModel model = new ShoppingListModel();
+                model.setImagePath(imagePathList.get(i));
+                model.setCaption("");
+
+                itemList.add(model);
+            }
+
+            mDetailFileAdapter = new ImagePreviewAdapter(itemList, mContext,true,iDeleteImagesInterface);
+            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(ItemsActivity.this, 2);
+            rvImages.setLayoutManager(mLayoutManager);
+            rvImages.setAdapter(mDetailFileAdapter);
+            mDetailFileAdapter.notifyDataSetChanged();
         }
     }
 
@@ -430,4 +600,398 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
 
     }
 
+    // files related
+
+    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
+        //copy file and send new file path
+        String fileName = getFileNameInfo(contentUri);
+        if (!TextUtils.isEmpty(fileName)) {
+            String ext = "";
+            if (fileName.contains(".")) {
+            } else {
+                ext = "." + extension;
+            }
+            File wallpaperDirectoryFile = new File(
+                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
+            copy(context, contentUri, wallpaperDirectoryFile);
+            return wallpaperDirectoryFile.getAbsolutePath();
+        }
+        return null;
+    }
+
+    protected static String getFileNameInfo(Uri uri) {
+        if (uri == null) {
+            return null;
+        }
+        String fileName = null;
+        String path = uri.getPath();
+        int cut = path.lastIndexOf('/');
+        if (cut != -1) {
+            fileName = path.substring(cut + 1);
+        }
+        return fileName;
+    }
+
+    public static void copy(Context context, Uri srcUri, File dstFile) {
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
+            if (inputStream == null) return;
+            FileOutputStream outputStream = new FileOutputStream(dstFile);
+            IOUtils.copy(inputStream, outputStream);
+            inputStream.close();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getRealPathFromURI(Uri contentURI, Activity context) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        @SuppressWarnings("deprecation")
+        Cursor cursor = context.managedQuery(contentURI, projection, null,
+                null, null);
+        if (cursor == null)
+            return null;
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        if (cursor.moveToFirst()) {
+            String s = cursor.getString(column_index);
+            // cursor.close();
+            return s;
+        }
+        // cursor.close();
+        return null;
+    }
+
+
+    public String saveImage(Bitmap myBitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        if (myBitmap != null) {
+            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        }
+        File wallpaperDirectory = new File(
+                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
+        // have the object build the directory structure, if needed.
+        if (!wallpaperDirectory.exists()) {
+            wallpaperDirectory.mkdirs();
+        }
+
+        try {
+            f = new File(wallpaperDirectory, Calendar.getInstance()
+                    .getTimeInMillis() + ".jpg");
+            f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(bytes.toByteArray());
+            MediaScannerConnection.scanFile(mContext,
+                    new String[]{f.getPath()},
+                    new String[]{"image/jpeg"}, null);
+            fo.close();
+            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
+
+            return f.getAbsolutePath();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return "";
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public String getPDFPath(Uri uri) {
+
+        final String id = DocumentsContract.getDocumentId(uri);
+        final Uri contentUri = ContentUris.withAppendedId(
+                Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = mContext.getApplicationContext().getContentResolver().query(contentUri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+    public String getFilePathFromURI(Uri contentUri, Context context) {
+        //copy file and send new file path
+        String fileName = getFileName(contentUri);
+        if (!TextUtils.isEmpty(fileName)) {
+            File copyFile = new File(context.getExternalCacheDir() + File.separator + fileName);
+            //copy(context, contentUri, copyFile);
+            return copyFile.getAbsolutePath();
+        }
+        return null;
+    }
+
+    public String getFileName(Uri uri) {
+        if (uri == null) return null;
+        String fileName = null;
+        String path = uri.getPath();
+        int cut = path.lastIndexOf('/');
+        if (cut != -1) {
+            fileName = path.substring(cut + 1);
+        }
+        return fileName;
+    }
+
+    public String getRealFilePath(Uri uri) {
+        String path = uri.getPath();
+        String[] pathArray = path.split(":");
+        String fileName = pathArray[pathArray.length - 1];
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
+    }
+
+    private void requestMultiplePermissions() {
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted
+                        if (report.areAllPermissionsGranted()) {
+//                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            // show alert dialog navigating to Settings
+                            //openSettingsDialog();fc
+                            Toast.makeText(getApplicationContext(), "You Denied the Permission", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).
+                withErrorListener(new PermissionRequestErrorListener() {
+                    @Override
+                    public void onError(DexterError error) {
+                        Toast.makeText(getApplicationContext(), "Some Error! ", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .onSameThread()
+                .check();
+    }
+
+    public static float getImageSize(Context context, Uri uri) {
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        if (cursor != null) {
+            int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+            cursor.moveToFirst();
+            float imageSize = cursor.getLong(sizeIndex);
+            cursor.close();
+            return imageSize / (1024f * 1024f); // returns size in bytes
+        }
+        return 0;
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //   mTxvBuy.setEnabled(true);
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == GALLERY) {
+            if (data != null) {
+                try {
+                    if (data.getData() != null) {
+                        Uri uri = data.getData();
+                        String orgFilePath = getRealPathFromURI(uri, this);
+                        String filepath = "";//default fileName
+
+                        String mimeType = this.mContext.getContentResolver().getType(uri);
+                        String uriString = uri.toString();
+                        String extension = "";
+                        if (uriString.contains(".")) {
+                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
+                        }
+
+                        if (mimeType != null) {
+                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
+                        }
+                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                            if (orgFilePath == null) {
+                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
+                            }
+                        } else {
+                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        imagePathList.add(orgFilePath);
+
+                        if (imagePathList.size() > 0) {
+//                            tvErrorMessage.setVisibility(View.GONE);
+                        } else {
+//                            tvErrorMessage.setVisibility(View.VISIBLE);
+                        }
+
+                        DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+                        rvImages.setLayoutManager(mLayoutManager);
+                        rvImages.setAdapter(mDetailFileAdapter);
+                        mDetailFileAdapter.notifyDataSetChanged();
+
+                    } else if (data.getClipData() != null) {
+                        ClipData mClipData = data.getClipData();
+                        for (int i = 0; i < mClipData.getItemCount(); i++) {
+                            ClipData.Item item = mClipData.getItemAt(i);
+                            Uri imageUri = item.getUri();
+                            String orgFilePath = getRealPathFromURI(imageUri, this);
+                            String filepath = "";//default fileName
+
+                            String mimeType = mContext.getContentResolver().getType(imageUri);
+                            String uriString = imageUri.toString();
+                            String extension = "";
+                            if (uriString.contains(".")) {
+                                extension = uriString.substring(uriString.lastIndexOf(".") + 1);
+                            }
+
+                            if (mimeType != null) {
+                                extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
+                            }
+                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                                if (orgFilePath == null) {
+                                    orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
+                                }
+                            } else {
+                                Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            imagePathList.add(orgFilePath);
+
+
+                            if (imagePathList.size() > 0) {
+//                                tvErrorMessage.setVisibility(View.GONE);
+                            } else {
+//                                tvErrorMessage.setVisibility(View.VISIBLE);
+                            }
+
+
+                        }
+                        DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+                        rvImages.setLayoutManager(mLayoutManager);
+                        rvImages.setAdapter(mDetailFileAdapter);
+                        mDetailFileAdapter.notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } else if (requestCode == CAMERA) {
+            if (data != null) {
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                //      imageview.setImageBitmap(bitmap);
+                path = saveImage(bitmap);
+                // imagePathList.add(bitmap.toString());
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+//            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
+                if (path != null) {
+                    mImageUri = Uri.parse(path);
+                    imagePathList.add(mImageUri.toString());
+                    if (imagePathList.size() > 0) {
+//                        tvErrorMessage.setVisibility(View.GONE);
+                    } else {
+//                        tvErrorMessage.setVisibility(View.VISIBLE);
+                    }
+                }
+                try {
+                    bytes.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
+                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+                rvImages.setLayoutManager(mLayoutManager);
+                rvImages.setAdapter(mDetailFileAdapter);
+                mDetailFileAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+
+    private void openGallery() {
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{
+                            Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
+
+                    return;
+                } else {
+                    Intent intent = new Intent();
+                    intent.setType("*/*");
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+                }
+            } else {
+
+                Intent intent = new Intent();
+                intent.setType("*/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void openCamera() {
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+
+                    requestPermissions(new String[]{
+                            Manifest.permission.CAMERA}, CAMERA);
+
+                    return;
+                } else {
+                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    Intent cameraIntent = new Intent();
+                    cameraIntent.setType("image/*");
+                    cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                    cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(intent, CAMERA);
+                }
+            } else {
+
+                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                Intent cameraIntent = new Intent();
+                cameraIntent.setType("image/*");
+                cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent, CAMERA);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void delete(int position, String imagePath) {
+        itemList.remove(position);
+        mDetailFileAdapter.notifyDataSetChanged();
+
+        if (imagePathList != null && imagePathList.size() > 0){
+
+            for (int i = 0;i<imagePathList.size();i++){
+
+                if (imagePathList.get(i).equalsIgnoreCase(imagePath)){
+
+                    imagePathList.remove(i);
+                }
+            }
+        }
+    }
 }

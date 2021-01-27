@@ -182,7 +182,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         consumerId = SharedPreference.getInstance(context).getIntValue("consumerId", 0);
         mRecycleFamily = findViewById(R.id.recycle_familyMember);
 
-        if(countryCode!=null){
+        if (countryCode != null) {
             et_countryCode.setText(countryCode);
         }
 
@@ -215,28 +215,24 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         });
 
 
+        et_phone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
 
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                cCodePicker.setVisibility(View.VISIBLE);
+                countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
+                et_countryCode.setVisibility(View.GONE);
+            }
 
-       et_phone.addTextChangedListener(new TextWatcher() {
-           @Override
-           public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            @Override
+            public void afterTextChanged(Editable editable) {
 
-           }
-
-           @Override
-           public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-               cCodePicker.setVisibility(View.VISIBLE);
-               countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
-               et_countryCode.setVisibility(View.GONE);
-           }
-
-           @Override
-           public void afterTextChanged(Editable editable) {
-
-           }
-       });
-
+            }
+        });
 
 
         bt_save.setEnabled(false);
@@ -428,81 +424,84 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
-                        LuserProfileList.clear();
-                        familyMembersList.clear();
-                        familyMembersList = response.body();
-                        FamilyArrayModel family = new FamilyArrayModel();
-                        family.setFirstName(firstName);
-                        family.setLastName(lastName);
-                        family.setId(consumerId);
-                        LuserProfileList.add(family);
-                        if (LuserProfileList.size() > 0) {
 
-                            if (response.body().size() > 0) {
-                                for (int i = 0; i < response.body().size(); i++) {
-                                    FamilyArrayModel family1 = new FamilyArrayModel();
-                                    family1.setFirstName(response.body().get(i).getUserProfile().getFirstName());
-                                    family1.setLastName(response.body().get(i).getUserProfile().getLastName());
-                                    family1.setId(response.body().get(i).getUserProfile().getId());
-                                    LuserProfileList.add(family1);
-                                }
-                            }
-                        }
+                        if (response.body() != null) {
 
-                        LCheckList.clear();
+                            LuserProfileList.clear();
+                            familyMembersList.clear();
+                            familyMembersList = response.body();
+                            FamilyArrayModel family = new FamilyArrayModel();
+                            family.setFirstName(firstName);
+                            family.setLastName(lastName);
+                            family.setId(consumerId);
+                            LuserProfileList.add(family);
+                            if (LuserProfileList.size() > 0) {
 
-                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
-                        mRecycleFamily.setLayoutManager(mLayoutManager);
-
-                        Config.logV("CheckList@@@@@@@@@@@@@@@@@@@@1111" + checkedfamilyList.size());
-                        Config.logV("CheckList@@@@@@@@@@@@@@@@@@@@ LuserProfileList" + LuserProfileList.size());
-                        if (update == 1 || multiple) {
-
-                            for (int j = 0; j < LuserProfileList.size(); j++) {
-                                FamilyArrayModel family1 = new FamilyArrayModel();
-                                family1.setFirstName(LuserProfileList.get(j).getFirstName());
-                                family1.setLastName(LuserProfileList.get(j).getLastName());
-                                family1.setId(LuserProfileList.get(j).getId());
-                                for (int i = 0; i < checkedfamilyList.size(); i++) {
-
-                                    if (checkedfamilyList.get(i).getId() == LuserProfileList.get(j).getId()) {
-                                        family1.setCheck(true);
-                                        Config.logV("Family %%%%%%%%%%%%%%%" + LuserProfileList.get(j).getFirstName());
+                                if (response.body().size() > 0) {
+                                    for (int i = 0; i < response.body().size(); i++) {
+                                        FamilyArrayModel family1 = new FamilyArrayModel();
+                                        family1.setFirstName(response.body().get(i).getUserProfile().getFirstName());
+                                        family1.setLastName(response.body().get(i).getUserProfile().getLastName());
+                                        family1.setId(response.body().get(i).getUserProfile().getId());
+                                        LuserProfileList.add(family1);
                                     }
                                 }
-                                LCheckList.add(family1);
-
                             }
 
-                            Config.logV("Family @@@@" + LCheckList.size());
+                            LCheckList.clear();
 
-                            if (checkedfamilyList.size() > 0) {
-                                bt_save.setBackground(context.getResources().getDrawable(R.drawable.curved_save));
-                                bt_save.setTextColor(context.getResources().getColor(R.color.white));
-                                bt_save.setEnabled(true);
+                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
+                            mRecycleFamily.setLayoutManager(mLayoutManager);
+
+                            Config.logV("CheckList@@@@@@@@@@@@@@@@@@@@1111" + checkedfamilyList.size());
+                            Config.logV("CheckList@@@@@@@@@@@@@@@@@@@@ LuserProfileList" + LuserProfileList.size());
+                            if (update == 1 || multiple) {
+
+                                for (int j = 0; j < LuserProfileList.size(); j++) {
+                                    FamilyArrayModel family1 = new FamilyArrayModel();
+                                    family1.setFirstName(LuserProfileList.get(j).getFirstName());
+                                    family1.setLastName(LuserProfileList.get(j).getLastName());
+                                    family1.setId(LuserProfileList.get(j).getId());
+                                    for (int i = 0; i < checkedfamilyList.size(); i++) {
+
+                                        if (checkedfamilyList.get(i).getId() == LuserProfileList.get(j).getId()) {
+                                            family1.setCheck(true);
+                                            Config.logV("Family %%%%%%%%%%%%%%%" + LuserProfileList.get(j).getFirstName());
+                                        }
+                                    }
+                                    LCheckList.add(family1);
+
+                                }
+
+                                Config.logV("Family @@@@" + LCheckList.size());
+
+                                if (checkedfamilyList.size() > 0) {
+                                    bt_save.setBackground(context.getResources().getDrawable(R.drawable.curved_save));
+                                    bt_save.setTextColor(context.getResources().getColor(R.color.white));
+                                    bt_save.setEnabled(true);
+                                } else {
+                                    bt_save.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                                    bt_save.setTextColor(context.getResources().getColor(R.color.button_grey));
+                                    bt_save.setEnabled(false);
+                                }
+
+
+                                mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(bt_save, LCheckList, multiple, LCheckList, context, (Activity) context, iFamillyListSelected);
                             } else {
-                                bt_save.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
-                                bt_save.setTextColor(context.getResources().getColor(R.color.button_grey));
-                                bt_save.setEnabled(false);
+                                if (memId == 0) {
+                                    memId = consumerId;
+                                }
+
+
+                                Config.logV("memID @@@@@" + memId);
+                                mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(bt_save, update, memId, multiple, LuserProfileList, context, (Activity) context, iFamillyListSelected);
                             }
 
+                            mRecycleFamily.setAdapter(mFamilyAdpater);
+                            mFamilyAdpater.notifyDataSetChanged();
 
-                            mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(bt_save, LCheckList, multiple, LCheckList, context, (Activity) context, iFamillyListSelected);
-                        } else {
-                            if (memId == 0) {
-                                memId = consumerId;
-                            }
-
-
-                            Config.logV("memID @@@@@" + memId);
-                            mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(bt_save, update, memId, multiple, LuserProfileList, context, (Activity) context, iFamillyListSelected);
                         }
-
-                        mRecycleFamily.setAdapter(mFamilyAdpater);
-                        mFamilyAdpater.notifyDataSetChanged();
-
                     }
-
 
                 } catch (
                         Exception e) {

@@ -618,4 +618,9 @@ public interface ApiInterface {
 
     @PUT("consumer/orders/{ynwuuid}")
     Call<ResponseBody> cancelOrder(@Path("ynwuuid") String uid,  @Query("account") int accountId);
+
+    @POST("consumer/orders/shoppingList")
+    Call<ResponseBody> orderList(@Query("account") int account,  @Body RequestBody jsonObj);
+
+
 }

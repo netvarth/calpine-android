@@ -1,0 +1,1592 @@
+package com.jaldeeinc.jaldee.activities;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.provider.MediaStore;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.jaldeeinc.jaldee.Interface.IAddressInterface;
+import com.jaldeeinc.jaldee.Interface.IDeleteImagesInterface;
+import com.jaldeeinc.jaldee.Interface.IEditContact;
+import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
+import com.jaldeeinc.jaldee.Interface.ISelectedTime;
+import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.adapter.AddressAdapter;
+import com.jaldeeinc.jaldee.adapter.ImagePreviewAdapter;
+import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.connection.ApiClient;
+import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.AddressDialog;
+import com.jaldeeinc.jaldee.custom.BorderImageView;
+import com.jaldeeinc.jaldee.custom.CustomEditTextRegular;
+import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
+import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.custom.EditContactDialog;
+import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
+import com.jaldeeinc.jaldee.custom.SlotSelection;
+import com.jaldeeinc.jaldee.custom.StoreDetailsDialog;
+import com.jaldeeinc.jaldee.custom.SuccessDialog;
+import com.jaldeeinc.jaldee.model.Address;
+import com.jaldeeinc.jaldee.model.CartItemModel;
+import com.jaldeeinc.jaldee.model.RazorpayModel;
+import com.jaldeeinc.jaldee.model.ShoppingListModel;
+import com.jaldeeinc.jaldee.payment.PaymentGateway;
+import com.jaldeeinc.jaldee.payment.PaytmPayment;
+import com.jaldeeinc.jaldee.response.ActiveOrders;
+import com.jaldeeinc.jaldee.response.Catalog;
+import com.jaldeeinc.jaldee.response.OrderResponse;
+import com.jaldeeinc.jaldee.response.PaymentModel;
+import com.jaldeeinc.jaldee.response.ProfileModel;
+import com.jaldeeinc.jaldee.response.Schedule;
+import com.jaldeeinc.jaldee.response.SearchViewDetail;
+import com.jaldeeinc.jaldee.response.StoreDetails;
+import com.jaldeeinc.jaldee.utils.DialogUtilsKt;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
+import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
+import com.razorpay.PaymentData;
+import com.razorpay.PaymentResultWithDataListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import kotlin.Unit;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class CheckoutListActivity extends AppCompatActivity implements IAddressInterface, ISelectedTime, IPaymentResponse, PaymentResultWithDataListener, IEditContact, IDeleteImagesInterface {
+
+
+    private Context mContext;
+    private IAddressInterface iAddressInterface;
+    ArrayList<Address> addressList = new ArrayList<>();
+    private LinearLayoutManager linearLayoutManager;
+    private AddressAdapter addressAdapter;
+
+    @BindView(R.id.rv_items)
+    RecyclerView rvItems;
+
+    @BindView(R.id.iv_spImage)
+    BorderImageView ivSpImage;
+
+    @BindView(R.id.tv_spName)
+    CustomTextViewSemiBold tvSpName;
+
+    @BindView(R.id.tv_locationName)
+    CustomTextViewMedium tvLocationName;
+
+    @BindView(R.id.et_specialNotes)
+    CustomEditTextRegular etSpecialNotes;
+
+    @BindView(R.id.tv_name)
+    CustomTextViewMedium tvName;
+
+    @BindView(R.id.tv_number)
+    CustomTextViewMedium tvMobileNumber;
+
+    @BindView(R.id.tv_mailId)
+    CustomTextViewMedium tvEmailId;
+
+    @BindView(R.id.tv_address)
+    CustomTextViewMedium tvDeliveryAddress;
+
+    @BindView(R.id.tv_storeDetails)
+    CustomTextViewMedium tvStoreDetails;
+
+    @BindView(R.id.tv_phoneNumber)
+    CustomTextViewMedium tvPhoneNumber;
+
+    @BindView(R.id.tv_email)
+    CustomTextViewMedium tvMailId;
+
+    @BindView(R.id.tv_changeAddress)
+    CustomTextViewSemiBold tvChangeAddress;
+
+    @BindView(R.id.ll_storeDetails)
+    LinearLayout llStoreDetails;
+
+    @BindView(R.id.shimmer)
+    SkeletonLoadingView shimmer;
+
+    @BindView(R.id.rl_deliveryFee)
+    RelativeLayout rlDeliveryFee;
+
+    @BindView(R.id.rl_prepayment)
+    RelativeLayout rlPrepayment;
+
+    @BindView(R.id.tv_itemsBill)
+    CustomTextViewMedium tvItemsBill;
+
+    @BindView(R.id.tv_deliveryBill)
+    CustomTextViewMedium tvDeliveryBill;
+
+    @BindView(R.id.tv_bill)
+    CustomTextViewSemiBold tvBill;
+
+    @BindView(R.id.tv_timeSlot)
+    CustomTextViewSemiBold tvTimeSlot;
+
+    @BindView(R.id.tv_changeTime)
+    CustomTextViewSemiBold tvChangeTime;
+
+    @BindView(R.id.rb_group)
+    RadioGroup rbGroup;
+
+    @BindView(R.id.rb_store)
+    RadioButton rbStore;
+
+    @BindView(R.id.rb_home)
+    RadioButton rbHome;
+
+    @BindView(R.id.ll_delivery)
+    LinearLayout llDelivery;
+
+    @BindView(R.id.ll_contactDetails)
+    LinearLayout llContactDetails;
+
+    @BindView(R.id.tv_contactNumber)
+    CustomTextViewSemiBold tvContactNumber;
+
+    @BindView(R.id.tv_advance)
+    CustomTextViewSemiBold tvAdvance;
+
+    @BindView(R.id.tv_contactEmail)
+    CustomTextViewSemiBold tvContactEmail;
+
+    @BindView(R.id.tv_changeContactInfo)
+    CustomTextViewSemiBold tvChangeContactInfo;
+
+    @BindView(R.id.tv_countryCode)
+    CustomTextViewSemiBold tvCountryCode;
+
+    @BindView(R.id.cv_placeOrder)
+    CardView cvPlaceOrder;
+
+    @BindView(R.id.ll_address)
+    LinearLayout llAddress;
+
+    @BindView(R.id.ll_addNew)
+    LinearLayout llAddNew;
+
+    @BindView(R.id.cv_back)
+    CardView cvBack;
+
+    @BindView(R.id.ll_billDetails)
+    LinearLayout llBillDetails;
+
+    private boolean isStore = true;
+    private String selectedDate;
+    private String selectedTime = "";
+    private String value = null;
+    private String prepayAmount = "";
+    private int accountId, catalogId, uniqueId;
+    private AddressDialog addressDialog;
+    private IPaymentResponse paymentResponse;
+    ArrayList<Catalog> catalogs = new ArrayList<>();
+    private ArrayList<CartItemModel> cartItemsList = new ArrayList<>();
+    private SearchViewDetail mBusinessDataList = new SearchViewDetail();
+    private OrderResponse orderResponse = new OrderResponse();
+    private ArrayList<Schedule> storePickupSchedulesList = new ArrayList<>();
+    private ArrayList<Schedule> homeDeliverySchedulesList = new ArrayList<>();
+    private SlotSelection slotSelection;
+    private ISelectedTime iSelectedTime;
+    private BottomSheetDialog dialog;
+    private String phoneNumber = "", countryCode = "", email = "";
+    private ActiveOrders activeOrders = new ActiveOrders();
+    private SuccessDialog successDialog;
+    ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
+    private ProfileModel profileDetails = new ProfileModel();
+    private EditContactDialog editContactDialog;
+    private IEditContact iEditContact;
+    private String homeDeliveryEmail, homeDeliveryNumber;
+    private StoreDetails storeInfo = new StoreDetails();
+    private StoreDetailsDialog storeDetailsDialog;
+    ArrayList<ShoppingListModel> imagePathList = new ArrayList<>();
+    String path;
+    Bitmap bitmap;
+    File f, file;
+    private static final String IMAGE_DIRECTORY = "/demonuts";
+    private IDeleteImagesInterface iDeleteImagesInterface;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_checkout_list);
+        ButterKnife.bind(CheckoutListActivity.this);
+        mContext = CheckoutListActivity.this;
+        iAddressInterface = (IAddressInterface) this;
+        iSelectedTime = (ISelectedTime) this;
+        paymentResponse = (IPaymentResponse) this;
+        iEditContact = (IEditContact) this;
+        iDeleteImagesInterface = (IDeleteImagesInterface) this;
+
+        Intent intent = getIntent();
+        imagePathList = (ArrayList<ShoppingListModel>) intent.getSerializableExtra("IMAGESLIST");
+        uniqueId = intent.getIntExtra("uniqueId", 0);
+        accountId = intent.getIntExtra("accountId", 0);
+        catalogId = intent.getIntExtra("catalogId", 0);
+
+        getCatalogDetails(accountId);
+        getProviderDetails(uniqueId);
+        // to fetch user addresses list
+
+        Typeface font_style = Typeface.createFromAsset(mContext.getAssets(), "fonts/JosefinSans-SemiBold.ttf");
+        rbHome.setTypeface(font_style);
+        rbStore.setTypeface(font_style);
+
+        tvChangeAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getAddressList();
+                showAddressDialog();
+
+            }
+        });
+
+        llAddNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                showAddressDialog();
+
+            }
+        });
+
+        cvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                finish();
+            }
+        });
+
+        tvStoreDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                getStoreDetails(accountId);
+
+            }
+        });
+
+        rbStore.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked) {
+
+                    isStore = true;
+                    rbStore.setChecked(true);
+                    rbHome.setChecked(false);
+                    llBillDetails.setVisibility(View.GONE);
+                    getStorePickupSchedules(catalogId, accountId);
+                    showDeliveryCharge();
+
+                } else {
+                    isStore = false;
+                    rbHome.setChecked(true);
+                    rbStore.setChecked(false);
+                    llBillDetails.setVisibility(View.VISIBLE);
+
+                }
+
+            }
+        });
+
+
+        rbHome.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked) {
+                    isStore = false;
+                    rbHome.setChecked(true);
+                    rbStore.setChecked(false);
+                    llBillDetails.setVisibility(View.VISIBLE);
+                    getHomeDeliverySchedules(catalogId, accountId);
+                    getAddressList();
+                    showDeliveryCharge();
+                } else {
+                    isStore = true;
+                    rbHome.setChecked(false);
+                    rbStore.setChecked(true);
+                    llBillDetails.setVisibility(View.GONE);
+                }
+
+            }
+        });
+
+
+        tvChangeTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (selectedDate != null && !selectedDate.trim().equalsIgnoreCase("")) {
+                    if (isStore) {
+                        slotSelection = new SlotSelection(mContext, storePickupSchedulesList, iSelectedTime, selectedDate);
+                    } else {
+                        slotSelection = new SlotSelection(mContext, homeDeliverySchedulesList, iSelectedTime, selectedDate);
+                    }
+                    slotSelection.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+                    slotSelection.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    slotSelection.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    slotSelection.show();
+                    slotSelection.setCancelable(true);
+                    DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                    int width = (int) (metrics.widthPixels * 1);
+                    slotSelection.getWindow().setGravity(Gravity.BOTTOM);
+                    slotSelection.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                }
+
+            }
+        });
+
+        tvChangeContactInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                editContactDialog = new EditContactDialog(mContext, iEditContact, phoneNumber, email, countryCode);
+                editContactDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+                editContactDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                editContactDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                editContactDialog.show();
+                editContactDialog.setCancelable(true);
+                DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                int width = (int) (metrics.widthPixels * 1);
+                editContactDialog.getWindow().setGravity(Gravity.BOTTOM);
+                editContactDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+
+            }
+        });
+
+        cvPlaceOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                placeOrder(accountId);
+
+            }
+        });
+
+        ApiGetProfileDetail();
+
+    }
+
+    private void placeOrder(int accountId) {
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        MediaType type = MediaType.parse("*/*");
+        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
+        mBuilder.setType(MultipartBody.FORM);
+        for (int i = 0; i < imagePathList.size(); i++) {
+
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getImagePath())));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (bitmap != null) {
+                path = saveImage(bitmap);
+                file = new File(path);
+            } else {
+                file = new File(imagePathList.get(i).getImagePath());
+            }
+            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+        }
+
+        JSONObject jsonObj = new JSONObject();
+        JSONObject inputBody = new JSONObject();
+        Map<String, String> query = new HashMap<>();
+        String json = "";
+        try {
+
+            for (int i = 0; i < imagePathList.size(); i++) {
+
+                query.put(String.valueOf(i), imagePathList.get(i).getCaption());
+//                jsonObj.put("0", "prescription");
+
+            }
+            Gson gson = new GsonBuilder().create();
+            json = gson.toJson(query);
+
+            JSONObject catalog = new JSONObject();
+            catalog.put("id", catalogId);
+            inputBody.put("catalog", catalog);
+
+            JSONObject orderFor = new JSONObject();
+            orderFor.put("id", 0);
+            inputBody.put("orderFor", orderFor);
+
+            inputBody.put("orderDate", selectedDate);
+            inputBody.put("countryCode", countryCode);
+            inputBody.put("orderNote", etSpecialNotes.getText().toString());
+
+            if (isStore) {
+                inputBody.put("storePickup", true);
+
+                if (phoneNumber != null && !phoneNumber.trim().equalsIgnoreCase("")) {
+                    inputBody.put("phoneNumber", phoneNumber);
+                } else {
+                    showAlert("Please enter valid mobile number");
+                    mDialog.dismiss();
+                    return;
+                }
+
+                if (email != null && !email.trim().equalsIgnoreCase("")) { // to check email address
+                    inputBody.put("email", email);
+                } else {
+                    showAlert("Please enter valid Email address");
+                    mDialog.dismiss();
+                    return;
+                }
+
+            } else {
+                if (!tvDeliveryAddress.getText().toString().trim().equalsIgnoreCase("")) {  // to check delivery address
+                    inputBody.put("homeDelivery", true);
+                    inputBody.put("homeDeliveryAddress", tvDeliveryAddress.getText().toString());
+
+                    if (homeDeliveryNumber != null && !homeDeliveryNumber.trim().equalsIgnoreCase("")) {
+                        inputBody.put("phoneNumber", homeDeliveryNumber);
+                    } else {
+                        showAlert("Please enter valid mobile number");
+                        mDialog.dismiss();
+                        return;
+                    }
+
+                    if (homeDeliveryEmail != null && !homeDeliveryEmail.trim().equalsIgnoreCase("")) {
+                        inputBody.put("email", homeDeliveryEmail);
+                    } else {
+                        showAlert("Please enter valid Email address");
+                        mDialog.dismiss();
+                        return;
+                    }
+
+                } else {
+
+                    showAlert("Please select an address to deliver");
+                    mDialog.dismiss();
+                    return;
+                }
+
+            }
+            JSONObject timeSlot = new JSONObject();
+            if (selectedTime != null && !selectedTime.trim().equalsIgnoreCase("")) {
+                if (isStore) {
+                    timeSlot.put("sTime", catalogs.get(0).getPickUp().getPickUpSchedule().getCatLogTimeSlotsList().get(0).getStartTime());
+                    timeSlot.put("eTime", catalogs.get(0).getPickUp().getPickUpSchedule().getCatLogTimeSlotsList().get(0).getEndTime());
+                    inputBody.put("timeSlot", timeSlot);
+                } else {
+
+                    timeSlot.put("sTime", catalogs.get(0).getHomeDelivery().getDeliverySchedule().getCatLogTimeSlotsList().get(0).getStartTime());
+                    timeSlot.put("eTime", catalogs.get(0).getHomeDelivery().getDeliverySchedule().getCatLogTimeSlotsList().get(0).getEndTime());
+                    inputBody.put("timeSlot", timeSlot);
+                }
+            } else {
+
+                showAlert("Please select a time slot");
+                mDialog.dismiss();
+                return;
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+        mBuilder.addFormDataPart("captions", "blob", body);
+        RequestBody body1 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), inputBody.toString());
+        mBuilder.addFormDataPart("order", "blob", body1);
+        RequestBody requestBody = mBuilder.build();
+        Call<ResponseBody> call = apiService.orderList(accountId, requestBody);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(CheckoutListActivity.this, mDialog);
+
+                    if (response.code() == 200) {
+
+                        if (response.body() != null) {
+
+                            JSONObject reader = new JSONObject(response.body().string());
+                            Iterator iteratorObj = reader.keys();
+
+                            while (iteratorObj.hasNext()) {
+                                String getJsonObj = (String) iteratorObj.next();
+                                System.out.println("KEY: " + "------>" + getJsonObj);
+                                if (reader.getString(getJsonObj).trim().length() > 7) {
+                                    value = reader.getString(getJsonObj);
+                                }
+                                if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().equalsIgnoreCase("0.0")) {
+                                    prepayAmount = reader.getString("_prepaymentAmount");
+                                }
+
+                            }
+                            getConfirmationId(value, accountId);
+
+                        }
+
+                    } else {
+
+                        if (response.code() == 422) {
+
+                            String errorString = response.errorBody().string();
+
+                            Toast.makeText(CheckoutListActivity.this, errorString, Toast.LENGTH_LONG).show();
+                        } else {
+                            String responseerror = response.errorBody().string();
+                            Config.logV("Response--error-------------------------" + responseerror);
+                            if (response.code() != 419)
+                                Toast.makeText(CheckoutListActivity.this, responseerror, Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                } catch (
+                        Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(CheckoutListActivity.this, mDialog);
+            }
+        });
+
+
+    }
+
+    private void getConfirmationId(String value, int acctId) {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(CheckoutListActivity.this).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(CheckoutListActivity.this, CheckoutListActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ActiveOrders> call = apiService.getOrderDetails(value, acctId);
+        call.enqueue(new Callback<ActiveOrders>() {
+            @Override
+            public void onResponse(Call<ActiveOrders> call, Response<ActiveOrders> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        activeOrders = response.body();
+                        if (activeOrders != null) {
+                            String orderId = activeOrders.getOrderNumber();
+                            if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().equalsIgnoreCase("0.0")) {
+                                if (!showPaytmWallet && !showPayU) {
+
+                                    //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
+                                } else {
+                                    try {
+                                        dialog = new BottomSheetDialog(CheckoutListActivity.this);
+                                        dialog.setContentView(R.layout.prepayment);
+                                        dialog.setCancelable(false);
+                                        dialog.show();
+
+                                        Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
+                                        Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
+                                        ImageView ivClose = dialog.findViewById(R.id.iv_close);
+                                        ivClose.setVisibility(View.VISIBLE);
+                                        if (showPaytmWallet) {
+                                            btn_paytm.setVisibility(View.VISIBLE);
+                                        } else {
+                                            btn_paytm.setVisibility(View.GONE);
+                                        }
+                                        if (showPayU) {
+                                            btn_payu.setVisibility(View.VISIBLE);
+                                        } else {
+                                            btn_payu.setVisibility(View.GONE);
+                                        }
+                                        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+                                        TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+
+                                        TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
+
+                                        txtprepayment.setText(R.string.serve_prepay);
+
+                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(prepayAmount))));
+                                        Typeface tyface1 = Typeface.createFromAsset(CheckoutListActivity.this.getAssets(),
+                                                "fonts/JosefinSans-SemiBold.ttf");
+                                        txtamt.setTypeface(tyface1);
+                                        ivClose.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+
+                                                finish();
+                                            }
+                                        });
+                                        btn_payu.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+
+                                                new PaymentGateway(CheckoutListActivity.this, CheckoutListActivity.this).ApiGenerateHash1(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, "checkin", 0, Constants.SOURCE_PAYMENT);
+                                                dialog.dismiss();
+
+                                            }
+                                        });
+
+                                        btn_paytm.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+
+                                                PaytmPayment payment = new PaytmPayment(CheckoutListActivity.this, paymentResponse);
+                                                payment.ApiGenerateHashPaytm(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, CheckoutListActivity.this, CheckoutListActivity.this, "", 0, orderId);
+                                                //payment.generateCheckSum(sAmountPay);
+                                                dialog.dismiss();
+
+                                            }
+                                        });
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+
+                            } else {
+
+                                onOrderSuccess(acctId);
+
+                            }
+                        }
+
+                    }
+
+                } catch (
+                        Exception e) {
+                    Log.i("mnbbnmmnbbnm", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveOrders> call, Throwable t) {
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+
+    }
+
+
+    private void getCatalogDetails(int accountId) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(CheckoutListActivity.this, CheckoutListActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ArrayList<Catalog>> call = apiService.getListOfCatalogs(accountId);
+        call.enqueue(new Callback<ArrayList<Catalog>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Catalog>> call, Response<ArrayList<Catalog>> response) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                try {
+                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Setting-------------------" + response.code());
+                    if (response.code() == 200) {
+                        catalogs.clear();
+                        catalogs = response.body();
+                        if (catalogs != null && catalogs.size() > 0) {
+                            getProviderDetails(accountId, catalogs);
+
+                            // to get payment modes
+                            APIPayment(String.valueOf(accountId));
+
+                            if (catalogs.get(0).getPickUp() != null && catalogs.get(0).getPickUp().isOrderPickUp() && catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
+
+                                rbStore.setVisibility(View.VISIBLE);
+                                rbStore.setChecked(true);
+                                rbHome.setChecked(false);
+                                getStorePickupSchedules(catalogs.get(0).getCatLogId(), accountId);
+                                getHomeDeliverySchedules(catalogs.get(0).getCatLogId(), accountId);
+
+                            } else if (catalogs.get(0).getPickUp() != null && catalogs.get(0).getPickUp().isOrderPickUp() && catalogs.get(0).getHomeDelivery() == null) {
+
+                                rbHome.setVisibility(View.GONE);
+                                rbStore.setVisibility(View.VISIBLE);
+                                rbStore.setChecked(true);
+                                rbHome.setChecked(false);
+                                getStorePickupSchedules(catalogs.get(0).getCatLogId(), accountId);
+
+                            } else if (catalogs.get(0).getPickUp() == null && catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
+
+                                rbStore.setVisibility(View.GONE);
+                                rbHome.setVisibility(View.VISIBLE);
+                                rbHome.setChecked(true);
+                                rbStore.setChecked(false);
+                                getHomeDeliverySchedules(catalogs.get(0).getCatLogId(), accountId);
+
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Catalog>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+    }
+
+
+    private void getStorePickupSchedules(int catalogId, int accountId) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(CheckoutListActivity.this, CheckoutListActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ArrayList<Schedule>> call = apiService.getPickUpSchedule(catalogId, accountId);
+        call.enqueue(new Callback<ArrayList<Schedule>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Schedule>> call, Response<ArrayList<Schedule>> response) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                try {
+                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Setting-------------------" + response.code());
+                    if (response.code() == 200) {
+                        storePickupSchedulesList.clear();
+                        storePickupSchedulesList = response.body();
+
+                        // set what is given in the catalog Api
+                        if (catalogs != null && catalogs.get(0).getNextAvailablePickUpDetails() != null) {
+
+                            selectedDate = catalogs.get(0).getNextAvailablePickUpDetails().getAvailableDate();
+                            String date = getCustomDateString(selectedDate);
+                            if (catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots() != null && catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots().size() > 0) {
+
+                                String startTime = catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots().get(0).getStartTime();
+                                String endTime = catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots().get(0).getEndTime();
+                                tvTimeSlot.setText(date + ", " + startTime + "-" + endTime);
+                                selectedTime = startTime + "-" + endTime;
+                            } else {
+
+                                tvTimeSlot.setText("Not available");
+
+                            }
+
+                            llDelivery.setVisibility(View.GONE);
+                            rlDeliveryFee.setVisibility(View.GONE);
+                            llContactDetails.setVisibility(View.VISIBLE);
+
+                        } else if (storePickupSchedulesList != null && storePickupSchedulesList.size() > 0) { // if failed show what is given in Api
+
+                            selectedDate = storePickupSchedulesList.get(0).getDate();
+                            String date = getCustomDateString(storePickupSchedulesList.get(0).getDate());
+                            if (storePickupSchedulesList.get(0).getCatalogTimeSlotList() != null) {
+                                String startTime = storePickupSchedulesList.get(0).getCatalogTimeSlotList().get(0).getStartTime();
+                                String endTime = storePickupSchedulesList.get(0).getCatalogTimeSlotList().get(0).getEndTime();
+                                tvTimeSlot.setText(date + ", " + startTime + "-" + endTime);
+                                selectedTime = startTime + "-" + endTime;
+                            } else {
+                                tvTimeSlot.setText(storePickupSchedulesList.get(0).getReason());
+                            }
+                            llDelivery.setVisibility(View.GONE);
+                            rlDeliveryFee.setVisibility(View.GONE);
+                            llContactDetails.setVisibility(View.VISIBLE);
+
+                        }
+
+                    } else {
+
+                        tvTimeSlot.setText("Not available");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Schedule>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+
+    }
+
+
+    private void getHomeDeliverySchedules(int catalogId, int accountId) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(CheckoutListActivity.this, CheckoutListActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ArrayList<Schedule>> call = apiService.getHomeDeliverySchedule(catalogId, accountId);
+        call.enqueue(new Callback<ArrayList<Schedule>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Schedule>> call, Response<ArrayList<Schedule>> response) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                try {
+                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Setting-------------------" + response.code());
+                    if (response.code() == 200) {
+                        homeDeliverySchedulesList.clear();
+                        homeDeliverySchedulesList = response.body();
+
+                        if (!isStore) {
+
+                            // set what is given in the catalog Api
+                            if (catalogs != null && catalogs.get(0).getNextAvailableDeliveryDetails() != null) {
+                                selectedDate = catalogs.get(0).getNextAvailableDeliveryDetails().getAvailableDate();
+                                String date = getCustomDateString(selectedDate);
+                                if (catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots() != null && catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots().size() > 0) {
+
+                                    String startTime = catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots().get(0).getStartTime();
+                                    String endTime = catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots().get(0).getEndTime();
+                                    tvTimeSlot.setText(date + ", " + startTime + "-" + endTime);
+                                    selectedTime = startTime + "-" + endTime;
+                                } else {
+
+                                    tvTimeSlot.setText("Not available");
+
+                                }
+
+                                llContactDetails.setVisibility(View.GONE);
+                                llDelivery.setVisibility(View.VISIBLE);
+                                rlDeliveryFee.setVisibility(View.VISIBLE);
+
+                            } else if (homeDeliverySchedulesList != null && homeDeliverySchedulesList.size() > 0) { // if failed show what is given in Api
+
+                                selectedDate = homeDeliverySchedulesList.get(0).getDate();
+                                String date = getCustomDateString(homeDeliverySchedulesList.get(0).getDate());
+                                if (homeDeliverySchedulesList.get(0).getCatalogTimeSlotList() != null) {
+                                    String startTime = homeDeliverySchedulesList.get(0).getCatalogTimeSlotList().get(0).getStartTime();
+                                    String endTime = homeDeliverySchedulesList.get(0).getCatalogTimeSlotList().get(0).getEndTime();
+                                    tvTimeSlot.setText(date + ", " + startTime + "-" + endTime);
+                                    selectedTime = startTime + "-" + endTime;
+                                } else {
+                                    tvTimeSlot.setText(homeDeliverySchedulesList.get(0).getReason());
+                                }
+                                llContactDetails.setVisibility(View.GONE);
+                                llDelivery.setVisibility(View.VISIBLE);
+                                rlDeliveryFee.setVisibility(View.VISIBLE);
+                            }
+
+
+                        }
+                    } else {
+
+                        tvTimeSlot.setText("Not available");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Schedule>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+    }
+
+    private void ApiGetProfileDetail() {
+
+        ApiInterface apiService = ApiClient.getClient(CheckoutListActivity.this).create(ApiInterface.class);
+
+        final int consumerId = SharedPreference.getInstance(CheckoutListActivity.this).getIntValue("consumerId", 0);
+
+        final Dialog mDialog = Config.getProgressDialog(CheckoutListActivity.this, CheckoutListActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ProfileModel> call = apiService.getProfileDetail(consumerId);
+
+        call.enqueue(new Callback<ProfileModel>() {
+            @Override
+            public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        profileDetails = response.body();
+                        if (profileDetails != null) {
+
+                            if (profileDetails.getUserprofile().getEmail() != null) {
+                                email = profileDetails.getUserprofile().getEmail();
+                                tvContactEmail.setText(email);
+                            } else {
+                                tvContactEmail.setHint("Enter your Mail Id");
+                            }
+                        }
+                    } else {
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<ProfileModel> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+
+
+    }
+
+
+    private void getProviderDetails(int id) {
+        ApiInterface apiService = ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(CheckoutListActivity.this, CheckoutListActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        Call<SearchViewDetail> call = apiService.getSearchViewDetail(id, sdf.format(currentTime));
+        call.enqueue(new Callback<SearchViewDetail>() {
+            @Override
+            public void onResponse(Call<SearchViewDetail> call, final Response<SearchViewDetail> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(CheckoutListActivity.this, mDialog);
+                    Config.logV("URL-----1111----------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-----detail--------------------" + response.code());
+                    if (response.code() == 200) {
+                        mBusinessDataList = response.body();
+
+                        if (mBusinessDataList != null) {
+
+                            tvSpName.setText(mBusinessDataList.getBusinessName());
+
+                            tvLocationName.setText(mBusinessDataList.getBaseLocation().getPlace());
+
+                            if (mBusinessDataList.getLogo() != null) {
+
+                                shimmer.setVisibility(View.VISIBLE);
+                                PicassoTrustAll.getInstance(CheckoutListActivity.this).load(mBusinessDataList.getLogo().getUrl()).into(ivSpImage, new com.squareup.picasso.Callback() {
+                                    @Override
+                                    public void onSuccess() {
+
+                                        shimmer.setVisibility(View.GONE);
+                                        ivSpImage.setVisibility(View.VISIBLE);
+                                    }
+
+                                    @Override
+                                    public void onError() {
+
+                                        shimmer.setVisibility(View.GONE);
+                                        ivSpImage.setVisibility(View.VISIBLE);
+                                        ivSpImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
+                                    }
+                                });
+                            }
+                        }
+
+                    } else {
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchViewDetail> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(CheckoutListActivity.this, mDialog);
+            }
+        });
+    }
+
+
+    private void getProviderDetails(int accountId, ArrayList<Catalog> catalogs) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(CheckoutListActivity.this, CheckoutListActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<OrderResponse> call = apiService.getOrderEnabledStatus(accountId);
+        call.enqueue(new Callback<OrderResponse>() {
+            @Override
+            public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                try {
+                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Setting-------------------" + response.code());
+                    if (response.code() == 200) {
+                        orderResponse = response.body();
+                        if (orderResponse != null) {
+
+                            updateMainUI(orderResponse, catalogs);
+                        }
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OrderResponse> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+
+    }
+
+    private void updateMainUI(OrderResponse orderResponse, ArrayList<Catalog> catalogs) {
+
+        if (orderResponse.getStoreInfo() != null) {
+
+            tvMailId.setText(orderResponse.getStoreInfo().getEmail());
+
+            tvPhoneNumber.setText(orderResponse.getStoreInfo().getPrimaryCountryCode() + " " + orderResponse.getStoreInfo().getPhone());
+
+        }
+
+        countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
+        phoneNumber = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+        tvContactNumber.setText(phoneNumber);
+        tvCountryCode.setText(countryCode);
+        tvContactEmail.setText(email);
+
+        updateImages();
+
+        showDeliveryCharge();
+
+    }
+
+    private void showDeliveryCharge() {
+
+        if (catalogs != null && catalogs.size() > 0) {
+            Catalog catalog = new Catalog();
+            catalog = catalogs.get(0);
+            if (catalog.getHomeDelivery() != null) {
+
+                if (catalog.getHomeDelivery().isHomeDelivery()) {
+
+                    rlDeliveryFee.setVisibility(View.VISIBLE);
+
+                    String deliveryCharge = convertAmountToDecimals(String.valueOf(catalog.getHomeDelivery().getDeliveryCharge()));
+                    tvDeliveryBill.setText("₹ " + deliveryCharge);
+
+
+                } else {
+                    rlDeliveryFee.setVisibility(View.GONE);
+                }
+            } else {
+                rlDeliveryFee.setVisibility(View.GONE);
+            }
+        }
+
+    }
+
+    private void updateImages() {
+
+        if (imagePathList != null && imagePathList.size() > 0) {
+            ImagePreviewAdapter mDetailFileAdapter = new ImagePreviewAdapter(imagePathList, mContext, false, iDeleteImagesInterface);
+            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(CheckoutListActivity.this, 2);
+            rvItems.setLayoutManager(mLayoutManager);
+            rvItems.setAdapter(mDetailFileAdapter);
+            mDetailFileAdapter.notifyDataSetChanged();
+        }
+    }
+
+
+    private void getStoreDetails(int accountId) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(CheckoutListActivity.this, CheckoutListActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<StoreDetails> call = apiService.getStoreDetails(accountId);
+        call.enqueue(new Callback<StoreDetails>() {
+            @Override
+            public void onResponse(Call<StoreDetails> call, Response<StoreDetails> response) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                try {
+                    if (response.code() == 200) {
+
+                        storeInfo = response.body();
+                        if (storeInfo != null) {
+                            storeDetailsDialog = new StoreDetailsDialog(mContext, storeInfo);
+                            storeDetailsDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+                            storeDetailsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            storeDetailsDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            storeDetailsDialog.show();
+                            storeDetailsDialog.setCancelable(true);
+                            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            storeDetailsDialog.getWindow().setGravity(Gravity.BOTTOM);
+                            storeDetailsDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StoreDetails> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+
+    }
+
+    boolean showPaytmWallet = false;
+    boolean showPayU = false;
+
+    private void APIPayment(String accountID) {
+
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
+
+        call.enqueue(new Callback<ArrayList<PaymentModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<PaymentModel>> call, Response<ArrayList<PaymentModel>> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL----%%%%%-----------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        mPaymentData = response.body();
+
+                        for (int i = 0; i < mPaymentData.size(); i++) {
+                            if (mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")) {
+                                showPaytmWallet = true;
+                            }
+
+                            if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
+                                showPayU = true;
+                            }
+                        }
+
+                        if ((showPayU) || showPaytmWallet) {
+                            Config.logV("URL----%%%%%---@@--");
+                            Log.e("XXXXXXXXXXX", "Executed Advance Amount");
+                            if (catalogs != null && catalogs.size() > 0) {
+
+                                if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().equalsIgnoreCase("0.0")) {
+                                    rlPrepayment.setVisibility(View.VISIBLE);
+                                    String amount = "₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(catalogs.get(0).getAdvanceAmount()));
+                                    tvAdvance.setText(amount);
+                                    rlPrepayment.setVisibility(View.GONE);
+                                    Log.e("XXXXXXXXXXX", "Executed Advance Amount");
+
+                                } else {
+                                    rlPrepayment.setVisibility(View.GONE);
+                                    Log.e("HHHHHHHHHHHHH", "Hide Advance Amount");
+                                }
+                            }
+
+
+                        }
+
+                    } else {
+                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<PaymentModel>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+
+            }
+        });
+
+    }
+
+    private void getAddressList() {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(CheckoutListActivity.this, CheckoutListActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ArrayList<Address>> call = apiService.getDeliveryAddress();
+        call.enqueue(new Callback<ArrayList<Address>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Address>> call, Response<ArrayList<Address>> response) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                try {
+                    if (response.code() == 200) {
+                        addressList = response.body();
+
+                        if (addressList != null && addressList.size() > 0) {
+
+                            updateUI(addressList.get(0));
+
+                        } else {
+
+                            tvChangeAddress.setVisibility(View.GONE);
+                            llAddress.setVisibility(View.GONE);
+                            llAddNew.setVisibility(View.VISIBLE);
+                            showAddressDialog();
+
+
+                        }
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Address>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+    }
+
+    private void showAddressDialog() {
+
+        addressDialog = new AddressDialog(mContext, addressList, iAddressInterface);
+        addressDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+        addressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        addressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        addressDialog.show();
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels * 1);
+        addressDialog.getWindow().setGravity(Gravity.BOTTOM);
+        addressDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+    }
+
+    private void updateUI(Address address) {
+
+        if (address != null) {
+
+            llAddNew.setVisibility(View.GONE);
+            tvChangeAddress.setVisibility(View.VISIBLE);
+            llAddress.setVisibility(View.VISIBLE);
+
+            homeDeliveryEmail = address.getEmail();
+            homeDeliveryNumber = address.getPhoneNumber();
+            tvName.setText(address.getFirstName() + " " + address.getLastName());
+            tvEmailId.setText(address.getEmail());
+            tvMobileNumber.setText(address.getPhoneNumber());
+            String fullAddress = address.getAddress() + ", \n" + address.getLandMark() + ", \n" + address.getCity() + ", " + address.getPostalCode();
+            tvDeliveryAddress.setText(fullAddress);
+
+        }
+    }
+
+
+    public static String convertAmountToDecimals(String price) {
+
+        double a = Double.parseDouble(price);
+        DecimalFormat decim = new DecimalFormat("0.00");
+        Double price2 = Double.parseDouble(decim.format(a));
+        String amount = decim.format(price2);
+        return amount;
+
+    }
+
+    public static String getCustomDateString(String d) throws ParseException {
+
+        String strCurrentDate = d;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date newDate = format.parse(strCurrentDate);
+        format = new SimpleDateFormat("MMM dd, yyyy");
+        String date = format.format(newDate);
+
+        return date;
+    }
+
+    @Override
+    public void onSelectAddress(Address address) {
+        // update selected Address
+        updateUI(address);
+    }
+
+    @Override
+    public void onEdit(String cCode, String number, String mail) {
+
+        countryCode = cCode;
+        phoneNumber = number;
+        email = mail;
+        tvContactEmail.setText(email);
+        tvContactNumber.setText(phoneNumber);
+        tvCountryCode.setText(countryCode);
+    }
+
+    @Override
+    public void sendPaymentResponse() {
+
+        onOrderSuccess(accountId);
+    }
+
+    private void onOrderSuccess(int acctId) {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(CheckoutListActivity.this).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(CheckoutListActivity.this, CheckoutListActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ActiveOrders> call = apiService.getOrderDetails(value, acctId);
+        call.enqueue(new Callback<ActiveOrders>() {
+            @Override
+            public void onResponse(Call<ActiveOrders> call, Response<ActiveOrders> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        activeOrders = response.body();
+                        if (activeOrders != null) {
+
+                            successDialog = new SuccessDialog(mContext, activeOrders.getOrderNumber());
+                            successDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+                            successDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            successDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            successDialog.setCancelable(false);
+                            successDialog.show();
+                            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            successDialog.getWindow().setGravity(Gravity.BOTTOM);
+                            successDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    successDialog.dismiss();
+                                    Intent checkIn = new Intent(CheckoutListActivity.this, OrderConfirmation.class);
+                                    checkIn.putExtra("orderInfo", activeOrders);
+                                    startActivity(checkIn);
+                                }
+                            }, 8000);
+
+
+                        }
+
+                    }
+                } catch (Exception e) {
+                    Log.i("mnbbnmmnbbnm", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveOrders> call, Throwable t) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+    }
+
+
+    @Override
+    public void sendTime(String newTime, String date, String displayDate) {
+        try {
+
+            selectedDate = date;
+            String convertedDate = getCustomDateString(date);
+            tvTimeSlot.setText(convertedDate + " " + newTime);
+            selectedTime = newTime;
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPaymentSuccess(String s, PaymentData paymentData) {
+
+        try {
+            RazorpayModel razorpayModel = new RazorpayModel(paymentData);
+            new PaymentGateway(mContext, CheckoutListActivity.this).sendPaymentStatus(razorpayModel, "SUCCESS");
+            Toast.makeText(mContext, "Payment Successful", Toast.LENGTH_LONG).show();
+            paymentFinished(razorpayModel);
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentSuccess", e);
+        }
+    }
+
+    public void paymentFinished(RazorpayModel razorpayModel) {
+
+        onOrderSuccess(accountId);
+    }
+
+    @Override
+    public void onPaymentError(int i, String s, PaymentData paymentData) {
+
+        try {
+            AlertDialog alertDialog = new AlertDialog.Builder(CheckoutListActivity.this).create();
+            alertDialog.setTitle("Payment Failed");
+            alertDialog.setMessage("Unable to process your request.Please try again after some time");
+            alertDialog.setCancelable(false);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+                            Intent homeIntent = new Intent(CheckoutListActivity.this, Home.class);
+                            startActivity(homeIntent);
+                            finish();
+
+                        }
+                    });
+            alertDialog.show();
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentError..", e);
+        }
+    }
+
+    public String saveImage(Bitmap myBitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        if (myBitmap != null) {
+            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        }
+        File wallpaperDirectory = new File(
+                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
+        // have the object build the directory structure, if needed.
+        if (!wallpaperDirectory.exists()) {
+            wallpaperDirectory.mkdirs();
+        }
+
+        try {
+            f = new File(wallpaperDirectory, Calendar.getInstance()
+                    .getTimeInMillis() + ".jpg");
+            f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(bytes.toByteArray());
+            MediaScannerConnection.scanFile(mContext,
+                    new String[]{f.getPath()},
+                    new String[]{"image/jpeg"}, null);
+            fo.close();
+            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
+
+            return f.getAbsolutePath();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return "";
+    }
+
+
+    private void showAlert(String message) {
+
+        DialogUtilsKt.showUIDialog(mContext, "", message, () -> {
+            return Unit.INSTANCE;
+        });
+    }
+
+    @Override
+    public void delete(int position, String imagePath) {
+
+    }
+}

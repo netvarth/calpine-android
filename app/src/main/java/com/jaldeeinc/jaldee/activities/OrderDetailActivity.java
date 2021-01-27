@@ -24,6 +24,8 @@ import com.google.zxing.WriterException;
 import com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView;
 import com.jaldeeinc.jaldee.CustomSwipe.transform.ScaleTransformer;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.adapter.ImagePreviewAdapter;
+import com.jaldeeinc.jaldee.adapter.OrderListImagesAdapter;
 import com.jaldeeinc.jaldee.adapter.OrdersAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -280,6 +282,14 @@ public class OrderDetailActivity extends AppCompatActivity {
                     rvItems.setItemTransformer(new ScaleTransformer.Builder()
                             .setMinScale(0.8f)
                             .build());
+                } else if (orderInfo.getShoppingList() != null){
+
+                    OrderListImagesAdapter imagePreviewAdapter = new OrderListImagesAdapter(orderInfo.getShoppingList(), mContext, false);
+                    rvItems.setAdapter(imagePreviewAdapter);
+                    rvItems.setItemTransformer(new ScaleTransformer.Builder()
+                            .setMinScale(0.8f)
+                            .build());
+
                 }
 
 
