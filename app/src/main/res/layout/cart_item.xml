@@ -20,7 +20,7 @@
             android:id="@+id/tv_itemName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="2"
+            android:maxLines="3"
             android:ellipsize="end"
             android:layout_marginTop="@dimen/dimen_25dp"
             android:textSize="@dimen/dimen_16dp"
