@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_15dp"
+        android:layout_marginEnd="@dimen/dimen_15dp">
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Preview"
+            android:layout_marginStart="@dimen/dimen_15dp"
+            android:textColor="@color/dark_black"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/dimen_18dp">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="@dimen/dimen_35dp"
+            android:layout_height="@dimen/dimen_35dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/bg_circle"
+            android:backgroundTint="@color/spinnerbg"
+            android:padding="@dimen/dimen_8dp"
+            android:src="@drawable/close"
+            app:tint="@color/title_color">
+
+        </ImageView>
+
+    </RelativeLayout>
+
+    <com.jaldeeinc.jaldee.widgets.TouchImageView
+        android:id="@+id/iv_image"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginBottom="@dimen/dimen_10dp" />
+
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        android:id="@+id/tv_caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/dimen_15dp"
+        android:layout_marginEnd="@dimen/dimen_15dp"
+        android:layout_marginBottom="@dimen/dimen_25dp"
+        android:background="@drawable/edittext"
+        android:backgroundTint="@color/special_background"
+        android:paddingStart="@dimen/dimen_15dp"
+        android:paddingTop="@dimen/dimen_5dp"
+        android:paddingEnd="@dimen/dimen_15dp"
+        android:paddingBottom="@dimen/dimen_5dp"
+        android:maxLines="3"
+        android:scrollbars="vertical"
+        android:textColor="@color/title_color">
+
+    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+
+</LinearLayout>

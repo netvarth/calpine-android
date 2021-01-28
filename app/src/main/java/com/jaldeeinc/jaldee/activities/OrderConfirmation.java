@@ -23,6 +23,7 @@ import com.google.zxing.WriterException;
 import com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView;
 import com.jaldeeinc.jaldee.CustomSwipe.transform.ScaleTransformer;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.adapter.OrderListImagesAdapter;
 import com.jaldeeinc.jaldee.adapter.OrdersAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -121,7 +122,7 @@ public class OrderConfirmation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent homeIntent = new Intent(OrderConfirmation.this,Home.class);
+                Intent homeIntent = new Intent(OrderConfirmation.this, Home.class);
                 homeIntent.putExtra("isOrder", "ORDER");
                 startActivity(homeIntent);
 
@@ -198,7 +199,7 @@ public class OrderConfirmation extends AppCompatActivity {
 
                         storeInfo = response.body();
                         if (storeInfo != null) {
-                            storeDetailsDialog = new StoreDetailsDialog(mContext,storeInfo);
+                            storeDetailsDialog = new StoreDetailsDialog(mContext, storeInfo);
                             storeDetailsDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
                             storeDetailsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                             storeDetailsDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -262,12 +263,22 @@ public class OrderConfirmation extends AppCompatActivity {
 
                 // to set items
 //                gridLayoutManager = new GridLayoutManager(mContext, 2);
-                ordersAdapter = new OrdersAdapter(orderInfo.getItemsList(), mContext, false);
+                if (orderInfo.getItemsList() != null && orderInfo.getItemsList().size() > 0) {
+                    ordersAdapter = new OrdersAdapter(orderInfo.getItemsList(), mContext, false);
 //                rvItems.setLayoutManager(gridLayoutManager);
-                rvItems.setAdapter(ordersAdapter);
-                rvItems.setItemTransformer(new ScaleTransformer.Builder()
-                        .setMinScale(0.8f)
-                        .build());
+                    rvItems.setAdapter(ordersAdapter);
+                    rvItems.setItemTransformer(new ScaleTransformer.Builder()
+                            .setMinScale(0.8f)
+                            .build());
+                } else if (orderInfo.getShoppingList() != null){
+
+                    OrderListImagesAdapter imagePreviewAdapter = new OrderListImagesAdapter(orderInfo.getShoppingList(), mContext, false);
+                    rvItems.setAdapter(imagePreviewAdapter);
+                    rvItems.setItemTransformer(new ScaleTransformer.Builder()
+                            .setMinScale(0.8f)
+                            .build());
+
+                }
 
 
                 if (orderInfo.getOrderNumber() != null) {
@@ -334,7 +345,7 @@ public class OrderConfirmation extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent homeIntent = new Intent(OrderConfirmation.this,Home.class);
+        Intent homeIntent = new Intent(OrderConfirmation.this, Home.class);
         homeIntent.putExtra("isOrder", "ORDER");
         startActivity(homeIntent);
     }

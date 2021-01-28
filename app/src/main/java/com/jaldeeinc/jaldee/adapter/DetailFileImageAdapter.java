@@ -69,55 +69,6 @@ public class DetailFileImageAdapter extends RecyclerView.Adapter<DetailFileImage
             Uri imgUri = Uri.parse(imagePathList.get(position));
             myViewHolder.iv_file_attach.setImageURI(imgUri);
 
-//            Glide.with(mContext)
-//                    .load(imgUri) // Uri of the picture
-//                    .into(myViewHolder.iv_file_attach);
-
-//            String path =  imagePathList.get(position);
-//
-//            File imgFile = new File(path);
-//            if(imgFile.exists())
-//            {
-//                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-//                myViewHolder.iv_file_attach.setImageBitmap(myBitmap);
-//            }
-//            try {
-//                Bitmap bitmap = BitmapFactory.decodeStream(mContext.getContentResolver().openInputStream(imgUri));
-//                myViewHolder.iv_file_attach.setImageBitmap(bitmap);
-//                myViewHolder.iv_file_attach.invalidate();
-//
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }
-
-
-//            myViewHolder.iv_file_attach.setImageURI(imgUri);
-
-//            myViewHolder.iv_file_attach.setImageURI(null);
-//            File imgFile = new  File(imagePathList.get(position));
-
-//            if(imgFile.exists()){
-//
-//                Bitmap myBitmap = BitmapFactory.decodeFile("file:"+imgFile.getAbsolutePath());
-//
-//                myViewHolder.iv_file_attach.setImageBitmap(myBitmap);
-//
-//            }
-//            myViewHolder.iv_file_attach.setImageURI(Uri.fromFile(imgFile));
-
-//            File imgFile = new  File(imagePathList.get(position));
-//
-//            if(imgFile.exists()) {
-//
-////                Bitmap myBitmap = BitmapFactory.decodeFile("file:"+imgFile.getAbsolutePath());
-//                String mImagePath = "file:" + imgFile.getAbsolutePath();
-//                PicassoTrustAll.getInstance(mContext)
-//                        .load(mImagePath)
-//                        .centerCrop()
-//                        .resize(200, 200)
-//                        .into(myViewHolder.iv_file_attach);
-//            }
-
         }
 
         myViewHolder.delete_file.setOnClickListener(new View.OnClickListener() {

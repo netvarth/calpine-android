@@ -163,8 +163,7 @@
                                 android:layout_gravity="center"
                                 android:layout_marginStart="@dimen/dimen_10dp"
                                 android:layout_marginTop="@dimen/dimen_10dp"
-                                android:layout_marginBottom="@dimen/dimen_10dp"
-                                android:src="@drawable/icon_checkin">
+                                android:layout_marginBottom="@dimen/dimen_10dp">
 
                             </ImageView>
 
@@ -188,7 +187,6 @@
                                         android:layout_height="wrap_content"
                                         android:ellipsize="end"
                                         android:maxLines="2"
-                                        android:text="Aditya pet care"
                                         android:textColor="@color/title_color"
                                         android:textSize="@dimen/dimen_16sp">
 
@@ -198,8 +196,7 @@
                                         android:id="@+id/paymentOn"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginTop="@dimen/dimen_8dp"
-                                        android:text="24th Oct, 2020 12:57 AM">
+                                        android:layout_marginTop="@dimen/dimen_8dp">
 
                                     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -220,7 +217,7 @@
                                         android:id="@+id/amount"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="$2500"
+                                        android:text=""
                                         android:textColor="@color/location_theme"
                                         android:textSize="@dimen/dimen_16sp">
 
@@ -230,7 +227,7 @@
                                         android:id="@+id/tv_status"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Incomplete"
+                                        android:text=""
                                         android:textColor="@color/title_color"
                                         android:textSize="@dimen/txtsize_12">
 

@@ -322,8 +322,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     static ArrayList<QueueTimeSlotModel> mQueueTimeSlotList = new ArrayList<>();
 
     //files related
-    private static final String IMAGE_DIRECTORY = "/Jaldee" +
-            "";
+    private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
     private int GALLERY = 1, CAMERA = 2;
     RecyclerView recycle_image_attachment;
 

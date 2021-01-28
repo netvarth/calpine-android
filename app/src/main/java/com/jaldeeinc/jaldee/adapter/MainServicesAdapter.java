@@ -24,6 +24,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.Interface.ISelectedService;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
@@ -103,7 +104,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                 viewHolder.tvServiceType.setVisibility(View.GONE);
                 viewHolder.ivMore.setVisibility(View.GONE);
                 if (servicesInfoList.get(position).getProviderImage() != null) {
-                    PicassoTrustAll.getInstance(context).load(servicesInfoList.get(position).getProviderImage()).fit().placeholder(R.drawable.icon_noimage).into(viewHolder.ivImage);
+                    Glide.with(context).load(servicesInfoList.get(position).getProviderImage()).placeholder(R.drawable.icon_noimage).into(viewHolder.ivImage);
 
                 } else {
                     viewHolder.ivImage.setImageResource(R.drawable.icon_noimage);
@@ -224,7 +225,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                     viewHolder.tvServiceType.setText("Get Token");
                 } else {
                     viewHolder.tvServiceType.setVisibility(View.VISIBLE);
-                    viewHolder.tvServiceType.setText("Check In");
+                    viewHolder.tvServiceType.setText("Check-in");
                 }
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
 

@@ -27,9 +27,11 @@
         app:itemBackground="@drawable/tab_bg"
         app:labelVisibilityMode="labeled"
         app:itemIconSize="@dimen/dimen_25dp"
+        android:visibility="visible"
         app:itemIconTint="@drawable/bottom_navigation_color_selector"
         app:itemTextColor="@drawable/bottom_navigation_color_selector"
         app:menu="@menu/menu_bottom_navigation" />
+
 
    <!-- <android.support.v4.view.ViewPager-->
     <com.jaldeeinc.jaldee.utils.CustomViewPager

@@ -37,7 +37,8 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.OrderDetailActivity"></activity>
+        <activity android:name=".activities.CheckoutListActivity"></activity>
+        <activity android:name=".activities.OrderDetailActivity" />
         <activity android:name=".activities.OrderConfirmation" />
         <activity
             android:name=".activities.CheckoutItemsActivity"
@@ -50,7 +51,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ItemsActivity"
-            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait" />
         <activity android:name=".activities.OrdersHistoryActivity" />
         <activity android:name=".activities.JdnActivity" />

@@ -373,12 +373,14 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                             } else {
                                 Intent intent = new Intent();
                                 intent.setType("*/*");
+                                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                                 intent.setAction(Intent.ACTION_GET_CONTENT);
                                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
                             }
                         } else {
                             Intent intent = new Intent();
                             intent.setType("*/*");
+                            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                             intent.setAction(Intent.ACTION_GET_CONTENT);
                             startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
                         }

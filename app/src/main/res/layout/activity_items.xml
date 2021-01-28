@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:autofit="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:autofit="http://schemas.android.com/tools"
     android:background="@color/white">
 
     <LinearLayout
@@ -172,9 +172,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/dimen_8dp"
                                 android:layout_marginTop="@dimen/dimen_8dp"
-                                android:visibility="visible"
                                 android:textColor="@color/title_color"
-                                android:textSize="@dimen/dimen_12dp">
+                                android:textSize="@dimen/dimen_12dp"
+                                android:visibility="visible">
 
                             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -252,6 +252,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding5"
                     android:orientation="vertical"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -260,11 +261,84 @@
                         android:id="@+id/rv_items"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/padding5"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                     </androidx.recyclerview.widget.RecyclerView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cv_shoppingList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/dimen_10dp"
+                        android:orientation="vertical"
+                        android:outlineSpotShadowColor="@color/special_background"
+                        android:visibility="visible"
+                        app:cardCornerRadius="@dimen/dimen_10dp"
+                        app:cardElevation="@dimen/dimen_20dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/dimen_8dp"
+                                android:layout_marginTop="@dimen/dimen_15dp"
+                                android:layout_marginEnd="@dimen/dimen_8dp"
+                                android:layout_marginBottom="@dimen/dimen_15dp"
+                                android:background="@drawable/upload_border"
+                                android:paddingTop="@dimen/dimen_10dp"
+                                android:paddingBottom="@dimen/dimen_10dp">
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:orientation="horizontal">
+
+                                    <ImageView
+                                        android:layout_width="@dimen/dimen_25dp"
+                                        android:layout_height="@dimen/dimen_25dp"
+                                        android:background="@drawable/rounded_grey_bg"
+                                        android:backgroundTint="@color/dark_blue"
+                                        android:src="@drawable/plus"
+                                        app:tint="@color/dark_blue">
+
+                                    </ImageView>
+
+                                    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="@dimen/dimen_12dp"
+                                        android:text="Upload Images"
+                                        android:textColor="@color/dark_blue"
+                                        android:textSize="@dimen/dimen_16dp">
+
+                                    </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rv_images"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:nestedScrollingEnabled="false"
+                                android:layout_marginBottom="@dimen/dimen_10dp"
+                                android:scrollbars="horizontal" />
+
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
 
                     <LinearLayout
                         android:id="@+id/ll_noItems"
@@ -320,7 +394,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_65dp"
         android:layout_alignParentBottom="true"
-        android:visibility="visible"
+        android:visibility="gone"
         app:cardBackgroundColor="@color/dark_blue"
         app:cardElevation="@dimen/dimen_50dp">
 
@@ -332,8 +406,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:layout_marginStart="@dimen/dimen_5dp">
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_weight="0.5">
 
 
                 <androidx.cardview.widget.CardView
@@ -369,8 +443,8 @@
                         android:id="@+id/tv_itemsCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
                         android:layout_gravity="center"
+                        android:text=""
                         android:textColor="@color/white"
                         android:textSize="@dimen/dimen_16dp">
 
@@ -385,28 +459,26 @@
                             android:id="@+id/tv_subTotal"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:singleLine="true"
-                            android:maxLines="1"
                             android:layout_weight="0.4"
-                            android:textSize="@dimen/dimen_12dp"
-                            autofit:minTextSize="8dp"
+                            android:maxLines="1"
+                            android:singleLine="true"
                             android:text=""
                             android:textColor="@color/white"
-                            />
+                            android:textSize="@dimen/dimen_12dp"
+                            autofit:minTextSize="8dp" />
 
                         <com.jaldeeinc.jaldee.custom.AutofitTextView
                             android:id="@+id/tv_totalDiscount"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:singleLine="true"
-                            android:maxLines="1"
                             android:layout_marginStart="@dimen/dimen_8dp"
                             android:layout_weight="0.6"
-                            android:textSize="14dp"
-                            autofit:minTextSize="8dp"
+                            android:maxLines="1"
+                            android:singleLine="true"
                             android:text=""
                             android:textColor="@color/white"
-                            />
+                            android:textSize="14dp"
+                            autofit:minTextSize="8dp" />
 
 
                     </LinearLayout>
@@ -430,9 +502,9 @@
                 android:id="@+id/ll_viewcart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_marginEnd="@dimen/dimen_5dp"
-                android:layout_weight="0.5">
+                android:layout_weight="0.5"
+                android:gravity="center">
 
                 <pl.droidsonroids.gif.GifImageView
                     android:layout_width="@dimen/dimen_65dp"
@@ -460,4 +532,43 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_listCheckout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_50dp"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/dark_blue"
+        app:cardElevation="@dimen/dimen_50dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dimen_8dp">
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Proceed"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dimen_16dp">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+            <ImageView
+                android:layout_width="@dimen/dimen_30dp"
+                android:layout_height="@dimen/dimen_30dp"
+                android:src="@drawable/icon_angle_right"
+                app:tint="@color/white">
+
+            </ImageView>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
 </RelativeLayout>
