@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:card_view="http://schemas.android.com/tools"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -36,10 +36,10 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text=""
-            android:textSize="@dimen/dimen_16sp"
             android:textColor="@color/location_theme"
-            android:layout_centerInParent="true">
+            android:textSize="@dimen/dimen_16sp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
@@ -175,6 +175,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical">
+
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -185,9 +186,9 @@
                                     <ImageView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:src="@drawable/tickmark"
+                                        android:layout_marginTop="3dp"
                                         android:layout_marginRight="@dimen/dimen_5dp"
-                                        android:layout_marginTop="3dp"/>
+                                        android:src="@drawable/tickmark" />
 
                                     <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                                         android:id="@+id/tv_heading"
@@ -195,14 +196,13 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginEnd="8dp"
                                         android:ellipsize="end"
-                                        android:text="Booking Confirmed!"
                                         android:maxLines="1"
+                                        android:text="Booking Confirmed!"
                                         android:textColor="@color/location_theme"
                                         android:textSize="@dimen/dimen_20dp">
 
                                     </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
                                 </LinearLayout>
-
 
 
                                 <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
@@ -242,6 +242,7 @@
                                             android:id="@+id/tv_doctorName"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
+                                            android:paddingLeft="@dimen/dimen_4dp"
                                             android:layout_marginEnd="8dp"
                                             android:ellipsize="end"
                                             android:maxLines="2"
@@ -250,37 +251,6 @@
                                             android:textSize="@dimen/dimen_20dp">
 
                                         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
-
-                                        <LinearLayout
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginTop="6dp"
-                                            android:gravity="center_vertical">
-
-                                            <ImageView
-                                                android:id="@+id/iv_teleService"
-                                                android:layout_width="20dp"
-                                                android:layout_height="18dp"
-                                                android:visibility="gone">
-
-                                            </ImageView>
-
-                                            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                                                android:id="@+id/tv_serviceName"
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
-                                                android:layout_marginStart="@dimen/padding3"
-                                                android:ellipsize="end"
-                                                android:maxLines="2"
-                                                android:text=""
-                                                android:textColor="@color/title_color"
-                                                android:textSize="@dimen/dimen_17sp">
-
-                                            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
-
-                                        </LinearLayout>
-
 
                                         <LinearLayout
                                             android:layout_width="wrap_content"
@@ -307,6 +277,35 @@
                                                 android:text=""
                                                 android:textColor="@color/location_theme"
                                                 android:textSize="@dimen/txtsize_14">
+
+                                            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                                        </LinearLayout>
+
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="6dp"
+                                            android:gravity="center_vertical">
+
+                                            <ImageView
+                                                android:id="@+id/iv_teleService"
+                                                android:layout_width="20dp"
+                                                android:layout_height="18dp"
+                                                android:visibility="gone">
+
+                                            </ImageView>
+
+                                            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                                                android:id="@+id/tv_serviceName"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginStart="@dimen/padding3"
+                                                android:ellipsize="end"
+                                                android:maxLines="2"
+                                                android:text=""
+                                                android:textColor="@color/title_color"
+                                                android:textSize="@dimen/dimen_17sp">
 
                                             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -518,10 +517,10 @@
                                             android:id="@+id/tv_queueTime"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
+                                            android:layout_marginTop="@dimen/dimen_1dp"
                                             android:text=""
                                             android:textColor="@color/appoint_theme"
                                             android:textSize="@dimen/dimen_12dp"
-                                            android:layout_marginTop="@dimen/dimen_1dp"
                                             android:visibility="visible">
 
                                         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
@@ -560,11 +559,11 @@
                                             android:id="@+id/tv_tokenWaitTime"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
+                                            android:layout_marginTop="@dimen/dimen_1dp"
                                             android:text=""
-                                            android:textSize="@dimen/dimen_12dp"
-                                            android:visibility="gone"
                                             android:textColor="@color/appoint_theme"
-                                            android:layout_marginTop="@dimen/dimen_1dp">
+                                            android:textSize="@dimen/dimen_12dp"
+                                            android:visibility="gone">
 
                                         </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
                                     </LinearLayout>
@@ -575,14 +574,14 @@
                                     android:id="@+id/cv_meetingDetails"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:visibility="gone"
                                     android:layout_marginStart="@dimen/dimen_10dp"
                                     android:layout_marginTop="@dimen/dimen_10dp"
-                                    android:layout_marginBottom="@dimen/dimen_5dp"
                                     android:layout_marginEnd="@dimen/dimen_10dp"
+                                    android:layout_marginBottom="@dimen/dimen_5dp"
                                     android:elevation="@dimen/dimen_10dp"
-                                    app:neomorph_shadow_type="inner"
+                                    android:visibility="gone"
                                     app:neomorph_corner_radius="@dimen/dimen_8dp"
+                                    app:neomorph_shadow_type="inner"
                                     card_view:cardBackgroundColor="#f8f8f8">
 
                                     <LinearLayout
@@ -594,31 +593,30 @@
                                             android:id="@+id/iv_meetingIcon"
                                             android:layout_width="@dimen/dimen_35dp"
                                             android:layout_height="@dimen/dimen_35dp"
-                                            android:padding="@dimen/dimen_5dp"
                                             android:layout_gravity="center"
-                                            android:layout_marginEnd="@dimen/dimen_10dp">
+                                            android:layout_marginEnd="@dimen/dimen_10dp"
+                                            android:padding="@dimen/dimen_5dp">
 
                                         </ImageView>
 
                                         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="Meeting Details"
                                             android:layout_gravity="center"
                                             android:gravity="center"
                                             android:letterSpacing="0.09"
                                             android:paddingTop="@dimen/dimen_5dp"
-                                            android:paddingBottom="@dimen/dimen_5dp"
                                             android:paddingEnd="@dimen/dimen_5dp"
-                                            android:textSize="@dimen/dimen_14sp"
-                                            android:textColor="@color/title_color">
+                                            android:paddingBottom="@dimen/dimen_5dp"
+                                            android:text="Meeting Details"
+                                            android:textColor="@color/title_color"
+                                            android:textSize="@dimen/dimen_14sp">
 
                                         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
                                     </LinearLayout>
 
                                 </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
-
 
 
                             </LinearLayout>
@@ -640,27 +638,27 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_centerVertical="true"
+                                    android:layout_weight="0.5"
                                     android:paddingRight="@dimen/dimen_20dp"
                                     android:text="View More"
                                     android:textAllCaps="true"
-                                    android:layout_weight="0.5"
                                     android:textColor="@color/location_theme"
                                     android:textSize="@dimen/txtsize_12">
 
                                 </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
                                 <Button
+                                    android:id="@+id/cv_ok"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0.5"
-                                    android:id="@+id/cv_ok"
-                                    android:text="OK"
-                                    android:textStyle="bold"
+                                    android:background="@drawable/curved_save"
                                     android:backgroundTint="@color/location_theme"
+                                    android:text="OK"
                                     android:textColor="@color/white"
-                                    android:background="@drawable/curved_save">
+                                    android:textStyle="bold">
 
                                 </Button>
-
 
 
                             </LinearLayout>
@@ -671,13 +669,13 @@
                             android:id="@+id/ll_moreDetails"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/rl_new"
                             android:layout_marginStart="@dimen/dimen_5dp"
                             android:layout_marginTop="@dimen/dimen_5dp"
                             android:layout_marginEnd="@dimen/dimen_5dp"
                             android:layout_marginBottom="@dimen/dimen_5dp"
                             android:elevation="@dimen/dimen_10dp"
                             android:visibility="gone"
-                            android:layout_below="@id/rl_new"
                             app:neomorph_corner_radius="@dimen/dimen_8dp"
                             app:neomorph_shadow_type="inner"
                             card_view:cardBackgroundColor="#f8f8f8">
@@ -710,9 +708,9 @@
                                         <LinearLayout
                                             android:id="@+id/ll_message"
                                             android:layout_width="wrap_content"
-                                            android:layout_marginTop="@dimen/dimen_10dp"
                                             android:layout_height="match_parent"
-                                            android:layout_columnWeight="1">
+                                            android:layout_columnWeight="1"
+                                            android:layout_marginTop="@dimen/dimen_10dp">
 
                                             <LinearLayout
                                                 android:layout_width="match_parent"
@@ -789,6 +787,7 @@
                             </LinearLayout>
 
                         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
                         <LinearLayout
                             android:id="@+id/ll_viewLess"
                             android:layout_width="match_parent"
@@ -805,8 +804,8 @@
                                 android:id="@+id/tv_viewLess"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="0.5"
                                 android:layout_centerVertical="true"
+                                android:layout_weight="0.5"
                                 android:paddingRight="@dimen/dimen_20dp"
                                 android:text="View Less"
                                 android:textAllCaps="true"
@@ -814,19 +813,19 @@
                                 android:textSize="@dimen/txtsize_12">
 
                             </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
                             <Button
+                                android:id="@+id/cv_ok1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.5"
-                                android:id="@+id/cv_ok1"
-                                android:text="OK"
-                                android:textStyle="bold"
+                                android:background="@drawable/curved_save"
                                 android:backgroundTint="@color/location_theme"
+                                android:text="OK"
                                 android:textColor="@color/white"
-                                android:background="@drawable/curved_save">
+                                android:textStyle="bold">
 
                             </Button>
-
 
 
                         </LinearLayout>
