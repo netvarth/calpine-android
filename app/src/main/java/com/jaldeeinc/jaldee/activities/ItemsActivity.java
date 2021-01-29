@@ -41,12 +41,14 @@ import android.widget.Toast;
 import com.jaldeeinc.jaldee.Interface.IDeleteImagesInterface;
 import com.jaldeeinc.jaldee.Interface.IDialogInterface;
 import com.jaldeeinc.jaldee.Interface.IItemInterface;
+import com.jaldeeinc.jaldee.Interface.ISaveNotes;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.adapter.ImagePreviewAdapter;
 import com.jaldeeinc.jaldee.adapter.ItemsAdapter;
 import com.jaldeeinc.jaldee.custom.AutofitTextView;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
+import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
@@ -58,6 +60,7 @@ import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CatalogItem;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
+import com.jaldeeinc.jaldee.response.ShoppingList;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -84,7 +87,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ItemsActivity extends AppCompatActivity implements IItemInterface, IDialogInterface, IDeleteImagesInterface {
+public class ItemsActivity extends AppCompatActivity implements IItemInterface, IDialogInterface, IDeleteImagesInterface, ISaveNotes {
 
     @BindView(R.id.cv_back)
     CardView cvBack;
@@ -159,6 +162,8 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
     ArrayList<ShoppingListModel> itemList = new ArrayList<>();
     private IDeleteImagesInterface iDeleteImagesInterface;
     private ImagePreviewAdapter mDetailFileAdapter;
+    private CustomNotes customNotes;
+    private ISaveNotes iSaveNotes;
 
     //files related
     private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
@@ -180,6 +185,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         iItemInterface = this;
         iDialogInterface = this;
         iDeleteImagesInterface = this;
+        iSaveNotes = this;
         db = new DatabaseHandler(ItemsActivity.this);
 
         Intent i = getIntent();
@@ -404,7 +410,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
             // set selected images in adapter
             updateImages();
 
-            if (imagePathList != null && imagePathList.size() > 0) {
+            if (itemList != null && itemList.size() > 0) {
                 cvListCheckOut.setVisibility(View.VISIBLE);
             } else {
                 cvListCheckOut.setVisibility(View.GONE);
@@ -417,18 +423,16 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
 
     private void updateImages() {
 
-        itemList = new ArrayList<>();
+        if (itemList != null && itemList.size() > 0) {
 
-        if (imagePathList != null && imagePathList.size() > 0) {
-
-            for (int i = 0;i<imagePathList.size();i++){
-
-                ShoppingListModel model = new ShoppingListModel();
-                model.setImagePath(imagePathList.get(i));
-                model.setCaption("");
-
-                itemList.add(model);
-            }
+//            for (int i = 0;i<imagePathList.size();i++){
+//
+//                ShoppingListModel model = new ShoppingListModel();
+//                model.setImagePath(imagePathList.get(i));
+//                model.setCaption("");
+//
+//                itemList.add(model);
+//            }
 
             mDetailFileAdapter = new ImagePreviewAdapter(itemList, mContext,true,iDeleteImagesInterface);
             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(ItemsActivity.this, 2);
@@ -820,13 +824,11 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                             return;
                         }
 
-                        imagePathList.add(orgFilePath);
+                        ShoppingListModel model  = new ShoppingListModel();
+                        model.setImagePath(orgFilePath);
+                        itemList.add(model);
 
-                        if (imagePathList.size() > 0) {
-//                            tvErrorMessage.setVisibility(View.GONE);
-                        } else {
-//                            tvErrorMessage.setVisibility(View.VISIBLE);
-                        }
+                        imagePathList.add(orgFilePath);
 
                         DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
@@ -860,15 +862,12 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                                 Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
                                 return;
                             }
+
+                            ShoppingListModel model  = new ShoppingListModel();
+                            model.setImagePath(orgFilePath);
+                            itemList.add(model);
+
                             imagePathList.add(orgFilePath);
-
-
-                            if (imagePathList.size() > 0) {
-//                                tvErrorMessage.setVisibility(View.GONE);
-                            } else {
-//                                tvErrorMessage.setVisibility(View.VISIBLE);
-                            }
-
 
                         }
                         DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
@@ -893,12 +892,11 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
 //            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
                 if (path != null) {
                     mImageUri = Uri.parse(path);
+                    ShoppingListModel model  = new ShoppingListModel();
+                    model.setImagePath(mImageUri.toString());
+                    itemList.add(model);
+
                     imagePathList.add(mImageUri.toString());
-                    if (imagePathList.size() > 0) {
-//                        tvErrorMessage.setVisibility(View.GONE);
-                    } else {
-//                        tvErrorMessage.setVisibility(View.VISIBLE);
-                    }
                 }
                 try {
                     bytes.close();
@@ -983,15 +981,43 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         itemList.remove(position);
         mDetailFileAdapter.notifyDataSetChanged();
 
-        if (imagePathList != null && imagePathList.size() > 0){
+        if (itemList != null && itemList.size() > 0){
 
-            for (int i = 0;i<imagePathList.size();i++){
+            for (int i = 0;i<itemList.size();i++){
 
-                if (imagePathList.get(i).equalsIgnoreCase(imagePath)){
+                if (itemList.get(i).getImagePath().equalsIgnoreCase(imagePath)){
 
-                    imagePathList.remove(i);
+                    itemList.remove(i);
                 }
             }
         }
+    }
+
+    @Override
+    public void addedNotes(int position) {
+
+        showNotesDialog(position);
+    }
+
+    private void showNotesDialog(int position) {
+
+        customNotes = new CustomNotes(mContext, position, iSaveNotes,itemList.get(position).getCaption());
+        customNotes.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+        customNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        customNotes.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        customNotes.setCancelable(false);
+        customNotes.show();
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels * 1);
+        customNotes.getWindow().setGravity(Gravity.BOTTOM);
+        customNotes.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
+    @Override
+    public void saveMessage(String caption, int position) {
+
+        itemList.get(position).setCaption(caption);
+        mDetailFileAdapter.notifyDataSetChanged();
+
     }
 }

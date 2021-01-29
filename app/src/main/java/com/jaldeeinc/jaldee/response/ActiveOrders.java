@@ -239,6 +239,10 @@ public class ActiveOrders implements Serializable {
     @Expose
     private ArrayList<ShoppingList> shoppingList;
 
+    @SerializedName("orderNote")
+    @Expose
+    private String orderNote;
+
     public TimeSlot getTimeSlot() {
         return timeSlot;
     }
@@ -261,5 +265,13 @@ public class ActiveOrders implements Serializable {
 
     public void setShoppingList(ArrayList<ShoppingList> shoppingList) {
         this.shoppingList = shoppingList;
+    }
+
+    public String getOrderNote() {
+        return orderNote;
+    }
+
+    public void setOrderNote(String orderNote) {
+        this.orderNote = orderNote;
     }
 }

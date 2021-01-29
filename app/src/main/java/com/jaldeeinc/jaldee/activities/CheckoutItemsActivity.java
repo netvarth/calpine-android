@@ -19,9 +19,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.format.DateUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -33,6 +35,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +54,8 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.AddressDialog;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomEditTextRegular;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.EditContactDialog;
@@ -72,6 +77,7 @@ import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CatalogTimeSlot;
+import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.OrderResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
@@ -225,6 +231,21 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     @BindView(R.id.cv_back)
     CardView cvBack;
 
+    @BindView(R.id.nested)
+    ScrollView scrollView;
+
+    @BindView(R.id.rl_coupon)
+    RelativeLayout rlCoupon;
+
+    @BindView(R.id.et_couponCode)
+    CustomEditTextRegular etCouponCode;
+
+    @BindView(R.id.tv_invalidCode)
+    CustomTextViewItalicSemiBold tvInvalidCode;
+
+    @BindView(R.id.tv_apply)
+    CustomTextViewBold tvApply;
+
     private boolean isStore = true;
     private DatabaseHandler db;
     private String selectedDate;
@@ -254,6 +275,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     private String homeDeliveryEmail, homeDeliveryNumber;
     private StoreDetails storeInfo = new StoreDetails();
     private StoreDetailsDialog storeDetailsDialog;
+    ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
 
 
     @Override
@@ -406,6 +428,26 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
                 placeOrder(accountId);
             }
+        });
+
+        // to scroll edittext or text inside scrollview
+        etSpecialNotes.setMovementMethod(new ScrollingMovementMethod());
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                etSpecialNotes.getParent().requestDisallowInterceptTouchEvent(false);
+
+                return false;
+            }
+        });
+
+        etSpecialNotes.setOnTouchListener((v, event) -> {
+
+            etSpecialNotes.getParent().requestDisallowInterceptTouchEvent(true);
+
+            return false;
         });
 
         ApiGetProfileDetail();
@@ -1597,4 +1639,50 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
         return date;
     }
+
+    private void getS3Coupons(int uniqueID) {
+
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(CheckoutItemsActivity.this).create(ApiInterface.class);
+
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        Call<ArrayList<CoupnResponse>> call = apiService.getCoupanList(uniqueID, sdf.format(currentTime));
+        call.enqueue(new Callback<ArrayList<CoupnResponse>>() {
+            @Override
+            public void onResponse(Call<ArrayList<CoupnResponse>> call, Response<ArrayList<CoupnResponse>> response) {
+
+                try {
+
+                    if (response.code() == 200) {
+                        s3couponList.clear();
+                        s3couponList = response.body();
+
+                        if (s3couponList.size() != 0) {
+                            rlCoupon.setVisibility(View.VISIBLE);
+                        } else {
+                            rlCoupon.setVisibility(View.GONE);
+                        }
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<CoupnResponse>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+
+            }
+        });
+    }
+
 }

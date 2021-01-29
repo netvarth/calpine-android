@@ -93,7 +93,8 @@
                     android:id="@+id/nested"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:fillViewport="true">
+                    android:fillViewport="true"
+                    android:scrollbars="vertical">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -488,10 +489,15 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_marginBottom="@dimen/dimen_20dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/dimen_10dp"
                                     android:layout_marginTop="@dimen/dimen_20dp"
                                     android:layout_marginEnd="@dimen/dimen_10dp"
-                                    android:layout_marginBottom="@dimen/dimen_20dp"
                                     android:orientation="horizontal">
 
                                     <com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView
@@ -504,6 +510,46 @@
 
                                 </LinearLayout>
 
+                                <LinearLayout
+                                    android:id="@+id/ll_notes"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="gone"
+                                    android:orientation="vertical">
+
+                                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Order Notes"
+                                        android:textSize="@dimen/dimen_15dp"
+                                        android:textColor="@color/dark_blue"
+                                        android:layout_marginStart="@dimen/dimen_20dp">
+
+                                    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                                        android:id="@+id/tv_notes"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="@dimen/dimen_15dp"
+                                        android:layout_marginEnd="@dimen/dimen_15dp"
+                                        android:background="@drawable/edittext"
+                                        android:backgroundTint="@color/special_background"
+                                        android:paddingStart="@dimen/dimen_15dp"
+                                        android:paddingTop="@dimen/dimen_5dp"
+                                        android:layout_marginTop="@dimen/dimen_8dp"
+                                        android:paddingEnd="@dimen/dimen_15dp"
+                                        android:paddingBottom="@dimen/dimen_5dp"
+                                        android:maxLines="3"
+                                        android:scrollbars="vertical"
+                                        android:textColor="@color/title_color">
+
+                                    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+
+                                </LinearLayout>
+
+                                </LinearLayout>
 
 
                             </LinearLayout>

@@ -84,7 +84,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
                     if (inboxList.getWaitlistId() != null) {
                         Intent intent = new Intent(view.getContext(), ChatActivity.class);
                         intent.putExtra("uuid", inboxList.getWaitlistId());
-                        intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
+                        if (inboxList.getUniqueID() != null) {
+                            intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
+                        }
                         intent.putExtra("name", inboxList.getAccountName());
                         if (inboxList.getWaitlistId().contains("_wl")) {
                             intent.putExtra("from", Constants.CHECKIN);
@@ -121,7 +123,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
                         if (inboxList.getWaitlistId() != null) {
                             Intent intent = new Intent(v.getContext(), ChatActivity.class);
                             intent.putExtra("uuid", inboxList.getWaitlistId());
-                            intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
+                            if (inboxList.getUniqueID() != null) {
+                                intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
+                            }
                             intent.putExtra("name", inboxList.getAccountName());
                             if (inboxList.getWaitlistId() != null) {
                                 if (inboxList.getWaitlistId().contains("_wl")) {

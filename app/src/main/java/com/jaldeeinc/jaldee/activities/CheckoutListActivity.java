@@ -21,9 +21,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -34,6 +36,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -232,6 +235,9 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     @BindView(R.id.ll_billDetails)
     LinearLayout llBillDetails;
 
+    @BindView(R.id.nested)
+    ScrollView scrollView;
+
     private boolean isStore = true;
     private String selectedDate;
     private String selectedTime = "";
@@ -426,6 +432,26 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                 placeOrder(accountId);
 
             }
+        });
+
+        // to scroll edittext or text inside scrollview
+        etSpecialNotes.setMovementMethod(new ScrollingMovementMethod());
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                etSpecialNotes.getParent().requestDisallowInterceptTouchEvent(false);
+
+                return false;
+            }
+        });
+
+        etSpecialNotes.setOnTouchListener((v, event) -> {
+
+            etSpecialNotes.getParent().requestDisallowInterceptTouchEvent(true);
+
+            return false;
         });
 
         ApiGetProfileDetail();
@@ -1587,6 +1613,11 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
 
     @Override
     public void delete(int position, String imagePath) {
+
+    }
+
+    @Override
+    public void addedNotes(int position) {
 
     }
 }

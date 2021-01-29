@@ -235,27 +235,29 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             if (!((Activity) context).isFinishing()) {
 
                                 Glide.with(context)
-                                    .load(finalUrl)
-                                    .apply(new RequestOptions().error(R.drawable.icon_noimage).circleCrop())
-                                    .listener(new RequestListener<Drawable>() {
-                                        @Override
-                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                            //on load failed
-                                            myViewHolder.cvShimmer.setVisibility(View.GONE);
-                                            myViewHolder.cvImage.setVisibility(View.VISIBLE);
-                                            myViewHolder.ivSpImage.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_noimage));
-                                            return false;
-                                        }
+                                        .load(finalUrl)
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                                        .skipMemoryCache(true)
+                                        .apply(new RequestOptions().error(R.drawable.icon_noimage).circleCrop())
+                                        .listener(new RequestListener<Drawable>() {
+                                            @Override
+                                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                                //on load failed
+                                                myViewHolder.cvShimmer.setVisibility(View.GONE);
+                                                myViewHolder.cvImage.setVisibility(View.VISIBLE);
+                                                myViewHolder.ivSpImage.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_noimage));
+                                                return false;
+                                            }
 
-                                        @Override
-                                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                            //on load success
-                                            myViewHolder.cvShimmer.setVisibility(View.GONE);
-                                            myViewHolder.cvImage.setVisibility(View.VISIBLE);
-                                            return false;
-                                        }
-                                    })
-                                    .into(myViewHolder.ivSpImage);
+                                            @Override
+                                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                //on load success
+                                                myViewHolder.cvShimmer.setVisibility(View.GONE);
+                                                myViewHolder.cvImage.setVisibility(View.VISIBLE);
+                                                return false;
+                                            }
+                                        })
+                                        .into(myViewHolder.ivSpImage);
 
                             }
 
@@ -1008,7 +1010,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         private RelativeLayout rlStatus;
         private CustomTextViewItalicSemiBold tvServiceOne, tvServiceTwo, tvServiceThree;
         private CustomTextViewSemiBold tvText;
-        private CardView cvClaimNow, cvAction, cvCard, cvImage,cvShimmer;
+        private CardView cvClaimNow, cvAction, cvCard, cvImage, cvShimmer;
 
         public MyViewHolder(View view) {
             super(view);

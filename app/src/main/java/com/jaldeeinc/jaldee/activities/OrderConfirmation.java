@@ -11,12 +11,15 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -87,6 +90,14 @@ public class OrderConfirmation extends AppCompatActivity {
     @BindView(R.id.tv_time)
     CustomTextViewBold tvTime;
 
+    @BindView(R.id.ll_notes)
+    LinearLayout llNotes;
+
+    @BindView(R.id.tv_notes)
+    CustomTextViewMedium tvNotes;
+
+    @BindView(R.id.nested)
+    ScrollView scrollView;
 
     private Context mContext;
     private String orderUUid;
@@ -104,6 +115,7 @@ public class OrderConfirmation extends AppCompatActivity {
         setContentView(R.layout.activity_order_confirmation);
         ButterKnife.bind(OrderConfirmation.this);
         mContext = OrderConfirmation.this;
+
 
 
         Intent intent = getIntent();
@@ -134,6 +146,25 @@ public class OrderConfirmation extends AppCompatActivity {
             public void onClick(View view) {
                 getStoreDetails(accountId);
             }
+        });
+
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                tvNotes.getParent().requestDisallowInterceptTouchEvent(false);
+
+                return false;
+            }
+        });
+
+        tvNotes.setMovementMethod(new ScrollingMovementMethod());
+        tvNotes.setOnTouchListener((v, event) -> {
+
+            tvNotes.getParent().requestDisallowInterceptTouchEvent(true);
+
+            return false;
         });
 
     }
@@ -320,6 +351,15 @@ public class OrderConfirmation extends AppCompatActivity {
                     } catch (WriterException e) {
                         e.printStackTrace();
                     }
+                }
+
+                if (orderInfo.getOrderNote() != null && !orderInfo.getOrderNote().trim().equalsIgnoreCase("")){
+
+                    llNotes.setVisibility(View.VISIBLE);
+                    tvNotes.setText(orderInfo.getOrderNote());
+                } else {
+
+                    llNotes.setVisibility(View.GONE);
                 }
 
             }

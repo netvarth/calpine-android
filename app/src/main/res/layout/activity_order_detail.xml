@@ -92,12 +92,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fillViewport="true"
-                    android:scrollbars="none">
+                    android:scrollbars="vertical">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
                         <RelativeLayout
                             android:id="@+id/rl_new"
                             android:layout_width="match_parent"
@@ -115,15 +116,15 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/dimen_10dp"
                                     android:layout_marginTop="@dimen/dimen_25dp"
-                                    android:visibility="gone"
-                                    android:orientation="horizontal">
+                                    android:orientation="horizontal"
+                                    android:visibility="gone">
 
                                     <ImageView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:src="@drawable/tickmark"
+                                        android:layout_marginTop="3dp"
                                         android:layout_marginRight="@dimen/dimen_5dp"
-                                        android:layout_marginTop="3dp"/>
+                                        android:src="@drawable/tickmark" />
 
                                     <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                                         android:id="@+id/tv_heading"
@@ -131,14 +132,13 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginEnd="8dp"
                                         android:ellipsize="end"
-                                        android:text="Order Confirmed!"
                                         android:maxLines="1"
+                                        android:text="Order Confirmed!"
                                         android:textColor="@color/dark_blue"
                                         android:textSize="@dimen/dimen_20dp">
 
                                     </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
                                 </LinearLayout>
-
 
 
                                 <LinearLayout
@@ -193,8 +193,7 @@
                                                 android:layout_marginStart="@dimen/padding3"
                                                 android:text="Contact info"
                                                 android:textColor="@color/dark_blue"
-                                                android:textSize="14dp">
-                                            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                                                android:textSize="14dp"></com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
                                         </LinearLayout>
 
@@ -203,8 +202,8 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_gravity="center_vertical"
-                                            android:visibility="gone"
-                                            android:layout_marginTop="6dp">
+                                            android:layout_marginTop="6dp"
+                                            android:visibility="gone">
 
                                             <ImageView
                                                 android:layout_width="20dp"
@@ -464,11 +463,11 @@
                                 <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Ordered Items"
+                                    android:layout_marginStart="@dimen/dimen_20dp"
                                     android:layout_marginTop="@dimen/dimen_15dp"
-                                    android:textSize="@dimen/dimen_15dp"
+                                    android:text="Ordered Items"
                                     android:textColor="@color/dark_blue"
-                                    android:layout_marginStart="@dimen/dimen_20dp">
+                                    android:textSize="@dimen/dimen_15dp">
 
                                 </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
@@ -476,10 +475,10 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="5dp"
                                     android:layout_marginStart="@dimen/dimen_20dp"
-                                    android:layout_marginEnd="@dimen/dimen_20dp"
                                     android:layout_marginTop="@dimen/dimen_5dp"
-                                    android:backgroundTint="@color/light_gray"
-                                    android:background="@drawable/dash_gap">
+                                    android:layout_marginEnd="@dimen/dimen_20dp"
+                                    android:background="@drawable/dash_gap"
+                                    android:backgroundTint="@color/light_gray">
 
                                 </LinearLayout>
 
@@ -487,23 +486,68 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/dimen_10dp"
-                                    android:layout_marginTop="@dimen/dimen_20dp"
-                                    android:layout_marginEnd="@dimen/dimen_10dp"
-                                    android:layout_marginBottom="@dimen/dimen_20dp"
-                                    android:orientation="horizontal">
+                                    android:orientation="vertical"
+                                    android:layout_marginBottom="@dimen/dimen_20dp">
 
-                                    <com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView
-                                        android:id="@+id/rv_items"
+                                    <LinearLayout
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content">
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="@dimen/dimen_10dp"
+                                        android:layout_marginTop="@dimen/dimen_20dp"
+                                        android:layout_marginEnd="@dimen/dimen_10dp"
+                                        android:layout_marginBottom="@dimen/dimen_20dp"
+                                        android:orientation="horizontal">
 
-                                    </com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView>
+                                        <com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView
+                                            android:id="@+id/rv_items"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content">
 
+                                        </com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView>
+
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:id="@+id/ll_notes"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:visibility="gone">
+
+                                        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="@dimen/dimen_20dp"
+                                            android:text="Order Notes"
+                                            android:textColor="@color/dark_blue"
+                                            android:textSize="@dimen/dimen_15dp">
+
+                                        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                                            android:id="@+id/tv_notes"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="@dimen/dimen_15dp"
+                                            android:layout_marginTop="@dimen/dimen_8dp"
+                                            android:layout_marginEnd="@dimen/dimen_15dp"
+                                            android:background="@drawable/edittext"
+                                            android:backgroundTint="@color/special_background"
+                                            android:maxLines="3"
+                                            android:paddingStart="@dimen/dimen_15dp"
+                                            android:paddingTop="@dimen/dimen_5dp"
+                                            android:paddingEnd="@dimen/dimen_15dp"
+                                            android:paddingBottom="@dimen/dimen_5dp"
+                                            android:scrollbars="vertical"
+                                            android:textColor="@color/title_color">
+
+                                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+
+                                    </LinearLayout>
 
                                 </LinearLayout>
-
-
 
                             </LinearLayout>
 
@@ -523,8 +567,8 @@
                                     android:id="@+id/tv_viewMore"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="0.5"
                                     android:layout_centerVertical="true"
+                                    android:layout_weight="0.5"
                                     android:paddingRight="@dimen/dimen_20dp"
                                     android:text="View More"
                                     android:textAllCaps="true"
@@ -532,19 +576,19 @@
                                     android:textSize="@dimen/txtsize_12">
 
                                 </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
                                 <Button
+                                    android:id="@+id/cv_ok"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0.5"
-                                    android:id="@+id/cv_ok"
-                                    android:text="OK"
-                                    android:textStyle="bold"
+                                    android:background="@drawable/curved_save"
                                     android:backgroundTint="@color/location_theme"
+                                    android:text="OK"
                                     android:textColor="@color/white"
-                                    android:background="@drawable/curved_save">
+                                    android:textStyle="bold">
 
                                 </Button>
-
 
 
                             </LinearLayout>
@@ -555,16 +599,16 @@
                             android:id="@+id/ll_moreDetails"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/rl_new"
                             android:layout_marginStart="@dimen/dimen_5dp"
                             android:layout_marginTop="@dimen/dimen_5dp"
                             android:layout_marginEnd="@dimen/dimen_5dp"
                             android:layout_marginBottom="@dimen/dimen_5dp"
                             android:elevation="@dimen/dimen_10dp"
                             android:visibility="gone"
-                            android:layout_below="@id/rl_new"
+                            app:cardBackgroundColor="#f8f8f8"
                             app:neomorph_corner_radius="@dimen/dimen_8dp"
-                            app:neomorph_shadow_type="inner"
-                            app:cardBackgroundColor="#f8f8f8">
+                            app:neomorph_shadow_type="inner">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -599,9 +643,9 @@
                                             <LinearLayout
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
+                                                android:layout_marginRight="@dimen/dimen_5dp"
                                                 android:gravity="center"
                                                 android:orientation="vertical"
-                                                android:layout_marginRight="@dimen/dimen_5dp"
                                                 android:visibility="visible">
 
 
@@ -637,9 +681,9 @@
                                             <LinearLayout
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
+                                                android:layout_marginLeft="@dimen/dimen_5dp"
                                                 android:layout_marginTop="@dimen/dimen_10dp"
                                                 android:gravity="center"
-                                                android:layout_marginLeft="@dimen/dimen_5dp"
                                                 android:orientation="vertical">
 
                                                 <ImageView
@@ -691,8 +735,8 @@
                                 android:id="@+id/tv_viewLess"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="0.5"
                                 android:layout_centerVertical="true"
+                                android:layout_weight="0.5"
                                 android:paddingRight="@dimen/dimen_20dp"
                                 android:text="View Less"
                                 android:textAllCaps="true"
@@ -700,19 +744,19 @@
                                 android:textSize="@dimen/txtsize_12">
 
                             </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
                             <Button
+                                android:id="@+id/cv_ok1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.5"
-                                android:id="@+id/cv_ok1"
-                                android:text="OK"
-                                android:textStyle="bold"
+                                android:background="@drawable/curved_save"
                                 android:backgroundTint="@color/location_theme"
+                                android:text="OK"
                                 android:textColor="@color/white"
-                                android:background="@drawable/curved_save">
+                                android:textStyle="bold">
 
                             </Button>
-
 
 
                         </LinearLayout>

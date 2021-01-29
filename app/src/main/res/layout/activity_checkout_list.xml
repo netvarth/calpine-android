@@ -49,6 +49,7 @@
 
 
     <ScrollView
+        android:id="@+id/nested"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/cv_placeOrder"
@@ -291,9 +292,11 @@
                         android:background="@drawable/edittext"
                         android:backgroundTint="@color/special_background"
                         android:hint="Add special instructions"
-                        android:inputType="text"
+                        android:inputType="textMultiLine"
                         android:paddingStart="@dimen/dimen_8dp"
                         android:paddingTop="@dimen/dimen_8dp"
+                        android:maxLines="3"
+                        android:scrollbars="vertical"
                         android:paddingBottom="@dimen/dimen_8dp"
                         android:textSize="14dp">
 

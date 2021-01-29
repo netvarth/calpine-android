@@ -33,6 +33,21 @@
             android:layout_marginBottom="@dimen/txtsize_12"
             android:orientation="vertical">
 
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                android:id="@+id/tv_providerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text=""
+                android:visibility="gone"
+                android:textColor="@color/title_color"
+                android:textSize="@dimen/dimen_16sp"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginEnd="@dimen/dimen_10dp">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -70,7 +85,7 @@
                         android:id="@+id/tv_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Confirmed"
+                        android:text=""
                         android:padding="@dimen/padding3"
                         android:layout_centerInParent="true"
                         android:textColor="@color/white"
@@ -85,20 +100,7 @@
 
             </LinearLayout>
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                android:id="@+id/tv_providerName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:text=""
-                android:visibility="gone"
-                android:textColor="@color/title_color"
-                android:textSize="@dimen/dimen_16sp"
-                android:layout_marginStart="@dimen/dimen_10dp"
-                android:layout_marginEnd="@dimen/dimen_10dp">
 
-            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
             <LinearLayout
                 android:layout_width="wrap_content"

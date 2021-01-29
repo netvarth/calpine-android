@@ -135,7 +135,6 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
         rvTodays.setAdapter(todayBookingsAdapter);
 
 
-
         return view;
     }
 
@@ -610,20 +609,24 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
 
                 Intent intent = new Intent(mContext, BookingDetails.class);
                 intent.putExtra("bookingInfo", bookings);
-                if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled") && !bookings.getBookingStatus().equalsIgnoreCase("Completed")) {
-                    intent.putExtra("isActive", true);
-                } else {
-                    intent.putExtra("isActive", false);
+                if (bookings.getBookingStatus() != null) {
+                    if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled") && !bookings.getBookingStatus().equalsIgnoreCase("Completed")) {
+                        intent.putExtra("isActive", true);
+                    } else {
+                        intent.putExtra("isActive", false);
+                    }
                 }
                 startActivity(intent);
             } else if (bookings.getBookingType().equalsIgnoreCase(Constants.CHECKIN) || bookings.getBookingType().equalsIgnoreCase(Constants.TOKEN)) {
 
                 Intent intent = new Intent(mContext, CheckInDetails.class);
                 intent.putExtra("bookingInfo", bookings);
-                if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled")) {
-                    intent.putExtra("isActive", true);
-                } else {
-                    intent.putExtra("isActive", false);
+                if (bookings.getBookingStatus() != null) {
+                    if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled")) {
+                        intent.putExtra("isActive", true);
+                    } else {
+                        intent.putExtra("isActive", false);
+                    }
                 }
                 startActivity(intent);
 
@@ -637,12 +640,12 @@ public class MyBookings extends RootFragment implements ISelectedBooking {
     public void sendSelectedBookingActions(Bookings bookings) {
 
         boolean isActive = false;
-        if (bookings != null && bookings.getBookingStatus() != null){
-            if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled") && !bookings.getBookingStatus().equalsIgnoreCase("done")){
+        if (bookings != null && bookings.getBookingStatus() != null) {
+            if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled") && !bookings.getBookingStatus().equalsIgnoreCase("done")) {
                 isActive = true;
             }
         }
-        actionsDialog = new ActionsDialog(mContext,isActive,bookings);
+        actionsDialog = new ActionsDialog(mContext, isActive, bookings);
         actionsDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
         actionsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         actionsDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

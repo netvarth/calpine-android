@@ -28,12 +28,10 @@ import com.jaldeeinc.jaldee.widgets.TouchImageView;
 
 import java.util.ArrayList;
 
-public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapter.MyViewHolder> implements ISaveNotes {
+public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapter.MyViewHolder> {
 
     ArrayList<ShoppingListModel> itemList;
-    private CustomNotes customNotes;
     Context mContext;
-    private ISaveNotes iSaveNotes;
     private boolean isEdit = false;
     private IDeleteImagesInterface iDeleteImagesInterface;
 
@@ -58,7 +56,6 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
     public ImagePreviewAdapter(ArrayList<ShoppingListModel> itemList, Context mContext, boolean isEdit,IDeleteImagesInterface iDeleteImagesInterface) {
         this.itemList = itemList;
         this.mContext = mContext;
-        iSaveNotes = this;
         this.isEdit = isEdit;
         this.iDeleteImagesInterface = iDeleteImagesInterface;
     }
@@ -105,7 +102,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
             @Override
             public void onClick(View v) {
 
-                showNotesDialog(position);
+                iDeleteImagesInterface.addedNotes(position);
 
             }
         });
@@ -121,19 +118,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
 
     }
 
-    private void showNotesDialog(int position) {
 
-        customNotes = new CustomNotes(mContext, position, iSaveNotes,itemList.get(position).getCaption());
-        customNotes.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
-        customNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        customNotes.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        customNotes.setCancelable(false);
-        customNotes.show();
-        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-        int width = (int) (metrics.widthPixels * 1);
-        customNotes.getWindow().setGravity(Gravity.BOTTOM);
-        customNotes.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-    }
 
     @Override
     public int getItemCount() {
@@ -190,13 +175,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
 
     }
 
-    @Override
-    public void saveMessage(String caption, int position) {
 
-        itemList.get(position).setCaption(caption);
-        notifyDataSetChanged();
-
-    }
 
 }
 
