@@ -693,7 +693,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
                                         TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
 
-                                        txtprepayment.setText(R.string.serve_prepay);
+                                        txtprepayment.setText(R.string.ordr_prepay);
 
                                         txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(prepayAmount))));
                                         Typeface tyface1 = Typeface.createFromAsset(CheckoutItemsActivity.this.getAssets(),
