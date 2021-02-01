@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.45"
             android:gravity="left"
-            android:maxLines="1"
+            android:maxLines="3"
             android:text="time"
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_12" />
