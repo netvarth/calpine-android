@@ -7,4 +7,6 @@ public interface IEditAddress {
     void onAddressClick(Address address);
 
     void onEditClick(Address address, int position);
+
+    void onDeleteClick(Address address, int position);
 }

@@ -26,6 +26,7 @@ public class MyPayments {
     String settlementAmount;
     boolean testTransaction;
     String paymentModeName;
+    String accountEncodedId;
 
     public int getId() {
         return id;
@@ -219,4 +220,11 @@ public class MyPayments {
         this.paymentModeName = paymentModeName;
     }
 
+    public String getAccountEncodedId() {
+        return accountEncodedId;
+    }
+
+    public void setAccountEncodedId(String accountEncodedId) {
+        this.accountEncodedId = accountEncodedId;
+    }
 }

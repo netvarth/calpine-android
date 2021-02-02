@@ -1,5 +1,6 @@
 package com.jaldeeinc.jaldee.activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
@@ -13,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -30,6 +32,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.ISelectedService;
@@ -205,6 +214,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
     @BindView(R.id.tv_aboutUsHint)
     CustomTextViewMedium tvAboutUsHint;
+
+    @BindView(R.id.tv_providerName)
+    CustomTextViewBold tvProviderName;
 
     String claimable;
     private int uniqueId;
@@ -618,7 +630,28 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     } else {
                         tv_mImageViewTextnew.setVisibility(View.GONE);
                         if (mBusinessDataList.getLogo() != null) {
-                            PicassoTrustAll.getInstance(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(ivSpImage);
+                            Glide.with(ProviderDetailActivity.this)
+                                    .load(mBusinessDataList.getLogo().getUrl())
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .skipMemoryCache(true)
+                                    .apply(new RequestOptions().error(R.drawable.icon_noimage).circleCrop())
+                                    .listener(new RequestListener<Drawable>() {
+                                        @Override
+                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                            //on load failed
+                                            ivSpImage.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_noimage));
+                                            return false;
+                                        }
+
+                                        @Override
+                                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                            //on load success
+
+                                            return false;
+                                        }
+                                    })
+                                    .into(ivSpImage);
+//                            PicassoTrustAll.getInstance(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(ivSpImage);
                             ivSpImage.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
@@ -659,14 +692,20 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
     private void UpdateMainUI(SearchViewDetail mBusinessDataList) {
 
-
         if (mBusinessDataList != null) {
 
             // Service provider name
             if (mBusinessDataList.getBusinessName() != null) {
                 String name = mBusinessDataList.getBusinessName();
-//                name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
                 tvSpName.setText(name);
+            }
+
+            if (mBusinessDataList.getBusinessUserName() != null){
+
+                tvProviderName.setVisibility(View.VISIBLE);
+                tvProviderName.setText(mBusinessDataList.getBusinessUserName());
+            } else {
+                tvProviderName.setVisibility(View.GONE);
             }
 
             // verified
@@ -837,21 +876,21 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
     }
 
-    public void updateContactInfo(){
+    public void updateContactInfo() {
 
-        if (mBusinessDataList.getPhoneNumbers() != null || mBusinessDataList.getEmails() != null){
+        if (mBusinessDataList.getPhoneNumbers() != null || mBusinessDataList.getEmails() != null) {
             tvMoreInfo.setVisibility(View.VISIBLE);
 
-            if (mBusinessDataList.getPhoneNumbers() != null && mBusinessDataList.getPhoneNumbers().size() > 0 && mBusinessDataList.getPhoneNumbers().get(0).getInstance() != null){
+            if (mBusinessDataList.getPhoneNumbers() != null && mBusinessDataList.getPhoneNumbers().size() > 0 && mBusinessDataList.getPhoneNumbers().get(0).getInstance() != null) {
                 llPhone.setVisibility(View.VISIBLE);
                 tvContactDetails.setVisibility(View.VISIBLE);
                 tvProviderPhoneNo.setText(mBusinessDataList.getPhoneNumbers().get(0).getInstance());
 
-            }  else {
+            } else {
                 llPhone.setVisibility(View.GONE);
             }
 
-            if (mBusinessDataList.getEmails() != null && mBusinessDataList.getEmails().size() > 0 && mBusinessDataList.getEmails().get(0).getInstance() != null){
+            if (mBusinessDataList.getEmails() != null && mBusinessDataList.getEmails().size() > 0 && mBusinessDataList.getEmails().get(0).getInstance() != null) {
 
                 llEmail.setVisibility(View.VISIBLE);
                 tvContactDetails.setVisibility(View.VISIBLE);
@@ -898,21 +937,34 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 String url = mBusinessDataList.getLogo().getUrl();
                 url = url.replaceAll(" ", "%20");
                 String finalUrl = url;
-                PicassoTrustAll.getInstance(context).load(url).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(ivSpImage, new com.squareup.picasso.Callback() {
-                    @Override
-                    public void onSuccess() {
 
-                    }
+                Glide.with(ProviderDetailActivity.this)
+                        .load(finalUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .apply(new RequestOptions().error(R.drawable.icon_noimage).circleCrop())
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                //on load failed
+                                ivSpImage.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_noimage));
+                                return false;
+                            }
 
-                    @Override
-                    public void onError() {
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                //on load success
 
-                        PicassoTrustAll.getInstance(context).load(finalUrl).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(ivSpImage);
-                    }
-                });
+                                return false;
+                            }
+                        })
+                        .into(ivSpImage);
+
             } else {
                 //Toast.makeText(mContext, "There is no Profile Pic", Toast.LENGTH_SHORT).show();
                 // Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+                ivSpImage.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_noimage));
+
             }
             if (mBusinessDataList.getLogo() != null) {
                 if (mGallery.size() > 0) {
@@ -960,7 +1012,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             checkOrderEnabled(mSearchSettings, uniqueId, mProviderId, mlocationId);
                         }
 
-                    } else if (response.code() == 403){
+                    } else if (response.code() == 403) {
 
                         rvServices.setVisibility(View.GONE);
                     }

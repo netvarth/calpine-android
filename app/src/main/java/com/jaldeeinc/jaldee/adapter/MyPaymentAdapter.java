@@ -98,6 +98,8 @@ public class MyPaymentAdapter extends ArrayAdapter<MyPayments> {
             } else if (paymentsList.get(position).getTxnType().equalsIgnoreCase("Donation")) {
                 ivIcon.setImageResource(R.drawable.icon_donate);
                 ivIcon.setColorFilter(getContext().getResources().getColor(R.color.location_theme));
+            } else if (paymentsList.get(position).getTxnType().equalsIgnoreCase("Order")){
+                ivIcon.setImageResource(R.drawable.order_icon);
             }
         } else {
             ivIcon.setVisibility(View.GONE);

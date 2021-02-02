@@ -45,15 +45,32 @@
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true">
+
+                <ImageView
+                    android:id="@+id/iv_delete"
+                    android:layout_width="@dimen/dimen_20dp"
+                    android:layout_height="@dimen/dimen_20dp"
+                    android:src="@drawable/ic_action_delete"
+                    app:tint="@color/dark_blue"
+                    android:visibility="gone">
+
+                </ImageView>
+
                 <ImageView
                     android:id="@+id/iv_edit"
                     android:layout_width="@dimen/dimen_20dp"
                     android:layout_height="@dimen/dimen_20dp"
+                    android:layout_marginStart="@dimen/dimen_8dp"
                     android:src="@drawable/edit_icon"
-                    android:layout_alignParentEnd="true"
                     app:tint="@color/dark_blue">
 
                 </ImageView>
+
+                </LinearLayout>
 
             </RelativeLayout>
 

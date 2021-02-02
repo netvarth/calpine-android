@@ -64,6 +64,7 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.AddNotes;
 import com.jaldeeinc.jaldee.custom.CheckInSlotsDialog;
+import com.jaldeeinc.jaldee.custom.CustomAutoSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
@@ -176,7 +177,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
     ImageView ivPlus;
 
     @BindView(R.id.tv_calenderDate)
-    CustomTextViewSemiBold tvCalenderDate;
+    CustomAutoSemiBold tvCalenderDate;
 
     @BindView(R.id.tv_userName)
     CustomTextViewBold tv_userName;

@@ -144,6 +144,79 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/ll_message"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/dimen_30dp"
+                        android:layout_height="@dimen/dimen_30dp"
+                        android:src="@drawable/icon_groupchat">
+
+                    </ImageView>
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding5"
+                        android:text="Messages"
+                        android:gravity="center"
+                        android:textColor="@color/title_color"
+                        android:textSize="@dimen/txtsize_12"
+                        android:visibility="visible">
+
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_rating"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="@dimen/dimen_10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/dimen_30dp"
+                        android:layout_height="@dimen/dimen_30dp"
+                        android:src="@drawable/rating_new"
+                        app:tint="@color/title_color">
+
+                    </ImageView>
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding5"
+                        android:text="     Rate    "
+                        android:gravity="center"
+                        android:textColor="@color/title_color"
+                        android:textSize="@dimen/txtsize_12"
+                        android:visibility="visible">
+
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                </LinearLayout>
+            </LinearLayout>
+
 
         </GridLayout>
 

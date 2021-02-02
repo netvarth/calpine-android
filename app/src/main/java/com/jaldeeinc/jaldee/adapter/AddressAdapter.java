@@ -101,6 +101,14 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
                 }
             });
 
+            viewHolder.ivDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    iEditAddress.onDeleteClick(address,position);
+                }
+            });
+
 
 
 
@@ -124,7 +132,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
        private CustomTextViewSemiBold tvHeader;
        private CustomTextViewMedium tvName,tvAddress,tvMobileNumber,tvEmail;
        private LinearLayout llLayout;
-       private ImageView ivEdit;
+       private ImageView ivEdit,ivDelete;
 
         public ViewHolder(@NonNull View itemView, boolean isLoading) {
 
@@ -139,6 +147,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
                 tvEmail = itemView.findViewById(R.id.tv_mailId);
                 llLayout = itemView.findViewById(R.id.ll_layout);
                 ivEdit = itemView.findViewById(R.id.iv_edit);
+                ivDelete = itemView.findViewById(R.id.iv_delete);
 
             }
         }

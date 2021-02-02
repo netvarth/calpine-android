@@ -328,6 +328,8 @@ public class ChatActivity extends AppCompatActivity {
                         ApiCommunicateAppointment(uuId, String.valueOf(accountID), etMessage.getText().toString());
                     } else if (from != null && from.equalsIgnoreCase(Constants.CHECKIN)) {
                         ApiCommunicateCheckin(uuId, String.valueOf(accountID), etMessage.getText().toString());
+                    } else if (from != null && from.equalsIgnoreCase(Constants.ORDERS)){
+                        ApiCommunicateOrders(uuId, String.valueOf(accountID), etMessage.getText().toString());
                     }
 
                 }
@@ -777,6 +779,75 @@ public class ChatActivity extends AppCompatActivity {
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog((Activity) mContext, mDialog);
+            }
+        });
+    }
+
+    private void ApiCommunicateOrders(String waitListId, String accId, String message) {
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        MediaType type = MediaType.parse("*/*");
+        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
+        mBuilder.setType(MultipartBody.FORM);
+        if (message.equalsIgnoreCase("")) {
+            message = "Please find the attachments";
+        }
+
+        mBuilder.addFormDataPart("message", message);
+        for (int i = 0; i < imagePathList.size(); i++) {
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (bitmap != null) {
+                path = saveImage(bitmap);
+                file = new File(path);
+            } else {
+                file = new File(imagePathList.get(i));
+            }
+            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+        }
+        RequestBody requestBody = mBuilder.build();
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("communicationMessage", message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call = apiService.orderMessage(waitListId, String.valueOf(accId), requestBody);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(ChatActivity.this, mDialog);
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+
+                        etMessage.setText("");
+                        ApiInboxList();
+                        imagePathList.clear();
+
+                    } else {
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(ChatActivity.this, mDialog);
             }
         });
     }

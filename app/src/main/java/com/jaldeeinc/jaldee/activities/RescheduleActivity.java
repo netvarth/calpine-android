@@ -52,6 +52,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.AddNotes;
+import com.jaldeeinc.jaldee.custom.CustomAutoSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
@@ -158,7 +159,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
     ImageView ivPlus;
 
     @BindView(R.id.tv_calenderDate)
-    CustomTextViewSemiBold tvCalenderDate;
+    CustomAutoSemiBold tvCalenderDate;
 
     @BindView(R.id.tv_userName)
     CustomTextViewBold tv_userName;

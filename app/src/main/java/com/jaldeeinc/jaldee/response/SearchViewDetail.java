@@ -46,6 +46,7 @@ public class  SearchViewDetail implements Serializable {
 
     int id;
     String businessName;
+    String businessUserName;
     String displayName;
     String domain;
     String branchId;
@@ -403,4 +404,11 @@ public class  SearchViewDetail implements Serializable {
     int userSubdomain;
 
 
+    public String getBusinessUserName() {
+        return businessUserName;
+    }
+
+    public void setBusinessUserName(String businessUserName) {
+        this.businessUserName = businessUserName;
+    }
 }

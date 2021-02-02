@@ -52,6 +52,8 @@ public class Constants {
 
     public static final String DEVICE_NAME = "deviceName";
 
+    public static final String NONE = "NONE";
+    public static final String FULLAMOUNT = "FULLAMOUNT";
 
 
 

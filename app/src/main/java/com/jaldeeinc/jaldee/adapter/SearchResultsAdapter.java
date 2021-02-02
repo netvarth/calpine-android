@@ -30,6 +30,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
@@ -105,6 +106,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
     final ArrayList serviceNamesDonationsMin = new ArrayList();
     final ArrayList serviceNamesDonationsMax = new ArrayList();
     final ArrayList serviceNamesDonationsMultiples = new ArrayList();
+
 
     public SearchResultsAdapter(Activity activity, Context context, AdapterCallback callback, String uniqueID, List<QueueList> mQueueList) {
         this.context = context;
@@ -232,12 +234,12 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             }
                             String finalUrl = url;
 
-                            if (!((Activity) context).isFinishing()) {
+//                            if (!((Activity) context).isDestroyed()) {
 
-                                Glide.with(context)
+                                Glide.with(myViewHolder.itemView.getContext())
                                         .load(finalUrl)
                                         .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                                        .skipMemoryCache(true)
+                                        .skipMemoryCache(true)
                                         .apply(new RequestOptions().error(R.drawable.icon_noimage).circleCrop())
                                         .listener(new RequestListener<Drawable>() {
                                             @Override
@@ -259,7 +261,11 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                         })
                                         .into(myViewHolder.ivSpImage);
 
-                            }
+//                            } else {
+//
+//                                myViewHolder.cvShimmer.setVisibility(View.GONE);
+//                            }
+
 
 //                            Glide.with(context) //1
 //                                    .load(url)

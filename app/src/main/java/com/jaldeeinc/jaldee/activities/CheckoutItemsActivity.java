@@ -48,6 +48,7 @@ import com.jaldeeinc.jaldee.Interface.ISelectedTime;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.AddressAdapter;
 import com.jaldeeinc.jaldee.adapter.CheckoutItemsAdapter;
+import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -240,11 +241,11 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     @BindView(R.id.et_couponCode)
     CustomEditTextRegular etCouponCode;
 
-    @BindView(R.id.tv_invalidCode)
-    CustomTextViewItalicSemiBold tvInvalidCode;
-
     @BindView(R.id.tv_apply)
     CustomTextViewBold tvApply;
+
+    @BindView(R.id.list)
+    RecyclerView list;
 
     private boolean isStore = true;
     private DatabaseHandler db;
@@ -276,6 +277,8 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     private StoreDetails storeInfo = new StoreDetails();
     private StoreDetailsDialog storeDetailsDialog;
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
+    ArrayList<String> couponArraylist = new ArrayList<>();
+    private CouponlistAdapter mAdapter;
 
 
     @Override
@@ -450,7 +453,61 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             return false;
         });
 
+        tvApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String code = etCouponCode.getEditableText().toString();
+
+                boolean found = false;
+                for (int index = 0; index < couponArraylist.size(); index++) {
+                    if (couponArraylist.get(index).equals(code)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+
+                    Toast.makeText(CheckoutItemsActivity.this, "Coupon already added", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+                found = false;
+                for (int i = 0; i < s3couponList.size(); i++) {
+                    if (s3couponList.get(i).getJaldeeCouponCode().equals(code)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+
+                    couponArraylist.add(code);
+
+                    etCouponCode.setText("");
+                    Toast.makeText(CheckoutItemsActivity.this, code + " " + "Added", Toast.LENGTH_SHORT).show();
+
+
+                } else {
+                    if (code.equals("")) {
+                        Toast.makeText(CheckoutItemsActivity.this, "Enter a coupon", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(CheckoutItemsActivity.this, "Coupon Invalid", Toast.LENGTH_SHORT).show();
+                    }
+
+
+                }
+                Config.logV("couponArraylist--code-------------------------" + couponArraylist);
+                list.setVisibility(View.VISIBLE);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CheckoutItemsActivity.this);
+                list.setLayoutManager(mLayoutManager);
+                mAdapter = new CouponlistAdapter(CheckoutItemsActivity.this, s3couponList, code, couponArraylist);
+                list.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+
+
         ApiGetProfileDetail();
+        getS3Coupons(uniqueId);
 
     }
 
@@ -464,9 +521,6 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         mDialog.show();
 
         JSONObject inputObj = new JSONObject();
-        JSONObject itemsObj1 = new JSONObject();
-        JSONObject itemsObj2 = new JSONObject();
-        JSONObject itemsObj3 = new JSONObject();
         JSONObject catalog = new JSONObject();
         JSONObject orderFor = new JSONObject();
         JSONObject timeSlot = new JSONObject();
@@ -529,6 +583,15 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             inputObj.put("orderDate", selectedDate);
             inputObj.put("countryCode", countryCode);
             inputObj.put("orderNote", etSpecialNotes.getText().toString());
+
+            JSONArray couponList = new JSONArray();
+
+            for (int i = 0; i < couponArraylist.size(); i++) {
+                couponList.put(couponArraylist.get(i));
+            }
+            Log.i("kooooooo", couponList.toString());
+            inputObj.put("coupons", couponList);
+            Log.i("couponList", couponList.toString());
             if (itemsList != null && itemsList.size() > 0) {
 
                 for (int i = 0; i < itemsList.size(); i++) {
@@ -599,7 +662,11 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                 if (reader.getString(getJsonObj).trim().length() > 7) {
                                     value = reader.getString(getJsonObj);
                                 }
-                                if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().equalsIgnoreCase("0.0")) {
+                                if (!catalogs.get(0).getPaymentType().equalsIgnoreCase(Constants.FULLAMOUNT)) {
+                                    if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().equalsIgnoreCase("0.0")) {
+                                        prepayAmount = reader.getString("_prepaymentAmount");
+                                    }
+                                } else {
                                     prepayAmount = reader.getString("_prepaymentAmount");
                                 }
 

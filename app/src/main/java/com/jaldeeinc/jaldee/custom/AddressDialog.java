@@ -389,6 +389,14 @@ public class AddressDialog extends Dialog implements IEditAddress {
 
     }
 
+    @Override
+    public void onDeleteClick(Address address, int position) {
+
+        addressList.remove(position);
+        addressAdapter.notifyDataSetChanged();
+
+    }
+
     private void clearAllEditTexts() {
 
         etFirstName.setText("");

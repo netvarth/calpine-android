@@ -50,6 +50,7 @@ import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.Interface.ISelectedTime;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.AddressAdapter;
+import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
 import com.jaldeeinc.jaldee.adapter.ImagePreviewAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -57,6 +58,7 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.AddressDialog;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomEditTextRegular;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.EditContactDialog;
@@ -72,6 +74,7 @@ import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.Catalog;
+import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.OrderResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
@@ -238,6 +241,18 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     @BindView(R.id.nested)
     ScrollView scrollView;
 
+    @BindView(R.id.rl_coupon)
+    RelativeLayout rlCoupon;
+
+    @BindView(R.id.et_couponCode)
+    CustomEditTextRegular etCouponCode;
+
+    @BindView(R.id.tv_apply)
+    CustomTextViewBold tvApply;
+
+    @BindView(R.id.list)
+    RecyclerView list;
+
     private boolean isStore = true;
     private String selectedDate;
     private String selectedTime = "";
@@ -271,6 +286,9 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     File f, file;
     private static final String IMAGE_DIRECTORY = "/demonuts";
     private IDeleteImagesInterface iDeleteImagesInterface;
+    ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
+    ArrayList<String> couponArraylist = new ArrayList<>();
+    private CouponlistAdapter mAdapter;
 
 
     @Override
@@ -454,7 +472,60 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
             return false;
         });
 
+        tvApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String code = etCouponCode.getEditableText().toString();
+
+                boolean found = false;
+                for (int index = 0; index < couponArraylist.size(); index++) {
+                    if (couponArraylist.get(index).equals(code)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+
+                    Toast.makeText(CheckoutListActivity.this, "Coupon already added", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+                found = false;
+                for (int i = 0; i < s3couponList.size(); i++) {
+                    if (s3couponList.get(i).getJaldeeCouponCode().equals(code)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+
+                    couponArraylist.add(code);
+
+                    etCouponCode.setText("");
+                    Toast.makeText(CheckoutListActivity.this, code + " " + "Added", Toast.LENGTH_SHORT).show();
+
+
+                } else {
+                    if (code.equals("")) {
+                        Toast.makeText(CheckoutListActivity.this, "Enter a coupon", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(CheckoutListActivity.this, "Coupon Invalid", Toast.LENGTH_SHORT).show();
+                    }
+
+
+                }
+                Config.logV("couponArraylist--code-------------------------" + couponArraylist);
+                list.setVisibility(View.VISIBLE);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CheckoutListActivity.this);
+                list.setLayoutManager(mLayoutManager);
+                mAdapter = new CouponlistAdapter(CheckoutListActivity.this, s3couponList, code, couponArraylist);
+                list.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+
         ApiGetProfileDetail();
+        getS3Coupons(uniqueId);
 
     }
 
@@ -508,6 +579,15 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
             inputBody.put("orderDate", selectedDate);
             inputBody.put("countryCode", countryCode);
             inputBody.put("orderNote", etSpecialNotes.getText().toString());
+
+            JSONArray couponList = new JSONArray();
+
+            for (int i = 0; i < couponArraylist.size(); i++) {
+                couponList.put(couponArraylist.get(i));
+            }
+            Log.i("kooooooo", couponList.toString());
+            inputBody.put("coupons", couponList);
+            Log.i("couponList", couponList.toString());
 
             if (isStore) {
                 inputBody.put("storePickup", true);
@@ -606,7 +686,11 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                                 if (reader.getString(getJsonObj).trim().length() > 7) {
                                     value = reader.getString(getJsonObj);
                                 }
-                                if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().equalsIgnoreCase("0.0")) {
+                                if (!catalogs.get(0).getPaymentType().equalsIgnoreCase(Constants.FULLAMOUNT)) {
+                                    if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().equalsIgnoreCase("0.0")) {
+                                        prepayAmount = reader.getString("_prepaymentAmount");
+                                    }
+                                } else {
                                     prepayAmount = reader.getString("_prepaymentAmount");
                                 }
 
@@ -1620,4 +1704,50 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     public void addedNotes(int position) {
 
     }
+
+    private void getS3Coupons(int uniqueID) {
+
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(CheckoutListActivity.this).create(ApiInterface.class);
+
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        Call<ArrayList<CoupnResponse>> call = apiService.getCoupanList(uniqueID, sdf.format(currentTime));
+        call.enqueue(new Callback<ArrayList<CoupnResponse>>() {
+            @Override
+            public void onResponse(Call<ArrayList<CoupnResponse>> call, Response<ArrayList<CoupnResponse>> response) {
+
+                try {
+
+                    if (response.code() == 200) {
+                        s3couponList.clear();
+                        s3couponList = response.body();
+
+                        if (s3couponList.size() != 0) {
+                            rlCoupon.setVisibility(View.VISIBLE);
+                        } else {
+                            rlCoupon.setVisibility(View.GONE);
+                        }
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<CoupnResponse>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+
+            }
+        });
+    }
+
 }

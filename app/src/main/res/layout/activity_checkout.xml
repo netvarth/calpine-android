@@ -807,18 +807,12 @@
 
             </RelativeLayout>
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
-                android:id="@+id/tv_invalidCode"
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="* Invalid coupon code"
-                android:layout_marginStart="@dimen/dimen_20dp"
-                android:layout_marginTop="@dimen/dimen_2dp"
-                android:textSize="@dimen/dimen_15dp"
-                android:visibility="gone"
-                android:textColor="@color/red">
-
-            </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
+                android:layout_margin="10dp"
+                android:visibility="gone" />
 
             <FrameLayout
                 android:layout_width="match_parent"

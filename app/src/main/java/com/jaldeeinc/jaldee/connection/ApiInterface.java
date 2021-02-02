@@ -400,6 +400,9 @@ public interface ApiInterface {
     @POST("consumer/waitlist/communicate/{waitlistid}")
     Call<ResponseBody> WaitListMessageWithAttachment(@Path("waitlistid") String waitlistId, @Query("account") String account, @Body RequestBody fBody);
 
+    @POST("consumer/orders/communicate/{uuid}")
+    Call<ResponseBody> orderMessage(@Path("uuid") String uuid, @Query("account") String account, @Body RequestBody jsonObj);
+
 
     @Headers("User-Agent: android")
     @POST("consumer/payment")
@@ -476,6 +479,15 @@ public interface ApiInterface {
 
     @POST("consumer/appointment/rating")
     Call<ResponseBody> PostRatingApp(@Query("account") String account, @Body RequestBody jsonObj);
+
+    @GET("consumer/orders/rating")
+    Call<ArrayList<RatingResponse>> getOrderRating(@QueryMap(encoded = true) Map<String, String> query);
+
+    @POST("consumer/orders/rating")
+    Call<ResponseBody> putOrderRating(@Query("account") String account, @Body RequestBody jsonObj);
+
+    @PUT("consumer/orders/rating")
+    Call<ResponseBody> updateOrderRating(@Query("account") String account, @Body RequestBody jsonObj);
 
     @GET("ynwConf/refinedFilters")
     Call<RefinedFilters> getFilters();

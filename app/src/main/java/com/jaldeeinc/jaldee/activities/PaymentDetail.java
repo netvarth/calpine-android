@@ -1,10 +1,13 @@
 package com.jaldeeinc.jaldee.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,11 +35,13 @@ import retrofit2.Response;
 public class PaymentDetail extends AppCompatActivity {
 
     Context mActivity;
-    TextView provider,dateandtime,mode,paymentMode,paymentGateway,amount,status,refundable;
-    LinearLayout providerLayout,dateandtimeLayout,modeLayout,paymentModeLayout,paymentGatewayLayout,amountLayout,statusLayout,refundableLayout;
+    TextView provider, dateandtime, mode, paymentMode, paymentGateway, amount, status, refundable;
+    LinearLayout providerLayout, dateandtimeLayout, modeLayout, paymentModeLayout, paymentGatewayLayout, amountLayout, statusLayout, refundableLayout;
     String id;
     TextView tv_title;
     Context mContext;
+    String uniqueID;
+    private MyPayments myPayments = new MyPayments();
 
 
     @Override
@@ -64,7 +69,6 @@ public class PaymentDetail extends AppCompatActivity {
         refundableLayout = findViewById(R.id.refundableLayout);
 
 
-
         ImageView iBackPress = findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,11 +92,48 @@ public class PaymentDetail extends AppCompatActivity {
         }
 
 
+        provider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (myPayments != null && myPayments.getAccountEncodedId() != null) {
+
+                    getUniqueId(myPayments.getAccountEncodedId());
+                }
+            }
+        });
+
         ApiPayementDetail(id);
 
 
     }
 
+    private void getUniqueId(String customID) {
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<String> call = apiService.getUniqueID(customID);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                try {
+                    if (response.code() == 200) {
+                        uniqueID = response.body();
+                        if (uniqueID != null) {
+                            Intent intent = new Intent(PaymentDetail.this, ProviderDetailActivity.class);
+                            intent.putExtra("uniqueID", uniqueID);
+                            startActivity(intent);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(mContext, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     private void ApiPayementDetail(String id) {
 
@@ -108,73 +149,71 @@ public class PaymentDetail extends AppCompatActivity {
 
                     if (response.code() == 200) {
 
-                        if(response.body().getAccountName()!=null){
-                            provider.setText(response.body().getAccountName());
-                            providerLayout.setVisibility(View.VISIBLE);
-                        }else{
-                            providerLayout.setVisibility(View.GONE);
-                        }
-                        if(response.body().getPaymentOn()!=null){
-                            String date = formatDateandTime(response.body().getPaymentOn());
-                            dateandtime.setText(date);
-                            dateandtime.setVisibility(View.VISIBLE);
-                        }else{
-                            dateandtime.setVisibility(View.GONE);
-                        }
+                        if (response.body() != null) {
 
-                        if(response.body().getPaymentMode()!=null){
-                            if (response.body().getPaymentModeName() != null) {
-                                paymentModeLayout.setVisibility(View.VISIBLE);
-                                paymentMode.setText(response.body().getPaymentModeName());
+                            myPayments = response.body();
+                            if (response.body().getAccountName() != null) {
+                                provider.setText(response.body().getAccountName());
+                                providerLayout.setVisibility(View.VISIBLE);
+                            } else {
+                                providerLayout.setVisibility(View.GONE);
                             }
-                            else {
+                            if (response.body().getPaymentOn() != null) {
+                                String date = formatDateandTime(response.body().getPaymentOn());
+                                dateandtime.setText(date);
+                                dateandtime.setVisibility(View.VISIBLE);
+                            } else {
+                                dateandtime.setVisibility(View.GONE);
+                            }
+
+                            if (response.body().getPaymentMode() != null) {
+                                if (response.body().getPaymentModeName() != null) {
+                                    paymentModeLayout.setVisibility(View.VISIBLE);
+                                    paymentMode.setText(response.body().getPaymentModeName());
+                                } else {
+                                    paymentModeLayout.setVisibility(View.GONE);
+                                }
+                            } else {
                                 paymentModeLayout.setVisibility(View.GONE);
                             }
-                        }else{
-                            paymentModeLayout.setVisibility(View.GONE);
+
+                            if (response.body().getAcceptPaymentBy() != null) {
+                                mode.setText(response.body().getAcceptPaymentBy());
+                                mode.setVisibility(View.VISIBLE);
+                            } else {
+                                mode.setVisibility(View.GONE);
+                            }
+
+                            if (response.body().getPaymentGateway() != null) {
+                                paymentGateway.setText(response.body().getPaymentGateway());
+                                paymentGatewayLayout.setVisibility(View.VISIBLE);
+                            } else {
+                                paymentGatewayLayout.setVisibility(View.GONE);
+                            }
+
+                            if (response.body().getAmount() != null) {
+                                amount.setText("₹ " + response.body().getAmount());
+                                amount.setVisibility(View.VISIBLE);
+                            } else {
+                                amount.setVisibility(View.GONE);
+                            }
+
+
+                            if (response.body().getStatus() != null) {
+                                status.setText(response.body().getStatus());
+                                status.setVisibility(View.VISIBLE);
+                            } else {
+                                status.setVisibility(View.GONE);
+                            }
+
+                            if (response.body().getRefundableAmount() != null) {
+                                refundable.setText(response.body().getRefundableAmount());
+                                refundable.setVisibility(View.VISIBLE);
+                            } else {
+                                refundable.setVisibility(View.GONE);
+                            }
+
                         }
-
-                        if(response.body().getAcceptPaymentBy()!=null){
-                            mode.setText(response.body().getAcceptPaymentBy());
-                            mode.setVisibility(View.VISIBLE);
-                        }else{
-                            mode.setVisibility(View.GONE);
-                        }
-
-                        if(response.body().getPaymentGateway()!=null){
-                            paymentGateway.setText(response.body().getPaymentGateway());
-                            paymentGateway.setVisibility(View.VISIBLE);
-                        }else{
-                            paymentGateway.setVisibility(View.GONE);
-                        }
-
-                        if(response.body().getAmount()!=null){
-                            amount.setText("₹ " + response.body().getAmount());
-                            amount.setVisibility(View.VISIBLE);
-                        }else{
-                            amount.setVisibility(View.GONE);
-                        }
-
-
-                        if(response.body().getStatus()!=null){
-                            status.setText(response.body().getStatus());
-                            status.setVisibility(View.VISIBLE);
-                        }else{
-                            status.setVisibility(View.GONE);
-                        }
-
-                        if(response.body().getRefundableAmount()!=null){
-                            refundable.setText(response.body().getRefundableAmount());
-                            refundable.setVisibility(View.VISIBLE);
-                        }else{
-                            refundable.setVisibility(View.GONE);
-                        }
-
-
-
-
-
-
                     } else {
                         if (response.code() != 419) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();

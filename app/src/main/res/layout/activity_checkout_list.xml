@@ -759,6 +759,62 @@
 
             </LinearLayout>
 
+            <RelativeLayout
+                android:id="@+id/rl_coupon"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_50dp"
+                android:layout_margin="@dimen/dimen_10dp"
+                android:background="@color/white"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_25dp"
+                    android:layout_height="@dimen/dimen_25dp"
+                    android:src="@drawable/discount"
+                    android:layout_marginStart="@dimen/dimen_15dp"
+                    android:layout_centerVertical="true"
+                    app:tint="@color/title_color">
+
+                </ImageView>
+
+                <com.jaldeeinc.jaldee.custom.CustomEditTextRegular
+                    android:id="@+id/et_couponCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Apply Coupon"
+                    android:textColorHint="@color/title_color"
+                    android:textColor="@color/title_color"
+                    android:maxLines="@integer/int_1"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="55dp"
+                    android:textSize="@dimen/dimen_16dp"
+                    android:background="@color/white">
+
+                </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                    android:id="@+id/tv_apply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Apply"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/dark_blue"
+                    android:layout_marginEnd="@dimen/dimen_15dp"
+                    android:textSize="@dimen/dimen_15dp">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:visibility="gone" />
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
