@@ -151,6 +151,7 @@
     <string name="db_table_address">tb_address</string>
     <string name="serve_prepay">Booking Fee </string>
     <string name="serve_pay">Service Fee </string>
+    <string name="ordr_prepay">Advance payment </string>
 
     <string name="terms"><![CDATA[T & C]]></string>
     <string name="err_pwd_valid_login">Invalid password</string>
