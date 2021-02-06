@@ -294,7 +294,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                 } else {
                     username = appointmentInfo.getProvider().getFirstName() + " " + appointmentInfo.getProvider().getLastName();
                 }
-                username = username.substring(0, 1).toUpperCase() + username.substring(1).toLowerCase();
+                //username = username.substring(0, 1).toUpperCase() + username.substring(1).toLowerCase();
                 tv_userName.setText(username);
                 tv_userName.setVisibility(View.VISIBLE);
                 tvSpName.setTextSize(16);
