@@ -310,6 +310,7 @@
                         android:layout_marginStart="@dimen/dimen_10dp"
                         android:layout_marginTop="@dimen/padding5"
                         android:layout_marginBottom="@dimen/padding5"
+                        android:orientation="horizontal"
                         android:visibility="gone">
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium

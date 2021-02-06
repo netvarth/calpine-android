@@ -790,6 +790,7 @@ public class CheckInDetails extends AppCompatActivity {
                     tvAmountToPay.setVisibility(View.GONE);
                     cvBill.setVisibility(View.VISIBLE);
                     tvBillText.setText("Receipt");
+                    tvBillText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 } else {
                     String amount = "₹" + " " + convertAmountToDecimals(checkInInfo.getAmountDue());
                     if (checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled")) {
