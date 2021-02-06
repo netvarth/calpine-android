@@ -8,7 +8,6 @@ import android.content.Intent;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +15,15 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
-import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchService;
+import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,6 +44,8 @@ public class ServiceListDetailAdapter extends RecyclerView.Adapter<ServiceListDe
     List<SearchDepartmentServices> mSearchDepartmentList;
     Context mContext;
     ServiceInfoDialog serviceInfoDialog;
+    private SearchViewDetail providerInfo;
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -134,7 +134,7 @@ public class ServiceListDetailAdapter extends RecyclerView.Adapter<ServiceListDe
 //                    final boolean isPrepayment = serviceList.isPrePayment();
 //                    final String minPrepayment = serviceList.getMinPrePaymentAmount();
 
-                    serviceInfoDialog = new ServiceInfoDialog(v.getContext(), mServiceList.get(position));
+                    serviceInfoDialog = new ServiceInfoDialog(v.getContext(), mServiceList.get(position), providerInfo);
                     serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     serviceInfoDialog.show();
                     DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();

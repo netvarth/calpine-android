@@ -23,9 +23,9 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
-import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchService;
+import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,6 +46,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
     List<SearchDepartmentServices> mSearchDepartmentList;
     Context mContext;
     ServiceInfoDialog serviceInfoDialog;
+    private SearchViewDetail providerInfo;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -135,7 +136,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
 //                    final boolean isPrepayment = serviceList.isPrePayment();
 //                    final String minPrepayment = serviceList.getMinPrePaymentAmount();
 
-                    serviceInfoDialog = new ServiceInfoDialog(v.getContext(), mServiceList.get(position));
+                    serviceInfoDialog = new ServiceInfoDialog(v.getContext(), mServiceList.get(position), providerInfo);
                     serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     serviceInfoDialog.show();
                     DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();

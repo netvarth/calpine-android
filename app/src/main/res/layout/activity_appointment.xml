@@ -529,6 +529,7 @@
                     android:paddingTop="@dimen/padding5"
                     android:paddingBottom="@dimen/padding5"
                     android:textAllCaps="true"
+                    android:inputType="text"
                     android:backgroundTint="@color/white"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/dimen_15sp" />

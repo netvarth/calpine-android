@@ -19,6 +19,8 @@ public class CartItemModel {
     private String promotionalType;
     private int isPromotional;
     private int isExpired = 0;
+    private int isTaxable = 0;
+    private double tax;
 
 
     public CartItemModel(){
@@ -26,10 +28,20 @@ public class CartItemModel {
     }
 
 
-    public CartItemModel(int id, int itemId, int accountId, int catalogId, String itemName, String imageUrl, int quantity, double itemPrice, double price, String instruction, int maxQuantity, double discount, double discountedPrice, String promotionalType) {
+
+    public CartItemModel(int itemId, double itemPrice, int maxQuantity, double discountedPrice) {
+        this.itemId = itemId;
+        this.itemPrice = itemPrice;
+        this.maxQuantity = maxQuantity;
+        this.discountedPrice = discountedPrice;
+        this.isPromotional = 0;
+    }
+
+    public CartItemModel(int id, int itemId, int accountId, int uniqueId, int catalogId, String itemName, String imageUrl, int quantity, double itemPrice, double price, String instruction, int maxQuantity, double discount, double discountedPrice, String promotionalType, int isPromotional, int isExpired, double tax) {
         this.id = id;
         this.itemId = itemId;
         this.accountId = accountId;
+        this.uniqueId = uniqueId;
         this.catalogId = catalogId;
         this.itemName = itemName;
         this.imageUrl = imageUrl;
@@ -41,14 +53,9 @@ public class CartItemModel {
         this.discount = discount;
         this.discountedPrice = discountedPrice;
         this.promotionalType = promotionalType;
-    }
-
-    public CartItemModel(int itemId, double itemPrice, int maxQuantity, double discountedPrice) {
-        this.itemId = itemId;
-        this.itemPrice = itemPrice;
-        this.maxQuantity = maxQuantity;
-        this.discountedPrice = discountedPrice;
-        this.isPromotional = 0;
+        this.isPromotional = isPromotional;
+        this.isExpired = isExpired;
+        this.tax = tax;
     }
 
 
@@ -194,5 +201,21 @@ public class CartItemModel {
 
     public void setIsExpired(int isExpired) {
         this.isExpired = isExpired;
+    }
+
+    public double getTax() {
+        return tax;
+    }
+
+    public void setTax(double tax) {
+        this.tax = tax;
+    }
+
+    public int getIsTaxable() {
+        return isTaxable;
+    }
+
+    public void setIsTaxable(int isTaxable) {
+        this.isTaxable = isTaxable;
     }
 }

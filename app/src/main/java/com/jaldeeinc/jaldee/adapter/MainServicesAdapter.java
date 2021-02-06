@@ -18,9 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,13 +32,11 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.DonationServiceDialog;
-import com.jaldeeinc.jaldee.custom.EnquiryDialog;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
 import com.jaldeeinc.jaldee.response.DepServiceInfo;
+import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
-import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -49,8 +45,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
-import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapter.ViewHolder> {
 
@@ -62,13 +56,15 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
     private ServiceInfoDialog serviceInfoDialog;
     private AppointmentServiceDialog appointmentServiceDialog;
     private DonationServiceDialog donationServiceDialog;
+    private SearchViewDetail providerInfo;
 
 
-    public MainServicesAdapter(ArrayList<DepServiceInfo> servicesInfo, Context context, boolean isLoading, ISelectedService iSelectedService) {
+    public MainServicesAdapter(ArrayList<DepServiceInfo> servicesInfo, Context context, boolean isLoading, ISelectedService iSelectedService, SearchViewDetail mBusinessDataList) {
         this.servicesInfoList = servicesInfo;
         this.context = context;
         this.isLoading = isLoading;
         this.iSelectedService = iSelectedService;
+        this.providerInfo = mBusinessDataList;
     }
 
     @NonNull
@@ -379,7 +375,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                         if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.CHECKIN)) {
 
                             if (servicesInfoList.get(position).getChecinServiceInfo() != null) {
-                                serviceInfoDialog = new ServiceInfoDialog(context, servicesInfoList.get(position).getChecinServiceInfo());
+                                serviceInfoDialog = new ServiceInfoDialog(context, servicesInfoList.get(position).getChecinServiceInfo(),providerInfo);
                                 serviceInfoDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                                 serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 serviceInfoDialog.show();
@@ -392,7 +388,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                         } else if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
                             if (servicesInfoList.get(position).getAppointmentServiceInfo() != null) {
-                                appointmentServiceDialog = new AppointmentServiceDialog(context, servicesInfoList.get(position).getAppointmentServiceInfo());
+                                appointmentServiceDialog = new AppointmentServiceDialog(context, servicesInfoList.get(position).getAppointmentServiceInfo(),providerInfo);
                                 appointmentServiceDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                                 appointmentServiceDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 appointmentServiceDialog.show();

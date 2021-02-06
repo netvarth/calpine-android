@@ -237,6 +237,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         initializations(row);
         ApiAWSearchDomain();
 
+
         String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
         Config.logV("UpdateLocation noooooooooooooooooo" + s_currentLoc);
         if (s_currentLoc.equalsIgnoreCase("yes")) {
@@ -347,11 +348,17 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                     db = new DatabaseHandler(mContext);
                     mPopular_AllSearchList = db.getPopularSearch("All");
                     mPopularSearchList = mPopular_AllSearchList;
-                    Config.logV("getPopularSearch Search Size-------------" + mPopularSearchList.size());
-                    gridLayoutManager = new GridLayoutManager(mContext, 2);
-                    rvPopularSearch.setLayoutManager(gridLayoutManager);
-                    popularSearchAdapter = new PopularSearchAdapter(mPopularSearchList, mContext, false, iSelectedPopularSearch);
-                    rvPopularSearch.setAdapter(popularSearchAdapter);
+
+                    if (mPopularSearchList.size() > 0) {
+                        llPopularSearch.setVisibility(View.VISIBLE);
+                        Config.logV("getPopularSearch Search Size-------------" + mPopularSearchList.size());
+                        gridLayoutManager = new GridLayoutManager(mContext, 2);
+                        rvPopularSearch.setLayoutManager(gridLayoutManager);
+                        popularSearchAdapter = new PopularSearchAdapter(mPopularSearchList, mContext, false, iSelectedPopularSearch);
+                        rvPopularSearch.setAdapter(popularSearchAdapter);
+                    } else {
+                        llPopularSearch.setVisibility(View.GONE);
+                    }
 
                 } else {
                     mPopular_SubSearchList.clear();
@@ -377,10 +384,15 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                     }
 
                     mPopularSearchList = mPopular_SubSearchList;
-                    gridLayoutManager = new GridLayoutManager(mContext, 2);
-                    rvPopularSearch.setLayoutManager(gridLayoutManager);
-                    popularSearchAdapter = new PopularSearchAdapter(mPopularSearchList, mContext, false, iSelectedPopularSearch);
-                    rvPopularSearch.setAdapter(popularSearchAdapter);
+                    if (mPopularSearchList.size() > 0) {
+                        llPopularSearch.setVisibility(View.VISIBLE);
+                        gridLayoutManager = new GridLayoutManager(mContext, 2);
+                        rvPopularSearch.setLayoutManager(gridLayoutManager);
+                        popularSearchAdapter = new PopularSearchAdapter(mPopularSearchList, mContext, false, iSelectedPopularSearch);
+                        rvPopularSearch.setAdapter(popularSearchAdapter);
+                    } else {
+                        llPopularSearch.setVisibility(View.GONE);
+                    }
 
                 }
 

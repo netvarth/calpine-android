@@ -3,12 +3,10 @@ package com.jaldeeinc.jaldee.custom;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -19,7 +17,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
-import com.squareup.picasso.Picasso;
+import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
 import java.util.ArrayList;
 
@@ -43,11 +41,14 @@ public class ServiceInfoDialog extends Dialog {
     String MinPrePaymentAmount, maxDonationAmount, minDonationAmount;
     SearchAppointmentDepartmentServices appointmentServices;
     String Name;
+    private SearchViewDetail providerInfo;
+    private CustomTextViewMedium tvCostHint,tvPrepaymentHint,tvDurationHint;
 
-    public ServiceInfoDialog(@NonNull Context context, SearchService searchService) {
+    public ServiceInfoDialog(@NonNull Context context, SearchService searchService, SearchViewDetail providerInfo) {
         super(context);
         this.context = context;
         this.searchService = searchService;
+        this.providerInfo = providerInfo;
     }
 
     @Override
@@ -98,15 +99,28 @@ public class ServiceInfoDialog extends Dialog {
                 tv_toolbartitle.setVisibility(View.GONE);
             }
 
+            if (providerInfo != null &&  providerInfo.getServiceSector() != null){
+
+                if (providerInfo.getServiceSector().getDisplayName().equalsIgnoreCase("Healthcare")){
+
+                    tvCostHint.setText("Consultation Fee");
+                    tvDurationHint.setText("Consultation Duration");
+                }  else {
+
+                    tvCostHint.setText("Service Fee");
+                    tvDurationHint.setText("Service Duration");
+                }
+            }
+
             if (searchService.getTotalAmount() != null) {
                 if (!searchService.getTotalAmount().equals("0.0")) {
                     tv_price.setVisibility(View.VISIBLE);
                     LserviceLayout.setVisibility(View.VISIBLE);
                     if (searchService.isTaxable()) {
-                        tv_price.setText("₹ " + searchService.getTotalAmount());
+                        tv_price.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(searchService.getTotalAmount())));
                         tvisTax.setVisibility(View.VISIBLE);
                     } else {
-                        tv_price.setText("₹ " + searchService.getTotalAmount());
+                        tv_price.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(searchService.getTotalAmount())));
                         tvisTax.setVisibility(View.GONE);
                     }
                 } else {
@@ -176,6 +190,14 @@ public class ServiceInfoDialog extends Dialog {
                 tv_descVal.setVisibility(View.GONE);
             }
 
+            if (txtpreVal.getText().toString().equalsIgnoreCase(tv_price.getText().toString())){
+
+                tvPrepaymentHint.setText("Full fees should be paid in advance");
+                txtpreVal.setVisibility(View.GONE);
+            } else {
+                tvPrepaymentHint.setText("Advance payment");
+                txtpreVal.setVisibility(View.VISIBLE);
+            }
 
             if (searchService.getServicegallery() != null) {
                 if (searchService.getServicegallery().size() > 0) {
@@ -243,6 +265,8 @@ public class ServiceInfoDialog extends Dialog {
         tv_maxvalue = findViewById(R.id.txtmaxvalue);
         tv_multiples = findViewById(R.id.txtmultiples);
         ivClose = findViewById(R.id.iv_close);
-
+        tvCostHint = findViewById(R.id.tv_costHint);
+        tvPrepaymentHint = findViewById(R.id.tv_prepaymentHint);
+        tvDurationHint = findViewById(R.id.tv_durationHint);
     }
 }

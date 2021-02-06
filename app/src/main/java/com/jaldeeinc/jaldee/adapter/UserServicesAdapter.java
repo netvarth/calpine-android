@@ -14,17 +14,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.Interface.ISelectedProviderService;
-import com.jaldeeinc.jaldee.Interface.ISelectedService;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.common.Config;
@@ -36,6 +33,7 @@ import com.jaldeeinc.jaldee.custom.DonationServiceDialog;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
 import com.jaldeeinc.jaldee.response.DepServiceInfo;
+import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.text.Format;
@@ -57,13 +55,16 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
     private ServiceInfoDialog serviceInfoDialog;
     private AppointmentServiceDialog appointmentServiceDialog;
     private DonationServiceDialog donationServiceDialog;
+    private SearchViewDetail providerInfo;
 
 
-    public UserServicesAdapter(ArrayList<DepServiceInfo> servicesInfo, Context context, boolean isLoading, ISelectedProviderService iSelectedService) {
+
+    public UserServicesAdapter(ArrayList<DepServiceInfo> servicesInfo, Context context, boolean isLoading, ISelectedProviderService iSelectedService, SearchViewDetail providerDetails) {
         this.servicesInfoList = servicesInfo;
         this.context = context;
         this.isLoading = isLoading;
         this.iSelectedService = iSelectedService;
+        this.providerInfo = providerDetails;
     }
 
     @NonNull
@@ -346,7 +347,7 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
                         if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.CHECKIN)) {
 
                             if (servicesInfoList.get(position).getChecinServiceInfo() != null) {
-                                serviceInfoDialog = new ServiceInfoDialog(context, servicesInfoList.get(position).getChecinServiceInfo());
+                                serviceInfoDialog = new ServiceInfoDialog(context, servicesInfoList.get(position).getChecinServiceInfo(), providerInfo);
                                 serviceInfoDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                                 serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 serviceInfoDialog.show();
@@ -359,7 +360,7 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
                         } else if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
                             if (servicesInfoList.get(position).getAppointmentServiceInfo() != null) {
-                                appointmentServiceDialog = new AppointmentServiceDialog(context, servicesInfoList.get(position).getAppointmentServiceInfo());
+                                appointmentServiceDialog = new AppointmentServiceDialog(context, servicesInfoList.get(position).getAppointmentServiceInfo(), providerInfo);
                                 appointmentServiceDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                                 appointmentServiceDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 appointmentServiceDialog.show();

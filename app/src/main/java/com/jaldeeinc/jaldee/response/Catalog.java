@@ -100,6 +100,10 @@ public class Catalog implements Serializable {
     @Expose
     private NextAvailableDeliveryDetails nextAvailableDeliveryDetails;
 
+    @SerializedName("taxPercentage")
+    @Expose
+    private double taxPercentage;
+
     public Catalog(){
 
     }
@@ -312,5 +316,13 @@ public class Catalog implements Serializable {
 
     public void setCatalogImagesList(ArrayList<ItemImages> catalogImagesList) {
         this.catalogImagesList = catalogImagesList;
+    }
+
+    public double getTaxPercentage() {
+        return taxPercentage;
+    }
+
+    public void setTaxPercentage(double taxPercentage) {
+        this.taxPercentage = taxPercentage;
     }
 }

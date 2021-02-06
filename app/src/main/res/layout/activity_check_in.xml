@@ -526,6 +526,7 @@
                     android:paddingStart="@dimen/padding5"
                     android:paddingTop="@dimen/padding5"
                     android:paddingBottom="@dimen/padding5"
+                    android:inputType="text"
                     android:textAllCaps="true"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/dimen_15sp" />

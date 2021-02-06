@@ -15,7 +15,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 
 import com.jaldeeinc.jaldee.Interface.ISelectedService;
@@ -26,9 +25,9 @@ import com.jaldeeinc.jaldee.custom.AppointmentServiceDialog;
 import com.jaldeeinc.jaldee.custom.DonationServiceDialog;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
-import com.jaldeeinc.jaldee.model.NextAvailableQModel;
 import com.jaldeeinc.jaldee.response.DepServiceInfo;
 import com.jaldeeinc.jaldee.response.DepartmentInfo;
+import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.text.Format;
@@ -51,15 +50,15 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
     private ServiceInfoDialog serviceInfoDialog;
     private AppointmentServiceDialog appointmentServiceDialog;
     private DonationServiceDialog donationServiceDialog;
+    private SearchViewDetail providerInfo;
 
-
-    public ServicesAdapter(Context context, ArrayList<DepartmentInfo> sectionItemList, boolean isLoading, ISelectedService iSelectedService) {
+    public ServicesAdapter(Context context, ArrayList<DepartmentInfo> sectionItemList, boolean isLoading, ISelectedService iSelectedService, SearchViewDetail mBusinessDataList) {
         super(context, sectionItemList);
         this.context = context;
         this.departmentInfoList = sectionItemList;
         this.isLoading = isLoading;
         this.iSelectedService = iSelectedService;
-
+        this.providerInfo = mBusinessDataList;
     }
 
     @Override
@@ -374,7 +373,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                     if (child.getType().equalsIgnoreCase(Constants.CHECKIN)) {
 
                         if (child.getChecinServiceInfo() != null) {
-                            serviceInfoDialog = new ServiceInfoDialog(context, child.getChecinServiceInfo());
+                            serviceInfoDialog = new ServiceInfoDialog(context, child.getChecinServiceInfo(), providerInfo);
                             serviceInfoDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                             serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                             serviceInfoDialog.show();
@@ -387,7 +386,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                     } else if (child.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
                         if (child.getAppointmentServiceInfo() != null) {
-                            appointmentServiceDialog = new AppointmentServiceDialog(context, child.getAppointmentServiceInfo());
+                            appointmentServiceDialog = new AppointmentServiceDialog(context, child.getAppointmentServiceInfo(), providerInfo);
                             appointmentServiceDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                             appointmentServiceDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                             appointmentServiceDialog.show();
