@@ -404,7 +404,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
         if (serviceInfo != null) {
             String name = serviceInfo.getServiceName();
-            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
             tvServiceName.setText(name);
             tvDescription.setText(serviceInfo.getDescription());
             try {

@@ -79,7 +79,6 @@ public class EnquiryDialog extends Dialog {
         if (providerName != null) {
 
             String name = providerName;
-            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
             tvTo.setText(name);
         }
 

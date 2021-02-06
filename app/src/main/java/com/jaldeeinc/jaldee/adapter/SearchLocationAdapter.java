@@ -49,6 +49,7 @@ import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchLocation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
+import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -75,6 +76,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     ArrayList<SearchAppointmentDepartmentServices> appList = new ArrayList<>();
     LocationAmenitiesDialog locationAmenitiesDialog;
     DonationServiceDialog donationServiceDialog;
+    private SearchViewDetail providerInfo;
+
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -782,7 +785,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         myViewHolder.txtservice1.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), checkInServicesList.get(0));
+                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), checkInServicesList.get(0), providerInfo);
                                 serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 serviceInfoDialog.show();
                                 DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
@@ -846,7 +849,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             myViewHolder.txtservice1.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    serviceInfoDialog = new ServiceInfoDialog(v.getContext(), checkInServicesList.get(0));
+                                    serviceInfoDialog = new ServiceInfoDialog(v.getContext(), checkInServicesList.get(0), providerInfo);
                                     serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                     serviceInfoDialog.show();
                                     DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
@@ -858,7 +861,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             myViewHolder.txtservice2.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    serviceInfoDialog = new ServiceInfoDialog(v.getContext(), checkInServicesList.get(1));
+                                    serviceInfoDialog = new ServiceInfoDialog(v.getContext(), checkInServicesList.get(1), providerInfo);
                                     serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                     serviceInfoDialog.show();
                                     DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
@@ -919,7 +922,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             myViewHolder.txtservice1.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    serviceInfoDialog = new ServiceInfoDialog(v.getContext(), checkInServicesList.get(0));
+                                    serviceInfoDialog = new ServiceInfoDialog(v.getContext(), checkInServicesList.get(0), providerInfo);
                                     serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                     serviceInfoDialog.show();
                                     DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
@@ -931,7 +934,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             myViewHolder.txtservice2.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    serviceInfoDialog = new ServiceInfoDialog(v.getContext(), checkInServicesList.get(1));
+                                    serviceInfoDialog = new ServiceInfoDialog(v.getContext(), checkInServicesList.get(1), providerInfo);
                                     serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                     serviceInfoDialog.show();
                                     DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
@@ -980,7 +983,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 myViewHolder.txtservice1.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        serviceInfoDialog = new ServiceInfoDialog(v.getContext(), checkInServicesList.get(0));
+                                        serviceInfoDialog = new ServiceInfoDialog(v.getContext(), checkInServicesList.get(0), providerInfo);
                                         serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                         serviceInfoDialog.show();
                                         DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();

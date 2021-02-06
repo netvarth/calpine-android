@@ -7,10 +7,8 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,7 +26,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.CheckIn;
-import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.AppointmentServiceInfoDialog;
@@ -38,7 +34,6 @@ import com.jaldeeinc.jaldee.custom.LocationAmenitiesDialog;
 import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
 import com.jaldeeinc.jaldee.custom.UserAppServicesDialog;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
-import com.jaldeeinc.jaldee.model.DepartmentModal;
 import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
@@ -46,8 +41,8 @@ import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
-import com.jaldeeinc.jaldee.response.SearchLocation;
 import com.jaldeeinc.jaldee.response.SearchService;
+import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -56,11 +51,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import kotlin.Unit;
-
 import static com.jaldeeinc.jaldee.adapter.SearchLocationAdapter.getWaitingTime;
-import static com.jaldeeinc.jaldee.connection.ApiClient.context;
-import static com.jaldeeinc.jaldee.utils.DialogUtilsKt.showUIDialog;
 
 public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.MyViewHolder> {
 
@@ -85,6 +76,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
     AppointmentServiceInfoDialog appServInfoDialog;
     UserAppServicesDialog userAppServicesDialog;
     List<SearchAppointmentDepartmentServices> appointServices;
+    private SearchViewDetail providerInfo;
 
 
     public UserDetailAdapter(Context mContext, ArrayList<DepartmentUserSearchModel> userDetails, SearchAWsResponse mSearchAWSResponse, ArrayList<SearchDepartmentServices> mDepartmentsList, String terminology, SearchLocationAdpterCallback mInterface, ArrayList<SearchCheckInMessage> mSearchmCheckMessageList) {
@@ -407,7 +399,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                         @Override
                                         public void onClick(View v) {
 
-                                            serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(0));
+                                            serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(0), providerInfo);
                                             serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                             serviceInfoDialog.show();
                                             DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
@@ -479,7 +471,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                         holder.txtservice1.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(0));
+                                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(0), providerInfo);
                                                 serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                                 serviceInfoDialog.show();
                                                 DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
@@ -491,7 +483,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                         holder.txtservice2.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(1));
+                                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(1), providerInfo);
                                                 serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                                 serviceInfoDialog.show();
                                                 DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
@@ -560,7 +552,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                         holder.txtservice1.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(0));
+                                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(0), providerInfo);
                                                 serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                                 serviceInfoDialog.show();
                                                 DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
@@ -572,7 +564,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                         holder.txtservice2.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(1));
+                                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(1), providerInfo);
                                                 serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                                 serviceInfoDialog.show();
                                                 DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
@@ -625,7 +617,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                                             holder.txtservice1.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
-                                                    serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(0));
+                                                    serviceInfoDialog = new ServiceInfoDialog(v.getContext(), servicesList.get(0), providerInfo);
                                                     serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                                     serviceInfoDialog.show();
                                                     DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();

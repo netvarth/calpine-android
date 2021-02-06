@@ -137,6 +137,7 @@
                     android:orientation="vertical">
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:id="@+id/tv_costHint"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Service Cost"
@@ -189,6 +190,7 @@
                     app:layout_constraintEnd_toEndOf="parent">
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:id="@+id/tv_durationHint"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -323,9 +325,10 @@
             android:visibility="gone">
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/tv_prepaymentHint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Prepayment Amount"
+                android:text="Advance payment"
                 android:textColor="#3d3c44"
                 android:textSize="@dimen/txtsize_hint" />
 

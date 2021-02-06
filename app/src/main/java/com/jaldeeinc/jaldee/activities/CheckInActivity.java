@@ -388,7 +388,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
         if (checkInInfo != null) {
             String name = checkInInfo.getName();
-            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
             tvServiceName.setText(name);
             tvDescription.setText(checkInInfo.getDescription());
             llCheckIn.setVisibility(View.VISIBLE);

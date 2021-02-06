@@ -417,7 +417,7 @@
                             android:layout_marginTop="@dimen/dimen_4dp"
                             android:layout_marginEnd="@dimen/dimen_10dp"
                             android:layout_marginBottom="@dimen/dimen_4dp"
-                            android:text="Get Appointment"
+                            android:text="Appointment"
                             android:textColor="@color/location_theme"
                             android:textSize="@dimen/dimen_12dp">
 

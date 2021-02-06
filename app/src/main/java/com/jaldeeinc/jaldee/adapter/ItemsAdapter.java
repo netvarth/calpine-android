@@ -11,18 +11,15 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,20 +34,16 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.jaldeeinc.jaldee.Interface.IItemInterface;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.AppointmentActivity;
-import com.jaldeeinc.jaldee.activities.ItemsActivity;
 import com.jaldeeinc.jaldee.custom.AutofitTextView;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.CartItemModel;
+import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CatalogItem;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
-import com.squareup.picasso.Callback;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -70,9 +63,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     Vibrator vibe;
     ProgressBar progressBar;
     private CardView cvPlus;
+    private Catalog catalogInfo;
 
 
-    public ItemsAdapter(ArrayList<CatalogItem> itemsList, Context context, boolean isLoading, IItemInterface iItemInterface, int accountId, int uniqueId) {
+
+    public ItemsAdapter(ArrayList<CatalogItem> itemsList, Context context, boolean isLoading, IItemInterface iItemInterface, int accountId, int uniqueId, Catalog catalogInfo) {
         this.itemsList = itemsList;
         this.context = context;
         this.isLoading = isLoading;
@@ -80,6 +75,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         db = new DatabaseHandler(context);
         this.accountId = accountId;
         this.uniqueId = uniqueId;
+        this.catalogInfo = catalogInfo;
         vibe = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
     }
@@ -240,6 +236,16 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                         item.setPromotionalType(catalogItem.getItems().getPromotionalPriceType());
                         item.setDiscount(catalogItem.getItems().getPromotionalPrice());
                         item.setDiscountedPrice(catalogItem.getItems().getDiscountedPrice());
+                        if (catalogItem.getItems().isTaxable()){
+                            item.setIsTaxable(1);
+                        } else {
+                            item.setIsTaxable(0);
+                        }
+                        if (catalogItem.getItems().isTaxable()){
+                            if (catalogInfo != null) {
+                                item.setTax(catalogInfo.getTaxPercentage());
+                            }
+                        }
                         if (catalogItem.getItems().isShowPromotionalPrice()) {
                             item.setIsPromotional(1);
                         } else {

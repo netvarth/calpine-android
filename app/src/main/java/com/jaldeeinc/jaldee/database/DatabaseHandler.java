@@ -193,6 +193,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     + "isPromotional NUMERIC,"
                     + "isExpired NUMERIC,"
                     + "uniqueId INTEGER,"
+                    + "tax REAL,"
+                    + "isTaxable NUMERIC,"
                     + "maxQuantity INTEGER )";
 
 
@@ -230,7 +232,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("isPromotional", cartItemModel.getIsPromotional());
                 values.put("isExpired", cartItemModel.isExpired());
                 values.put("maxQuantity", cartItemModel.getMaxQuantity());
-
+                values.put("tax",cartItemModel.getTax());
+                values.put("isTaxable",cartItemModel.getIsTaxable());
                 db.insert(mContext.getString(R.string.db_table_cart), null, values);
 
                 db.setTransactionSuccessful();
@@ -534,6 +537,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+
     public double getCartDiscountedPrice() {
 
         try {
@@ -562,6 +566,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
+    public double getTaxAmount() {
+
+        try {
+            double taxAmount = 0;
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+            db.beginTransaction();
+            Cursor cursor = db.rawQuery("SELECT sum(((discountedPrice * quantity) * tax) / 100) as cartCount FROM " + mContext.getString(R.string.db_table_cart) + " WHERE isTaxable = 1", null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    taxAmount = cursor.getDouble(0);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+            return taxAmount;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+    }
+
+
     public ArrayList<CartItemModel> getCartItems() {
 
         try {
@@ -569,7 +601,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
 
             String table = mContext.getString(R.string.db_table_cart);
-            String[] columns = {"itemId", "accountId", "catalogId", "itemName", "imageUrl", "quantity", "itemPrice", "price", "instruction", "discountedPrice", "discount", "promotionalType", "maxQuantity", "isPromotional","isExpired","uniqueId"};
+            String[] columns = {"itemId", "accountId", "catalogId", "itemName", "imageUrl", "quantity", "itemPrice", "price", "instruction", "discountedPrice", "discount", "promotionalType", "maxQuantity", "isPromotional","isExpired","uniqueId","tax","isTaxable"};
             String selection = " quantity >?";
             String[] selectionArgs = new String[]{"0"};
             db.beginTransaction();
@@ -594,7 +626,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     cartItem.setIsPromotional(cursor.getInt(13));
                     cartItem.setExpired(cursor.getInt(14));
                     cartItem.setUniqueId(cursor.getInt(15));
-
+                    cartItem.setTax(cursor.getDouble(16));
+                    cartItem.setIsTaxable(cursor.getInt(17));
                     cartItemsList.add(cartItem);
                 } while (cursor.moveToNext());
             }

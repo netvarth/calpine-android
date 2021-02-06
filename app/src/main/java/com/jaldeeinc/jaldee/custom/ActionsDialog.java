@@ -322,7 +322,7 @@ public class ActionsDialog extends Dialog {
 
                 // To show Bill details
 
-                if (bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("FullyPaid") || bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("Refund")) {
+                if (bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("FullyPaid") || bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("Refund") && bookings.getCheckInInfo().getBillViewStatus() != null) {
                     ivBillIcon.setVisibility(View.VISIBLE);
                     tvBillText.setText("Receipt");
                 } else {
@@ -341,6 +341,10 @@ public class ActionsDialog extends Dialog {
                 } else {
                     if (!bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("NotPaid")) {
                         ivBillIcon.setVisibility(View.VISIBLE);
+                        if (bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("Refund")){
+                            ivBillIcon.setVisibility(View.GONE);
+                            hideView(llBillDetails);
+                        }
                     } else {
                         ivBillIcon.setVisibility(View.GONE);
                         hideView(llBillDetails);

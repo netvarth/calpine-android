@@ -247,6 +247,12 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     @BindView(R.id.list)
     RecyclerView list;
 
+    @BindView(R.id.rv_tax)
+    RelativeLayout rvTax;
+
+    @BindView(R.id.tv_totalTax)
+    CustomTextViewMedium tvTotalTax;
+
     private boolean isStore = true;
     private DatabaseHandler db;
     private String selectedDate;
@@ -730,7 +736,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         activeOrders = response.body();
                         if (activeOrders != null) {
                             String orderId = activeOrders.getOrderNumber();
-                            if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().equalsIgnoreCase("0.0")) {
+                            if (catalogs.get(0).getPaymentType() != null && !catalogs.get(0).getPaymentType().equalsIgnoreCase(Constants.NONE)) {
                                 if (!showPaytmWallet && !showPayU) {
 
                                     //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
@@ -1343,6 +1349,14 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
         }
 
+        if (db.getTaxAmount() > 0.0) {
+            rvTax.setVisibility(View.VISIBLE);
+            String tax = Config.getAmountinTwoDecimalPoints(db.getTaxAmount());
+            tvTotalTax.setText(tax);
+        } else {
+            rvTax.setVisibility(View.GONE);
+        }
+
 
         updateBill();
         // to set total bill value
@@ -1365,6 +1379,11 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
         try {
 
+            boolean tax = false;
+            if (db.getTaxAmount() >= 0.0){
+                tax = true;
+            }
+
             if (catalogs != null && catalogs.size() > 0) {
                 Catalog catalog = new Catalog();
                 catalog = catalogs.get(0);
@@ -1385,20 +1404,35 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
                     if (catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
 
-                        double totalBill = db.getCartDiscountedPrice() + catalogs.get(0).getHomeDelivery().getDeliveryCharge();
-                        tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
+                        if (tax) {
+                            double totalBill = db.getCartDiscountedPrice() + catalogs.get(0).getHomeDelivery().getDeliveryCharge() + db.getTaxAmount();
+                            tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
+                        } else {
+                            double totalBill = db.getCartDiscountedPrice() + catalogs.get(0).getHomeDelivery().getDeliveryCharge();
+                            tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
+                        }
 
                     } else {
 
-                        double totalBill = db.getCartDiscountedPrice();
-                        tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
+                        if (tax) {
+                            double totalBill = db.getCartDiscountedPrice() + db.getTaxAmount();
+                            tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
+                        } else {
+                            double totalBill = db.getCartDiscountedPrice();
+                            tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
+                        }
 
                     }
 
                 } else {
 
-                    double bill = db.getCartDiscountedPrice();
-                    tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(bill)));
+                    if (tax) {
+                        double bill = db.getCartDiscountedPrice() + db.getTaxAmount();
+                        tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(bill)));
+                    } else {
+                        double bill = db.getCartDiscountedPrice();
+                        tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(bill)));
+                    }
                 }
             }
 

@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -55,7 +54,6 @@ import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
@@ -63,7 +61,6 @@ import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.custom.EnquiryDialog;
 import com.jaldeeinc.jaldee.custom.IGetSelectedLocation;
 import com.jaldeeinc.jaldee.custom.LocationsDialog;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.ResizableCustomView;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.response.Catalog;
@@ -103,7 +100,6 @@ import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.functions.Function;
 import okhttp3.ResponseBody;
@@ -316,7 +312,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         rvServices = findViewById(R.id.rv_services);
         gridLayoutManager = new GridLayoutManager(this, 2);
         rvServices.setLayoutManager(gridLayoutManager);
-        mainServicesAdapter = new MainServicesAdapter(serviceInfoList, this, true, iSelectedService);
+        mainServicesAdapter = new MainServicesAdapter(serviceInfoList, this, true, iSelectedService, mBusinessDataList);
         rvServices.setAdapter(mainServicesAdapter);
 
 
@@ -884,7 +880,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             if (mBusinessDataList.getPhoneNumbers() != null && mBusinessDataList.getPhoneNumbers().size() > 0 && mBusinessDataList.getPhoneNumbers().get(0).getInstance() != null) {
                 llPhone.setVisibility(View.VISIBLE);
                 tvContactDetails.setVisibility(View.VISIBLE);
-                tvProviderPhoneNo.setText(mBusinessDataList.getPhoneNumbers().get(0).getInstance());
+                tvProviderPhoneNo.setText("+91 "+mBusinessDataList.getPhoneNumbers().get(0).getInstance());
 
             } else {
                 llPhone.setVisibility(View.GONE);
@@ -1412,7 +1408,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                                 rvServices.setVisibility(View.VISIBLE);
                                                 gridLayoutManager = new GridLayoutManager(ProviderDetailActivity.this, 2);
                                                 rvServices.setLayoutManager(gridLayoutManager);
-                                                mainServicesAdapter = new MainServicesAdapter(servicesInfoList, ProviderDetailActivity.this, false, iSelectedService);
+                                                mainServicesAdapter = new MainServicesAdapter(servicesInfoList, ProviderDetailActivity.this, false, iSelectedService,mBusinessDataList);
                                                 rvServices.setAdapter(mainServicesAdapter);
                                             } else {
 
@@ -1717,7 +1713,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                                 rvServices.setVisibility(View.VISIBLE);
                                                 gridLayoutManager = new GridLayoutManager(ProviderDetailActivity.this, 2);
                                                 rvServices.setLayoutManager(gridLayoutManager);
-                                                mainServicesAdapter = new MainServicesAdapter(servicesInfoList, ProviderDetailActivity.this, false, iSelectedService);
+                                                mainServicesAdapter = new MainServicesAdapter(servicesInfoList, ProviderDetailActivity.this, false, iSelectedService, mBusinessDataList);
                                                 rvServices.setAdapter(mainServicesAdapter);
                                             } else {
                                                 llNoSlots.setVisibility(View.VISIBLE);
@@ -2071,7 +2067,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                                     }
                                                 });
                                                 rvServices.setLayoutManager(glm);
-                                                servicesAdapter = new ServicesAdapter(ProviderDetailActivity.this, departmentsDataList, false, iSelectedService);
+                                                servicesAdapter = new ServicesAdapter(ProviderDetailActivity.this, departmentsDataList, false, iSelectedService,mBusinessDataList);
                                                 rvServices.setAdapter(servicesAdapter);
                                             } else {
                                                 llNoSlots.setVisibility(View.VISIBLE);

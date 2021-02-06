@@ -13,23 +13,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.ISelectedProviderService;
-import com.jaldeeinc.jaldee.Interface.ISelectedService;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.MainServicesAdapter;
-import com.jaldeeinc.jaldee.adapter.ServicesAdapter;
 import com.jaldeeinc.jaldee.adapter.SpecialisationAdapter;
 import com.jaldeeinc.jaldee.adapter.UserServicesAdapter;
 import com.jaldeeinc.jaldee.adapter.VirtualFieldAdapter;
@@ -39,19 +34,15 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.EnquiryDialog;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.ResizableCustomView;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.response.DepServiceInfo;
-import com.jaldeeinc.jaldee.response.DepartmentInfo;
 import com.jaldeeinc.jaldee.response.ProfilePicture;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAppoinment;
-import com.jaldeeinc.jaldee.response.SearchDonation;
-import com.jaldeeinc.jaldee.response.SearchLocation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
@@ -69,7 +60,6 @@ import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.functions.Function;
 import retrofit2.Call;
@@ -199,7 +189,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
         rvServices = findViewById(R.id.rv_services);
         gridLayoutManager = new GridLayoutManager(this, 2);
         rvServices.setLayoutManager(gridLayoutManager);
-        userServicesAdapter = new UserServicesAdapter(serviceInfoList, this, true, iSelectedService);
+        userServicesAdapter = new UserServicesAdapter(serviceInfoList, this, true, iSelectedService, providerDetails);
         rvServices.setAdapter(userServicesAdapter);
 
         // get provider details
@@ -666,7 +656,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
                                                 rvServices.setVisibility(View.VISIBLE);
                                                 gridLayoutManager = new GridLayoutManager(UserDetailActivity.this, 2);
                                                 rvServices.setLayoutManager(gridLayoutManager);
-                                                userServicesAdapter = new UserServicesAdapter(servicesInfoList, UserDetailActivity.this, false, iSelectedService);
+                                                userServicesAdapter = new UserServicesAdapter(servicesInfoList, UserDetailActivity.this, false, iSelectedService,providerDetails);
                                                 rvServices.setAdapter(userServicesAdapter);
                                             } else {
 

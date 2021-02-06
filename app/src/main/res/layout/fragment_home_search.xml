@@ -107,7 +107,7 @@
                     <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
                         android:id="@+id/ll_searchBlock"
                         android:layout_width="match_parent"
-                        android:layout_height="210dp"
+                        android:layout_height="wrap_content"
                         android:layout_below="@id/skipQueues"
                         android:layout_marginTop="@dimen/dimen_10dp"
                         android:layout_marginBottom="@dimen/dimen_10dp"
@@ -125,7 +125,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
-
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/cv_search"
                                 android:layout_width="match_parent"
@@ -133,6 +132,7 @@
                                 android:layout_marginStart="@dimen/dimen_10dp"
                                 android:layout_marginTop="@dimen/dimen_20dp"
                                 android:layout_marginEnd="@dimen/dimen_10dp"
+                                android:layout_marginBottom="@dimen/dimen_20dp"
                                 app:cardCornerRadius="@dimen/dimen_5dp"
                                 app:cardElevation="6dp">
 
@@ -197,6 +197,9 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@id/cv_search"
+                                android:layout_marginTop="-12dp"
+                                android:layout_marginBottom="@dimen/dimen_10dp"
+                                android:visibility="visible"
                                 android:orientation="vertical">
 
                                 <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
@@ -210,22 +213,36 @@
 
                                 </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
 
-                                <androidx.recyclerview.widget.RecyclerView
-                                    android:id="@+id/rv_popularSearch"
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:id="@+id/Id_const_layout"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/dimen_5dp"
-                                    android:layout_marginTop="@dimen/dimen_5dp"
-                                    android:layout_marginEnd="@dimen/dimen_5dp"
-                                    android:layout_marginBottom="@dimen/dimen_10dp"
-                                    android:nestedScrollingEnabled="true">
+                                    android:layout_marginStart="@dimen/dimen_10dp"
+                                    android:layout_marginTop="@dimen/dimen_10dp"
+                                    android:layout_marginEnd="@dimen/dimen_10dp">
 
-                                </androidx.recyclerview.widget.RecyclerView>
+                                    <androidx.recyclerview.widget.RecyclerView
+                                        android:id="@+id/rv_popularSearch"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="@dimen/dimen_5dp"
+                                        android:layout_marginEnd="@dimen/dimen_5dp"
+                                        android:nestedScrollingEnabled="true"
+                                        app:layout_constrainedHeight="true"
+                                        app:layout_constraintBottom_toBottomOf="@+id/Id_const_layout"
+                                        app:layout_constraintEnd_toEndOf="@+id/Id_const_layout"
+                                        app:layout_constraintHeight_max="@dimen/dimen_80dp"
+                                        app:layout_constraintHeight_min="@dimen/dimen_50dp"
+                                        app:layout_constraintStart_toStartOf="@+id/Id_const_layout"
+                                        app:layout_constraintTop_toTopOf="@+id/Id_const_layout">
+
+                                    </androidx.recyclerview.widget.RecyclerView>
+                                </androidx.constraintlayout.widget.ConstraintLayout>
 
                             </LinearLayout>
 
                         </RelativeLayout>
-
 
                     </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
 

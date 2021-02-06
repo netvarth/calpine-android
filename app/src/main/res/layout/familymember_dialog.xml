@@ -132,7 +132,7 @@
                 android:layout_marginLeft="@dimen/dimen_5dp"
                 android:background="@drawable/edittext_color"
                 android:hint="Enter Phone Number"
-                android:inputType="phone"
+                android:inputType="number"
                 android:maxLength="10"
                 android:paddingStart="@dimen/padding5"
                 android:textColor="@color/black"

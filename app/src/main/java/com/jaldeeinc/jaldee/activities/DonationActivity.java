@@ -711,9 +711,9 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
 
                                     txtprepayment.setText("Donation Amount ");
 
-                                    txtamt.setText("Rs." + getMoneyFormat(Config.getAmountinTwoDecimalPoints((Double.parseDouble(etAmount.getText().toString())))));
+                                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(etAmount.getText().toString()))));
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                            "fonts/Montserrat_Bold.otf");
+                                            "fonts/JosefinSans-SemiBold.ttf");
                                     txtamt.setTypeface(tyface1);
                                     btn_payu.setOnClickListener(new View.OnClickListener() {
                                         @Override

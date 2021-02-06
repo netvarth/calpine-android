@@ -60,7 +60,6 @@ import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CatalogItem;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
-import com.jaldeeinc.jaldee.response.ShoppingList;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -202,7 +201,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
 
         gridLayoutManager = new GridLayoutManager(ItemsActivity.this, 2);
         rvItems.setLayoutManager(gridLayoutManager);
-        itemsAdapter = new ItemsAdapter(catalogInfo.getCatalogItemsList(), this, true, iItemInterface, accountId, uniqueId);
+        itemsAdapter = new ItemsAdapter(catalogInfo.getCatalogItemsList(), this, true, iItemInterface, accountId, uniqueId, catalogInfo);
         rvItems.setAdapter(itemsAdapter);
 
         if (accountId == db.getAccountId()) {
@@ -389,7 +388,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         catalogItemsList = updateCatalogItemsQuantity(catalogItemsList);
         gridLayoutManager = new GridLayoutManager(ItemsActivity.this, 2);
         rvItems.setLayoutManager(gridLayoutManager);
-        itemsAdapter = new ItemsAdapter(catalogItemsList, this, false, iItemInterface, accountId, uniqueId);
+        itemsAdapter = new ItemsAdapter(catalogItemsList, this, false, iItemInterface, accountId, uniqueId,catalogInfo);
         rvItems.setAdapter(itemsAdapter);
         updateCartUI();
     }
