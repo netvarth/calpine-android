@@ -144,7 +144,7 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/dimen_20dp"
+                                    android:layout_marginStart="@dimen/dimen_12dp"
                                     android:layout_marginTop="@dimen/dimen_40dp"
                                     android:layout_marginEnd="@dimen/dimen_12dp"
                                     android:orientation="horizontal">
@@ -261,7 +261,7 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/dimen_20dp"
+                                    android:layout_marginStart="@dimen/dimen_12dp"
                                     android:layout_marginTop="@dimen/dimen_20dp"
                                     android:layout_marginEnd="@dimen/dimen_8dp"
                                     android:orientation="horizontal">
@@ -270,7 +270,6 @@
                                     <LinearLayout
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginEnd="@dimen/dimen_8dp"
                                         android:layout_weight="0.5"
                                         android:gravity="start"
                                         android:orientation="vertical">
@@ -328,7 +327,7 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/dimen_20dp"
+                                    android:layout_marginStart="@dimen/dimen_12dp"
                                     android:layout_marginTop="@dimen/dimen_20dp"
                                     android:layout_marginEnd="@dimen/dimen_8dp"
                                     android:orientation="horizontal">
@@ -338,7 +337,6 @@
                                         android:id="@+id/ll_payment"
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginEnd="@dimen/dimen_8dp"
                                         android:layout_weight="0.5"
                                         android:gravity="start"
                                         android:orientation="vertical">
@@ -396,7 +394,7 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/dimen_20dp"
+                                    android:layout_marginStart="@dimen/dimen_12dp"
                                     android:layout_marginTop="@dimen/dimen_20dp"
                                     android:layout_marginEnd="@dimen/dimen_8dp"
                                     android:orientation="horizontal">
@@ -405,7 +403,6 @@
                                     <LinearLayout
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginEnd="@dimen/dimen_8dp"
                                         android:layout_weight="0.5"
                                         android:gravity="start"
                                         android:orientation="vertical">
@@ -425,7 +422,7 @@
                                             android:layout_height="wrap_content"
                                             android:paddingTop="@dimen/dimen_1dp"
                                             android:textColor="@color/appoint_theme"
-                                            android:textSize="@dimen/dimen_18dp">
+                                            android:textSize="16dp">
 
                                         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
@@ -453,7 +450,7 @@
                                             android:layout_height="wrap_content"
                                             android:paddingTop="@dimen/dimen_1dp"
                                             android:textColor="@color/appoint_theme"
-                                            android:textSize="@dimen/dimen_18dp">
+                                            android:textSize="16dp">
 
                                         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
                                     </LinearLayout>
@@ -463,7 +460,7 @@
                                 <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/dimen_20dp"
+                                    android:layout_marginStart="@dimen/dimen_12dp"
                                     android:layout_marginTop="@dimen/dimen_15dp"
                                     android:text="Ordered Items"
                                     android:textColor="@color/dark_blue"
@@ -474,9 +471,9 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="5dp"
-                                    android:layout_marginStart="@dimen/dimen_20dp"
+                                    android:layout_marginStart="@dimen/dimen_12dp"
                                     android:layout_marginTop="@dimen/dimen_5dp"
-                                    android:layout_marginEnd="@dimen/dimen_20dp"
+                                    android:layout_marginEnd="@dimen/dimen_12dp"
                                     android:background="@drawable/dash_gap"
                                     android:backgroundTint="@color/light_gray">
 
