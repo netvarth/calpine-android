@@ -377,7 +377,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     if (actionName.equalsIgnoreCase("bookservice")) {
 
                         myViewHolder.cvAction.setVisibility(View.VISIBLE);
-                        myViewHolder.tvText.setText("Book Service");
+                        myViewHolder.tvText.setText("Book");
                         myViewHolder.llEstTime.setVisibility(View.GONE);
                         myViewHolder.llWaitingInLine.setVisibility(View.GONE);
                         setServices(myViewHolder, searchdetailList.getServices());
