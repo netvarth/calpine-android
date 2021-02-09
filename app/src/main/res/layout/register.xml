@@ -72,7 +72,7 @@
                 android:background="#F2F2F2"
                 android:paddingTop="@dimen/dimen_12dp"
                 android.support.design:ccp_textSize="@dimen/dimen_12dp"
-                app:ccp_autoDetectCountry="true" />
+                app:ccp_autoDetectCountry="true"/>
 
 
             <com.google.android.material.textfield.TextInputLayout
