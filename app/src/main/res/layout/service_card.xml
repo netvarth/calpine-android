@@ -68,7 +68,6 @@
                     android:letterSpacing="0.04"
                     android:maxLines="2"
                     android:text=""
-
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/dimen_18sp">
 

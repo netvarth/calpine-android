@@ -181,6 +181,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @BindView(R.id.cv_favourite)
     CardView cvFavourite;
 
+    @BindView(R.id.cv_coupon)
+    CardView cvCoupon;
+
     @BindView(R.id.iv_fav)
     ImageView ivfav;
 
@@ -395,6 +398,18 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 }
             }
         });
+
+        cvCoupon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent iCoupons = new Intent(v.getContext(), CouponActivity.class);
+                iCoupons.putExtra("uniqueID", uniqueId);
+                context.startActivity(iCoupons);
+
+            }
+        });
+
 
 
         apiVirtualFields(uniqueId);

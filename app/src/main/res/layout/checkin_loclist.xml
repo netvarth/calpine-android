@@ -85,7 +85,9 @@
         android:id="@+id/checkloclist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding3"></androidx.recyclerview.widget.RecyclerView>
+        android:layout_marginTop="@dimen/padding3">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 
     <Button

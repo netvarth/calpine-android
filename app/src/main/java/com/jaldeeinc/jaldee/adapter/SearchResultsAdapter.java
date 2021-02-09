@@ -177,6 +177,23 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     myViewHolder.tvSpName.setText(searchdetailList.getTitle());
                 }
 
+                if (searchdetailList.getJdn() != null && searchdetailList.getJdn().equalsIgnoreCase("1")){
+
+                    myViewHolder.llJdn.setVisibility(View.VISIBLE);
+                } else {
+
+                    myViewHolder.llJdn.setVisibility(View.GONE);
+                }
+
+                myViewHolder.llJdn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        mAdapterCallback.onMethodJdn(searchdetailList.getUniqueid());
+
+                    }
+                });
+
                 // to set locationName
                 if (searchdetailList.getPlace1() != null) {
                     myViewHolder.tvLocationName.setVisibility(View.VISIBLE);
@@ -1012,7 +1029,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         private CustomTextViewItalicSemiBold tvTime, tvWaitingCount, tvWaitingCountHint;
         private CustomTextViewMedium tvLocationName, tvEstWaitTime, tvSpOne, tvSpTwo, tvWaitingInLine;
         private RatingBar ratingBar;
-        private LinearLayout llServices, llSpecializations, llWaitingInLine, llEstTime, llLoader;
+        private LinearLayout llServices, llSpecializations, llWaitingInLine, llEstTime, llLoader,llJdn;
         private RelativeLayout rlStatus;
         private CustomTextViewItalicSemiBold tvServiceOne, tvServiceTwo, tvServiceThree;
         private CustomTextViewSemiBold tvText;
@@ -1049,6 +1066,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             cvImage = view.findViewById(R.id.cv_image);
             llLoader = view.findViewById(R.id.ll_loader);
             cvShimmer = view.findViewById(R.id.cv_shimmer);
+            llJdn = view.findViewById(R.id.ll_jdn);
 
         }
     }

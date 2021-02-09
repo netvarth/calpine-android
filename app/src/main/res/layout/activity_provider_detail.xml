@@ -38,6 +38,31 @@
             android:layout_centerVertical="true">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cv_coupon"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardElevation="@dimen/padding3">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:padding="1dp"
+                    android:scaleType="fitStart"
+                    android:src="@drawable/discount"
+                    android:visibility="visible"
+                    app:tint="@color/dark_blue">
+
+                </ImageView>
+
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
                 android:id="@+id/cv_share"
                 android:layout_width="35dp"
                 android:layout_height="35dp"

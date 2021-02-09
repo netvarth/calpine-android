@@ -42,17 +42,34 @@
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                         android:id="@+id/tv_spName"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/padding3"
                         android:ellipsize="end"
                         android:maxLines="2"
                         android:padding="2dp"
                         android:text=""
+                        android:layout_weight="0.9"
                         android:textColor="#0F0C08"
                         android:textSize="@dimen/dimen_18dp">
 
                     </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+                    <LinearLayout
+                        android:id="@+id/ll_jdn"
+                        android:layout_width="@dimen/dimen_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="@dimen/dimen_20dp"
+                        android:layout_height="@dimen/dimen_20dp"
+                        android:src="@drawable/jdn_icon">
+
+                    </ImageView>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
