@@ -1127,7 +1127,8 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                 tvTimeSlot.setText(date + ", " + startTime + "-" + endTime);
                                 selectedTime = startTime + "-" + endTime;
                             } else {
-                                tvTimeSlot.setText(storePickupSchedulesList.get(0).getReason());
+                               // tvTimeSlot.setText(storePickupSchedulesList.get(0).getReason());
+                                tvTimeSlot.setText("No Store pickup");
                             }
                             llDelivery.setVisibility(View.GONE);
                             rlDeliveryFee.setVisibility(View.GONE);
@@ -1206,7 +1207,8 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                     tvTimeSlot.setText(date + ", " + startTime + "-" + endTime);
                                     selectedTime = startTime + "-" + endTime;
                                 } else {
-                                    tvTimeSlot.setText(homeDeliverySchedulesList.get(0).getReason());
+                                   // tvTimeSlot.setText(homeDeliverySchedulesList.get(0).getReason());
+                                    tvTimeSlot.setText("No Home Delivery");
                                 }
                                 llContactDetails.setVisibility(View.GONE);
                                 llDelivery.setVisibility(View.VISIBLE);
