@@ -403,6 +403,8 @@ public interface ApiInterface {
     @POST("consumer/orders/communicate/{uuid}")
     Call<ResponseBody> orderMessage(@Path("uuid") String uuid, @Query("account") String account, @Body RequestBody jsonObj);
 
+    @POST("consumer/donation/communicate/{uuid}")
+    Call<ResponseBody> donationMessage(@Path("uuid") String uuid, @Query("account") String account, @Body RequestBody jsonObj);
 
     @Headers("User-Agent: android")
     @POST("consumer/payment")

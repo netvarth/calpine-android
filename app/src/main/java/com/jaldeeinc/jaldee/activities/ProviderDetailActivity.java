@@ -385,13 +385,19 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             public void onClick(View v) {
 
                 if (mBusinessDataList != null) {
-                    enquiryDialog = new EnquiryDialog(mContext, mBusinessDataList.getBusinessName(), iSendMessage, mBusinessDataList.getId());
-                    enquiryDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
-                    enquiryDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    enquiryDialog.show();
-                    DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
-                    int width = (int) (metrics.widthPixels * 1);
-                    enquiryDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                    Intent intent = new Intent(ProviderDetailActivity.this,ChatActivity.class);
+                    intent.putExtra("from",Constants.PROVIDER);
+                    intent.putExtra("accountId",mBusinessDataList.getId());
+                    intent.putExtra("name",mBusinessDataList.getBusinessName());
+                    startActivity(intent);
+//                    enquiryDialog = new EnquiryDialog(mContext, mBusinessDataList.getBusinessName(), iSendMessage, mBusinessDataList.getId());
+//                    enquiryDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+//                    enquiryDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//                    enquiryDialog.show();
+//                    DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+//                    int width = (int) (metrics.widthPixels * 1);
+//                    enquiryDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                 } else {
 
                     Toast.makeText(ProviderDetailActivity.this, "Please try after some time", Toast.LENGTH_SHORT).show();
@@ -2272,6 +2278,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                 if (mSearchLocList.get(i).getId() == mSearchmCheckMessageList.get(i).getLocid()) {
                                     if (mSearchmCheckMessageList.get(i).getmAllSearch_checkIn().size() > 0) {
                                         tv_checkinsList.setVisibility(View.VISIBLE);
+                                        tv_checkinsList.setVisibility(View.GONE); // remove this line when you want to show bookings
+
                                     }
                                     //  myViewHolder.tv_checkin.setText("You have "+mCheckInMessage.get(i).getmAllSearch_checkIn().size()+" Check-In at this location");
 

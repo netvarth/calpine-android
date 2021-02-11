@@ -295,6 +295,12 @@ public class ChatActivity extends AppCompatActivity {
                                 ApiCommunicateAppointment(uuId, String.valueOf(accountID), etMessage.getText().toString());
                             } else if (from != null && from.equalsIgnoreCase(Constants.CHECKIN)) {
                                 ApiCommunicateCheckin(uuId, String.valueOf(accountID), etMessage.getText().toString());
+                            } else if (from != null && from.equalsIgnoreCase(Constants.ORDERS)){
+                                ApiCommunicateOrders(uuId, String.valueOf(accountID), etMessage.getText().toString());
+                            } else if (from != null && from.equalsIgnoreCase(Constants.PROVIDER)){
+                                ApiCommunicate(String.valueOf(accountID),etMessage.getText().toString());
+                            } else if (from != null && from.equalsIgnoreCase(Constants.DONATION)){
+                                ApiCommunicateDonation(uuId,String.valueOf(accountID),etMessage.getText().toString());
                             }
                             tvErrorMessage.setVisibility(View.GONE);
                             imagePathLists = imagePathList;
@@ -330,6 +336,10 @@ public class ChatActivity extends AppCompatActivity {
                         ApiCommunicateCheckin(uuId, String.valueOf(accountID), etMessage.getText().toString());
                     } else if (from != null && from.equalsIgnoreCase(Constants.ORDERS)){
                         ApiCommunicateOrders(uuId, String.valueOf(accountID), etMessage.getText().toString());
+                    } else if (from != null && from.equalsIgnoreCase(Constants.PROVIDER)){
+                        ApiCommunicate(String.valueOf(accountID),etMessage.getText().toString());
+                    } else if (from != null && from.equalsIgnoreCase(Constants.DONATION)){
+                        ApiCommunicateDonation(uuId,String.valueOf(accountID),etMessage.getText().toString());
                     }
 
                 }
@@ -852,6 +862,142 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    private void ApiCommunicate(String accountID, String message) {
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        MediaType type = MediaType.parse("*/*");
+        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
+        mBuilder.setType(MultipartBody.FORM);
+        if (message.equalsIgnoreCase("")) {
+            message = "Please find the attachments";
+        }
+
+        mBuilder.addFormDataPart("message", message);
+        for (int i = 0; i < imagePathList.size(); i++) {
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (bitmap != null) {
+                path = saveImage(bitmap);
+                file = new File(path);
+            } else {
+                file = new File(imagePathList.get(i));
+            }
+            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+        }
+        RequestBody requestBody = mBuilder.build();
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("communicationMessage", message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call = apiService.PostMessage(accountID, requestBody);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(ChatActivity.this, mDialog);
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        etMessage.setText("");
+                        ApiInboxList();
+                        imagePathList.clear();
+                    } else if (response.code() == 403) {
+                        Toast.makeText(mContext, "Please complete the details of profile name,location and working hours to continue", Toast.LENGTH_LONG).show();
+                    } else if (response.code() == 404) {
+                        Toast.makeText(mContext, "The account doesn't exist", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(ChatActivity.this, mDialog);
+            }
+        });
+    }
+
+    private void ApiCommunicateDonation(String uuId, String accountID, String message) {
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        MediaType type = MediaType.parse("*/*");
+        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
+        mBuilder.setType(MultipartBody.FORM);
+        if (message.equalsIgnoreCase("")) {
+            message = "Please find the attachments";
+        }
+
+        mBuilder.addFormDataPart("message", message);
+        for (int i = 0; i < imagePathList.size(); i++) {
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (bitmap != null) {
+                path = saveImage(bitmap);
+                file = new File(path);
+            } else {
+                file = new File(imagePathList.get(i));
+            }
+            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+        }
+        RequestBody requestBody = mBuilder.build();
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("communicationMessage", message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call = apiService.donationMessage(uuId,accountID, requestBody);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(ChatActivity.this, mDialog);
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        etMessage.setText("");
+                        ApiInboxList();
+                        imagePathList.clear();
+                    } else if (response.code() == 403) {
+                        Toast.makeText(mContext, "Please complete the details of profile name,location and working hours to continue", Toast.LENGTH_LONG).show();
+                    } else if (response.code() == 404) {
+                        Toast.makeText(mContext, "The account doesn't exist", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(ChatActivity.this, mDialog);
+            }
+        });
+    }
+
 
     private void ApiInboxList() {
 
@@ -863,7 +1009,6 @@ public class ChatActivity extends AppCompatActivity {
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         final HashMap<String, List<InboxList>> messagesMap = new HashMap<String, List<InboxList>>();
-
 
         call.enqueue(new Callback<ArrayList<InboxList>>() {
             @Override
@@ -887,7 +1032,7 @@ public class ChatActivity extends AppCompatActivity {
 
                                 if (accountID == Integer.parseInt(mInboxList.get(i).getAccountId())) {
 
-                                    if (mInboxList.get(i).getWaitlistId() != null) {
+//                                    if (mInboxList.get(i).getWaitlistId() != null) {
 //                                    if (from1 != null && from1.equalsIgnoreCase(Constants.INBOX)) {
 //                                        inboxModels.add(mInboxList.get(i));
 //                                    } else {
@@ -896,7 +1041,7 @@ public class ChatActivity extends AppCompatActivity {
                                         inboxModels.add(mInboxList.get(i));
 //                                        }
 //                                    }
-                                    }
+//                                    }
                                 }
                             }
 
