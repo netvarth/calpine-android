@@ -124,6 +124,9 @@ public class BookingDetails extends AppCompatActivity {
     @BindView(R.id.tv_billText)
     CustomTextViewSemiBold tvBillText;
 
+    @BindView(R.id.tv_bill_receiptText)
+    CustomTextViewSemiBold tvBillReceiptText;
+
     @BindView(R.id.cv_back)
     CardView cvBack;
 
@@ -736,7 +739,9 @@ public class BookingDetails extends AppCompatActivity {
                     tvAmountToPay.setText(amount);
                     tvAmountToPay.setVisibility(View.GONE);
                     cvBill.setVisibility(View.VISIBLE);
-                    tvBillText.setText("Receipt");
+                    tvBillText.setVisibility(View.GONE);
+                    tvBillReceiptText.setVisibility(View.VISIBLE);
+                    tvBillReceiptText.setText("Receipt");
                 } else {
                     String amount = "₹" + " " + convertAmountToDecimals(String.valueOf(appointmentInfo.getAmountDue()));
                     if (appointmentInfo.getApptStatus().equalsIgnoreCase("Cancelled")) {

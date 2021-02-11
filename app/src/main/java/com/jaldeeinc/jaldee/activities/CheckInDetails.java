@@ -122,6 +122,9 @@ public class CheckInDetails extends AppCompatActivity {
     @BindView(R.id.tv_billText)
     CustomTextViewSemiBold tvBillText;
 
+    @BindView(R.id.tv_bill_receiptText)
+    CustomTextViewSemiBold tvBillReceiptText;
+
     @BindView(R.id.cv_back)
     CardView cvBack;
 
@@ -789,8 +792,9 @@ public class CheckInDetails extends AppCompatActivity {
                     tvAmountToPay.setText(amount);
                     tvAmountToPay.setVisibility(View.GONE);
                     cvBill.setVisibility(View.VISIBLE);
-                    tvBillText.setText("Receipt");
-                    tvBillText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    tvBillText.setVisibility(View.GONE);
+                    tvBillReceiptText.setVisibility(View.VISIBLE);
+                    tvBillReceiptText.setText("Receipt");
                 } else {
                     String amount = "₹" + " " + convertAmountToDecimals(checkInInfo.getAmountDue());
                     if (checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled")) {

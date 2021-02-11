@@ -36,10 +36,10 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text="Token Details"
-            android:textSize="@dimen/dimen_16sp"
             android:textColor="@color/location_theme"
-            android:layout_centerInParent="true">
+            android:textSize="@dimen/dimen_16sp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
@@ -214,10 +214,10 @@
                                             android:id="@+id/tv_doctorName"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:paddingLeft="@dimen/dimen_4dp"
                                             android:layout_marginEnd="8dp"
                                             android:ellipsize="end"
                                             android:maxLines="2"
+                                            android:paddingLeft="@dimen/dimen_4dp"
                                             android:text=""
                                             android:textColor="@color/title_color"
                                             android:textSize="@dimen/dimen_20dp">
@@ -985,7 +985,8 @@
 
                                     <RelativeLayout
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content">
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center">
 
                                         <com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic
                                             android:id="@+id/tv_amountToPay"
@@ -1013,6 +1014,18 @@
 
                                         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
+                                        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                                            android:id="@+id/tv_bill_receiptText"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerInParent="true"
+                                            android:paddingBottom="@dimen/padding3"
+                                            android:textAllCaps="false"
+                                            android:textColor="@color/white"
+                                            android:textSize="18dp"
+                                            android:visibility="gone">
+
+                                        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
                                     </RelativeLayout>
 
                                 </androidx.cardview.widget.CardView>
