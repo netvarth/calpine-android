@@ -6,12 +6,20 @@ package com.jaldeeinc.jaldee.adapter;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+
 import androidx.fragment.app.Fragment;
+
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -21,7 +29,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+
 import androidx.appcompat.widget.SearchView;
+
 import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
@@ -43,11 +53,12 @@ public class SearchListAdpter extends BaseAdapter implements Filterable {
     Fragment mSearchFrag;
     private SearchView searchView;
     String mCheckClass;
-    boolean first=false;
+    boolean first = false;
     Activity mActivity;
-    public SearchListAdpter( String mCheckClass, Context context, ArrayList<ListCell> item, double lant, double longt, Fragment fragment, SearchView mSearchView) {
+
+    public SearchListAdpter(String mCheckClass, Context context, ArrayList<ListCell> item, double lant, double longt, Fragment fragment, SearchView mSearchView) {
         mContext = context;
-        this.mCheckClass=mCheckClass;
+        this.mCheckClass = mCheckClass;
         items = item;
         filteredItems = item;
         mSearchFrag = fragment;
@@ -89,12 +100,10 @@ public class SearchListAdpter extends BaseAdapter implements Filterable {
         if (cell.getCategory().equalsIgnoreCase("Business Name as")) {
             domain.setVisibility(View.GONE);
             name.setText(highlight(text, "Business Name/Keyword As " + cell.getMdisplayname()));
-        }
-        else if(cell.getCategory().equalsIgnoreCase("Business Id as")) {
+        } else if (cell.getCategory().equalsIgnoreCase("Business Id as")) {
             domain.setVisibility(View.GONE);
             name.setText(highlight(text, "Business Id As " + cell.getMdisplayname()));
-        }
-            else {
+        } else {
             domain.setVisibility(View.VISIBLE);
             domain.setText(cell.getCategory());
             name.setText(highlight(text, cell.getMdisplayname()));
@@ -142,43 +151,48 @@ public class SearchListAdpter extends BaseAdapter implements Filterable {
     String text = "";
 
 
-        private class ValueFilter extends Filter {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults results = new FilterResults();
+    private class ValueFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
 
-                if (constraint != null && constraint.length() > 0) {
-                    text = constraint.toString();
-                    ArrayList<ListCell> filterList = new ArrayList<ListCell>();
-                    for (int i = 0; i < filteredItems.size(); i++) {
+            if (constraint != null && constraint.length() > 0) {
+                text = constraint.toString();
+                ArrayList<ListCell> filterList = new ArrayList<ListCell>();
+                for (int i = 0; i < filteredItems.size(); i++) {
 
                   /*  if ((String.valueOf(filteredItems.get(i).getName()).toLowerCase())
                             .contains(constraint.toString().toLowerCase())) {*/
 
 
-                        if ((String.valueOf(filteredItems.get(i).getMdisplayname()).toLowerCase())
-                                .contains(constraint.toString().toLowerCase())) {
+                    if ((String.valueOf(filteredItems.get(i).getMdisplayname()).toLowerCase())
+                            .contains(constraint.toString().toLowerCase())) {
 
-                            Config.logV("Same---------------"+filteredItems.get(i).getMdisplayname());
-                            ListCell searchmodel = new ListCell(filteredItems.get(i).getName(), filteredItems.get(i).getCategory(), filteredItems.get(i).getMsector(),filteredItems.get(i).getMdisplayname());
-                            filterList.add(searchmodel);
+                        Config.logV("Same---------------" + filteredItems.get(i).getMdisplayname());
+                        ListCell searchmodel = new ListCell(filteredItems.get(i).getName(), filteredItems.get(i).getCategory(), filteredItems.get(i).getMsector(), filteredItems.get(i).getMdisplayname());
+                        filterList.add(searchmodel);
 
 
-
-                        }
                     }
-
-
-                    results.count = filterList.size();
-                    results.values = filterList;
-                } else {
-                    results.count = filteredItems.size();
-                    results.values = filteredItems;
                 }
+                if (filterList != null && !filterList.isEmpty()) {
 
-                return results;
-
+                    Set<ListCell> filterList1 = filterList.stream().collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(ListCell::getName))));
+                    ArrayList<ListCell> searchmodel1 = filterList.stream().filter(p -> p.getCategory().equals("Business Name as")).collect(Collectors.toCollection(() -> new ArrayList<ListCell>()));
+                    filterList.clear();
+                    filterList.addAll(filterList1);
+                    filterList.addAll(searchmodel1);
+                }
+                results.count = filterList.size();
+                results.values = filterList;
+            } else {
+                results.count = filteredItems.size();
+                results.values = filteredItems;
             }
+
+            return results;
+
+        }
 
         @Override
         protected void publishResults(CharSequence constraint,
@@ -189,7 +203,8 @@ public class SearchListAdpter extends BaseAdapter implements Filterable {
         }
 
     }
-    public  CharSequence highlight(String search, String originalText) {
+
+    public CharSequence highlight(String search, String originalText) {
         // ignore case and accents
         // the same thing should have been done for the search text
         String normalizedText = Normalizer
@@ -216,7 +231,7 @@ public class SearchListAdpter extends BaseAdapter implements Filterable {
                 start = normalizedText.indexOf(search, spanEnd);
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
-                highlighted.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                highlighted.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             }
 
