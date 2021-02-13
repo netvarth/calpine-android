@@ -54,9 +54,11 @@ import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.response.ShareLocation;
+import com.jaldeeinc.jaldee.response.ShoppingList;
 import com.jaldeeinc.jaldee.response.SlotsData;
 import com.jaldeeinc.jaldee.response.StoreDetails;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
+import com.jaldeeinc.jaldee.response.ViewAttachments;
 
 
 import org.json.JSONObject;
@@ -636,5 +638,16 @@ public interface ApiInterface {
     @POST("consumer/orders/shoppingList")
     Call<ResponseBody> orderList(@Query("account") int account,  @Body RequestBody jsonObj);
 
+    @POST("consumer/waitlist/{uuid}/attachment")
+    Call<ResponseBody> waitlistSendAttachments(@Path("uuid") String uid,@Query("account") int account,  @Body RequestBody jsonObj);
+
+    @POST("consumer/appointment/{uuid}/attachment")
+    Call<ResponseBody> appointmentSendAttachments(@Path("uuid") String uid,@Query("account") int account,  @Body RequestBody jsonObj);
+
+    @GET("consumer/waitlist/attachment/{uuid}")
+    Call<ArrayList<ShoppingList>> getWaitlistAttachments(@Path("uuid") String uid, @Query("account") int account);
+
+    @GET("consumer/appointment/attachment/{uuid}")
+    Call<ArrayList<ShoppingList>> getAppointmentAttachments(@Path("uuid") String uid, @Query("account") int account);
 
 }

@@ -424,15 +424,6 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
 
         if (itemList != null && itemList.size() > 0) {
 
-//            for (int i = 0;i<imagePathList.size();i++){
-//
-//                ShoppingListModel model = new ShoppingListModel();
-//                model.setImagePath(imagePathList.get(i));
-//                model.setCaption("");
-//
-//                itemList.add(model);
-//            }
-
             mDetailFileAdapter = new ImagePreviewAdapter(itemList, mContext,true,iDeleteImagesInterface);
             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(ItemsActivity.this, 2);
             rvImages.setLayoutManager(mLayoutManager);

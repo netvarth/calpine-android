@@ -25,6 +25,8 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.ChatActivity;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.callback.FavAdapterOnCallback;
 import com.jaldeeinc.jaldee.common.Config;
@@ -115,8 +117,11 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
 
         myViewHolder.tv_provider.setText(favList.getBusinessName());
 
-        if (favList.getPlace() != null) {
+        if (favList.getPlace() != null && !favList.getPlace().trim().equalsIgnoreCase("")) {
+            myViewHolder.llLocation.setVisibility(View.VISIBLE);
             myViewHolder.tvLocationName.setText(favList.getPlace());
+        } else {
+            myViewHolder.llLocation.setVisibility(View.GONE);
         }
 
         myViewHolder.llLocation.setOnClickListener(new View.OnClickListener() {
@@ -180,60 +185,66 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
         myViewHolder.ivMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
-                dialog.setContentView(R.layout.reply);
-                dialog.show();
+//                final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
+//                dialog.setContentView(R.layout.reply);
+//                dialog.show();
+//
+//                final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
+//                Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
+//                final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+//                TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
+//                txtsendmsg.setVisibility(View.VISIBLE);
+//                txtsendmsg.setText("Message to " + favList.getBusinessName());
+//                btn_send.setText("SEND");
+//
+//                edt_message.addTextChangedListener(new TextWatcher() {
+//                    @Override
+//                    public void afterTextChanged(Editable arg0) {
+//                        if (edt_message.getText().toString().length() > 0 && !edt_message.getText().toString().trim().isEmpty()) {
+//                            btn_send.setEnabled(true);
+//                            btn_send.setClickable(true);
+//                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
+//                        } else {
+//                            btn_send.setEnabled(false);
+//                            btn_send.setClickable(false);
+//                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                    }
+//
+//                    @Override
+//                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                    }
+//                });
+//
+//                btn_send.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                        String modifyAccountID = String.valueOf(favList.getId());
+//                        callback.onMethodMessageCallback(modifyAccountID, edt_message.getText().toString(), dialog);
+//                        // ApiSearchViewTerminology(modifyAccountID);
+//                        //dialog.dismiss();
+//
+//                    }
+//                });
+//
+//                btn_cancel.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        dialog.dismiss();
+//                    }
+//                });
+//
 
-                final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
-                Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
-                final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-                TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
-                txtsendmsg.setVisibility(View.VISIBLE);
-                txtsendmsg.setText("Message to " + favList.getBusinessName());
-                btn_send.setText("SEND");
-
-                edt_message.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void afterTextChanged(Editable arg0) {
-                        if (edt_message.getText().toString().length() > 0 && !edt_message.getText().toString().trim().isEmpty()) {
-                            btn_send.setEnabled(true);
-                            btn_send.setClickable(true);
-                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
-                        } else {
-                            btn_send.setEnabled(false);
-                            btn_send.setClickable(false);
-                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
-                        }
-                    }
-
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    }
-                });
-
-                btn_send.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        String modifyAccountID = String.valueOf(favList.getId());
-                        callback.onMethodMessageCallback(modifyAccountID, edt_message.getText().toString(), dialog);
-                        // ApiSearchViewTerminology(modifyAccountID);
-                        //dialog.dismiss();
-
-                    }
-                });
-
-                btn_cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
+                Intent intent = new Intent(mContext, ChatActivity.class);
+                intent.putExtra("name",favList.getBusinessName());
+                intent.putExtra("accountId",favList.getId());
+                intent.putExtra("from", Constants.PROVIDER);
+                mContext.startActivity(intent);
 
             }
         });

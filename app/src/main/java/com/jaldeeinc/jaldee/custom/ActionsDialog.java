@@ -1,15 +1,29 @@
 package com.jaldeeinc.jaldee.custom;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -23,11 +37,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.jaldeeinc.jaldee.Interface.ISendData;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
 import com.jaldeeinc.jaldee.activities.BookingDetails;
@@ -38,6 +56,7 @@ import com.jaldeeinc.jaldee.activities.CheckinShareLocationAppointment;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.RescheduleActivity;
 import com.jaldeeinc.jaldee.activities.RescheduleCheckinActivity;
+import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -46,13 +65,32 @@ import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.RatingResponse;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.payumoney.core.entity.TransactionResponse;
+import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
+import com.payumoney.sdkui.ui.utils.ResultModel;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.RequestBody;
@@ -61,12 +99,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 public class ActionsDialog extends Dialog {
 
     private Context mContext;
-    private LinearLayout llReschedule, llMessages, llRating, llCancel, llTrackingOn, llInstructions, llCustomerNotes, llMeetingDetails, llBillDetails, llPrescription;
+    private LinearLayout llReschedule, llMessages, llRating, llCancel, llTrackingOn, llInstructions, llCustomerNotes, llMeetingDetails, llBillDetails, llPrescription, llSendAttachments, llViewAttachments;
     private CustomTextViewMedium tvTrackingText, tvBillText;
     private boolean isActive = false;
     private Bookings bookings = new Bookings();
@@ -78,13 +118,29 @@ public class ActionsDialog extends Dialog {
     private MeetingDetailsWindow meetingDetailsWindow;
     private MeetingInfo meetingInfo;
     private PrescriptionDialog prescriptionDialog;
+    ArrayList<String> imagePathList = new ArrayList<>();
+    ArrayList<String> imagePathLists = new ArrayList<>();
+    Bitmap bitmap;
+    File f, file;
+    String path, from, from1 = "";
+    private LinearLayout llNoHistory;
+    private ImageView iv_attach;
+    TextView tv_attach, tv_camera;
+    private BottomSheetDialog dialog;
+    CustomTextViewSemiBold tvErrorMessage;
+    RecyclerView recycle_image_attachment;
+    private int GALLERY = 1, CAMERA = 2;
+    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
+    private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
+    private Uri mImageUri;
+    private ISendData iSendData;
 
-
-    public ActionsDialog(@NonNull Context context, boolean isActive, Bookings bookings) {
+    public ActionsDialog(@NonNull Context context, boolean isActive, Bookings bookings, ISendData iSendData) {
         super(context);
         this.mContext = context;
         this.isActive = isActive;
         this.bookings = bookings;
+        this.iSendData = iSendData;
     }
 
     @Override
@@ -217,17 +273,16 @@ public class ActionsDialog extends Dialog {
                     });
 
                     // To show prescription
-                    if(bookings.getAppointmentInfo().isPrescShared()){
+                    if (bookings.getAppointmentInfo().isPrescShared()) {
                         llPrescription.setVisibility(View.VISIBLE);
-                    }
-                    else{
+                    } else {
                         hideView(llPrescription);
                     }
 
                     llPrescription.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            prescriptionDialog = new PrescriptionDialog(mContext,isActive,bookings);
+                            prescriptionDialog = new PrescriptionDialog(mContext, isActive, bookings);
                             prescriptionDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
                             prescriptionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                             prescriptionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -240,7 +295,6 @@ public class ActionsDialog extends Dialog {
                     });
 
                 }
-
 
 
             } else if (bookings.getCheckInInfo() != null) {
@@ -341,7 +395,7 @@ public class ActionsDialog extends Dialog {
                 } else {
                     if (!bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("NotPaid")) {
                         ivBillIcon.setVisibility(View.VISIBLE);
-                        if (bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("Refund")){
+                        if (bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("Refund")) {
                             ivBillIcon.setVisibility(View.GONE);
                             hideView(llBillDetails);
                         }
@@ -370,10 +424,9 @@ public class ActionsDialog extends Dialog {
                 });
 
                 // To Show Prescription
-                if(bookings.getCheckInInfo().isPrescShared()){
+                if (bookings.getCheckInInfo().isPrescShared()) {
                     llPrescription.setVisibility(View.VISIBLE);
-                }
-                else{
+                } else {
                     hideView(llPrescription);
                 }
 
@@ -387,7 +440,7 @@ public class ActionsDialog extends Dialog {
                 llPrescription.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        prescriptionDialog = new PrescriptionDialog(mContext,isActive,bookings);
+                        prescriptionDialog = new PrescriptionDialog(mContext, isActive, bookings);
                         prescriptionDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
                         prescriptionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         prescriptionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -401,6 +454,33 @@ public class ActionsDialog extends Dialog {
 
             }
 
+            llSendAttachments.setVisibility(View.VISIBLE);
+
+            llSendAttachments.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    iSendData.sendAttachments(bookings);
+                    dismiss();
+
+                }
+            });
+
+            if (bookings.isHasAttachment()) {
+                llViewAttachments.setVisibility(View.VISIBLE);
+            } else {
+                llViewAttachments.setVisibility(View.GONE);
+            }
+            llViewAttachments.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    iSendData.viewAttachments(bookings);
+                    dismiss();
+
+                }
+            });
+
         } else {
 
             hideView(llReschedule);
@@ -410,11 +490,13 @@ public class ActionsDialog extends Dialog {
             hideView(llCustomerNotes);
             hideView(llMeetingDetails);
             hideView(llPrescription);
+            hideView(llSendAttachments);
+            hideView(llViewAttachments);
             llRating.setVisibility(View.VISIBLE);
 
 
             // To show Bill details
-            if(bookings.getAppointmentInfo()!=null) {
+            if (bookings.getAppointmentInfo() != null) {
 
                 if (bookings.getAppointmentInfo().getPaymentStatus().equalsIgnoreCase("FullyPaid") || bookings.getAppointmentInfo().getPaymentStatus().equalsIgnoreCase("Refund")) {
                     ivBillIcon.setVisibility(View.VISIBLE);
@@ -457,8 +539,7 @@ public class ActionsDialog extends Dialog {
                         v.getContext().startActivity(iBill);
                     }
                 });
-            }
-            else if(bookings.getCheckInInfo()!=null){
+            } else if (bookings.getCheckInInfo() != null) {
                 if (bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("FullyPaid") || bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("Refund")) {
                     ivBillIcon.setVisibility(View.VISIBLE);
                     tvBillText.setText("Receipt");
@@ -535,12 +616,12 @@ public class ActionsDialog extends Dialog {
                         intent.putExtra("uuid", bookings.getAppointmentInfo().getUid());
                         intent.putExtra("accountId", bookings.getAppointmentInfo().getProviderAccount().getId());
                         intent.putExtra("name", bookings.getAppointmentInfo().getProviderAccount().getBusinessName());
-                        intent.putExtra("from",Constants.APPOINTMENT);
+                        intent.putExtra("from", Constants.APPOINTMENT);
                     } else if (bookings.getCheckInInfo() != null) {
                         intent.putExtra("uuid", bookings.getCheckInInfo().getYnwUuid());
                         intent.putExtra("accountId", bookings.getCheckInInfo().getProviderAccount().getId());
                         intent.putExtra("name", bookings.getCheckInInfo().getProviderAccount().getBusinessName());
-                        intent.putExtra("from",Constants.CHECKIN);
+                        intent.putExtra("from", Constants.CHECKIN);
                     }
                     mContext.startActivity(intent);
                     dismiss();
@@ -764,11 +845,11 @@ public class ActionsDialog extends Dialog {
 
                 try {
 
-                    if (bookings.getAppointmentInfo() != null){
+                    if (bookings.getAppointmentInfo() != null) {
 
                         apiGetMeetingDetails(bookings.getAppointmentInfo().getUid(), bookings.getAppointmentInfo().getService().getVirtualCallingModes().get(0).getCallingMode(), bookings.getAppointmentInfo().getProviderAccount().getId(), bookings.getAppointmentInfo());
 
-                    } else  if (bookings.getCheckInInfo() != null){
+                    } else if (bookings.getCheckInInfo() != null) {
 
                         apiGetMeetingDetails(bookings.getCheckInInfo().getYnwUuid(), bookings.getCheckInInfo().getService().getVirtualCallingModes().get(0).getCallingMode(), bookings.getCheckInInfo().getProviderAccount().getId(), bookings.getCheckInInfo());
 
@@ -782,6 +863,7 @@ public class ActionsDialog extends Dialog {
 
 
     }
+
 
     private void initializations() {
 
@@ -800,6 +882,9 @@ public class ActionsDialog extends Dialog {
         ivBillIcon = findViewById(R.id.iv_billIcon);
         tvBillText = findViewById(R.id.billLabel);
         llPrescription = findViewById(R.id.ll_prescriptionDetails);
+        llSendAttachments = findViewById(R.id.ll_sendAttachments);
+        llViewAttachments = findViewById(R.id.ll_viewAttachments);
+
     }
 
     private void apiGetMeetingDetails(String uuid, String mode, int accountID, ActiveAppointment info) {
@@ -856,7 +941,7 @@ public class ActionsDialog extends Dialog {
     // for zoom and GMeet
     public void showMeetingDetailsWindow(ActiveAppointment activeAppointment, String mode, TeleServiceCheckIn meetingDetails) {
 
-        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(),activeAppointment.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
+        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
         meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
         meetingDetailsWindow.show();
         meetingDetailsWindow.setCancelable(false);
@@ -869,9 +954,9 @@ public class ActionsDialog extends Dialog {
     public void showMeetingWindow(ActiveAppointment activeAppointment, String mode, TeleServiceCheckIn meetingDetails) {
 
         if (mode.equalsIgnoreCase("WhatsApp")) {
-            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getWhatsApp(), activeAppointment.getService().getVirtualCallingModes().get(0).getVirtualServiceType(), activeAppointment.getCountryCode(),Constants.APPOINTMENT);
+            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getWhatsApp(), activeAppointment.getService().getVirtualCallingModes().get(0).getVirtualServiceType(), activeAppointment.getCountryCode(), Constants.APPOINTMENT);
         } else {
-            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getPhone(),"", activeAppointment.getCountryCode(),Constants.APPOINTMENT);
+            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getPhone(), "", activeAppointment.getCountryCode(), Constants.APPOINTMENT);
         }
         meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
         meetingInfo.show();
@@ -936,7 +1021,7 @@ public class ActionsDialog extends Dialog {
     // for zoom and GMeet
     public void showCheckInMeetingDetailsWindow(ActiveCheckIn activeCheckIn, String mode, TeleServiceCheckIn meetingDetails) {
 
-        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(),activeCheckIn.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
+        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
         meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
         meetingDetailsWindow.show();
         meetingDetailsWindow.setCancelable(false);
@@ -949,9 +1034,9 @@ public class ActionsDialog extends Dialog {
     public void showCheckInMeetingWindow(ActiveCheckIn activeCheckIn, String mode, TeleServiceCheckIn meetingDetails) {
 
         if (mode.equalsIgnoreCase("WhatsApp")) {
-            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getWhatsApp(),activeCheckIn.getService().getVirtualCallingModes().get(0).getVirtualServiceType(),activeCheckIn.getCountryCode(),Constants.CHECKIN);
+            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getWhatsApp(), activeCheckIn.getService().getVirtualCallingModes().get(0).getVirtualServiceType(), activeCheckIn.getCountryCode(), Constants.CHECKIN);
         } else {
-            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getPhone(),"",activeCheckIn.getCountryCode(),Constants.CHECKIN);
+            meetingInfo = new MeetingInfo(mContext, activeCheckIn.getCheckInTime(), activeCheckIn.getService().getName(), meetingDetails, activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode(), activeCheckIn.getVirtualService().getPhone(), "", activeCheckIn.getCountryCode(), Constants.CHECKIN);
         }
         meetingInfo.setCancelable(false);
         meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1058,7 +1143,7 @@ public class ActionsDialog extends Dialog {
     }
 
 
-    BottomSheetDialog dialog;
+    BottomSheetDialog ratingDialog;
     float rate = 0;
     String comment = "";
 
@@ -1083,18 +1168,18 @@ public class ActionsDialog extends Dialog {
                     if (response.code() == 200) {
                         final ArrayList<RatingResponse> mRatingDATA = response.body();
                         Config.logV("Response--code--------BottomSheetDialog-----------------" + response.code());
-                        dialog = new BottomSheetDialog(mContext);
-                        dialog.setContentView(R.layout.rating);
-                        dialog.setCancelable(true);
-                        dialog.show();
-                        TextView tv_title = (TextView) dialog.findViewById(R.id.txtratevisit);
-                        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-                        final RatingBar rating = (RatingBar) dialog.findViewById(R.id.rRatingBar);
+                        ratingDialog = new BottomSheetDialog(mContext);
+                        ratingDialog.setContentView(R.layout.rating);
+                        ratingDialog.setCancelable(true);
+                        ratingDialog.show();
+                        TextView tv_title = (TextView) ratingDialog.findViewById(R.id.txtratevisit);
+                        final EditText edt_message = (EditText) ratingDialog.findViewById(R.id.edt_message);
+                        final RatingBar rating = (RatingBar) ratingDialog.findViewById(R.id.rRatingBar);
                         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         tv_title.setTypeface(tyface);
-                        final Button btn_close = (Button) dialog.findViewById(R.id.btn_cancel);
-                        final Button btn_rate = (Button) dialog.findViewById(R.id.btn_send);
+                        final Button btn_close = (Button) ratingDialog.findViewById(R.id.btn_cancel);
+                        final Button btn_rate = (Button) ratingDialog.findViewById(R.id.btn_send);
                         btn_rate.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -1105,14 +1190,14 @@ public class ActionsDialog extends Dialog {
                                 } else {
                                     firstTimeRating = false;
                                 }
-                                ApiPUTRating(Math.round(rate), UUID, comment, accountID, dialog, firstTimeRating);
+                                ApiPUTRating(Math.round(rate), UUID, comment, accountID, ratingDialog, firstTimeRating);
 
                             }
                         });
                         edt_message.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void afterTextChanged(Editable arg0) {
-                                if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating!=null && rating.getRating()!=0) {
+                                if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating != null && rating.getRating() != 0) {
                                     btn_rate.setEnabled(true);
                                     btn_rate.setClickable(true);
                                     btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
@@ -1136,12 +1221,11 @@ public class ActionsDialog extends Dialog {
                             rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                                 @Override
                                 public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                                    if(edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating.getRating() != 0){
+                                    if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating.getRating() != 0) {
                                         btn_rate.setEnabled(true);
                                         btn_rate.setClickable(true);
                                         btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
-                                    }
-                                    else{
+                                    } else {
                                         btn_rate.setEnabled(false);
                                         btn_rate.setClickable(false);
                                         btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
@@ -1154,7 +1238,7 @@ public class ActionsDialog extends Dialog {
                         btn_close.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                dialog.dismiss();
+                                ratingDialog.dismiss();
                             }
                         });
                         if (response.body().size() > 0) {
@@ -1235,125 +1319,6 @@ public class ActionsDialog extends Dialog {
         });
     }
 
-    private void ApiCheckInRating(final String accountID, final String UUID) {
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Map<String, String> query = new HashMap<>();
-        query.put("account", accountID);
-        query.put("uId-eq", UUID);
-        Call<ArrayList<RatingResponse>> call = apiService.getRating(query);
-        Config.logV("Location-----###########@@@@@@" + query);
-        call.enqueue(new Callback<ArrayList<RatingResponse>>() {
-            @Override
-            public void onResponse(Call<ArrayList<RatingResponse>> call, final Response<ArrayList<RatingResponse>> response) {
-                try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getOwnerActivity(), mDialog);
-                    Config.logV("URL----------Location-----###########@@@@@@-----" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code--------Message-----------------" + response.code());
-                    if (response.code() == 200) {
-                        final ArrayList<RatingResponse> mRatingDATA = response.body();
-                        Config.logV("Response--code--------BottomSheetDialog-----------------" + response.code());
-                        dialog = new BottomSheetDialog(mContext);
-                        dialog.setContentView(R.layout.rating);
-                        dialog.setCancelable(true);
-                        dialog.show();
-                        TextView tv_title = (TextView) dialog.findViewById(R.id.txtratevisit);
-                        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-                        final RatingBar rating = (RatingBar) dialog.findViewById(R.id.rRatingBar);
-                        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                                "fonts/Montserrat_Bold.otf");
-                        tv_title.setTypeface(tyface);
-                        final Button btn_close = (Button) dialog.findViewById(R.id.btn_cancel);
-                        final Button btn_rate = (Button) dialog.findViewById(R.id.btn_send);
-                        btn_rate.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                rate = rating.getRating();
-                                comment = edt_message.getText().toString();
-                                if (response.body().size() == 0) {
-                                    firstTimeRating = true;
-                                } else {
-                                    firstTimeRating = false;
-                                }
-                                ApiPUTRating(Math.round(rate), UUID, comment, accountID, dialog, firstTimeRating);
-
-                            }
-                        });
-                        edt_message.addTextChangedListener(new TextWatcher() {
-                            @Override
-                            public void afterTextChanged(Editable arg0) {
-                                if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating!=null && rating.getRating()!=0) {
-                                    btn_rate.setEnabled(true);
-                                    btn_rate.setClickable(true);
-                                    btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
-                                } else {
-                                    btn_rate.setEnabled(false);
-                                    btn_rate.setClickable(false);
-                                    btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
-                                }
-                            }
-
-                            @Override
-                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                            }
-
-                            @Override
-                            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            }
-                        });
-
-                        if (rating != null) {
-                            rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-                                @Override
-                                public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                                    if(edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating.getRating() != 0){
-                                        btn_rate.setEnabled(true);
-                                        btn_rate.setClickable(true);
-                                        btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
-                                    }
-                                    else{
-                                        btn_rate.setEnabled(false);
-                                        btn_rate.setClickable(false);
-                                        btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
-                                    }
-                                }
-                            });
-                        }
-
-
-                        btn_close.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.dismiss();
-                            }
-                        });
-                        if (response.body().size() > 0) {
-                            if (mRatingDATA.get(0).getStars() != 0) {
-                                rating.setRating(Float.valueOf(mRatingDATA.get(0).getStars()));
-                            }
-                            if (mRatingDATA.get(0).getFeedback() != null) {
-                                Config.logV("Comments---------" + mRatingDATA.get(0).getFeedback().get(mRatingDATA.get(0).getFeedback().size() - 1).getComments());
-                                edt_message.setText(mRatingDATA.get(0).getFeedback().get(mRatingDATA.get(0).getFeedback().size() - 1).getComments());
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<RatingResponse>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getOwnerActivity(), mDialog);
-            }
-        });
-    }
 
     private void ApiPUTCheckInRating(final int stars, final String UUID, String feedback, String accountID, final BottomSheetDialog dialog, boolean firstTimerate) {
         ApiInterface apiService =

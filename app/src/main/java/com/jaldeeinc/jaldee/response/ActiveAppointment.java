@@ -138,6 +138,16 @@ public class ActiveAppointment implements Serializable {
     String consumerNoteTitle;
     boolean prescShared;
     String prescUrl;
+    boolean hasAttachment;
+
+    public boolean isHasAttachment() {
+        return hasAttachment;
+    }
+
+    public void setHasAttachment(boolean hasAttachment) {
+        this.hasAttachment = hasAttachment;
+    }
+
 
     public String getCountryCode() {
         return countryCode;

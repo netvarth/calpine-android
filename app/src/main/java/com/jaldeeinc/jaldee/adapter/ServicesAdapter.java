@@ -235,7 +235,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
         } else if (child.getType() != null && child.getType().equalsIgnoreCase(Constants.DONATION)) {
 
             viewHolder.tvServiceType.setVisibility(View.VISIBLE);
-            viewHolder.tvServiceType.setText("Donation");
+            viewHolder.tvServiceType.setText("Donate");
             viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.donation_theme));
 
         } else if (child.getType() != null && child.getType().equalsIgnoreCase(Constants.PROVIDER)) {

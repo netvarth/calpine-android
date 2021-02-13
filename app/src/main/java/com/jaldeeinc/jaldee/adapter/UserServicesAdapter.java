@@ -234,7 +234,7 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
             } else if (servicesInfoList.get(position).getType() != null && servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.DONATION)) {
 
                 viewHolder.tvServiceType.setVisibility(View.VISIBLE);
-                viewHolder.tvServiceType.setText("Donation");
+                viewHolder.tvServiceType.setText("Donate");
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.donation_theme));
 
             } else if (servicesInfoList.get(position).getType() != null && servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.PROVIDER)) {

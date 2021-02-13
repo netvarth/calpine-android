@@ -22,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    public static final String BASE_URL = "https://scale.jaldee.com/v1/rest/";
+    public static final String BASE_URL = "https://www.jaldee.com/v1/rest/";
 
 //    public static final String BASE_URL = "http://103.70.197.233/v1/rest/";
 

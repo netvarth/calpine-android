@@ -368,6 +368,40 @@
             </LinearLayout>
 
 
+            <LinearLayout
+                android:id="@+id/ll_preinfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginStart="@dimen/dimen_15dp"
+                android:layout_marginEnd="@dimen/padding15"
+                android:layout_marginTop="@dimen/dimen_10dp">
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                    android:id="@+id/tv_preInfoTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="@dimen/txtsize_14"
+                    android:textStyle="bold"
+                    android:textColor="@color/title_color">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:id="@+id/tv_preInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding5"
+                    android:textSize="@dimen/txtsize_12"
+                    android:scrollbars="vertical"
+                    android:textColor="@color/title_color">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+            </LinearLayout>
+
 
 
         </LinearLayout>

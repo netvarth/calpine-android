@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -129,6 +130,15 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     @BindView(R.id.tv_note)
     EditText et_note;
 
+    @BindView(R.id.ll_preinfo)
+    LinearLayout llPreInfo;
+
+    @BindView(R.id.tv_preInfoTitle)
+    CustomTextViewSemiBold tvPreInfoTitle;
+
+    @BindView(R.id.tv_preInfo)
+    CustomTextViewMedium tvPreInfo;
+
     private IPaymentResponse paymentResponse;
     private int locationId;
     private int uniqueId;
@@ -197,6 +207,22 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         familyMEmID = consumerId;
         tvConsumerName.setText(mFirstName + " " + mLastName);
 
+        if (serviceInfo.isPreInfoEnabled()) {  //  check if pre-info is available for the service
+
+            llPreInfo.setVisibility(View.VISIBLE);
+            if (serviceInfo.getPreInfoTitle() != null) {
+                tvPreInfoTitle.setText(serviceInfo.getPreInfoTitle());
+            } else {
+                llPreInfo.setVisibility(View.GONE);
+            }
+            if (serviceInfo.getPreInfoText() != null) {
+                tvPreInfo.setText((Html.fromHtml(serviceInfo.getPreInfoText())));
+            } else {
+                llPreInfo.setVisibility(View.GONE);
+            }
+        } else {
+            llPreInfo.setVisibility(View.GONE);
+        }
 
         //Click-actions
         cvBack.setOnClickListener(new View.OnClickListener() {

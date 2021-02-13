@@ -37,7 +37,8 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.CheckoutListActivity"></activity>
+        <activity android:name=".activities.ViewAttachmentActivity"></activity>
+        <activity android:name=".activities.CheckoutListActivity" />
         <activity android:name=".activities.OrderDetailActivity" />
         <activity android:name=".activities.OrderConfirmation" />
         <activity

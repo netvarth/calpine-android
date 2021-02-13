@@ -77,7 +77,7 @@ public class OrderListImagesAdapter extends RecyclerView.Adapter<OrderListImages
     @Override
     public void onBindViewHolder(final OrderListImagesAdapter.MyViewHolder myViewHolder, final int position) {
         String imagePath = itemList.get(position).getS3path();
-        if (imagePath.substring(imagePath.lastIndexOf(".") + 1).equals("pdf")) {
+        if (imagePath != null && imagePath.substring(imagePath.lastIndexOf(".") + 1).equals("pdf")) {
             myViewHolder.iv_file_attach.setVisibility(View.VISIBLE);
         } else {
             myViewHolder.iv_file_attach.setVisibility(View.VISIBLE);

@@ -23,6 +23,7 @@ public class Bookings implements Serializable {
     private String calculationMode;
     private int tokenNo;
     private String amountPaid;
+    private boolean hasAttachment;
     private ActiveAppointment appointmentInfo;
     private ActiveCheckIn checkInInfo;
 
@@ -187,5 +188,13 @@ public class Bookings implements Serializable {
 
     public void setAmountPaid(String amountPaid) {
         this.amountPaid = amountPaid;
+    }
+
+    public boolean isHasAttachment() {
+        return hasAttachment;
+    }
+
+    public void setHasAttachment(boolean hasAttachment) {
+        this.hasAttachment = hasAttachment;
     }
 }

@@ -125,6 +125,16 @@ public class ActiveCheckIn implements Serializable {
     String appmtDate;
     String appmtTime;
 
+    public boolean isHasAttachment() {
+        return hasAttachment;
+    }
+
+    public void setHasAttachment(boolean hasAttachment) {
+        this.hasAttachment = hasAttachment;
+    }
+
+    boolean hasAttachment;
+
 
     public int getAppxWaitingTime() {
         return appxWaitingTime;
