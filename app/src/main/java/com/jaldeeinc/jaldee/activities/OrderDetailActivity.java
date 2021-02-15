@@ -283,7 +283,8 @@ public class OrderDetailActivity extends AppCompatActivity {
 
                 tvOrderNO.setText(orderInfo.getOrderNumber());
                 tvStatus.setText(orderInfo.getOrderStatus());
-                tvDate.setText(getCalenderDateFormat(orderInfo.getOrderDate()));
+                String date = getCustomDateString(orderInfo.getOrderDate());
+                tvDate.setText(date);
                 if (orderInfo.getTimeSlot() != null) {
                     tvTime.setText(orderInfo.getTimeSlot().getsTime() + " - " + orderInfo.getTimeSlot().geteTime());
                 }
@@ -389,5 +390,26 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         return yourDate;
 
+    }
+    public static String getCustomDateString(String d) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date1 = format.parse(d);
+        String date = format.format(date1);
+
+        if (date.endsWith("1") && !date.endsWith("11"))
+            format = new SimpleDateFormat("d'st' MMM, yyyy");
+
+        else if (date.endsWith("2") && !date.endsWith("12"))
+            format = new SimpleDateFormat("d'nd' MMM, yyyy");
+
+        else if (date.endsWith("3") && !date.endsWith("13"))
+            format = new SimpleDateFormat("d'rd' MMM, yyyy");
+
+        else
+            format = new SimpleDateFormat("d'th' MMM, yyyy");
+
+        String yourDate = format.format(date1);
+
+        return yourDate;
     }
 }
