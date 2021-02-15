@@ -782,6 +782,7 @@ public class BookingDetails extends AppCompatActivity {
                         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
                         iBill.putExtra("consumer", appointmentInfo.getAppmtFor().get(0).getFirstName() + " " + appointmentInfo.getAppmtFor().get(0).getLastName());
                         iBill.putExtra("uniqueId", appointmentInfo.getProviderAccount().getUniqueId());
+                        iBill.putExtra("encId",appointmentInfo.getAppointmentEncId());
                         startActivity(iBill);
 
                     }

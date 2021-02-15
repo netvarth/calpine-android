@@ -339,7 +339,7 @@ public class CheckInDetails extends AppCompatActivity {
                     tvViewMore.setText("View Less");
                     isTvViewMore = true;
 
-                }else{
+                } else {
 
                     llMoreDetails.setVisibility(View.GONE);
                     tvViewMore.setText("View More");
@@ -561,10 +561,9 @@ public class CheckInDetails extends AppCompatActivity {
                 }
 
                 tvViewMore.setVisibility(View.VISIBLE);
-                if(isTvViewMore){
+                if (isTvViewMore) {
                     llMoreDetails.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     llMoreDetails.setVisibility(View.GONE);
                 }
 
@@ -817,9 +816,16 @@ public class CheckInDetails extends AppCompatActivity {
                 } else {
                     if (!checkInInfo.getPaymentStatus().equalsIgnoreCase("NotPaid")) {
                         cvBill.setVisibility(View.VISIBLE);
+                        if (bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("Refund")) {
+                            cvBill.setVisibility(View.GONE);
+                        }
                     } else {
                         cvBill.setVisibility(View.GONE);
                     }
+                }
+
+                if (checkInInfo.getParentUuid() != null){
+                    cvBill.setVisibility(View.GONE);
                 }
 
 
@@ -835,6 +841,7 @@ public class CheckInDetails extends AppCompatActivity {
                         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
                         iBill.putExtra("consumer", checkInInfo.getWaitlistingFor().get(0).getFirstName() + " " + checkInInfo.getWaitlistingFor().get(0).getLastName());
                         iBill.putExtra("uniqueId", checkInInfo.getProviderAccount().getUniqueId());
+                        iBill.putExtra("encId", checkInInfo.getCheckinEncId());
                         startActivity(iBill);
 
                     }

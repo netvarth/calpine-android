@@ -268,6 +268,7 @@ public class ActionsDialog extends Dialog {
                             iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
                             iBill.putExtra("consumer", bookings.getAppointmentInfo().getAppmtFor().get(0).getFirstName() + " " + bookings.getAppointmentInfo().getAppmtFor().get(0).getLastName());
                             iBill.putExtra("uniqueId", bookings.getAppointmentInfo().getProviderAccount().getUniqueId());
+                            iBill.putExtra("encId", bookings.getAppointmentInfo().getAppointmentEncId());
                             v.getContext().startActivity(iBill);
                         }
                     });
@@ -405,6 +406,10 @@ public class ActionsDialog extends Dialog {
                     }
                 }
 
+                if (bookings.getCheckInInfo() != null && bookings.getCheckInInfo().getParentUuid() != null) {
+                    hideView(llBillDetails);
+                }
+
 
                 ivBillIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -418,6 +423,7 @@ public class ActionsDialog extends Dialog {
                         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
                         iBill.putExtra("consumer", bookings.getCheckInInfo().getWaitlistingFor().get(0).getFirstName() + " " + bookings.getCheckInInfo().getWaitlistingFor().get(0).getLastName());
                         iBill.putExtra("uniqueId", bookings.getCheckInInfo().getProviderAccount().getUniqueId());
+                        iBill.putExtra("encId", bookings.getCheckInInfo().getCheckinEncId());
                         v.getContext().startActivity(iBill);
 
                     }
@@ -536,6 +542,7 @@ public class ActionsDialog extends Dialog {
                         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
                         iBill.putExtra("consumer", bookings.getAppointmentInfo().getAppmtFor().get(0).getFirstName() + " " + bookings.getAppointmentInfo().getAppmtFor().get(0).getLastName());
                         iBill.putExtra("uniqueId", bookings.getAppointmentInfo().getProviderAccount().getUniqueId());
+                        iBill.putExtra("encId", bookings.getAppointmentInfo().getAppointmentEncId());
                         v.getContext().startActivity(iBill);
                     }
                 });
@@ -578,6 +585,7 @@ public class ActionsDialog extends Dialog {
                         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
                         iBill.putExtra("consumer", bookings.getCheckInInfo().getWaitlistingFor().get(0).getFirstName() + " " + bookings.getCheckInInfo().getWaitlistingFor().get(0).getLastName());
                         iBill.putExtra("uniqueId", bookings.getCheckInInfo().getProviderAccount().getUniqueId());
+                        iBill.putExtra("encId", bookings.getCheckInInfo().getCheckinEncId());
                         v.getContext().startActivity(iBill);
 
                     }
@@ -711,7 +719,7 @@ public class ActionsDialog extends Dialog {
 
                 if (bookings.getAppointmentInfo() != null) {
 
-                    ApiRating(String.valueOf(bookings.getAppointmentInfo().getProviderAccount().getId()), bookings.getAppointmentInfo().getUid());
+                    ApiRatingApp(String.valueOf(bookings.getAppointmentInfo().getProviderAccount().getId()), bookings.getAppointmentInfo().getUid());
 
                 } else if (bookings.getCheckInInfo() != null) {
 
@@ -1153,6 +1161,179 @@ public class ActionsDialog extends Dialog {
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Map<String, String> query = new HashMap<>();
+        query.put("account", accountID);
+        query.put("uId-eq", UUID);
+        Call<ArrayList<RatingResponse>> call = apiService.getRating(query);
+        Config.logV("Location-----###########@@@@@@" + query);
+        call.enqueue(new Callback<ArrayList<RatingResponse>>() {
+            @Override
+            public void onResponse(Call<ArrayList<RatingResponse>> call, final Response<ArrayList<RatingResponse>> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getOwnerActivity(), mDialog);
+                    Config.logV("URL----------Location-----###########@@@@@@-----" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code--------Message-----------------" + response.code());
+                    if (response.code() == 200) {
+                        final ArrayList<RatingResponse> mRatingDATA = response.body();
+                        Config.logV("Response--code--------BottomSheetDialog-----------------" + response.code());
+                        ratingDialog = new BottomSheetDialog(mContext);
+                        ratingDialog.setContentView(R.layout.rating);
+                        ratingDialog.setCancelable(true);
+                        ratingDialog.show();
+                        TextView tv_title = (TextView) ratingDialog.findViewById(R.id.txtratevisit);
+                        final EditText edt_message = (EditText) ratingDialog.findViewById(R.id.edt_message);
+                        final RatingBar rating = (RatingBar) ratingDialog.findViewById(R.id.rRatingBar);
+                        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                                "fonts/Montserrat_Bold.otf");
+                        tv_title.setTypeface(tyface);
+                        final Button btn_close = (Button) ratingDialog.findViewById(R.id.btn_cancel);
+                        final Button btn_rate = (Button) ratingDialog.findViewById(R.id.btn_send);
+                        btn_rate.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                rate = rating.getRating();
+                                comment = edt_message.getText().toString();
+                                if (response.body().size() == 0) {
+                                    firstTimeRating = true;
+                                } else {
+                                    firstTimeRating = false;
+                                }
+                                ApiPUTCheckInRating(Math.round(rate), UUID, comment, accountID, ratingDialog, firstTimeRating);
+
+                            }
+                        });
+                        edt_message.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void afterTextChanged(Editable arg0) {
+                                if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating != null && rating.getRating() != 0) {
+                                    btn_rate.setEnabled(true);
+                                    btn_rate.setClickable(true);
+                                    btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
+                                } else {
+                                    btn_rate.setEnabled(false);
+                                    btn_rate.setClickable(false);
+                                    btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                                }
+                            }
+
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            }
+                        });
+
+                        if (rating != null) {
+                            rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                                @Override
+                                public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                                    if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating.getRating() != 0) {
+                                        btn_rate.setEnabled(true);
+                                        btn_rate.setClickable(true);
+                                        btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
+                                    } else {
+                                        btn_rate.setEnabled(false);
+                                        btn_rate.setClickable(false);
+                                        btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                                    }
+                                }
+                            });
+                        }
+
+
+                        btn_close.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ratingDialog.dismiss();
+                            }
+                        });
+                        if (response.body().size() > 0) {
+                            if (mRatingDATA.get(0).getStars() != 0) {
+                                rating.setRating(Float.valueOf(mRatingDATA.get(0).getStars()));
+                            }
+                            if (mRatingDATA.get(0).getFeedback() != null) {
+                                Config.logV("Comments---------" + mRatingDATA.get(0).getFeedback().get(mRatingDATA.get(0).getFeedback().size() - 1).getComments());
+                                edt_message.setText(mRatingDATA.get(0).getFeedback().get(mRatingDATA.get(0).getFeedback().size() - 1).getComments());
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<RatingResponse>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getOwnerActivity(), mDialog);
+            }
+        });
+    }
+
+    private void ApiPUTCheckInRating(final int stars, final String UUID, String feedback, String accountID, final BottomSheetDialog dialog, boolean firstTimerate) {
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("uuid", UUID);
+            jsonObj.put("stars", String.valueOf(stars));
+            jsonObj.put("feedback", feedback);
+            Config.logV("Feedback--------------" + feedback);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call;
+        if (firstTimerate) {
+            call = apiService.PostRating(accountID, body);
+        } else {
+            call = apiService.PutRating(accountID, body);
+        }
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    Config.logV("URL-------Request---" + response.raw().request().url().toString().trim());
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getOwnerActivity(), mDialog);
+                    dialog.dismiss();
+                    Config.logV("Put Rating#########################" + response.code());
+                    if (response.code() == 200) {
+                        if (response.body().string().equalsIgnoreCase("true")) {
+                            DynamicToast.make(context, "Rated successfully", AppCompatResources.getDrawable(
+                                    context, R.drawable.icon_tickmark),
+                                    ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
+                            dismiss();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getOwnerActivity(), mDialog);
+            }
+        });
+    }
+
+
+    private void ApiRatingApp(final String accountID, final String UUID) {
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Map<String, String> query = new HashMap<>();
         query.put("account-eq", accountID);
         query.put("uId-eq", UUID);
         Call<ArrayList<RatingResponse>> call = apiService.getRatingApp(query);
@@ -1286,60 +1467,6 @@ public class ActionsDialog extends Dialog {
             call = apiService.PostRatingApp(accountID, body);
         } else {
             call = apiService.PutRatingApp(accountID, body);
-        }
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    Config.logV("URL-------Request---" + response.raw().request().url().toString().trim());
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getOwnerActivity(), mDialog);
-                    dialog.dismiss();
-                    Config.logV("Put Rating#########################" + response.code());
-                    if (response.code() == 200) {
-                        if (response.body().string().equalsIgnoreCase("true")) {
-                            DynamicToast.make(context, "Rated successfully", AppCompatResources.getDrawable(
-                                    context, R.drawable.icon_tickmark),
-                                    ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
-                            dismiss();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getOwnerActivity(), mDialog);
-            }
-        });
-    }
-
-
-    private void ApiPUTCheckInRating(final int stars, final String UUID, String feedback, String accountID, final BottomSheetDialog dialog, boolean firstTimerate) {
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        JSONObject jsonObj = new JSONObject();
-        try {
-            jsonObj.put("uuid", UUID);
-            jsonObj.put("stars", String.valueOf(stars));
-            jsonObj.put("feedback", feedback);
-            Config.logV("Feedback--------------" + feedback);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<ResponseBody> call;
-        if (firstTimerate) {
-            call = apiService.PostRating(accountID, body);
-        } else {
-            call = apiService.PutRating(accountID, body);
         }
         call.enqueue(new Callback<ResponseBody>() {
             @Override

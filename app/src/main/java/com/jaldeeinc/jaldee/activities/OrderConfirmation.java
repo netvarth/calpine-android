@@ -272,7 +272,7 @@ public class OrderConfirmation extends AppCompatActivity {
 
                 tvOrderNO.setText(orderInfo.getOrderNumber());
                 tvStatus.setText(orderInfo.getOrderStatus());
-                tvDate.setText(getCalenderDateFormat(orderInfo.getOrderDate()));
+                tvDate.setText(Config.getCustomDateString(orderInfo.getOrderDate()));
                 if (orderInfo.getTimeSlot() != null) {
                     tvTime.setText(orderInfo.getTimeSlot().getsTime() + " - " + orderInfo.getTimeSlot().geteTime());
                 }
@@ -381,6 +381,9 @@ public class OrderConfirmation extends AppCompatActivity {
         return yourDate;
 
     }
+
+
+
 
     @Override
     public void onBackPressed() {

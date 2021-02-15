@@ -593,10 +593,13 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         String lastNme = SharedPreference.getInstance(mCOntext).getStringValue("lastname", "");
                         tv_customer.setText(consumer);
                         DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
-                        DateFormat targetFormat = new SimpleDateFormat(("dd-MM-yyyy hh:mm a"));
+                        DateFormat targetFormat = new SimpleDateFormat("hh:mm a");
                         Date date = originalFormat.parse(mBillData.getCreatedDate());
                         String formattedDate = targetFormat.format(date);
-                        tv_date.setText(formattedDate);
+                        DateFormat dateTarget = new SimpleDateFormat("yyyy-MM-dd");
+                        Date date1 = originalFormat.parse(mBillData.getCreatedDate());
+                        String targetDate = dateTarget.format(date1);
+                        tv_date.setText(Config.getCustomDateString(targetDate)+" - "+formattedDate);
 
 
                         Typeface tyface = Typeface.createFromAsset(getAssets(),
