@@ -1692,7 +1692,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
-                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();///////
                         imagePathList.clear();
                         dialog.dismiss();
                     } else {
