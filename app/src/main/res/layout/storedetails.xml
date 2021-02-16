@@ -183,8 +183,7 @@
             android:layout_width="@dimen/dimen_15dp"
             android:layout_height="@dimen/dimen_15dp"
             android:layout_gravity="center"
-            android:src="@drawable/whatsappicon"
-            app:tint="@color/dark_blue" />
+            android:src="@drawable/whatsapp"/>
 
         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
             android:id="@+id/whatsAppNo"
