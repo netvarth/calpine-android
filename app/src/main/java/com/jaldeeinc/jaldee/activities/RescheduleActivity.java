@@ -283,7 +283,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
         if (appointmentInfo != null) {
 
             String name = appointmentInfo.getProviderAccount().getBusinessName();
-            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+            //name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
 
             tvSpName.setText(name);
 

@@ -195,10 +195,10 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                 tv_title.setText("Bill");
                 btn_pay.setVisibility(View.VISIBLE);
                 couponCheckin.setVisibility(View.VISIBLE);
+                ApiJaldeegetS3Coupons(uniqueId);
             }
         }
         ApiBill(ynwUUID);
-        ApiJaldeegetS3Coupons(uniqueId);
 
 
         Typeface tyface1 = Typeface.createFromAsset(this.getAssets(),
