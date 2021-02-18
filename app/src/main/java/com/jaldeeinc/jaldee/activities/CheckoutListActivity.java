@@ -289,6 +289,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     ArrayList<String> couponArraylist = new ArrayList<>();
     private CouponlistAdapter mAdapter;
+    private Address selectedAddress = new Address();
 
 
     @Override
@@ -611,8 +612,18 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
             } else {
                 if (!tvDeliveryAddress.getText().toString().trim().equalsIgnoreCase("")) {  // to check delivery address
                     inputBody.put("homeDelivery", true);
-                    inputBody.put("homeDeliveryAddress", tvDeliveryAddress.getText().toString());
+                    JSONObject address = new JSONObject();
+                    address.put("phoneNumber",selectedAddress.getPhoneNumber());
+                    address.put("firstName",selectedAddress.getFirstName());
+                    address.put("lastName",selectedAddress.getLastName());
+                    address.put("email",selectedAddress.getEmail());
+                    address.put("address",selectedAddress.getAddress());
+                    address.put("city",selectedAddress.getCity());
+                    address.put("postalCode",selectedAddress.getPostalCode());
+                    address.put("landMark",selectedAddress.getLandMark());
+                    address.put("countryCode",selectedAddress.getCountryCode());
 
+                    inputBody.put("homeDeliveryAddress", address);
                     if (homeDeliveryNumber != null && !homeDeliveryNumber.trim().equalsIgnoreCase("")) {
                         inputBody.put("phoneNumber", homeDeliveryNumber);
                     } else {
@@ -1483,6 +1494,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
             tvChangeAddress.setVisibility(View.VISIBLE);
             llAddress.setVisibility(View.VISIBLE);
 
+            selectedAddress = address;
             homeDeliveryEmail = address.getEmail();
             homeDeliveryNumber = address.getPhoneNumber();
             tvName.setText(address.getFirstName() + " " + address.getLastName());

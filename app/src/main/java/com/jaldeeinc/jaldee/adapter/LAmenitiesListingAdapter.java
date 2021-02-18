@@ -40,7 +40,7 @@ public class LAmenitiesListingAdapter extends RecyclerView.Adapter<LAmenitiesLis
                 "fonts/Montserrat_Regular.otf");
 
         viewHolder.tvServiceName.setText(listType.get(i).getTypename());
-        viewHolder.tvServiceName.setTypeface(tyface);
+//        viewHolder.tvServiceName.setTypeface(tyface);
 
     }
 

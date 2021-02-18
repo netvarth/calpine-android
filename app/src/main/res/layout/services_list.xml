@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
         android:layout_marginStart="@dimen/dimen_10dp"
         android:textColor="@color/dark_blue">
 
-    </TextView>
+    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_8dp"
+        android:layout_marginBottom="@dimen/dimen_8dp"
         android:layout_below="@id/tv_title">
 
     </androidx.recyclerview.widget.RecyclerView>

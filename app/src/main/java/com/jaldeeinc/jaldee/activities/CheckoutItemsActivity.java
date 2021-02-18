@@ -110,6 +110,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import kotlin.Unit;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -285,6 +286,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     ArrayList<String> couponArraylist = new ArrayList<>();
     private CouponlistAdapter mAdapter;
+    private Address selectedAddress = new Address();
 
 
     @Override
@@ -559,7 +561,18 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             } else {
                 if (!tvDeliveryAddress.getText().toString().trim().equalsIgnoreCase("")) {  // to check delivery address
                     inputObj.put("homeDelivery", true);
-                    inputObj.put("homeDeliveryAddress", tvDeliveryAddress.getText().toString());
+                    JSONObject address = new JSONObject();
+                    address.put("phoneNumber",selectedAddress.getPhoneNumber());
+                    address.put("firstName",selectedAddress.getFirstName());
+                    address.put("lastName",selectedAddress.getLastName());
+                    address.put("email",selectedAddress.getEmail());
+                    address.put("address",selectedAddress.getAddress());
+                    address.put("city",selectedAddress.getCity());
+                    address.put("postalCode",selectedAddress.getPostalCode());
+                    address.put("landMark",selectedAddress.getLandMark());
+                    address.put("countryCode",selectedAddress.getCountryCode());
+
+                    inputObj.put("homeDeliveryAddress", address);
 
                     if (homeDeliveryNumber != null && !homeDeliveryNumber.trim().equalsIgnoreCase("")) {
                         inputObj.put("phoneNumber", homeDeliveryNumber);
@@ -644,8 +657,14 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), inputObj.toString());
-        Call<ResponseBody> call = apiService.order(accountId, body);
+        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
+        mBuilder.setType(MultipartBody.FORM);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), inputObj.toString());
+        mBuilder.addFormDataPart("order", "blob", body);
+//        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), inputObj.toString());
+        RequestBody requestBody = mBuilder.build();
+
+        Call<ResponseBody> call = apiService.order(accountId, requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse
@@ -1512,6 +1531,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             tvChangeAddress.setVisibility(View.VISIBLE);
             llAddress.setVisibility(View.VISIBLE);
 
+            selectedAddress = address;
             homeDeliveryEmail = address.getEmail();
             homeDeliveryNumber = address.getPhoneNumber();
             tvName.setText(address.getFirstName() + " " + address.getLastName());

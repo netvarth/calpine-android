@@ -10,10 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -43,8 +45,13 @@ import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.ISelectedService;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.adapter.EmailsAdapter;
 import com.jaldeeinc.jaldee.adapter.LocationCheckinAdapter;
 import com.jaldeeinc.jaldee.adapter.MainServicesAdapter;
+import com.jaldeeinc.jaldee.adapter.ParkingModel;
+import com.jaldeeinc.jaldee.adapter.ParkingTypesAdapter;
+import com.jaldeeinc.jaldee.adapter.PhoneNumbersAdapter;
+import com.jaldeeinc.jaldee.adapter.SearchLocationAdapter;
 import com.jaldeeinc.jaldee.adapter.SectionRecyclerViewAdapter;
 import com.jaldeeinc.jaldee.adapter.ServicesAdapter;
 import com.jaldeeinc.jaldee.adapter.SpecialisationAdapter;
@@ -60,6 +67,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.custom.EnquiryDialog;
 import com.jaldeeinc.jaldee.custom.IGetSelectedLocation;
+import com.jaldeeinc.jaldee.custom.LocationAmenitiesDialog;
 import com.jaldeeinc.jaldee.custom.LocationsDialog;
 import com.jaldeeinc.jaldee.custom.ResizableCustomView;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
@@ -123,6 +131,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
     @BindView(R.id.tv_locationName)
     CustomTextViewMedium tvLocationName;
+
+    @BindView(R.id.tv_specializations)
+    CustomTextViewMedium tvSpecializations;
 
     @BindView(R.id.ll_specializations)
     LinearLayout llSpecializations;
@@ -199,11 +210,11 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @BindView(R.id.tv_contactDetails)
     CustomTextViewMedium tvContactDetails;
 
-    @BindView(R.id.tv_mobileNumber)
-    CustomTextViewMedium tvProviderPhoneNo;
+    @BindView(R.id.rv_phoneNumbers)
+    RecyclerView rvPhoneNumbers;
 
-    @BindView(R.id.tv_email)
-    CustomTextViewMedium tvProviderEmail;
+    @BindView(R.id.rv_emails)
+    RecyclerView rvEmails;
 
     @BindView(R.id.ll_phone)
     LinearLayout llPhone;
@@ -211,11 +222,38 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @BindView(R.id.ll_email)
     LinearLayout llEmail;
 
+    @BindView(R.id.ll_socialMedia)
+    LinearLayout llSocialMedia;
+
+    @BindView(R.id.iv_facebook)
+    ImageView ivFacebook;
+
+    @BindView(R.id.iv_youtube)
+    ImageView ivYoutube;
+
+    @BindView(R.id.iv_gPlus)
+    ImageView ivGooglePlus;
+
+    @BindView(R.id.iv_twitter)
+    ImageView ivTwitter;
+
+    @BindView(R.id.iv_linkedIn)
+    ImageView ivLinkedIn;
+
+    @BindView(R.id.iv_pintrest)
+    ImageView ivPintrest;
+
+    @BindView(R.id.tv_socialMedia)
+    CustomTextViewMedium tvSocialMedia;
+
     @BindView(R.id.tv_aboutUsHint)
     CustomTextViewMedium tvAboutUsHint;
 
     @BindView(R.id.tv_providerName)
     CustomTextViewBold tvProviderName;
+
+    @BindView(R.id.ll_amenities)
+    LinearLayout llAmenities;
 
     String claimable;
     private int uniqueId;
@@ -276,6 +314,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     private String location_Id;
     private String place;
     private OrderResponse orderResponse = new OrderResponse();
+    private LocationAmenitiesDialog locationAmenitiesDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -386,10 +425,10 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                 if (mBusinessDataList != null) {
 
-                    Intent intent = new Intent(ProviderDetailActivity.this,ChatActivity.class);
-                    intent.putExtra("from",Constants.PROVIDER);
-                    intent.putExtra("accountId",mBusinessDataList.getId());
-                    intent.putExtra("name",mBusinessDataList.getBusinessName());
+                    Intent intent = new Intent(ProviderDetailActivity.this, ChatActivity.class);
+                    intent.putExtra("from", Constants.PROVIDER);
+                    intent.putExtra("accountId", mBusinessDataList.getId());
+                    intent.putExtra("name", mBusinessDataList.getBusinessName());
                     startActivity(intent);
 //                    enquiryDialog = new EnquiryDialog(mContext, mBusinessDataList.getBusinessName(), iSendMessage, mBusinessDataList.getId());
 //                    enquiryDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
@@ -415,7 +454,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
             }
         });
-
 
 
         apiVirtualFields(uniqueId);
@@ -513,6 +551,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                 rlLocation.setVisibility(View.VISIBLE);
                                 tvLocation.setText(mSearchLocList.get(0).getAddress());
                                 tvChangeLocation.setVisibility(View.VISIBLE);
+
                             } else {
                                 rlLocation.setVisibility(View.GONE);
                             }
@@ -619,6 +658,103 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         });
     }
 
+    ArrayList<ParkingModel> listType = new ArrayList<>();
+
+    private void handleLocationAmenities(SearchLocation searchLoclist) {
+
+        listType = new ArrayList<>();
+        if (searchLoclist.getParkingType() != null) {
+            if (searchLoclist.getParkingType().equalsIgnoreCase("free") || searchLoclist.getParkingType().equalsIgnoreCase("valet") || searchLoclist.getParkingType().equalsIgnoreCase("street") || searchLoclist.getParkingType().equalsIgnoreCase("privatelot") || searchLoclist.getParkingType().equalsIgnoreCase("paid")) {
+                ParkingModel mType = new ParkingModel();
+                mType.setId("1");
+                mType.setTypename(Config.toTitleCase(searchLoclist.getParkingType()) + " Parking ");
+                listType.add(mType);
+            }
+        }
+        if (searchLoclist.getLocationVirtualFields() != null) {
+            if (searchLoclist.getLocationVirtualFields().getDocambulance() != null) {
+                if (searchLoclist.getLocationVirtualFields().getDocambulance().equalsIgnoreCase("true")) {
+                    ParkingModel mType = new ParkingModel();
+                    mType.setId("4");
+                    mType.setTypename("Ambulance");
+                    listType.add(mType);
+                }
+            }
+            if (searchLoclist.getLocationVirtualFields().getFirstaid() != null) {
+                if (searchLoclist.getLocationVirtualFields().getFirstaid().equalsIgnoreCase("true")) {
+                    ParkingModel mType = new ParkingModel();
+                    mType.setId("5");
+                    mType.setTypename("First Aid");
+                    listType.add(mType);
+                }
+            }
+            if (searchLoclist.getLocationVirtualFields().getTraumacentre() != null) {
+                if (searchLoclist.getLocationVirtualFields().getTraumacentre().equalsIgnoreCase("true")) {
+                    ParkingModel mType = new ParkingModel();
+                    mType.setId("7");
+                    mType.setTypename("Trauma");
+                    listType.add(mType);
+                }
+            }
+            if (searchLoclist.getLocationVirtualFields().getPhysiciansemergencyservices() != null) {
+                if (searchLoclist.getLocationVirtualFields().getPhysiciansemergencyservices().equalsIgnoreCase("true")) {
+                    ParkingModel mType = new ParkingModel();
+                    mType.setId("3");
+                    mType.setTypename("Emergency");
+                    listType.add(mType);
+                }
+            }
+            if (searchLoclist.getLocationVirtualFields().getHosemergencyservices() != null) {
+                if (searchLoclist.getLocationVirtualFields().getHosemergencyservices().equalsIgnoreCase("true")) {
+                    ParkingModel mType = new ParkingModel();
+                    mType.setId("3");
+                    mType.setTypename("Emergency");
+                    listType.add(mType);
+                }
+            }
+            if (searchLoclist.getLocationVirtualFields().getDentistemergencyservices() != null) {
+                if (searchLoclist.getLocationVirtualFields().getDentistemergencyservices().equalsIgnoreCase("true")) {
+                    ParkingModel mType = new ParkingModel();
+                    mType.setId("6");
+                    mType.setTypename("Emergency");
+                    listType.add(mType);
+                }
+            }
+        }
+        try {
+            if (searchLoclist.isOpen24hours()) {
+                ParkingModel mType = new ParkingModel();
+                mType.setId("2");
+                mType.setTypename("24 Hours");
+                listType.add(mType);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (listType.size() > 0) {
+            Config.logV("Location Ament---------------" + listType.size());
+
+            llAmenities.setVisibility(View.VISIBLE);
+            llAmenities.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    locationAmenitiesDialog = new LocationAmenitiesDialog(mContext, listType);
+                    locationAmenitiesDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    locationAmenitiesDialog.show();
+                    DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                    int width = (int) (metrics.widthPixels * 1);
+                    locationAmenitiesDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                }
+            });
+
+        } else {
+            llAmenities.setVisibility(View.GONE);
+        }
+
+
+    }
 
     private void apiSearchGallery(int muniqueID) {
         ApiInterface apiService = ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
@@ -717,7 +853,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 tvSpName.setText(name);
             }
 
-            if (mBusinessDataList.getBusinessUserName() != null){
+            if (mBusinessDataList.getBusinessUserName() != null) {
 
                 tvProviderName.setVisibility(View.VISIBLE);
                 tvProviderName.setText(mBusinessDataList.getBusinessUserName());
@@ -844,6 +980,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                 if (mBusinessDataList.getSpecialization().size() > 0) {
 
+                    tvSpecializations.setVisibility(View.VISIBLE);
+                    tvSpOne.setVisibility(View.VISIBLE);
+
                     ArrayList<String> specNames = new ArrayList<>();
                     String name;
                     for (int i = 0; i < mBusinessDataList.getSpecialization().size(); i++) {
@@ -868,6 +1007,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             if (lineCount > 3) {
                                 ResizableCustomView.doResizeTextView(mContext, tvSpOne, 3, "View more", true);
                             } else {
+
                             }
                             // Use lineCount here
                         }
@@ -875,45 +1015,198 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 } else {
 
                     if (mBusinessDataList.getServiceSubSector() != null && mBusinessDataList.getServiceSubSector().getDisplayName() != null) {
-                        tvSpOne.setText(mBusinessDataList.getServiceSubSector().getDisplayName());
+                        if (!mBusinessDataList.getServiceSubSector().getDisplayName().equalsIgnoreCase("Miscellaneous")) {
+                            tvSpecializations.setVisibility(View.VISIBLE);
+                            tvSpOne.setVisibility(View.VISIBLE);
+                            tvSpOne.setText(mBusinessDataList.getServiceSubSector().getDisplayName());
+                        } else {
+                            tvSpecializations.setVisibility(View.GONE);
+                            tvSpOne.setVisibility(View.GONE);
+                        }
                     }
                 }
-
 
             } else {
 
                 if (mBusinessDataList.getServiceSubSector() != null && mBusinessDataList.getServiceSubSector().getDisplayName() != null) {
-                    tvSpOne.setText(mBusinessDataList.getServiceSubSector().getDisplayName());
+                    if (!mBusinessDataList.getServiceSubSector().getDisplayName().equalsIgnoreCase("Miscellaneous")) {
+                        tvSpecializations.setVisibility(View.VISIBLE);
+                        tvSpOne.setVisibility(View.VISIBLE);
+                        tvSpOne.setText(mBusinessDataList.getServiceSubSector().getDisplayName());
+                    } else {
+                        tvSpecializations.setVisibility(View.GONE);
+                        tvSpOne.setVisibility(View.GONE);
+                    }
                 }
             }
 
+            updateSocialMedia();
             updateContactInfo();
 
         }
 
     }
 
+    private void updateSocialMedia() {
+
+        if (mBusinessDataList.getSocialMedia() != null) {
+            if (mBusinessDataList.getSocialMedia().size() > 0) {
+                llSocialMedia.setVisibility(View.VISIBLE);
+                tvSocialMedia.setVisibility(View.VISIBLE);
+                for (int i = 0; i < mBusinessDataList.getSocialMedia().size(); i++) {
+                    if (mBusinessDataList.getSocialMedia().get(i).getResource().equalsIgnoreCase("facebook")) {
+//                        tv_SocialMedia.setVisibility(View.VISIBLE);
+                        ivFacebook.setVisibility(View.VISIBLE);
+                        final int finalI = i;
+                        ivFacebook.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mBusinessDataList.getSocialMedia().get(finalI).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                    if (mBusinessDataList.getSocialMedia().get(i).getResource().equalsIgnoreCase("googleplus")) {
+//                        tv_SocialMedia.setVisibility(View.VISIBLE);
+                        ivGooglePlus.setVisibility(View.VISIBLE);
+                        final int finalI3 = i;
+                        ivGooglePlus.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mBusinessDataList.getSocialMedia().get(finalI3).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                    if (mBusinessDataList.getSocialMedia().get(i).getResource().equalsIgnoreCase("twitter")) {
+//                        tv_SocialMedia.setVisibility(View.VISIBLE);
+                        ivTwitter.setVisibility(View.VISIBLE);
+                        final int finalI1 = i;
+                        ivTwitter.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mBusinessDataList.getSocialMedia().get(finalI1).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                    if (mBusinessDataList.getSocialMedia().get(i).getResource().equalsIgnoreCase("linkedin")) {
+//                        tv_SocialMedia.setVisibility(View.VISIBLE);
+                        ivLinkedIn.setVisibility(View.VISIBLE);
+                        final int finalI5 = i;
+                        ivLinkedIn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mBusinessDataList.getSocialMedia().get(finalI5).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                    if (mBusinessDataList.getSocialMedia().get(i).getResource().equalsIgnoreCase("pinterest")) {
+//                        tv_SocialMedia.setVisibility(View.VISIBLE);
+                        ivPintrest.setVisibility(View.VISIBLE);
+                        final int finalI4 = i;
+                        ivPintrest.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mBusinessDataList.getSocialMedia().get(finalI4).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                    if (mBusinessDataList.getSocialMedia().get(i).getResource().equalsIgnoreCase("youtube")) {
+//                        tv_SocialMedia.setVisibility(View.VISIBLE);
+                        ivYoutube.setVisibility(View.VISIBLE);
+                        final int finalI2 = i;
+                        ivYoutube.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mBusinessDataList.getSocialMedia().get(finalI2).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                }
+            } else {
+                llSocialMedia.setVisibility(View.GONE);
+                tvSocialMedia.setVisibility(View.GONE);
+            }
+        } else {
+            llSocialMedia.setVisibility(View.GONE);
+            tvSocialMedia.setVisibility(View.GONE);
+        }
+    }
+
     public void updateContactInfo() {
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ProviderDetailActivity.this);
+        PhoneNumbersAdapter phoneNumbersAdapter;
+        EmailsAdapter emailsAdapter;
 
         if (mBusinessDataList.getPhoneNumbers() != null || mBusinessDataList.getEmails() != null) {
             tvMoreInfo.setVisibility(View.VISIBLE);
 
-            if (mBusinessDataList.getPhoneNumbers() != null && mBusinessDataList.getPhoneNumbers().size() > 0 && mBusinessDataList.getPhoneNumbers().get(0).getInstance() != null) {
+            if (mBusinessDataList.getPhoneNumbers() != null && mBusinessDataList.getPhoneNumbers().size() > 0) {
                 llPhone.setVisibility(View.VISIBLE);
+                rvPhoneNumbers.setVisibility(View.VISIBLE);
                 tvContactDetails.setVisibility(View.VISIBLE);
-                tvProviderPhoneNo.setText("+91 "+mBusinessDataList.getPhoneNumbers().get(0).getInstance());
+                rvPhoneNumbers.setLayoutManager(linearLayoutManager);
+                phoneNumbersAdapter = new PhoneNumbersAdapter(mBusinessDataList.getPhoneNumbers(), ProviderDetailActivity.this);
+                rvPhoneNumbers.setAdapter(phoneNumbersAdapter);
 
             } else {
                 llPhone.setVisibility(View.GONE);
+                rvPhoneNumbers.setVisibility(View.GONE);
             }
 
-            if (mBusinessDataList.getEmails() != null && mBusinessDataList.getEmails().size() > 0 && mBusinessDataList.getEmails().get(0).getInstance() != null) {
+            if (mBusinessDataList.getEmails() != null && mBusinessDataList.getEmails().size() > 0) {
 
                 llEmail.setVisibility(View.VISIBLE);
                 tvContactDetails.setVisibility(View.VISIBLE);
-                tvProviderEmail.setText(mBusinessDataList.getEmails().get(0).getInstance());
+                rvEmails.setVisibility(View.VISIBLE);
+                rvEmails.setLayoutManager(new LinearLayoutManager(this));
+                emailsAdapter = new EmailsAdapter(mBusinessDataList.getEmails(), ProviderDetailActivity.this);
+                rvEmails.setAdapter(emailsAdapter);
+
             } else {
                 llEmail.setVisibility(View.GONE);
+                rvEmails.setVisibility(View.GONE);
             }
         } else {
 
@@ -1024,6 +1317,14 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         rvServices.setVisibility(View.VISIBLE);
                         mSearchSettings = response.body();
                         if (mSearchSettings != null) {
+
+                            if (mSearchLocList != null && mSearchLocList.size() > 0) {
+                                for (int i = 0; i < mSearchLocList.size(); i++) {
+                                    if (mlocationId == mSearchLocList.get(i).getId()) {
+                                        handleLocationAmenities(mSearchLocList.get(i));
+                                    }
+                                }
+                            }
 
                             // to check if the provider has order enabled, if it is order enabled
                             checkOrderEnabled(mSearchSettings, uniqueId, mProviderId, mlocationId);
@@ -1429,7 +1730,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                                 rvServices.setVisibility(View.VISIBLE);
                                                 gridLayoutManager = new GridLayoutManager(ProviderDetailActivity.this, 2);
                                                 rvServices.setLayoutManager(gridLayoutManager);
-                                                mainServicesAdapter = new MainServicesAdapter(servicesInfoList, ProviderDetailActivity.this, false, iSelectedService,mBusinessDataList);
+                                                mainServicesAdapter = new MainServicesAdapter(servicesInfoList, ProviderDetailActivity.this, false, iSelectedService, mBusinessDataList);
                                                 rvServices.setAdapter(mainServicesAdapter);
                                             } else {
 
@@ -2088,7 +2389,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                                     }
                                                 });
                                                 rvServices.setLayoutManager(glm);
-                                                servicesAdapter = new ServicesAdapter(ProviderDetailActivity.this, departmentsDataList, false, iSelectedService,mBusinessDataList);
+                                                servicesAdapter = new ServicesAdapter(ProviderDetailActivity.this, departmentsDataList, false, iSelectedService, mBusinessDataList);
                                                 rvServices.setAdapter(servicesAdapter);
                                             } else {
                                                 llNoSlots.setVisibility(View.VISIBLE);
