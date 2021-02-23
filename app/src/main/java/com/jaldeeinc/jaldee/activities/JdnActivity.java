@@ -28,7 +28,7 @@ import retrofit2.Response;
 
 public class JdnActivity extends AppCompatActivity {
     JdnResponse jdnList;
-    String jdnDiscount, jdnMaxvalue,jdnNote;
+    String jdnDiscount, jdnMaxvalue, jdnNote;
     String uniqueid;
 
     TextView discount, maxvalue, note;
@@ -106,13 +106,12 @@ public class JdnActivity extends AppCompatActivity {
                         if (jdnList.getDiscMax() != null && jdnList.getDiscPercentage() != null) {
 //                            discount.setText(jdnList.getDiscPercentage() + "%");
 //                            maxvalue.setText("₹" + jdnList.getDiscMax());
-                            discount.setText("You will get a discount of "+ jdnList.getDiscPercentage() + "%" + " " + "(" + "upto" + " " + "₹" + " "+ jdnList.getDiscMax() + ")" + " " + " for every visit.");
-
+                            discount.setText("You will get a discount of " + Config.getAmountNoDecimalPoints(Double.parseDouble(jdnList.getDiscPercentage())) + "%" + " " + "(" + "upto" + " " + "₹" + " " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(jdnList.getDiscMax())) + ")" + " " + " for every visit.");
                         }
-                        if(jdnList.getDisplayNote()!= null){
+                        if (jdnList.getDisplayNote() != null) {
                             note.setText(jdnList.getDisplayNote());
                         }
-                        if(jdnList.getDisplayNote() == null){
+                        if (jdnList.getDisplayNote() == null) {
                             note.setVisibility(View.GONE);
                         }
                     }
@@ -135,9 +134,6 @@ public class JdnActivity extends AppCompatActivity {
 
 
     }
-
-
-
 
 
 }

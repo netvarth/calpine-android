@@ -20,6 +20,7 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.MyPayments;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -192,7 +193,7 @@ public class PaymentDetail extends AppCompatActivity {
                             }
 
                             if (response.body().getAmount() != null) {
-                                amount.setText("₹ " + response.body().getAmount());
+                                amount.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(response.body().getAmount())));
                                 amount.setVisibility(View.VISIBLE);
                             } else {
                                 amount.setVisibility(View.GONE);
@@ -210,7 +211,7 @@ public class PaymentDetail extends AppCompatActivity {
                             } else {
 
                                 if (response.body().getRefundableAmount() != null) {
-                                    refundable.setText(response.body().getRefundableAmount());
+                                    refundable.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(response.body().getRefundableAmount())));
                                     refundable.setVisibility(View.VISIBLE);
                                 } else {
                                     refundable.setVisibility(View.GONE);

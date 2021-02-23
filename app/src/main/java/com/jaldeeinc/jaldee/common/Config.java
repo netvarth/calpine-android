@@ -205,6 +205,10 @@ public class Config {
     public static String getAmountinSingleDecimalPoints(double amount) {
         return String.format("%.1f", amount);
     }
+    public static String getAmountNoDecimalPoints(double d) {
+        int i = (int) d;
+        return d == i ? String.valueOf(i) : String.valueOf(d);
+    }
 
     public static String convert12(String str) {
 // Get Hours

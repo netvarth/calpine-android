@@ -115,7 +115,7 @@ public class JdnFragment extends RootFragment {
                         if (jdnList.getDiscMax() != null && jdnList.getDiscPercentage() != null) {
 //                            discount.setText(jdnList.getDiscPercentage() + "%");
 //                            maxvalue.setText("₹" + jdnList.getDiscMax());
-                            discount.setText("You will get a discount of "+ jdnList.getDiscPercentage() + "%" + " " + "(" + "upto" + " " + "₹" + " "+ jdnList.getDiscMax() + ")" + " " + " for every visit.");
+                            discount.setText("You will get a discount of "+ Config.getAmountNoDecimalPoints(Double.parseDouble(jdnList.getDiscPercentage())) + "%" + " " + "(" + "upto" + " " + "₹" + " "+ Config.getAmountinTwoDecimalPoints(Double.parseDouble(jdnList.getDiscMax())) + ")" + " " + " for every visit.");
 
                         }
                         if(jdnList.getDisplayNote()!= null){
