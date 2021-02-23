@@ -113,11 +113,13 @@ public class OrderActionsDialog extends Dialog {
                     }
                 });
             } else {
+                hideView(llCancel);
                 llCancel.setVisibility(View.GONE);
             }
 
         } else {
             llCancel.setVisibility(View.GONE);
+            hideView(llCancel);
             llRating.setVisibility(View.VISIBLE);
         }
 
