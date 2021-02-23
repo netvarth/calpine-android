@@ -45,7 +45,7 @@
 //         * @see #cancel(Context)
 //         */
 //        public static void notify(final Context context,
-//                                  final String titleString, final String textString, final String activityString, final int number) {
+//                                  final String titleString, final String textString, final String activityString, final String number) {
 //            final Resources res = context.getResources();
 //
 //            // This image is used as the notification's large icon (thumbnail).

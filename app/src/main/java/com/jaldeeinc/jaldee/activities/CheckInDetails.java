@@ -216,6 +216,7 @@ public class CheckInDetails extends AppCompatActivity {
     private String uuid;
     private PrescriptionDialog prescriptionDialog;
     private Bookings bookings = new Bookings();
+    String ynwUUid, accountId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,6 +229,8 @@ public class CheckInDetails extends AppCompatActivity {
         if (i != null) {
             bookingInfo = (Bookings) i.getSerializableExtra("bookingInfo");
             isActive = i.getBooleanExtra("isActive", true);
+            ynwUUid = i.getStringExtra("uuid");
+            accountId = i.getStringExtra("account");
 
         }
 
@@ -419,15 +422,25 @@ public class CheckInDetails extends AppCompatActivity {
             }
         });
 
-
     }
 
     @Override
     protected void onResume() {
 
-        // Api call
-        if (bookingInfo != null && bookingInfo.getCheckInInfo() != null) {
-            getBookingDetails(bookingInfo.getCheckInInfo().getYnwUuid(), bookingInfo.getCheckInInfo().getProviderAccount().getId());
+        try {
+
+            // Api call
+            if (bookingInfo != null && bookingInfo.getCheckInInfo() != null) {
+                getBookingDetails(bookingInfo.getCheckInInfo().getYnwUuid(), bookingInfo.getCheckInInfo().getProviderAccount().getId());
+            } else {
+
+                // this gets called when activity is launched from push notification
+                if (ynwUUid != null) {
+                    getBookingDetails(ynwUUid, Integer.parseInt(accountId));
+                }
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
         super.onResume();
     }
@@ -451,9 +464,12 @@ public class CheckInDetails extends AppCompatActivity {
                         activeCheckIn = response.body();
 
                         if (activeCheckIn != null) {
-
+                            if (!activeCheckIn.getWaitlistStatus().equalsIgnoreCase("Cancelled") && !activeCheckIn.getWaitlistStatus().equalsIgnoreCase("done")) {
+                                isActive = true;
+                            } else {
+                                isActive = false;
+                            }
                             updateUI(activeCheckIn);
-
                         }
 
                     }
@@ -824,7 +840,7 @@ public class CheckInDetails extends AppCompatActivity {
                     }
                 }
 
-                if (checkInInfo.getParentUuid() != null){
+                if (checkInInfo.getParentUuid() != null) {
                     cvBill.setVisibility(View.GONE);
                 }
 

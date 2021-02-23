@@ -38,6 +38,9 @@ import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
+import com.jaldeeinc.jaldee.response.ActiveAppointment;
+import com.jaldeeinc.jaldee.response.ActiveCheckIn;
+import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
@@ -89,20 +92,22 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
     Button btn_pay, mbill_applybtn;
     TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax, billLabel, jdnLabel, jdnValue, txtrefund, txtdelivery, tv_deliveryCharge;
-    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin, jcLayout, jdnLayout, refundLayout, deliveryLayout,llproviderlayout;
+    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin, jcLayout, jdnLayout, refundLayout, deliveryLayout, llproviderlayout;
     String sAmountPay;
     String accountID;
     String payStatus, consumer;
     String coupon_entered;
     String purpose;
     String displayNotes;
-    TextView tv_billnotes, tv_notes,tvProviderName;
+    TextView tv_billnotes, tv_notes, tvProviderName;
     int customerId;
     String uniqueId;
-    double total, totalRefund =0.0;;
+    double total, totalRefund = 0.0;
+    ;
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     private IPaymentResponse paymentResponse;
     String encId;
+    TextView tv_title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +142,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         tv_jaldeeCouponLabel = findViewById(R.id.jaldeeCouponLabel);
         recycle_discount_total = findViewById(R.id.recycle_discount_total);
         jcLayout = findViewById(R.id.jcLayout);
-        TextView tv_title = findViewById(R.id.toolbartitle);
+        tv_title = findViewById(R.id.toolbartitle);
         tv_billnotes = findViewById(R.id.billnotes);
         tv_notes = findViewById(R.id.notes);
         Typeface tyface = Typeface.createFromAsset(getAssets(),
@@ -184,35 +189,21 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             encId = extras.getString("encId");
         }
 
+        if (encId == null && ynwUUID != null) {   // if encId is null then  the activity is launched from notification, so checking for required values and getting them via API calls
 
-        if (payStatus != null) {
-
-            if (payStatus.equalsIgnoreCase("FullyPaid") || payStatus.equalsIgnoreCase("FullyRefunded")) {
-                tv_title.setText("Receipt");
-                btn_pay.setVisibility(View.GONE);
-                couponCheckin.setVisibility(View.GONE);
-            } else {
-                tv_title.setText("Bill");
-                btn_pay.setVisibility(View.VISIBLE);
-                couponCheckin.setVisibility(View.VISIBLE);
-                ApiJaldeegetS3Coupons(uniqueId);
+            if (ynwUUID.contains("_appt")) {
+                getAppointmentDetails(ynwUUID, accountID);
+            } else if (ynwUUID.contains("_wl")) {
+                getCheckInDetails(ynwUUID, accountID);
+            } else if (ynwUUID.contains("_odr")) {
+                getOrderDetails(ynwUUID, Integer.parseInt(accountID));
             }
+        } else {
+
+            // if launched directly from APP
+            UpdateUI();
         }
-        ApiBill(ynwUUID);
 
-
-        Typeface tyface1 = Typeface.createFromAsset(this.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_provider.setTypeface(tyface1);
-        tv_provider.setText(Config.toTitleCase(mprovider));
-
-       /* btn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });*/
-        APIPayment(accountID);
 
         mbill_applybtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -298,6 +289,175 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         });
 
 
+    }
+
+    private void UpdateUI() {
+
+        if (payStatus != null) {
+
+            if (payStatus.equalsIgnoreCase("FullyPaid") || payStatus.equalsIgnoreCase("FullyRefunded")) {
+                tv_title.setText("Receipt");
+                btn_pay.setVisibility(View.GONE);
+                couponCheckin.setVisibility(View.GONE);
+            } else {
+                tv_title.setText("Bill");
+                btn_pay.setVisibility(View.VISIBLE);
+                couponCheckin.setVisibility(View.VISIBLE);
+                ApiJaldeegetS3Coupons(uniqueId);
+            }
+        }
+        ApiBill(ynwUUID);
+
+
+        Typeface tyface1 = Typeface.createFromAsset(this.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_provider.setTypeface(tyface1);
+        tv_provider.setText(Config.toTitleCase(mprovider));
+
+
+        APIPayment(accountID);
+
+
+    }
+
+    public void getAppointmentDetails(String uid, String id) {
+        final ApiInterface apiService =
+                ApiClient.getClient(BillActivity.this).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(BillActivity.this, BillActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(uid, id);
+        call.enqueue(new Callback<ActiveAppointment>() {
+            @Override
+            public void onResponse(Call<ActiveAppointment> call, Response<ActiveAppointment> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        ActiveAppointment apptInfo = response.body();
+
+                        if (apptInfo != null) {
+
+                            try {
+                                mprovider = apptInfo.getProviderAccount().getBusinessName();
+                                payStatus = apptInfo.getPaymentStatus();
+                                consumer = apptInfo.getAppmtFor().get(0).getFirstName() + " " + apptInfo.getAppmtFor().get(0).getLastName();
+                                purpose = Constants.PURPOSE_BILLPAYMENT;
+                                uniqueId = apptInfo.getProviderAccount().getUniqueId();
+                                encId = apptInfo.getAppointmentEncId();
+
+                                // update UI with the data from notification
+                                UpdateUI();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveAppointment> call, Throwable t) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+    }
+
+    private void getCheckInDetails(String uid, String id) {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(BillActivity.this).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(BillActivity.this, BillActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(uid, id);
+        call.enqueue(new Callback<ActiveCheckIn>() {
+            @Override
+            public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        ActiveCheckIn activeCheckIn = response.body();
+
+                        if (activeCheckIn != null) {
+
+                            mprovider = activeCheckIn.getProviderAccount().getBusinessName();
+                            payStatus = activeCheckIn.getPaymentStatus();
+                            consumer = activeCheckIn.getWaitlistingFor().get(0).getFirstName() + " " + activeCheckIn.getWaitlistingFor().get(0).getLastName();
+                            purpose = Constants.PURPOSE_BILLPAYMENT;
+                            uniqueId = activeCheckIn.getProviderAccount().getUniqueId();
+                            encId = activeCheckIn.getCheckinEncId();
+
+                            // update UI with the data from notification
+                            UpdateUI();
+                        }
+
+                    }
+                } catch (Exception e) {
+                    Log.i("mnbbnmmnbbnm", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+    }
+
+    private void getOrderDetails(String orderUUid, int accountId) {
+
+        ApiInterface apiService = ApiClient.getClient(BillActivity.this).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(BillActivity.this, BillActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ActiveOrders> call = apiService.getOrderDetails(orderUUid, accountId);
+        call.enqueue(new Callback<ActiveOrders>() {
+            @Override
+            public void onResponse(Call<ActiveOrders> call, Response<ActiveOrders> response) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                try {
+                    if (response.code() == 200) {
+
+                        ActiveOrders orderInfo = response.body();
+                        if (orderInfo != null) {
+
+                            mprovider = orderInfo.getProviderAccount().getBusinessName();
+                            if (orderInfo.getBill() != null) {
+                                payStatus = orderInfo.getBill().getBillPaymentStatus();
+                            }
+                            consumer = orderInfo.getOrderFor().getFirstName() + " " + orderInfo.getOrderFor().getLastName();
+                            purpose = Constants.PURPOSE_BILLPAYMENT;
+                            uniqueId = String.valueOf(orderInfo.getProviderAccount().getUniqueId());
+                            encId = orderInfo.getOrderNumber();
+
+                            // update UI with the data from notification
+                            UpdateUI();
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveOrders> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
     }
 
 
@@ -571,15 +731,15 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         mBillData = response.body();
 //                        APIRefundInfo(ynwUUID);
 
-                        if (mBillData == null){
+                        if (mBillData == null) {
                             mBillData = new BillModel();
                         }
 
-                        if (mBillData.getAccountProfile() != null){
+                        if (mBillData.getAccountProfile() != null) {
 
                             tv_provider.setText(mBillData.getAccountProfile().getBusinessName());
 
-                            if (mBillData.getAccountProfile().getProviderBusinessName() !=null){
+                            if (mBillData.getAccountProfile().getProviderBusinessName() != null) {
 
                                 llproviderlayout.setVisibility(View.VISIBLE);
                                 tvProviderName.setText(mBillData.getAccountProfile().getProviderBusinessName());
@@ -599,7 +759,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         DateFormat dateTarget = new SimpleDateFormat("yyyy-MM-dd");
                         Date date1 = originalFormat.parse(mBillData.getCreatedDate());
                         String targetDate = dateTarget.format(date1);
-                        tv_date.setText(Config.getCustomDateString(targetDate)+" - "+formattedDate);
+                        tv_date.setText(Config.getCustomDateString(targetDate) + " - " + formattedDate);
 
 
                         Typeface tyface = Typeface.createFromAsset(getAssets(),
@@ -644,7 +804,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                         if (mBillData.getDeliveryCharges() != 0) {
                             deliveryLayout.setVisibility(View.VISIBLE);
-                            tv_deliveryCharge.setText("(" + "+" + ")"+"₹ " + mBillData.getDeliveryCharges());
+                            tv_deliveryCharge.setText("(" + "+" + ")" + "₹ " + mBillData.getDeliveryCharges());
                         } else {
                             deliveryLayout.setVisibility(View.GONE);
                         }

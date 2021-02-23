@@ -521,4 +521,12 @@ public class AppointmentConfirmation extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent home = new Intent(AppointmentConfirmation.this, Home.class);
+        startActivity(home);
+        finish();
+        super.onBackPressed();
+    }
+
 }

@@ -155,11 +155,13 @@ public class OrderActionsDialog extends Dialog {
                             iBill.putExtra("ynwUUID", orderInfo.getUid());
                             iBill.putExtra("provider", orderInfo.getProviderAccount().getBusinessName());
                             iBill.putExtra("accountID", String.valueOf(orderInfo.getProviderAccount().getId()));
-                            iBill.putExtra("payStatus", orderInfo.getBill().getBillPaymentStatus());
+                            if (orderInfo.getBill() != null) {
+                                iBill.putExtra("payStatus", orderInfo.getBill().getBillPaymentStatus());
+                            }
                             iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
                             iBill.putExtra("consumer", orderInfo.getOrderFor().getFirstName() + " " + orderInfo.getOrderFor().getLastName());
                             iBill.putExtra("uniqueId", String.valueOf(orderInfo.getProviderAccount().getUniqueId()));
-                            iBill.putExtra("encId",orderInfo.getOrderNumber());
+                            iBill.putExtra("encId", orderInfo.getOrderNumber());
                             mContext.startActivity(iBill);
                             dismiss();
                         }
@@ -188,7 +190,7 @@ public class OrderActionsDialog extends Dialog {
             @Override
             public void onClick(View v) {
 
-                ApiRating(String.valueOf(orderInfo.getProviderAccount().getId()),orderInfo.getUid());
+                ApiRating(String.valueOf(orderInfo.getProviderAccount().getId()), orderInfo.getUid());
             }
         });
 
@@ -269,7 +271,7 @@ public class OrderActionsDialog extends Dialog {
                         edt_message.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void afterTextChanged(Editable arg0) {
-                                if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating!=null && rating.getRating()!=0) {
+                                if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating != null && rating.getRating() != 0) {
                                     btn_rate.setEnabled(true);
                                     btn_rate.setClickable(true);
                                     btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
@@ -293,12 +295,11 @@ public class OrderActionsDialog extends Dialog {
                             rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                                 @Override
                                 public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                                    if(edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating.getRating() != 0){
+                                    if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating.getRating() != 0) {
                                         btn_rate.setEnabled(true);
                                         btn_rate.setClickable(true);
                                         btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
-                                    }
-                                    else{
+                                    } else {
                                         btn_rate.setEnabled(false);
                                         btn_rate.setClickable(false);
                                         btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));

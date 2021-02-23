@@ -118,7 +118,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     @BindView(R.id.cv_back)
     CardView cvBack;
 
-    @BindView(R.id.tv_number)
+    @BindView(R.id.tv_mobile)
     CustomTextViewMedium tvNumber;
 
     @BindView(R.id.tv_email)

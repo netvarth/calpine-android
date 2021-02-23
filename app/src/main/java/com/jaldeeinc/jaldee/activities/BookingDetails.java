@@ -206,6 +206,7 @@ public class BookingDetails extends AppCompatActivity {
     private MeetingInfo meetingInfo;
     private String uuid;
     private PrescriptionDialog prescriptionDialog;
+    String ynwUUid, accountId;
 
 
     @Override
@@ -222,6 +223,8 @@ public class BookingDetails extends AppCompatActivity {
         if (i != null) {
             bookingInfo = (Bookings) i.getSerializableExtra("bookingInfo");
             isActive = i.getBooleanExtra("isActive", true);
+            ynwUUid = i.getStringExtra("uuid");
+            accountId = i.getStringExtra("account");
 
         }
 
@@ -270,16 +273,15 @@ public class BookingDetails extends AppCompatActivity {
 
                 try {
                     Intent intent = new Intent(BookingDetails.this, ChatActivity.class);
-                    if(apptInfo.getUid().contains("h_")){
-                        uuid = apptInfo.getUid().replace("h_","");
+                    if (apptInfo.getUid().contains("h_")) {
+                        uuid = apptInfo.getUid().replace("h_", "");
                         intent.putExtra("uuid", uuid);
-                    }
-                    else {
+                    } else {
                         intent.putExtra("uuid", apptInfo.getUid());
                     }
                     intent.putExtra("accountId", apptInfo.getProviderAccount().getId());
                     intent.putExtra("name", apptInfo.getProviderAccount().getBusinessName());
-                    intent.putExtra("from",Constants.APPOINTMENT);
+                    intent.putExtra("from", Constants.APPOINTMENT);
                     startActivity(intent);
 
                 } catch (Exception e) {
@@ -325,7 +327,7 @@ public class BookingDetails extends AppCompatActivity {
 
                     llMoreDetails.setVisibility(View.VISIBLE);
                     tvViewMore.setText("View Less");
-                }else {
+                } else {
 
                     llMoreDetails.setVisibility(View.GONE);
                     tvViewMore.setText("View More");
@@ -413,6 +415,12 @@ public class BookingDetails extends AppCompatActivity {
         // Api call
         if (bookingInfo != null && bookingInfo.getAppointmentInfo() != null) {
             getAppointmentDetails(bookingInfo.getAppointmentInfo().getUid(), bookingInfo.getAppointmentInfo().getProviderAccount().getId());
+        } else {
+
+            // this gets called when activity is launched from push notification
+            if (ynwUUid != null) {
+                getAppointmentDetails(ynwUUid, Integer.parseInt(accountId));
+            }
         }
         super.onResume();
     }
@@ -434,7 +442,16 @@ public class BookingDetails extends AppCompatActivity {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         apptInfo = response.body();
-                        updateUI(apptInfo);
+
+                        if (apptInfo != null) {
+
+                            if (!apptInfo.getApptStatus().equalsIgnoreCase("Cancelled") && !apptInfo.getApptStatus().equalsIgnoreCase("done")) {
+                                isActive = true;
+                            } else {
+                                isActive = false;
+                            }
+                            updateUI(apptInfo);
+                        }
                     }
                 } catch (Exception e) {
 
@@ -782,7 +799,7 @@ public class BookingDetails extends AppCompatActivity {
                         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
                         iBill.putExtra("consumer", appointmentInfo.getAppmtFor().get(0).getFirstName() + " " + appointmentInfo.getAppmtFor().get(0).getLastName());
                         iBill.putExtra("uniqueId", appointmentInfo.getProviderAccount().getUniqueId());
-                        iBill.putExtra("encId",appointmentInfo.getAppointmentEncId());
+                        iBill.putExtra("encId", appointmentInfo.getAppointmentEncId());
                         startActivity(iBill);
 
                     }
@@ -797,17 +814,16 @@ public class BookingDetails extends AppCompatActivity {
                     }
                 });
 
-                if(appointmentInfo.isPrescShared()){
+                if (appointmentInfo.isPrescShared()) {
                     llPrescription.setVisibility(View.VISIBLE);
-                }
-                else{
+                } else {
                     hideView(llPrescription);
                 }
 
                 llPrescription.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        prescriptionDialog = new PrescriptionDialog(mContext,isActive,appointmentInfo,"checkin");
+                        prescriptionDialog = new PrescriptionDialog(mContext, isActive, appointmentInfo, "checkin");
                         prescriptionDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
                         prescriptionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         prescriptionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -818,8 +834,6 @@ public class BookingDetails extends AppCompatActivity {
                         prescriptionDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                     }
                 });
-
-
 
 
             }
@@ -882,7 +896,7 @@ public class BookingDetails extends AppCompatActivity {
     // for zoom and GMeet
     public void showMeetingDetailsWindow(ActiveAppointment activeAppointment, String mode, TeleServiceCheckIn meetingDetails) {
 
-        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(),activeAppointment.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
+        meetingDetailsWindow = new MeetingDetailsWindow(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getService().getVirtualCallingModes().get(0).getVirtualServiceType());
         meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
         meetingDetailsWindow.show();
         meetingDetailsWindow.setCancelable(false);
@@ -895,9 +909,9 @@ public class BookingDetails extends AppCompatActivity {
     public void showMeetingWindow(ActiveAppointment activeAppointment, String mode, TeleServiceCheckIn meetingDetails) {
 
         if (mode.equalsIgnoreCase("WhatsApp")) {
-            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getWhatsApp(),activeAppointment.getService().getVirtualServiceType(), activeAppointment.getCountryCode(),Constants.APPOINTMENT);
+            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getWhatsApp(), activeAppointment.getService().getVirtualServiceType(), activeAppointment.getCountryCode(), Constants.APPOINTMENT);
         } else {
-            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getPhone(),"",activeAppointment.getCountryCode(), Constants.APPOINTMENT);
+            meetingInfo = new MeetingInfo(mContext, activeAppointment.getApptTime(), activeAppointment.getService().getName(), meetingDetails, activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode(), activeAppointment.getVirtualService().getPhone(), "", activeAppointment.getCountryCode(), Constants.APPOINTMENT);
         }
         meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
         meetingInfo.show();
@@ -1007,7 +1021,7 @@ public class BookingDetails extends AppCompatActivity {
                         edt_message.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void afterTextChanged(Editable arg0) {
-                                if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating!=null && rating.getRating()!=0) {
+                                if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating != null && rating.getRating() != 0) {
                                     btn_rate.setEnabled(true);
                                     btn_rate.setClickable(true);
                                     btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
@@ -1031,12 +1045,11 @@ public class BookingDetails extends AppCompatActivity {
                             rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                                 @Override
                                 public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                                    if(edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating.getRating() != 0){
+                                    if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty() && rating.getRating() != 0) {
                                         btn_rate.setEnabled(true);
                                         btn_rate.setClickable(true);
                                         btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.curved_save));
-                                    }
-                                    else{
+                                    } else {
                                         btn_rate.setEnabled(false);
                                         btn_rate.setClickable(false);
                                         btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));

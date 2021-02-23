@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.util.Linkify;
 import android.view.View;
 import android.widget.TextView;
 
@@ -31,7 +32,7 @@ public class NotificationDialog extends Dialog {
         tvTitle = findViewById(R.id.tv_message);
         tvOk = findViewById(R.id.tv_ok);
         tvTitle.setText(notificationMessage);
-
+        Linkify.addLinks(tvTitle, Linkify.WEB_URLS);
 
         tvOk.setOnClickListener(new View.OnClickListener() {
             @Override

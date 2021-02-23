@@ -855,15 +855,15 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
         final ApiInterface apiService =
                 ApiClient.getClient(CheckoutItemsActivity.this).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(CheckoutItemsActivity.this, CheckoutItemsActivity.this.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
+        final Dialog dialog = Config.getProgressDialog(CheckoutItemsActivity.this, CheckoutItemsActivity.this.getResources().getString(R.string.dialog_log_in));
+        dialog.show();
         Call<ActiveOrders> call = apiService.getOrderDetails(value, acctId);
         call.enqueue(new Callback<ActiveOrders>() {
             @Override
             public void onResponse(Call<ActiveOrders> call, Response<ActiveOrders> response) {
                 try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
+                    if (dialog.isShowing())
+                        Config.closeDialog(getParent(), dialog);
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
@@ -905,8 +905,8 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
             @Override
             public void onFailure(Call<ActiveOrders> call, Throwable t) {
-                if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
+                if (dialog.isShowing())
+                    Config.closeDialog(getParent(), dialog);
             }
         });
     }

@@ -112,6 +112,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     private StoreDetails storeInfo = new StoreDetails();
     private StoreDetailsDialog storeDetailsDialog;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,14 +123,17 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         orderInfo = (ActiveOrders) intent.getSerializableExtra("orderInfo");
+        orderUUid = intent.getStringExtra("uuid");
+        String account = intent.getStringExtra("account");
+        if (account != null){
+            accountId = Integer.parseInt(account);
+        }
 
         if (orderInfo != null) {
-
             orderUUid = orderInfo.getUid();
             if (orderInfo.getProviderAccount() != null) {
                 accountId = orderInfo.getProviderAccount().getId();
             }
-
         }
 
         cvBack.setOnClickListener(new View.OnClickListener() {

@@ -357,6 +357,7 @@ public class ChatActivity extends AppCompatActivity {
         ApiInboxList();
     }
 
+
     private void requestMultiplePermissions() {
         Dexter.withActivity(this)
                 .withPermissions(

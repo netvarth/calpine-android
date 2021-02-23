@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,8 +117,9 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
         void bind(UserMessage message) {
             if (message.getMessage() != null) {
-                mText.setText(Html.fromHtml(message.getMessage()));
-                mText.setMovementMethod(LinkMovementMethod.getInstance());
+                mText.setText(message.getMessage());
+//                messageText.setMovementMethod(LinkMovementMethod.getInstance());
+                Linkify.addLinks(mText, Linkify.WEB_URLS);
             }
             // Format the stored timestamp into a readable String using method.
             timeText.setText(formatTimeStamp(message.getTimeStamp()));
@@ -267,8 +269,10 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
         void bind(UserMessage message) {
             if (message.getMessage() != null) {
-                messageText.setText(Html.fromHtml(message.getMessage()));
-                messageText.setMovementMethod(LinkMovementMethod.getInstance());
+                messageText.setText(message.getMessage());
+//                messageText.setMovementMethod(LinkMovementMethod.getInstance());
+                Linkify.addLinks(messageText, Linkify.WEB_URLS);
+
             }
             // Format the stored timestamp into a readable String using method.
             timeText.setText(formatTimeStamp(message.getTimeStamp()));

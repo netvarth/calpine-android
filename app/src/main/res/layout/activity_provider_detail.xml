@@ -657,7 +657,7 @@
                             android:background="@drawable/curved_button"
                             android:backgroundTint="@color/spinnerbg"
                             android:padding="@dimen/padding3"
-                            android:visibility="visible">
+                            android:visibility="gone">
 
                             <LinearLayout
                                 android:id="@+id/ll_location"
@@ -713,7 +713,7 @@
                             android:layout_marginTop="@dimen/dimen_5dp"
                             android:background="@drawable/custom_status"
                             android:backgroundTint="@color/spinnerbg"
-                            android:visibility="visible"
+                            android:visibility="gone"
                             android:elevation="@dimen/dimen_12dp">
 
                             <com.jaldeeinc.jaldee.custom.CustomTextViewMedium

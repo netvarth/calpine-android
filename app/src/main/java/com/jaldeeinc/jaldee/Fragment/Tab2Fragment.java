@@ -69,16 +69,7 @@ public class Tab2Fragment extends RootFragment  {
         Home.doubleBackToExitPressedOnce = false;
         mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        try {
-            if (Config.isOnline(mContext)) {
-                ApiPayments();
-            } else {
-                if (mDialog.isShowing())
-                    Config.closeDialog(getActivity(), mDialog);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
         ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
@@ -98,6 +89,21 @@ public class Tab2Fragment extends RootFragment  {
 
 
         return row;
+    }
+
+    @Override
+    public void onResume() {
+        try {
+            if (Config.isOnline(mContext)) {
+                ApiPayments();
+            } else {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onResume();
     }
 
 
