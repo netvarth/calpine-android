@@ -289,7 +289,11 @@ public class OrderDetailActivity extends AppCompatActivity {
                 tvStatus.setText(orderInfo.getOrderStatus());
                 tvDate.setText(Config.getCustomDateString(orderInfo.getOrderDate()));
                 if (orderInfo.getTimeSlot() != null) {
-                    tvTime.setText(orderInfo.getTimeSlot().getsTime() + " - " + orderInfo.getTimeSlot().geteTime());
+                    String sTime = orderInfo.getTimeSlot().getsTime();
+                    String eTime = orderInfo.getTimeSlot().geteTime();
+                    sTime = sTime.replaceAll(" ","\u00A0");
+                    eTime = eTime.replaceAll(" ","\u00A0");
+                    tvTime.setText(sTime + " - " + eTime);
                 }
 
                 if (orderInfo.isHomeDelivery()) {
