@@ -192,7 +192,7 @@ public class AddressDialog extends Dialog implements IEditAddress {
                     }else {
 
                         tvErrorMessage.setVisibility(View.VISIBLE);
-                        tvErrorMessage.setText("Enter a valid postal code");
+                        tvErrorMessage.setText("Enter 6 digit postal code");
                         tvErrorMessage.setAnimation(animShake);
                     }
                 } else {
