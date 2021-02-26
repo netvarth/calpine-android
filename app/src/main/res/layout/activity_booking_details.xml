@@ -728,6 +728,7 @@
                                                     android:layout_height="wrap_content"
                                                     android:layout_marginTop="@dimen/padding5"
                                                     android:text="Reschedule"
+                                                    android:gravity="center"
                                                     android:textColor="@color/title_color"
                                                     android:textSize="@dimen/txtsize_12"
                                                     android:visibility="visible">
@@ -766,6 +767,7 @@
                                                     android:layout_height="wrap_content"
                                                     android:layout_marginTop="@dimen/padding5"
                                                     android:text="  Messages  "
+                                                    android:gravity="center"
                                                     android:textColor="@color/title_color"
                                                     android:textSize="@dimen/txtsize_12"
                                                     android:visibility="visible">
@@ -802,6 +804,7 @@
                                                     android:layout_height="wrap_content"
                                                     android:layout_marginTop="@dimen/padding5"
                                                     android:text="     Rate    "
+                                                    android:gravity="center"
                                                     android:textColor="@color/title_color"
                                                     android:textSize="@dimen/txtsize_12"
                                                     android:visibility="visible">
@@ -838,6 +841,7 @@
                                                     android:layout_height="wrap_content"
                                                     android:layout_marginTop="@dimen/padding5"
                                                     android:text="   Cancel   "
+                                                    android:gravity="center"
                                                     android:textColor="@color/title_color"
                                                     android:textSize="@dimen/txtsize_12"
                                                     android:visibility="visible">
@@ -876,6 +880,7 @@
                                                     android:layout_height="wrap_content"
                                                     android:layout_marginTop="@dimen/padding5"
                                                     android:text="   Tracking On   "
+                                                    android:gravity="center"
                                                     android:textColor="@color/title_color"
                                                     android:textSize="@dimen/txtsize_12"
                                                     android:visibility="visible">
@@ -913,6 +918,7 @@
                                                     android:layout_height="wrap_content"
                                                     android:layout_marginTop="@dimen/padding5"
                                                     android:text=" Instructions "
+                                                    android:gravity="center"
                                                     android:textColor="@color/title_color"
                                                     android:textSize="@dimen/txtsize_12"
                                                     android:visibility="visible">
@@ -951,6 +957,7 @@
                                                     android:layout_height="wrap_content"
                                                     android:layout_marginTop="@dimen/padding5"
                                                     android:text="Customer Notes"
+                                                    android:gravity="center"
                                                     android:textColor="@color/title_color"
                                                     android:textSize="@dimen/txtsize_12"
                                                     android:visibility="visible">
