@@ -193,7 +193,9 @@
                                                 android:layout_marginStart="@dimen/padding3"
                                                 android:text="Contact info"
                                                 android:textColor="@color/dark_blue"
-                                                android:textSize="14dp"></com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                                                android:textSize="14dp">
+
+                                            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
                                         </LinearLayout>
 
@@ -448,11 +450,15 @@
                                             android:id="@+id/tv_time"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
+                                            android:layout_centerHorizontal="true"
+                                            android:layout_centerVertical="true"
                                             android:paddingTop="@dimen/dimen_1dp"
                                             android:textColor="@color/appoint_theme"
+                                            android:textFontWeight="1"
                                             android:textSize="16dp">
 
                                         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
                                     </LinearLayout>
 
                                 </LinearLayout>
@@ -483,8 +489,8 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:orientation="vertical"
-                                    android:layout_marginBottom="@dimen/dimen_20dp">
+                                    android:layout_marginBottom="@dimen/dimen_20dp"
+                                    android:orientation="vertical">
 
                                     <LinearLayout
                                         android:layout_width="match_parent"

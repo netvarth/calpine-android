@@ -49,9 +49,9 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
 //        DecimalFormat format = new DecimalFormat("0.00");
         if (billServiceData.get(position).getServiceName() != null) {
             Config.logV("ServiceNAme" + billServiceData.get(position).getServiceName());
-            holder.txtservicenme.setText(billServiceData.get(position).getServiceName()+" ₹ "+Config.getAmountinTwoDecimalPoints(billServiceData.get(position).getPrice()));
+            holder.txtservicenme.setText(billServiceData.get(position).getServiceName()+" ₹\u00a0"+Config.getAmountinTwoDecimalPoints(billServiceData.get(position).getPrice()));
         } else {
-            holder.txtservicenme.setText(billServiceData.get(position).getItemName()+" ₹ "+ Config.getAmountinTwoDecimalPoints(billServiceData.get(position).getPrice()));
+            holder.txtservicenme.setText(billServiceData.get(position).getItemName()+" ₹\u00a0"+ Config.getAmountinTwoDecimalPoints(billServiceData.get(position).getPrice()));
         }
         //holder.txt_amount.setText("₹ " + String.valueOf(billServiceData.get(position).getPrice()));
 

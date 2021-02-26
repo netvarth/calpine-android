@@ -76,7 +76,7 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
 
             setAnimation(viewHolder.cvBooking, position);
 
-            if (orders.getShoppingList() != null){
+            if (orders.getShoppingList() != null) {
 
                 viewHolder.rlQuantity.setVisibility(View.GONE);
             } else {
@@ -176,8 +176,10 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                         viewHolder.tvpayment.setVisibility(View.GONE);
                     }
                 } else {
-                    viewHolder.tvpayment.setVisibility(View.VISIBLE);
-                    viewHolder.tvpayment.setText("PAID" + " " + "₹" + " " + convertAmountsToDecimals(orders.getBill().getAmountPaid()));
+                    if (orders.getBill().getAmountPaid() != 0) {
+                        viewHolder.tvpayment.setVisibility(View.VISIBLE);
+                        viewHolder.tvpayment.setText("PAID" + " " + "₹" + " " + convertAmountsToDecimals(orders.getBill().getAmountPaid()));
+                    }
                 }
 
                 viewHolder.cvBooking.setOnClickListener(new View.OnClickListener() {
@@ -238,7 +240,7 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
         CustomTextViewSemiBold tvProviderName, ivOrderNo;
         CustomTextViewMedium tvStatus, tvServiceName, tvDateAndTime, tvpayment, tvQuantity;
         CardView cvBooking;
-        RelativeLayout rlStatus,rlQuantity;
+        RelativeLayout rlStatus, rlQuantity;
 
 
         public ViewHolder(@NonNull View itemView, boolean isLoading) {

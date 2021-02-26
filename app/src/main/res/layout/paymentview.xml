@@ -209,7 +209,6 @@
                                     android:layout_gravity="center"
                                     android:layout_marginStart="@dimen/dimen_8dp"
                                     android:layout_marginEnd="@dimen/dimen_10dp"
-                                    android:layout_weight="0.1"
                                     android:gravity="center"
                                     android:orientation="vertical">
 

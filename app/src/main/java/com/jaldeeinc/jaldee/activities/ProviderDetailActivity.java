@@ -917,7 +917,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                 if (mBusinessDataList.getBaseLocation().getPlace() != null) {
 
-                    tvLocationName.setText(mBusinessDataList.getBaseLocation().getPlace());
+                    //tvLocationName.setText(mBusinessDataList.getBaseLocation().getPlace());
+                    tvLocationName.setText(location);
 
                     tvLocationName.setOnClickListener(new View.OnClickListener() {
                         @Override
