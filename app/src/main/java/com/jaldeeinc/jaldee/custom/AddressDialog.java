@@ -322,6 +322,8 @@ public class AddressDialog extends Dialog implements IEditAddress {
                             addressAdapter = new AddressAdapter(addressList, context, false, iEditAddress);
                             rvAddress.setAdapter(addressAdapter);
 
+                        }else {
+                            dismiss();
                         }
 
                     }
