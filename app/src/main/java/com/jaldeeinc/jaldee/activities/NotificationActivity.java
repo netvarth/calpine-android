@@ -85,6 +85,8 @@ public class NotificationActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         Intent intent = new Intent(NotificationActivity.this,Home.class);
+        intent.removeExtra("message");
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
         super.onBackPressed();

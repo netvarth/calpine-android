@@ -4,7 +4,7 @@
     xmlns:autofit="http://schemas.android.com/tools"
     android:id="@+id/cv_card"
     android:layout_width="wrap_content"
-    android:layout_height="200dp"
+    android:layout_height="215dp"
     android:layout_margin="6dp"
     app:cardBackgroundColor="@color/white"
     app:cardElevation="6dp">
@@ -63,19 +63,21 @@
                     android:ellipsize="end"
                     android:letterSpacing="0.03"
                     android:maxLines="2"
-                    android:text=""
                     android:textColor="@color/dark_black"
                     android:textSize="14dp">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:id="@+id/tv_shortDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_itemName"
                     android:layout_marginStart="@dimen/dimen_5dp"
                     android:layout_marginTop="6dp"
-                    android:text="Short Description here"
+                    android:text=""
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/dimen_12dp"
                     android:visibility="gone">
@@ -266,8 +268,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#95ffffff"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:visibility="gone" />
+        android:visibility="gone">
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Out of Stock"
+            android:layout_marginBottom="@dimen/dimen_25dp"
+            android:textSize="@dimen/dimen_20dp"
+            android:textColor="@color/red">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+
+    </LinearLayout>
+
+
 
 </androidx.cardview.widget.CardView>
 

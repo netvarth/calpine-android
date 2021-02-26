@@ -111,6 +111,7 @@ public class ChatActivity extends AppCompatActivity {
     private static final String IMAGE_DIRECTORY = "/Jaldee" +
             "";
     private Uri mImageUri;
+    private boolean fromPushNotification = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +125,7 @@ public class ChatActivity extends AppCompatActivity {
         providerName = i.getStringExtra("name");
         from = i.getStringExtra("from");
         from1 = i.getStringExtra("from1");
+        fromPushNotification = i.getBooleanExtra(Constants.PUSH_NOTIFICATION,false);
         rvChatMessages = findViewById(R.id.rv_chatMessages);
         etMessage = findViewById(R.id.et_message);
         ivSend = findViewById(R.id.iv_submit_message);
@@ -355,6 +357,20 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         ApiInboxList();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (fromPushNotification){
+            Intent intent = new Intent(ChatActivity.this,Home.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            super.onBackPressed();
+            startActivity(intent);
+            finish();
+        } else {
+            super.onBackPressed();
+        }
     }
 
 

@@ -111,6 +111,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     private ActiveOrders orderInfo = new ActiveOrders();
     private StoreDetails storeInfo = new StoreDetails();
     private StoreDetailsDialog storeDetailsDialog;
+    private boolean fromPushNotification = false;
 
 
     @Override
@@ -125,6 +126,8 @@ public class OrderDetailActivity extends AppCompatActivity {
         orderInfo = (ActiveOrders) intent.getSerializableExtra("orderInfo");
         orderUUid = intent.getStringExtra("uuid");
         String account = intent.getStringExtra("account");
+        fromPushNotification = intent.getBooleanExtra(Constants.PUSH_NOTIFICATION,false);
+
         if (account != null){
             accountId = Integer.parseInt(account);
         }
@@ -384,5 +387,18 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+        if (fromPushNotification){
+            Intent intent = new Intent(OrderDetailActivity.this,Home.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            super.onBackPressed();
+            startActivity(intent);
+            finish();
+        } else {
+            super.onBackPressed();
+        }
+    }
 
 }

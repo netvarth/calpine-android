@@ -1432,7 +1432,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             queueobj.put("appmtDate", apiDate);
             sjsonobj.put("id", scheduleId);
             queueobj.put("consumerNote", txt_addnote);
-            queueobj.put("phonenumber", phoneNumber);
+            queueobj.put("phoneNumber", phoneNumber);
             qjsonObj.put("countryCode", countryCode);
             if (serviceInfo.isUser()) {
                 pjsonobj.put("id", providerId);

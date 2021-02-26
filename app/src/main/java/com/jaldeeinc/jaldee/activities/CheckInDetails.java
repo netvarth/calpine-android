@@ -62,6 +62,7 @@ import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -217,6 +218,7 @@ public class CheckInDetails extends AppCompatActivity {
     private PrescriptionDialog prescriptionDialog;
     private Bookings bookings = new Bookings();
     String ynwUUid, accountId;
+    private boolean fromPushNotification = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,7 +233,7 @@ public class CheckInDetails extends AppCompatActivity {
             isActive = i.getBooleanExtra("isActive", true);
             ynwUUid = i.getStringExtra("uuid");
             accountId = i.getStringExtra("account");
-
+            fromPushNotification = i.getBooleanExtra(Constants.PUSH_NOTIFICATION,false);
         }
 
         cvBack.setOnClickListener(new View.OnClickListener() {
@@ -465,7 +467,23 @@ public class CheckInDetails extends AppCompatActivity {
 
                         if (activeCheckIn != null) {
                             if (!activeCheckIn.getWaitlistStatus().equalsIgnoreCase("Cancelled") && !activeCheckIn.getWaitlistStatus().equalsIgnoreCase("done")) {
-                                isActive = true;
+
+                                try {
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                    Date strDate = sdf.parse(activeCheckIn.getDate());
+                                    Date date = null;
+                                    date = getCurrentDate();
+                                    if (date.compareTo(strDate) == 0) {
+                                        isActive = true;
+                                    } else if (date.compareTo(strDate) == 1){
+                                        isActive = false;
+                                    } else if (date.compareTo(strDate) == -1){
+                                        isActive  = true;
+                                    }
+
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
                             } else {
                                 isActive = false;
                             }
@@ -832,7 +850,7 @@ public class CheckInDetails extends AppCompatActivity {
                 } else {
                     if (!checkInInfo.getPaymentStatus().equalsIgnoreCase("NotPaid")) {
                         cvBill.setVisibility(View.VISIBLE);
-                        if (bookings.getCheckInInfo().getPaymentStatus().equalsIgnoreCase("Refund")) {
+                        if (checkInInfo.getPaymentStatus().equalsIgnoreCase("Refund")) {
                             cvBill.setVisibility(View.GONE);
                         }
                     } else {
@@ -1280,4 +1298,32 @@ public class CheckInDetails extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+
+        if (fromPushNotification){
+            Intent intent = new Intent(CheckInDetails.this,Home.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            super.onBackPressed();
+            startActivity(intent);
+            finish();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    public Date getCurrentDate(){
+
+        Date date = new Date();
+        try {
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); ;
+            String d = formatter.format(date);
+            date = (Date)formatter.parse(d);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date;
+    }
 }

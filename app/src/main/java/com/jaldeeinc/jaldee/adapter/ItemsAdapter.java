@@ -104,6 +104,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
             setAnimation(viewHolder.cvCard, position);
 
+            if (catalogItem.getItems().isStockAvailable()){
+                viewHolder.llLoader.setVisibility(View.GONE);
+            } else {
+                viewHolder.llLoader.setVisibility(View.VISIBLE);
+            }
+
             if (catalogItem.getItems().isShowPromotionalPrice()) {
 
                 viewHolder.rlTag.setVisibility(View.VISIBLE);
@@ -128,6 +134,10 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 viewHolder.tvItemName.setText(catalogItem.getItems().getDisplayName());
             }
 
+            // to set shortDescription of item
+            if (catalogItem.getItems().getShortDescription() != null){
+                viewHolder.tvShortDescription.setText(catalogItem.getItems().getShortDescription());
+            }
 
             // to set item Image
             if (catalogItem.getItems().getItemImagesList() != null && catalogItem.getItems().getItemImagesList().size() > 0) {
@@ -341,6 +351,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 }
             });
 
+            viewHolder.llLoader.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
 
         } else {
 
@@ -406,7 +423,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         private SkeletonLoadingView shimmer;
         private LinearLayout llLoader, llActionPreventor;
         private RelativeLayout rlTag;
-        private CustomTextViewMedium tvTag;
+        private CustomTextViewMedium tvTag,tvShortDescription;
 
         public ViewHolder(@NonNull View itemView, boolean isLoading) {
 
@@ -432,6 +449,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 tvPrice.setTypeface(tyface2);
                 tvDiscountedPrice.setTypeface(tyface1);
                 llActionPreventor = itemView.findViewById(R.id.ll_actionPreventor);
+                tvShortDescription = itemView.findViewById(R.id.tv_shortDescription);
 
             }
         }

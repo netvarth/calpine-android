@@ -148,6 +148,18 @@
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
+                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                    android:id="@+id/tv_stock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="*Out of Stock"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:textSize="@dimen/dimen_20dp"
+                    android:visibility="gone"
+                    android:textColor="@color/red">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -194,6 +206,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_actions"
                         android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

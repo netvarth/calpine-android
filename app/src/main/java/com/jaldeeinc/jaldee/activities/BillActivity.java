@@ -108,6 +108,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     private IPaymentResponse paymentResponse;
     String encId;
     TextView tv_title;
+    private boolean fromPushNotification = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,6 +188,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             customerId = extras.getInt("customerId");
             uniqueId = extras.getString("uniqueId");
             encId = extras.getString("encId");
+            fromPushNotification = extras.getBoolean(Constants.PUSH_NOTIFICATION,false);
         }
 
         if (encId == null && ynwUUID != null) {   // if encId is null then  the activity is launched from notification, so checking for required values and getting them via API calls
@@ -1123,7 +1125,6 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     public void paymentFinished(RazorpayModel razorpayModel) {
         Intent intent = new Intent(mCOntext, Home.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra("message", "razorpay");
         startActivity(intent);
         finish();
     }
@@ -1157,5 +1158,19 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         //Paytm
         Toast.makeText(BillActivity.this, "Payment Successful", Toast.LENGTH_LONG).show();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (fromPushNotification){
+            Intent intent = new Intent(BillActivity.this,Home.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            super.onBackPressed();
+            startActivity(intent);
+            finish();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

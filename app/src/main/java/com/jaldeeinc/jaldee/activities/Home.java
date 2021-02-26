@@ -13,7 +13,10 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.Fragment.CheckinsFragmentCopy;
@@ -21,6 +24,7 @@ import com.jaldeeinc.jaldee.Fragment.HomeTabFragment;
 import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.custom.NotificationDialog;
 import com.jaldeeinc.jaldee.service.LiveTrackService;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
@@ -42,6 +46,8 @@ public class Home extends AppCompatActivity {
 
     Intent mLiveTrackClient;
     private LiveTrackService liveTrackService = new LiveTrackService();
+    private boolean fromPushNotification = false;
+    NotificationDialog notificationDialog;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -53,10 +59,14 @@ public class Home extends AppCompatActivity {
             detail = extras.getString("detail_id", "");
             path = extras.getString("path", "");
             message = extras.getString("message", "");
+            fromPushNotification = extras.getBoolean(Constants.PUSH_NOTIFICATION, false);
             Log.i("detailsofDetail", detail);
             Log.i("detailsofDetail", path);
         }
 
+        if (notificationDialog != null && notificationDialog.isShowing()){
+            notificationDialog.dismiss();
+        }
         Config.logV("Home Screen@@@@@@@@@@@@@@@@@@@");
         mContext = this;
         try {
@@ -129,43 +139,58 @@ public class Home extends AppCompatActivity {
 
         if (message != null && !message.equalsIgnoreCase("")) {
 
-            Intent notifyIntent = new Intent(Home.this,NotificationActivity.class);
-            notifyIntent.putExtra("message",message);
-            startActivity(notifyIntent);
+            notificationDialog = new NotificationDialog(mContext, message);
+            notificationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            notificationDialog.show();
+            notificationDialog.setCancelable(false);
+            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+            int width = (int) (metrics.widthPixels * 1);
+            notificationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         }
-        else {
-            if (detail != null && !detail.equalsIgnoreCase("")) {
-                if (path.contains("status")) {
-                    mHomeTab = new HomeTabFragment();
-                    final FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.container, mHomeTab)
-                            .commit();
-                } else {
-                    Log.i("ghjghjgj", "detaillll");
-                    searchDetailViewFragment = new SearchDetailViewFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("homeUniqueId", detail);
-                    bundle.putString("home", "home");
-                    searchDetailViewFragment.setArguments(bundle);
-                    final FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.container, searchDetailViewFragment).commit();
-                }
-            } else {
+        if (detail != null && !detail.equalsIgnoreCase("")) {
+            if (path.contains("status")) {
                 mHomeTab = new HomeTabFragment();
                 final FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, mHomeTab)
                         .commit();
+            } else {
+                Log.i("ghjghjgj", "detaillll");
+                searchDetailViewFragment = new SearchDetailViewFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("homeUniqueId", detail);
+                bundle.putString("home", "home");
+                searchDetailViewFragment.setArguments(bundle);
+                final FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.container, searchDetailViewFragment).commit();
             }
+        } else {
+            mHomeTab = new HomeTabFragment();
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, mHomeTab)
+                    .commit();
         }
     }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
+        message = intent.getStringExtra("message");
+        if (message!= null && !message.equalsIgnoreCase("") && message.trim().length() > 15){
+
+            notificationDialog = new NotificationDialog(mContext, message);
+            notificationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            notificationDialog.show();
+            notificationDialog.setCancelable(false);
+            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+            int width = (int) (metrics.widthPixels * 1);
+            notificationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        }
         from = intent.getStringExtra("isOrder");   // to set orders tab by default after completion of placing order.
         String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
         Config.logV("Push Notification Foreground @@@@@@@@@@@@@@@@@@@@@" + loginId);
@@ -173,15 +198,15 @@ public class Home extends AppCompatActivity {
             mHomeTab = new HomeTabFragment();
             Bundle bundle = new Bundle();
             bundle.putString("tab", "1");
-            if (from != null && !from.equalsIgnoreCase("")){
-                if (from.equalsIgnoreCase("ORDER")){
+            if (from != null && !from.equalsIgnoreCase("")) {
+                if (from.equalsIgnoreCase("ORDER")) {
 
-                    bundle.putInt("myJaldeeTab",2);  // to set orders tab by default after completion of placing order.
+                    bundle.putInt("myJaldeeTab", 2);  // to set orders tab by default after completion of placing order.
                 }
             }
             if (message != null && !message.equalsIgnoreCase("")) {
                 bundle.putString("message", message);
-            }else {
+            } else {
                 bundle.putString("message", intent.getStringExtra("message"));
             }
             mHomeTab.setArguments(bundle);
@@ -205,7 +230,6 @@ public class Home extends AppCompatActivity {
             if (!mHomeTab.onBackPressed()) {
                 Config.logV("Home Back Presss-------------");
                 if (doubleBackToExitPressedOnce) {
-//                    super.onBackPressed();
                     System.exit(0);
                 }
                 doubleBackToExitPressedOnce = true;
@@ -214,7 +238,6 @@ public class Home extends AppCompatActivity {
             }
         } else {
             if (doubleBackToExitPressedOnce) {
-//                    super.onBackPressed();
                 System.exit(0);
             }
             doubleBackToExitPressedOnce = true;

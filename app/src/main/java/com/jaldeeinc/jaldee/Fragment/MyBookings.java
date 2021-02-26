@@ -756,6 +756,10 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
             if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled") && !bookings.getBookingStatus().equalsIgnoreCase("done")) {
                 isActive = true;
             }
+        } else {
+            if (bookings != null && bookings.isVirtual()){
+                isActive = true;
+            }
         }
         actionsDialog = new ActionsDialog(mContext, isActive, bookings, iSendData);
         actionsDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;

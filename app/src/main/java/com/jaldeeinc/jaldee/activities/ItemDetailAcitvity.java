@@ -123,6 +123,12 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
     @BindView(R.id.tv_totalDiscount)
     AutofitTextView tvTotalDiscount;
 
+    @BindView(R.id.tv_stock)
+    CustomTextViewMedium tvStock;
+
+    @BindView(R.id.ll_actions)
+    LinearLayout llActions;
+
     private int accountId, uniqueId;
     private CardView cvPlus;
     private Context mContext;
@@ -176,6 +182,14 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
 
                 // to set item Name
                 tvItemName.setText(itemDetails.getItems().getDisplayName());
+
+                if (itemDetails.getItems().isStockAvailable()){
+                    tvStock.setVisibility(View.GONE);
+                    llActions.setEnabled(true);
+                } else {
+                    tvStock.setVisibility(View.VISIBLE);
+                    llActions.setEnabled(false);
+                }
 
                 if (itemDetails.getItems().getItemDescription() != null) {
                     tvItemDescription.setVisibility(View.VISIBLE);

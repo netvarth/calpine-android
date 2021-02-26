@@ -56,6 +56,9 @@ public class Constants {
     public static final String FULLAMOUNT = "FULLAMOUNT";
 
 
+    // notification purpose
+    public static final String PUSH_NOTIFICATION = "pushNotification";
+
 
 
 

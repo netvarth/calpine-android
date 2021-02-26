@@ -16,6 +16,10 @@ public class Item implements Serializable {
     @Expose
     private String displayName;
 
+    @SerializedName("shortDesc")
+    @Expose
+    private String shortDescription;
+
     @SerializedName("itemDesc")
     @Expose
     private String itemDescription;
@@ -263,5 +267,13 @@ public class Item implements Serializable {
 
     public void setPromotionLabel(String promotionLabel) {
         this.promotionLabel = promotionLabel;
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
     }
 }

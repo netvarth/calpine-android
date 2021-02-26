@@ -17,6 +17,7 @@ import android.os.Build;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.TaskStackBuilder;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
@@ -95,6 +96,7 @@ public class BasicNotification {
                 intent = new Intent(context, CheckInDetails.class);
                 intent.putExtra("uuid", bookingId);
                 intent.putExtra("account", accountId);
+                intent.putExtra(Constants.PUSH_NOTIFICATION,true);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 pendingIntent = PendingIntent.getActivity(context, number, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 break;
@@ -104,15 +106,18 @@ public class BasicNotification {
                 intent = new Intent(context, BookingDetails.class);
                 intent.putExtra("uuid", bookingId);
                 intent.putExtra("account", accountId);
+                intent.putExtra(Constants.PUSH_NOTIFICATION,true);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 pendingIntent = PendingIntent.getActivity(context, number, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 break;
 
             case "CONSUMER_ORDER":
+            case "CONSUMER_ORDER_STATUS":
 
                 intent = new Intent(context, OrderDetailActivity.class);
                 intent.putExtra("uuid", bookingId);
                 intent.putExtra("account", accountId);
+                intent.putExtra(Constants.PUSH_NOTIFICATION,true);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 pendingIntent = PendingIntent.getActivity(context, number, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 break;
@@ -124,8 +129,9 @@ public class BasicNotification {
                 intent.putExtra("uuid", bookingId);
                 intent.putExtra("account", accountId);
                 intent.putExtra("message",textString);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                pendingIntent = PendingIntent.getActivity(context, number, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                intent.putExtra(Constants.PUSH_NOTIFICATION,true);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                pendingIntent = PendingIntent.getActivity(context, number, intent, PendingIntent.FLAG_ONE_SHOT);
                 break;
 
             case "BILL":
@@ -133,6 +139,7 @@ public class BasicNotification {
                 intent = new Intent(context, BillActivity.class);
                 intent.putExtra("ynwUUID", bookingId);
                 intent.putExtra("accountID", accountId);
+                intent.putExtra(Constants.PUSH_NOTIFICATION,true);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 pendingIntent = PendingIntent.getActivity(context, number, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 break;
@@ -156,6 +163,7 @@ public class BasicNotification {
                 }
                 intent.putExtra("uuid", bookingId);
                 intent.putExtra("account", accountId);
+                intent.putExtra(Constants.PUSH_NOTIFICATION,true);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 pendingIntent = PendingIntent.getActivity(context, number, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 break;
@@ -164,6 +172,7 @@ public class BasicNotification {
 
                 intent = new Intent(context, ChatActivity.class);
                 intent.putExtra("uuid", bookingId);
+                intent.putExtra(Constants.PUSH_NOTIFICATION,true);
                 if (accountId != null) {
                     intent.putExtra("accountId", Integer.parseInt(accountId));
                 }
