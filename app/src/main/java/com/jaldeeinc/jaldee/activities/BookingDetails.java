@@ -191,6 +191,12 @@ public class BookingDetails extends AppCompatActivity {
     @BindView(R.id.ll_prescription)
     LinearLayout llPrescription;
 
+    @BindView(R.id.tv_phoneNumber)
+    CustomTextViewBold tvPhoneNumber;
+
+    @BindView(R.id.ll_phoneNumber)
+    LinearLayout llPhoneNumber;
+
     boolean firstTimeRating = false;
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -207,7 +213,7 @@ public class BookingDetails extends AppCompatActivity {
     private MeetingInfo meetingInfo;
     private String uuid;
     private PrescriptionDialog prescriptionDialog;
-    String ynwUUid, accountId;
+    String ynwUUid, accountId, countryCode;
     private boolean fromPushNotification = false;
 
 
@@ -630,7 +636,14 @@ public class BookingDetails extends AppCompatActivity {
                 if (appointmentInfo.getAppointmentEncId() != null) {
                     tvConfirmationNumber.setText(appointmentInfo.getAppointmentEncId());
                 }
-
+                // to set Phone number
+                if(appointmentInfo.getPhoneNumber() != null && !appointmentInfo.getPhoneNumber().isEmpty()) {
+                    llPhoneNumber.setVisibility(View.VISIBLE);
+                    countryCode = appointmentInfo.getCountryCode();
+                    tvPhoneNumber.setText(countryCode + "\u00a0" + appointmentInfo.getPhoneNumber());
+                }else {
+                    hideView(llPhoneNumber);
+                }
                 // to set status
                 if (appointmentInfo.getApptStatus() != null) {
                     if (appointmentInfo.getApptStatus().equalsIgnoreCase("Completed")) {

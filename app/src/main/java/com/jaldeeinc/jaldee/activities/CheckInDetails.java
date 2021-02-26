@@ -201,6 +201,12 @@ public class CheckInDetails extends AppCompatActivity {
     @BindView(R.id.ll_viewMore)
     LinearLayout llMore;
 
+    @BindView(R.id.tv_phoneNumber)
+    CustomTextViewBold tvPhoneNumber;
+
+    @BindView(R.id.ll_phoneNumber)
+    LinearLayout llPhoneNumber;
+
     boolean firstTimeRating = false;
     boolean isTvViewMore = false;
 
@@ -217,7 +223,7 @@ public class CheckInDetails extends AppCompatActivity {
     private String uuid;
     private PrescriptionDialog prescriptionDialog;
     private Bookings bookings = new Bookings();
-    String ynwUUid, accountId;
+    String ynwUUid, accountId, countryCode;
     private boolean fromPushNotification = false;
 
     @Override
@@ -647,7 +653,14 @@ public class CheckInDetails extends AppCompatActivity {
                 if (checkInInfo.getCheckinEncId() != null) {
                     tvConfirmationNumber.setText(checkInInfo.getCheckinEncId());
                 }
-
+                // to set Phone number
+                if(checkInInfo.getWaitlistPhoneNumber() != null && !checkInInfo.getWaitlistPhoneNumber().isEmpty()) {
+                    llPhoneNumber.setVisibility(View.VISIBLE);
+                    countryCode = checkInInfo.getCountryCode();
+                    tvPhoneNumber.setText(countryCode + "\u00a0" + checkInInfo.getWaitlistPhoneNumber());
+                }else {
+                    hideView(llPhoneNumber);
+                }
                 // to set status
                 if (checkInInfo.getWaitlistStatus() != null) {
 
