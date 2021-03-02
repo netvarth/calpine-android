@@ -124,7 +124,7 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
     AutofitTextView tvTotalDiscount;
 
     @BindView(R.id.tv_stock)
-    CustomTextViewMedium tvStock;
+    CustomTextViewSemiBold tvStock;
 
     @BindView(R.id.ll_actions)
     LinearLayout llActions;
