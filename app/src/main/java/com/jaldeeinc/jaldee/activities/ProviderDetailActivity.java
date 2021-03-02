@@ -1700,7 +1700,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                 serviceInfo.setNextAvailableTime("");
                                 serviceInfo.setCatalogInfo(catalog); // adding all the catalog info
                                 services.add(serviceInfo);
-
+                                break; // if more than one catalog,in this line break the loop and add only one catalog to diaplay(current system only support one catalog)(****   catalog commented on 3 locations   ***)
                             }
 
                         }
@@ -2004,6 +2004,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                 serviceInfo.setNextAvailableTime("");
                                 serviceInfo.setCatalogInfo(catalog); // adding all the catalog info
                                 services.add(serviceInfo);
+                                break; // if more than one catalog,in this line break the loop and add only one catalog to diaplay(current system only support one catalog)(****   catalog commented on 3 locations   ***)
 
                             }
 
@@ -2344,6 +2345,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                 serviceInfo.setNextAvailableTime("");
                                 serviceInfo.setCatalogInfo(catalog); // adding all the catalog info
                                 catalogsList.add(serviceInfo);
+                                break; // if more than one catalog,in this line break the loop and add only one catalog to diaplay(current system only support one catalog)(****   catalog commented on 3 locations   ***)
+
                             }
 
                             if (catalogsList.size() > 0) {
