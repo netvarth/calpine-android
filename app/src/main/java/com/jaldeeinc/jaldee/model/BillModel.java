@@ -263,4 +263,9 @@ public class BillModel {
     public void setAccountProfile(AccountProfile accountProfile) {
         this.accountProfile = accountProfile;
     }
+    double totalAmountSaved;
+
+    public double getTotalAmountSaved() {
+        return totalAmountSaved;
+    }
 }

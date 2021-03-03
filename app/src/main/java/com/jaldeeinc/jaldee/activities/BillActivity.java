@@ -91,8 +91,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     ArrayList<BillModel> coupanArrayList = new ArrayList<>();
 
     Button btn_pay, mbill_applybtn;
-    TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax, billLabel, jdnLabel, jdnValue, txtrefund, txtdelivery, tv_deliveryCharge;
-    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin, jcLayout, jdnLayout, refundLayout, deliveryLayout, llproviderlayout;
+    TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax, billLabel, jdnLabel, jdnValue, txtrefund, txtdelivery, tv_deliveryCharge, tv_amount_Saved;
+    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin, jcLayout, jdnLayout, refundLayout, deliveryLayout, llproviderlayout, ll_amount_Saved;
     String sAmountPay;
     String accountID;
     String payStatus, consumer;
@@ -163,6 +163,10 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         recycle_display_notes = findViewById(R.id.recycle_display_notes_demand);
         llproviderlayout = findViewById(R.id.ll_providerLayout);
         tvProviderName = findViewById(R.id.tv_providerName);
+        ll_amount_Saved = findViewById(R.id.ll_amount_Saved);
+        tv_amount_Saved = findViewById(R.id.tv_amount_Saved);
+
+        tv_amount_Saved.setTypeface(tyface);
         tv_totalamt.setTypeface(tyface);
         txttotal.setTypeface(tyface);
         txtnetRate.setTypeface(tyface);
@@ -970,9 +974,11 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                                 recycle_discount_total.setVisibility(View.VISIBLE);
                                 billDiscountAdapter = new BIllDiscountAdapter("totalbill", discountArrayList, mCOntext);
+                                //////////////
+                                recycle_discount_total.setAdapter(billDiscountAdapter);
+                                billDiscountAdapter.notifyDataSetChanged();
                             }
-                            recycle_discount_total.setAdapter(billDiscountAdapter);
-                            billDiscountAdapter.notifyDataSetChanged();
+
                         } else {
                             recycle_discount_total.setVisibility(View.GONE);
                         }
@@ -983,13 +989,23 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                                 recycle_display_notes.setVisibility(View.VISIBLE);
                                 billDemandDisplayNotesAdapter = new BillDemandDisplayNotesAdapter(discountArrayList, mCOntext, mBillData);
+                                ////////////
+                                recycle_display_notes.setAdapter(billDemandDisplayNotesAdapter);
+                                billDemandDisplayNotesAdapter.notifyDataSetChanged();
                             }
-                            recycle_display_notes.setAdapter(billDemandDisplayNotesAdapter);
-                            billDemandDisplayNotesAdapter.notifyDataSetChanged();
+
                         } else {
                             recycle_display_notes.setVisibility(View.GONE);
                         }
-
+                        if (mBillData.getTotalAmountSaved() > 0) {
+                            if (payStatus.equals("FullyPaid")) {
+                                ll_amount_Saved.setVisibility(View.VISIBLE);
+                                tv_amount_Saved.setText("You have saved ₹\u00a0" + Config.getAmountinTwoDecimalPoints(mBillData.getTotalAmountSaved()));
+                            } else {
+                                ll_amount_Saved.setVisibility(View.VISIBLE);
+                                tv_amount_Saved.setText("You will save ₹\u00a0" + Config.getAmountinTwoDecimalPoints(mBillData.getTotalAmountSaved()));
+                            }
+                        }
 
                     }
 

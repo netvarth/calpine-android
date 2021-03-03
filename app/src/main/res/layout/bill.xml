@@ -598,7 +598,26 @@
                             android:textSize="@dimen/txtsize_hint" />
 
                     </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/ll_amount_Saved"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/default_padding"
+                        android:orientation="horizontal"
+                        android:padding="7dp"
+                        android:visibility="gone">
 
+                        <TextView
+                            android:id="@+id/tv_amount_Saved"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:gravity="left"
+                            android:text="Amount Saved"
+                            android:textColor="@color/colorAccent"
+                            android:textStyle="bold"
+                            android:textSize="@dimen/txtsize_hint" />
+                    </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
