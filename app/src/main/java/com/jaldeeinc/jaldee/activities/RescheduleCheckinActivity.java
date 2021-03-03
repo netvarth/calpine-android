@@ -1193,7 +1193,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
 
-        Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID.split("-")[0]), requestBody);
+        Call<ResponseBody> call = apiService.waitlistSendAttachments(waitListId, Integer.parseInt(accountID.split("-")[0]), requestBody);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

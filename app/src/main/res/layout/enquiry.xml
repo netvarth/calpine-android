@@ -85,10 +85,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:background="#333E4A59"
+            android:background="@color/location_theme"
             android:text="@string/send"
-            android:clickable="false"
-            android:enabled="false"
             android:textAllCaps="true"
             android:textColor="@color/app_background"
             android:textSize="@dimen/txtsize_hint" />

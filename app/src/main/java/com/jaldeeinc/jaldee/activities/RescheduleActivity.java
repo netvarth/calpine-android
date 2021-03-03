@@ -1475,7 +1475,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
 
-        Call<ResponseBody> call = apiService.AppointmentMessage(waitListId, String.valueOf(accountID.split("-")[0]), requestBody);
+        Call<ResponseBody> call = apiService.appointmentSendAttachments(waitListId, Integer.parseInt(accountID.split("-")[0]), requestBody);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

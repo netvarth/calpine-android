@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.activities;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -64,7 +65,7 @@ public class Home extends AppCompatActivity {
             Log.i("detailsofDetail", path);
         }
 
-        if (notificationDialog != null && notificationDialog.isShowing()){
+        if (notificationDialog != null && notificationDialog.isShowing()) {
             notificationDialog.dismiss();
         }
         Config.logV("Home Screen@@@@@@@@@@@@@@@@@@@");
@@ -179,46 +180,171 @@ public class Home extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        message = intent.getStringExtra("message");
-        if (message!= null && !message.equalsIgnoreCase("") && message.trim().length() > 15){
+        String account = intent.getStringExtra("account");
+        if (account != null) {
 
-            notificationDialog = new NotificationDialog(mContext, message);
-            notificationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            notificationDialog.show();
-            notificationDialog.setCancelable(false);
-            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-            int width = (int) (metrics.widthPixels * 1);
-            notificationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+            String action = intent.getStringExtra("click_action");
+            String bookingId = intent.getStringExtra("uuid");
+            String bodyMessage = intent.getStringExtra("body");
+            String titleString = intent.getStringExtra("title");
 
-        }
-        from = intent.getStringExtra("isOrder");   // to set orders tab by default after completion of placing order.
-        String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
-        Config.logV("Push Notification Foreground @@@@@@@@@@@@@@@@@@@@@" + loginId);
-        if (!loginId.equalsIgnoreCase("")) {
-            mHomeTab = new HomeTabFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("tab", "1");
-            if (from != null && !from.equalsIgnoreCase("")) {
-                if (from.equalsIgnoreCase("ORDER")) {
+            if (action != null) {
+                switch (action) {
 
-                    bundle.putInt("myJaldeeTab", 2);  // to set orders tab by default after completion of placing order.
+                    case "CONSUMER_WAITLIST":
+
+                        intent = new Intent(Home.this, CheckInDetails.class);
+                        intent.putExtra("uuid", bookingId);
+                        intent.putExtra("account", account);
+                        intent.putExtra(Constants.PUSH_NOTIFICATION, true);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+
+                    case "CONSUMER_APPT":
+
+                        intent = new Intent(Home.this, BookingDetails.class);
+                        intent.putExtra("uuid", bookingId);
+                        intent.putExtra("account", account);
+                        intent.putExtra(Constants.PUSH_NOTIFICATION, true);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+
+                    case "CONSUMER_ORDER":
+                    case "CONSUMER_ORDER_STATUS":
+
+                        intent = new Intent(Home.this, OrderDetailActivity.class);
+                        intent.putExtra("uuid", bookingId);
+                        intent.putExtra("account", account);
+                        intent.putExtra(Constants.PUSH_NOTIFICATION, true);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        break;
+
+                    case "CONSUMER_DONATION_SERVICE":
+                    case "PAYMENTFAIL":
+
+                        intent = new Intent(Home.this, Home.class);
+                        intent.putExtra("uuid", bookingId);
+                        intent.putExtra("account", account);
+                        intent.putExtra("message", bodyMessage);
+                        intent.putExtra(Constants.PUSH_NOTIFICATION, true);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        break;
+
+                    case "BILL":
+
+                        intent = new Intent(Home.this, BillActivity.class);
+                        intent.putExtra("ynwUUID", bookingId);
+                        intent.putExtra("accountID", account);
+                        intent.putExtra(Constants.PUSH_NOTIFICATION, true);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        break;
+
+                    case "BILL_PAYMENT_SUCCESS":
+                    case "CONSUMER_SHARE_PRESCRIPTION":
+                    case "CONSUMER_SHARE_MEDICAL_RECODE":
+                    case "PRE_PAYMENT_SUCCESS":
+
+                        if (bookingId != null) {
+
+                            if (bookingId.contains("_wl")) {
+                                intent = new Intent(Home.this, CheckInDetails.class);
+                            } else if (bookingId.contains("_appt")) {
+                                intent = new Intent(Home.this, BookingDetails.class);
+                            } else {
+                                intent = new Intent(Home.this, OrderDetailActivity.class);
+                            }
+                        } else {
+                            intent = new Intent(Home.this, Home.class);
+                        }
+                        intent.putExtra("uuid", bookingId);
+                        intent.putExtra("account", account);
+                        intent.putExtra(Constants.PUSH_NOTIFICATION, true);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        break;
+
+                    case "MASSCOMMUNICATION":
+
+                        intent = new Intent(Home.this, ChatActivity.class);
+                        intent.putExtra("uuid", bookingId);
+                        intent.putExtra(Constants.PUSH_NOTIFICATION, true);
+                        intent.putExtra("accountId", Integer.parseInt(account));
+                        intent.putExtra("name", titleString);
+                        if (bookingId != null) {
+                            if (bookingId.contains("_appt")) {
+                                intent.putExtra("from", Constants.APPOINTMENT);
+                            } else if (bookingId.contains("_odr")) {
+                                intent.putExtra("from", Constants.ORDERS);
+                            } else if (bookingId.contains("_wl")) {
+                                intent.putExtra("from", Constants.CHECKIN);
+                            } else if (bookingId.contains("_dtn")) {
+                                intent.putExtra("from", Constants.DONATION);
+                            } else {
+                                intent.putExtra("from", Constants.PROVIDER);
+                            }
+                        } else {
+                            intent.putExtra("from", Constants.PROVIDER);
+                        }
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        break;
+
+                    default:
+
+                        break;
+
                 }
             }
-            if (message != null && !message.equalsIgnoreCase("")) {
-                bundle.putString("message", message);
-            } else {
-                bundle.putString("message", intent.getStringExtra("message"));
-            }
-            mHomeTab.setArguments(bundle);
-            final FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, mHomeTab)
-                    .commit();
+
         } else {
-            Intent iLogin = new Intent(this, Register.class);
-            startActivity(iLogin);
-            finish();
+
+            message = intent.getStringExtra("message");
+            if (message != null && !message.equalsIgnoreCase("") && message.trim().length() > 15) {
+
+                notificationDialog = new NotificationDialog(mContext, message);
+                notificationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                notificationDialog.show();
+                notificationDialog.setCancelable(false);
+                DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                int width = (int) (metrics.widthPixels * 1);
+                notificationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            }
+
+            from = intent.getStringExtra("isOrder");   // to set orders tab by default after completion of placing order.
+            String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
+            Config.logV("Push Notification Foreground @@@@@@@@@@@@@@@@@@@@@" + loginId);
+            if (!loginId.equalsIgnoreCase("")) {
+                mHomeTab = new HomeTabFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("tab", "1");
+                if (from != null && !from.equalsIgnoreCase("")) {
+                    if (from.equalsIgnoreCase("ORDER")) {
+
+                        bundle.putInt("myJaldeeTab", 2);  // to set orders tab by default after completion of placing order.
+                    }
+                }
+                if (message != null && !message.equalsIgnoreCase("")) {
+                    bundle.putString("message", message);
+                } else {
+                    bundle.putString("message", intent.getStringExtra("message"));
+                }
+                mHomeTab.setArguments(bundle);
+                final FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, mHomeTab)
+                        .commit();
+
+            } else {
+                Intent iLogin = new Intent(this, Register.class);
+                startActivity(iLogin);
+                finish();
+            }
         }
+
     }
 
     public static boolean doubleBackToExitPressedOnce = false;

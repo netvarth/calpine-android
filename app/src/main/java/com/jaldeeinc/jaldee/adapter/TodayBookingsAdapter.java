@@ -110,11 +110,15 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                             }
 
                         } else if (bookings.getBookingType().equalsIgnoreCase(Constants.CHECKIN)) {
-                            if (!bookings.getBookingStatus().equalsIgnoreCase("Done") && !bookings.getBookingStatus().equalsIgnoreCase("started") && !bookings.getBookingStatus().equalsIgnoreCase(Constants.CANCELLED)) {
+                            if (bookings.getBookingStatus()!= null && !bookings.getBookingStatus().equalsIgnoreCase("Done") && !bookings.getBookingStatus().equalsIgnoreCase("started") && !bookings.getBookingStatus().equalsIgnoreCase(Constants.CANCELLED)) {
                                 viewHolder.tvDateAndTime.setVisibility(View.VISIBLE);
                             }
                             else{
-                                viewHolder.tvDateAndTime.setVisibility(View.GONE);
+                                if (bookings.getBookingStatus() == null && bookings.isVirtual()){
+                                    viewHolder.tvDateAndTime.setVisibility(View.VISIBLE);
+                                } else {
+                                    viewHolder.tvDateAndTime.setVisibility(View.GONE);
+                                }
                             }
 
                             if (bookings.getCalculationMode() != null && !bookings.getCalculationMode().equalsIgnoreCase("NoCalc")) {

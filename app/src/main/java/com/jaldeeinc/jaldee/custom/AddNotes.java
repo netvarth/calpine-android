@@ -60,7 +60,7 @@ public class AddNotes extends Dialog {
         btCancel = findViewById(R.id.btn_cancel);
         btSend = findViewById(R.id.btn_send);
 
-        if (userMessage != null){
+        if (userMessage != null) {
 
             etMessage.setText(userMessage);
         }
@@ -77,34 +77,36 @@ public class AddNotes extends Dialog {
             tvTo.setText(name);
         }
 
-        etMessage.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable arg0) {
-                if (etMessage.getText().toString().length() >= 1 && !etMessage.getText().toString().trim().isEmpty()) {
-                    btSend.setEnabled(true);
-                    btSend.setClickable(true);
-                    btSend.setBackground(context.getResources().getDrawable(R.color.location_theme));
-                } else {
-                    btSend.setEnabled(false);
-                    btSend.setClickable(false);
-                    btSend.setBackground(context.getResources().getDrawable(R.color.button_grey));
-                }
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
+//        etMessage.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void afterTextChanged(Editable arg0) {
+//                if (etMessage.getText().toString().length() >= 1 && !etMessage.getText().toString().trim().isEmpty()) {
+//                    btSend.setEnabled(true);
+//                    btSend.setClickable(true);
+//                    btSend.setBackground(context.getResources().getDrawable(R.color.location_theme));
+//                } else {
+//                    btSend.setEnabled(false);
+//                    btSend.setClickable(false);
+//                    btSend.setBackground(context.getResources().getDrawable(R.color.button_grey));
+//                }
+//            }
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//            }
+//        });
 
         btSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 iSendMessage.getMessage(etMessage.getText().toString());
                 dismiss();
+
             }
         });
         btCancel.setOnClickListener(new View.OnClickListener() {

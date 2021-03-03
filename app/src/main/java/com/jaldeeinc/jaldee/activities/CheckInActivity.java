@@ -1469,14 +1469,14 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 pjsonobj.put("id", providerId);
             }
 
-            if (imagePathList != null && imagePathList.size() > 0) {
-
-                if (userMessage != null && userMessage.trim().equalsIgnoreCase("")) {
-                    mDialog.dismiss();
-                    showToolTip();
-                    return;
-                }
-            }
+//            if (imagePathList != null && imagePathList.size() > 0) {
+//
+//                if (userMessage != null && userMessage.trim().equalsIgnoreCase("")) {
+//                    mDialog.dismiss();
+//                    showToolTip();
+//                    return;
+//                }
+//            }
 
             if (etVirtualNumber.getText().toString().trim().length() > 9) {
                 if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("whatsApp")) {
@@ -1684,7 +1684,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID.split("-")[0]), requestBody);
+        Call<ResponseBody> call = apiService.waitlistSendAttachments(waitListId, Integer.parseInt(accountID.split("-")[0]), requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

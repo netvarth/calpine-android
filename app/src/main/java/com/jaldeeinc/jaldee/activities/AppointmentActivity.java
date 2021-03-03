@@ -1411,7 +1411,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             return;
         }
 
-
         ApiInterface apiService = ApiClient.getClient(AppointmentActivity.this).create(ApiInterface.class);
         JSONObject qjsonObj = new JSONObject();
         JSONObject queueobj = new JSONObject();
@@ -1433,22 +1432,22 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             sjsonobj.put("id", scheduleId);
             queueobj.put("consumerNote", txt_addnote);
             queueobj.put("phoneNumber", phoneNumber);
-            qjsonObj.put("countryCode", countryCode);
+            queueobj.put("countryCode", countryCode);
             if (serviceInfo.isUser()) {
                 pjsonobj.put("id", providerId);
             } else {
                 pjsonobj.put("id", 0);
             }
 
-            if (imagePathList != null && imagePathList.size() > 0) {
-
-                if (userMessage != null && userMessage.trim().equalsIgnoreCase("")) {
-
-                    showToolTip();
-                    mDialog.dismiss();
-                    return;
-                }
-            }
+//            if (imagePathList != null && imagePathList.size() > 0) {
+//
+//                if (userMessage != null && userMessage.trim().equalsIgnoreCase("")) {
+//
+//                    showToolTip();
+//                    mDialog.dismiss();
+//                    return;
+//                }
+//            }
 
             if (etVirtualNumber.getText().toString().trim().length() > 9) {
                 if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("whatsApp")) {
@@ -1637,9 +1636,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     }
 
-    private void ApiCommunicateAppointment(String waitListId, String accountID, String message,
-                                           final BottomSheetDialog dialog) {
-
+    private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
 
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         MediaType type = MediaType.parse("*/*");
@@ -1663,7 +1660,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         }
         RequestBody requestBody = mBuilder.build();
 
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject jsonObj = new JSONObject();
@@ -1674,14 +1670,13 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
 
-        Call<ResponseBody> call = apiService.AppointmentMessage(waitListId, String.valueOf(accountID.split("-")[0]), requestBody);
+        Call<ResponseBody> call = apiService.appointmentSendAttachments(waitListId, Integer.parseInt(accountID.split("-")[0]), requestBody);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 try {
-
 
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
