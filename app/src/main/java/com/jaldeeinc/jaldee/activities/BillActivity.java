@@ -1139,9 +1139,13 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     }
 
     public void paymentFinished(RazorpayModel razorpayModel) {
-        Intent intent = new Intent(mCOntext, Home.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startActivity(intent);
+        if (ynwUUID.endsWith("_odr")) {
+            redirectToOrderTab();  // for in order payment -- after payment redirect to myorder.java tablayout
+        } else {
+            Intent intent = new Intent(mCOntext, Home.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        }
         finish();
     }
 
@@ -1188,5 +1192,11 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void redirectToOrderTab() {
+        Intent homeIntent = new Intent(BillActivity.this, Home.class);
+        homeIntent.putExtra("isOrder", "ORDER");
+        startActivity(homeIntent);
     }
 }
