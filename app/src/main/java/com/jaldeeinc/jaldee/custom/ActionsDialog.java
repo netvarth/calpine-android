@@ -460,32 +460,15 @@ public class ActionsDialog extends Dialog {
 
             }
 
+
             llSendAttachments.setVisibility(View.VISIBLE);
-
-            llSendAttachments.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    iSendData.sendAttachments(bookings);
-                    dismiss();
-
-                }
-            });
-
             if (bookings.isHasAttachment()) {
                 llViewAttachments.setVisibility(View.VISIBLE);
             } else {
                 llViewAttachments.setVisibility(View.GONE);
+                hideView(llViewAttachments);
             }
-            llViewAttachments.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                    iSendData.viewAttachments(bookings);
-                    dismiss();
-
-                }
-            });
 
         } else {
 
@@ -496,8 +479,15 @@ public class ActionsDialog extends Dialog {
             hideView(llCustomerNotes);
             hideView(llMeetingDetails);
             hideView(llPrescription);
-            hideView(llSendAttachments);
-            hideView(llViewAttachments);
+            llSendAttachments.setVisibility(View.VISIBLE);
+            //hideView(llSendAttachments);
+            if (bookings.isHasAttachment()) {
+                llViewAttachments.setVisibility(View.VISIBLE);
+            } else {
+                llViewAttachments.setVisibility(View.GONE);
+                hideView(llViewAttachments);
+            }
+            //hideView(llViewAttachments);
             llRating.setVisibility(View.VISIBLE);
 
 
@@ -593,7 +583,24 @@ public class ActionsDialog extends Dialog {
             }
 
         }
+        llSendAttachments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                iSendData.sendAttachments(bookings);
+                dismiss();
+
+            }
+        });
+        llViewAttachments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                iSendData.viewAttachments(bookings);
+                dismiss();
+
+            }
+        });
         if (bookings.getAppointmentInfo() != null) {
             if (bookings.getAppointmentInfo().getApptStatus() != null) {
                 if (bookings.getAppointmentInfo().getApptStatus().equalsIgnoreCase("Completed")) {
