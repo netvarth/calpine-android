@@ -81,7 +81,7 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
     public void onBindViewHolder(MyViewHolder myViewHolder, final int position) {
         final FamilyArrayModel familylist = familyList.get(position);
         Config.logV("Family -----------------");
-        myViewHolder.name.setText(familylist.getUserProfile().getFirstName() + " " + familylist.getUserProfile().getLastName()); 
+        myViewHolder.name.setText(familylist.getUserProfile().getFirstName() + " " + familylist.getUserProfile().getLastName());
 
 
         myViewHolder.edit.setOnClickListener(new View.OnClickListener() {
