@@ -27,6 +27,7 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -791,6 +792,9 @@ public class BookingDetails extends AppCompatActivity {
                     tvBillText.setVisibility(View.GONE);
                     tvBillReceiptText.setVisibility(View.VISIBLE);
                     tvBillReceiptText.setText("Receipt");
+                    RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) cvBill.getLayoutParams();
+                    lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+                    cvBill.setLayoutParams(lp);
                 } else {
                     String amount = "₹" + " " + convertAmountToDecimals(String.valueOf(appointmentInfo.getAmountDue()));
                     if (appointmentInfo.getApptStatus().equalsIgnoreCase("Cancelled")) {
@@ -801,6 +805,9 @@ public class BookingDetails extends AppCompatActivity {
                     }
                     cvBill.setVisibility(View.VISIBLE);
                     tvBillText.setText("Bill");
+                    RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) cvBill.getLayoutParams();
+                    lp.addRule(RelativeLayout.ALIGN_PARENT_END);
+                    cvBill.setLayoutParams(lp);
                 }
 
                 if (appointmentInfo.getBillViewStatus() != null && !appointmentInfo.getApptStatus().equalsIgnoreCase("cancelled")) {
