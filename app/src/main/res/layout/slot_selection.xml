@@ -183,7 +183,7 @@
     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose your Slot"
+        android:text="Delivery Timing"
         android:textSize="@dimen/txtsize_14"
         android:textAllCaps="true"
         android:textColor="@color/title_color"
