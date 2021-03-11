@@ -423,7 +423,7 @@
                         android:outlineSpotShadowColor="@color/gray"
                         app:cardBackgroundColor="@color/special_background"
                         app:cardCornerRadius="@dimen/dimen_10dp"
-                        app:cardElevation="@dimen/dimen_10dp">
+                        app:cardElevation="@dimen/dimen_5dp">
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                             android:id="@+id/tv_text"

@@ -1,7 +1,6 @@
 package com.jaldeeinc.jaldee.connection;
 
 
-import com.google.android.gms.common.api.Response;
 import com.jaldeeinc.jaldee.model.Address;
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
@@ -9,7 +8,6 @@ import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
-import com.jaldeeinc.jaldee.model.StoreOrderBody;
 import com.jaldeeinc.jaldee.model.TestModel;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
@@ -58,10 +56,7 @@ import com.jaldeeinc.jaldee.response.ShoppingList;
 import com.jaldeeinc.jaldee.response.SlotsData;
 import com.jaldeeinc.jaldee.response.StoreDetails;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
-import com.jaldeeinc.jaldee.response.ViewAttachments;
 
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -649,5 +644,7 @@ public interface ApiInterface {
 
     @GET("consumer/appointment/attachment/{uuid}")
     Call<ArrayList<ShoppingList>> getAppointmentAttachments(@Path("uuid") String uid, @Query("account") int account);
+
+
 
 }

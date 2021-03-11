@@ -199,6 +199,7 @@ public class Home extends AppCompatActivity {
                         intent.putExtra(Constants.PUSH_NOTIFICATION, true);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
+                        break;
 
                     case "CONSUMER_APPT":
 
@@ -208,6 +209,7 @@ public class Home extends AppCompatActivity {
                         intent.putExtra(Constants.PUSH_NOTIFICATION, true);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
+                        break;
 
                     case "CONSUMER_ORDER":
                     case "CONSUMER_ORDER_STATUS":

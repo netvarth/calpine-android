@@ -19,7 +19,7 @@ public class TestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.item_card);
+        setContentView(R.layout.search_new);
 
 
 //        myJaldee = new HomeSearchFragment();

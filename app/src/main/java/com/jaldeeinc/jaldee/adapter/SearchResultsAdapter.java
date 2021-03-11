@@ -470,133 +470,15 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         myViewHolder.rlStatus.setVisibility(View.GONE);
                     }
 
-//                    if (searchdetailList.isWaitlistEnabled() && searchdetailList.isApptEnabled() && searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1")) {
-//
-//                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
-//                        myViewHolder.tvText.setText("Book Service");
-//                        myViewHolder.llEstTime.setVisibility(View.GONE);
-//                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
-//                        setServices(myViewHolder, searchdetailList.getServices());
-//
-//                    } else if (searchdetailList.isWaitlistEnabled() && searchdetailList.isApptEnabled() && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1"))) {
-//
-//                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
-//                        myViewHolder.tvText.setText("Book Service");
-//                        myViewHolder.llEstTime.setVisibility(View.GONE);
-//                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
-//                        setServices(myViewHolder, searchdetailList.getServices());
-//
-//                    } else if (searchdetailList.isWaitlistEnabled() && searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1") && !searchdetailList.isApptEnabled()) {
-//
-//                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
-//                        myViewHolder.tvText.setText("Book Service");
-//                        myViewHolder.llEstTime.setVisibility(View.GONE);
-//                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
-//                        setServices(myViewHolder, searchdetailList.getServices());
-//
-//                    } else if (searchdetailList.isApptEnabled() && searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1") && !searchdetailList.isWaitlistEnabled()) {
-//
-//                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
-//                        myViewHolder.tvText.setText("Book Service");
-//                        myViewHolder.llEstTime.setVisibility(View.GONE);
-//                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
-//                        setServices(myViewHolder, searchdetailList.getAppt_services());
-//
-//                    } else if (searchdetailList.isWaitlistEnabled() && !searchdetailList.isApptEnabled() && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1"))) {
-//
-//                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
-//                        if (searchdetailList.isShowToken()) {
-//                            myViewHolder.tvText.setText("Get Token");
-//                        } else {
-//                            myViewHolder.tvText.setText("CheckIn");
-//                        }
-//
-//                        setServices(myViewHolder, searchdetailList.getServices());
-//
-//                        if (searchdetailList.getAvail_date() != null) {
-//
-//                            // est wait time or Date
-//                            if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())) {
-//                                myViewHolder.llWaitingInLine.setVisibility(View.VISIBLE);
-//                                if (!searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc")) {
-//                                    myViewHolder.llEstTime.setVisibility(View.VISIBLE);
-//                                    showWaitingTime(myViewHolder, searchdetailList, null);
-//                                } else {
-//                                    myViewHolder.llEstTime.setVisibility(View.GONE);
-//                                }
-//
-//                                // people waiting in Line
-//                                myViewHolder.tvWaitingCount.setText(String.valueOf(searchdetailList.getPersonAhead()));
-//                                if (searchdetailList.getPersonAhead() == 1) {
-//                                    myViewHolder.tvWaitingCountHint.setText("Person");
-//                                } else {
-//                                    myViewHolder.tvWaitingCountHint.setText("People");
-//                                }
-//
-//                            } else {
-//                                myViewHolder.llEstTime.setVisibility(View.VISIBLE);
-//                                myViewHolder.llWaitingInLine.setVisibility(View.GONE);
-//                                showWaitingTime(myViewHolder, searchdetailList, "future");
-//                            }
-//
-//                        } else {
-//
-//                            myViewHolder.llEstTime.setVisibility(View.GONE);
-//                            myViewHolder.llWaitingInLine.setVisibility(View.GONE);
-//
-//                        }
-//
-//                    } else if (searchdetailList.isApptEnabled() && !searchdetailList.isWaitlistEnabled() && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1"))) {
-//
-//                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
-//                        myViewHolder.tvText.setText("Get Appointment");
-//                        myViewHolder.llEstTime.setVisibility(View.VISIBLE);
-//                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
-//
-//                        setServices(myViewHolder, searchdetailList.getAppt_services());
-//
-//                        if (searchdetailList.getAvailableDate() != null) {
-//
-//                            if (formattedDate.equalsIgnoreCase(searchdetailList.getAvailableDate())) {
-//
-//                                myViewHolder.tvEstWaitTime.setText("Next available on");
-//                                String time = convertSlotTime(searchdetailList.getAvailableTime().split("-")[0]);
-//                                myViewHolder.tvTime.setText("Today, " + time);
-//                            } else {
-//                                myViewHolder.tvEstWaitTime.setText("Next available on");
-//                                String time = convertSlotTime(searchdetailList.getAvailableTime().split("-")[0]);
-//                                myViewHolder.tvTime.setText(convertDate(searchdetailList.getAvailableDate()) + " " + time);
-//
-//                            }
-//                        } else {
-//
-//                            myViewHolder.llEstTime.setVisibility(View.GONE);
-//                            myViewHolder.llWaitingInLine.setVisibility(View.GONE);
-//                        }
-//
-//                    } else if (searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1") && !searchdetailList.isWaitlistEnabled() && !searchdetailList.isApptEnabled()) {
-//
-//                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
-//                        myViewHolder.tvText.setText("Donate");
-//                        myViewHolder.llEstTime.setVisibility(View.GONE);
-//                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
-//
-//                    } else if (searchdetailList.getOrderEnabled() == 1 && !(searchdetailList.getDonation_status() != null && searchdetailList.getDonation_status().equalsIgnoreCase("1")) && !searchdetailList.isWaitlistEnabled() && !searchdetailList.isApptEnabled()) {
-//
-//                        myViewHolder.cvAction.setVisibility(View.VISIBLE);
-//                        myViewHolder.tvText.setText("Order");
-//                        myViewHolder.llEstTime.setVisibility(View.GONE);
-//                        myViewHolder.llWaitingInLine.setVisibility(View.GONE);
-//
-//                    } else {
-//
-//                        myViewHolder.rlStatus.setVisibility(View.GONE);
-//                    }
-
                 } else {
                     myViewHolder.rlStatus.setVisibility(View.GONE);
                 }
 
+                if (myViewHolder.llEstTime.getVisibility() == View.GONE && myViewHolder.llWaitingInLine.getVisibility() == View.GONE && myViewHolder.llServices.getVisibility() == View.GONE){
+                    myViewHolder.rlStatus.setBackgroundColor(context.getResources().getColor(R.color.white));
+                } else {
+                    myViewHolder.rlStatus.setBackground(context.getResources().getDrawable(R.drawable.difference_background));
+                }
 
                 myViewHolder.cvCard.setOnClickListener(new View.OnClickListener() {
                     @Override

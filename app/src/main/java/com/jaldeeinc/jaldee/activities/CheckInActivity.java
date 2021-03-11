@@ -1462,7 +1462,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             qjsonObj.put("id", queueId);
             queueobj.put("date", apiDate);
             queueobj.put("consumerNote", txt_addnote);
-            queueobj.put("waitlistPhonenumber", phoneNumber);
+            queueobj.put("waitlistPhoneNumber", phoneNumber);
             queueobj.put("countryCode", countryCode);
 
             if (isUser) {

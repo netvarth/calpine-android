@@ -80,7 +80,7 @@
                     android:ellipsize="end"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/dimen_12dp"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
