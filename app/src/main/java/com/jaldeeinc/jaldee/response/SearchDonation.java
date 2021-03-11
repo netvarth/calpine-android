@@ -38,6 +38,8 @@ public class SearchDonation implements Serializable {
     boolean postInfoEnabled;
     String postInfoTitle;
     String postInfoText;
+    String consumerNoteTitle;
+    boolean consumerNoteMandatory;
 
     public ArrayList<SearchDonation> getServicegallery() {
         return servicegallery;
@@ -162,6 +164,7 @@ public class SearchDonation implements Serializable {
     public void setLivetrack(String livetrack) {
         this.livetrack = livetrack;
     }
+
     public String getMinPrePaymentAmount() {
         return minPrePaymentAmount;
     }
@@ -169,6 +172,7 @@ public class SearchDonation implements Serializable {
     public void setMinPrePaymentAmount(String minPrePaymentAmount) {
         this.minPrePaymentAmount = minPrePaymentAmount;
     }
+
     public String getVirtualServiceType() {
         return virtualServiceType;
     }
@@ -176,6 +180,7 @@ public class SearchDonation implements Serializable {
     public void setVirtualServiceType(String virtualServiceType) {
         this.virtualServiceType = virtualServiceType;
     }
+
     public ArrayList<SearchAppoinment> getVirtualCallingModes() {
         return virtualCallingModes;
     }
@@ -183,6 +188,7 @@ public class SearchDonation implements Serializable {
     public void setVirtualCallingModes(ArrayList<SearchAppoinment> virtualCallingModes) {
         this.virtualCallingModes = virtualCallingModes;
     }
+
     public String getInstructions() {
         return instructions;
     }
@@ -190,6 +196,7 @@ public class SearchDonation implements Serializable {
     public void setInstructions(String instructions) {
         this.instructions = instructions;
     }
+
     public String getCallingMode() {
         return callingMode;
     }
@@ -197,6 +204,7 @@ public class SearchDonation implements Serializable {
     public void setCallingMode(String callingMode) {
         this.callingMode = callingMode;
     }
+
     public String getValue() {
         return value;
     }
@@ -204,10 +212,12 @@ public class SearchDonation implements Serializable {
     public void setValue(String value) {
         this.value = value;
     }
+
     @Override
     public String toString() {
         return this.name; // Value to be displayed in the Spinner
     }
+
     public boolean isPrePayment() {
         return isPrePayment;
     }
@@ -217,7 +227,6 @@ public class SearchDonation implements Serializable {
     }
 
 
-
     public String getUrl() {
         return url;
     }
@@ -225,6 +234,7 @@ public class SearchDonation implements Serializable {
     public void setUrl(String url) {
         this.url = url;
     }
+
     public String getThumbUrl() {
         return thumbUrl;
     }
@@ -295,6 +305,13 @@ public class SearchDonation implements Serializable {
 
     public void setPostInfoText(String postInfoText) {
         this.postInfoText = postInfoText;
+    }
+
+    public String getConsumerNoteTitle() {
+        return consumerNoteTitle;
+    }
+    public boolean isConsumerNoteMandatory() {
+        return consumerNoteMandatory;
     }
 }
 

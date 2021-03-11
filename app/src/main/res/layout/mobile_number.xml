@@ -53,7 +53,7 @@
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:layout_marginEnd="@dimen/padding15"
                 android:layout_weight="1"
-                android:background="@drawable/edittext"
+                android:background="@drawable/edittext_color"
                 android:hint="Enter Mobile Number"
                 android:inputType="number"
                 android:maxLength="10"
@@ -95,7 +95,9 @@
         android:textStyle="bold"
         android:padding="@dimen/padding5"
         android:background="@drawable/curved_save"
+        android:backgroundTint="@color/button_background"
         android:fontFamily="@font/customfont"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        />
 
 </LinearLayout>

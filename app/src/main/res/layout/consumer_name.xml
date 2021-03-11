@@ -23,7 +23,7 @@
 
 
         <EditText
-            android:id="@+id/email"
+            android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/padding15"
@@ -34,7 +34,7 @@
             android:paddingBottom="@dimen/padding3"
             android:textSize="@dimen/dimen_15sp"
             android:background="@drawable/edittext_color"
-            android:hint="Enter your Mail Id"
+            android:hint="Enter Donor Name"
             android:textColor="@color/title_grey"/>
 
 

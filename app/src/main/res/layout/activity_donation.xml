@@ -12,8 +12,9 @@
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_60dp"
+        android:layout_height="@dimen/dimen_45dp"
         android:background="@color/white"
+        android:backgroundTint="#F1B51C"
         android:orientation="horizontal"
         android:paddingEnd="@dimen/dimen_10dp">
 
@@ -22,7 +23,8 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginStart="@dimen/dimen_15dp"
+            android:backgroundTint="#F1B51C"
             app:cardBackgroundColor="@color/white"
             app:cardElevation="@dimen/padding3">
 
@@ -38,18 +40,22 @@
         </androidx.cardview.widget.CardView>
 
 
-        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-            android:id="@+id/tv_providerName"
-            android:layout_width="wrap_content"
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+            android:id="@+id/tv_serviceName"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@id/cv_back"
-            android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dimen_15dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/padding5"
+            android:layout_marginEnd="@dimen/dimen_45dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
             android:text=""
             android:textColor="@color/title_color"
-            android:textSize="@dimen/dimen_16sp">
+            android:textSize="@dimen/txtsize_14"
+            android:textStyle="bold">
 
-        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
     </LinearLayout>
 
@@ -57,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
-        android:layout_above="@id/cv_submit">
+        android:paddingBottom="@dimen/dimen_60dp">
 
         <LinearLayout
             android:id="@+id/main"
@@ -65,393 +71,526 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <soup.neumorphism.NeumorphCardView
-                android:id="@+id/pressed_card"
-                style="@style/Widget.Neumorph.CardView"
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:neumorph_backgroundColor="@color/white"
-                app:neumorph_insetBottom="@dimen/dimen_0dp"
-                app:neumorph_insetEnd="@dimen/dimen_1dp"
-                app:neumorph_insetStart="@dimen/dimen_1dp"
-                app:neumorph_insetTop="@dimen/dimen_1dp"
-                app:neumorph_shadowColorDark="#BEF2F2F2"
-                app:neumorph_shadowColorLight="#BEF2F2F2"
-                app:neumorph_shapeType="pressed">
+                android:orientation="vertical">
+
 
                 <RelativeLayout
+                    android:id="@+id/relative"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-                        android:id="@+id/tv_serviceName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/padding5"
-                        android:layout_marginTop="@dimen/dimen_10dp"
-                        android:layout_marginEnd="@dimen/padding5"
-                        android:ellipsize="end"
-                        android:maxLines="2"
-                        android:text=""
-                        android:textColor="@color/title_color"
-                        android:textSize="@dimen/dimen_26dp">
-
-                    </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                        android:id="@+id/tv_description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_serviceName"
-                        android:layout_marginStart="@dimen/padding5"
-                        android:layout_marginTop="@dimen/padding5"
-                        android:layout_marginEnd="@dimen/padding5"
-                        android:textColor="@color/title_color">
-
-                    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
-
-                    <ImageView
-                        android:id="@+id/uImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:src="@drawable/dash_gap"
-                        android:layout_marginTop="@dimen/padding15"
-                        android:layout_below="@id/tv_description">
-
-                    </ImageView>
-
-                    <RelativeLayout
-                        android:id="@+id/relative"
-                        android:layout_width="match_parent"
-                        android:layout_height="180dp"
-                        android:layout_below="@id/uImage"
-                        android:layout_marginStart="@dimen/padding5"
-                        android:layout_marginEnd="@dimen/padding5">
-
-                            <LinearLayout
-                                android:id="@+id/ll_amountHint"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/dimen_10dp"
-                                android:layout_marginTop="@dimen/dimen_10dp">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_info_black">
-
-                                </ImageView>
-
-                                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                                    android:id="@+id/tv_amountHint"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text=""
-                                    android:letterSpacing="0.04"
-                                    android:layout_marginStart="@dimen/dimen_10dp"
-                                    android:layout_gravity="center"
-                                    android:textColor="@color/title_color">
-
-                                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/ll_amount"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/padding50"
-                                android:paddingStart="@dimen/padding5"
-                                android:layout_marginTop="@dimen/padding20"
-                                android:layout_marginStart="@dimen/dimen_10dp"
-                                android:layout_marginEnd="@dimen/dimen_10dp"
-                                android:background="@drawable/donate_edittext"
-                                android:layout_below="@id/ll_amountHint">
-
-                                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="₹"
-                                    android:textSize="@dimen/dimen_16sp"
-                                    android:textColor="@color/title_color">
-
-                                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
-                            <EditText
-                                android:id="@+id/et_amount"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="Amount"
-                                android:inputType="number"
-                                android:textColor="@color/title_color"
-                                android:layout_marginEnd="@dimen/padding5"
-                                android:layout_marginStart="@dimen/padding5"
-                                android:backgroundTint="@color/white">
-
-                            </EditText>
-
-                            </LinearLayout>
-
-
-                            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                                android:id="@+id/tv_errorAmount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="* Amount is manditory"
-                                android:textSize="@dimen/txtsize_12"
-                                android:textColor="@color/red"
-                                android:visibility="gone"
-                                android:layout_below="@id/ll_amount"
-                                android:layout_marginTop="@dimen/padding5"
-                                android:layout_marginStart="@dimen/dimen_16dp">
-
-                            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
-
-                        </RelativeLayout>
-
-                    <ImageView
-                        android:id="@+id/lImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:src="@drawable/dash_gap"
-                        android:layout_marginBottom="@dimen/dimen_50dp"
-                        android:layout_below="@id/relative">
-
-                    </ImageView>
-
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding5"
+                    android:layout_marginEnd="@dimen/padding5"
+                    android:gravity="center_horizontal">
 
                     <LinearLayout
-                        android:id="@+id/ll_virtualNumber"
+                        android:id="@+id/ll_amountHint"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
+                        android:layout_below="@id/ll_amount"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginStart="@dimen/dimen_10dp"
-                        android:layout_marginTop="@dimen/padding5"
-                        android:layout_marginBottom="@dimen/padding5"
-                        android:visibility="gone">
+                        android:layout_marginBottom="@dimen/dimen_5dp"
+                        android:gravity="center_horizontal"
+                        android:visibility="visible">
 
-                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Contact for virtual service : "
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_info_black">
+
+                        </ImageView>
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                            android:id="@+id/tv_amountHint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/dimen_10dp"
+                            android:letterSpacing="0.04"
+                            android:text=""
                             android:textSize="@dimen/txtsize_12">
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                    </LinearLayout>
 
-                        <EditText
-                            android:id="@+id/et_virtualNumber"
+                    <LinearLayout
+                        android:id="@+id/ll_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:paddingStart="@dimen/padding5">
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/padding3"
-                            android:text="5555000015"
-                            android:textSize="@dimen/txtsize_14">
+                            android:gravity="center_vertical"
+                            android:text="₹"
+                            android:textColor="@color/dark_black"
+                            android:textSize="@dimen/dimen_30dp"
+                            android:textStyle="normal">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+                        <EditText
+                            android:id="@+id/et_amount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginEnd="@dimen/padding5"
+                            android:backgroundTint="@color/white"
+                            android:gravity="center_vertical"
+                            android:hint="0"
+                            android:inputType="number"
+                            android:maxLength="6"
+                            android:text=""
+                            android:textColor="@color/dark_black"
+                            android:textColorHint="@color/button_grey"
+                            android:textSize="@dimen/dimen_40dp"
+                            android:textStyle="bold">
 
                         </EditText>
 
                     </LinearLayout>
 
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:id="@+id/tv_errorAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/ll_amount"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="@dimen/dimen_5dp"
+                        android:text="* Amount is mandatory"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/txtsize_12"
+                        android:visibility="gone">
+
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
                 </RelativeLayout>
 
-            </soup.neumorphism.NeumorphCardView>
+                <LinearLayout
+                    android:id="@+id/about"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relative"
+                    android:layout_marginStart="@dimen/padding15"
+                    android:orientation="vertical">
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/padding15"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                android:orientation="horizontal">
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                            android:id="@+id/tv_donationName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/padding5"
+                            android:text=""
+                            android:textAllCaps="true"
+                            android:textColor="@color/title_color"
+                            android:textSize="@dimen/txtsize_12"
+                            android:textStyle="bold"
+                            android:visibility="visible">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                            android:id="@+id/tv_moreInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginStart="@dimen/padding2"
+                            android:layout_marginTop="@dimen/padding5"
+                            android:layout_marginEnd="@dimen/dimen_25dp"
+                            android:text="Showmore..."
+                            android:textAllCaps="true"
+                            android:textColor="@color/title_color"
+                            android:textSize="@dimen/txtsize_10"
+                            android:visibility="visible">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                    </RelativeLayout>
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:id="@+id/tv_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimen_15dp"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:layout_marginEnd="@dimen/dimen_20dp"
+                        android:layout_marginBottom="@dimen/dimen_5dp"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:maxLines="2"
+                        android:text=""
+                        android:textColor="@color/title_color"
+                        android:textSize="@dimen/txtsize_12"
+                        android:visibility="visible">
+
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                    <LinearLayout
+                        android:id="@+id/ll_preinfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimen_15dp"
+                        android:layout_marginEnd="@dimen/dimen_25dp"
+                        android:layout_marginBottom="@dimen/dimen_10dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                            android:id="@+id/tv_preInfoTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/title_color"
+                            android:textSize="@dimen/txtsize_14">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                            android:id="@+id/tv_preInfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:scrollbars="vertical"
+                            android:textColor="@color/title_color"
+                            android:textSize="@dimen/txtsize_12">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_virtualNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginTop="@dimen/padding5"
+                    android:layout_marginBottom="@dimen/padding5"
+                    android:visibility="gone">
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Contact for virtual service : "
+                        android:textSize="@dimen/txtsize_12">
+
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                    <EditText
+                        android:id="@+id/et_virtualNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding3"
+                        android:text="5555000015"
+                        android:textSize="@dimen/txtsize_14">
+
+                    </EditText>
+
+                </LinearLayout>
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:id="@+id/tv_donation_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                    android:layout_below="@+id/about"
+                    android:layout_marginStart="@dimen/padding15"
                     android:text="Donation by"
                     android:textAllCaps="true"
                     android:textColor="@color/title_color"
-                    android:textSize="@dimen/txtsize_12">
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_consumerName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/padding15"
-                android:layout_marginTop="@dimen/padding5"
-                android:layout_marginEnd="@dimen/dimen_10dp"
-                android:background="@drawable/donate_edittext"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/tv_consumerName"
+                <LinearLayout
+                    android:id="@+id/ll_consumerName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint=""
-                    android:inputType="text"
-                    android:background="@color/white"
-                    android:layout_margin="@dimen/padding5"
-                    android:textColor="@color/title_color"
-                    android:textSize="@dimen/dimen_18sp">
+                    android:layout_below="@id/tv_donation_text"
+                    android:layout_marginStart="@dimen/dimen_25dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_25dp"
+                    android:background="@drawable/donate_edittext"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dimen_10dp">
 
-                </EditText>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/dimen_5dp"
+                        android:orientation="horizontal">
 
-            </LinearLayout>
+                        <ImageView
+                            android:layout_width="@dimen/dimen_20dp"
+                            android:layout_height="@dimen/dimen_20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/user_filled"
+                            app:tint="@color/title_grey">
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                android:id="@+id/tv_error_donor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="* Donor name is manidtory"
-                android:textSize="@dimen/txtsize_12"
-                android:textColor="@color/red"
-                android:visibility="gone"
-                android:layout_marginTop="@dimen/padding5"
-                android:layout_marginStart="@dimen/dimen_16dp">
+                        </ImageView>
 
-            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                            android:id="@+id/tv_consumerName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/padding5"
+                            android:background="@color/white"
+                            android:hint=""
+                            android:inputType="text"
+                            android:text=""
+                            android:textColor="@color/title_color"
+                            android:textSize="@dimen/dimen_14sp">
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                android:id="@+id/tv_mobile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding2"
-                android:layout_marginStart="@dimen/padding15"
-                android:drawableRight="@drawable/edit_icon_sized"
-                android:drawablePadding="@dimen/padding5"
-                android:text=""
-                android:textColor="@color/title_color"
-                android:textSize="@dimen/txtsize_14">
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                    </LinearLayout>
 
-            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:id="@+id/tv_error_donor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimen_16dp"
+                        android:layout_marginTop="@dimen/padding5"
+                        android:text="* Donor name is mandatory"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/txtsize_12"
+                        android:visibility="gone">
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                android:id="@+id/tv_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding2"
-                android:drawableRight="@drawable/edit_icon_sized"
-                android:drawablePadding="@dimen/padding5"
-                android:text=""
-                android:layout_marginStart="@dimen/padding15"
-                android:textColor="@color/title_color"
-                android:textSize="@dimen/txtsize_14">
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/dimen_5dp"
+                        android:orientation="horizontal">
 
-            <LinearLayout
-                android:id="@+id/ll_note"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/padding15"
-                android:layout_marginTop="@dimen/padding5"
-                android:layout_marginEnd="@dimen/dimen_10dp"
-                android:background="@drawable/donate_edittext"
-                android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="@dimen/dimen_20dp"
+                            android:layout_height="@dimen/dimen_20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/call_icon"
+                            app:tint="@color/title_grey">
+
+                        </ImageView>
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                            android:id="@+id/tv_mobile"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/padding5"
+
+                            android:background="@color/white"
+                            android:hint=""
+                            android:inputType="text"
+                            android:text=""
+                            android:textColor="@color/title_color"
+                            android:textSize="@dimen/dimen_14sp">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/dimen_5dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="@dimen/dimen_20dp"
+                            android:layout_height="@dimen/dimen_20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/emailicon_sized"
+                            app:tint="@color/title_grey">
+
+                        </ImageView>
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                            android:id="@+id/tv_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/padding5"
+                            android:background="@color/white"
+                            android:hint=""
+                            android:inputType="text"
+                            android:maxLines="2"
+                            android:text=""
+                            android:textColor="@color/title_color"
+                            android:textSize="@dimen/dimen_14sp">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                    </LinearLayout>
+                </LinearLayout>
 
                 <EditText
                     android:id="@+id/tv_note"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Add Note"
+                    android:layout_below="@+id/ll_consumerName"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="@dimen/dimen_25dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_25dp"
+                    android:background="@drawable/donate_edittext"
+                    android:hint="Add a note"
                     android:inputType="text"
-                    android:background="@color/white"
-                    android:layout_margin="@dimen/padding5"
-                    android:textColor="@color/title_color"
-                    android:textSize="@dimen/dimen_15sp"
-                    android:textStyle="bold"
-                    android:maxLines="10">
+                    android:maxWidth="250dp"
+                    android:maxLines="10"
+                    android:minWidth="150dp"
+                    android:padding="@dimen/dimen_10dp"
+                    android:textSize="@dimen/dimen_14sp">
 
                 </EditText>
 
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/ll_preinfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
-                android:layout_marginStart="@dimen/dimen_15dp"
-                android:layout_marginBottom="@dimen/dimen_5dp"
-                android:layout_marginEnd="@dimen/padding15"
-                android:layout_marginTop="@dimen/dimen_10dp">
-
-                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                    android:id="@+id/tv_preInfoTitle"
+                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:id="@+id/tv_payment_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:textSize="@dimen/txtsize_14"
-                    android:textStyle="bold"
-                    android:textColor="@color/title_color">
-
-                </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
-
-                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                    android:id="@+id/tv_preInfo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding5"
+                    android:layout_below="@+id/tv_note"
+                    android:layout_marginStart="@dimen/padding15"
+                    android:paddingTop="@dimen/dimen_20dp"
+                    android:paddingBottom="@dimen/dimen_10dp"
+                    android:text="SELECT PAYMENT METHOD"
+                    android:textAllCaps="true"
+                    android:textColor="@color/title_color"
                     android:textSize="@dimen/txtsize_12"
-                    android:scrollbars="vertical"
-                    android:textColor="@color/title_color">
+                    android:textStyle="bold">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/ll_payment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_payment_text"
+                    android:layout_marginStart="@dimen/dimen_25dp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_marginEnd="@dimen/dimen_25dp"
+                    android:layout_marginBottom="@dimen/dimen_15dp"
+                    android:orientation="horizontal">
 
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cv_payTm"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_50dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:layout_weight="0.5"
+                        android:clickable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardCornerRadius="@dimen/dimen_15dp"
+                        app:cardElevation="0dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="payTm"
+                            android:textSize="@dimen/dimen_15dp"
+                            android:textStyle="bold" />
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cv_razorpay"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_50dp"
+                        android:layout_alignRight="@+id/cv_payTm"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:layout_weight="0.5"
+                        android:clickable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:cardCornerRadius="@dimen/dimen_15dp"
+                        app:cardElevation="0dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="CC/DC/NB"
+                            android:textSize="@dimen/dimen_15dp"
+                            android:textStyle="bold" />
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:id="@+id/tv_errorPayment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ll_payment"
+                    android:layout_centerInParent="true"
+                    android:text="* Please select payment method"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/txtsize_12"
+                    android:visibility="gone">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+            </RelativeLayout>
 
 
         </LinearLayout>
 
     </ScrollView>
 
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv_submit"
+    <LinearLayout
+        android:id="@+id/ll_submit"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/padding45"
+        android:layout_height="@dimen/dimen_70dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/padding5"
-        android:layout_marginEnd="@dimen/dimen_10dp"
-        android:layout_marginBottom="@dimen/dimen_15dp"
-        app:cardBackgroundColor="@color/location_theme"
-        app:cardCornerRadius="@dimen/padding3">
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:weightSum="1">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_submit"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/padding45"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_weight="0.7"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:cardCornerRadius="@dimen/dimen_15dp">
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Donate"
-                android:textColor="@color/white"
-                android:textSize="@dimen/txtsize_14">
+                android:layout_gravity="center">
 
-            </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                    android:id="@+id/tv_submit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Donate"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/txtsize_14"
+                    android:textStyle="bold">
 
-            <ImageView
-                android:layout_width="@dimen/dimen_20dp"
-                android:layout_height="@dimen/dimen_16sp"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/txtsize_10"
-                android:src="@drawable/rightarrow"
-                app:tint="@color/white">
-
-            </ImageView>
+                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
 
-        </LinearLayout>
+            </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
 
 </RelativeLayout>
