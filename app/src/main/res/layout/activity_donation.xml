@@ -148,8 +148,7 @@
                             android:backgroundTint="@color/white"
                             android:gravity="center_vertical"
                             android:hint="0"
-                            android:inputType="number"
-                            android:maxLength="6"
+                            android:inputType="numberDecimal"
                             android:text=""
                             android:textColor="@color/dark_black"
                             android:textColorHint="@color/button_grey"
@@ -177,7 +176,7 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:id="@+id/about"
+                    android:id="@+id/ll_donation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/relative"
@@ -307,7 +306,7 @@
                     android:id="@+id/tv_donation_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/about"
+                    android:layout_below="@+id/ll_donation"
                     android:layout_marginStart="@dimen/padding15"
                     android:text="Donation by"
                     android:textAllCaps="true"

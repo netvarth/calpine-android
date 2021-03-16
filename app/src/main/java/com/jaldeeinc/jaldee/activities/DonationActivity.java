@@ -14,6 +14,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
+import android.text.InputFilter;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
@@ -42,6 +43,7 @@ import com.jaldeeinc.jaldee.custom.ConsumerNameDialog;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.custom.DecimalDigitsInputFilter;
 import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
@@ -158,6 +160,9 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     @BindView(R.id.tv_moreInfo)
     CustomTextViewMedium tvMoreInfo;
 
+    @BindView(R.id.ll_donation)
+    LinearLayout llDonation;
+
     private IPaymentResponse paymentResponse;
     private int locationId;
     private int uniqueId;
@@ -223,8 +228,9 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 tvServiceName.setText(name.substring(0, 1).toUpperCase() + name.substring(1));
                 tvDonationName.setText(name.substring(0, 1).toUpperCase() + name.substring(1));
                 tvDescription.setText(serviceInfo.getDescription());
-                tvAmountHint.setText("Amount must be in range between " + " ₹" + getMoneyFormat(serviceInfo.getMinDonationAmount()) + " and ₹" + getMoneyFormat(serviceInfo.getMaxDonationAmount()) + " (multiples of ₹" + String.valueOf(serviceInfo.getMultiples()) + ")");
+                tvAmountHint.setText("Amount must be in range between" + " ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())) + " and ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMaxDonationAmount())) + " (multiples of ₹\u00A0" + Config.getAmountinTwoDecimalPoints(serviceInfo.getMultiples()) + ")");
                 llAmountHint.setVisibility(View.VISIBLE);
+                tvErrorAmount.setVisibility(View.GONE);
                 et_note.setHint(serviceInfo.getConsumerNoteTitle());
             }
         } catch (Exception e) {
@@ -256,7 +262,6 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // tvSubmit.setText("Donate ₹ "+etAmount+" now");
-
             }
 
             @Override
@@ -798,6 +803,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                             if(!(amount >= minAmount && amount <= maxAmount && amount%multipls == 0)){
                                 tvAmountHint.setTextColor(Color.parseColor("#dc3545"));
                                 llAmountHint.setVisibility(View.VISIBLE);
+                                tvErrorAmount.setVisibility(View.GONE);
                             }
                             String errorString = response.errorBody().string();
 
