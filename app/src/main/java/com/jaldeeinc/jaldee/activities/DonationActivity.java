@@ -14,7 +14,14 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
+import android.text.Layout;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.RelativeSizeSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -208,6 +215,9 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         cvSubmit.setCardBackgroundColor(Color.parseColor("#7a7a7a"));
         cvPayTm.setCardBackgroundColor(Color.parseColor("#f1f0f0"));
         cvRazorpay.setCardBackgroundColor(Color.parseColor("#f1f0f0"));
+        Spanned s1 = null;
+        Spanned s2 = null;
+        Spanned s3 = null;
         //etAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(2, 2)}); //etamount max digits allowed
        /* if (providerName != null) {
             tvProviderName.setText(providerName);
@@ -219,11 +229,57 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 String name = serviceInfo.getName();
                 tvServiceName.setText(name.substring(0, 1).toUpperCase() + name.substring(1));
                 tvDonationName.setText(name.substring(0, 1).toUpperCase() + name.substring(1));
-                tvDescription.setText(serviceInfo.getDescription());
+
                 tvAmountHint.setText("Amount must be in range between" + " ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())) + " and ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMaxDonationAmount())) + " (multiples of ₹\u00A0" + Config.getAmountinTwoDecimalPoints(serviceInfo.getMultiples()) + ")");
                 llAmountHint.setVisibility(View.VISIBLE);
                 tvErrorAmount.setVisibility(View.GONE);
                 et_note.setHint(serviceInfo.getConsumerNoteTitle());
+                SpannableStringBuilder builder = new SpannableStringBuilder();
+
+                if(!serviceInfo.getDescription().equals("")) {
+                    s1 = Html.fromHtml(serviceInfo.getDescription()+"<br><br>");
+                    builder.append(s1);
+                }
+                if(!serviceInfo.getPreInfoTitle().equals("")) {
+                    s2 = Html.fromHtml("<b><font color='#484848'>" + serviceInfo.getPreInfoTitle() + "</font></b>");
+                    builder.append(s2);
+                }
+                if(!serviceInfo.getPreInfoText().equals("")) {
+                    s3 = Html.fromHtml("<br><font color='#484848'>" + serviceInfo.getPreInfoText() + "</font>");
+                    builder.append(s3);
+                }
+
+                //tvDescription.setText(Html.fromHtml(serviceInfo.getDescription() + "<br><br><b><big><font color='#484848'>" + serviceInfo.getPreInfoTitle() + "</font></big></b><br><font color='#484848'>" + serviceInfo.getPreInfoText() + "</font>"));
+                tvDescription.setText(builder);
+                tvDescription.post(new Runnable() {                    //for find the description is elipsized or not
+                    @Override
+                    public void run() {
+                        int lineCount = tvDescription.getLineCount();
+                        Layout l = tvDescription.getLayout();
+                        if (l.getEllipsisCount(lineCount - 1) > 0) {
+                            tvMoreInfo.setVisibility(View.VISIBLE);      //if elipsized tvMoreinfo set to "visible" otherwise set to "gone"
+                        }
+                    }
+                });
+
+                /*tvDescription.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Layout l = tvDescription.getLayout();
+
+                        int lineCount = tvDescription.getLineCount();
+                        int s=l.getEllipsisCount(lineCount);
+                        if(lineCount>2){
+                            tvMoreInfo.setVisibility(View.VISIBLE);
+                            tvDescription.setMaxLines(2);
+
+                        }else{
+                            tvMoreInfo.setVisibility(View.GONE);
+                            tvDescription.setVisibility(View.VISIBLE);
+
+                        }
+                    }
+                });*/
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -488,13 +544,13 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 }
             }
         });
-        et_note.setOnClickListener(new View.OnClickListener() {
+        et_note.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-
-                et_note.setBackground(getResources().getDrawable(R.drawable.donate_edittext));
-
-
+            public boolean onTouch(View v, MotionEvent event) {
+                if(true) {
+                    et_note.setBackground(getResources().getDrawable(R.drawable.donate_edittext));
+                }
+                return false;
             }
         });
         etAmount.setOnClickListener(new View.OnClickListener() {
@@ -514,7 +570,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
 
                 if (tvMoreInfo.getText().toString().equalsIgnoreCase("Showmore...")) {
                     tvDescription.setMaxLines(Integer.MAX_VALUE);//your TextView
-                    if (serviceInfo.isPreInfoEnabled()) {  //  check if pre-info is available for the service
+                    /*if (serviceInfo.isPreInfoEnabled()) {  //  check if pre-info is available for the service
 
                         llPreInfo.setVisibility(View.VISIBLE);
                         if (serviceInfo.getPreInfoTitle() != null) {
@@ -533,10 +589,10 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                         }
                     } else {
                         llPreInfo.setVisibility(View.GONE);
-                    }
+                    }*/
                     tvMoreInfo.setText("Showless");
                 } else {
-                    tvDescription.setMaxLines(3);//your TextView
+                    tvDescription.setMaxLines(2);//your TextView
                     llPreInfo.setVisibility(View.GONE);
                     tvMoreInfo.setText("Showmore...");
                 }

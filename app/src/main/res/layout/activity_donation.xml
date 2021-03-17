@@ -213,7 +213,7 @@
                             android:textAllCaps="true"
                             android:textColor="@color/dark_black"
                             android:textSize="@dimen/txtsize_10"
-                            android:visibility="visible">
+                            android:visibility="gone">
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
