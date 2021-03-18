@@ -229,7 +229,7 @@
                         android:layout_marginBottom="@dimen/dimen_5dp"
                         android:ellipsize="end"
                         android:gravity="left"
-                        android:maxLines="2"
+                        android:maxLines="3"
                         android:text=""
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"

@@ -52,7 +52,7 @@
             android:id="@+id/qtyval"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.3"
+            android:layout_weight="0.5"
             android:gravity="right"
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_hint" />

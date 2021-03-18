@@ -592,7 +592,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                     }*/
                     tvMoreInfo.setText("Showless");
                 } else {
-                    tvDescription.setMaxLines(2);//your TextView
+                    tvDescription.setMaxLines(3);//your TextView
                     llPreInfo.setVisibility(View.GONE);
                     tvMoreInfo.setText("Showmore...");
                 }

@@ -14,7 +14,7 @@
             android:id="@+id/txt_amount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7"
+            android:layout_weight="0.6"
             android:gravity="left"
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_hint" />
@@ -32,7 +32,7 @@
             android:id="@+id/txtdiscountval"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.3"
+            android:layout_weight="0.4"
             android:gravity="right"
             android:textColor="@color/sec_title_grey"
             android:textSize="@dimen/txtsize_hint" />
