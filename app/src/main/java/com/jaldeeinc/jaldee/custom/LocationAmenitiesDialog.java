@@ -3,6 +3,8 @@ package com.jaldeeinc.jaldee.custom;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,8 +23,7 @@ public class LocationAmenitiesDialog extends Dialog {
     ArrayList<ParkingModel> listType = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
     private RecyclerView.Adapter serviceListingAdapter;
-
-
+    private ImageView ivClose;
 
     public LocationAmenitiesDialog(@NonNull Context context, ArrayList<ParkingModel> listType) {
         super(context);
@@ -40,6 +41,14 @@ public class LocationAmenitiesDialog extends Dialog {
         rvList.setLayoutManager(linearLayoutManager);
         serviceListingAdapter = new LAmenitiesListingAdapter(listType,context);
         rvList.setAdapter(serviceListingAdapter);
+        ivClose = findViewById(R.id.iv_close);
+
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
 
     }
 
