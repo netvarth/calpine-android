@@ -645,6 +645,9 @@ public interface ApiInterface {
     @GET("consumer/appointment/attachment/{uuid}")
     Call<ArrayList<ShoppingList>> getAppointmentAttachments(@Path("uuid") String uid, @Query("account") int account);
 
+    @POST("provider/claim/{accId}")
+    Call<ProfileModel> usrProfile(@Path("accId")  int account);
+
 
 
 }
