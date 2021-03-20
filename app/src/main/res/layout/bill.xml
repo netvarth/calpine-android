@@ -267,7 +267,7 @@
                             android:id="@+id/grossDelivery"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.3"
+                            android:layout_weight="0.4"
                             android:gravity="right"
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
@@ -303,7 +303,7 @@
                             android:id="@+id/jdnValue"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.3"
+                            android:layout_weight="0.4"
                             android:gravity="right"
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
@@ -340,7 +340,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.3"
+                            android:layout_weight="0.4"
                             android:gravity="right"
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
