@@ -1951,6 +1951,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
             @Override
             public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
+                Log.i("mnbbnmmnbbnm", t.toString());
+                t.printStackTrace();
             }
         });
 

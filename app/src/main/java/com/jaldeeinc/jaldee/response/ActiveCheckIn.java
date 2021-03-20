@@ -52,7 +52,7 @@ public class ActiveCheckIn implements Serializable {
     boolean phone_verified;
     boolean email_verified;
     int parent;
-    int jaldeeConsumer;
+//    int jaldeeConsumer;
 
     public String getCountryCode() {
         return countryCode;
@@ -399,13 +399,13 @@ public class ActiveCheckIn implements Serializable {
         this.parent = parent;
     }
 
-    public int getJaldeeConsumer() {
-        return jaldeeConsumer;
-    }
-
-    public void setJaldeeConsumer(int jaldeeConsumer) {
-        this.jaldeeConsumer = jaldeeConsumer;
-    }
+//    public int getJaldeeConsumer() {
+//        return jaldeeConsumer;
+//    }
+//
+//    public void setJaldeeConsumer(int jaldeeConsumer) {
+//        this.jaldeeConsumer = jaldeeConsumer;
+//    }
 
     public String getName() {
         return name;

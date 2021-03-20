@@ -436,12 +436,6 @@ public class ActionsDialog extends Dialog {
                     hideView(llPrescription);
                 }
 
-                llPrescription.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    }
-                });
 
                 llPrescription.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -470,7 +464,8 @@ public class ActionsDialog extends Dialog {
             }
 
 
-        } else {
+        }
+        else {
 
             hideView(llReschedule);
             hideView(llCancel);
@@ -478,7 +473,49 @@ public class ActionsDialog extends Dialog {
             hideView(llInstructions);
             hideView(llCustomerNotes);
             hideView(llMeetingDetails);
-            hideView(llPrescription);
+            if (bookings != null && bookings.getCheckInInfo()!= null){
+                if (bookings.getCheckInInfo().isPrescShared()){
+                    llPrescription.setVisibility(View.VISIBLE);
+                    llPrescription.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            prescriptionDialog = new PrescriptionDialog(mContext, isActive, bookings);
+                            prescriptionDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+                            prescriptionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            prescriptionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            prescriptionDialog.show();
+                            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            prescriptionDialog.getWindow().setGravity(Gravity.BOTTOM);
+                            prescriptionDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        }
+                    });
+                } else {
+                    hideView(llPrescription);
+                }
+            } else if (bookings != null && bookings.getAppointmentInfo()!= null){
+                if (bookings.getAppointmentInfo().isPrescShared()){
+                    llPrescription.setVisibility(View.VISIBLE);
+                    llPrescription.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            prescriptionDialog = new PrescriptionDialog(mContext, isActive, bookings);
+                            prescriptionDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+                            prescriptionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            prescriptionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            prescriptionDialog.show();
+                            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            prescriptionDialog.getWindow().setGravity(Gravity.BOTTOM);
+                            prescriptionDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        }
+                    });
+                } else {
+                    hideView(llPrescription);
+                }
+            } else {
+                hideView(llPrescription);
+            }
             llSendAttachments.setVisibility(View.VISIBLE);
             //hideView(llSendAttachments);
             if (bookings.isHasAttachment()) {

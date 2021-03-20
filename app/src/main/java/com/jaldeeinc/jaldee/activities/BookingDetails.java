@@ -464,10 +464,10 @@ public class BookingDetails extends AppCompatActivity {
                                     date = getCurrentDate();
                                     if (date.compareTo(strDate) == 0) {
                                         isActive = true;
-                                    } else if (date.compareTo(strDate) == 1){
+                                    } else if (date.compareTo(strDate) == 1) {
                                         isActive = false;
-                                    } else if (date.compareTo(strDate) == -1){
-                                        isActive  = true;
+                                    } else if (date.compareTo(strDate) == -1) {
+                                        isActive = true;
                                     }
 
                                 } catch (ParseException e) {
@@ -638,11 +638,11 @@ public class BookingDetails extends AppCompatActivity {
                     tvConfirmationNumber.setText(appointmentInfo.getAppointmentEncId());
                 }
                 // to set Phone number
-                if(appointmentInfo.getPhoneNumber() != null && !appointmentInfo.getPhoneNumber().isEmpty()) {
+                if (appointmentInfo.getPhoneNumber() != null && !appointmentInfo.getPhoneNumber().isEmpty()) {
                     llPhoneNumber.setVisibility(View.VISIBLE);
                     countryCode = appointmentInfo.getCountryCode();
                     tvPhoneNumber.setText(countryCode + "\u00a0" + appointmentInfo.getPhoneNumber());
-                }else {
+                } else {
                     hideView(llPhoneNumber);
                 }
                 // to set status
@@ -761,8 +761,11 @@ public class BookingDetails extends AppCompatActivity {
                     hideView(llReschedule);
                     hideView(llCancel);
                     hideView(llLocation);
-                    hideView(llPrescription);
-
+                    if (appointmentInfo.isPrescShared()) {
+                        llPrescription.setVisibility(View.VISIBLE);
+                    } else {
+                        hideView(llPrescription);
+                    }
                 }
 
                 // hide instructions link when there are no post instructions
@@ -1270,13 +1273,14 @@ public class BookingDetails extends AppCompatActivity {
         }
     }
 
-    public Date getCurrentDate(){
+    public Date getCurrentDate() {
 
         Date date = new Date();
         try {
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); ;
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            ;
             String d = formatter.format(date);
-            date = (Date)formatter.parse(d);
+            date = (Date) formatter.parse(d);
 
         } catch (ParseException e) {
             e.printStackTrace();

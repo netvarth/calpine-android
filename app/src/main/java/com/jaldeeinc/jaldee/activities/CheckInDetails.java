@@ -240,7 +240,7 @@ public class CheckInDetails extends AppCompatActivity {
             isActive = i.getBooleanExtra("isActive", true);
             ynwUUid = i.getStringExtra("uuid");
             accountId = i.getStringExtra("account");
-            fromPushNotification = i.getBooleanExtra(Constants.PUSH_NOTIFICATION,false);
+            fromPushNotification = i.getBooleanExtra(Constants.PUSH_NOTIFICATION, false);
         }
 
         cvBack.setOnClickListener(new View.OnClickListener() {
@@ -482,10 +482,10 @@ public class CheckInDetails extends AppCompatActivity {
                                     date = getCurrentDate();
                                     if (date.compareTo(strDate) == 0) {
                                         isActive = true;
-                                    } else if (date.compareTo(strDate) == 1){
+                                    } else if (date.compareTo(strDate) == 1) {
                                         isActive = false;
-                                    } else if (date.compareTo(strDate) == -1){
-                                        isActive  = true;
+                                    } else if (date.compareTo(strDate) == -1) {
+                                        isActive = true;
                                     }
 
                                 } catch (ParseException e) {
@@ -655,11 +655,11 @@ public class CheckInDetails extends AppCompatActivity {
                     tvConfirmationNumber.setText(checkInInfo.getCheckinEncId());
                 }
                 // to set Phone number
-                if(checkInInfo.getWaitlistPhoneNumber() != null && !checkInInfo.getWaitlistPhoneNumber().isEmpty()) {
+                if (checkInInfo.getWaitlistPhoneNumber() != null && !checkInInfo.getWaitlistPhoneNumber().isEmpty()) {
                     llPhoneNumber.setVisibility(View.VISIBLE);
                     countryCode = checkInInfo.getCountryCode();
                     tvPhoneNumber.setText(countryCode + "\u00a0" + checkInInfo.getWaitlistPhoneNumber());
-                }else {
+                } else {
                     hideView(llPhoneNumber);
                 }
                 // to set status
@@ -812,7 +812,11 @@ public class CheckInDetails extends AppCompatActivity {
                     hideView(llReschedule);
                     hideView(llCancel);
                     hideView(llLocation);
-                    hideView(llPrescription);
+                    if (checkInInfo.isPrescShared()) {
+                        llPrescription.setVisibility(View.VISIBLE);
+                    } else {
+                        hideView(llPrescription);
+                    }
                 }
 
                 // hide instructions link when there are no post instructions
@@ -1321,8 +1325,8 @@ public class CheckInDetails extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        if (fromPushNotification){
-            Intent intent = new Intent(CheckInDetails.this,Home.class);
+        if (fromPushNotification) {
+            Intent intent = new Intent(CheckInDetails.this, Home.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             super.onBackPressed();
             startActivity(intent);
@@ -1332,13 +1336,14 @@ public class CheckInDetails extends AppCompatActivity {
         }
     }
 
-    public Date getCurrentDate(){
+    public Date getCurrentDate() {
 
         Date date = new Date();
         try {
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); ;
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            ;
             String d = formatter.format(date);
-            date = (Date)formatter.parse(d);
+            date = (Date) formatter.parse(d);
 
         } catch (ParseException e) {
             e.printStackTrace();
