@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -21,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,6 +48,8 @@ import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.connection.ApiClient;
+import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.CustomDailogVerification;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
@@ -55,10 +59,10 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
+import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 
 import org.json.JSONArray;
@@ -73,6 +77,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -771,18 +780,8 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             public void onClick(View view) {
 
                 try {
+                    getAccProfile(searchdetailList);
 
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_VIEW);
-                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                    boolean claimable = false;
-                    if (searchdetailList.getClaimable() != null && searchdetailList.getClaimable().equalsIgnoreCase("1")) {
-                        claimable = true;
-                    }
-                    String accountId = "0";
-                    accountId = searchdetailList.getId().split("-")[0];
-                    intent.setData(Uri.parse(Constants.URL + "business/signup?" + "claimable=" + claimable + "&accountId=" + accountId + "&sector=" + searchdetailList.getSectorname() + "&subSector=" + searchdetailList.getSub_sector()));
-                    context.startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -791,7 +790,49 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         });
 
     }
+    private void getAccProfile(SearchListModel searchdetailList) {
+        String accountId = "0";
+        accountId = searchdetailList.getId().split("-")[0];
 
+        ApiInterface apiService =
+                ApiClient.getClient(context).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(context, "");
+        mDialog.show();
+        Call<ProfileModel> call = apiService.usrProfile(Integer.parseInt(accountId));
+        call.enqueue(new Callback<ProfileModel>() {
+            @Override
+            public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(activity, mDialog);
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_VIEW);
+                            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                            boolean claimable = false;
+                            if (searchdetailList.getClaimable() != null && searchdetailList.getClaimable().equalsIgnoreCase("1")) {
+                                claimable = true;
+                            }
+                            String accountId = "0";
+                            accountId = searchdetailList.getId().split("-")[0];
+                            intent.setData(Uri.parse(Constants.URL + "business/signup?" + "claimable=" + claimable + "&phoneNo=" + response.body().getUserprofile().getPrimaryMobileNo() +"&accountId=" + accountId + "&sector=" + searchdetailList.getSectorname() + "&subSector=" + searchdetailList.getSub_sector()));
+                            context.startActivity(intent);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<ProfileModel> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(activity, mDialog);
+            }
+        });
+    }
 
     public static String convertDate(String date) {
 

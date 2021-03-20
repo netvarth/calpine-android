@@ -82,7 +82,7 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
             holder.txtcoupanval.setText("₹ " + String.valueOf(billServiceData.get(position).getCouponValue()));
         }*/
 
-        holder.qtyval.setText("₹ " + Config.getAmountinTwoDecimalPoints(billServiceData.get(position).getPrice() * billServiceData.get(position).getQuantity()));
+        holder.qtyval.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(billServiceData.get(position).getPrice() * billServiceData.get(position).getQuantity()));
 
         holder.qty.setText("Qty " + String.valueOf(billServiceData.get(position).getQuantity()));
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
@@ -91,7 +91,7 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
 
             if(billServiceData.get(position).getDiscount().size()>0) {
                 holder.Lsubtotal.setVisibility(View.VISIBLE);
-                holder.txtsubtotalval.setText("₹ " + Config.getAmountinTwoDecimalPoints(billServiceData.get(position).getNetRate()));
+                holder.txtsubtotalval.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(billServiceData.get(position).getNetRate()));
                 billDiscountAdapter = new BIllDiscountAdapter("service", billServiceData.get(position).getDiscount(), context);
                 holder.recyclerView_discount.setAdapter(billDiscountAdapter);
                 billDiscountAdapter.notifyDataSetChanged();

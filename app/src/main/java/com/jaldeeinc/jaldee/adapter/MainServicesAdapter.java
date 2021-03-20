@@ -37,6 +37,7 @@ import com.jaldeeinc.jaldee.response.DepServiceInfo;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -198,8 +199,8 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                         viewHolder.llDonationRange.setVisibility(View.VISIBLE);
                         viewHolder.llTime.setVisibility(View.GONE);
                         viewHolder.llEstwaitTime.setVisibility(View.GONE);
-                        viewHolder.tvMinAmount.setText("₹" + getMoneyFormat(servicesInfoList.get(position).getMinDonationAmount()));
-                        viewHolder.tvMaxAmount.setText("₹" + getMoneyFormat(servicesInfoList.get(position).getMaxDonationAmount()));
+                        viewHolder.tvMinAmount.setText("₹\u00A0" +  Config.getAmountinTwoDecimalPoints(Double.parseDouble(servicesInfoList.get(position).getMinDonationAmount())));
+                        viewHolder.tvMaxAmount.setText("₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(servicesInfoList.get(position).getMaxDonationAmount())));
                     } else {
                         viewHolder.llDonationRange.setVisibility(View.GONE);
                     }

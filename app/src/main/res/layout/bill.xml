@@ -231,7 +231,7 @@
                             android:id="@+id/grosstotal"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.3"
+                            android:layout_weight="0.4"
                             android:gravity="right"
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
@@ -392,7 +392,7 @@
                             android:id="@+id/txtaxval"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.3"
+                            android:layout_weight="0.4"
                             android:gravity="right"
                             android:textColor="@color/sec_title_grey"
                             android:textSize="@dimen/txtsize_hint" />
@@ -427,7 +427,7 @@
                             android:id="@+id/txtamt"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.3"
+                            android:layout_weight="0.4"
                             android:gravity="right"
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
@@ -517,7 +517,7 @@
                             android:id="@+id/amtpaid"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.3"
+                            android:layout_weight="0.4"
                             android:gravity="right"
 
                             android:textColor="@color/title_grey"
@@ -556,7 +556,7 @@
                             android:id="@+id/refundamt"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.3"
+                            android:layout_weight="0.4"
                             android:gravity="right"
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
@@ -592,7 +592,7 @@
                             android:id="@+id/totalamt"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.3"
+                            android:layout_weight="0.4"
                             android:gravity="right"
                             android:textColor="@color/colorAccent"
                             android:textSize="@dimen/txtsize_hint" />
