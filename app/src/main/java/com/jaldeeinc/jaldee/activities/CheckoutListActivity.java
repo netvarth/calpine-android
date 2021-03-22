@@ -539,7 +539,6 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
         ApiJaldeegetProviderCoupons(uniqueId);
 
 
-
     }
 
     private void placeOrder(int accountId) {
@@ -1749,12 +1748,17 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                     if (response.code() == 200) {
                         s3couponList.clear();
                         s3couponList = response.body();
-
-                        if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
+                        /**
+                         * below code commented because of "coupons not need to apply in order via list"
+                         */
+                        /*if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
                             rlCoupon.setVisibility(View.VISIBLE);
                         } else {
                             rlCoupon.setVisibility(View.GONE);
-                        }
+                        }*/
+                        /**
+                         *
+                         * */
 
                     }
 
@@ -1773,6 +1777,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
             }
         });
     }
+
     private void ApiJaldeegetProviderCoupons(int uniqueID) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(CheckoutListActivity.this).create(ApiInterface.class);
@@ -1793,13 +1798,17 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                         providerCouponList.clear();
                         providerCouponList = response.body();
                         Log.i("ProviderCouponResponse", providerCouponList.toString());
-
-                        if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
+                        /**
+                        * below code commented because of "coupons not need to apply in order via list"
+                        */
+                        /*if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
                             rlCoupon.setVisibility(View.VISIBLE);
                         } else {
                             rlCoupon.setVisibility(View.GONE);
-                        }
-
+                        }*/
+                        /**
+                         *
+                         * */
 
                     }
                 } catch (Exception e) {
