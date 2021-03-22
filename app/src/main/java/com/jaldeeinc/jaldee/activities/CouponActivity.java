@@ -37,40 +37,41 @@ public class CouponActivity extends AppCompatActivity {
     ListView coupon_listview;
     String uniqueid;
     private CouponAdapter mAdapter;
+    ArrayList<ProviderCouponResponse> providerCouponList = new ArrayList<>();
 
 
-@Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.couponlist);
-    coupon_listview = findViewById(R.id.coupon_inner_list);
-    Bundle bundle = getIntent().getExtras();
-    if (bundle != null) {
+        coupon_listview = findViewById(R.id.coupon_inner_list);
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
 
-        uniqueid = bundle.getString("uniqueID", "");
-        ApiJaldeeCoupan(uniqueid);
+            uniqueid = bundle.getString("uniqueID", "");
+            ApiJaldeeCoupan(uniqueid);
+//            ApiJaldeegetProviderCoupons(uniqueid);
+
+        }
+
+        ImageView iBackPress = findViewById(R.id.backpress);
+        iBackPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // what do you want here
+                finish();
+            }
+        });
+
+
+        TextView tv_title = findViewById(R.id.toolbartitle);
+        Typeface tyface1 = Typeface.createFromAsset(CouponActivity.this.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface1);
+        tv_title.setText(R.string.couponss);
+
 
     }
-
-    ImageView iBackPress= findViewById(R.id.backpress);
-    iBackPress.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            // what do you want here
-            finish();
-        }
-    });
-
-
-    TextView tv_title = findViewById(R.id.toolbartitle);
-    Typeface tyface1 = Typeface.createFromAsset(CouponActivity.this.getAssets(),
-            "fonts/Montserrat_Bold.otf");
-    tv_title.setTypeface(tyface1);
-    tv_title.setText(R.string.couponss);
-
-
-
-}
 
     private void ApiJaldeeCoupan(String uniqueID) {
 
@@ -106,7 +107,7 @@ public class CouponActivity extends AppCompatActivity {
 
                     if (response.code() == 200) {
                         coupanList = response.body();
-                        mAdapter = new CouponAdapter(CouponActivity.this,0, coupanList);
+                        mAdapter = new CouponAdapter(CouponActivity.this, 0, coupanList);
                         coupon_listview.setAdapter(mAdapter);
                     }
 
@@ -129,45 +130,45 @@ public class CouponActivity extends AppCompatActivity {
 
     }
 
-//    private void ApiJaldeegetProviderCoupons(String uniqueID) {
-//        ApiInterface apiService =
-//                ApiClient.getClientS3Cloud(CouponActivity.this).create(ApiInterface.class);
-//        Date currentTime = new Date();
-//        final SimpleDateFormat sdf = new SimpleDateFormat(
-//                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-//        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-//        System.out.println("UTC time: " + sdf.format(currentTime));
-//        Call<ArrayList<ProviderCouponResponse>> call = apiService.getProviderCoupanList(Integer.parseInt(uniqueID), sdf.format(currentTime));
-//        call.enqueue(new Callback<ArrayList<ProviderCouponResponse>>() {
-//            @Override
-//            public void onResponse(Call<ArrayList<ProviderCouponResponse>> call, Response<ArrayList<ProviderCouponResponse>> response) {
-//                try {
-//                    Config.logV("Response---------------------------" + response.body().toString());
-//                    Config.logV("URL-response--------------" + response.raw().request().url().toString().trim());
-//                    Config.logV("Response--code-------------------------" + response.code());
-//                    if (response.code() == 200) {
-//                        providerCouponList.clear();
-//                        providerCouponList = response.body();
-//                        if (providerCouponList.size() > 0) {
-//                            couponCheckin.setVisibility(View.VISIBLE);
-//                        } else {
-//                            couponCheckin.setVisibility(View.GONE);
-//                        }
-//                        Log.i("CouponResponse", providerCouponList.toString());
-//
-//
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ArrayList<ProviderCouponResponse>> call, Throwable t) {
-//                // Log error here since request failed
-//                Config.logV("Fail---------------" + t.toString());
-//
-//            }
-//        });
-//    }
+    private void ApiJaldeegetProviderCoupons(String uniqueID) {
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(CouponActivity.this).create(ApiInterface.class);
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        Call<ArrayList<ProviderCouponResponse>> call = apiService.getProviderCoupanList(Integer.parseInt(uniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<ArrayList<ProviderCouponResponse>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ProviderCouponResponse>> call, Response<ArrayList<ProviderCouponResponse>> response) {
+                try {
+                    Config.logV("Response---------------------------" + response.body().toString());
+                    Config.logV("URL-response--------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        providerCouponList.clear();
+                        if (response.body() != null) {
+                            providerCouponList = response.body();
+                            if (providerCouponList.size() > 0) {
+
+                            } else {
+
+                            }
+                        }
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ProviderCouponResponse>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+
+            }
+        });
+    }
 }

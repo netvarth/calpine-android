@@ -371,6 +371,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0.5"
+                                    android:visibility="gone"
                                     android:gravity="center">
 
 
@@ -474,7 +475,8 @@
                                     android:layout_marginTop="@dimen/padding5"
                                     android:layout_marginBottom="3dp"
                                     android:background="@color/title_color"
-                                    android:orientation="vertical">
+                                    android:orientation="vertical"
+                                    android:visibility="visible">
 
                                 </LinearLayout>
 
@@ -484,6 +486,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/dimen_10dp"
                                     android:layout_weight="0.5"
+                                    android:visibility="gone"
                                     android:gravity="center">
 
                                     <LinearLayout
