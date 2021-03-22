@@ -22,7 +22,11 @@ import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
+import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
+import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import java.util.ArrayList;
@@ -41,6 +45,11 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
 
     Context mContext;
     LinearLayout mLprofile,mLchangepwd,mLchangeEmail,mLchangePhone,mLmember,mLogout,mLTerm,mLcontactus,mLshare,mLappfeed;
+    ImageView ivEdit;
+    CustomTextViewBold tvUserName;
+    CustomTextViewMedium tvMobileNumber,tvEmailId;
+    DatabaseHandler db;
+    String countryCode ="";
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -67,7 +76,14 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
         tv_title.setText("My Account");
         tv_title.setTypeface(tyface);
 
+        db = new DatabaseHandler(mContext);
+        countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
 
+
+        ivEdit = row.findViewById(R.id.iv_edit);
+        tvUserName = row.findViewById(R.id.tv_userName);
+        tvMobileNumber = row.findViewById(R.id.tv_phoneNumber);
+        tvEmailId = row.findViewById(R.id.tv_mailId);
         mLappfeed=(LinearLayout) row.findViewById(R.id.lappfeed);
         mLprofile = (LinearLayout) row.findViewById(R.id.lprofile);
         mLchangepwd=(LinearLayout)row.findViewById(R.id.lchangepwd);
@@ -220,6 +236,90 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
 
         return row;
     }
+
+    @Override
+    public void onResume() {
+
+        if (Config.isOnline(mContext)) {
+
+            ApiGetProfileDetail();
+        } else {
+
+            int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
+            db = new DatabaseHandler(mContext);
+            if (db.checkForTables()) {
+                ProfileModel getProfile = db.getProfileDetail(consumerId);
+                showProfileDetail(getProfile);
+            }
+        }
+
+        super.onResume();
+    }
+
+
+    private void ApiGetProfileDetail() {
+
+        ApiInterface apiService =
+                ApiClient.getClient(getActivity()).create(ApiInterface.class);
+
+        final int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
+
+        final Dialog mDialog = Config.getProgressDialog(mContext,mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ProfileModel> call = apiService.getProfileDetail(consumerId);
+
+        call.enqueue(new Callback<ProfileModel>() {
+            @Override
+            public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    if (response.code() == 200) {
+
+                        if (response.body() != null) {
+                            db.DeleteProfile();
+                            db.insertUserInfo(response.body().getUserprofile());
+
+                            SharedPreference.getInstance(mContext).setValue("mobile", response.body().getUserprofile().getPrimaryMobileNo());
+                            ProfileModel getProfile = db.getProfileDetail(consumerId);
+                            showProfileDetail(getProfile);
+                            SharedPreference.getInstance(mContext).setValue("userDb", "success");
+                        }
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ProfileModel> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+    }
+
+    private void showProfileDetail(ProfileModel profile) {
+
+        tvUserName.setText(profile.getFirstName() + " "+ profile.getLastName());
+
+        tvMobileNumber.setText(countryCode+" "+ profile.getPrimaryMobileNo());
+
+        tvEmailId.setText(profile.getEmail());
+
+    }
+
+
     List<FamilyArrayModel> MuserProfileList=new ArrayList<>();
     FamilyArrayModel MuserProfileMode;
     private void ApiAddFamilyMember() {

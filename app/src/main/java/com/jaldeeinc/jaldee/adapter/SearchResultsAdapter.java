@@ -221,7 +221,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     }
                 });
 
-                if (searchdetailList.getCoupon_enabled() == 1) {
+                if (searchdetailList.getCoupon_enabled() >= 1) {
                     myViewHolder.ivProviderCoupon.setVisibility(View.VISIBLE);
                 } else {
                     myViewHolder.ivProviderCoupon.setVisibility(View.GONE);
