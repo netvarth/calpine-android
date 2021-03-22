@@ -382,6 +382,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         }
                         setServices(myViewHolder, searchdetailList.getServices());
                         handleWaitlist(formattedDate, searchdetailList, myViewHolder);
+                        handleAppointment(searchdetailList,myViewHolder,formattedDate);
 
 
                     } else if (actionName.equalsIgnoreCase("appointment")) {
@@ -416,6 +417,13 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 } else {
                     myViewHolder.rlStatusBar.setVisibility(View.GONE);
                     myViewHolder.llAction.setVisibility(View.GONE);
+                }
+
+                if (myViewHolder.llWaitlist.getVisibility() == View.VISIBLE || myViewHolder.llAppointment.getVisibility() == View.VISIBLE){
+
+                    myViewHolder.rlStatus.setVisibility(View.VISIBLE);
+                }else {
+                    myViewHolder.rlStatus.setVisibility(View.GONE);
                 }
 
                 if (myViewHolder.llServices.getVisibility() == View.GONE && (myViewHolder.ivJdn.getVisibility() == View.GONE || myViewHolder.ivProviderCoupon.getVisibility() == View.GONE) && myViewHolder.rlStatus.getVisibility() == View.GONE) {
