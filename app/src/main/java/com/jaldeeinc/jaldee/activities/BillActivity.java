@@ -173,6 +173,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         tv_totalamt.setTypeface(tyface);
         txttotal.setTypeface(tyface);
         txtnetRate.setTypeface(tyface);
+        boolean iscouponCheckin = false;
 
 
         ImageView iBackPress = findViewById(R.id.backpress);
@@ -224,6 +225,12 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                     boolean found = false;
                     for (int i = 0; i < s3couponList.size(); i++) {
                         if (s3couponList.get(i).getJaldeeCouponCode().equals(coupon_entered)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    for (int i = 0; i < providerCouponList.size(); i++) {
+                        if (providerCouponList.get(i).getCouponCode().equals(coupon_entered)) {
                             found = true;
                             break;
                         }
@@ -314,6 +321,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                 couponCheckin.setVisibility(View.VISIBLE);
                 ApiJaldeegetS3Coupons(uniqueId);
                 ApiJaldeegetProviderCoupons(uniqueId);/////////////////
+
             }
         }
         ApiBill(ynwUUID);
@@ -1051,7 +1059,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                     if (response.code() == 200) {
                         s3couponList.clear();
                         s3couponList = response.body();
-                        if (s3couponList.size() > 0) {
+                        if (s3couponList.size() > 0 || providerCouponList.size() > 0) {
                             couponCheckin.setVisibility(View.VISIBLE);
                         } else {
                             couponCheckin.setVisibility(View.GONE);
@@ -1092,12 +1100,12 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                     if (response.code() == 200) {
                         providerCouponList.clear();
                         providerCouponList = response.body();
-                        if (providerCouponList.size() > 0) {
+                        if (s3couponList.size() > 0 || providerCouponList.size() > 0) {
                             couponCheckin.setVisibility(View.VISIBLE);
                         } else {
                             couponCheckin.setVisibility(View.GONE);
                         }
-                        Log.i("CouponResponse", providerCouponList.toString());
+                        Log.i("ProviderCouponResponse", providerCouponList.toString());
 
 
                     }

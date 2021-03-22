@@ -87,6 +87,7 @@ import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
+import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
@@ -299,6 +300,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     private IMobileSubmit iMobileSubmit;
     ArrayList<String> couponArraylist = new ArrayList<>();
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
+    ArrayList<ProviderCouponResponse> providerCouponList = new ArrayList<>();
+
     RecyclerView list;
     private CouponlistAdapter mAdapter;
     static int familyMEmID;
@@ -529,6 +532,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         ApiSearchViewSetting(uniqueId);
         apiSearchViewDetail(uniqueId);
         ApiJaldeegetS3Coupons(uniqueId);
+        ApiJaldeegetProviderCoupons(uniqueId);
+
 
 
         // click actions
@@ -742,6 +747,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 found = false;
                 for (int i = 0; i < s3couponList.size(); i++) {
                     if (s3couponList.get(i).getJaldeeCouponCode().equals(couponEntered)) {
+                        found = true;
+                        break;
+                    }
+                }
+                for (int i = 0; i < providerCouponList.size(); i++) {
+                    if (providerCouponList.get(i).getCouponCode().equals(couponEntered)) {
                         found = true;
                         break;
                     }
@@ -1299,7 +1310,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         s3couponList = response.body();
                         Log.i("CouponResponse", s3couponList.toString());
 
-                        if (s3couponList.size() != 0) {
+                        if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
                             tvApplyCode.setVisibility(View.VISIBLE);
                         } else {
                             tvApplyCode.setVisibility(View.GONE);
@@ -1322,7 +1333,47 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             }
         });
     }
+    private void ApiJaldeegetProviderCoupons(int uniqueID) {
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        Call<ArrayList<ProviderCouponResponse>> call = apiService.getProviderCoupanList(uniqueID, sdf.format(currentTime));
+        call.enqueue(new Callback<ArrayList<ProviderCouponResponse>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ProviderCouponResponse>> call, Response<ArrayList<ProviderCouponResponse>> response) {
+                try {
+                    Config.logV("Response---------------------------" + response.body().toString());
+                    Config.logV("URL-response--------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        providerCouponList.clear();
+                        providerCouponList = response.body();
+                        if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
+                            tvApplyCode.setVisibility(View.VISIBLE);
+                        } else {
+                            tvApplyCode.setVisibility(View.GONE);
+                        }
+                        Log.i("ProviderCouponResponse", providerCouponList.toString());
 
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ProviderCouponResponse>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+
+            }
+        });
+    }
 
     boolean showPaytmWallet = false;
     boolean showPayU = false;
