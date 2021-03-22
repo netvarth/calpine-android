@@ -57,11 +57,18 @@ public class BillModel {
     }
 
     double netTotal;
-    public ArrayList<BillModel> getProviderCoupon() {
+   /* public ArrayList<BillModel> getProviderCoupon() {
         return providerCoupon;
     }
 
-    ArrayList<BillModel>providerCoupon;
+    ArrayList<BillModel>providerCoupon;*/
+
+    @SerializedName("providerCoupon")
+    private Map<String, JsonObject> providerCoupon;
+
+    public Map<String, JsonObject> getProviderCoupon() {
+        return providerCoupon;
+    }
 
     public String getName() {
         return name;

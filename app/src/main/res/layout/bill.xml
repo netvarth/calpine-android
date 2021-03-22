@@ -352,7 +352,46 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
+                    <LinearLayout
+                        android:id="@+id/pcLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding7"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:gravity="left"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+
+                        <TextView
+                            android:id="@+id/providerCouponLabel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:gravity="right"
+                            android:text="Jaldee Coupon "
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.4"
+                            android:gravity="right"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+                    </LinearLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/proCoupon_added"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycle_discount_total"

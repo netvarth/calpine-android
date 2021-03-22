@@ -79,10 +79,10 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     TextView tv_provider, tv_customer, tv_date, tv_gstn, tv_bill;
     EditText mbill_coupon_edit;
     BillModel mBillData;
-    TextView tv_paid, tv_totalamt, tv_jaldeeCouponLabel, gstLabel, tv_refundamount;
-    RecyclerView recycle_item, recycle_discount_total, coupon_added, recycle_display_notes;
+    TextView tv_paid, tv_totalamt, tv_jaldeeCouponLabel, tv_providerCouponLabel, gstLabel, tv_refundamount;
+    RecyclerView recycle_item, recycle_discount_total, coupon_added, proCoupon_added, recycle_display_notes;
     BillServiceAdapter billServiceAdapter;
-    BillCouponAdapter billCouponAdapter;
+    BillCouponAdapter billCouponAdapter,billProCouponAdapter;
     ArrayList<BillModel> serviceArrayList = new ArrayList<>();
     ArrayList<BillModel> itemArrayList = new ArrayList<>();
     ArrayList<BillModel> serviceItemArrayList = new ArrayList<>();
@@ -93,7 +93,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
     Button btn_pay, mbill_applybtn;
     TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax, billLabel, jdnLabel, jdnValue, txtrefund, txtdelivery, tv_deliveryCharge, tv_amount_Saved;
-    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin, jcLayout, jdnLayout, refundLayout, deliveryLayout, llproviderlayout, ll_amount_Saved;
+    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin, jcLayout, pcLayout, jdnLayout, refundLayout, deliveryLayout, llproviderlayout, ll_amount_Saved;
     String sAmountPay;
     String accountID;
     String payStatus, consumer;
@@ -143,9 +143,12 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         btn_pay = findViewById(R.id.btn_pay);
         recycle_item = findViewById(R.id.recycle_item);
         coupon_added = findViewById(R.id.coupon_added);
+        proCoupon_added = findViewById(R.id.proCoupon_added);
         tv_jaldeeCouponLabel = findViewById(R.id.jaldeeCouponLabel);
+        tv_providerCouponLabel = findViewById(R.id.providerCouponLabel);
         recycle_discount_total = findViewById(R.id.recycle_discount_total);
         jcLayout = findViewById(R.id.jcLayout);
+        pcLayout = findViewById(R.id.pcLayout);
         tv_title = findViewById(R.id.toolbartitle);
         tv_billnotes = findViewById(R.id.billnotes);
         tv_notes = findViewById(R.id.notes);
@@ -930,7 +933,25 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         } else {
                             jcLayout.setVisibility(View.GONE);
                         }
-
+                        if (mBillData.getProviderCoupon() != null) {
+                            if (mBillData.getProviderCoupon().size() > 0 && mBillData.getProviderCoupon().size() == 1) {
+                                pcLayout.setVisibility(View.VISIBLE);
+                                tv_providerCouponLabel.setText("Provider Coupon");
+                                tv_providerCouponLabel.setVisibility(View.VISIBLE);
+                            }
+                            if (mBillData.getProviderCoupon().size() > 1) {
+                                pcLayout.setVisibility(View.VISIBLE);
+                                tv_providerCouponLabel.setText("Provider Coupons");
+                                tv_providerCouponLabel.setVisibility(View.VISIBLE);
+                            }
+                            RecyclerView.LayoutManager cLayoutManager = new LinearLayoutManager(mCOntext);
+                            proCoupon_added.setLayoutManager(cLayoutManager);
+                            billProCouponAdapter = new BillCouponAdapter(mBillData.getProviderCoupon());
+                            proCoupon_added.setAdapter(billProCouponAdapter);
+                            billProCouponAdapter.notifyDataSetChanged();
+                        } else {
+                            pcLayout.setVisibility(View.GONE);
+                        }
 
                         if (mBillData.getJdn() != null) {
                             jdnLayout.setVisibility(View.VISIBLE);
@@ -974,8 +995,9 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         discountArrayList.clear();
                         coupanArrayList.clear();
                         discountArrayList = response.body().getDiscount();
-                        coupanArrayList = response.body().getProviderCoupon();
+                        /*coupanArrayList = response.body().getProviderCoupon();
 
+                        if (discountArrayList != null || coupanArrayList != null) {*/
                         if (discountArrayList != null || coupanArrayList != null) {
                             discountArrayList.addAll(coupanArrayList);
 
