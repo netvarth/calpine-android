@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.activities;
 import android.app.Dialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -17,6 +18,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
+import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -126,4 +128,46 @@ public class CouponActivity extends AppCompatActivity {
 
 
     }
+
+//    private void ApiJaldeegetProviderCoupons(String uniqueID) {
+//        ApiInterface apiService =
+//                ApiClient.getClientS3Cloud(CouponActivity.this).create(ApiInterface.class);
+//        Date currentTime = new Date();
+//        final SimpleDateFormat sdf = new SimpleDateFormat(
+//                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+//        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        System.out.println("UTC time: " + sdf.format(currentTime));
+//        Call<ArrayList<ProviderCouponResponse>> call = apiService.getProviderCoupanList(Integer.parseInt(uniqueID), sdf.format(currentTime));
+//        call.enqueue(new Callback<ArrayList<ProviderCouponResponse>>() {
+//            @Override
+//            public void onResponse(Call<ArrayList<ProviderCouponResponse>> call, Response<ArrayList<ProviderCouponResponse>> response) {
+//                try {
+//                    Config.logV("Response---------------------------" + response.body().toString());
+//                    Config.logV("URL-response--------------" + response.raw().request().url().toString().trim());
+//                    Config.logV("Response--code-------------------------" + response.code());
+//                    if (response.code() == 200) {
+//                        providerCouponList.clear();
+//                        providerCouponList = response.body();
+//                        if (providerCouponList.size() > 0) {
+//                            couponCheckin.setVisibility(View.VISIBLE);
+//                        } else {
+//                            couponCheckin.setVisibility(View.GONE);
+//                        }
+//                        Log.i("CouponResponse", providerCouponList.toString());
+//
+//
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ArrayList<ProviderCouponResponse>> call, Throwable t) {
+//                // Log error here since request failed
+//                Config.logV("Fail---------------" + t.toString());
+//
+//            }
+//        });
+//    }
 }
