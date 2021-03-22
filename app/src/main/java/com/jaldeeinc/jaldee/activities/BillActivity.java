@@ -44,6 +44,7 @@ import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
+import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
 import com.jaldeeinc.jaldee.response.RefundDetails;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.payumoney.core.PayUmoneyConfig;
@@ -105,6 +106,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     double total, totalRefund = 0.0;
     ;
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
+    ArrayList<ProviderCouponResponse> providerCouponList = new ArrayList<>();
+
     private IPaymentResponse paymentResponse;
     String encId;
     TextView tv_title;
@@ -310,6 +313,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                 btn_pay.setVisibility(View.VISIBLE);
                 couponCheckin.setVisibility(View.VISIBLE);
                 ApiJaldeegetS3Coupons(uniqueId);
+                ApiJaldeegetProviderCoupons(uniqueId);/////////////////
             }
         }
         ApiBill(ynwUUID);
@@ -1063,6 +1067,47 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
             @Override
             public void onFailure(Call<ArrayList<CoupnResponse>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+
+            }
+        });
+    }
+    private void ApiJaldeegetProviderCoupons(String uniqueID) {
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mActivity).create(ApiInterface.class);
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        Call<ArrayList<ProviderCouponResponse>> call = apiService.getProviderCoupanList(Integer.parseInt(uniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<ArrayList<ProviderCouponResponse>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ProviderCouponResponse>> call, Response<ArrayList<ProviderCouponResponse>> response) {
+                try {
+                    Config.logV("Response---------------------------" + response.body().toString());
+                    Config.logV("URL-response--------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        providerCouponList.clear();
+                        providerCouponList = response.body();
+                        if (providerCouponList.size() > 0) {
+                            couponCheckin.setVisibility(View.VISIBLE);
+                        } else {
+                            couponCheckin.setVisibility(View.GONE);
+                        }
+                        Log.i("CouponResponse", providerCouponList.toString());
+
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ProviderCouponResponse>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
 

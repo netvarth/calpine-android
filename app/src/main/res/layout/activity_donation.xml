@@ -92,6 +92,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ll_amount"
                         android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/dimen_10dp"
                         android:layout_marginStart="@dimen/dimen_10dp"
                         android:layout_marginBottom="@dimen/dimen_5dp"
                         android:gravity="center_horizontal"
@@ -124,8 +125,11 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_marginStart="@dimen/dimen_10dp"
-                        android:layout_marginTop="@dimen/dimen_10dp"
-                        android:layout_marginEnd="@dimen/dimen_10dp">
+                        android:layout_marginTop="@dimen/dimen_30dp"
+                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:paddingLeft="@dimen/dimen_25dp"
+                        android:paddingRight="@dimen/dimen_25dp"
+                        android:background="@drawable/edittext_donation">
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                             android:layout_width="wrap_content"
@@ -144,7 +148,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="3dp"
-                            android:backgroundTint="@color/white"
+                            android:background="@color/transparent"
                             android:gravity="center_vertical"
                             android:hint="0"
                             android:inputType="numberDecimal"
@@ -153,7 +157,10 @@
                             android:textColor="@color/dark_black"
                             android:textColorHint="@color/button_grey"
                             android:textSize="@dimen/dimen_40dp"
-                            android:textStyle="bold">
+                            android:textStyle="bold"
+                            android:paddingTop="@dimen/dimen_0dp"
+                            android:paddingBottom="@dimen/dimen_5dp"
+                            android:textCursorDrawable="@drawable/cursor">
 
                         </EditText>
 

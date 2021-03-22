@@ -28,6 +28,7 @@ import com.jaldeeinc.jaldee.response.OrderResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.PaytmChecksum;
 import com.jaldeeinc.jaldee.response.ProfileModel;
+import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.RatingResponse;
@@ -511,6 +512,9 @@ public interface ApiInterface {
 
     @GET("{consumerID}/coupon.json")
     Call<ArrayList<CoupnResponse>> getCoupanList(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+
+    @GET("{consumerID}/providerCoupon.json")
+    Call<ArrayList<ProviderCouponResponse>> getProviderCoupanList(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
 
     @GET("{consumerID}/jaldeediscount.json")
