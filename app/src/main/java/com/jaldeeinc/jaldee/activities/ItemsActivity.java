@@ -50,6 +50,7 @@ import com.jaldeeinc.jaldee.custom.AutofitTextView;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.SelectedItemsDialog;
@@ -87,6 +88,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ItemsActivity extends AppCompatActivity implements IItemInterface, IDialogInterface, IDeleteImagesInterface, ISaveNotes {
+
+    @BindView(R.id.tv_homeDeliveryRadiuse)
+    CustomTextViewItalicSemiBold tvHomeDeliveryRadiuse;
 
     @BindView(R.id.cv_back)
     CardView cvBack;
@@ -256,6 +260,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                 }
 
                 if (catalogInfo.getHomeDelivery() != null && catalogInfo.getHomeDelivery().isHomeDelivery()) {
+                    tvHomeDeliveryRadiuse.setText("(In "+ catalogInfo.getHomeDelivery().getDeliveryRadius() +"\u00a0km radius)");
                     llHomeDelivery.setVisibility(View.VISIBLE);
                 } else {
                     llHomeDelivery.setVisibility(View.GONE);

@@ -199,16 +199,37 @@
 
                                     </ImageView>
 
-                                    <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
+                                    <RelativeLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
+                                        android:orientation="vertical"
                                         android:layout_marginStart="@dimen/dimen_5dp"
-                                        android:text="Home Delivery"
-                                        android:textColor="@color/location_theme"
-                                        android:textSize="14dp">
+                                        android:layout_gravity="center">
 
-                                    </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
+                                        <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
+                                            android:id="@+id/tv_homeDelivery"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerInParent="true"
+                                            android:layout_centerVertical="true"
+                                            android:layout_gravity="center"
+                                            android:text="Home Delivery"
+                                            android:textColor="@color/location_theme"
+                                            android:textSize="14dp">
+
+                                        </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
+
+                                        <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
+                                            android:id="@+id/tv_homeDeliveryRadiuse"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_below="@id/tv_homeDelivery"
+                                            android:text="(In 5 km radius)"
+                                            android:textColor="@color/location_theme"
+                                            android:textSize="12dp">
+
+                                        </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
+                                    </RelativeLayout>
 
                                 </LinearLayout>
 
@@ -330,8 +351,8 @@
                                 android:id="@+id/rv_images"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:nestedScrollingEnabled="false"
                                 android:layout_marginBottom="@dimen/dimen_10dp"
+                                android:nestedScrollingEnabled="false"
                                 android:scrollbars="horizontal" />
 
 
