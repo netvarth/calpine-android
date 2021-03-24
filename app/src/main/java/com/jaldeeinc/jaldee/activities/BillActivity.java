@@ -110,6 +110,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
     private IPaymentResponse paymentResponse;
     String encId;
+    String bookingStatus;
     TextView tv_title;
     private boolean fromPushNotification = false;
 
@@ -199,6 +200,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             customerId = extras.getInt("customerId");
             uniqueId = extras.getString("uniqueId");
             encId = extras.getString("encId");
+            bookingStatus = extras.getString("bookingStatus");
             fromPushNotification = extras.getBoolean(Constants.PUSH_NOTIFICATION,false);
         }
 
@@ -367,6 +369,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                                 purpose = Constants.PURPOSE_BILLPAYMENT;
                                 uniqueId = apptInfo.getProviderAccount().getUniqueId();
                                 encId = apptInfo.getAppointmentEncId();
+                                bookingStatus = apptInfo.getApptStatus();
 
                                 // update UI with the data from notification
                                 UpdateUI();
@@ -415,7 +418,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             purpose = Constants.PURPOSE_BILLPAYMENT;
                             uniqueId = activeCheckIn.getProviderAccount().getUniqueId();
                             encId = activeCheckIn.getCheckinEncId();
-
+                            bookingStatus = activeCheckIn.getWaitlistStatus();
                             // update UI with the data from notification
                             UpdateUI();
                         }
@@ -460,7 +463,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             purpose = Constants.PURPOSE_BILLPAYMENT;
                             uniqueId = String.valueOf(orderInfo.getProviderAccount().getUniqueId());
                             encId = orderInfo.getOrderNumber();
-
+                            bookingStatus = orderInfo.getOrderStatus();
                             // update UI with the data from notification
                             UpdateUI();
                         }
@@ -794,6 +797,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             tv_grosstotal.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(mBillData.getNetTotal()));
 
                         } else {
+                            tv_gross.setVisibility(View.GONE);
                             tv_grosstotal.setVisibility(View.GONE);
                         }
 
@@ -840,8 +844,35 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             paidlayout.setVisibility(View.GONE);
                         }
 
-
-                        total = mBillData.getNetRate() - mBillData.getTotalAmountPaid() + mBillData.getRefundedAmount();
+                        if(!bookingStatus.equals("Cancelled")){
+                            txttotal.setVisibility(View.VISIBLE);
+                            tv_totalamt.setVisibility(View.VISIBLE);
+                            tv_totalamt.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(Math.abs(mBillData.getAmountDue())));
+                            if(mBillData.getAmountDue() == 0){
+                                btn_pay.setVisibility(View.GONE);
+                                couponCheckin.setVisibility(View.GONE);
+                            }else if(mBillData.getAmountDue() < 0) {
+                                txttotal.setText("Refund Amount");
+                                btn_pay.setVisibility(View.GONE);
+                                couponCheckin.setVisibility(View.GONE);
+                            }else if(mBillData.getAmountDue() > 0){
+                                txttotal.setText("Amount Due");                         //negative amountDue is the refundamound ,there for use getAmountDue() as the refund amount
+                                btn_pay.setVisibility(View.VISIBLE);
+                                //couponCheckin.setVisibility(View.GONE);  // "couponCheckin" visibility VISIBLE setted at ApiJaldeegetProviderCoupons and ApiJaldeegetS3Coupons methods.
+                            }
+                        }else{
+                            tv_totalamt.setVisibility(View.VISIBLE);
+                            txttotal.setVisibility(View.VISIBLE);
+                            tv_totalamt.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(Math.abs(mBillData.getAmountDue())));  ////negative amountDue is the refundamound ,there for use getAmountDue() as the refund amount
+                            if(mBillData.getAmountDue() < 0) {
+                                txttotal.setText("Refund Amount");
+                            }if(mBillData.getAmountDue() > 0) {
+                                txttotal.setText("Amount Due");
+                            }
+                            btn_pay.setVisibility(View.GONE);
+                            couponCheckin.setVisibility(View.GONE);
+                        }
+                        /*total = mBillData.getNetRate() - mBillData.getTotalAmountPaid() + mBillData.getRefundedAmount();//1111111111111
 
                         if (total >= 0) {
                             txttotal.setVisibility(View.VISIBLE);
@@ -868,7 +899,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             //  txttotal.setText("Refund Amount");
                             btn_pay.setVisibility(View.INVISIBLE);
                             couponCheckin.setVisibility(View.INVISIBLE);
-                        }
+                        }*/
 
                         sAmountPay = Config.getAmountinTwoDecimalPoints(total);
 //                        Config.logV("Amount PAy@@@@@@@@@@@@@@@@@@@@@@@@" + sAmountPay);
@@ -882,8 +913,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             refundLayout.setVisibility(View.GONE);
                         }
 
-                        if (total != 0.0 && total > 0) {
-                            if (payStatus.equalsIgnoreCase("FullyPaid") || payStatus.equalsIgnoreCase("FullyRefunded")) {
+                       /* if (total != 0.0 && total > 0) {
+                            if (payStatus.equalsIgnoreCase("FullyPaid") || payStatus.equalsIgnoreCase("FullyRefunded")) {2222222222222
 
 
                                 if (mBillData.getAmountDue() > 0) {
@@ -899,7 +930,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                         } else {
                             btn_pay.setVisibility(View.INVISIBLE);
-                        }
+                        }*/
 
                         if (mBillData.getTaxableTotal() > 0) {
                             taxlayout.setVisibility(View.VISIBLE);
@@ -1031,8 +1062,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         } else {
                             recycle_display_notes.setVisibility(View.GONE);
                         }
-                        if (mBillData.getTotalAmountSaved() > 0) {
-                            if (payStatus.equals("FullyPaid")) {
+                        if (mBillData.getTotalAmountSaved() > 0 && !bookingStatus.equals("Cancelled")) {
+                            if (payStatus.equals("FullyPaid") && mBillData.getAmountDue() == 0) {
                                 ll_amount_Saved.setVisibility(View.VISIBLE);
                                 tv_amount_Saved.setText("You have saved ₹\u00a0" + Config.getAmountinTwoDecimalPoints(mBillData.getTotalAmountSaved()));
                             } else {
@@ -1081,8 +1112,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                     if (response.code() == 200) {
                         s3couponList.clear();
                         s3couponList = response.body();
-                        if (s3couponList.size() > 0 || providerCouponList.size() > 0) {
-                            couponCheckin.setVisibility(View.VISIBLE);
+                        if ((s3couponList.size() > 0 || providerCouponList.size() > 0) && !bookingStatus.equals("Cancelled")) { //bookingStatus.equals("Cancelled") is seted for if cancelled bookings not need to visible the couponCheckin
+                            couponCheckin.setVisibility(View.VISIBLE );
                         } else {
                             couponCheckin.setVisibility(View.GONE);
                         }
@@ -1122,7 +1153,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                     if (response.code() == 200) {
                         providerCouponList.clear();
                         providerCouponList = response.body();
-                        if (s3couponList.size() > 0 || providerCouponList.size() > 0) {
+                        if ((s3couponList.size() > 0 || providerCouponList.size() > 0) && !bookingStatus.equals("Cancelled")) {//bookingStatus.equals("Cancelled") is seted for if cancelled bookings not need to visible the couponCheckin
                             couponCheckin.setVisibility(View.VISIBLE);
                         } else {
                             couponCheckin.setVisibility(View.GONE);

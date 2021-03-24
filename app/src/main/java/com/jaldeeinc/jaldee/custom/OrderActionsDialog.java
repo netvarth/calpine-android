@@ -167,6 +167,7 @@ public class OrderActionsDialog extends Dialog {
                             iBill.putExtra("consumer", orderInfo.getOrderFor().getFirstName() + " " + orderInfo.getOrderFor().getLastName());
                             iBill.putExtra("uniqueId", String.valueOf(orderInfo.getProviderAccount().getUniqueId()));
                             iBill.putExtra("encId", orderInfo.getOrderNumber());
+                            iBill.putExtra("bookingStatus", orderInfo.getOrderStatus());
                             mContext.startActivity(iBill);
                             dismiss();
                         }

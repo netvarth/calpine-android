@@ -269,6 +269,8 @@ public class ActionsDialog extends Dialog {
                             iBill.putExtra("consumer", bookings.getAppointmentInfo().getAppmtFor().get(0).getFirstName() + " " + bookings.getAppointmentInfo().getAppmtFor().get(0).getLastName());
                             iBill.putExtra("uniqueId", bookings.getAppointmentInfo().getProviderAccount().getUniqueId());
                             iBill.putExtra("encId", bookings.getAppointmentInfo().getAppointmentEncId());
+                            iBill.putExtra("bookingStatus", bookings.getAppointmentInfo().getApptStatus());
+
                             v.getContext().startActivity(iBill);
                         }
                     });
@@ -424,6 +426,8 @@ public class ActionsDialog extends Dialog {
                         iBill.putExtra("consumer", bookings.getCheckInInfo().getWaitlistingFor().get(0).getFirstName() + " " + bookings.getCheckInInfo().getWaitlistingFor().get(0).getLastName());
                         iBill.putExtra("uniqueId", bookings.getCheckInInfo().getProviderAccount().getUniqueId());
                         iBill.putExtra("encId", bookings.getCheckInInfo().getCheckinEncId());
+                        iBill.putExtra("bookingStatus", bookings.getCheckInInfo().getWaitlistStatus());
+
                         v.getContext().startActivity(iBill);
 
                     }
@@ -570,6 +574,8 @@ public class ActionsDialog extends Dialog {
                         iBill.putExtra("consumer", bookings.getAppointmentInfo().getAppmtFor().get(0).getFirstName() + " " + bookings.getAppointmentInfo().getAppmtFor().get(0).getLastName());
                         iBill.putExtra("uniqueId", bookings.getAppointmentInfo().getProviderAccount().getUniqueId());
                         iBill.putExtra("encId", bookings.getAppointmentInfo().getAppointmentEncId());
+                        iBill.putExtra("bookingStatus", bookings.getAppointmentInfo().getApptStatus());
+
                         v.getContext().startActivity(iBill);
                     }
                 });
@@ -613,6 +619,8 @@ public class ActionsDialog extends Dialog {
                         iBill.putExtra("consumer", bookings.getCheckInInfo().getWaitlistingFor().get(0).getFirstName() + " " + bookings.getCheckInInfo().getWaitlistingFor().get(0).getLastName());
                         iBill.putExtra("uniqueId", bookings.getCheckInInfo().getProviderAccount().getUniqueId());
                         iBill.putExtra("encId", bookings.getCheckInInfo().getCheckinEncId());
+                        iBill.putExtra("bookingStatus", bookings.getCheckInInfo().getWaitlistStatus());
+
                         v.getContext().startActivity(iBill);
 
                     }
