@@ -1,72 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white"
+    android:id="@+id/ll_coupon"
     android:orientation="vertical">
 
     <androidx.core.widget.NestedScrollView
-        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:fillViewport="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical"
         android:overScrollMode="never">
 
         <LinearLayout
-            android:background="@color/home_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/home_background"
             android:orientation="vertical">
 
 
             <FrameLayout
-                android:background="@color/home_background"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/home_background">
 
                 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/card"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding5"
                     android:layout_marginTop="@dimen/default_padding"
                     android:layout_marginRight="@dimen/padding5"
                     android:layout_marginBottom="@dimen/default_padding"
-                    android:paddingBottom="@dimen/default_padding"
                     android:background="@color/white"
-                    card_view:cardCornerRadius="10dp">
+                    android:paddingBottom="@dimen/default_padding"
+                    app:cardCornerRadius="10dp">
 
                     <LinearLayout
-                        android:padding="5dp"
-                        android:background="@color/white"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@color/white"
                         android:orientation="vertical"
-                       >
+                        android:padding="5dp">
 
-
-                        <TextView
-                            android:textColor="@color/red"
-                            android:id="@+id/couponName"
-                            android:layout_width="wrap_content"
+                        <RelativeLayout
+                            android:id="@+id/rl_cName"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="20dp"
-                            android:text="Name"
-                            android:textSize="17sp"
-                            android:textStyle="bold" />
+                            android:layout_marginStart="@dimen/dimen_15dp"
+                            android:layout_marginTop="@dimen/dimen_15dp">
 
-                        <TextView
+
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                                android:id="@+id/couponName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Coupon Name"
+                                android:textColor="@color/dark_black"
+                                android:textSize="@dimen/dimen_18dp" />
+
+
+                            <LinearLayout
+                                android:id="@+id/ll_signUpCoupon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:background="@drawable/left_curved"
+                                android:backgroundTint="@color/action_color"
+                                android:visibility="visible">
+
+                                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingStart="@dimen/dimen_10dp"
+                                    android:paddingTop="@dimen/dimen_4dp"
+                                    android:paddingEnd="@dimen/dimen_5dp"
+                                    android:paddingBottom="@dimen/dimen_4dp"
+                                    android:text="Signup Coupon"
+                                    android:textColor="@color/dark_blue">
+
+                                </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                            </LinearLayout>
+
+
+                        </RelativeLayout>
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                             android:id="@+id/couponDesc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/couponName"
-                            android:layout_marginLeft="20dp"
+                            android:layout_below="@id/rl_cName"
+                            android:layout_marginLeft="@dimen/dimen_15dp"
+                            android:layout_marginTop="@dimen/dimen_10dp"
                             android:layout_marginRight="20dp"
                             android:layout_marginBottom="5dp"
                             android:text="Description"
+                            android:textColor="@color/title_color"
                             android:textSize="@dimen/txtsize_hint" />
 
 
@@ -79,7 +113,8 @@
                             android:layout_marginTop="5dp"
                             android:layout_marginRight="5dp"
                             android:layout_marginBottom="5dp"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:visibility="gone">
 
 
                             <TextView
@@ -90,105 +125,184 @@
                                 android:textSize="@dimen/txtsize_hint" />
 
                             <TextView
-                                android:textIsSelectable="true"
-                                android:textStyle="bold"
-                                android:textColor="@color/green"
-                                android:id="@+id/couponCode"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Code"
-                                android:textSize="@dimen/txtsize_hint" />
-
+                                android:textColor="@color/green"
+                                android:textIsSelectable="true"
+                                android:textSize="@dimen/txtsize_hint"
+                                android:textStyle="bold" />
 
 
                         </LinearLayout>
 
 
-                    <LinearLayout
-                        android:id="@+id/termlayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/couponTerms"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:orientation="horizontal">
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="T &amp; C : "
-                            android:textSize="@dimen/txtsize_hint" />
-
-                        <TextView
-                            android:id="@+id/couponTerms"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Terms"
-                            android:textSize="@dimen/txtsize_hint" />
-
-                    </LinearLayout>
-
-
                         <LinearLayout
-                            android:id="@+id/discountlayout"
+                            android:id="@+id/termlayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/couponTerms"
-                            android:layout_marginLeft="20dp"
+                            android:layout_marginLeft="@dimen/dimen_15dp"
                             android:layout_marginTop="5dp"
                             android:layout_marginRight="5dp"
                             android:layout_marginBottom="5dp"
                             android:orientation="horizontal">
 
 
-                            <TextView
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewLight
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="T &amp; C : "
+                                android:textSize="@dimen/txtsize_hint"
+                                android:visibility="visible" />
 
-                                android:id="@+id/couponDiscText"
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                                android:id="@+id/couponTerms"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Terms"
+                                android:textColor="@color/title_color"
+                                android:textSize="@dimen/txtsize_hint" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/discountLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/termlayout"
+                            android:layout_marginLeft="@dimen/dimen_15dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewLight
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Discount : "
-                                android:textSize="@dimen/txtsize_hint" />
+                                android:textSize="@dimen/txtsize_hint"
+                                android:visibility="visible" />
 
-                            <TextView
-
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                                 android:id="@+id/couponDisc"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Discount"
+                                android:text=""
+                                android:textColor="@color/title_color"
                                 android:textSize="@dimen/txtsize_hint" />
 
-
                         </LinearLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp">
+
+                            <LinearLayout
+                                android:id="@+id/minBill"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="@dimen/dimen_15dp"
+                                android:layout_marginRight="5dp"
+                                android:orientation="horizontal">
+
+
+                                <com.jaldeeinc.jaldee.custom.CustomTextViewLight
+                                    android:id="@+id/couponDiscText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Min Bill : "
+                                    android:textSize="@dimen/txtsize_hint"
+                                    android:visibility="visible" />
+
+                                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                                    android:id="@+id/tv_minBill"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:textColor="@color/title_color"
+                                    android:textSize="@dimen/txtsize_hint" />
+
+
+                            </LinearLayout>
+
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="150dp"
+                                android:layout_height="@dimen/dimen_35dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="@dimen/dimen_15dp"
+                                android:layout_marginBottom="@dimen/dimen_5dp"
+                                app:cardBackgroundColor="@color/special_background"
+                                app:cardCornerRadius="@dimen/dimen_10dp">
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                                        android:id="@+id/couponCode"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentStart="true"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginStart="@dimen/dimen_10dp"
+                                        android:text="EDSCR"
+                                        android:textColor="@color/dark_blue"
+                                        android:textSize="@dimen/dimen_18dp">
+
+                                    </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+
+                                    <ImageView
+                                        android:id="@+id/iv_copy"
+                                        android:layout_width="@dimen/dimen_20dp"
+                                        android:layout_height="@dimen/dimen_20dp"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginEnd="@dimen/dimen_10dp"
+                                        android:padding="@dimen/dimen_2dp"
+                                        android:src="@drawable/copy"
+                                        android:tint="@color/dark_blue">
+
+                                    </ImageView>
+
+                                </RelativeLayout>
+
+                            </androidx.cardview.widget.CardView>
+
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:id="@+id/validlayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/couponTerms"
-                            android:layout_marginLeft="20dp"
+                            android:layout_marginLeft="@dimen/dimen_15dp"
                             android:layout_marginTop="5dp"
                             android:layout_marginRight="5dp"
                             android:layout_marginBottom="5dp"
                             android:orientation="horizontal">
 
 
-                            <TextView
-
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewLight
                                 android:id="@+id/validitytext"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Valid through : "
-                                android:textSize="@dimen/txtsize_hint" />
+                                android:textSize="@dimen/txtsize_hint"
+                                android:visibility="visible" />
 
-                            <TextView
-
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                                 android:id="@+id/validityvaluetext"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Validity"
+                                android:textColor="@color/title_color"
                                 android:textSize="@dimen/txtsize_hint" />
 
 

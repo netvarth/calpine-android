@@ -11,12 +11,17 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponAdapter;
+import com.jaldeeinc.jaldee.adapter.CouponsAdapter;
+import com.jaldeeinc.jaldee.adapter.ProviderCouponsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
 
@@ -33,10 +38,13 @@ import retrofit2.Response;
 
 public class CouponActivity extends AppCompatActivity {
 
+    RecyclerView rvProviderCoupons;
     List<CoupnResponse> coupanList;
-    ListView coupon_listview;
+    RecyclerView rvCoupons;
     String uniqueid;
-    private CouponAdapter mAdapter;
+    private CouponsAdapter mAdapter;
+    CustomTextViewSemiBold tvError;
+    private ProviderCouponsAdapter providerCouponsAdapter;
     ArrayList<ProviderCouponResponse> providerCouponList = new ArrayList<>();
 
 
@@ -44,13 +52,15 @@ public class CouponActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.couponlist);
-        coupon_listview = findViewById(R.id.coupon_inner_list);
+        rvCoupons = findViewById(R.id.coupon_inner_list);
+        rvProviderCoupons = findViewById(R.id.rv_providerCoupons);
+        tvError = findViewById(R.id.tv_error);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
 
             uniqueid = bundle.getString("uniqueID", "");
             ApiJaldeeCoupan(uniqueid);
-//            ApiJaldeegetProviderCoupons(uniqueid);
+            ApiJaldeegetProviderCoupons(uniqueid);
 
         }
 
@@ -107,8 +117,17 @@ public class CouponActivity extends AppCompatActivity {
 
                     if (response.code() == 200) {
                         coupanList = response.body();
-                        mAdapter = new CouponAdapter(CouponActivity.this, 0, coupanList);
-                        coupon_listview.setAdapter(mAdapter);
+                        if (coupanList != null) {
+                            tvError.setVisibility(View.GONE);
+                            rvCoupons.setLayoutManager(new LinearLayoutManager(CouponActivity.this));
+                            mAdapter = new CouponsAdapter(CouponActivity.this, coupanList);
+                            rvCoupons.setAdapter(mAdapter);
+                        } else {
+
+                            tvError.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        tvError.setVisibility(View.VISIBLE);
                     }
 
                 } catch (Exception e) {
@@ -143,20 +162,27 @@ public class CouponActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ArrayList<ProviderCouponResponse>> call, Response<ArrayList<ProviderCouponResponse>> response) {
                 try {
-                    Config.logV("Response---------------------------" + response.body().toString());
-                    Config.logV("URL-response--------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
+
                     if (response.code() == 200) {
                         providerCouponList.clear();
                         if (response.body() != null) {
                             providerCouponList = response.body();
                             if (providerCouponList.size() > 0) {
-
+                                tvError.setVisibility(View.GONE);
+                                rvProviderCoupons.setLayoutManager(new LinearLayoutManager(CouponActivity.this));
+                                providerCouponsAdapter = new ProviderCouponsAdapter(providerCouponList, CouponActivity.this, uniqueID);
+                                rvProviderCoupons.setAdapter(providerCouponsAdapter);
                             } else {
 
+                                tvError.setVisibility(View.VISIBLE);
                             }
+                        } else {
+
+                            tvError.setVisibility(View.VISIBLE);
                         }
 
+                    } else {
+                        tvError.setVisibility(View.VISIBLE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

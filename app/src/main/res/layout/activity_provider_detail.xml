@@ -43,7 +43,7 @@
                 android:layout_height="35dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/dimen_16dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:cardBackgroundColor="@color/white"
                 app:cardElevation="@dimen/padding3">
 

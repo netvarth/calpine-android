@@ -15,6 +15,53 @@ public class LoginResponse {
     String primaryPhoneNumber;
     String s3Url;
     String isProvider;
+    String checkedInProviders;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    public void setAccStatus(String accStatus) {
+        this.accStatus = accStatus;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setPrimaryPhoneNumber(String primaryPhoneNumber) {
+        this.primaryPhoneNumber = primaryPhoneNumber;
+    }
+
+    public void setS3Url(String s3Url) {
+        this.s3Url = s3Url;
+    }
+
+    public void setIsProvider(String isProvider) {
+        this.isProvider = isProvider;
+    }
+
+    public boolean isFirstCheckIn() {
+        return firstCheckIn;
+    }
+
+    public void setFirstCheckIn(boolean firstCheckIn) {
+        this.firstCheckIn = firstCheckIn;
+    }
+
+    boolean firstCheckIn;
 
     public int getId() {
         return id;
@@ -53,5 +100,11 @@ public class LoginResponse {
     }
 
 
+    public String getCheckedInProviders() {
+        return checkedInProviders;
+    }
 
+    public void setCheckedInProviders(String checkedInProviders) {
+        this.checkedInProviders = checkedInProviders;
+    }
 }

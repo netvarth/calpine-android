@@ -251,7 +251,7 @@
                     android:background="@drawable/difference_background"
                     android:orientation="horizontal"
                     android:paddingBottom="@dimen/dimen_5dp"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <RelativeLayout
                         android:id="@+id/rl_s"
@@ -619,7 +619,7 @@
                     android:layout_weight="0.5"
                     android:background="@color/action_color"
                     android:gravity="center_horizontal"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                         android:id="@+id/tv_text"

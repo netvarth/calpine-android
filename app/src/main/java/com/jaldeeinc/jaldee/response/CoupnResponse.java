@@ -72,4 +72,14 @@ public class CoupnResponse {
 
     boolean firstCheckinOnly;
 
+    public String getMinBillAmount() {
+        return minBillAmount;
+    }
+
+    public void setMinBillAmount(String minBillAmount) {
+        this.minBillAmount = minBillAmount;
+    }
+
+    String minBillAmount;
+
 }

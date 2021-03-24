@@ -7,38 +7,89 @@
     android:background="@color/spinnerbg"
     android:focusableInTouchMode="true">
 
-  <RelativeLayout
-      android:id="@+id/coupon_list"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent">
-
-
-    <LinearLayout
-        android:id="@+id/layout_toolbar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/hometopbar"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical">
-
-      <include
-          android:id="@+id/toolbar"
-          layout="@layout/custom_toolbar" />
-    </LinearLayout>
-
-    <ListView
-        android:layout_below="@id/layout_toolbar"
-        android:id="@+id/coupon_inner_list"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="@dimen/dimen_8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:background="#ffffff"
+    <RelativeLayout
+        android:id="@+id/coupon_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </ListView>
 
-</RelativeLayout>
+        <LinearLayout
+            android:id="@+id/layout_toolbar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/hometopbar"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/custom_toolbar" />
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            android:fitsSystemWindows="false"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:scrollbars="none"
+            android:layout_below="@id/layout_toolbar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/coupon_inner_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="@dimen/dimen_8dp"
+                    android:visibility="visible"
+                    android:nestedScrollingEnabled="true"
+                    android:layout_marginBottom="8dp"
+                    android:background="#ffffff">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_providerCoupons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/white"
+                    android:visibility="visible"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_marginRight="@dimen/dimen_8dp"
+                    android:layout_marginBottom="8dp">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                    android:id="@+id/tv_error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No Coupons at the moment"
+                    android:textColor="@color/title_color"
+                    android:textSize="@dimen/dimen_15dp"
+                    android:layout_marginTop="@dimen/dimen_25dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone">
+
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+
+    </RelativeLayout>
 
 </FrameLayout>

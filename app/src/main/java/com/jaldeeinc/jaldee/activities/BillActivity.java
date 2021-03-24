@@ -1147,9 +1147,6 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             @Override
             public void onResponse(Call<ArrayList<ProviderCouponResponse>> call, Response<ArrayList<ProviderCouponResponse>> response) {
                 try {
-                    Config.logV("Response---------------------------" + response.body().toString());
-                    Config.logV("URL-response--------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         providerCouponList.clear();
                         providerCouponList = response.body();

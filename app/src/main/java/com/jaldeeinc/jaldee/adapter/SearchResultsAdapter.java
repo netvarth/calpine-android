@@ -45,6 +45,7 @@ import com.bumptech.glide.request.target.Target;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.ChatActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.activities.CouponActivity;
 import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
@@ -223,6 +224,18 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 if (searchdetailList.getCoupon_enabled() >= 1) {
                     myViewHolder.ivProviderCoupon.setVisibility(View.VISIBLE);
+
+                    myViewHolder.ivProviderCoupon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            Intent iCoupons = new Intent(context, CouponActivity.class);
+                            iCoupons.putExtra("uniqueID", searchdetailList.getUniqueid());
+                            context.startActivity(iCoupons);
+
+                        }
+                    });
+
                 } else {
                     myViewHolder.ivProviderCoupon.setVisibility(View.GONE);
                 }
@@ -390,9 +403,8 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         myViewHolder.llAction.setVisibility(View.VISIBLE);
                         myViewHolder.tvText.setText("Appointment");
                         myViewHolder.rlStatusBar.setVisibility(View.VISIBLE);
-
                         setServices(myViewHolder, searchdetailList.getAppt_services());
-
+                        handleWaitlist(formattedDate, searchdetailList, myViewHolder);
                         handleAppointment(searchdetailList, myViewHolder, formattedDate);
 
 
@@ -411,11 +423,15 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     } else {
 
                         myViewHolder.rlStatusBar.setVisibility(View.GONE);
+                        myViewHolder.llWaitlist.setVisibility(View.GONE);
+                        myViewHolder.llAppointment.setVisibility(View.GONE);
                         myViewHolder.llAction.setVisibility(View.GONE);
                     }
 
                 } else {
                     myViewHolder.rlStatusBar.setVisibility(View.GONE);
+                    myViewHolder.llWaitlist.setVisibility(View.GONE);
+                    myViewHolder.llAppointment.setVisibility(View.GONE);
                     myViewHolder.llAction.setVisibility(View.GONE);
                 }
 
