@@ -243,6 +243,15 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @BindView(R.id.iv_pintrest)
     ImageView ivPintrest;
 
+    @BindView(R.id.iv_bizyglobe)
+    ImageView ivBizyglobe;
+
+    @BindView(R.id.iv_website)
+    ImageView ivWebsite;
+
+    @BindView(R.id.iv_instagram)
+    ImageView ivInstagram;
+
     @BindView(R.id.tv_socialMedia)
     CustomTextViewMedium tvSocialMedia;
 
@@ -1154,6 +1163,60 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             public void onClick(View v) {
                                 try {
                                     Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mBusinessDataList.getSocialMedia().get(finalI2).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                    if (mBusinessDataList.getSocialMedia().get(i).getResource().equalsIgnoreCase("instagram")) {
+//                        tv_SocialMedia.setVisibility(View.VISIBLE);
+                        ivInstagram.setVisibility(View.VISIBLE);
+                        final int finalI4 = i;
+                        ivInstagram.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mBusinessDataList.getSocialMedia().get(finalI4).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                    if (mBusinessDataList.getSocialMedia().get(i).getResource().equalsIgnoreCase("bizyGlobe")) {
+//                        tv_SocialMedia.setVisibility(View.VISIBLE);
+                        ivBizyglobe.setVisibility(View.VISIBLE);
+                        final int finalI4 = i;
+                        ivBizyglobe.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mBusinessDataList.getSocialMedia().get(finalI4).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                    if (mBusinessDataList.getSocialMedia().get(i).getResource().equalsIgnoreCase("website")) {
+//                        tv_SocialMedia.setVisibility(View.VISIBLE);
+                        ivWebsite.setVisibility(View.VISIBLE);
+                        final int finalI4 = i;
+                        ivWebsite.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mBusinessDataList.getSocialMedia().get(finalI4).getValue()));
                                     startActivity(myIntent);
                                 } catch (ActivityNotFoundException e) {
                                     Toast.makeText(mContext, "No application can handle this request."

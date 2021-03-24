@@ -858,6 +858,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             }else if(mBillData.getAmountDue() > 0){
                                 txttotal.setText("Amount Due");                         //negative amountDue is the refundamound ,there for use getAmountDue() as the refund amount
                                 btn_pay.setVisibility(View.VISIBLE);
+                                sAmountPay = Config.getAmountinTwoDecimalPoints(Math.abs(mBillData.getAmountDue())); //amount to pay
                                 //couponCheckin.setVisibility(View.GONE);  // "couponCheckin" visibility VISIBLE setted at ApiJaldeegetProviderCoupons and ApiJaldeegetS3Coupons methods.
                             }
                         }else{
@@ -901,7 +902,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             couponCheckin.setVisibility(View.INVISIBLE);
                         }*/
 
-                        sAmountPay = Config.getAmountinTwoDecimalPoints(total);
+                        //sAmountPay = Config.getAmountinTwoDecimalPoints(total);
 //                        Config.logV("Amount PAy@@@@@@@@@@@@@@@@@@@@@@@@" + sAmountPay);
 
                         if (mBillData.getRefundedAmount() > 0) {
@@ -1112,7 +1113,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                     if (response.code() == 200) {
                         s3couponList.clear();
                         s3couponList = response.body();
-                        if ((s3couponList.size() > 0 || providerCouponList.size() > 0) && !bookingStatus.equals("Cancelled")) { //bookingStatus.equals("Cancelled") is seted for if cancelled bookings not need to visible the couponCheckin
+                        if ((s3couponList.size() > 0 || providerCouponList.size() > 0) && !bookingStatus.equals("Cancelled") && mBillData.getAmountDue() > 0) { //bookingStatus.equals("Cancelled") is seted for if cancelled bookings not need to visible the couponCheckin
                             couponCheckin.setVisibility(View.VISIBLE );
                         } else {
                             couponCheckin.setVisibility(View.GONE);
@@ -1150,7 +1151,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                     if (response.code() == 200) {
                         providerCouponList.clear();
                         providerCouponList = response.body();
-                        if ((s3couponList.size() > 0 || providerCouponList.size() > 0) && !bookingStatus.equals("Cancelled")) {//bookingStatus.equals("Cancelled") is seted for if cancelled bookings not need to visible the couponCheckin
+                        if ((s3couponList.size() > 0 || providerCouponList.size() > 0) && !bookingStatus.equals("Cancelled") && mBillData.getAmountDue() > 0) {//bookingStatus.equals("Cancelled") is seted for if cancelled bookings not need to visible the couponCheckin
                             couponCheckin.setVisibility(View.VISIBLE);
                         } else {
                             couponCheckin.setVisibility(View.GONE);
