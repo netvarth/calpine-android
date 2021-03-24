@@ -581,6 +581,30 @@
                                     android:src="@drawable/icon_pinterest"
                                     android:visibility="gone" />
 
+                                <ImageView
+                                    android:id="@+id/iv_instagram"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/padding3"
+                                    android:src="@drawable/icon_instagram"
+                                    android:visibility="gone" />
+
+                                <ImageView
+                                    android:id="@+id/iv_bizyglobe"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/padding3"
+                                    android:src="@drawable/icon_bizyglobe"
+                                    android:visibility="gone" />
+
+                                <ImageView
+                                    android:id="@+id/iv_website"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/padding3"
+                                    android:src="@drawable/icon_website"
+                                    android:visibility="gone" />
+
                             </LinearLayout>
 
 
@@ -640,7 +664,6 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
 
 
                     <LinearLayout
@@ -713,8 +736,8 @@
                             android:layout_marginTop="@dimen/dimen_5dp"
                             android:background="@drawable/custom_status"
                             android:backgroundTint="@color/spinnerbg"
-                            android:visibility="gone"
-                            android:elevation="@dimen/dimen_12dp">
+                            android:elevation="@dimen/dimen_12dp"
+                            android:visibility="gone">
 
                             <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                                 android:layout_width="wrap_content"
