@@ -872,16 +872,23 @@ public class CheckInDetails extends AppCompatActivity {
                     }
 
                 } else {
-                    if (!checkInInfo.getPaymentStatus().equalsIgnoreCase("NotPaid")) {
+                    /**26-3-21*/
+                    /**/if (!checkInInfo.getPaymentStatus().equalsIgnoreCase("NotPaid")) {
                         cvBill.setVisibility(View.VISIBLE);
                         if (checkInInfo.getPaymentStatus().equalsIgnoreCase("Refund")) {
                             cvBill.setVisibility(View.GONE);
                         }
                     } else {
                         cvBill.setVisibility(View.GONE);
-                    }
+                    }/**/
+                   // cvBill.setVisibility(View.GONE);
+                    /***/
                 }
-
+                /**26-3-21*/
+                if(checkInInfo.getBillViewStatus().equalsIgnoreCase("NotShow")  || checkInInfo.getBillStatus().equals("Settled") || checkInInfo.getWaitlistStatus().equals("Rejected")){
+                    cvBill.setVisibility(View.GONE);
+                }
+                /***/
                 if (checkInInfo.getParentUuid() != null) {
                     cvBill.setVisibility(View.GONE);
                 }
