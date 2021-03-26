@@ -271,8 +271,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_2dp"
-                    android:background="#55EDEDED"
-                    android:layout_marginTop="@dimen/dimen_5dp">
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:background="#55EDEDED">
 
                 </LinearLayout>
 
@@ -293,9 +293,9 @@
                         android:backgroundTint="@color/special_background"
                         android:hint="Add special instructions"
                         android:inputType="textMultiLine"
+                        android:maxLines="3"
                         android:paddingStart="@dimen/dimen_8dp"
                         android:paddingTop="@dimen/dimen_8dp"
-                        android:maxLines="3"
                         android:paddingBottom="@dimen/dimen_8dp"
                         android:textSize="14dp">
 
@@ -662,33 +662,33 @@
 
                                 </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
-
-                                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                                    android:id="@+id/tv_cCode"
+                                <LinearLayout
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="+91"
-                                    android:textColor="@color/title_color"
-                                    android:textSize="@dimen/dimen_12dp">
+                                    android:layout_height="wrap_content">
 
-                                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                                        android:id="@+id/tv_cCode"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="+91"
+                                        android:textColor="@color/title_color"
+                                        android:textSize="@dimen/dimen_12dp">
+
+                                    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
 
-                                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                                    android:id="@+id/tv_number"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/dimen_4dp"
-                                    android:text=""
-                                    android:textColor="@color/title_color"
-                                    android:textSize="@dimen/dimen_12dp">
+                                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                                        android:id="@+id/tv_number"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="@dimen/dimen_4dp"
+                                        android:text=""
+                                        android:textColor="@color/title_color"
+                                        android:textSize="@dimen/dimen_12dp">
 
-                                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                                    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-                            </LinearLayout>
+                                </LinearLayout>
 
                             </LinearLayout>
 
@@ -764,15 +764,16 @@
                 android:layout_height="@dimen/dimen_50dp"
                 android:layout_margin="@dimen/dimen_10dp"
                 android:background="@color/white"
+                android:orientation="horizontal"
                 android:visibility="gone"
-                android:orientation="horizontal">
+                android:gravity="clip_vertical">
 
                 <ImageView
                     android:layout_width="@dimen/dimen_25dp"
                     android:layout_height="@dimen/dimen_25dp"
-                    android:src="@drawable/discount"
-                    android:layout_marginStart="@dimen/dimen_15dp"
                     android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/dimen_15dp"
+                    android:src="@drawable/discount"
                     app:tint="@color/title_color">
 
                 </ImageView>
@@ -781,14 +782,14 @@
                     android:id="@+id/et_couponCode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="Apply Coupon"
-                    android:textColorHint="@color/title_color"
-                    android:textColor="@color/title_color"
-                    android:maxLines="@integer/int_1"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="55dp"
-                    android:textSize="@dimen/dimen_16dp"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:hint="Apply Coupon"
+                    android:maxLines="@integer/int_1"
+                    android:textColor="@color/title_color"
+                    android:textColorHint="@color/title_color"
+                    android:textSize="@dimen/dimen_16dp">
 
                 </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
 
@@ -796,11 +797,11 @@
                     android:id="@+id/tv_apply"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Apply"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:textColor="@color/dark_blue"
                     android:layout_marginEnd="@dimen/dimen_15dp"
+                    android:text="Apply"
+                    android:textColor="@color/dark_blue"
                     android:textSize="@dimen/dimen_15dp">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
@@ -939,6 +940,35 @@
                         android:layout_marginEnd="@dimen/dimen_8dp"
                         android:background="#EDEDED">
 
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_advanceAmount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_8dp"
+                        android:layout_marginEnd="@dimen/dimen_15dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/icon_info"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:src="@drawable/ic_info_black"
+                            app:tint="@color/error_strip"
+                            android:layout_gravity="center"/>
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                            android:id="@+id/tv_advanceAmount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/padding2"
+                            android:text="An advance of 10.00 required"
+                            android:textColor="@color/error_strip"
+                            android:textSize="10dp">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
                     </LinearLayout>
 
                     <RelativeLayout

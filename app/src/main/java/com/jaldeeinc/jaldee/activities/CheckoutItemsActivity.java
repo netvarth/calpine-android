@@ -255,6 +255,12 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     @BindView(R.id.tv_totalTax)
     CustomTextViewMedium tvTotalTax;
 
+    @BindView(R.id.ll_advanceAmount)
+    LinearLayout llAdvanceAmount;
+
+    @BindView(R.id.tv_advanceAmount)
+    CustomTextViewSemiBold tvAdvanceAmount;
+
     private boolean isStore = true;
     private DatabaseHandler db;
     private String selectedDate;
@@ -1465,6 +1471,10 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         double bill = db.getCartDiscountedPrice();
                         tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(bill)));
                     }
+                }
+                if(catalog.getAdvanceAmount() != null && !catalog.getAdvanceAmount().isEmpty() && Float.parseFloat(catalogs.get(0).getAdvanceAmount()) > 0){
+                    tvAdvanceAmount.setText("An advance of ₹\u00a0"+catalog.getAdvanceAmount()+" required");
+                    llAdvanceAmount.setVisibility(View.VISIBLE);
                 }
             }
 
