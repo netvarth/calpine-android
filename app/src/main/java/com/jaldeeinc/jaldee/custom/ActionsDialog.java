@@ -255,7 +255,7 @@ public class ActionsDialog extends Dialog {
                         }
                     }
                     /**26-3-21*/
-                    if(bookings.getAppointmentInfo().getBillViewStatus().equalsIgnoreCase("NotShow")  || bookings.getAppointmentInfo().getBillStatus().equals("Settled") || bookings.getAppointmentInfo().getApptStatus().equals("Rejected")){
+                    if(bookings.getAppointmentInfo().getBillViewStatus() == null || bookings.getAppointmentInfo().getBillViewStatus().equalsIgnoreCase("NotShow")  || bookings.getAppointmentInfo().getBillStatus().equals("Settled") || bookings.getAppointmentInfo().getApptStatus().equals("Rejected")){
                         ivBillIcon.setVisibility(View.GONE);
                         hideView(llBillDetails);
                     }
@@ -413,7 +413,7 @@ public class ActionsDialog extends Dialog {
                     }
                 }
                 /**26-3-21*/
-                if(bookings.getCheckInInfo().getBillViewStatus().equalsIgnoreCase("NotShow") || bookings.getCheckInInfo().getBillStatus().equals("Settled") || bookings.getCheckInInfo().getWaitlistStatus().equals("Rejected")){
+                if(bookings.getCheckInInfo().getBillViewStatus() == null || bookings.getCheckInInfo().getBillViewStatus().equalsIgnoreCase("NotShow") || bookings.getCheckInInfo().getBillStatus().equals("Settled") || bookings.getCheckInInfo().getWaitlistStatus().equals("Rejected")){
                     ivBillIcon.setVisibility(View.GONE);
                     hideView(llBillDetails);
                 }
@@ -570,7 +570,7 @@ public class ActionsDialog extends Dialog {
                     }
                 }
                 /**26-3-21*/
-                if(bookings.getAppointmentInfo().getBillViewStatus().equalsIgnoreCase("NotShow")  || bookings.getAppointmentInfo().getBillStatus().equals("Settled") || bookings.getAppointmentInfo().getApptStatus().equals("Rejected")){
+                if(bookings.getAppointmentInfo().getBillViewStatus() == null || bookings.getAppointmentInfo().getBillViewStatus().equalsIgnoreCase("NotShow")  || bookings.getAppointmentInfo().getBillStatus().equals("Settled") || bookings.getAppointmentInfo().getApptStatus().equals("Rejected")){
                     ivBillIcon.setVisibility(View.GONE);
                     hideView(llBillDetails);
                 }
@@ -620,7 +620,7 @@ public class ActionsDialog extends Dialog {
                     }
                 }
                 /**26-3-21*/
-                if(bookings.getCheckInInfo().getBillViewStatus().equalsIgnoreCase("NotShow") || bookings.getCheckInInfo().getBillStatus().equals("Settled") || bookings.getCheckInInfo().getWaitlistStatus().equals("Rejected")){
+                if(bookings.getCheckInInfo().getBillViewStatus() == null || bookings.getCheckInInfo().getBillViewStatus().equalsIgnoreCase("NotShow") || bookings.getCheckInInfo().getBillStatus().equals("Settled") || bookings.getCheckInInfo().getWaitlistStatus().equals("Rejected")){
                     ivBillIcon.setVisibility(View.GONE);
                     hideView(llBillDetails);
                 }

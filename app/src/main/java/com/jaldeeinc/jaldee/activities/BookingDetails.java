@@ -831,7 +831,7 @@ public class BookingDetails extends AppCompatActivity {
                     /***/
                 }
                 /**26-3-21*/
-                if(appointmentInfo.getBillViewStatus().equalsIgnoreCase("NotShow")  || appointmentInfo.getBillStatus().equals("Settled") || appointmentInfo.getApptStatus().equals("Rejected")){
+                if(appointmentInfo.getBillViewStatus() == null || appointmentInfo.getBillViewStatus().equalsIgnoreCase("NotShow")  || appointmentInfo.getBillStatus().equals("Settled") || appointmentInfo.getApptStatus().equals("Rejected")){
                     cvBill.setVisibility(View.GONE);
                 }
                 /***/
