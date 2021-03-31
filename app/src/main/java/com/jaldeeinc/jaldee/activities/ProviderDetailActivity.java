@@ -549,9 +549,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             public void onClick(View view) {
                                 // save bitmap to cache directory
                                 try {
-                                    ivShare.setVisibility(View.GONE);
+                                    ivShare.setImageResource(R.drawable.jaldeeblue);
                                     Bitmap bitmap1 = getBitmapFromView(qr_card);
-                                    ivShare.setVisibility(View.VISIBLE);
+                                    ivShare.setImageResource(R.drawable.icon_share);
 
                                     File cachePath = new File(context.getCacheDir(), "images");
                                     cachePath.mkdirs(); // don't forget to make the directory
