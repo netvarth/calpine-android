@@ -821,13 +821,20 @@ public class BookingDetails extends AppCompatActivity {
                     }
 
                 } else {
-                    if (!appointmentInfo.getPaymentStatus().equalsIgnoreCase("NotPaid")) {
+                    /**26-3-21*/
+                    /**/if (!appointmentInfo.getPaymentStatus().equalsIgnoreCase("NotPaid")) {
                         cvBill.setVisibility(View.VISIBLE);
                     } else {
                         cvBill.setVisibility(View.GONE);
-                    }
+                    }/**/
+                    //cvBill.setVisibility(View.GONE);
+                    /***/
                 }
-
+                /**26-3-21*/
+                if(appointmentInfo.getBillViewStatus() == null || appointmentInfo.getBillViewStatus().equalsIgnoreCase("NotShow")  || appointmentInfo.getBillStatus().equals("Settled") || appointmentInfo.getApptStatus().equals("Rejected")){
+                    cvBill.setVisibility(View.GONE);
+                }
+                /***/
 
                 cvBill.setOnClickListener(new View.OnClickListener() {
                     @Override

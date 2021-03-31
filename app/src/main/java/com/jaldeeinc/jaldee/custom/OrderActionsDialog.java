@@ -132,7 +132,7 @@ public class OrderActionsDialog extends Dialog {
                 tvBill.setText("Pay Bill");
             }
 
-           /* if (orderInfo.getBill().getBillViewStatus() != null && !orderInfo.getOrderStatus().equalsIgnoreCase("cancelled")) {
+            if (orderInfo.getBill().getBillViewStatus() != null && !orderInfo.getOrderStatus().equalsIgnoreCase("Cancelled")) {
                 if (orderInfo.getBill().getBillViewStatus().equalsIgnoreCase("Show")) {
                     llBill.setVisibility(View.VISIBLE);
                 } else {
@@ -145,10 +145,12 @@ public class OrderActionsDialog extends Dialog {
                 } else {
                     hideView(llBill);
                 }
-            }*/
-            if(orderInfo.getBill().getBillStatus().equals("Cancel")){
+            }
+            /**26-3-21*/
+            if(orderInfo.getBill().getBillViewStatus() == null || orderInfo.getBill().getBillViewStatus().equalsIgnoreCase("NotShow")  || orderInfo.getBill().getBillStatus().equals("Settled") || orderInfo.getOrderStatus().equals("Rejected") || orderInfo.getOrderStatus().equals("Cancelled")){
                 hideView(llBill);
             }
+            /***/
 
             llBill.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -254,7 +254,12 @@ public class ActionsDialog extends Dialog {
                             hideView(llBillDetails);
                         }
                     }
-
+                    /**26-3-21*/
+                    if(bookings.getAppointmentInfo().getBillViewStatus() == null || bookings.getAppointmentInfo().getBillViewStatus().equalsIgnoreCase("NotShow")  || bookings.getAppointmentInfo().getBillStatus().equals("Settled") || bookings.getAppointmentInfo().getApptStatus().equals("Rejected")){
+                        ivBillIcon.setVisibility(View.GONE);
+                        hideView(llBillDetails);
+                    }
+                    /***/
 
                     ivBillIcon.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -407,7 +412,12 @@ public class ActionsDialog extends Dialog {
                         hideView(llBillDetails);
                     }
                 }
-
+                /**26-3-21*/
+                if(bookings.getCheckInInfo().getBillViewStatus() == null || bookings.getCheckInInfo().getBillViewStatus().equalsIgnoreCase("NotShow") || bookings.getCheckInInfo().getBillStatus().equals("Settled") || bookings.getCheckInInfo().getWaitlistStatus().equals("Rejected")){
+                    ivBillIcon.setVisibility(View.GONE);
+                    hideView(llBillDetails);
+                }
+                /***/
                 if (bookings.getCheckInInfo() != null && bookings.getCheckInInfo().getParentUuid() != null) {
                     hideView(llBillDetails);
                 }
@@ -559,7 +569,12 @@ public class ActionsDialog extends Dialog {
                         hideView(llBillDetails);
                     }
                 }
-
+                /**26-3-21*/
+                if(bookings.getAppointmentInfo().getBillViewStatus() == null || bookings.getAppointmentInfo().getBillViewStatus().equalsIgnoreCase("NotShow")  || bookings.getAppointmentInfo().getBillStatus().equals("Settled") || bookings.getAppointmentInfo().getApptStatus().equals("Rejected")){
+                    ivBillIcon.setVisibility(View.GONE);
+                    hideView(llBillDetails);
+                }
+                /***/
 
                 ivBillIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -604,6 +619,12 @@ public class ActionsDialog extends Dialog {
                         hideView(llBillDetails);
                     }
                 }
+                /**26-3-21*/
+                if(bookings.getCheckInInfo().getBillViewStatus() == null || bookings.getCheckInInfo().getBillViewStatus().equalsIgnoreCase("NotShow") || bookings.getCheckInInfo().getBillStatus().equals("Settled") || bookings.getCheckInInfo().getWaitlistStatus().equals("Rejected")){
+                    ivBillIcon.setVisibility(View.GONE);
+                    hideView(llBillDetails);
+                }
+                /***/
 
 
                 ivBillIcon.setOnClickListener(new View.OnClickListener() {
