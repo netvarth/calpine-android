@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +14,10 @@ import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
@@ -22,10 +27,13 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -42,6 +50,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.jaldeeinc.jaldee.BuildConfig;
 import com.jaldeeinc.jaldee.Interface.ISelectedService;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.R;
@@ -61,6 +72,7 @@ import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.Contents;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
@@ -69,6 +81,7 @@ import com.jaldeeinc.jaldee.custom.EnquiryDialog;
 import com.jaldeeinc.jaldee.custom.IGetSelectedLocation;
 import com.jaldeeinc.jaldee.custom.LocationAmenitiesDialog;
 import com.jaldeeinc.jaldee.custom.LocationsDialog;
+import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.custom.ResizableCustomView;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.response.Catalog;
@@ -95,6 +108,10 @@ import com.jaldeeinc.jaldee.response.ServiceInfo;
 import com.jaldeeinc.jaldee.widgets.CustomDialog;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -264,6 +281,10 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @BindView(R.id.ll_amenities)
     LinearLayout llAmenities;
 
+    @BindView(R.id.cv_qr)
+    CardView cvQr;
+
+
     String claimable;
     private int uniqueId;
     private int providerId;
@@ -414,6 +435,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     String shareBody = Constants.URL + sharingId;
                     sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "ServiceProvider details");
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+
                     startActivity(Intent.createChooser(sharingIntent, "Share via"));
                 }
             }
@@ -464,7 +486,121 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
             }
         });
+        cvQr.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                if (sharingId != null) {
+                    //Encode with a QR Code image
+                    String shareBody = Constants.URL + sharingId;
+                    //Find screen size
+                    WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
+                    Display display = manager.getDefaultDisplay();
+                    Point point = new Point();
+                    display.getSize(point);
+                    int width = point.x;
+                    int height = point.y;
+                    int smallerDimension = width < height ? width : height;
+                    smallerDimension = smallerDimension * 3 / 4;
+                    QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(shareBody,
+                            null,
+                            Contents.Type.TEXT,
+                            BarcodeFormat.QR_CODE.toString(), smallerDimension);
+                    try {
+                        Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
+
+                        Dialog settingsDialog = new Dialog(ProviderDetailActivity.this);
+                        settingsDialog.setContentView(getLayoutInflater().inflate(R.layout.qr_code_view, null));
+                        ImageView ivQR = settingsDialog.findViewById(R.id.iv_Qr);
+                        TextView tvProvidername = settingsDialog.findViewById(R.id.tv_providerName);
+                        tvProvidername.setText(mBusinessDataList.getBusinessName());
+                        TextView tvProviderSpecialization = settingsDialog.findViewById(R.id.tv_provider_specialization);
+                        tvProviderSpecialization.setText(mBusinessDataList.getServiceSubSector().getDisplayName());
+                        RelativeLayout rlClose = settingsDialog.findViewById(R.id.rl_close);
+                        FrameLayout qr_card = settingsDialog.findViewById(R.id.qr_card);
+                        ImageView avatar = settingsDialog.findViewById(R.id.profile_picture);
+                        ImageView ivShare = settingsDialog.findViewById(R.id.iv_share);
+                        //LinearLayout ll_qr = settingsDialog.findViewById(R.id.ll_qr);
+                        //RelativeLayout rl_close = settingsDialog.findViewById(R.id.rl_close);
+
+                        if (mBusinessDataList.getLogo() != null) {
+                            Glide.with(ProviderDetailActivity.this)
+                                    .load(mBusinessDataList.getLogo().getUrl())
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .skipMemoryCache(true)
+                                    .apply(new RequestOptions().error(R.drawable.icon_noimage).circleCrop())
+                                    .listener(new RequestListener<Drawable>() {
+                                        @Override
+                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                            //on load failed
+                                            avatar.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_noimage));
+                                            return false;
+                                        }
+
+                                        @Override
+                                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                            return false;
+                                        }
+                                    })
+                                    .into(avatar);
+                        }
+                        ivShare.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // save bitmap to cache directory
+                                try {
+                                    ivShare.setVisibility(View.GONE);
+                                    Bitmap bitmap1 = getBitmapFromView(qr_card);
+                                    ivShare.setVisibility(View.VISIBLE);
+
+                                    File cachePath = new File(context.getCacheDir(), "images");
+                                    cachePath.mkdirs(); // don't forget to make the directory
+                                    FileOutputStream stream = new FileOutputStream(new File(cachePath, "image.png")); // overwrites this image every time
+                                    bitmap1.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                                    stream.close();
+
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                File imagePath = new File(context.getCacheDir(), "images");
+                                File newFile = new File(imagePath, "image.png");
+                                Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", newFile);
+
+                                if (contentUri != null) {
+
+                                    Intent shareIntent = new Intent();
+                                    shareIntent.setAction(Intent.ACTION_SEND);
+                                    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // temp permission for receiving app to read this file
+                                    shareIntent.setDataAndType(contentUri, getContentResolver().getType(contentUri));
+                                    shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+                                    String shareBody = Constants.URL + sharingId;
+                                    shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "ServiceProvider details");
+                                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                                    startActivity(Intent.createChooser(shareIntent, "share via"));
+
+                                }
+                            }
+                        });
+                        rlClose.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                settingsDialog.dismiss();
+                            }
+                        });
+
+                        ivQR.setImageBitmap(bitmap);
+                        settingsDialog.show();
+
+
+                    } catch (WriterException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
 
         apiVirtualFields(uniqueId);
         ApiSearchViewLocation(uniqueId);
@@ -2916,5 +3052,20 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @Override
     public void getMessage(String valueOf) {
         // do nothing
+    }
+
+    private Bitmap getBitmapFromView(View view) {
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(returnedBitmap);
+        Drawable bgDrawable = view.getBackground();
+        if (bgDrawable != null) {
+            //has background drawable, then draw it on the canvas
+            bgDrawable.draw(canvas);
+        } else {
+            //does not have background drawable, then draw white background on the canvas
+            canvas.drawColor(Color.WHITE);
+        }
+        view.draw(canvas);
+        return returnedBitmap;
     }
 }
