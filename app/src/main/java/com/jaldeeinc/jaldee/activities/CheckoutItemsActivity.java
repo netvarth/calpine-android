@@ -255,6 +255,9 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     @BindView(R.id.tv_totalTax)
     CustomTextViewMedium tvTotalTax;
 
+    @BindView(R.id.cv_coupon)
+    CardView cvCoupon;
+
     private boolean isStore = true;
     private DatabaseHandler db;
     private String selectedDate;
@@ -347,6 +350,17 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
                 getStoreDetails(accountId);
 
+            }
+        });
+
+        cvCoupon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent iCoupons = new Intent(CheckoutItemsActivity.this, CouponActivity.class);
+                iCoupons.putExtra("uniqueID", String.valueOf(uniqueId));
+                iCoupons.putExtra("accountId", String.valueOf(mBusinessDataList.getId()));
+                startActivity(iCoupons);
             }
         });
 
@@ -573,15 +587,15 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                 if (!tvDeliveryAddress.getText().toString().trim().equalsIgnoreCase("")) {  // to check delivery address
                     inputObj.put("homeDelivery", true);
                     JSONObject address = new JSONObject();
-                    address.put("phoneNumber",selectedAddress.getPhoneNumber());
-                    address.put("firstName",selectedAddress.getFirstName());
-                    address.put("lastName",selectedAddress.getLastName());
-                    address.put("email",selectedAddress.getEmail());
-                    address.put("address",selectedAddress.getAddress());
-                    address.put("city",selectedAddress.getCity());
-                    address.put("postalCode",selectedAddress.getPostalCode());
-                    address.put("landMark",selectedAddress.getLandMark());
-                    address.put("countryCode",selectedAddress.getCountryCode());
+                    address.put("phoneNumber", selectedAddress.getPhoneNumber());
+                    address.put("firstName", selectedAddress.getFirstName());
+                    address.put("lastName", selectedAddress.getLastName());
+                    address.put("email", selectedAddress.getEmail());
+                    address.put("address", selectedAddress.getAddress());
+                    address.put("city", selectedAddress.getCity());
+                    address.put("postalCode", selectedAddress.getPostalCode());
+                    address.put("landMark", selectedAddress.getLandMark());
+                    address.put("countryCode", selectedAddress.getCountryCode());
 
                     inputObj.put("homeDeliveryAddress", address);
 
@@ -648,14 +662,17 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             inputObj.put("orderFor", orderFor);
             if (selectedTime != null && !selectedTime.trim().equalsIgnoreCase("")) {
                 if (isStore) {
-                    timeSlot.put("sTime", catalogs.get(0).getPickUp().getPickUpSchedule().getCatLogTimeSlotsList().get(0).getStartTime());
-                    timeSlot.put("eTime", catalogs.get(0).getPickUp().getPickUpSchedule().getCatLogTimeSlotsList().get(0).getEndTime());
-                    inputObj.put("timeSlot", timeSlot);
+                    if (catalogs != null && catalogs.get(0).getNextAvailablePickUpDetails() != null && catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots() != null) {
+                        timeSlot.put("sTime", catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots().get(0).getStartTime());
+                        timeSlot.put("eTime", catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots().get(0).getEndTime());
+                        inputObj.put("timeSlot", timeSlot);
+                    }
                 } else {
-
-                    timeSlot.put("sTime", catalogs.get(0).getHomeDelivery().getDeliverySchedule().getCatLogTimeSlotsList().get(0).getStartTime());
-                    timeSlot.put("eTime", catalogs.get(0).getHomeDelivery().getDeliverySchedule().getCatLogTimeSlotsList().get(0).getEndTime());
-                    inputObj.put("timeSlot", timeSlot);
+                    if (catalogs != null && catalogs.get(0).getNextAvailableDeliveryDetails() != null && catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots() != null) {
+                        timeSlot.put("sTime", catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots().get(0).getStartTime());
+                        timeSlot.put("eTime", catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots().get(0).getEndTime());
+                        inputObj.put("timeSlot", timeSlot);
+                    }
                 }
             } else {
 
@@ -1157,7 +1174,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                 tvTimeSlot.setText(date + ", " + startTime + "-" + endTime);
                                 selectedTime = startTime + "-" + endTime;
                             } else {
-                               // tvTimeSlot.setText(storePickupSchedulesList.get(0).getReason());
+                                // tvTimeSlot.setText(storePickupSchedulesList.get(0).getReason());
                                 tvTimeSlot.setText("No Store pickup");
                             }
                             llDelivery.setVisibility(View.GONE);
@@ -1237,7 +1254,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                     tvTimeSlot.setText(date + ", " + startTime + "-" + endTime);
                                     selectedTime = startTime + "-" + endTime;
                                 } else {
-                                   // tvTimeSlot.setText(homeDeliverySchedulesList.get(0).getReason());
+                                    // tvTimeSlot.setText(homeDeliverySchedulesList.get(0).getReason());
                                     tvTimeSlot.setText("No Home Delivery");
                                 }
                                 llContactDetails.setVisibility(View.GONE);
@@ -1412,7 +1429,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         try {
 
             boolean tax = false;
-            if (db.getTaxAmount() >= 0.0){
+            if (db.getTaxAmount() >= 0.0) {
                 tax = true;
             }
 
@@ -1795,10 +1812,15 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         s3couponList.clear();
                         s3couponList = response.body();
 
-                        if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
-                            rlCoupon.setVisibility(View.VISIBLE);
-                        } else {
-                            rlCoupon.setVisibility(View.GONE);
+                        if (s3couponList != null) {
+
+                            if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
+                                rlCoupon.setVisibility(View.VISIBLE);
+                                cvCoupon.setVisibility(View.VISIBLE);
+                            } else {
+                                rlCoupon.setVisibility(View.GONE);
+                                cvCoupon.setVisibility(View.GONE);
+                            }
                         }
 
                     }
@@ -1818,6 +1840,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             }
         });
     }
+
     private void ApiJaldeegetProviderCoupons(int uniqueID) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(CheckoutItemsActivity.this).create(ApiInterface.class);
@@ -1835,14 +1858,18 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     if (response.code() == 200) {
                         providerCouponList.clear();
                         providerCouponList = response.body();
-                        Log.i("ProviderCouponResponse", providerCouponList.toString());
 
-                        if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
-                            rlCoupon.setVisibility(View.VISIBLE);
-                        } else {
-                            rlCoupon.setVisibility(View.GONE);
+                        if (providerCouponList != null) {
+
+                            if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
+                                rlCoupon.setVisibility(View.VISIBLE);
+                                cvCoupon.setVisibility(View.VISIBLE);
+                            } else {
+                                rlCoupon.setVisibility(View.GONE);
+                                cvCoupon.setVisibility(View.GONE);
+                            }
+
                         }
-
 
                     }
                 } catch (Exception e) {

@@ -624,15 +624,15 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                 if (!tvDeliveryAddress.getText().toString().trim().equalsIgnoreCase("")) {  // to check delivery address
                     inputBody.put("homeDelivery", true);
                     JSONObject address = new JSONObject();
-                    address.put("phoneNumber",selectedAddress.getPhoneNumber());
-                    address.put("firstName",selectedAddress.getFirstName());
-                    address.put("lastName",selectedAddress.getLastName());
-                    address.put("email",selectedAddress.getEmail());
-                    address.put("address",selectedAddress.getAddress());
-                    address.put("city",selectedAddress.getCity());
-                    address.put("postalCode",selectedAddress.getPostalCode());
-                    address.put("landMark",selectedAddress.getLandMark());
-                    address.put("countryCode",selectedAddress.getCountryCode());
+                    address.put("phoneNumber", selectedAddress.getPhoneNumber());
+                    address.put("firstName", selectedAddress.getFirstName());
+                    address.put("lastName", selectedAddress.getLastName());
+                    address.put("email", selectedAddress.getEmail());
+                    address.put("address", selectedAddress.getAddress());
+                    address.put("city", selectedAddress.getCity());
+                    address.put("postalCode", selectedAddress.getPostalCode());
+                    address.put("landMark", selectedAddress.getLandMark());
+                    address.put("countryCode", selectedAddress.getCountryCode());
 
                     inputBody.put("homeDeliveryAddress", address);
                     if (homeDeliveryNumber != null && !homeDeliveryNumber.trim().equalsIgnoreCase("")) {
@@ -662,14 +662,18 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
             JSONObject timeSlot = new JSONObject();
             if (selectedTime != null && !selectedTime.trim().equalsIgnoreCase("")) {
                 if (isStore) {
-                    timeSlot.put("sTime", catalogs.get(0).getPickUp().getPickUpSchedule().getCatLogTimeSlotsList().get(0).getStartTime());
-                    timeSlot.put("eTime", catalogs.get(0).getPickUp().getPickUpSchedule().getCatLogTimeSlotsList().get(0).getEndTime());
-                    inputBody.put("timeSlot", timeSlot);
+                    if (catalogs != null && catalogs.get(0).getNextAvailablePickUpDetails() != null && catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots() != null) {
+                        timeSlot.put("sTime", catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots().get(0).getStartTime());
+                        timeSlot.put("eTime", catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots().get(0).getEndTime());
+                        inputBody.put("timeSlot", timeSlot);
+                    }
                 } else {
 
-                    timeSlot.put("sTime", catalogs.get(0).getHomeDelivery().getDeliverySchedule().getCatLogTimeSlotsList().get(0).getStartTime());
-                    timeSlot.put("eTime", catalogs.get(0).getHomeDelivery().getDeliverySchedule().getCatLogTimeSlotsList().get(0).getEndTime());
-                    inputBody.put("timeSlot", timeSlot);
+                    if (catalogs != null && catalogs.get(0).getNextAvailableDeliveryDetails() != null && catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots() != null) {
+                        timeSlot.put("sTime", catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots().get(0).getStartTime());
+                        timeSlot.put("eTime", catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots().get(0).getEndTime());
+                        inputBody.put("timeSlot", timeSlot);
+                    }
                 }
             } else {
 
@@ -1797,8 +1801,8 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                         providerCouponList = response.body();
                         Log.i("ProviderCouponResponse", providerCouponList.toString());
                         /**
-                        * below code commented because of "coupons not need to apply in order via list"
-                        */
+                         * below code commented because of "coupons not need to apply in order via list"
+                         */
                         /*if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
                             rlCoupon.setVisibility(View.VISIBLE);
                         } else {

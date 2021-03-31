@@ -10,7 +10,6 @@ public class CouponRules implements Serializable {
     private boolean firstCheckinOnly;
     private long startDate;
     private long endDate;
-    private String termsConditions;
 
 
 
@@ -62,11 +61,5 @@ public class CouponRules implements Serializable {
         this.maxDiscountValue = maxDiscountValue;
     }
 
-    public String getTermsConditions() {
-        return termsConditions;
-    }
 
-    public void setTermsConditions(String termsConditions) {
-        this.termsConditions = termsConditions;
-    }
 }

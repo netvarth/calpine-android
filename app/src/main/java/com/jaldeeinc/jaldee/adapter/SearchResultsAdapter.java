@@ -231,6 +231,9 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                             Intent iCoupons = new Intent(context, CouponActivity.class);
                             iCoupons.putExtra("uniqueID", searchdetailList.getUniqueid());
+                            if (searchdetailList.getId()!= null) {
+                                iCoupons.putExtra("accountId", searchdetailList.getId().split("-")[0]);
+                            }
                             context.startActivity(iCoupons);
 
                         }

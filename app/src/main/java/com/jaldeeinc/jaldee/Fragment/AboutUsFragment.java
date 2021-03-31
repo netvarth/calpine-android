@@ -68,10 +68,8 @@ public class AboutUsFragment extends RootFragment {
             }
         });
 
-        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
+
         tv_title.setText("About Us");
-        tv_title.setTypeface(tyface);
 
         collapseabt = (ImageView) row.findViewById(R.id.collapseabt);
         collapseterm = (ImageView) row.findViewById(R.id.collapseterm);

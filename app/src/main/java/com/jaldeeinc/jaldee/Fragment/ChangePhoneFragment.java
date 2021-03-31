@@ -65,9 +65,6 @@ public class ChangePhoneFragment extends RootFragment {
         ApiGetProfileDetail();
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
         txtmobile=(TextView) row.findViewById(R.id.textmobile);
-        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_title.setTypeface(tyface1);
 
         ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
 
@@ -102,7 +99,9 @@ public class ChangePhoneFragment extends RootFragment {
         edtPhone.addTextChangedListener(new MyTextWatcher(edtPhone));
         mDone=(Button)row.findViewById(R.id.btnsubmit) ;
 
-
+        Typeface tfButton = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/JosefinSans-Bold.ttf");
+        mDone.setTypeface(tfButton);
 
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,10 +117,9 @@ public class ChangePhoneFragment extends RootFragment {
 
 
         Typeface tyface_edittext = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-Regular.ttf");
         edtPhone.setTypeface(tyface_edittext);
-
-
+        text_input_phone.setTypeface(tyface_edittext);
 
 
         return row;
@@ -180,7 +178,7 @@ public class ChangePhoneFragment extends RootFragment {
                         String firstWord ="Your Current Mobile # ";
                         String secondWord = countryCode + " " +  mobile;
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                "fonts/Montserrat_Bold.otf");
+                                "fonts/JosefinSans-Bold.ttf");
                         Spannable spannable = new SpannableString(firstWord + secondWord);
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length() , firstWord.length() + secondWord.length() , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         txtmobile.setText(spannable);

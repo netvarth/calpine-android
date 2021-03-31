@@ -78,7 +78,8 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // what do you want here
-                getFragmentManager().popBackStack();
+
+                finish();
             }
         });
 
@@ -101,10 +102,6 @@ public class EditProfileActivity extends AppCompatActivity {
 //        txtlastname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
         mContext = EditProfileActivity.this;
-
-        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_title.setTypeface(tyface);
 
         countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
 

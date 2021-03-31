@@ -74,9 +74,6 @@ public class FamilyListFragment extends RootFragment implements FamilyAdapterCal
 
         tv_title.setText("Members");
 
-        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_title.setTypeface(tyface);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             ValueCheck = bundle.getString("refersh", "");

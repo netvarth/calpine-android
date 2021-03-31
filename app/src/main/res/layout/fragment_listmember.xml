@@ -52,13 +52,14 @@
                     android:layout_margin="@dimen/default_padding"
                     android:orientation="vertical">
 
-                    <TextView
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                         android:id="@+id/txt_add"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
                         android:background="@drawable/input_border_rectblue_bg"
                         android:gravity="center"
+                        android:layout_marginStart="@dimen/dimen_8dp"
                         android:padding="@dimen/padding3"
                         android:text="Add New Member"
                         android:textColor="@color/title_consu"

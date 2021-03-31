@@ -458,7 +458,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             public void onClick(View v) {
 
                 Intent iCoupons = new Intent(v.getContext(), CouponActivity.class);
-                iCoupons.putExtra("uniqueID", uniqueId);
+                iCoupons.putExtra("uniqueID", String.valueOf(uniqueId));
+                iCoupons.putExtra("accountId", String.valueOf(mBusinessDataList.getId()));
                 startActivity(iCoupons);
 
             }

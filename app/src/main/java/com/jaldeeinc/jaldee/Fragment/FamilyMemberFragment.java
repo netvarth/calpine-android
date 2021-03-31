@@ -92,7 +92,7 @@ public class FamilyMemberFragment extends RootFragment {
 
         tv_title.setText("Add Members");
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-Bold.ttf");
 
 
         tv_title.setTypeface(tyface);
@@ -116,20 +116,32 @@ public class FamilyMemberFragment extends RootFragment {
 
         //setupUI(row.findViewById(R.id.LMlayout));
 
+        Typeface tyFaceEdit = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/JosefinSans-Regular.ttf");
         calenderclick = (ImageView) row.findViewById(R.id.calenderclick);
         dob = (EditText) row.findViewById(R.id.edtdob);
+        dob.setTypeface(tyFaceEdit);
+
+
 
         text_input_lastname = (TextInputLayout) row.findViewById(R.id.text_input_lastname);
+        text_input_lastname.setTypeface(tyFaceEdit);
 
         text_input_firstname = (TextInputLayout) row.findViewById(R.id.text_input_firstname);
+        text_input_firstname.setTypeface(tyFaceEdit);
 
 
         edtfirstname = (TextInputEditText) row.findViewById(R.id.edtFirstName1);
+        edtfirstname.setTypeface(tyFaceEdit);
         lastname = (TextInputEditText) row.findViewById(R.id.edtLastName);
+        lastname.setTypeface(tyFaceEdit);
         btn_Save = (Button) row.findViewById(R.id.btn_save);
+        btn_Save.setTypeface(tyface);
         gender = (RadioGroup) row.findViewById(R.id.radiogender);
         rFemale = (RadioButton) row.findViewById(R.id.radioF);
         rMale = (RadioButton) row.findViewById(R.id.radioM);
+        rMale.setTypeface(tyFaceEdit);
+        rFemale.setTypeface(tyFaceEdit);
         edtmobileno = (TextInputEditText) row.findViewById(R.id.edtmobileno);
         gender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override

@@ -270,6 +270,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     @BindView(R.id.tv_vsHint)
     CustomTextViewMedium tvVsHint;
 
+    @BindView(R.id.ll_coupons)
+    LinearLayout llCoupons;
+
     static CustomTextViewMedium txtserviceamount;
 
     static LinearLayout LPrepay;
@@ -981,6 +984,17 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             txtserviceamount.setText(spannable);
         }
+
+        llCoupons.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent iCoupons = new Intent(AppointmentActivity.this, CouponActivity.class);
+                iCoupons.putExtra("uniqueID", String.valueOf(uniqueId));
+                iCoupons.putExtra("accountId", String.valueOf(mBusinessDataList.getId()));
+                startActivity(iCoupons);
+            }
+        });
 
 
     }

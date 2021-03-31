@@ -48,9 +48,7 @@ public class ChangeEmailFragment extends RootFragment {
         mContext = getActivity();
 
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
-        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_title.setTypeface(tyface1);
+
 
         ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
         iBackPress.setOnClickListener(new View.OnClickListener() {

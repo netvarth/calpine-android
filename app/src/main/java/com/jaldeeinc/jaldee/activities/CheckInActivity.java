@@ -259,6 +259,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     @BindView(R.id.tv_vsHint)
     CustomTextViewMedium tvVsHint;
 
+    @BindView(R.id.ll_coupons)
+    LinearLayout llCoupons;
+
     static CustomTextViewMedium txtprepayamount;
     static CustomTextViewMedium txtserviceamount;
 
@@ -347,7 +350,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     String checkEncId;
     private FamilyMemberDialog familyMemberDialog;
     private IFamilyMemberDetails iFamilyMemberDetails;
-    String emailId,prepayAmount = "";
+    String emailId, prepayAmount = "";
     private String countryCode;
 
     @Override
@@ -408,7 +411,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     tvHint.setVisibility(View.GONE); // else condition to show Queue time and date if calculation mode is NoCalc
                     if (isUser) {
                         ApiQueueTimeSlot(locationId, checkInInfo.getId(), userId, checkInInfo.getCheckInServiceAvailability().getAvailableDate());
-                    }else {
+                    } else {
                         ApiQueueTimeSlot(locationId, checkInInfo.getId(), providerId, checkInInfo.getCheckInServiceAvailability().getAvailableDate());
                     }
                 }
@@ -438,7 +441,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                         llVirtualNumber.setVisibility(View.VISIBLE);
 
-                        if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")){
+                        if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
                             tvVsHint.setText("WhatsApp number");
                         } else {
 
@@ -514,10 +517,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             }
 
 
-            if(checkInInfo.getConsumerNoteTitle()!=null && !checkInInfo.getConsumerNoteTitle().equalsIgnoreCase("")){
+            if (checkInInfo.getConsumerNoteTitle() != null && !checkInInfo.getConsumerNoteTitle().equalsIgnoreCase("")) {
                 tvAddNotes.setText(checkInInfo.getConsumerNoteTitle());
-            }
-            else{
+            } else {
                 tvAddNotes.setText("Add Note");
             }
         }
@@ -535,7 +537,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         ApiJaldeegetProviderCoupons(uniqueId);
 
 
-
         // click actions
 
         cvBack.setOnClickListener(new View.OnClickListener() {
@@ -549,7 +550,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         tvEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(tvEmail.getText().toString().equalsIgnoreCase("")) {
+                if (tvEmail.getText().toString().equalsIgnoreCase("")) {
                     familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode);
                     familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -572,7 +573,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 //                int width = (int) (metrics.widthPixels * 1);
 //                emailEditWindow.getWindow().setGravity(Gravity.CENTER);
 //                emailEditWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-           }
+            }
         });
 
         tvNumber.setOnClickListener(new View.OnClickListener() {
@@ -596,11 +597,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             @Override
             public void onClick(View v) {
 
-                familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this,familyMEmID,tvEmail.getText().toString(), phoneNumber,checkInInfo.isPrePayment(),iFamilyMemberDetails,profileDetails,multiplemem,0, countryCode);
+                familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode);
                 familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                 familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 familyMemberDialog.show();
-                DisplayMetrics metrics =CheckInActivity.this.getResources().getDisplayMetrics();
+                DisplayMetrics metrics = CheckInActivity.this.getResources().getDisplayMetrics();
                 int width = (int) (metrics.widthPixels * 1);
                 familyMemberDialog.setCancelable(false);
                 familyMemberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -962,10 +963,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(imagePathList.size()>0){
+                        if (imagePathList.size() > 0) {
                             tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
-                        }
-                        else {
+                        } else {
                             tvAttachFileSize.setText("Attach File");
                         }
                         dialog.dismiss();
@@ -974,7 +974,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             }
         });
 
-        if(checkInInfo.getTotalAmount()!=null && !checkInInfo.getTotalAmount().equalsIgnoreCase("0.0")){
+        if (checkInInfo.getTotalAmount() != null && !checkInInfo.getTotalAmount().equalsIgnoreCase("0.0")) {
             LservicePrepay.setVisibility(View.VISIBLE);
             LserviceAmount.setVisibility(View.VISIBLE);
             Typeface tyface = Typeface.createFromAsset(getAssets(),
@@ -991,6 +991,17 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             txtserviceamount.setText(spannable);
         }
+
+        llCoupons.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent iCoupons = new Intent(CheckInActivity.this, CouponActivity.class);
+                iCoupons.putExtra("uniqueID", String.valueOf(uniqueId));
+                iCoupons.putExtra("accountId", String.valueOf(mBusinessDataList.getId()));
+                startActivity(iCoupons);
+            }
+        });
 
     }
 
@@ -1176,7 +1187,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             tvConsumerName.setText(profileDetails.getUserprofile().getFirstName() + " " + profileDetails.getUserprofile().getLastName());
                             countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
                             phoneNumber = profileDetails.getUserprofile().getPrimaryMobileNo();
-                            tvNumber.setText( countryCode + " " + phoneNumber);
+                            tvNumber.setText(countryCode + " " + phoneNumber);
                             et_countryCode.setText(countryCode);
                             etVirtualNumber.setText(profileDetails.getUserprofile().getPrimaryMobileNo());
 
@@ -1242,7 +1253,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         if (response.body() != null) {
                             isToken = response.body().isShowTokenId();
 
-                            if(!checkInInfo.isPrePayment()) {
+                            if (!checkInInfo.isPrePayment()) {
                                 if (isToken) {
                                     tvButtonName.setText("Confirm Token");
                                     tvTerm.setText("Token for");
@@ -1250,8 +1261,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                     tvButtonName.setText("Confirm CheckIn");
                                     tvTerm.setText("CheckIn for");
                                 }
-                            }
-                            else{
+                            } else {
                                 if (isToken) {
                                     tvButtonName.setText("Proceed to Payment");
                                     tvTerm.setText("Token for");
@@ -1333,6 +1343,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             }
         });
     }
+
     private void ApiJaldeegetProviderCoupons(int uniqueID) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
@@ -1477,18 +1488,17 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         String number = etVirtualNumber.getText().toString();
         uuid = UUID.randomUUID().toString();
         String virtual_code = et_countryCode.getText().toString();
-        String countryVirtualCode ="";
-        if(!virtual_code.equalsIgnoreCase("")) {
+        String countryVirtualCode = "";
+        if (!virtual_code.equalsIgnoreCase("")) {
             countryVirtualCode = virtual_code.substring(1);
-        }
-        else{
+        } else {
             DynamicToast.make(CheckInActivity.this, "Country code needed", AppCompatResources.getDrawable(
                     CheckInActivity.this, R.drawable.ic_info_black),
                     ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
             mDialog.dismiss();
             return;
         }
-        if(!virtual_code.matches("^(\\+)?(\\d{1,3})$")){
+        if (!virtual_code.matches("^(\\+)?(\\d{1,3})$")) {
             DynamicToast.make(CheckInActivity.this, "Please enter valid Country code", AppCompatResources.getDrawable(
                     CheckInActivity.this, R.drawable.ic_info_black),
                     ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
@@ -1530,25 +1540,25 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             if (etVirtualNumber.getText().toString().trim().length() > 9) {
                 if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("whatsApp")) {
                     virtualService.put("WhatsApp", countryVirtualCode + etVirtualNumber.getText());
-                } else if (checkInInfo.getVirtualCallingModes() != null &&  checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                } else if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
                     virtualService.put("GoogleMeet", checkInInfo.getVirtualCallingModes().get(0).getValue());
                 } else if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
                     virtualService.put("Zoom", checkInInfo.getVirtualCallingModes().get(0).getValue());
-                } else if (checkInInfo.getVirtualCallingModes()!= null &&  checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Phone")) {
+                } else if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Phone")) {
                     virtualService.put("Phone", countryVirtualCode + etVirtualNumber.getText());
 
                 }
             } else {
 
                 String modeOfCalling = "";
-                if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("whatsApp")){
+                if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("whatsApp")) {
                     modeOfCalling = "Invalid WhatsApp number";
                 } else {
                     modeOfCalling = "Invalid Contact number";
                 }
                 DynamicToast.make(CheckInActivity.this, modeOfCalling, AppCompatResources.getDrawable(
-                            CheckInActivity.this, R.drawable.ic_info_black),
-                            ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+                        CheckInActivity.this, R.drawable.ic_info_black),
+                        ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                 mDialog.dismiss();
                 return;
             }
@@ -1575,10 +1585,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             if (MultiplefamilyList.size() > 0) {
                 for (int i = 0; i < MultiplefamilyList.size(); i++) {
                     JSONObject waitobj1 = new JSONObject();
-                    if(familyMEmID==MultiplefamilyList.get(i).getId()){
-                        waitobj1.put("id",0);
-                    }
-                    else {
+                    if (familyMEmID == MultiplefamilyList.get(i).getId()) {
+                        waitobj1.put("id", 0);
+                    } else {
                         waitobj1.put("id", MultiplefamilyList.get(i).getId());
                     }
                     waitobj1.put("firstName", MultiplefamilyList.get(i).getFirstName());
@@ -1633,7 +1642,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             String getJsonObj = (String) iteratorObj.next();
                             System.out.println("KEY: " + "------>" + getJsonObj);
                             value = reader.getString(getJsonObj);
-                            if(checkInInfo.isPrePayment()) {
+                            if (checkInInfo.isPrePayment()) {
                                 prepayAmount = reader.getString("_prepaymentAmount");
                             }
                             break;
@@ -1786,11 +1795,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             checkin.putExtra("waitlistPhonenumber", phoneNumber);
                             checkin.putExtra("livetrack", checkInInfo.isLivetrack());
                             if (isUser) {
-                                    checkin.putExtra("accountID", String.valueOf(userId));
-                                } else {
-                                    checkin.putExtra("accountID", String.valueOf(providerId));
-                                }
-                            checkin.putExtra("confId",value);
+                                checkin.putExtra("accountID", String.valueOf(userId));
+                            } else {
+                                checkin.putExtra("accountID", String.valueOf(providerId));
+                            }
+                            checkin.putExtra("confId", value);
                             startActivity(checkin);
                         }
 
@@ -1834,7 +1843,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                 String queueTime = mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime() + "-" + mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime();
                                 tvCheckInDate.setVisibility(View.VISIBLE);
                                 tvCheckInDate.setTextSize(20);
-                                tvCheckInDate.setText(startDate+","+"\n"+ queueTime);
+                                tvCheckInDate.setText(startDate + "," + "\n" + queueTime);
 
                             } else {
 
@@ -1955,38 +1964,16 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                     if (imagePathList.size() > 0) {
                                         ApiCommunicateCheckin(value, String.valueOf(userId), txt_addnote, dialog);
                                     }
-                                    if (!checkInInfo.isLivetrack()) {
-                                        getConfirmationDetails(userId);
-                                    }
+                                    getConfirmationDetails(userId);
 
                                 } else {
                                     if (imagePathList.size() > 0) {
                                         ApiCommunicateCheckin(value, String.valueOf(providerId), txt_addnote, dialog);
                                     }
-//                                    if (!checkInInfo.isLivetrack()) {
-                                        getConfirmationDetails(providerId);
-//                                    }
+                                    getConfirmationDetails(providerId);
 
                                 }
                             }
-
-//                            if (checkInInfo.isLivetrack()) {
-//                                Intent checkinShareLocations = new Intent(mContext, CheckinShareLocation.class);
-//                                checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
-//                                checkinShareLocations.putExtra("uuid", value);
-//                                if (isUser) {
-//                                    checkinShareLocations.putExtra("accountID", String.valueOf(userId));
-//                                } else {
-//                                    checkinShareLocations.putExtra("accountID", String.valueOf(providerId));
-//                                }
-//                                checkinShareLocations.putExtra("title", providerName);
-//                                checkinShareLocations.putExtra("terminology", mSearchTerminology.getWaitlist());
-//                                checkinShareLocations.putExtra("calcMode", calcMode);
-//                                checkinShareLocations.putExtra("queueStartTime", "");
-//                                checkinShareLocations.putExtra("queueEndTime", "");
-//                                checkinShareLocations.putExtra("from", "checkin");
-//                                startActivity(checkinShareLocations);
-//                            }
 
 
                         }
@@ -2012,7 +1999,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         MultiplefamilyList.clear();
         MultiplefamilyList.addAll(familyList);
         recycle_family.setVisibility(View.VISIBLE);
-        if(checkInInfo.getTotalAmount()!=null && !checkInInfo.getTotalAmount().equalsIgnoreCase("0.0")) {
+        if (checkInInfo.getTotalAmount() != null && !checkInInfo.getTotalAmount().equalsIgnoreCase("0.0")) {
             totalServicePay = String.valueOf(Double.parseDouble(checkInInfo.getTotalAmount()) * MultiplefamilyList.size());
             String firstWord = "";
             String thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalServicePay));
@@ -2137,7 +2124,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 String startDate = convertDate(queueDetails.getEffectiveSchedule().getStartDate());
                 String queueTime = queueDetails.getQueueSchedule().getTimeSlots().get(0).getsTime() + "-" + queueDetails.getQueueSchedule().getTimeSlots().get(0).geteTime();
                 tvCheckInDate.setTextSize(20);
-                tvCheckInDate.setText(startDate+","+"\n"+ queueTime);
+                tvCheckInDate.setText(startDate + "," + "\n" + queueTime);
             }
             queueId = id;
             apiDate = selectedDate;
@@ -2509,10 +2496,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         }
                         imagePathList.add(orgFilePath);
 
-                        if(imagePathList.size()>0){
+                        if (imagePathList.size() > 0) {
                             tvErrorMessage.setVisibility(View.GONE);
-                        }
-                        else{
+                        } else {
                             tvErrorMessage.setVisibility(View.VISIBLE);
                         }
 
@@ -2550,10 +2536,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             }
                             imagePathList.add(orgFilePath);
 
-                            if(imagePathList.size()>0){
+                            if (imagePathList.size() > 0) {
                                 tvErrorMessage.setVisibility(View.GONE);
-                            }
-                            else{
+                            } else {
                                 tvErrorMessage.setVisibility(View.VISIBLE);
                             }
                         }
@@ -2581,10 +2566,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     mImageUri = Uri.parse(path);
                     imagePathList.add(mImageUri.toString());
 
-                    if(imagePathList.size()>0){
+                    if (imagePathList.size() > 0) {
                         tvErrorMessage.setVisibility(View.GONE);
-                    }
-                    else{
+                    } else {
                         tvErrorMessage.setVisibility(View.VISIBLE);
                     }
                 }
@@ -2652,13 +2636,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         familyMEmID = consumerId;
         emailId = email;
         countryCode = conCode;
-        tvNumber.setText( countryCode + " " + phoneNumber);
+        tvNumber.setText(countryCode + " " + phoneNumber);
         et_countryCode.setText(countryCode);
 
-        if(!emailId.equalsIgnoreCase("")) {
+        if (!emailId.equalsIgnoreCase("")) {
             tvEmail.setText(emailId);
-        }
-        else{
+        } else {
             tvEmail.setText("");
         }
         tvConsumerName.setText(mFirstName);

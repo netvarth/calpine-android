@@ -51,12 +51,12 @@ public class ProviderCouponsAdapter extends RecyclerView.Adapter<ProviderCoupons
     String startDate;
     String endDate;
     String checkedInProviders;
-    String uniqueId = null;
+    String accountId = null;
 
-    public ProviderCouponsAdapter(ArrayList<ProviderCouponResponse> itemsList, Context context, String uniqueID) {
+    public ProviderCouponsAdapter(ArrayList<ProviderCouponResponse> itemsList, Context context, String accId) {
         this.context = context;
         this.itemsList = itemsList;
-        this.uniqueId = uniqueID;
+        this.accountId = accId;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             dateformats = new SimpleDateFormat("MMM dd, yyyy");
         }
@@ -128,7 +128,7 @@ public class ProviderCouponsAdapter extends RecyclerView.Adapter<ProviderCoupons
             });
 
             if (couponResponse.getCouponRules() != null && couponResponse.getCouponRules().isFirstCheckinOnly()) {
-                if (checkedInProviders != null && checkedInProviders.contains(uniqueId)) {
+                if (checkedInProviders != null && checkedInProviders.contains(accountId)) {
 
                     viewHolder.llCoupon.setVisibility(View.GONE);
                     viewHolder.llSignUpCoupon.setVisibility(View.GONE);
@@ -151,9 +151,9 @@ public class ProviderCouponsAdapter extends RecyclerView.Adapter<ProviderCoupons
 
             }
 
-            if (couponResponse.getCouponRules() != null && couponResponse.getCouponRules().getTermsConditions() != null) {
+            if (couponResponse.getTermsConditions() != null) {
                 viewHolder.llTerms.setVisibility(View.VISIBLE);
-                viewHolder.tvTerms.setText(couponResponse.getCouponRules().getTermsConditions());
+                viewHolder.tvTerms.setText(couponResponse.getTermsConditions());
             } else {
                 viewHolder.llTerms.setVisibility(View.GONE);
             }

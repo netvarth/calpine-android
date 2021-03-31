@@ -14,6 +14,8 @@ public class ProviderCouponResponse  implements Serializable {
     String status;
     String couponCode;
     private CouponRules couponRules;
+    private String termsConditions;
+
 
 
     public long getId() {
@@ -78,5 +80,13 @@ public class ProviderCouponResponse  implements Serializable {
 
     public void setCouponRules(CouponRules couponRules) {
         this.couponRules = couponRules;
+    }
+
+    public String getTermsConditions() {
+        return termsConditions;
+    }
+
+    public void setTermsConditions(String termsConditions) {
+        this.termsConditions = termsConditions;
     }
 }

@@ -62,9 +62,6 @@ public class ChangePasswordFragment extends RootFragment {
         mContext = getActivity();
 
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
-        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_title.setTypeface(tyface1);
 
         ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
         iBackPress.setOnClickListener(new View.OnClickListener() {
@@ -97,8 +94,8 @@ public class ChangePasswordFragment extends RootFragment {
 
 
 
-        Typeface tyface_edittext = Typeface.createFromAsset(getActivity().getAssets(),
-                "fonts/Montserrat_Regular.otf");
+        Typeface tyface_edittext = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/JosefinSans-Regular.ttf");
         edtOldpwd.setTypeface(tyface_edittext);
         edtNewpwd.setTypeface(tyface_edittext);
         edtconfirmpwd.setTypeface(tyface_edittext);
@@ -110,8 +107,10 @@ public class ChangePasswordFragment extends RootFragment {
 
 
 
-
+        Typeface typeface_action = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/JosefinSans-Bold.ttf");
         mDone=(Button)row.findViewById(R.id.btndone) ;
+        mDone.setTypeface(typeface_action);
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -59,14 +59,14 @@ public class LogouFragment  extends RootFragment {
         });
 
         tv_title.setText("Logout");
-        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-
-        tv_title.setTypeface(tyface);
 
 
         mBtnNo=(Button)row.findViewById(R.id.btnno) ;
         mBtnyes=(Button)row.findViewById(R.id.btnyes) ;
+        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/JosefinSans-Bold.ttf");
+        mBtnNo.setTypeface(tyface);
+        mBtnyes.setTypeface(tyface);
         mBtnyes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

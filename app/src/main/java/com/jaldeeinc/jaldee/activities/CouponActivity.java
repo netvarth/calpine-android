@@ -41,7 +41,7 @@ public class CouponActivity extends AppCompatActivity {
     RecyclerView rvProviderCoupons;
     List<CoupnResponse> coupanList;
     RecyclerView rvCoupons;
-    String uniqueid;
+    String uniqueid,accountId;
     private CouponsAdapter mAdapter;
     CustomTextViewSemiBold tvError;
     private ProviderCouponsAdapter providerCouponsAdapter;
@@ -59,9 +59,8 @@ public class CouponActivity extends AppCompatActivity {
         if (bundle != null) {
 
             uniqueid = bundle.getString("uniqueID", "");
+            accountId = bundle.getString("accountId",null);
             ApiJaldeeCoupan(uniqueid);
-            ApiJaldeegetProviderCoupons(uniqueid);
-
         }
 
         ImageView iBackPress = findViewById(R.id.backpress);
@@ -117,16 +116,18 @@ public class CouponActivity extends AppCompatActivity {
 
                     if (response.code() == 200) {
                         coupanList = response.body();
-                        if (coupanList != null) {
+                        if (coupanList != null && coupanList.size() > 0) {
+                            ApiJaldeegetProviderCoupons(uniqueid);
                             tvError.setVisibility(View.GONE);
                             rvCoupons.setLayoutManager(new LinearLayoutManager(CouponActivity.this));
                             mAdapter = new CouponsAdapter(CouponActivity.this, coupanList);
                             rvCoupons.setAdapter(mAdapter);
                         } else {
-
+                            ApiJaldeegetProviderCoupons(uniqueid);
                             tvError.setVisibility(View.VISIBLE);
                         }
                     } else {
+                        ApiJaldeegetProviderCoupons(uniqueid);
                         tvError.setVisibility(View.VISIBLE);
                     }
 
@@ -170,19 +171,14 @@ public class CouponActivity extends AppCompatActivity {
                             if (providerCouponList.size() > 0) {
                                 tvError.setVisibility(View.GONE);
                                 rvProviderCoupons.setLayoutManager(new LinearLayoutManager(CouponActivity.this));
-                                providerCouponsAdapter = new ProviderCouponsAdapter(providerCouponList, CouponActivity.this, uniqueID);
+                                providerCouponsAdapter = new ProviderCouponsAdapter(providerCouponList, CouponActivity.this, accountId);
                                 rvProviderCoupons.setAdapter(providerCouponsAdapter);
                             } else {
-
-                                tvError.setVisibility(View.VISIBLE);
                             }
                         } else {
-
-                            tvError.setVisibility(View.VISIBLE);
                         }
 
                     } else {
-                        tvError.setVisibility(View.VISIBLE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

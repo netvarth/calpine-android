@@ -72,10 +72,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
         ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
         iBackPress.setVisibility(View.GONE);
 
-        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
         tv_title.setText("My Account");
-        tv_title.setTypeface(tyface);
 
         db = new DatabaseHandler(mContext);
         countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
