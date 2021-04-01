@@ -222,7 +222,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     }
                 });
 
-                if (searchdetailList.getCoupon_enabled() >= 1) {
+                if (searchdetailList.getCoupon_enabled() >= 1 || searchdetailList.getFirst_checkin_provider_coupon_count() >=1) {
                     myViewHolder.ivProviderCoupon.setVisibility(View.VISIBLE);
 
                     myViewHolder.ivProviderCoupon.setOnClickListener(new View.OnClickListener() {

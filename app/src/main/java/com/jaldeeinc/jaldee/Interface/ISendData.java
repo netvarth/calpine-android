@@ -6,4 +6,6 @@ public interface ISendData {
     void sendAttachments(Bookings bookings);
 
     void viewAttachments(Bookings bookings);
+
+    void cancel();
 }

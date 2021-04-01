@@ -21,6 +21,7 @@ public class SearchAWsResponse  {
     String hosemergencyservices_location1;
     String name;
     String altemergencyservices_location1;
+    private int first_checkin_provider_coupon_count;
 
     public String getDepartment_code() {
         return department_code;
@@ -624,6 +625,13 @@ public class SearchAWsResponse  {
         this.altemergencyservices_location1 = altemergencyservices_location1;
     }
 
+    public int getFirst_checkin_provider_coupon_count() {
+        return first_checkin_provider_coupon_count;
+    }
+
+    public void setFirst_checkin_provider_coupon_count(int first_checkin_provider_coupon_count) {
+        this.first_checkin_provider_coupon_count = first_checkin_provider_coupon_count;
+    }
 }
 
 

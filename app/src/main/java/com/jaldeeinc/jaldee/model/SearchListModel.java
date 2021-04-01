@@ -27,6 +27,16 @@ public class SearchListModel implements Serializable {
     private String claimable;
     boolean isCheckinAllowed;
 
+    public int getFirst_checkin_provider_coupon_count() {
+        return first_checkin_provider_coupon_count;
+    }
+
+    public void setFirst_checkin_provider_coupon_count(int first_checkin_provider_coupon_count) {
+        this.first_checkin_provider_coupon_count = first_checkin_provider_coupon_count;
+    }
+
+    private int first_checkin_provider_coupon_count;
+
     public boolean isApptEnabled() {
         return apptEnabled;
     }

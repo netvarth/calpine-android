@@ -740,6 +740,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                                 search.setSector(response.body().getHits().getHit().get(i).getFields().getSector());
                                 search.setSub_sector(response.body().getHits().getHit().get(i).getFields().getSub_sector());
                                 search.setOrdersEnabled(response.body().getHits().getHit().get(i).getFields().getOrdersEnabled());
+                                search.setFirst_checkin_provider_coupon_count(response.body().getHits().getHit().get(i).getFields().getFirst_checkin_provider_coupon_count());
                                 if (response.body().getHits().getHit().get(i).getFields().getYnw_verified() != null) {
                                     search.setYnw_verified(response.body().getHits().getHit().get(i).getFields().getYnw_verified());
                                 }
@@ -958,7 +959,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                                 search.setToday_appt(response.body().getHits().getHit().get(i).getFields().getToday_appt());
                                 search.setFuture_appt(response.body().getHits().getHit().get(i).getFields().getFuture_appt());
                                 search.setOrdersEnabled(response.body().getHits().getHit().get(i).getFields().getOrdersEnabled());
-
+                                search.setFirst_checkin_provider_coupon_count(response.body().getHits().getHit().get(i).getFields().getFirst_checkin_provider_coupon_count());
                                 if (response.body().getHits().getHit().get(i).getFields().getYnw_verified() != null) {
                                     search.setYnw_verified(response.body().getHits().getHit().get(i).getFields().getYnw_verified());
 
@@ -1187,6 +1188,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                                     searchList.setSpecialization_displayname(mSearchRespPass.get(i).getSpecialization_displayname());
                                     searchList.setVirtual_service_status(mSearchRespPass.get(i).getVirtual_service_status());
                                     searchList.setOrderEnabled(mSearchRespPass.get(i).getOrdersEnabled());
+                                    searchList.setFirst_checkin_provider_coupon_count(mSearchRespPass.get(i).getFirst_checkin_provider_coupon_count());
                                     String qualify = "";
                                     if (mSearchRespPass.get(i).getQualification() != null) {
                                         for (int l = 0; l < mSearchRespPass.get(i).getQualification().size(); l++) {
@@ -1366,6 +1368,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                                     searchList.setSpecialization_displayname(mSearchRespPass.get(i).getSpecialization_displayname());
                                     searchList.setVirtual_service_status(mSearchRespPass.get(i).getVirtual_service_status());
                                     searchList.setOrderEnabled(mSearchRespPass.get(i).getOrdersEnabled());
+                                    searchList.setFirst_checkin_provider_coupon_count(mSearchRespPass.get(i).getFirst_checkin_provider_coupon_count());
                                     String qualify = "";
                                     if (mSearchRespPass.get(i).getQualification() != null) {
                                         for (int l = 0; l < mSearchRespPass.get(i).getQualification().size(); l++) {

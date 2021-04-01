@@ -956,6 +956,12 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
 
     }
 
+    @Override
+    public void cancel() {
+
+        apiGetAllBookings();
+    }
+
     private void getAppointmentImages(String uid, int id) {
 
         ApiInterface apiService =
