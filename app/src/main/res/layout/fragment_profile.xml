@@ -50,6 +50,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/action_background"
                     android:elevation="@dimen/dimen_15dp"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="@dimen/dimen_10dp">
 
@@ -57,24 +58,26 @@
                         android:layout_width="@dimen/dimen_50dp"
                         android:layout_height="@dimen/dimen_50dp"
                         android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/dimen_15dp"
+                        android:layout_margin="15.0dip"
+                        android:scaleType="fitXY"
                         android:src="@drawable/user_icon">
 
                     </ImageView>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0.0dip"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/dimen_15dp"
+                        android:layout_weight="1.0"
                         android:orientation="vertical">
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                             android:id="@+id/tv_userName"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:letterSpacing="0.03"
                             android:maxLines="1"
+                            android:singleLine="true"
                             android:text="Sravan kumar velnati"
                             android:textColor="@color/dark_black"
                             android:textSize="@dimen/dimen_18dp">
@@ -132,6 +135,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/dimen_5dp"
+                                android:ellipsize="end"
+                                android:singleLine="true"
                                 android:text="sravanworkinfo@gmail.com"
                                 android:textColor="@color/title_color"
                                 android:textSize="@dimen/dimen_15dp">
@@ -142,24 +147,16 @@
 
                     </LinearLayout>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:id="@+id/iv_edit"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/dimen_15dp"
-                        android:layout_marginEnd="@dimen/dimen_15dp">
+                        android:layout_margin="15.0dip"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/icon_edit"
+                        app:tint="@color/dark_blue">
 
-                        <ImageView
-                            android:id="@+id/iv_edit"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_gravity="end"
-                            android:src="@drawable/icon_edit"
-                            app:tint="@color/dark_blue">
-
-                        </ImageView>
-                    </RelativeLayout>
+                    </ImageView>
 
                 </LinearLayout>
 
