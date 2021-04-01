@@ -76,7 +76,6 @@
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:letterSpacing="0.03"
-                            android:maxLines="1"
                             android:singleLine="true"
                             android:text="Sravan kumar velnati"
                             android:textColor="@color/dark_black"
