@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.fragment.app.FragmentTransaction;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.jaldeeinc.jaldee.BuildConfig;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
@@ -45,17 +48,16 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
 
 
     Context mContext;
-    LinearLayout mLprofile,mLchangepwd,mLchangeEmail,mLchangePhone,mLmember,mLogout,mLTerm,mLcontactus,mLshare,mLappfeed;
+    LinearLayout mLprofile, mLchangepwd, mLchangeEmail, mLchangePhone, mLmember, mLogout, mLTerm, mLcontactus, mLshare, mLappfeed, mLEmailId;
     ImageView ivEdit;
     CustomTextViewBold tvUserName;
-    CustomTextViewMedium tvMobileNumber,tvEmailId;
+    CustomTextViewMedium tvMobileNumber, tvEmailId;
     DatabaseHandler db;
-    String countryCode ="";
+    String countryCode = "";
 
     public ProfileFragment() {
         // Required empty public constructor
     }
-
 
 
     @Override
@@ -66,10 +68,10 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
         mContext = getActivity();
         Config.logV("Profile-----------");
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        Home.doubleBackToExitPressedOnce=false;
+        Home.doubleBackToExitPressedOnce = false;
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
 
-        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
         iBackPress.setVisibility(View.GONE);
 
         tv_title.setText("My Account");
@@ -82,23 +84,24 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
         tvUserName = row.findViewById(R.id.tv_userName);
         tvMobileNumber = row.findViewById(R.id.tv_phoneNumber);
         tvEmailId = row.findViewById(R.id.tv_mailId);
-        mLappfeed=(LinearLayout) row.findViewById(R.id.lappfeed);
+        mLEmailId = row.findViewById(R.id.ll_mailId);
+        mLappfeed = (LinearLayout) row.findViewById(R.id.lappfeed);
         mLprofile = (LinearLayout) row.findViewById(R.id.lprofile);
-        mLchangepwd=(LinearLayout)row.findViewById(R.id.lchangepwd);
-        mLchangeEmail=(LinearLayout)row.findViewById(R.id.lchangeemail);
-        mLchangePhone=(LinearLayout)row.findViewById(R.id.lchangeph);
-        mLmember=(LinearLayout)row.findViewById(R.id.lmember);
-        mLogout=(LinearLayout)row.findViewById(R.id.llogout);
-        mLTerm=(LinearLayout)row.findViewById(R.id.lterm);
-        mLcontactus=(LinearLayout)row.findViewById(R.id.lcontactus);
-        mLshare=(LinearLayout)row.findViewById(R.id.lshare);
+        mLchangepwd = (LinearLayout) row.findViewById(R.id.lchangepwd);
+        mLchangeEmail = (LinearLayout) row.findViewById(R.id.lchangeemail);
+        mLchangePhone = (LinearLayout) row.findViewById(R.id.lchangeph);
+        mLmember = (LinearLayout) row.findViewById(R.id.lmember);
+        mLogout = (LinearLayout) row.findViewById(R.id.llogout);
+        mLTerm = (LinearLayout) row.findViewById(R.id.lterm);
+        mLcontactus = (LinearLayout) row.findViewById(R.id.lcontactus);
+        mLshare = (LinearLayout) row.findViewById(R.id.lshare);
 
 
         mLappfeed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto","support@jaldee.com", null));
+                        "mailto", "support@jaldee.com", null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Jaldee Feedback");
                 emailIntent.putExtra(Intent.EXTRA_TEXT, "");
                 try {
@@ -118,10 +121,10 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
                     i.setType("text/plain");
                     i.putExtra(Intent.EXTRA_SUBJECT, mContext.getResources().getString(R.string.app_name));
                     String sAux = "\nLet me recommend you this application\n";
-                    sAux = sAux +  "https://play.google.com/store/apps/details?id=com.jaldeeinc.jaldee\n" + BuildConfig.APPLICATION_ID +"\n\n";
+                    sAux = sAux + "https://play.google.com/store/apps/details?id=com.jaldeeinc.jaldee\n" + BuildConfig.APPLICATION_ID + "\n\n";
                     i.putExtra(Intent.EXTRA_TEXT, sAux);
                     startActivity(Intent.createChooser(i, "choose one"));
-                } catch(Exception e) {
+                } catch (Exception e) {
                     //e.toString();
                 }
             }
@@ -132,7 +135,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
             public void onClick(View v) {
                 ContactusFragment contactFragment = new ContactusFragment();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, contactFragment).commit();
@@ -145,7 +148,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
             public void onClick(View v) {
                 ChangeEmailFragment changeFragment = new ChangeEmailFragment();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, changeFragment).commit();
@@ -157,7 +160,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
             public void onClick(View v) {
                 ChangePhoneFragment changeFragment = new ChangePhoneFragment();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, changeFragment).commit();
@@ -169,7 +172,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
             public void onClick(View v) {
                 ChangePasswordFragment changeFragment = new ChangePasswordFragment();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, changeFragment).commit();
@@ -210,7 +213,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
             public void onClick(View v) {
                 LogouFragment pfFragment = new LogouFragment();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, pfFragment).commit();
 
@@ -223,16 +226,12 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
             public void onClick(View v) {
                 AboutUsFragment contactFragment = new AboutUsFragment();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, contactFragment).commit();
             }
         });
-
-
-
-
 
 
         return row;
@@ -265,7 +264,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
 
         final int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
 
-        final Dialog mDialog = Config.getProgressDialog(mContext,mContext.getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<ProfileModel> call = apiService.getProfileDetail(consumerId);
 
@@ -312,17 +311,22 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
 
     private void showProfileDetail(ProfileModel profile) {
 
-        tvUserName.setText(profile.getFirstName() + " "+ profile.getLastName());
+        tvUserName.setText(profile.getFirstName() + " " + profile.getLastName());
 
-        tvMobileNumber.setText(countryCode+" "+ profile.getPrimaryMobileNo());
+        tvMobileNumber.setText(countryCode + " " + profile.getPrimaryMobileNo());
 
-        tvEmailId.setText(profile.getEmail());
-
+        if (profile.getEmail() != null && !profile.getEmail().isEmpty()) {
+            tvEmailId.setText(profile.getEmail());
+            mLEmailId.setVisibility(View.VISIBLE);
+        } else {
+            mLEmailId.setVisibility(View.GONE);
+        }
     }
 
 
-    List<FamilyArrayModel> MuserProfileList=new ArrayList<>();
+    List<FamilyArrayModel> MuserProfileList = new ArrayList<>();
     FamilyArrayModel MuserProfileMode;
+
     private void ApiAddFamilyMember() {
 
 
@@ -331,7 +335,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
 
         final int consumerId = SharedPreference.getInstance(getActivity()).getIntValue("consumerId", 0);
 
-        String mobno= SharedPreference.getInstance(mContext).getStringValue("mobno","");
+        String mobno = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
@@ -351,14 +355,14 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
 
                     if (response.code() == 200) {
 
-                        Config.logV("Response--Array size-------------------------" +response.body().size());
+                        Config.logV("Response--Array size-------------------------" + response.body().size());
 //                        Config.logV("Response--Array ----Family List---------------------" +new Gson().toJson(response.body()));
 
-                        if(response.body().size()>0){
+                        if (response.body().size() > 0) {
                             MuserProfileList.clear();
-                            for(int i=0;i<response.body().size();i++){
+                            for (int i = 0; i < response.body().size(); i++) {
 
-                                FamilyArrayModel family=new FamilyArrayModel();
+                                FamilyArrayModel family = new FamilyArrayModel();
                                 family.setUser(response.body().get(i).getUser());
                                 family.setUserProfile(response.body().get(i).getUserProfile());
                                 //MuserProfileMode=response.body().get(i).getUserProfile();
@@ -366,20 +370,20 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
                             }
 
 
-                            boolean check=FamilyListFragment.getFamilyList(MuserProfileList,mContext);
-                            if(check){
+                            boolean check = FamilyListFragment.getFamilyList(MuserProfileList, mContext);
+                            if (check) {
 
                                 Bundle bundle = new Bundle();
                                 bundle.putString("refersh", "noupdate");
                                 FamilyListFragment pfFragment = new FamilyListFragment();
                                 pfFragment.setArguments(bundle);
                                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right); // Store the Fragment in stack
+                                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right); // Store the Fragment in stack
                                 transaction.addToBackStack(null);
                                 transaction.replace(R.id.mainlayout, pfFragment).commit();
                             }
 
-                        }else {
+                        } else {
                             Bundle bundle = new Bundle();
                             bundle.putString("familymember", "profile");
 
@@ -387,7 +391,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
                             FamilyMemberFragment pfFragment = new FamilyMemberFragment();
                             pfFragment.setArguments(bundle);
                             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                            transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);// Store the Fragment in stack
+                            transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);// Store the Fragment in stack
                             transaction.addToBackStack(null);
                             transaction.replace(R.id.mainlayout, pfFragment).commit();
                         }
@@ -413,6 +417,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
 
 
     }
+
     @Override
     public void onDestroyView() {
 

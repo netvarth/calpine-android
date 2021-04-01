@@ -8,7 +8,6 @@
     android:orientation="vertical">
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -48,35 +47,36 @@
                 <LinearLayout
                     android:id="@+id/lprofile"
                     android:layout_width="match_parent"
-                    android:layout_height="110dp"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/action_background"
-                    android:elevation="@dimen/dimen_15dp">
+                    android:elevation="@dimen/dimen_15dp"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/dimen_10dp">
 
                     <ImageView
                         android:layout_width="@dimen/dimen_50dp"
                         android:layout_height="@dimen/dimen_50dp"
-                        android:src="@drawable/user_icon"
+                        android:layout_gravity="center"
                         android:layout_marginStart="@dimen/dimen_15dp"
-                        android:layout_gravity="center">
+                        android:src="@drawable/user_icon">
 
                     </ImageView>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginTop="@dimen/dimen_10dp"
-                        android:layout_marginStart="@dimen/dimen_15dp">
+                        android:layout_marginStart="@dimen/dimen_15dp"
+                        android:orientation="vertical">
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                             android:id="@+id/tv_userName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:letterSpacing="0.03"
+                            android:maxLines="1"
                             android:text="Sravan kumar velnati"
                             android:textColor="@color/dark_black"
-                            android:maxLines="1"
-                            android:letterSpacing="0.03"
-                            android:ellipsize="end"
                             android:textSize="@dimen/dimen_18dp">
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
@@ -100,32 +100,24 @@
                                 android:id="@+id/tv_phoneNumber"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="@dimen/dimen_15dp"
-                                android:textColor="@color/title_color"
-                                android:layout_toRightOf="@id/image"
                                 android:layout_marginStart="@dimen/dimen_5dp"
-                                android:text="+91 9491913907">
+                                android:layout_toRightOf="@id/image"
+                                android:text="+91 9491913907"
+                                android:textColor="@color/title_color"
+                                android:textSize="@dimen/dimen_15dp">
 
                             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-                            <ImageView
-                                android:id="@+id/iv_edit"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/icon_edit"
-                                android:layout_marginEnd="@dimen/dimen_15dp"
-                                android:layout_alignParentEnd="true"
-                                app:tint="@color/dark_blue">
-
-                            </ImageView>
 
                         </RelativeLayout>
 
 
                         <LinearLayout
+                            android:id="@+id/ll_mailId"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dimen_8dp">
+                            android:layout_marginTop="@dimen/dimen_8dp"
+                            android:visibility="gone">
 
                             <ImageView
                                 android:layout_width="@dimen/dimen_20dp"
@@ -139,10 +131,10 @@
                                 android:id="@+id/tv_mailId"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="@dimen/dimen_15dp"
-                                android:textColor="@color/title_color"
                                 android:layout_marginStart="@dimen/dimen_5dp"
-                                android:text="sravanworkinfo@gmail.com">
+                                android:text="sravanworkinfo@gmail.com"
+                                android:textColor="@color/title_color"
+                                android:textSize="@dimen/dimen_15dp">
 
                             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -150,16 +142,33 @@
 
                     </LinearLayout>
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="@dimen/dimen_15dp"
+                        android:layout_marginEnd="@dimen/dimen_15dp">
 
+                        <ImageView
+                            android:id="@+id/iv_edit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_gravity="end"
+                            android:src="@drawable/icon_edit"
+                            app:tint="@color/dark_blue">
+
+                        </ImageView>
+                    </RelativeLayout>
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:background="@drawable/rounded_white_bg_rect"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -168,22 +177,22 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:textColor="@color/black"
-                            android:letterSpacing="0.03"
-                            android:textStyle="bold"
-                            android:justificationMode="inter_word"
-                            android:lineSpacingExtra="@dimen/padding3"
-
-                            android:drawablePadding="10dp"
-                            android:drawableLeft="@drawable/icon_updateprofile"
                             android:id="@+id/name"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_weight="1"
+
+                            android:drawableLeft="@drawable/icon_updateprofile"
+                            android:drawablePadding="10dp"
                             android:gravity="left"
+                            android:justificationMode="inter_word"
+                            android:letterSpacing="0.03"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:text="@string/updateprofile"
-                            android:textSize="@dimen/txtsize_hint" />
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/txtsize_hint"
+                            android:textStyle="bold" />
 
                         <ImageView
                             android:layout_width="0dp"
@@ -198,8 +207,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:visibility="gone"
-                    android:background="@color/view_border" />
+                    android:background="@color/view_border"
+                    android:visibility="gone" />
 
 
                 <LinearLayout
@@ -220,30 +229,29 @@
                             android:layout_width="@dimen/dimen_45dp"
                             android:layout_height="@dimen/dimen_45dp"
                             android:layout_marginStart="@dimen/dimen_8dp"
-                            android:src="@drawable/icon_addmember">
-                        </ImageView>
+                            android:src="@drawable/icon_addmember"></ImageView>
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                            android:textColor="@color/black"
-                            android:letterSpacing="0.03"
-                            android:textStyle="bold"
-                            android:justificationMode="inter_word"
-                            android:lineSpacingExtra="@dimen/padding3"
                             android:layout_width="0dp"
-                            android:layout_marginStart="@dimen/dimen_10dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/dimen_10dp"
                             android:layout_weight="1"
                             android:gravity="left"
+                            android:justificationMode="inter_word"
+                            android:letterSpacing="0.03"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:text="@string/member"
-                            android:textSize="@dimen/txtsize_hint" />
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/txtsize_hint"
+                            android:textStyle="bold" />
 
                         <ImageView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_weight="0.1"
                             android:paddingRight="@dimen/padding5"
-                            android:layout_gravity="center"
                             android:src="@drawable/icon_angle_right"
                             app:tint="@color/gray" />
                     </LinearLayout>
@@ -275,32 +283,31 @@
                             android:layout_width="@dimen/dimen_35dp"
                             android:layout_height="@dimen/dimen_45dp"
                             android:layout_marginStart="@dimen/dimen_8dp"
-                            android:src="@drawable/icon_password">
-                        </ImageView>
+                            android:src="@drawable/icon_password"></ImageView>
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                            android:textColor="@color/black"
-                            android:letterSpacing="0.03"
-                            android:textStyle="bold"
-                            android:justificationMode="inter_word"
-                            android:lineSpacingExtra="@dimen/padding3"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_weight="1"
                             android:layout_marginStart="@dimen/dimen_16dp"
+                            android:layout_weight="1"
                             android:gravity="left"
+                            android:justificationMode="inter_word"
+                            android:letterSpacing="0.03"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:text="@string/changepwd"
-                            android:textSize="@dimen/txtsize_hint" />
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/txtsize_hint"
+                            android:textStyle="bold" />
 
                         <ImageView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_weight="0.1"
                             android:paddingRight="@dimen/padding5"
-                            app:tint="@color/gray"
-                            android:layout_gravity="center"
-                            android:src="@drawable/icon_angle_right" />
+                            android:src="@drawable/icon_angle_right"
+                            app:tint="@color/gray" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -315,12 +322,12 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/padding5"
                     android:layout_marginLeft="@dimen/padding5"
                     android:layout_marginRight="@dimen/padding5"
-                    android:visibility="gone"
+                    android:layout_marginBottom="@dimen/padding5"
                     android:background="@drawable/rounded_white_bg_rect"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:id="@+id/lchangeemail"
@@ -366,30 +373,29 @@
                             android:layout_width="@dimen/dimen_35dp"
                             android:layout_height="@dimen/dimen_45dp"
                             android:layout_marginStart="@dimen/dimen_8dp"
-                            android:src="@drawable/icon_change_number">
-                        </ImageView>
+                            android:src="@drawable/icon_change_number"></ImageView>
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                            android:textColor="@color/black"
-                            android:letterSpacing="0.03"
-                            android:textStyle="bold"
-                            android:justificationMode="inter_word"
-                            android:lineSpacingExtra="@dimen/padding3"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/dimen_16dp"
                             android:layout_weight="1"
                             android:gravity="left"
-                            android:layout_marginStart="@dimen/dimen_16dp"
+                            android:justificationMode="inter_word"
+                            android:letterSpacing="0.03"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:text="@string/changePh"
-                            android:textSize="@dimen/txtsize_hint" />
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/txtsize_hint"
+                            android:textStyle="bold" />
 
                         <ImageView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_weight="0.1"
                             android:paddingRight="@dimen/padding5"
-                            android:layout_gravity="center"
                             android:src="@drawable/icon_angle_right"
                             app:tint="@color/gray" />
                     </LinearLayout>
@@ -420,31 +426,30 @@
                             android:layout_width="@dimen/dimen_35dp"
                             android:layout_height="@dimen/dimen_45dp"
                             android:layout_marginStart="@dimen/dimen_8dp"
-                            android:src="@drawable/ynw_logo">
-                        </ImageView>
+                            android:src="@drawable/ynw_logo"></ImageView>
 
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                            android:textColor="@color/black"
-                            android:letterSpacing="0.03"
-                            android:textStyle="bold"
-                            android:justificationMode="inter_word"
-                            android:lineSpacingExtra="@dimen/padding3"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/dimen_16dp"
                             android:layout_weight="1"
                             android:gravity="left"
-                            android:layout_marginStart="@dimen/dimen_16dp"
+                            android:justificationMode="inter_word"
+                            android:letterSpacing="0.03"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:text="@string/aboutus"
-                            android:textSize="@dimen/txtsize_hint" />
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/txtsize_hint"
+                            android:textStyle="bold" />
 
                         <ImageView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_weight="0.1"
                             android:paddingRight="@dimen/padding5"
-                            android:layout_gravity="center"
                             android:src="@drawable/icon_angle_right"
                             app:tint="@color/gray" />
                     </LinearLayout>
@@ -475,33 +480,32 @@
                             android:layout_width="@dimen/dimen_35dp"
                             android:layout_height="@dimen/dimen_45dp"
                             android:layout_marginStart="@dimen/dimen_8dp"
-                            android:src="@drawable/icon_contactus">
-                        </ImageView>
+                            android:src="@drawable/icon_contactus"></ImageView>
 
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                            android:textColor="@color/black"
-                            android:letterSpacing="0.03"
-                            android:textStyle="bold"
-                            android:justificationMode="inter_word"
-                            android:lineSpacingExtra="@dimen/padding3"
-                            android:layout_marginStart="@dimen/dimen_16dp"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/dimen_16dp"
                             android:layout_weight="1"
                             android:gravity="left"
+                            android:justificationMode="inter_word"
+                            android:letterSpacing="0.03"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:text="@string/contactus"
-                            android:textSize="@dimen/txtsize_hint" />
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/txtsize_hint"
+                            android:textStyle="bold" />
 
                         <ImageView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_weight="0.1"
                             android:paddingRight="@dimen/padding5"
-                            app:tint="@color/gray"
-                            android:layout_gravity="center"
-                            android:src="@drawable/icon_angle_right" />
+                            android:src="@drawable/icon_angle_right"
+                            app:tint="@color/gray" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -530,31 +534,30 @@
                         <ImageView
                             android:layout_width="@dimen/dimen_45dp"
                             android:layout_height="@dimen/dimen_45dp"
-                            android:src="@drawable/icon_feedback"
-                            android:layout_marginStart="1dp">
-                        </ImageView>
+                            android:layout_marginStart="1dp"
+                            android:src="@drawable/icon_feedback"></ImageView>
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                            android:textColor="@color/black"
-                            android:letterSpacing="0.03"
-                            android:textStyle="bold"
-                            android:justificationMode="inter_word"
-                            android:lineSpacingExtra="@dimen/padding3"
-                            android:layout_marginStart="@dimen/dimen_16dp"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/dimen_16dp"
                             android:layout_weight="1"
                             android:gravity="left"
+                            android:justificationMode="inter_word"
+                            android:letterSpacing="0.03"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:text="@string/sendappfeed"
-                            android:textSize="@dimen/txtsize_hint" />
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/txtsize_hint"
+                            android:textStyle="bold" />
 
                         <ImageView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_weight="0.1"
                             android:paddingRight="@dimen/padding5"
-                            android:layout_gravity="center"
                             android:src="@drawable/icon_angle_right"
                             app:tint="@color/gray" />
                     </LinearLayout>
@@ -585,32 +588,31 @@
                             android:layout_width="@dimen/dimen_35dp"
                             android:layout_height="@dimen/dimen_45dp"
                             android:layout_marginStart="@dimen/dimen_8dp"
-                            android:src="@drawable/icon_share">
-                        </ImageView>
+                            android:src="@drawable/icon_share"></ImageView>
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                            android:textColor="@color/black"
-                            android:letterSpacing="0.03"
-                            android:textStyle="bold"
-                            android:justificationMode="inter_word"
-                            android:lineSpacingExtra="@dimen/padding3"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_weight="1"
                             android:layout_marginStart="@dimen/dimen_16dp"
+                            android:layout_weight="1"
                             android:gravity="left"
+                            android:justificationMode="inter_word"
+                            android:letterSpacing="0.03"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:text="@string/shareynw"
-                            android:textSize="@dimen/txtsize_hint" />
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/txtsize_hint"
+                            android:textStyle="bold" />
 
                         <ImageView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_weight="0.1"
                             android:paddingRight="@dimen/padding5"
-                            app:tint="@color/gray"
-                            android:layout_gravity="center"
-                            android:src="@drawable/icon_angle_right" />
+                            android:src="@drawable/icon_angle_right"
+                            app:tint="@color/gray" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -639,32 +641,31 @@
                             android:layout_width="@dimen/dimen_35dp"
                             android:layout_height="@dimen/dimen_45dp"
                             android:layout_marginStart="@dimen/dimen_8dp"
-                            android:src="@drawable/icon_logout">
-                        </ImageView>
+                            android:src="@drawable/icon_logout"></ImageView>
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                            android:textColor="@color/black"
-                            android:letterSpacing="0.03"
-                            android:textStyle="bold"
-                            android:justificationMode="inter_word"
-                            android:lineSpacingExtra="@dimen/padding3"
                             android:layout_width="0dp"
-                            android:layout_marginStart="@dimen/dimen_16dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/dimen_16dp"
                             android:layout_weight="1"
                             android:gravity="left"
+                            android:justificationMode="inter_word"
+                            android:letterSpacing="0.03"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:text="@string/logout"
-                            android:textSize="@dimen/txtsize_hint" />
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/txtsize_hint"
+                            android:textStyle="bold" />
 
                         <ImageView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_weight="0.1"
                             android:paddingRight="@dimen/padding5"
-                            app:tint="@color/gray"
-                            android:layout_gravity="center"
-                            android:src="@drawable/icon_angle_right" />
+                            android:src="@drawable/icon_angle_right"
+                            app:tint="@color/gray" />
                     </LinearLayout>
 
                 </LinearLayout>
