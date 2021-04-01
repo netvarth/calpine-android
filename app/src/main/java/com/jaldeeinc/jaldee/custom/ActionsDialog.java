@@ -1150,6 +1150,7 @@ public class ActionsDialog extends Dialog {
 
                             dialog.dismiss();
                             dismiss();
+                            iSendData.cancel();
 
                         }
                     } else {
