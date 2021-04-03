@@ -37,6 +37,9 @@ import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -102,7 +105,11 @@ public class CheckInConfirmation extends AppCompatActivity {
         if (value != null && providerId != null) {
             getConfirmationDetails(Integer.parseInt(providerId));
         } else {
-            UpdateMainUI();
+            try {
+                UpdateMainUI();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
 
@@ -142,7 +149,7 @@ public class CheckInConfirmation extends AppCompatActivity {
     }
 
 
-    public void UpdateMainUI() {
+    public void UpdateMainUI() throws ParseException {
         if (from != null && activeCheckInInfo != null) {
             if (from.equalsIgnoreCase("Reschedule")) {
                 if (activeCheckInInfo.getShowToken() != null && activeCheckInInfo.getShowToken().equalsIgnoreCase("true")) {
@@ -375,7 +382,9 @@ public class CheckInConfirmation extends AppCompatActivity {
                 }
             }
 
-
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date checkinDate = sdf.parse(activeCheckInInfo.getDate());
+            Date today = sdf.parse(LocalDateTime.now().toString());
             // to set waitTime or token No with waitTime
             if (activeCheckInInfo.getShowToken() != null && activeCheckInInfo.getShowToken().equalsIgnoreCase("true")) {
 
@@ -384,8 +393,8 @@ public class CheckInConfirmation extends AppCompatActivity {
                     tvTime.setText(String.valueOf(activeCheckInInfo.getToken()));
                     tvTime.setGravity(Gravity.CENTER_HORIZONTAL);
                     tvTokenWaitTime.setVisibility(View.VISIBLE);
-                    if (activeCheckInInfo.getAppxWaitingTime() == 1) {
-                        tvTokenWaitTime.setText("Est wait time : " + Config.getTimeinHourMinutes(activeCheckInInfo.getAppxWaitingTime()));
+                    if (checkinDate.after(today)) {  //future upcomming checkin/token service time
+                        tvTokenWaitTime.setText("Starts at : " + (activeCheckInInfo.getServiceTime()));
 
                     } else {
                         tvTokenWaitTime.setText("Est wait time : " + Config.getTimeinHourMinutes(activeCheckInInfo.getAppxWaitingTime()));
@@ -398,8 +407,13 @@ public class CheckInConfirmation extends AppCompatActivity {
                     tvTokenWaitTime.setVisibility(View.GONE);
                 }
             } else {
-                tvHint.setText("Est wait time");
-                tvTime.setText(Config.getTimeinHourMinutes(activeCheckInInfo.getAppxWaitingTime()));
+                if (checkinDate.after(today)) {    //future upcomming checkin/token service time
+                    tvHint.setText("Starts at");
+                    tvTime.setText(activeCheckInInfo.getServiceTime());
+                } else {
+                    tvHint.setText("Est wait time");
+                    tvTime.setText(Config.getTimeinHourMinutes(activeCheckInInfo.getAppxWaitingTime()));
+                }
             }
 
 

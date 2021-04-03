@@ -67,6 +67,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -710,7 +711,9 @@ public class CheckInDetails extends AppCompatActivity {
                     tvQueueTime.setText(time);
 
                 }
-
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date checkinDate = sdf.parse(checkInInfo.getDate());
+                Date today = sdf.parse(LocalDateTime.now().toString());
                 // to set waitTime or token No with waitTime
                 if (checkInInfo.getShowToken() != null && checkInInfo.getShowToken().equalsIgnoreCase("true")) {
                     tvTitle.setText("Token Details");
@@ -722,8 +725,8 @@ public class CheckInDetails extends AppCompatActivity {
                         tvTime.setGravity(Gravity.CENTER_HORIZONTAL);
                         if (!checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("done") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("started")) {
                             tvTokenWaitTime.setVisibility(View.VISIBLE);
-                            if (checkInInfo.getAppxWaitingTime() == 1) {
-                                tvTokenWaitTime.setText("Est wait time : " + Config.getTimeinHourMinutes(checkInInfo.getAppxWaitingTime()));
+                            if (checkinDate.after(today)) {   //future upcomming checkin/token service time
+                                tvTokenWaitTime.setText("Starts at : " + (checkInInfo.getServiceTime()));
 
                             } else {
                                 tvTokenWaitTime.setText("Est wait time : " + Config.getTimeinHourMinutes(checkInInfo.getAppxWaitingTime()));
@@ -741,7 +744,13 @@ public class CheckInDetails extends AppCompatActivity {
                 } else {
                     tvTitle.setText("CheckIn Details");
                     isToken = false;
-                    tvHint.setText("Est wait time");
+                    if (checkinDate.after(today)) {    //future upcomming checkin/token service time
+                        tvHint.setText("Starts at");
+                        tvTime.setText(checkInInfo.getServiceTime());
+                    } else {
+                        tvHint.setText("Est wait time");
+                        tvTime.setText(Config.getTimeinHourMinutes(checkInInfo.getAppxWaitingTime()));
+                    }
                     if (!checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("done") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("started")) {
                         tvTime.setVisibility(View.VISIBLE);
                         tvHint.setVisibility(View.VISIBLE);
@@ -749,7 +758,6 @@ public class CheckInDetails extends AppCompatActivity {
                         tvTime.setVisibility(View.GONE);
                         tvHint.setVisibility(View.GONE);
                     }
-                    tvTime.setText(Config.getTimeinHourMinutes(checkInInfo.getAppxWaitingTime()));
                 }
 
 
