@@ -461,13 +461,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     intent.putExtra("accountId", mBusinessDataList.getId());
                     intent.putExtra("name", mBusinessDataList.getBusinessName());
                     startActivity(intent);
-//                    enquiryDialog = new EnquiryDialog(mContext, mBusinessDataList.getBusinessName(), iSendMessage, mBusinessDataList.getId());
-//                    enquiryDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
-//                    enquiryDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//                    enquiryDialog.show();
-//                    DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
-//                    int width = (int) (metrics.widthPixels * 1);
-//                    enquiryDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
                 } else {
 
                     Toast.makeText(ProviderDetailActivity.this, "Please try after some time", Toast.LENGTH_SHORT).show();
@@ -520,6 +514,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         FrameLayout qr_card = settingsDialog.findViewById(R.id.qr_card);
                         ImageView avatar = settingsDialog.findViewById(R.id.profile_picture);
                         ImageView ivShare = settingsDialog.findViewById(R.id.iv_share);
+                        ivShare.setVisibility(View.GONE);
                         //LinearLayout ll_qr = settingsDialog.findViewById(R.id.ll_qr);
                         //RelativeLayout rl_close = settingsDialog.findViewById(R.id.rl_close);
 
@@ -3009,6 +3004,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         providerIntent.putExtra("providerInfo", providerInfo);
         providerIntent.putExtra("locationName", tvLocationName.getText().toString());
         providerIntent.putExtra("isToken", isToken);
+        providerIntent.putExtra("providerName",tvSpName.getText().toString());
         startActivity(providerIntent);
 
     }

@@ -124,6 +124,9 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
     @BindView(R.id.ll_noSlots)
     LinearLayout llNoSlots;
 
+    @BindView(R.id.tv_providerName)
+    CustomTextViewBold tvProviderName;
+
     private Context mContext;
     private boolean onlinePresence;
     String claimable;
@@ -131,7 +134,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
     private int providerId;
     private int locationId;
     private int userId;
-    private String locationName;
+    private String locationName,providerName;
     boolean flag_more = false;
     private boolean isToken;
     private RecyclerView rvServices, mRecycle_virtualfield;
@@ -168,6 +171,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             providerInfo = (ProviderUserModel) intent.getSerializableExtra("providerInfo");
             locationName = intent.getStringExtra("locationName");
             isToken = intent.getBooleanExtra("isToken", false);
+            providerName = intent.getStringExtra("providerName");
         }
 
         if (providerInfo != null) {
@@ -180,6 +184,11 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
                 ivSpImage.setImageResource(R.drawable.icon_noimage);
             }
 
+        }
+
+        if (providerName != null){
+
+            tvProviderName.setText(providerName);
         }
 
 

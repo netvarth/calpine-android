@@ -68,6 +68,7 @@
                         android:layout_height="wrap_content"
                         style="?android:attr/borderlessButtonStyle"
                         android:background="@drawable/roundedrect_blue"
+                        android:backgroundTint="@color/dark_blue"
                         android:textAllCaps="true"
                         android:textColor="@color/app_background"
                         android:textSize="@dimen/txtsize_hint"
@@ -80,7 +81,8 @@
                         android:layout_weight="0.5"
                         style="?android:attr/borderlessButtonStyle"
                         android:layout_marginLeft="@dimen/default_padding"
-                        android:textColor="@color/app_background"
+                        android:backgroundTint="@color/special_background"
+                        android:textColor="@color/dark_blue"
                         android:background="@drawable/roundedrect_grey"
                         android:textSize="@dimen/txtsize_hint"
                         android:text="No"/>

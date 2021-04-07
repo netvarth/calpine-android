@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+
+
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/new_back">
+
+    </ImageView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:cardCornerRadius="@dimen/dimen_30dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardElevation="@dimen/dimen_20dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="140dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ynw_logo_big"
+            android:layout_gravity="center">
+
+        </ImageView>
+
+    </androidx.cardview.widget.CardView>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="@color/dark_blue"
+            android:layout_gravity="center_horizontal"
+            android:textSize="@dimen/dimen_20dp">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:textSize="14dp"
+            android:textColor="@color/title_color"
+            android:text="Avoid waiting in Queues\nJaldify your process"
+            android:gravity="center_horizontal">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+    </LinearLayout>
+
+</FrameLayout>

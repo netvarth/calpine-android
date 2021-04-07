@@ -89,7 +89,7 @@ public class Password extends AppCompatActivity {
         img_indicator = (ImageView) findViewById(R.id.img_indicator);
 
         Typeface tyface_btn = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Medium.otf");
+                "fonts/JosefinSans-Bold.ttf");
         btn_pwd_submit.setTypeface(tyface_btn);
 
         countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
@@ -112,9 +112,6 @@ public class Password extends AppCompatActivity {
             TextView tv_title = (TextView) findViewById(R.id.title);
             tv_title.setText("Forgot password");
 
-            Typeface tyface = Typeface.createFromAsset(getAssets(),
-                    "fonts/Montserrat_Bold.otf");
-            tv_title.setTypeface(tyface);
 
 
 
@@ -145,7 +142,7 @@ public class Password extends AppCompatActivity {
             txt_ynw.setVisibility(View.VISIBLE);
 
             Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
-                    "fonts/Montserrat_Bold.otf");
+                    "fonts/JosefinSans-Bold.ttf");
             txt_ynw.setTypeface(tyface_edittext);
             //tv_password_title.setText("Create New Password");
             btn_pwd_submit.setText("Create Password");
@@ -158,9 +155,9 @@ public class Password extends AppCompatActivity {
             Spannable spannable = new SpannableString(firstWord + secondWord);
 
             Typeface tyface_edittext1 = Typeface.createFromAsset(getAssets(),
-                    "fonts/Montserrat_Light.otf");
+                    "fonts/JosefinSans-Light.ttf");
             Typeface tyface_edittext2 = Typeface.createFromAsset(getAssets(),
-                    "fonts/Montserrat_Bold.otf");
+                    "fonts/JosefinSans-Bold.ttf");
 
             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -184,12 +181,12 @@ public class Password extends AppCompatActivity {
 
 
         Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-Bold.ttf");
         mEdtpwd.setTypeface(tyface_edittext);
         mEdtconfirmPwd.setTypeface(tyface_edittext);
 
         Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Light.otf");
+                "fonts/JosefinSans-Light.ttf");
         txt_InputPwd.setTypeface(tyface_edittext_hint);
         txt_Confirm_InputPwd.setTypeface(tyface_edittext_hint);
         btn_pwd_submit.setOnClickListener(new View.OnClickListener() {
@@ -274,7 +271,7 @@ public class Password extends AppCompatActivity {
 
             SpannableString s = new SpannableString(getString(R.string.err_msg_password));
             Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-                    "fonts/Montserrat_Light.otf");
+                    "fonts/JosefinSans-Light.ttf");
             s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             txt_Confirm_InputPwd.setError(s);
 

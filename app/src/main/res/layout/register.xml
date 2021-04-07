@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/tools"
-    android:background="@drawable/app_bg_gradient"
+    android:background="@color/special_background"
     app:ignore="NamespaceTypo">
 
     <LinearLayout
@@ -21,7 +21,7 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <TextView
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                 android:id="@+id/txtwelcome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
                 android:textColor="@color/title_grey"
                 android:textSize="@dimen/txtsize_title" />
 
-            <TextView
+            <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                 android:id="@+id/txtynw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -38,8 +38,8 @@
                 android:layout_marginTop="@dimen/padding5"
                 android:gravity="center"
                 android:text="@string/ynw"
-                android:textColor="@color/title_grey"
-                android:textSize="@dimen/txtsize_title_large" />
+                android:textColor="@color/dark_blue"
+                android:textSize="@dimen/dimen_25dp" />
 
             <TextView
                 android:id="@+id/txtcons"
@@ -61,7 +61,7 @@
             android:orientation="horizontal"
             android:layout_marginStart="@dimen/dimen_20dp"
             android:layout_marginEnd="@dimen/dimen_20dp"
-            android:background="@drawable/textbox_curved">
+            android:background="@color/special_background">
 
             <com.hbb20.CountryCodePicker
                 android:id="@+id/ccp"
@@ -69,7 +69,7 @@
                 android:layout_height="@dimen/dimen_50dp"
                 android:layout_gravity="center"
                 android:layout_weight="0"
-                android:background="#F2F2F2"
+                android:background="@color/special_background"
                 android:paddingTop="@dimen/dimen_12dp"
                 android.support.design:ccp_textSize="@dimen/dimen_12dp"
                 app:ccp_autoDetectCountry="true"/>
@@ -87,7 +87,7 @@
                     android:id="@+id/editmobno"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/edittxt_line"
+                    android:backgroundTint="@color/title_color"
                     android:hint="@string/hint_mobile"
                     android:inputType="number"
                     android:maxLength="10"
@@ -116,13 +116,14 @@
                 android:layout_height="@dimen/padding45"
                 android:layout_marginTop="@dimen/padding5"
                 android:background="@drawable/button_gradient"
+                android:backgroundTint="@color/dark_blue"
                 android:maxHeight="@dimen/padding30"
                 android:onClick="BtnSubmit"
                 android:text="@string/layout_button_ok"
                 android:textAllCaps="true"
                 android:textColor="@color/app_background" />
 
-            <TextView
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/padding20"
@@ -133,7 +134,7 @@
                 android:textColor="@color/title_grey"
                 android:textSize="@dimen/txtsize_title_term_small" />
 
-            <TextView
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                 android:id="@+id/txt_terms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -141,9 +142,9 @@
                 android:gravity="center"
                 android:text="@string/terms_cond_register2"
                 android:textColor="@color/title_grey"
-                android:textSize="@dimen/txtsize_title_term_small" />
+                android:textSize="@dimen/dimen_14sp" />
 
-            <TextView
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                 android:id="@+id/txtProvider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -155,7 +156,7 @@
                 android:textColor="@color/title_grey"
                 android:textSize="@dimen/txtsize_hint" />
 
-            <TextView
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                 android:id="@+id/txt_download"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -172,5 +173,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/bottomgraphics" />
+        android:src="@drawable/bottomgraphics" />
 </RelativeLayout>

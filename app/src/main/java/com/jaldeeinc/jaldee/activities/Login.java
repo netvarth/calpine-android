@@ -89,25 +89,17 @@ public class Login extends AppCompatActivity {
         tv_account = findViewById(R.id.txt_account);
         btn_login = findViewById(R.id.btn_login);
         TextView tv_ynw = findViewById(R.id.txtynw);
-        Typeface tyface = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_ynw.setTypeface(tyface);
         TextView txtpwd_login = findViewById(R.id.txtpwd_login);
-        Typeface tyface1 = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Light.otf");
-        txtpwd_login.setTypeface(tyface1);
-        Typeface tyface_confm = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_account.setTypeface(tyface_confm);
         edtpassword_login.setInputType(EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         edtpassword_login.setTransformationMethod(new PasswordTransformationMethod());
         Typeface tyface_btn = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Medium.otf");
+                "fonts/JosefinSans-Regular.ttf");
         btn_login.setTypeface(tyface_btn);
         Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-Bold.ttf");
         edtpassword_login.setTypeface(tyface_edittext);
-
+        btn_login.setTypeface(tyface_edittext);
+        txt_InputPwd.setTypeface(tyface_edittext);
         edtpassword_login.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {

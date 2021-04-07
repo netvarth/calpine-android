@@ -67,13 +67,7 @@ public class Register extends AppCompatActivity {
         tv_provider = findViewById(R.id.txtProvider);
         tv_download = findViewById(R.id.txt_download);
         btn_reg_submit = findViewById(R.id.reg_submit);
-        Typeface tyface = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Light.otf");
-        tv_welcome.setTypeface(tyface);
-        TextView tv_ynw = findViewById(R.id.txtynw);
-        Typeface tyface_ynw = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_ynw.setTypeface(tyface_ynw);
+
 
         mContext = this;
         SharedPreference.getInstance(mContext).removeKey("PREF_COOKIES");
@@ -105,18 +99,19 @@ public class Register extends AppCompatActivity {
             }
         });
 
-        countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
-
-
         Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-SemiBold.ttf");
+        countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
+        cCodePicker.setTypeFace(tyface_edittext);
+
+
         mEdtMobno.setTypeface(tyface_edittext);
         Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Light.otf");
+                "fonts/JosefinSans-Regular.ttf");
         txt_InputMob.setTypeface(tyface_edittext_hint);
 
         Typeface tyface_btn = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Medium.otf");
+                "fonts/JosefinSans-Bold.ttf");
         btn_reg_submit.setTypeface(tyface_btn);
         tv_terms.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,14 +125,14 @@ public class Register extends AppCompatActivity {
         Spannable spannable = new SpannableString(firstWord + secondWord);
 
         Typeface tyface_edittext1 = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Regular.otf");
+                "fonts/JosefinSans-Regular.ttf");
         Typeface tyface_edittext2 = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-Bold.ttf");
 
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dark_blue)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv_terms.setText(spannable);
         String text1 = "Are you a ";
         String text2 = "Service Provider? ";
@@ -149,7 +144,7 @@ public class Register extends AppCompatActivity {
         String text_2 = "Jaldee for Business App ";
         //  <font color='#00AEF2'><b>Terms and Conditions
         Spannable spannable_txt1 = new SpannableString(text_1 + text_2);
-        spannable_txt1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_consu)), text_1.length(), text_1.length() + text_2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable_txt1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dark_blue)), text_1.length(), text_1.length() + text_2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable_txt1.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, text_1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable_txt1.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), text_1.length(), text_1.length() + text_2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv_download.setText(spannable_txt1);
@@ -168,7 +163,7 @@ public class Register extends AppCompatActivity {
 
             SpannableString s = new SpannableString(getString(R.string.err_msg_phone));
             Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-                    "fonts/Montserrat_Light.otf");
+                    "fonts/JosefinSans-MediumItalic.ttf");
             s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             txt_InputMob.setErrorEnabled(true);
             txt_InputMob.setError(s);

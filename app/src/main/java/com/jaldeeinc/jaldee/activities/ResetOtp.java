@@ -63,12 +63,6 @@ public class ResetOtp extends AppCompatActivity {
         TextView tv_title = (TextView)findViewById(R.id.title);
         tv_title.setText("Forgot password");
 
-        Typeface tyface = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_title.setTypeface(tyface);
-
-
-
 
         img_indicator = (ImageView) findViewById(R.id.img_indicator);
         img_indicator.setVisibility(View.GONE);
@@ -77,9 +71,6 @@ public class ResetOtp extends AppCompatActivity {
         String countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
 
        // txtproceed.setText("OTP has been sent to " + loginId);
-        Typeface tyface_p = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Light.otf");
-        txtproceed.setTypeface(tyface_p);
 
 
         mContext = this;
@@ -113,15 +104,15 @@ public class ResetOtp extends AppCompatActivity {
         });
         txt_input_layout_otp = (TextInputLayout) findViewById(R.id.text_input_layout_pwd);
         Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-Bold.ttf");
         editotp.setTypeface(tyface_edittext);
 
         Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Light.otf");
+                "fonts/JosefinSans-Light.ttf");
         txt_input_layout_otp.setTypeface(tyface_edittext_hint);
 
         Typeface tyface_btn = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Medium.otf");
+                "fonts/JosefinSans-Regular.ttf");
         otpverify.setTypeface(tyface_btn);
 
 
@@ -142,9 +133,9 @@ public class ResetOtp extends AppCompatActivity {
         Spannable spannable = new SpannableString(firstWord + secondWord);
 
         Typeface tyface_edittext1 = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Light.otf");
+                "fonts/JosefinSans-Light.ttf");
         Typeface tyface_edittext2 = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-Bold.ttf");
 
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

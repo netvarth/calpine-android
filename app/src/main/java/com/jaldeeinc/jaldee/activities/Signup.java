@@ -76,34 +76,22 @@ public class Signup extends AppCompatActivity {
         tv_ynw = findViewById(R.id.txt_ynw);
         tv_needynw = findViewById(R.id.txt_needynw);
         btn_signup = findViewById(R.id.btn_signup);
-        Typeface tyface = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_ynw.setTypeface(tyface);
-        Typeface tyface_need = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Light.otf");
-        tv_needynw.setTypeface(tyface_need);
-        Typeface tyface_confm = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_createaccc.setTypeface(tyface_confm);
         Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-Bold.ttf");
         firstName.setTypeface(tyface_edittext);
         Lastname.setTypeface(tyface_edittext);
         email.setTypeface(tyface_edittext);
+        btn_signup.setTypeface(tyface_edittext);
 
         Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Light.otf");
+                "fonts/JosefinSans-Regular.ttf");
         mInputFirst.setTypeface(tyface_edittext_hint);
 
         Typeface tyface_edittext_hintlast = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Light.otf");
+                "fonts/JosefinSans-Regular.ttf");
         mInputLast.setTypeface(tyface_edittext_hintlast);
 
         mEmail.setTypeface(tyface_edittext_hintlast);
-
-        Typeface tyface_btn = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Medium.otf");
-        btn_signup.setTypeface(tyface_btn);
 
         String firstWord = "Jaldee ";
         String secondWord = "Terms and Conditions";
@@ -112,15 +100,15 @@ public class Signup extends AppCompatActivity {
         Spannable spannable = new SpannableString(firstWord + secondWord);
 
         Typeface tyface_edittext1 = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Regular.otf");
+                "fonts/JosefinSans-Regular.ttf");
         Typeface tyface_edittext2 = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-Bold.ttf");
 
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dark_blue)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         tv_terms.setText(spannable);
 
@@ -156,7 +144,7 @@ public class Signup extends AppCompatActivity {
                     Config.logV("Firstname-----------1111");
                     SpannableString s = new SpannableString("Please enter firstname");
                     Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-                            "fonts/Montserrat_Light.otf");
+                            "fonts/JosefinSans-Light.ttf");
                     s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     mInputFirst.setError(s);
                 }
@@ -165,14 +153,14 @@ public class Signup extends AppCompatActivity {
                     Config.logV("Lastname-----------1111");
                     SpannableString s = new SpannableString("Please enter lastname");
                     Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-                            "fonts/Montserrat_Light.otf");
+                            "fonts/JosefinSans-Light.ttf");
                     s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     mInputLast.setError(s);
                 }
                 if (email.getText().toString().equalsIgnoreCase("")) {
                     SpannableString s = new SpannableString("Please enter email");
                     Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-                            "fonts/Montserrat_Light.otf");
+                            "fonts/JosefinSans-Light.ttf");
                     s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     mEmail.setError(s);
                 }
@@ -188,7 +176,7 @@ public class Signup extends AppCompatActivity {
                     Config.logV("Firstname-----------1111");
                     SpannableString s = new SpannableString("Please enter firstname");
                     Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-                            "fonts/Montserrat_Light.otf");
+                            "fonts/JosefinSans-Light.ttf");
                     s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     mInputFirst.setError(s);
                 }
@@ -197,7 +185,7 @@ public class Signup extends AppCompatActivity {
                     Config.logV("Lastname-----------1111");
                     SpannableString s = new SpannableString("Please enter lastname");
                     Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-                            "fonts/Montserrat_Light.otf");
+                            "fonts/JosefinSans-Light.ttf");
                     s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     mInputLast.setError(s);
                 }

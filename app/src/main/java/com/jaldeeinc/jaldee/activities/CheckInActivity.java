@@ -1318,16 +1318,19 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     if (response.code() == 200) {
                         s3couponList.clear();
                         s3couponList = response.body();
-                        Log.i("CouponResponse", s3couponList.toString());
+                        if (s3couponList != null) {
+                            Log.i("CouponResponse", s3couponList.toString());
 
-                        if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
-                            tvApplyCode.setVisibility(View.VISIBLE);
-                        } else {
-                            tvApplyCode.setVisibility(View.GONE);
+                            if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
+                                tvApplyCode.setVisibility(View.VISIBLE);
+                                llCoupons.setVisibility(View.VISIBLE);
+                            } else {
+                                tvApplyCode.setVisibility(View.GONE);
+                                llCoupons.setVisibility(View.GONE);
+                            }
                         }
 
                     }
-
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1361,12 +1364,16 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     if (response.code() == 200) {
                         providerCouponList.clear();
                         providerCouponList = response.body();
-                        if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
-                            tvApplyCode.setVisibility(View.VISIBLE);
-                        } else {
-                            tvApplyCode.setVisibility(View.GONE);
+                        if (providerCouponList != null) {
+                            if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
+                                tvApplyCode.setVisibility(View.VISIBLE);
+                                llCoupons.setVisibility(View.VISIBLE);
+                            } else {
+                                tvApplyCode.setVisibility(View.GONE);
+                                llCoupons.setVisibility(View.GONE);
+                            }
+                            Log.i("ProviderCouponResponse", providerCouponList.toString());
                         }
-                        Log.i("ProviderCouponResponse", providerCouponList.toString());
 
 
                     }

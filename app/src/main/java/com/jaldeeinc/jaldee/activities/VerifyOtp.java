@@ -79,15 +79,7 @@ public class VerifyOtp extends AppCompatActivity {
         txt_ynw= (TextView) findViewById(R.id.txt_ynw);
         txt_ynw.setVisibility(View.VISIBLE);
 
-        Typeface tyface = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        txt_ynw.setTypeface(tyface);
 
-
-
-        Typeface tyface_p = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Light.otf");
-        txtproceed.setTypeface(tyface_p);
         final String mobno = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
         String countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
 
@@ -104,11 +96,11 @@ public class VerifyOtp extends AppCompatActivity {
 
 
         Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-Bold.ttf");
         editotp.setTypeface(tyface_edittext);
 
         Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Light.otf");
+                "fonts/JosefinSans-Light.ttf");
         txt_input_layout_otp.setTypeface(tyface_edittext_hint);
 
 
@@ -129,7 +121,7 @@ public class VerifyOtp extends AppCompatActivity {
             }
         });
         Typeface tyface_btn = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Medium.otf");
+                "fonts/JosefinSans-Regular.ttf");
         btn_verify.setTypeface(tyface_btn);
 
 
@@ -162,9 +154,9 @@ public class VerifyOtp extends AppCompatActivity {
         Spannable spannable = new SpannableString(firstWord+secondWord);
 
         Typeface tyface_edittext1 = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Light.otf");
+                "fonts/JosefinSans-Light.ttf");
         Typeface tyface_edittext2 = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
+                "fonts/JosefinSans-Bold.ttf");
 
         spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
