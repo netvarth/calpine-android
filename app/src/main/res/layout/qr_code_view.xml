@@ -37,7 +37,7 @@
             android:orientation="vertical"
             android:paddingBottom="36.0dip">
 
-            <TextView
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                 android:id="@+id/tv_providerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
                 android:textColor="@color/black"
                 android:textSize="18.0sp" />
 
-            <TextView
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                 android:id="@+id/tv_provider_specialization"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -506,9 +506,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         Dialog settingsDialog = new Dialog(ProviderDetailActivity.this);
                         settingsDialog.setContentView(getLayoutInflater().inflate(R.layout.qr_code_view, null));
                         ImageView ivQR = settingsDialog.findViewById(R.id.iv_Qr);
-                        TextView tvProvidername = settingsDialog.findViewById(R.id.tv_providerName);
+                        CustomTextViewSemiBold tvProvidername = settingsDialog.findViewById(R.id.tv_providerName);
                         tvProvidername.setText(mBusinessDataList.getBusinessName());
-                        TextView tvProviderSpecialization = settingsDialog.findViewById(R.id.tv_provider_specialization);
+                        CustomTextViewMedium tvProviderSpecialization = settingsDialog.findViewById(R.id.tv_provider_specialization);
                         tvProviderSpecialization.setText(mBusinessDataList.getServiceSubSector().getDisplayName());
                         RelativeLayout rlClose = settingsDialog.findViewById(R.id.rl_close);
                         FrameLayout qr_card = settingsDialog.findViewById(R.id.qr_card);
