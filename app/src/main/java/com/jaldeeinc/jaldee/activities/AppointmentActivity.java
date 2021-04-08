@@ -1302,8 +1302,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                         if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
                             tvApplyCode.setVisibility(View.VISIBLE);
+                            llCoupons.setVisibility(View.VISIBLE);
                         } else {
                             tvApplyCode.setVisibility(View.GONE);
+                            llCoupons.setVisibility(View.GONE);
+
                         }
 
                     }
@@ -1344,8 +1347,10 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                         if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
                             tvApplyCode.setVisibility(View.VISIBLE);
+                            llCoupons.setVisibility(View.VISIBLE);
                         } else {
                             tvApplyCode.setVisibility(View.GONE);
+                            llCoupons.setVisibility(View.GONE);
                         }
 
 
