@@ -1365,7 +1365,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         providerCouponList.clear();
                         providerCouponList = response.body();
                         if (providerCouponList != null) {
-                            
+
                             if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
                                 tvApplyCode.setVisibility(View.VISIBLE);
                                 llCoupons.setVisibility(View.VISIBLE);

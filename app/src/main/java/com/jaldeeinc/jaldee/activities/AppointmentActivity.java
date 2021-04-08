@@ -1299,7 +1299,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         s3couponList.clear();
                         s3couponList = response.body();
                         Log.i("CouponResponse", s3couponList.toString());
-
                         if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
                             tvApplyCode.setVisibility(View.VISIBLE);
                             llCoupons.setVisibility(View.VISIBLE);
