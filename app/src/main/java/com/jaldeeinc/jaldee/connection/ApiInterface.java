@@ -17,6 +17,7 @@ import com.jaldeeinc.jaldee.response.AppointmentSchedule;
 import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
+import com.jaldeeinc.jaldee.response.CouponApliedOrNotDetails;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.InboxList;
 import com.jaldeeinc.jaldee.response.InboxModel;
@@ -419,6 +420,11 @@ public interface ApiInterface {
     @POST("consumer/waitlist")
     Call<ResponseBody> Checkin(@Query("account") String account, @Body RequestBody jsonObj);
 
+    @PUT("consumer/waitlist/advancePayment")
+    Call<CouponApliedOrNotDetails> getWlCoupnAppliedOrNotDetails(@Query("account") String account, @Body RequestBody jsonObj);
+
+    @PUT("consumer/appointment/advancePayment")
+    Call<CouponApliedOrNotDetails> getApptCoupnAppliedOrNotDetails(@Query("account") String account, @Body RequestBody jsonObj);
 
     @POST("consumer/appointment")
     Call<ResponseBody> Appointment(@Query("account") String account, @Body RequestBody jsonObj);

@@ -55,6 +55,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.jaldeeinc.jaldee.Interface.ICpn;
 import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
@@ -87,6 +88,7 @@ import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
+import com.jaldeeinc.jaldee.response.CouponApliedOrNotDetails;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
@@ -150,7 +152,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AppointmentActivity extends AppCompatActivity implements PaymentResultWithDataListener, ISlotInfo, IMailSubmit, IPaymentResponse, IMobileSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected {
+public class AppointmentActivity extends AppCompatActivity implements PaymentResultWithDataListener, ISlotInfo, IMailSubmit, IPaymentResponse, IMobileSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected, ICpn {
 
     @BindView(R.id.tv_providerName)
     CustomTextViewBold tvProviderName;
@@ -307,6 +309,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     ArrayList<String> couponArraylist = new ArrayList<>();
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     ArrayList<ProviderCouponResponse> providerCouponList = new ArrayList<>();
+    CouponApliedOrNotDetails couponApliedOrNotDetails = new CouponApliedOrNotDetails();
 
     RecyclerView list;
     private CouponlistAdapter mAdapter;
@@ -353,6 +356,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     private String prepayAmount = "";
     private String countryCode;
 
+    private ICpn iCpn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -455,7 +459,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                         llVirtualNumber.setVisibility(View.VISIBLE);
 
-                        if (serviceInfo.getCallingMode().equalsIgnoreCase("WhatsApp")){
+                        if (serviceInfo.getCallingMode().equalsIgnoreCase("WhatsApp")) {
                             tvVsHint.setText("WhatsApp number");
                         } else {
 
@@ -698,13 +702,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
 
                 }
-                Config.logV("couponArraylist--code-------------------------" + couponArraylist);
-                list.setVisibility(View.VISIBLE);
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppointmentActivity.this);
-                list.setLayoutManager(mLayoutManager);
-                mAdapter = new CouponlistAdapter(AppointmentActivity.this, s3couponList, couponEntered, couponArraylist);
-                list.setAdapter(mAdapter);
-                mAdapter.notifyDataSetChanged();
+                cpns(couponArraylist);
+
             }
         });
 
@@ -1325,6 +1324,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             }
         });
     }
+
     private void ApiJaldeegetProviderCoupons(int uniqueID) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(AppointmentActivity.this).create(ApiInterface.class);
@@ -1467,11 +1467,10 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         String number = tvNumber.getText().toString();
         uuid = UUID.randomUUID().toString();
         String virtual_code = et_countryCode.getText().toString();
-        String countryVirtualCode ="";
-        if(!virtual_code.equalsIgnoreCase("")) {
-             countryVirtualCode = virtual_code.substring(1);
-        }
-        else{
+        String countryVirtualCode = "";
+        if (!virtual_code.equalsIgnoreCase("")) {
+            countryVirtualCode = virtual_code.substring(1);
+        } else {
             DynamicToast.make(AppointmentActivity.this, "Countrycode needed", AppCompatResources.getDrawable(
                     AppointmentActivity.this, R.drawable.ic_info_black),
                     ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
@@ -1530,7 +1529,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             } else {
 
                 String modeOfCalling = "";
-                if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("whatsApp")){
+                if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("whatsApp")) {
                     modeOfCalling = "Invalid WhatsApp number";
                 } else {
                     modeOfCalling = "Invalid Contact number";
@@ -2587,4 +2586,156 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     }
 
+    @Override
+    public void cpns(ArrayList<String> mcouponArraylist) {
+        iCpn = (ICpn) this;
+        couponArraylist = mcouponArraylist;
+        //CouponApliedOrNotDetails c = new CouponApliedOrNotDetails();
+        if (userMessage != null) {
+
+
+            if (serviceInfo.isUser()) {
+                getCoupnAppliedOrNotDetails(userMessage, userId);
+            } else {
+                getCoupnAppliedOrNotDetails(userMessage, providerId);
+            }
+        }
+       /* Config.logV("couponArraylist--code-------------------------" + couponArraylist);
+        list.setVisibility(View.VISIBLE);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CheckInActivity.this);
+        list.setLayoutManager(mLayoutManager);
+        mAdapter = new CouponlistAdapter(CheckInActivity.this, s3couponList, couponEntered, couponArraylist, getCoupnAppliedOrNotDetails(userMessage, providerId), iCpn);
+        list.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();*/
+    }
+
+    public CouponApliedOrNotDetails getCoupnAppliedOrNotDetails(final String txt_addnote, int id) {
+        final Dialog mDialog = Config.getProgressDialog(AppointmentActivity.this, AppointmentActivity.this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        String number = tvNumber.getText().toString();
+        uuid = UUID.randomUUID().toString();
+        String virtual_code = et_countryCode.getText().toString();
+
+        ApiInterface apiService = ApiClient.getClient(AppointmentActivity.this).create(ApiInterface.class);
+
+        JSONObject queueobj = new JSONObject();
+        JSONObject waitobj = new JSONObject();
+        JSONObject waitobj1 = new JSONObject();
+        JSONObject sejsonobj = new JSONObject();
+        JSONArray waitlistArray = new JSONArray();
+        JSONObject sjsonobj = new JSONObject();
+        JSONObject virtualService = new JSONObject();
+        JSONObject pjsonobj = new JSONObject();
+
+
+        try {
+
+            queueobj.put("appmtDate", apiDate);
+            sjsonobj.put("id", scheduleId);
+            queueobj.put("consumerNote", txt_addnote);
+            queueobj.put("phoneNumber", phoneNumber);
+            queueobj.put("countryCode", countryCode);
+            if (serviceInfo.isUser()) {
+                pjsonobj.put("id", providerId);
+            } else {
+                pjsonobj.put("id", 0);
+            }
+
+
+            sejsonobj.put("id", serviceInfo.getServiceId());
+            sejsonobj.put("serviceType", serviceInfo.getServiceType());
+
+            JSONArray couponList = new JSONArray();
+
+            for (int i = 0; i < couponArraylist.size(); i++) {
+                couponList.put(couponArraylist.get(i));
+            }
+            queueobj.put("coupons", couponList);
+            Log.i("couponList", couponList.toString());
+
+            if (familyMEmID == 0) {
+                familyMEmID = consumerID;
+            }
+
+            if (MultiplefamilyList.size() > 0) {
+                for (int i = 0; i < MultiplefamilyList.size(); i++) {
+
+                    waitobj1.put("id", MultiplefamilyList.get(i).getId());
+                    waitobj1.put("firstName", MultiplefamilyList.get(i).getFirstName());
+                    waitobj1.put("lastName", MultiplefamilyList.get(i).getLastName());
+                    waitobj1.put("apptTime", slotTime);
+
+                    waitlistArray.put(waitobj1);
+                }
+            } else {
+                if (familyMEmID == consumerID) {
+                    familyMEmID = 0;
+                }
+                waitobj.put("id", familyMEmID);
+                waitobj.put("firstName", mFirstName);
+                waitobj.put("lastName", mLastName);
+                waitobj.put("apptTime", slotTime);
+
+            }
+            waitlistArray.put(waitobj);
+
+            queueobj.putOpt("schedule", sjsonobj);
+            queueobj.putOpt("service", sejsonobj);
+            queueobj.putOpt("appmtFor", waitlistArray);
+
+            queueobj.putOpt("provider", pjsonobj);
+
+            if (serviceInfo.getServiceType().equalsIgnoreCase("virtualService")) {
+                queueobj.putOpt("virtualService", virtualService);
+            }
+
+        } catch (
+                JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.i("QueueObj Appointment", queueobj.toString());
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), queueobj.toString());
+        Call<CouponApliedOrNotDetails> call = apiService.getApptCoupnAppliedOrNotDetails(String.valueOf(id), body);
+        call.enqueue(new Callback<CouponApliedOrNotDetails>() {
+            @Override
+            public void onResponse(Call<CouponApliedOrNotDetails> call, Response<CouponApliedOrNotDetails> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    Config.logV("Response--code-------------------------" + response.body());
+
+                    MultiplefamilyList.clear();
+                    if (response.code() == 200) {
+                        couponApliedOrNotDetails = response.body();
+
+                        Config.logV("couponArraylist--code-------------------------" + couponArraylist);
+                        list.setVisibility(View.VISIBLE);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppointmentActivity.this);
+                        list.setLayoutManager(mLayoutManager);
+                        mAdapter = new CouponlistAdapter(AppointmentActivity.this, s3couponList, couponEntered, couponArraylist, couponApliedOrNotDetails, iCpn);
+                        list.setAdapter(mAdapter);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CouponApliedOrNotDetails> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+
+            }
+        });
+        return couponApliedOrNotDetails;
+    }
 }

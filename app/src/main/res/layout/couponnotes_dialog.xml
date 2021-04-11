@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/dimen_5dp">
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+            android:id="@+id/tv_cpn_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.20"
+            android:padding="@dimen/dimen_5dp"
+            android:text=""
+            android:textSize="@dimen/dimen_16sp"
+            android:textColor="@color/dark_black"/>
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.99"
+            android:padding="@dimen/padding5"
+            android:src="@drawable/close"
+            app:tint="@color/gray"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/dimen_5dp">
+        <com.jaldeeinc.jaldee.custom.CustomTextViewLight
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.20"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginRight="@dimen/dimen_10dp"
+            android:text="Sorry!! This coupon is rejected because it doesn't meet the following requirements:"
+            android:textSize="@dimen/dimen_16sp"
+            android:textColor="@color/cb_errorRed"/>
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="visible"
+        android:paddingBottom="@dimen/dimen_10dp"/>
+
+</LinearLayout>
