@@ -289,7 +289,17 @@ public class OrderDetailActivity extends AppCompatActivity {
                 });
 
                 tvOrderNO.setText(orderInfo.getOrderNumber());
-                tvStatus.setText(orderInfo.getOrderStatus());
+
+                if (orderInfo.getOrderStatus() != null){
+
+                    tvStatus.setText(convertToTitleForm(orderInfo.getOrderStatus()));
+
+                    if (orderInfo.getOrderStatus().equalsIgnoreCase("Cancelled")){
+                        tvStatus.setTextColor(mContext.getResources().getColor(R.color.red));
+                    } else {
+                        tvStatus.setTextColor(mContext.getResources().getColor(R.color.location_theme));
+                    }
+                }
                 tvDate.setText(Config.getCustomDateString(orderInfo.getOrderDate()));
                 if (orderInfo.getTimeSlot() != null) {
                     String sTime = orderInfo.getTimeSlot().getsTime();
@@ -390,6 +400,14 @@ public class OrderDetailActivity extends AppCompatActivity {
 
 
     }
+
+
+    public static String convertToTitleForm(String name) {
+        String convertName = name;
+        convertName = convertName.substring(0, 1).toUpperCase() + convertName.substring(1).toLowerCase();
+        return convertName;
+    }
+
 
     @Override
     public void onBackPressed() {

@@ -271,6 +271,21 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 // to set specializations
                 setSpecializations(myViewHolder, searchdetailList);
 
+                // to set no of doctors only for "Hospital" subdomain
+
+                if (searchdetailList.getSub_sector() != null && searchdetailList.getSub_sector().equalsIgnoreCase("hospital")){
+                    if (searchdetailList.getProviders() != null) {
+                        myViewHolder.tvNoOfDoctors.setVisibility(View.VISIBLE);
+                        if (searchdetailList.getProviders().size() > 1){
+                            myViewHolder.tvNoOfDoctors.setText(searchdetailList.getProviders().size() + " Doctors");
+                        } else {
+                            myViewHolder.tvNoOfDoctors.setText(searchdetailList.getProviders().size() + " Doctor");
+                        }
+                    }
+                } else {
+                    myViewHolder.tvNoOfDoctors.setVisibility(View.GONE);
+                }
+
                 // to set provider image
                 myViewHolder.ivSpImage.setImageDrawable(null); // to make sure images of previous position don't show up in new positions
 
@@ -983,6 +998,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         private RelativeLayout rlStatus, rlStatusBar;
         private CustomTextViewItalicSemiBold tvServiceOne, tvServiceTwo, tvServiceThree;
         private CustomTextViewBold tvText;
+        private CustomTextViewSemiBold tvNoOfDoctors;
         private CardView cvClaimNow, cvAction, cvCard, cvImage, cvShimmer;
 
         public MyViewHolder(View view) {
@@ -1028,6 +1044,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             rlStatusBar = view.findViewById(R.id.rl_statusBar);
             llActionBar = view.findViewById(R.id.ll_actionBar);
             llCoupons = view.findViewById(R.id.ll_coupons);
+            tvNoOfDoctors  = view.findViewById(R.id.tv_noofDoctors);
 
         }
     }

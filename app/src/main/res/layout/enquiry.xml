@@ -50,7 +50,7 @@
             android:background="@drawable/input_border_message_bg"
             android:gravity="top"
             android:hint="@string/hint_message"
-            android:minHeight="150dp"
+            android:minHeight="250dp"
             android:padding="@dimen/padding5"
             android:textColorHint="@color/title_grey_light"
             android:textSize="@dimen/txtsize_12" />
