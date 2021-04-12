@@ -53,12 +53,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.jaldeeinc.jaldee.Interface.ICpn;
 import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.Interface.IMobileSubmit;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.Interface.ISelectQ;
+import com.jaldeeinc.jaldee.Interface.ISendData;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
@@ -85,6 +89,7 @@ import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
+import com.jaldeeinc.jaldee.response.CouponApliedOrNotDetails;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
@@ -147,7 +152,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CheckInActivity extends AppCompatActivity implements ISelectQ, PaymentResultWithDataListener, IPaymentResponse, IMobileSubmit, IMailSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected {
+public class CheckInActivity extends AppCompatActivity implements ISelectQ, PaymentResultWithDataListener, IPaymentResponse, IMobileSubmit, IMailSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected, ICpn {
 
     @BindView(R.id.tv_providerName)
     CustomTextViewBold tvProviderName;
@@ -304,6 +309,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     ArrayList<String> couponArraylist = new ArrayList<>();
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     ArrayList<ProviderCouponResponse> providerCouponList = new ArrayList<>();
+    CouponApliedOrNotDetails couponApliedOrNotDetails = new CouponApliedOrNotDetails();
 
     RecyclerView list;
     private CouponlistAdapter mAdapter;
@@ -352,6 +358,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     private IFamilyMemberDetails iFamilyMemberDetails;
     String emailId, prepayAmount = "";
     private String countryCode;
+
+    private ICpn iCpn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -775,13 +784,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
 
                 }
-                Config.logV("couponArraylist--code-------------------------" + couponArraylist);
-                list.setVisibility(View.VISIBLE);
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CheckInActivity.this);
-                list.setLayoutManager(mLayoutManager);
-                mAdapter = new CouponlistAdapter(CheckInActivity.this, s3couponList, couponEntered, couponArraylist);
-                list.setAdapter(mAdapter);
-                mAdapter.notifyDataSetChanged();
+                cpns(couponArraylist);
             }
         });
 
@@ -1332,6 +1335,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                     }
 
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1487,6 +1491,162 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
 
     }
+
+    public CouponApliedOrNotDetails getCoupnAppliedOrNotDetails(final String txt_addnote, int id) {
+        final ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        JSONObject qjsonObj = new JSONObject();
+        JSONObject queueobj = new JSONObject();
+        JSONObject waitobj = new JSONObject();
+        JSONObject service = new JSONObject();
+        JSONArray waitlistArray = new JSONArray();
+        JSONObject consumerObj = new JSONObject();
+        try {
+            consumerObj.put("id", consumerID);
+            qjsonObj.put("id", queueId);
+            queueobj.put("date", apiDate);
+            queueobj.put("consumerNote", txt_addnote);
+            queueobj.put("waitlistPhoneNumber", phoneNumber);
+            queueobj.put("countryCode", countryCode);
+
+            JSONArray couponList = new JSONArray();
+
+            for (int i = 0; i < couponArraylist.size(); i++) {
+
+                couponList.put(couponArraylist.get(i));
+
+            }
+            queueobj.put("coupons", couponList);
+            Log.i("couponList", couponList.toString());
+            service.put("id", checkInInfo.getId());
+            if (familyMEmID == 0) {
+                familyMEmID = consumerID;
+            }
+
+            if (MultiplefamilyList.size() > 0) {
+                for (int i = 0; i < MultiplefamilyList.size(); i++) {
+                    JSONObject waitobj1 = new JSONObject();
+                    if (familyMEmID == MultiplefamilyList.get(i).getId()) {
+                        waitobj1.put("id", 0);
+                    } else {
+                        waitobj1.put("id", MultiplefamilyList.get(i).getId());
+                    }
+                    waitobj1.put("firstName", MultiplefamilyList.get(i).getFirstName());
+                    waitobj1.put("lastName", MultiplefamilyList.get(i).getLastName());
+                    waitlistArray.put(waitobj1);
+                }
+            } else {
+                if (familyMEmID == consumerID) {
+                    familyMEmID = 0;
+                }
+                waitobj.put("id", familyMEmID);
+                waitlistArray.put(waitobj);
+            }
+
+            queueobj.putOpt("service", service);
+            queueobj.putOpt("queue", qjsonObj);
+            queueobj.putOpt("waitlistingFor", waitlistArray);
+            queueobj.putOpt("consumer", consumerObj);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), queueobj.toString());
+        Call<CouponApliedOrNotDetails> call = apiService.getWlCoupnAppliedOrNotDetails(String.valueOf(id), requestBody);
+        call.enqueue(new Callback<CouponApliedOrNotDetails>() {
+
+            @Override
+            public void onResponse(Call<CouponApliedOrNotDetails> call, Response<CouponApliedOrNotDetails> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        couponApliedOrNotDetails = response.body();
+
+                        Config.logV("couponArraylist--code-------------------------" + couponArraylist);
+                        list.setVisibility(View.VISIBLE);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CheckInActivity.this);
+                        list.setLayoutManager(mLayoutManager);
+                        mAdapter = new CouponlistAdapter(CheckInActivity.this, s3couponList, couponEntered, couponArraylist, couponApliedOrNotDetails, iCpn);
+                        list.setAdapter(mAdapter);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CouponApliedOrNotDetails> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+        return couponApliedOrNotDetails;
+    }
+    /*private JSONObject getCoupnAppliedOrNotDetails(final String txt_addnote, int id) {
+        JSONObject qjsonObj = new JSONObject();
+        JSONObject queueobj = new JSONObject();
+        JSONObject waitobj = new JSONObject();
+        JSONObject service = new JSONObject();
+        JSONArray waitlistArray = new JSONArray();
+        JSONObject consumerObj = new JSONObject();
+        try {
+            consumerObj.put("id", consumerID);
+            qjsonObj.put("id", queueId);
+            queueobj.put("date", apiDate);
+            queueobj.put("consumerNote", txt_addnote);
+            queueobj.put("waitlistPhoneNumber", phoneNumber);
+            queueobj.put("countryCode", countryCode);
+
+            JSONArray couponList = new JSONArray();
+
+            for (int i = 0; i < couponArraylist.size(); i++) {
+
+                couponList.put(couponArraylist.get(i));
+
+            }
+            queueobj.put("coupons", couponList);
+            Log.i("couponList", couponList.toString());
+            service.put("id", checkInInfo.getId());
+            if (familyMEmID == 0) {
+                familyMEmID = consumerID;
+            }
+
+            if (MultiplefamilyList.size() > 0) {
+                for (int i = 0; i < MultiplefamilyList.size(); i++) {
+                    JSONObject waitobj1 = new JSONObject();
+                    if (familyMEmID == MultiplefamilyList.get(i).getId()) {
+                        waitobj1.put("id", 0);
+                    } else {
+                        waitobj1.put("id", MultiplefamilyList.get(i).getId());
+                    }
+                    waitobj1.put("firstName", MultiplefamilyList.get(i).getFirstName());
+                    waitobj1.put("lastName", MultiplefamilyList.get(i).getLastName());
+                    waitlistArray.put(waitobj1);
+                }
+            } else {
+                if (familyMEmID == consumerID) {
+                    familyMEmID = 0;
+                }
+                waitobj.put("id", familyMEmID);
+                waitlistArray.put(waitobj);
+            }
+
+            queueobj.putOpt("service", service);
+            queueobj.putOpt("queue", qjsonObj);
+            queueobj.putOpt("waitlistingFor", waitlistArray);
+            queueobj.putOpt("consumer", consumerObj);
+            queueobj.putOpt("id", id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return queueobj;
+    }*/
 
     private void ApiCheckin(final String txt_addnote, int id) {
 
@@ -2687,6 +2847,32 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 //        tvConsumerName.setVisibility(View.GONE);
 
     }
+    @Override
+    public void cpns(ArrayList<String> mcouponArraylist){
+        iCpn = (ICpn) this;
+        couponArraylist = mcouponArraylist;
+        //CouponApliedOrNotDetails c = new CouponApliedOrNotDetails();
+        if (userMessage != null) {
 
+
+            if (isUser) {
+                getCoupnAppliedOrNotDetails(userMessage, userId);
+            } else {
+                getCoupnAppliedOrNotDetails(userMessage, providerId);
+            }
+        }
+       /* Config.logV("couponArraylist--code-------------------------" + couponArraylist);
+        list.setVisibility(View.VISIBLE);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CheckInActivity.this);
+        list.setLayoutManager(mLayoutManager);
+        mAdapter = new CouponlistAdapter(CheckInActivity.this, s3couponList, couponEntered, couponArraylist, getCoupnAppliedOrNotDetails(userMessage, providerId), iCpn);
+        list.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();*/
+    }
+    private void ApiAppointment(final String txt_addnote, int id) {
+
+
+
+    }
 
 }

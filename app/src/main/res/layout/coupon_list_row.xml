@@ -2,22 +2,75 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:layout_marginTop="@dimen/dimen_10dp"
+    android:background="@drawable/coupon_dotted_boarder">
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-        android:id="@+id/name"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:text=""
-        android:ellipsize="end"
         android:layout_alignParentStart="true"
-        android:layout_marginEnd="@dimen/dimen_15dp"
-        android:layout_centerVertical="true"
-        android:layout_toStartOf="@id/ReadTC"
-        android:maxLines="@integer/int_1"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/black" />
+        android:orientation="vertical"
+        android:layout_margin="@dimen/padding2">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/dimen_50dp"
+                android:padding="@dimen/padding2"
+                android:gravity="center"
+                android:layout_marginEnd="@dimen/dimen_15dp"
+                android:ellipsize="end"
+                android:maxLines="@integer/int_1"
+                android:text=""
+                android:background="@color/unclaimed"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/black" />
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/tv_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/black" />
+            <ImageView
+                android:id="@+id/iv_info"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingTop="@dimen/padding2"
+                android:paddingRight="@dimen/dimen_10dp"
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:gravity="center_vertical"
+                android:src="@drawable/icon_info_32"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_cpnApplied"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal
+                android:id="@+id/tv_cpnApplied"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Coupon applied"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/green" />
+        </LinearLayout>
+    </LinearLayout>
 
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
@@ -25,11 +78,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:text=""
-        android:visibility="invisible"
         android:layout_centerInParent="true"
+        android:text=""
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/deletecoupon"
@@ -38,7 +91,6 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:src="@drawable/icon_delete" />
-
 
 
 </RelativeLayout>

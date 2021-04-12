@@ -398,6 +398,8 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface,OnBottom
         tvDate.setVisibility(View.GONE);
         tvTime.setVisibility(View.GONE);
         cvConfirm.setVisibility(View.GONE);
+        llSeeMoreHint.setVisibility(View.GONE);
+
 
     }
 

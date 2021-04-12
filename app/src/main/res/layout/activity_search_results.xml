@@ -63,7 +63,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_refineSearch"
                 android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/dimen_16dp"
                 android:layout_marginEnd="@dimen/padding5"
@@ -72,7 +72,7 @@
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:layout_gravity="center"
                     android:layout_margin="3dp"
                     android:src="@drawable/icon_newfilter"
