@@ -25,7 +25,8 @@ public enum CouponSystemNotes {
     COUPON_CAN_NOT_APPLY("Coupon cannot be applied."),
     PROVIDER_COUPON_NOT_APPLICABLE_ORDER("Provider coupon not applicable for order"),
     PROVIDER_COUPON_NOT_APPLICABLE_WAITLIST("Provider coupon not applicable for waitlist"),
-    PROVIDER_COUPON_NOT_APPLICABLE_APPOINTMENT("Provider coupon not applicable for appointment");
+    PROVIDER_COUPON_NOT_APPLICABLE_APPOINTMENT("Provider coupon not applicable for appointment"),
+    EXCEEDS_PRO_COUP_APPLY_LIMIT("Coupon reached limit of usage");
     //COUPON_EXPIRED_OR_PASSIVE(JALDEE_COUPON_EXPIRED_OR_PASSIVE),
     //PROVIDER_COUPON_NOT_APPLICABLE_COUPON_BASED_ON(COUPON_NOT_VALID);
 
