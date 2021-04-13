@@ -3,7 +3,7 @@ public enum CouponSystemNotes {
 
     MINIMUM_BILL_AMT_REQUIRED("A minimum bill amount is required to redeem this coupon"),
     ONLY_WHEN_FITST_CHECKIN_ON_PROVIDER("Coupon can be applied only for first check in with this provider"),
-    COUPON_APPLIED("Coupon already applied"),
+    COUPON_APPLIED("Coupon Sussessfully applied"),
     SELF_PAY_REQUIRED("Self pay required"),
     NO_OTHER_COUPONS_ALLOWED("No other coupons allowed"),
     EXCEEDS_APPLY_LIMIT("Exceeds apply limit"),
