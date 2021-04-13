@@ -22,7 +22,10 @@ public enum CouponSystemNotes {
     PROVIDER_COUPON_NOT_APPLICABLE_NOW("Provider coupon not applicable now"),
     JC_NOT_APPLICABLE_DAY("Jaldee Coupon not applicable on this day"),
 
-    COUPON_CAN_NOT_APPLY("Coupon cannot be applied.");
+    COUPON_CAN_NOT_APPLY("Coupon cannot be applied."),
+    PROVIDER_COUPON_NOT_APPLICABLE_ORDER("Provider coupon not applicable for order"),
+    PROVIDER_COUPON_NOT_APPLICABLE_WAITLIST("Provider coupon not applicable for waitlist"),
+    PROVIDER_COUPON_NOT_APPLICABLE_APPOINTMENT("Provider coupon not applicable for appointment");
     //COUPON_EXPIRED_OR_PASSIVE(JALDEE_COUPON_EXPIRED_OR_PASSIVE),
     //PROVIDER_COUPON_NOT_APPLICABLE_COUPON_BASED_ON(COUPON_NOT_VALID);
 
