@@ -24,6 +24,7 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class CouponActivity extends AppCompatActivity {
     RecyclerView rvProviderCoupons;
     List<CoupnResponse> coupanList;
     RecyclerView rvCoupons;
-    String uniqueid,accountId;
+    String uniqueid, accountId;
     private CouponsAdapter mAdapter;
     CustomTextViewSemiBold tvError;
     private ProviderCouponsAdapter providerCouponsAdapter;
@@ -59,7 +60,7 @@ public class CouponActivity extends AppCompatActivity {
         if (bundle != null) {
 
             uniqueid = bundle.getString("uniqueID", "");
-            accountId = bundle.getString("accountId",null);
+            accountId = bundle.getString("accountId", null);
             ApiJaldeeCoupan(uniqueid);
         }
 
@@ -113,7 +114,6 @@ public class CouponActivity extends AppCompatActivity {
 
                     Config.logV("URL-response--------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
                         coupanList = response.body();
                         if (coupanList != null && coupanList.size() > 0) {

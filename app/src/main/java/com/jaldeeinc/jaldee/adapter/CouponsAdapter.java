@@ -47,9 +47,8 @@ public class CouponsAdapter extends RecyclerView.Adapter<CouponsAdapter.ViewHold
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             dateformats = new SimpleDateFormat("MMM dd, yyyy");
         }
-
         isFirstForConsumer = SharedPreference.getInstance(context).getBoolanValue("firstBooking", false);
-
+        couponList = rmvCpnsNotSupportThisCnsmr(isFirstForConsumer, couponList);//this method for remove firstcheckinOnly copouns if the consumer not isFirstForConsumer is FALSE(not a first checkin)
     }
 
     @NonNull
@@ -65,7 +64,6 @@ public class CouponsAdapter extends RecyclerView.Adapter<CouponsAdapter.ViewHold
     public void onBindViewHolder(@NonNull final CouponsAdapter.ViewHolder viewHolder, final int position) {
 
         final CoupnResponse couponResponse = couponList.get(position);
-
         if (couponResponse != null) {
 
 
@@ -83,15 +81,15 @@ public class CouponsAdapter extends RecyclerView.Adapter<CouponsAdapter.ViewHold
                 viewHolder.tvCouponName.setText(couponResponse.getCouponName());
             }
 
-            if (couponResponse.getJaldeeCouponCode() != null){
+            if (couponResponse.getJaldeeCouponCode() != null) {
                 viewHolder.tvCode.setText(couponResponse.getJaldeeCouponCode());
             }
 
-            if (couponResponse.getCouponDescription() != null){
+            if (couponResponse.getCouponDescription() != null) {
                 viewHolder.tvDescription.setText(couponResponse.getCouponDescription());
             }
 
-            if (couponResponse.getMinBillAmount() != null){
+            if (couponResponse.getMinBillAmount() != null) {
 
                 viewHolder.tvMinBill.setText("₹" + " " + Config.getAmountinTwoDecimalPoints(Double.parseDouble((couponResponse.getMinBillAmount()))));
             }
@@ -113,7 +111,7 @@ public class CouponsAdapter extends RecyclerView.Adapter<CouponsAdapter.ViewHold
             });
 
             if (couponResponse.isFirstCheckinOnly()) {
-                if (isFirstForConsumer){
+                if (isFirstForConsumer) {
 
                     viewHolder.llCoupon.setVisibility(View.VISIBLE);
                     viewHolder.llSignUpCoupon.setVisibility(View.VISIBLE);
@@ -133,7 +131,7 @@ public class CouponsAdapter extends RecyclerView.Adapter<CouponsAdapter.ViewHold
             }
 
 
-            if (couponResponse.getConsumerTermsAndconditions() != null){
+            if (couponResponse.getConsumerTermsAndconditions() != null) {
                 viewHolder.llTerms.setVisibility(View.VISIBLE);
                 viewHolder.tvTerms.setText(couponResponse.getConsumerTermsAndconditions());
             } else {
@@ -148,23 +146,21 @@ public class CouponsAdapter extends RecyclerView.Adapter<CouponsAdapter.ViewHold
 
         }
 
-
     }
 
 
     @Override
     public int getItemCount() {
-
         return couponList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        CustomTextViewSemiBold tvCouponName,tvTerms,tvDiscount,tvValidity,tvMinBill;
+        CustomTextViewSemiBold tvCouponName, tvTerms, tvDiscount, tvValidity, tvMinBill;
         CustomTextViewMedium tvDescription;
         CustomTextViewBold tvCode;
         ImageView ivCopy;
-        LinearLayout llSignUpCoupon,llTerms,llCoupon;
+        LinearLayout llSignUpCoupon, llTerms, llCoupon;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -185,4 +181,20 @@ public class CouponsAdapter extends RecyclerView.Adapter<CouponsAdapter.ViewHold
         }
     }
 
+    private List<CoupnResponse> rmvCpnsNotSupportThisCnsmr(boolean isFirstForConsumer, List<CoupnResponse> couponList) {  //this method for remove firstcheckinOnly copouns if the consumer not isFirstForConsumer is FALSE(not a first checkin)
+        CoupnResponse cr;
+        ArrayList<CoupnResponse> ccpnlist = new ArrayList<CoupnResponse>();
+        for (int i = 0; i < couponList.size(); i++) {
+            cr = couponList.get(i);
+            if (cr.isFirstCheckinOnly()) {
+                if (isFirstForConsumer) {
+                    ccpnlist.add(cr);
+                    continue;
+                }
+            } else {
+                ccpnlist.add(cr);
+            }
+        }
+        return ccpnlist;
+    }
 }
