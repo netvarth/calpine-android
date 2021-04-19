@@ -1,5 +1,6 @@
 package com.jaldeeinc.jaldee.activities;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -18,6 +19,12 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.payment.PaymentGateway;
+import com.jaldeeinc.jaldee.payment.PaytmPayment;
+import com.jaldeeinc.jaldee.response.ActiveAppointment;
+import com.jaldeeinc.jaldee.response.ActiveCheckIn;
+import com.jaldeeinc.jaldee.response.ActiveDonation;
+import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.MyPayments;
 
 import java.text.DecimalFormat;
@@ -42,6 +49,12 @@ public class PaymentDetail extends AppCompatActivity {
     TextView tv_title;
     Context mContext;
     String uniqueID;
+    private ActiveCheckIn bookingDetail = new ActiveCheckIn();
+    private ActiveAppointment apptDetail = new ActiveAppointment();
+    private ActiveDonation donationDetail = new ActiveDonation();
+    private ActiveOrders orderDetail = new ActiveOrders();
+
+
     private MyPayments myPayments = new MyPayments();
 
 
@@ -105,7 +118,6 @@ public class PaymentDetail extends AppCompatActivity {
         });
 
         ApiPayementDetail(id);
-
 
     }
 
@@ -217,7 +229,14 @@ public class PaymentDetail extends AppCompatActivity {
                                     refundable.setVisibility(View.GONE);
                                 }
                             }
-
+                            if (myPayments != null) {
+                                if (myPayments.getYnwUuid().endsWith("_wl")) {
+                                    getBookingDetails(myPayments.getYnwUuid(), myPayments.getAccountId());
+                                }
+                                if (myPayments.getYnwUuid().endsWith("_appt")) {
+                                    getAppointmentDetails(myPayments.getYnwUuid(), myPayments.getAccountId());
+                                }
+                            }
                         }
                     } else {
                         if (response.code() != 419) {
@@ -242,6 +261,131 @@ public class PaymentDetail extends AppCompatActivity {
         });
 
 
+    }
+
+    private void getBookingDetails(String uid, int id) {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(uid, String.valueOf(id));
+        call.enqueue(new Callback<ActiveCheckIn>() {
+            @Override
+            public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
+                try {
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        bookingDetail = response.body();
+                        if (bookingDetail.getProvider() != null) {
+
+                            if (bookingDetail.getProvider().getBusinessName() != null && !bookingDetail.getProvider().getBusinessName().equalsIgnoreCase("")) {
+                                provider.append(", " + bookingDetail.getProvider().getBusinessName());
+                            } else {
+                                String name = bookingDetail.getProvider().getFirstName() + " " + bookingDetail.getProvider().getLastName();
+                                provider.append(", " + name);
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.i("mnbbnmmnbbnm", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+    }
+
+    public void getAppointmentDetails(String uid, int id) {
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(uid, String.valueOf(id));
+        call.enqueue(new Callback<ActiveAppointment>() {
+            @Override
+            public void onResponse(Call<ActiveAppointment> call, Response<ActiveAppointment> response) {
+                try {
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        apptDetail = response.body();
+                        if (apptDetail.getProvider() != null) {
+
+                            if (apptDetail.getProvider().getBusinessName() != null && !apptDetail.getProvider().getBusinessName().equalsIgnoreCase("")) {
+                                provider.append(", " + apptDetail.getProvider().getBusinessName());
+                            } else {
+                                String name = apptDetail.getProvider().getFirstName() + " " + apptDetail.getProvider().getLastName();
+                                provider.append(", " + name);
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveAppointment> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+    }
+
+
+    private void getConfirmationId(String uid, int id) {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<ActiveDonation> call = apiService.getActiveDonationUUID(uid, String.valueOf(id));
+        call.enqueue(new Callback<ActiveDonation>() {
+            @Override
+            public void onResponse(Call<ActiveDonation> call, Response<ActiveDonation> response) {
+                try {
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        donationDetail = response.body();
+                    }
+                } catch (Exception e) {
+                    Log.i("mnbbnmmnbbnm", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveDonation> call, Throwable t) {
+            }
+        });
+
+    }
+
+    private void getOrderDetails(String orderUUid, int accountId) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<ActiveOrders> call = apiService.getOrderDetails(orderUUid, accountId);
+        call.enqueue(new Callback<ActiveOrders>() {
+            @Override
+            public void onResponse(Call<ActiveOrders> call, Response<ActiveOrders> response) {
+                try {
+                    if (response.code() == 200) {
+                        orderDetail = response.body();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveOrders> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
     }
 
     public String formatDateandTime(String time) {
