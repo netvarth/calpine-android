@@ -896,6 +896,8 @@ public class CheckInDetails extends AppCompatActivity {
                 if(checkInInfo.getBillViewStatus() == null || checkInInfo.getBillViewStatus().equalsIgnoreCase("NotShow")  || checkInInfo.getBillStatus().equals("Settled") || checkInInfo.getWaitlistStatus().equals("Rejected")){
                     cvBill.setVisibility(View.GONE);
                 }
+                if(checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled"))
+                    cvBill.setVisibility(View.GONE);
                 /***/
                 if (checkInInfo.getParentUuid() != null) {
                     cvBill.setVisibility(View.GONE);
