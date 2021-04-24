@@ -47,6 +47,7 @@ import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 import com.jaldeeinc.jaldee.response.ServiceInfo;
+import com.jaldeeinc.jaldee.response.UserResponse;
 import com.jaldeeinc.jaldee.widgets.CustomDialog;
 
 import java.text.SimpleDateFormat;
@@ -134,7 +135,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
     private int providerId;
     private int locationId;
     private int userId;
-    private String locationName,providerName;
+    private String locationName, providerName;
     boolean flag_more = false;
     private boolean isToken;
     private RecyclerView rvServices, mRecycle_virtualfield;
@@ -151,6 +152,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
     ArrayList<SearchVirtualFields> sub_domainVirtual = new ArrayList<>();
     private ISendMessage iSendMessage;
     private EnquiryDialog enquiryDialog;
+    private UserResponse userResponse = new UserResponse();
 
 
     @Override
@@ -186,7 +188,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
 
         }
 
-        if (providerName != null){
+        if (providerName != null) {
 
             tvProviderName.setText(providerName);
         }
@@ -201,8 +203,8 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
         userServicesAdapter = new UserServicesAdapter(serviceInfoList, this, true, iSelectedService, providerDetails);
         rvServices.setAdapter(userServicesAdapter);
 
-        // get provider details
-        getProviderBusinessProfile(uniqueId, providerId, locationId);
+
+        getUserDetails(uniqueId, providerId, locationId);
 
 
         tvMoreInfo.setOnClickListener(new View.OnClickListener() {
@@ -251,116 +253,95 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             }
         });
 
-        apiVirtualFields(uniqueId, providerId);
+    }
 
+    private void getUserDetails(int uniqueId, int providerId, int locId) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        Call<UserResponse> call = apiService.getUserDetails(uniqueId, providerId);
+        call.enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, final Response<UserResponse> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(UserDetailActivity.this, mDialog);
+
+                    if (response.code() == 200) {
+                        userResponse = response.body();
+
+                        if (userResponse != null) {
+
+                            if (userResponse.getBusinessProfile() != null) {
+                                providerDetails = userResponse.getBusinessProfile();
+
+                                if (providerDetails != null) {
+
+                                    userId = providerDetails.getId();
+                                    onlinePresence = providerDetails.isOnlinePresence();
+                                    onlinePresence = true;   //businessprofile .Json is not getting updated correctly, so we don't need to check this condition..that's why setting it as true.
+                                    UpdateMainUI(providerDetails);
+                                    apiGetProviders(uniqueId, providerId, locId, userId);
+
+                                    apiVirtualFields(uniqueId, providerId);
+
+                                }
+                            }
+                        }
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(UserDetailActivity.this, mDialog);
+            }
+        });
     }
 
     private void apiVirtualFields(int muniqueID, int provId) {
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<SearchVirtualFields> call = apiService.getProviderVirtualFields(muniqueID, provId, sdf.format(currentTime));
-        call.enqueue(new Callback<SearchVirtualFields>() {
-            @Override
-            public void onResponse(Call<SearchVirtualFields> call, Response<SearchVirtualFields> response) {
-                try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(UserDetailActivity.this, mDialog);
-                    Config.logV("URL----VIRTUAL---8888--------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code------VIRTUAL-------------------" + response.code());
-                    if (response.code() == 200) {
-                        resultData = response.body();
-                        if (resultData != null) {
-                            domainVirtual.clear();
-                            domainVirtual = resultData.getDomain();
-                            sub_domainVirtual.clear();
-                            sub_domainVirtual = resultData.getSubdomain();
-                            domainVirtual.addAll(sub_domainVirtual);
 
-                            if (domainVirtual.size() > 0) {
-                                tvMoreInfo.setVisibility(View.VISIBLE);
-                                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                                mRecycle_virtualfield.setLayoutManager(mLayoutManager);
-                                mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, 0);
-                                mRecycle_virtualfield.setAdapter(mAdapter);
-                                mAdapter.notifyDataSetChanged();
-                            } else {
-                                tvMoreInfo.setVisibility(View.GONE);
-                            }
-                        } else {
-                            llMore.setVisibility(View.GONE);
-                        }
+        try {
+
+            if (userResponse.getVirtualFields() != null) {
+
+                String vFields = userResponse.getVirtualFields();
+                resultData = new Gson().fromJson(vFields, SearchVirtualFields.class);
+
+                if (resultData != null) {
+                    domainVirtual.clear();
+                    domainVirtual = resultData.getDomain();
+                    sub_domainVirtual.clear();
+                    sub_domainVirtual = resultData.getSubdomain();
+                    domainVirtual.addAll(sub_domainVirtual);
+
+                    if (domainVirtual.size() > 0) {
+                        tvMoreInfo.setVisibility(View.VISIBLE);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                        mRecycle_virtualfield.setLayoutManager(mLayoutManager);
+                        mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, 0);
+                        mRecycle_virtualfield.setAdapter(mAdapter);
+                        mAdapter.notifyDataSetChanged();
                     } else {
-                        llMore.setVisibility(View.GONE);
+                        tvMoreInfo.setVisibility(View.GONE);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
+                    llMore.setVisibility(View.GONE);
                 }
+            } else {
+                llMore.setVisibility(View.GONE);
             }
-
-            @Override
-            public void onFailure(Call<SearchVirtualFields> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(UserDetailActivity.this, mDialog);
-            }
-        });
-    }
-
-
-    private void getProviderBusinessProfile(int uniqueId, int providerId, int locId) {
-
-        ApiInterface apiService = ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<SearchViewDetail> call = apiService.getUserBusinessProfile(uniqueId, providerId, sdf.format(currentTime));
-        call.enqueue(new Callback<SearchViewDetail>() {
-            @Override
-            public void onResponse(Call<SearchViewDetail> call, final Response<SearchViewDetail> response) {
-                try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(UserDetailActivity.this, mDialog);
-                    Config.logV("URL-----1111----------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-----detail--------------------" + response.code());
-                    if (response.code() == 200) {
-                        providerDetails = response.body();
-
-                        if (providerDetails != null) {
-
-                            userId = providerDetails.getId();
-                            onlinePresence = providerDetails.isOnlinePresence();
-                            onlinePresence = true;   //businessprofile .Json is not getting updated correctly, so we don't need to check this condition..that's why setting it as true.
-                            UpdateMainUI(providerDetails);
-                            apiGetProviders(uniqueId, providerId, locId, userId);
-
-                        }
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SearchViewDetail> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(UserDetailActivity.this, mDialog);
-            }
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -562,7 +543,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
 
                             if (checkInService.getProvider() != null) {// adding only Sp level services
 
-                                if(checkInService.getCheckInServiceAvailability() != null) {
+                                if (checkInService.getCheckInServiceAvailability() != null) {
 
                                     if (checkInService.getProvider().getId() == provid) { // add only particular provider services
 
@@ -605,7 +586,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
 
                             if (appt.getProvider() != null) {  // adding only Sp level services
 
-                                if(appt.getAppointServiceAvailability() != null) {
+                                if (appt.getAppointServiceAvailability() != null) {
 
                                     if (appt.getProvider().getId() == provid) {  // add only particular provider services
 
@@ -665,7 +646,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
                                                 rvServices.setVisibility(View.VISIBLE);
                                                 gridLayoutManager = new GridLayoutManager(UserDetailActivity.this, 2);
                                                 rvServices.setLayoutManager(gridLayoutManager);
-                                                userServicesAdapter = new UserServicesAdapter(servicesInfoList, UserDetailActivity.this, false, iSelectedService,providerDetails);
+                                                userServicesAdapter = new UserServicesAdapter(servicesInfoList, UserDetailActivity.this, false, iSelectedService, providerDetails);
                                                 rvServices.setAdapter(userServicesAdapter);
                                             } else {
 
@@ -759,7 +740,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             if (appointmentServiceInfo.getPreInfoText() != null) {
                 serviceInfo.setPreInfoText(appointmentServiceInfo.getPreInfoText());
             }
-            if (appointmentServiceInfo.getPreInfoTitle() != null){
+            if (appointmentServiceInfo.getPreInfoTitle() != null) {
                 serviceInfo.setPreInfoTitle(appointmentServiceInfo.getPreInfoTitle());
             }
             if (appointmentServiceInfo.getServiceType() != null) {
@@ -776,7 +757,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
                 serviceInfo.setTime(appointmentServiceInfo.getAppointServiceAvailability().getNextAvailable());
             }
 
-            if(appointmentServiceInfo.getTotalAmount()!=null){
+            if (appointmentServiceInfo.getTotalAmount() != null) {
                 serviceInfo.setTotalAmount(appointmentServiceInfo.getTotalAmount());
             }
 

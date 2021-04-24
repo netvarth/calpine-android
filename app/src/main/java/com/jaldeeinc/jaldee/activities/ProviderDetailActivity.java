@@ -20,7 +20,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -50,6 +49,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.jaldeeinc.jaldee.BuildConfig;
@@ -60,9 +60,7 @@ import com.jaldeeinc.jaldee.adapter.EmailsAdapter;
 import com.jaldeeinc.jaldee.adapter.LocationCheckinAdapter;
 import com.jaldeeinc.jaldee.adapter.MainServicesAdapter;
 import com.jaldeeinc.jaldee.adapter.ParkingModel;
-import com.jaldeeinc.jaldee.adapter.ParkingTypesAdapter;
 import com.jaldeeinc.jaldee.adapter.PhoneNumbersAdapter;
-import com.jaldeeinc.jaldee.adapter.SearchLocationAdapter;
 import com.jaldeeinc.jaldee.adapter.SectionRecyclerViewAdapter;
 import com.jaldeeinc.jaldee.adapter.ServicesAdapter;
 import com.jaldeeinc.jaldee.adapter.SpecialisationAdapter;
@@ -90,6 +88,7 @@ import com.jaldeeinc.jaldee.response.DepartmentInfo;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.OrderResponse;
 import com.jaldeeinc.jaldee.response.ProfilePicture;
+import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
@@ -345,6 +344,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     private String place;
     private OrderResponse orderResponse = new OrderResponse();
     private LocationAmenitiesDialog locationAmenitiesDialog;
+    private Provider providerResponse = new Provider();
+    ArrayList<SearchDonation> donationServices = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -597,206 +598,176 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             }
         });
 
-        apiVirtualFields(uniqueId);
-        ApiSearchViewLocation(uniqueId);
-        apiSearchViewTerminology(String.valueOf(uniqueId));
-
+        ApiGetProviderDetails(uniqueId);
 
     }
 
-    private void apiVirtualFields(int muniqueID) {
+    private void ApiGetProviderDetails(int uniqueId) {
+
         ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+                ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<SearchVirtualFields> call = apiService.getVirtualFields(muniqueID, sdf.format(currentTime));
-        call.enqueue(new Callback<SearchVirtualFields>() {
+        Call<Provider> call = apiService.getProviderDetails(uniqueId);
+        call.enqueue(new Callback<Provider>() {
             @Override
-            public void onResponse(Call<SearchVirtualFields> call, Response<SearchVirtualFields> response) {
+            public void onResponse(Call<Provider> call, Response<Provider> response) {
                 try {
                     if (mDialog.isShowing())
                         Config.closeDialog(ProviderDetailActivity.this, mDialog);
                     Config.logV("URL----VIRTUAL---8888--------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code------VIRTUAL-------------------" + response.code());
                     if (response.code() == 200) {
-                        resultData = response.body();
-                        if (resultData != null) {
-                            domainVirtual.clear();
-                            domainVirtual = resultData.getDomain();
-                            sub_domainVirtual.clear();
-                            sub_domainVirtual = resultData.getSubdomain();
-                            domainVirtual.addAll(sub_domainVirtual);
+                        providerResponse = response.body();
+                        if (providerResponse != null) {
 
-                            if (domainVirtual.size() > 0) {
-                                tvMoreInfo.setVisibility(View.VISIBLE);
-                                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                                mRecycle_virtualfield.setLayoutManager(mLayoutManager);
-                                mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, 0);
-                                mRecycle_virtualfield.setAdapter(mAdapter);
-                                mAdapter.notifyDataSetChanged();
-                            } else {
-                                tvMoreInfo.setVisibility(View.GONE);
-                            }
+                            apiVirtualFields(providerResponse.getVirtualFields());
+
+                            ApiSearchViewLocation(providerResponse.getLocation(), providerResponse.getBusinessProfile(), providerResponse);
+
+                            apiSearchViewTerminology(providerResponse.getTerminologies());
+
                         } else {
-                            llMore.setVisibility(View.GONE);
+
                         }
-                    } else {
-                        llMore.setVisibility(View.GONE);
-                        tvMoreInfo.setVisibility(View.GONE);
-                        updateContactInfo();
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<SearchVirtualFields> call, Throwable t) {
+            public void onFailure(Call<Provider> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(ProviderDetailActivity.this, mDialog);
             }
         });
+
+    }
+
+    private void apiVirtualFields(String virtFields) {
+
+        if (virtFields != null) {
+
+            String vFields = virtFields;
+            resultData = new Gson().fromJson(vFields, SearchVirtualFields.class);
+
+            if (resultData != null) {
+                domainVirtual.clear();
+                domainVirtual = resultData.getDomain();
+                sub_domainVirtual.clear();
+                sub_domainVirtual = resultData.getSubdomain();
+                domainVirtual.addAll(sub_domainVirtual);
+
+                if (domainVirtual.size() > 0) {
+                    tvMoreInfo.setVisibility(View.VISIBLE);
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                    mRecycle_virtualfield.setLayoutManager(mLayoutManager);
+                    mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, 0);
+                    mRecycle_virtualfield.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    tvMoreInfo.setVisibility(View.GONE);
+                }
+            } else {
+                llMore.setVisibility(View.GONE);
+            }
+        } else {
+            llMore.setVisibility(View.GONE);
+            tvMoreInfo.setVisibility(View.GONE);
+            updateContactInfo();
+        }
+
     }
 
 
-    private void ApiSearchViewLocation(int muniqueID) {
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<ArrayList<SearchLocation>> call = apiService.getSearchViewLoc(muniqueID, sdf.format(currentTime));
-        call.enqueue(new Callback<ArrayList<SearchLocation>>() {
-            @Override
-            public void onResponse(Call<ArrayList<SearchLocation>> call, Response<ArrayList<SearchLocation>> response) {
-                try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(ProviderDetailActivity.this, mDialog);
-                    Config.logV("URL---3333------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code--Location-----------------------" + response.code());
-                    if (response.code() == 200) {
-                        mSearchLocList = response.body();
-                        if (mSearchLocList != null) {
-                            if (mSearchLocList.size() > 1) {
-                                rlLocation.setVisibility(View.VISIBLE);
-                                tvLocation.setText(mSearchLocList.get(0).getAddress());
-                                tvChangeLocation.setVisibility(View.VISIBLE);
+    private void ApiSearchViewLocation(String loc, SearchViewDetail businessProfile, Provider providerResponse) {
 
-                            } else {
-                                rlLocation.setVisibility(View.GONE);
-                            }
+        try {
 
-                            if (mFrom != null && mFrom.equalsIgnoreCase("checkin")) {
-                                locationId = Integer.parseInt(location_Id);
-                                location = place;
-                                for (int i = 0; i < mSearchLocList.size(); i++) {
-                                    if (locationId == mSearchLocList.get(i).getId()) {
-                                        tvLocation.setText(mSearchLocList.get(i).getAddress());
-                                    }
-                                }
+            mSearchLocList = new Gson().fromJson(loc, new TypeToken<ArrayList<SearchLocation>>() {
+            }.getType());
 
-                            } else {
-                                locationId = mSearchLocList.get(0).getId();
-                                location = mSearchLocList.get(0).getPlace();
-                            }
+            if (mSearchLocList != null) {
 
+                if (mSearchLocList.size() > 1) {
+                    rlLocation.setVisibility(View.VISIBLE);
+                    tvLocation.setText(mSearchLocList.get(0).getAddress());
+                    tvChangeLocation.setVisibility(View.VISIBLE);
 
-                            apiSearchViewDetail(uniqueId);
+                } else {
+                    rlLocation.setVisibility(View.GONE);
+                }
 
-                        } else {
-                            rlLocation.setVisibility(View.GONE);
+                if (mFrom != null && mFrom.equalsIgnoreCase("checkin")) {
+                    locationId = Integer.parseInt(location_Id);
+                    location = place;
+                    for (int i = 0; i < mSearchLocList.size(); i++) {
+                        if (locationId == mSearchLocList.get(i).getId()) {
+                            tvLocation.setText(mSearchLocList.get(i).getAddress());
                         }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+                } else {
+                    locationId = mSearchLocList.get(0).getId();
+                    location = mSearchLocList.get(0).getPlace();
                 }
+
+
+                apiSearchViewDetail(businessProfile, providerResponse);
+
+            } else {
+                rlLocation.setVisibility(View.GONE);
             }
 
-            @Override
-            public void onFailure(Call<ArrayList<SearchLocation>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(ProviderDetailActivity.this, mDialog);
-            }
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 
-    private void apiSearchViewDetail(int id) {
-        ApiInterface apiService = ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(ProviderDetailActivity.this, ProviderDetailActivity.this.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<SearchViewDetail> call = apiService.getSearchViewDetail(id, sdf.format(currentTime));
-        call.enqueue(new Callback<SearchViewDetail>() {
-            @Override
-            public void onResponse(Call<SearchViewDetail> call, final Response<SearchViewDetail> response) {
-                try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(ProviderDetailActivity.this, mDialog);
-                    Config.logV("URL-----1111----------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-----detail--------------------" + response.code());
-                    if (response.code() == 200) {
-                        mBusinessDataList = response.body();
+    private void apiSearchViewDetail(SearchViewDetail businessProf, Provider providerResponse) {
 
-                        if (mBusinessDataList != null) {
-                            accountType = mBusinessDataList.getAccountType();
+        try {
 
-//
-//
-                            if (mBusinessDataList.getCustomId() != null) {
-                                sharingId = mBusinessDataList.getCustomId();
-                            } else if (mBusinessDataList.getAccEncUid() != null) {
-                                sharingId = mBusinessDataList.getAccEncUid();
-                            } else if (mBusinessDataList.getAccEncUid() != null) {
-                                sharingId = mBusinessDataList.getAccEncUid();
-                            } else {
-                                sharingId = mBusinessDataList.getUniqueId();
-                            }
+            mBusinessDataList = businessProf;
 
-                            if (mBusinessDataList.getId() != 0) {
-                                providerId = mBusinessDataList.getId();
-                            }
-                            onlinePresence = mBusinessDataList.isOnlinePresence();
-                            onlinePresence = true;   //businessprofile .Json is not getting updated correctly, so we don't need to check this condition..that's why setting it as true.
-                            UpdateMainUI(mBusinessDataList);
-                            apiSearchGallery(id);
-                            apiSettings_Details(id, providerId, locationId, location);
-                            // check if the provider is a favourite
-                            ApiFavList();
+            if (mBusinessDataList != null) {
+                accountType = mBusinessDataList.getAccountType();
 
-                        }
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (mBusinessDataList.getCustomId() != null) {
+                    sharingId = mBusinessDataList.getCustomId();
+                } else if (mBusinessDataList.getAccEncUid() != null) {
+                    sharingId = mBusinessDataList.getAccEncUid();
+                } else if (mBusinessDataList.getAccEncUid() != null) {
+                    sharingId = mBusinessDataList.getAccEncUid();
+                } else {
+                    sharingId = mBusinessDataList.getUniqueId();
                 }
-            }
 
-            @Override
-            public void onFailure(Call<SearchViewDetail> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(ProviderDetailActivity.this, mDialog);
+                if (mBusinessDataList.getId() != 0) {
+                    providerId = mBusinessDataList.getId();
+                }
+                onlinePresence = mBusinessDataList.isOnlinePresence();
+                onlinePresence = true;   //businessprofile .Json is not getting updated correctly, so we don't need to check this condition..that's why setting it as true.
+                UpdateMainUI(mBusinessDataList);
+                apiSearchGallery(providerResponse.getGalleryList());
+                apiSettings_Details(uniqueId, providerId, locationId, location);
+                // check if the provider is a favourite
+                ApiFavList();
+
+
             }
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     ArrayList<ParkingModel> listType = new ArrayList<>();
@@ -897,90 +868,63 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
     }
 
-    private void apiSearchGallery(int muniqueID) {
-        ApiInterface apiService = ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(ProviderDetailActivity.this, ProviderDetailActivity.this.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println(sdf.format(currentTime));
-        Call<ArrayList<SearchViewDetail>> call = apiService.getSearchGallery(muniqueID, sdf.format(currentTime));
-        call.enqueue(new Callback<ArrayList<SearchViewDetail>>() {
-            @Override
-            public void onResponse(Call<ArrayList<SearchViewDetail>> call, Response<ArrayList<SearchViewDetail>> response) {
-                try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(ProviderDetailActivity.this, mDialog);
-                    Config.logV("URL------100000---------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-----gallery--------------------" + response.code());
-                    if (response.code() == 200) {
-                        mSearchGallery = response.body();
-                        if (mSearchGallery != null) {
-                            UpdateGallery(mSearchGallery);
-                        }
+    private void apiSearchGallery(ArrayList<SearchViewDetail> mSearchGallery) {
 
-                    } else {
-                        tv_mImageViewTextnew.setVisibility(View.GONE);
-                        if (mBusinessDataList.getLogo() != null) {
-                            Glide.with(ProviderDetailActivity.this)
-                                    .load(mBusinessDataList.getLogo().getUrl())
-                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                    .skipMemoryCache(true)
-                                    .apply(new RequestOptions().error(R.drawable.icon_noimage).circleCrop())
-                                    .listener(new RequestListener<Drawable>() {
-                                        @Override
-                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                            //on load failed
-                                            ivSpImage.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_noimage));
-                                            return false;
-                                        }
+        try {
 
-                                        @Override
-                                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                            //on load success
-
-                                            return false;
-                                        }
-                                    })
-                                    .into(ivSpImage);
-//                            PicassoTrustAll.getInstance(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(ivSpImage);
-                            ivSpImage.setOnClickListener(new View.OnClickListener() {
+            if (mSearchGallery != null) {
+                UpdateGallery(mSearchGallery);
+            } else {
+                tv_mImageViewTextnew.setVisibility(View.GONE);
+                if (mBusinessDataList.getLogo() != null) {
+                    Glide.with(ProviderDetailActivity.this)
+                            .load(mBusinessDataList.getLogo().getUrl())
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .apply(new RequestOptions().error(R.drawable.icon_noimage).circleCrop())
+                            .listener(new RequestListener<Drawable>() {
                                 @Override
-                                public void onClick(View view) {
-                                    ArrayList<String> mGalleryList = new ArrayList<>();
-                                    if (mBusinessDataList.getLogo() != null) {
-                                        mGalleryList.add(mBusinessDataList.getLogo().getUrl());
-                                    }
-
-                                    boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, view.getContext());
-                                    if (mValue) {
-                                        Intent intent = new Intent(ProviderDetailActivity.this, SwipeGalleryImage.class);
-                                        intent.putExtra("pos", 0);
-                                        startActivity(intent);
-                                    }
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    //on load failed
+                                    ivSpImage.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_noimage));
+                                    return false;
                                 }
-                            });
 
-                        } else {
-                            tv_mImageViewTextnew.setVisibility(View.GONE);
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    //on load success
+
+                                    return false;
+                                }
+                            })
+                            .into(ivSpImage);
+//                            PicassoTrustAll.getInstance(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(ivSpImage);
+                    ivSpImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ArrayList<String> mGalleryList = new ArrayList<>();
+                            if (mBusinessDataList.getLogo() != null) {
+                                mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+                            }
+
+                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, view.getContext());
+                            if (mValue) {
+                                Intent intent = new Intent(ProviderDetailActivity.this, SwipeGalleryImage.class);
+                                intent.putExtra("pos", 0);
+                                startActivity(intent);
+                            }
                         }
+                    });
 
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
+                    tv_mImageViewTextnew.setVisibility(View.GONE);
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ArrayList<SearchViewDetail>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(ProviderDetailActivity.this, mDialog);
             }
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -1491,58 +1435,36 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     }
 
     private void apiSettings_Details(int uniqueId, int mProviderId, final int mlocationId, String location) {
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<SearchSetting> call = apiService.getSearchViewSetting(uniqueId, sdf.format(currentTime));
-        call.enqueue(new Callback<SearchSetting>() {
-            @Override
-            public void onResponse(Call<SearchSetting> call, Response<SearchSetting> response) {
-                try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(ProviderDetailActivity.this, mDialog);
-                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code------Setting-------------------" + response.code());
-                    if (response.code() == 200) {
-                        rvServices.setVisibility(View.VISIBLE);
-                        mSearchSettings = response.body();
-                        if (mSearchSettings != null) {
 
-                            if (mSearchLocList != null && mSearchLocList.size() > 0) {
-                                for (int i = 0; i < mSearchLocList.size(); i++) {
-                                    if (mlocationId == mSearchLocList.get(i).getId()) {
-                                        handleLocationAmenities(mSearchLocList.get(i));
-                                    }
-                                }
+        try {
+
+            if (providerResponse.getSettings() != null) {
+
+                String settings = providerResponse.getSettings();
+                mSearchSettings = new Gson().fromJson(settings, SearchSetting.class);
+                rvServices.setVisibility(View.VISIBLE);
+                if (mSearchSettings != null) {
+
+                    if (mSearchLocList != null && mSearchLocList.size() > 0) {
+                        for (int i = 0; i < mSearchLocList.size(); i++) {
+                            if (mlocationId == mSearchLocList.get(i).getId()) {
+                                handleLocationAmenities(mSearchLocList.get(i));
                             }
-
-                            // to check if the provider has order enabled, if it is order enabled
-                            checkOrderEnabled(mSearchSettings, uniqueId, mProviderId, mlocationId);
                         }
-
-                    } else if (response.code() == 403) {
-
-                        rvServices.setVisibility(View.GONE);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<SearchSetting> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(ProviderDetailActivity.this, mDialog);
+                    // to check if the provider has order enabled, if it is order enabled
+                    checkOrderEnabled(mSearchSettings, uniqueId, mProviderId, mlocationId);
+                }
+
+            } else {
+
+                rvServices.setVisibility(View.GONE);
             }
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void checkOrderEnabled(SearchSetting mSearchSettings, int uniqueId, int mProviderId, int mlocationId) {
@@ -1576,6 +1498,12 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             }
                         } else {
 
+                            // to parse donation services
+
+                            if (providerResponse.getDonationServices() != null) {
+                                donationServices = new Gson().fromJson(providerResponse.getDonationServices(), new TypeToken<ArrayList<SearchDonation>>() {
+                                }.getType());
+                            }
                             getOnlyServices(uniqueId, mlocationId, mProviderId);
                         }
                         ApiCheckInMessage(mlocationId, location);
@@ -1594,6 +1522,11 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             }
                         } else {
 
+                            // to parse donation services
+                            if (providerResponse.getDonationServices() != null) {
+                                donationServices = new Gson().fromJson(providerResponse.getDonationServices(), new TypeToken<ArrayList<SearchDonation>>() {
+                                }.getType());
+                            }
                             getOnlyServices(uniqueId, mlocationId, mProviderId);
                         }
                         ApiCheckInMessage(mlocationId, location);
@@ -1616,83 +1549,62 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
     private void getProviderWithDepartments(int uniqueId, int mProviderId, int mlocationId) {
 
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<ArrayList<SearchDepartmentServices>> call = apiService.getUserandDepartments(uniqueId, sdf.format(currentTime));
-        call.enqueue(new Callback<ArrayList<SearchDepartmentServices>>() {
-            @Override
-            public void onResponse(Call<ArrayList<SearchDepartmentServices>> call, Response<ArrayList<SearchDepartmentServices>> response) {
-                try {
 
-                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code------Setting-------------------" + response.code());
-                    if (response.code() == 200) {
-                        departmentProviders.clear();
-                        departmentProviders = response.body();
+        try {
+            if (providerResponse.getDepartmentProviders() != null) {
 
-                        getDepartmentsWithCheckInServices(uniqueId, mProviderId, mlocationId);
-
-                    } else if (response.code() == 404) {
-
-                        getDepartmentsWithCheckInServices(uniqueId, mProviderId, mlocationId);
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                departmentProviders = new Gson().fromJson(providerResponse.getDepartmentProviders(), new TypeToken<ArrayList<SearchDepartmentServices>>() {
+                }.getType());
             }
 
-            @Override
-            public void onFailure(Call<ArrayList<SearchDepartmentServices>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
+            if (providerResponse.getDonationServices() != null) {
+                donationServices = new Gson().fromJson(providerResponse.getDonationServices(), new TypeToken<ArrayList<SearchDonation>>() {
+                }.getType());
             }
-        });
+
+            if (departmentProviders != null) {
+
+                getDepartmentsWithCheckInServices(uniqueId, mProviderId, mlocationId);
+
+            } else {
+
+                getDepartmentsWithCheckInServices(uniqueId, mProviderId, mlocationId);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void getProvidersNew(int uniqueId, int mProviderId, int mlocationId) {
 
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<ArrayList<ProviderUserModel>> call = apiService.getUsers(uniqueId, sdf.format(currentTime));
-        call.enqueue(new Callback<ArrayList<ProviderUserModel>>() {
-            @Override
-            public void onResponse(Call<ArrayList<ProviderUserModel>> call, Response<ArrayList<ProviderUserModel>> response) {
-                try {
 
-                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code------Setting-------------------" + response.code());
-                    if (response.code() == 200) {
+        try {
 
-                        providersList = response.body();
-                        apiGetProviders(uniqueId, mProviderId, mlocationId);
-
-                    } else if (response.code() == 404 || response.code() == 403) {
-
-                        apiGetProviders(uniqueId, mProviderId, mlocationId);
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            if (providerResponse.getDepartmentProviders() != null) {
+                providersList = new Gson().fromJson(providerResponse.getDepartmentProviders(), new TypeToken<ArrayList<ProviderUserModel>>() {
+                }.getType());
             }
 
-            @Override
-            public void onFailure(Call<ArrayList<ProviderUserModel>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
+            if (providerResponse.getDonationServices() != null) {
+                donationServices = new Gson().fromJson(providerResponse.getDonationServices(), new TypeToken<ArrayList<SearchDonation>>() {
+                }.getType());
             }
-        });
+
+            if (providersList != null) {
+
+                apiGetProviders(uniqueId, mProviderId, mlocationId);
+
+            } else {
+
+                apiGetProviders(uniqueId, mProviderId, mlocationId);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void getOnlyServices(int unqId, int locid, int provid) {
@@ -1718,7 +1630,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 requests.add(apiService.getAppointmentSchedule(provid + "-" + locid));
                 requests.add(apiService.getCheckInServices(locid));
                 requests.add(apiService.getAppointmentServices(locid));
-                requests.add(s3ApiService.getDonationServices(unqId, sdf.format(currentTime)));
                 requests.add(apiService.getCatalog(provid));
 
             } else {
@@ -1726,7 +1637,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 requests.add(apiService.getAppointmentSchedule(provid + "-" + locid));
                 requests.add(apiService.getCheckInServices(locid));
                 requests.add(apiService.getAppointmentServices(locid));
-                requests.add(s3ApiService.getDonationServices(unqId, sdf.format(currentTime)));
             }
 
             // Zip all requests with the Function, which will receive the results.
@@ -1738,7 +1648,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     ArrayList<ScheduleList> schedulesList = new ArrayList<>();
                     ArrayList<SearchService> checkInServList = new ArrayList<>();
                     ArrayList<SearchAppoinment> apptServicesList = new ArrayList<>();
-                    ArrayList<SearchDonation> donationServices = new ArrayList<>();
                     ArrayList<Catalog> catalogs = new ArrayList<>();
                     if (orderEnabled) {
 
@@ -1746,15 +1655,13 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         schedulesList = (ArrayList<ScheduleList>) objects[1];
                         checkInServList = (ArrayList<SearchService>) objects[2];
                         apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
-                        donationServices = (ArrayList<SearchDonation>) objects[4];
-                        catalogs = (ArrayList<Catalog>) objects[5];
+                        catalogs = (ArrayList<Catalog>) objects[4];
 
                     } else {
                         queueList = (ArrayList<QueueList>) objects[0];
                         schedulesList = (ArrayList<ScheduleList>) objects[1];
                         checkInServList = (ArrayList<SearchService>) objects[2];
                         apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
-                        donationServices = (ArrayList<SearchDonation>) objects[4];
                     }
 
                     queueList = queueList == null ? new ArrayList<QueueList>() : queueList;
@@ -1980,7 +1887,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 requests.add(apiService.getAppointmentSchedule(provid + "-" + locid));
                 requests.add(apiService.getCheckInServices(locid));
                 requests.add(apiService.getAppointmentServices(locid));
-                requests.add(s3ApiService.getDonationServices(unqId, sdf.format(currentTime)));
                 requests.add(apiService.getCatalog(provid));
 
             } else {
@@ -1988,7 +1894,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 requests.add(apiService.getAppointmentSchedule(provid + "-" + locid));
                 requests.add(apiService.getCheckInServices(locid));
                 requests.add(apiService.getAppointmentServices(locid));
-                requests.add(s3ApiService.getDonationServices(unqId, sdf.format(currentTime)));
             }
 
             // Zip all requests with the Function, which will receive the results.
@@ -2000,7 +1905,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     ArrayList<ScheduleList> schedulesList = new ArrayList<>();
                     ArrayList<SearchService> checkInServList = new ArrayList<>();
                     ArrayList<SearchAppoinment> apptServicesList = new ArrayList<>();
-                    ArrayList<SearchDonation> donationServices = new ArrayList<>();
                     ArrayList<Catalog> catalogs = new ArrayList<>();
 
                     if (orderEnabled) {
@@ -2009,8 +1913,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         schedulesList = (ArrayList<ScheduleList>) objects[1];
                         checkInServList = (ArrayList<SearchService>) objects[2];
                         apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
-                        donationServices = (ArrayList<SearchDonation>) objects[4];
-                        catalogs = (ArrayList<Catalog>) objects[5];
+                        catalogs = (ArrayList<Catalog>) objects[4];
 
                     } else {
 
@@ -2018,7 +1921,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         schedulesList = (ArrayList<ScheduleList>) objects[1];
                         checkInServList = (ArrayList<SearchService>) objects[2];
                         apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
-                        donationServices = (ArrayList<SearchDonation>) objects[4];
                     }
 
                     queueList = queueList == null ? new ArrayList<QueueList>() : queueList;
@@ -2279,21 +2181,17 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             // Make a collection of all requests you need to call at once, there can be any number of requests, not only 3. You can have 2 or 5, or 100.
             if (orderEnabled) {
 
-                requests.add(s3ApiService.getDepartmentProviders(unqId, sdf.format(currentTime)));
                 requests.add(apiService.getCheckInsSchedule(provId + "-" + locid));
                 requests.add(apiService.getAppointmentSchedule(provId + "-" + locid));
                 requests.add(apiService.getCheckInServices(locid));
                 requests.add(apiService.getAppointmentServices(locid));
-                requests.add(s3ApiService.getDonationServices(unqId, sdf.format(currentTime)));
                 requests.add(apiService.getCatalog(provId));
 
             } else {
-                requests.add(s3ApiService.getDepartmentProviders(unqId, sdf.format(currentTime)));
                 requests.add(apiService.getCheckInsSchedule(provId + "-" + locid));
                 requests.add(apiService.getAppointmentSchedule(provId + "-" + locid));
                 requests.add(apiService.getCheckInServices(locid));
                 requests.add(apiService.getAppointmentServices(locid));
-                requests.add(s3ApiService.getDonationServices(unqId, sdf.format(currentTime)));
             }
 
             // Zip all requests with the Function, which will receive the results.
@@ -2301,35 +2199,27 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 @Override
                 public Object apply(Object[] objects) throws Exception {
                     // Objects[] is an array of combined results of completed requests
-                    ArrayList<SearchDepartmentServices> deptCheckinsList = new ArrayList<>();
                     ArrayList<QueueList> queueList = new ArrayList<>();
                     ArrayList<ScheduleList> schedulesList = new ArrayList<>();
                     ArrayList<SearchService> checkInServicesList = new ArrayList<>();
                     ArrayList<SearchAppoinment> apptServicesList = new ArrayList<>();
-                    ArrayList<SearchDonation> donationServices = new ArrayList<>();
                     ArrayList<Catalog> catalogs = new ArrayList<>();
 
                     if (orderEnabled) {
 
-                        deptCheckinsList = (ArrayList<SearchDepartmentServices>) objects[0];
-                        queueList = (ArrayList<QueueList>) objects[1];
-                        schedulesList = (ArrayList<ScheduleList>) objects[2];
-                        checkInServicesList = (ArrayList<SearchService>) objects[3];
-                        apptServicesList = (ArrayList<SearchAppoinment>) objects[4];
-                        donationServices = (ArrayList<SearchDonation>) objects[5];
-                        catalogs = (ArrayList<Catalog>) objects[6];
+                        queueList = (ArrayList<QueueList>) objects[0];
+                        schedulesList = (ArrayList<ScheduleList>) objects[1];
+                        checkInServicesList = (ArrayList<SearchService>) objects[2];
+                        apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
+                        catalogs = (ArrayList<Catalog>) objects[4];
 
                     } else {
 
-                        deptCheckinsList = (ArrayList<SearchDepartmentServices>) objects[0];
-                        queueList = (ArrayList<QueueList>) objects[1];
-                        schedulesList = (ArrayList<ScheduleList>) objects[2];
-                        checkInServicesList = (ArrayList<SearchService>) objects[3];
-                        apptServicesList = (ArrayList<SearchAppoinment>) objects[4];
-                        donationServices = (ArrayList<SearchDonation>) objects[5];
+                        queueList = (ArrayList<QueueList>) objects[0];
+                        schedulesList = (ArrayList<ScheduleList>) objects[1];
+                        checkInServicesList = (ArrayList<SearchService>) objects[2];
+                        apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
                     }
-
-                    deptCheckinsList = deptCheckinsList == null ? new ArrayList<SearchDepartmentServices>() : deptCheckinsList;
 
                     checkInServicesList = checkInServicesList == null ? new ArrayList<SearchService>() : checkInServicesList;
 
@@ -2342,7 +2232,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     donationServices = donationServices == null ? new ArrayList<SearchDonation>() : donationServices;
 
                     departmentsList.clear();
-                    for (SearchDepartmentServices department : deptCheckinsList) {
+                    for (SearchDepartmentServices department : ProviderDetailActivity.this.departmentProviders) {
 
                         DepartmentInfo departmentInfo = new DepartmentInfo();
                         ArrayList<DepServiceInfo> services = new ArrayList<DepServiceInfo>();
@@ -2433,7 +2323,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         }
 
                         // for providers
-                        for (SearchDepartmentServices provider : departmentProviders) {
+                        for (SearchDepartmentServices provider : ProviderDetailActivity.this.departmentProviders) {
 
                             if (department.getDepartmentId().equalsIgnoreCase(provider.getDepartmentId())) {
 
@@ -2864,44 +2754,17 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         });
     }
 
-    private void apiSearchViewTerminology(String muniqueID) {
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-//        mDialog.show();
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<SearchTerminology> call = apiService.getSearchViewTerminology(Integer.parseInt(muniqueID), sdf.format(currentTime));
-        call.enqueue(new Callback<SearchTerminology>() {
-            @Override
-            public void onResponse(Call<SearchTerminology> call, Response<SearchTerminology> response) {
-                try {
-//                    if (mDialog.isShowing())
-//                        Config.closeDialog(getActivity(), mDialog);
-                    Config.logV("URL-------9999--------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-----Terminl--------------------" + response.code());
-                    if (response.code() == 200) {
-                        mSearchTerminology = response.body();
-                        terminology = mSearchTerminology.getWaitlist();
-                        userTerminology = mSearchTerminology.getProvider();
+    private void apiSearchViewTerminology(String termin) {
+        try {
+            mSearchTerminology = new Gson().fromJson(termin, SearchTerminology.class);
+            if (mSearchTerminology != null) {
+                terminology = mSearchTerminology.getWaitlist();
+                userTerminology = mSearchTerminology.getProvider();
 
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
-
-            @Override
-            public void onFailure(Call<SearchTerminology> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-//                if (mDialog.isShowing())
-//                    Config.closeDialog(getActivity(), mDialog);
-            }
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -3004,7 +2867,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         providerIntent.putExtra("providerInfo", providerInfo);
         providerIntent.putExtra("locationName", tvLocationName.getText().toString());
         providerIntent.putExtra("isToken", isToken);
-        providerIntent.putExtra("providerName",tvSpName.getText().toString());
+        providerIntent.putExtra("providerName", tvSpName.getText().toString());
         startActivity(providerIntent);
 
     }

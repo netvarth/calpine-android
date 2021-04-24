@@ -41,7 +41,6 @@ import android.text.format.DateUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -53,8 +52,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.Interface.ICpn;
 import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
@@ -62,13 +61,11 @@ import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.Interface.IMobileSubmit;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.Interface.ISelectQ;
-import com.jaldeeinc.jaldee.Interface.ISendData;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
 import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.adapter.MultipleFamilyMemberAdapter;
-import com.jaldeeinc.jaldee.adapter.QueuesAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -81,7 +78,6 @@ import com.jaldeeinc.jaldee.custom.CustomToolTip;
 import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.custom.FamilyMemberDialog;
 import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
-import com.jaldeeinc.jaldee.custom.MyLeadingMarginSpan2;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
@@ -92,6 +88,7 @@ import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.CouponApliedOrNotDetails;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
+import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.SearchService;
@@ -358,6 +355,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     private IFamilyMemberDetails iFamilyMemberDetails;
     String emailId, prepayAmount = "";
     private String countryCode;
+    private Provider providerResponse = new Provider();
+    private SearchSetting mSearchSettings;
 
     private ICpn iCpn;
 
@@ -538,12 +537,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         consumerID = SharedPreference.getInstance(CheckInActivity.this).getIntValue("consumerId", 0);
 
         // api calls
-        ApiSearchViewTerminology(uniqueId);
+        ApiGetProviderDetails(uniqueId);
+
         ApiGetProfileDetail();
-        ApiSearchViewSetting(uniqueId);
-        apiSearchViewDetail(uniqueId);
-        ApiJaldeegetS3Coupons(uniqueId);
-        ApiJaldeegetProviderCoupons(uniqueId);
 
 
         // click actions
@@ -1008,98 +1004,88 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
     }
 
-    private void ApiSearchViewTerminology(int muniqueID) {
 
+    private void ApiGetProviderDetails(int uniqueId) {
 
         ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+                ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<SearchTerminology> call = apiService.getSearchViewTerminology(muniqueID, sdf.format(currentTime));
-
-        call.enqueue(new Callback<SearchTerminology>() {
+        Call<Provider> call = apiService.getProviderDetails(uniqueId);
+        call.enqueue(new Callback<Provider>() {
             @Override
-            public void onResponse(Call<SearchTerminology> call, Response<SearchTerminology> response) {
-
-                try {
-
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
-                    if (response.code() == 200) {
-
-                        mSearchTerminology = response.body();
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<SearchTerminology> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
-
-            }
-        });
-    }
-
-    private void apiSearchViewDetail(int id) {
-        ApiInterface apiService = ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<SearchViewDetail> call = apiService.getSearchViewDetail(id, sdf.format(currentTime));
-        call.enqueue(new Callback<SearchViewDetail>() {
-            @Override
-            public void onResponse(Call<SearchViewDetail> call, final Response<SearchViewDetail> response) {
+            public void onResponse(Call<Provider> call, Response<Provider> response) {
                 try {
                     if (mDialog.isShowing())
                         Config.closeDialog(CheckInActivity.this, mDialog);
-                    Config.logV("URL-----1111----------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-----detail--------------------" + response.code());
                     if (response.code() == 200) {
-                        mBusinessDataList = response.body();
+                        providerResponse = response.body();
+                        if (providerResponse != null) {
 
-                        if (mBusinessDataList != null) {
+                            ApiSearchViewSetting(providerResponse.getSettings());
 
-                            sector = mBusinessDataList.getServiceSector().getDomain();
-                            subsector = mBusinessDataList.getServiceSubSector().getSubDomain();
-                            APISector(sector, subsector);
+                            ApiSearchViewTerminology(providerResponse.getTerminologies());
+
+                            apiSearchViewDetail(providerResponse.getBusinessProfile());
+
+                            ApiJaldeegetS3Coupons(providerResponse.getCoupon());
+
+                            ApiJaldeegetProviderCoupons(providerResponse.getProviderCoupon());
+
+                        } else {
+
                         }
-
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<SearchViewDetail> call, Throwable t) {
+            public void onFailure(Call<Provider> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(CheckInActivity.this, mDialog);
             }
         });
+
+    }
+
+
+    private void ApiSearchViewTerminology(String termin) {
+
+        try {
+
+            if (termin != null) {
+                mSearchTerminology = new Gson().fromJson(termin, SearchTerminology.class);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void apiSearchViewDetail(SearchViewDetail profile) {
+
+
+        try {
+
+            mBusinessDataList = profile;
+
+            if (mBusinessDataList != null) {
+
+                sector = mBusinessDataList.getServiceSector().getDomain();
+                subsector = mBusinessDataList.getServiceSubSector().getSubDomain();
+                APISector(sector, subsector);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     SectorCheckin checkin_sector = null;
@@ -1133,17 +1119,19 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     if (response.code() == 200) {
                         checkin_sector = response.body();
                         maxPartysize = 0;
-                        if (checkin_sector.isPartySize() && !checkin_sector.isPartySizeForCalculation()) {
-                            enableparty = true;
-                            maxPartysize = checkin_sector.getMaxPartySize();
-                        } else {
-                            enableparty = false;
-                        }
-                        if (checkin_sector.isPartySizeForCalculation()) {
-                            multiplemem = true;
+                        if (checkin_sector != null) {
+                            if (checkin_sector.isPartySize() && !checkin_sector.isPartySizeForCalculation()) {
+                                enableparty = true;
+                                maxPartysize = checkin_sector.getMaxPartySize();
+                            } else {
+                                enableparty = false;
+                            }
+                            if (checkin_sector.isPartySizeForCalculation()) {
+                                multiplemem = true;
 
-                        } else {
-                            multiplemem = false;
+                            } else {
+                                multiplemem = false;
+                            }
                         }
                     }
                 } catch (Exception e) {
@@ -1221,178 +1209,89 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
     }
 
-    private void ApiSearchViewSetting(int muniqueID) {
+    private void ApiSearchViewSetting(String setting) {
 
+        try {
+            if (setting != null) {
+                mSearchSettings = new Gson().fromJson(setting, SearchSetting.class);
+                isToken = mSearchSettings.isShowTokenId();
 
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-
-
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-
-
-        Call<SearchSetting> call = apiService.getSearchViewSetting(muniqueID, sdf.format(currentTime));
-
-        call.enqueue(new Callback<SearchSetting>() {
-            @Override
-            public void onResponse(Call<SearchSetting> call, Response<SearchSetting> response) {
-
-                try {
-
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
-                    if (response.code() == 200) {
-                        if (response.body() != null) {
-                            isToken = response.body().isShowTokenId();
-
-                            if (!checkInInfo.isPrePayment()) {
-                                if (isToken) {
-                                    tvButtonName.setText("Confirm Token");
-                                    tvTerm.setText("Token for");
-                                } else {
-                                    tvButtonName.setText("Confirm CheckIn");
-                                    tvTerm.setText("CheckIn for");
-                                }
-                            } else {
-                                if (isToken) {
-                                    tvButtonName.setText("Proceed to Payment");
-                                    tvTerm.setText("Token for");
-                                } else {
-                                    tvButtonName.setText("Proceed to Payment");
-                                    tvTerm.setText("CheckIn for");
-                                }
-                            }
-                            if (response.body().getCalculationMode() != null) {
-                                calcMode = response.body().getCalculationMode();
-                            }
-                        }
+                if (!checkInInfo.isPrePayment()) {
+                    if (isToken) {
+                        tvButtonName.setText("Confirm Token");
+                        tvTerm.setText("Token for");
+                    } else {
+                        tvButtonName.setText("Confirm CheckIn");
+                        tvTerm.setText("CheckIn for");
                     }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
+                    if (isToken) {
+                        tvButtonName.setText("Proceed to Payment");
+                        tvTerm.setText("Token for");
+                    } else {
+                        tvButtonName.setText("Proceed to Payment");
+                        tvTerm.setText("CheckIn for");
+                    }
                 }
-
+                if (mSearchSettings.getCalculationMode() != null) {
+                    calcMode = mSearchSettings.getCalculationMode();
+                }
             }
 
-            @Override
-            public void onFailure(Call<SearchSetting> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
-            }
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
-    private void ApiJaldeegetS3Coupons(int uniqueID) {
+    private void ApiJaldeegetS3Coupons(String s3Coupons) {
 
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+        try {
 
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
+            if (s3Coupons != null) {
+                s3couponList.clear();
+                s3couponList = new Gson().fromJson(s3Coupons, new TypeToken<ArrayList<CoupnResponse>>() {
+                }.getType());
+                if (s3couponList.size() != 0 || (providerCouponList != null && providerCouponList.size() != 0)) {
+                    tvApplyCode.setVisibility(View.VISIBLE);
+                    llCoupons.setVisibility(View.VISIBLE);
+                } else {
+                    tvApplyCode.setVisibility(View.GONE);
+                    llCoupons.setVisibility(View.GONE);
 
-        Call<ArrayList<CoupnResponse>> call = apiService.getCoupanList(uniqueID, sdf.format(currentTime));
-
-        call.enqueue(new Callback<ArrayList<CoupnResponse>>() {
-            @Override
-            public void onResponse(Call<ArrayList<CoupnResponse>> call, Response<ArrayList<CoupnResponse>> response) {
-
-                try {
-
-                    Config.logV("Response---------------------------" + response.body().toString());
-                    Config.logV("URL-response--------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
-                    if (response.code() == 200) {
-                        s3couponList.clear();
-                        s3couponList = response.body();
-                        if (s3couponList != null) {
-                            Log.i("CouponResponse", s3couponList.toString());
-
-                            if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
-                                tvApplyCode.setVisibility(View.VISIBLE);
-                                llCoupons.setVisibility(View.VISIBLE);
-                            } else {
-                                tvApplyCode.setVisibility(View.GONE);
-                                llCoupons.setVisibility(View.GONE);
-                            }
-                        }
-
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
 
             }
 
-            @Override
-            public void onFailure(Call<ArrayList<CoupnResponse>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-            }
-        });
     }
 
-    private void ApiJaldeegetProviderCoupons(int uniqueID) {
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<ArrayList<ProviderCouponResponse>> call = apiService.getProviderCoupanList(uniqueID, sdf.format(currentTime));
-        call.enqueue(new Callback<ArrayList<ProviderCouponResponse>>() {
-            @Override
-            public void onResponse(Call<ArrayList<ProviderCouponResponse>> call, Response<ArrayList<ProviderCouponResponse>> response) {
-                try {
+    private void ApiJaldeegetProviderCoupons(String providerCoupons) {
 
-                    if (response.code() == 200) {
-                        providerCouponList.clear();
-                        providerCouponList = response.body();
-                        if (providerCouponList != null) {
-                            if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
-                                tvApplyCode.setVisibility(View.VISIBLE);
-                                llCoupons.setVisibility(View.VISIBLE);
-                            } else {
-                                tvApplyCode.setVisibility(View.GONE);
-                                llCoupons.setVisibility(View.GONE);
-                            }
-                            Log.i("ProviderCouponResponse", providerCouponList.toString());
-                        }
+        try {
 
+            if (providerCoupons != null) {
+                providerCouponList.clear();
+                providerCouponList = new Gson().fromJson(providerCoupons, new TypeToken<ArrayList<ProviderCouponResponse>>() {
+                }.getType());
 
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (s3couponList != null && s3couponList.size() != 0 || providerCouponList.size() != 0) {
+                    tvApplyCode.setVisibility(View.VISIBLE);
+                    llCoupons.setVisibility(View.VISIBLE);
+                } else {
+                    tvApplyCode.setVisibility(View.GONE);
+                    llCoupons.setVisibility(View.GONE);
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<ProviderCouponResponse>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
 
             }
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     boolean showPaytmWallet = false;
@@ -1573,7 +1472,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         list.setAdapter(mAdapter);
                         mAdapter.notifyDataSetChanged();
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -2847,8 +2746,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 //        tvConsumerName.setVisibility(View.GONE);
 
     }
+
     @Override
-    public void cpns(ArrayList<String> mcouponArraylist){
+    public void cpns(ArrayList<String> mcouponArraylist) {
         iCpn = (ICpn) this;
         couponArraylist = mcouponArraylist;
         //CouponApliedOrNotDetails c = new CouponApliedOrNotDetails();
@@ -2869,8 +2769,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         list.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();*/
     }
-    private void ApiAppointment(final String txt_addnote, int id) {
 
+    private void ApiAppointment(final String txt_addnote, int id) {
 
 
     }

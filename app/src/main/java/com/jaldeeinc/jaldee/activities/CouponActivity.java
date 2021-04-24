@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponAdapter;
 import com.jaldeeinc.jaldee.adapter.CouponsAdapter;
@@ -23,6 +25,7 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
+import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
 
 import java.text.SimpleDateFormat;
@@ -41,11 +44,12 @@ public class CouponActivity extends AppCompatActivity {
     RecyclerView rvProviderCoupons;
     List<CoupnResponse> coupanList;
     RecyclerView rvCoupons;
-    String uniqueid,accountId;
+    String uniqueid, accountId;
     private CouponsAdapter mAdapter;
     CustomTextViewSemiBold tvError;
     private ProviderCouponsAdapter providerCouponsAdapter;
     ArrayList<ProviderCouponResponse> providerCouponList = new ArrayList<>();
+    private Provider providerResponse = new Provider();
 
 
     @Override
@@ -59,7 +63,7 @@ public class CouponActivity extends AppCompatActivity {
         if (bundle != null) {
 
             uniqueid = bundle.getString("uniqueID", "");
-            accountId = bundle.getString("accountId",null);
+            accountId = bundle.getString("accountId", null);
             ApiJaldeeCoupan(uniqueid);
         }
 
@@ -85,50 +89,45 @@ public class CouponActivity extends AppCompatActivity {
     private void ApiJaldeeCoupan(String uniqueID) {
 
         ApiInterface apiService =
-                ApiClient.getClientS3Cloud(CouponActivity.this).create(ApiInterface.class);
-
-
+                ApiClient.getClient(CouponActivity.this).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(CouponActivity.this, CouponActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-
-
-        Call<ArrayList<CoupnResponse>> call = apiService.getCoupanList(Integer.parseInt(uniqueID), sdf.format(currentTime));
-
-        call.enqueue(new Callback<ArrayList<CoupnResponse>>() {
-
-
+        Call<Provider> call = apiService.getCoupons(Integer.parseInt(uniqueID));
+        call.enqueue(new Callback<Provider>() {
             @Override
-            public void onResponse(@NonNull Call<ArrayList<CoupnResponse>> call, Response<ArrayList<CoupnResponse>> response) {
+            public void onResponse(@NonNull Call<Provider> call, Response<Provider> response) {
                 coupanList = new ArrayList<>();
                 try {
 
                     if (mDialog.isShowing())
                         Config.closeDialog(CouponActivity.this, mDialog);
 
-                    Config.logV("URL-response--------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-                        coupanList = response.body();
-                        if (coupanList != null && coupanList.size() > 0) {
-                            ApiJaldeegetProviderCoupons(uniqueid);
-                            tvError.setVisibility(View.GONE);
-                            rvCoupons.setLayoutManager(new LinearLayoutManager(CouponActivity.this));
-                            mAdapter = new CouponsAdapter(CouponActivity.this, coupanList);
-                            rvCoupons.setAdapter(mAdapter);
-                        } else {
-                            ApiJaldeegetProviderCoupons(uniqueid);
-                            tvError.setVisibility(View.VISIBLE);
+                        providerResponse = response.body();
+
+                        if (providerResponse != null) {
+
+                            if (providerResponse.getCoupon() != null) {
+                                coupanList.clear();
+                                coupanList = new Gson().fromJson(providerResponse.getCoupon(), new TypeToken<ArrayList<CoupnResponse>>() {
+                                }.getType());
+
+                                if (coupanList != null && coupanList.size() > 0) {
+                                    ApiJaldeegetProviderCoupons(providerResponse.getProviderCoupon());
+                                    tvError.setVisibility(View.GONE);
+                                    rvCoupons.setLayoutManager(new LinearLayoutManager(CouponActivity.this));
+                                    mAdapter = new CouponsAdapter(CouponActivity.this, coupanList);
+                                    rvCoupons.setAdapter(mAdapter);
+                                } else {
+                                    ApiJaldeegetProviderCoupons(providerResponse.getProviderCoupon());
+                                    tvError.setVisibility(View.VISIBLE);
+                                }
+                            } else {
+                                ApiJaldeegetProviderCoupons(providerResponse.getProviderCoupon());
+                                tvError.setVisibility(View.VISIBLE);
+                            }
+
                         }
-                    } else {
-                        ApiJaldeegetProviderCoupons(uniqueid);
-                        tvError.setVisibility(View.VISIBLE);
                     }
 
                 } catch (Exception e) {
@@ -138,7 +137,7 @@ public class CouponActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<ArrayList<CoupnResponse>> call, Throwable t) {
+            public void onFailure(@NonNull Call<Provider> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
@@ -150,47 +149,24 @@ public class CouponActivity extends AppCompatActivity {
 
     }
 
-    private void ApiJaldeegetProviderCoupons(String uniqueID) {
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(CouponActivity.this).create(ApiInterface.class);
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<ArrayList<ProviderCouponResponse>> call = apiService.getProviderCoupanList(Integer.parseInt(uniqueID), sdf.format(currentTime));
-        call.enqueue(new Callback<ArrayList<ProviderCouponResponse>>() {
-            @Override
-            public void onResponse(Call<ArrayList<ProviderCouponResponse>> call, Response<ArrayList<ProviderCouponResponse>> response) {
-                try {
+    private void ApiJaldeegetProviderCoupons(String providerCoupons) {
 
-                    if (response.code() == 200) {
-                        providerCouponList.clear();
-                        if (response.body() != null) {
-                            providerCouponList = response.body();
-                            if (providerCouponList.size() > 0) {
-                                tvError.setVisibility(View.GONE);
-                                rvProviderCoupons.setLayoutManager(new LinearLayoutManager(CouponActivity.this));
-                                providerCouponsAdapter = new ProviderCouponsAdapter(providerCouponList, CouponActivity.this, accountId);
-                                rvProviderCoupons.setAdapter(providerCouponsAdapter);
-                            } else {
-                            }
-                        } else {
-                        }
+        try {
 
-                    } else {
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+            providerCouponList.clear();
+            providerCouponList = new Gson().fromJson(providerCoupons, new TypeToken<ArrayList<ProviderCouponResponse>>() {
+            }.getType());
+            if (providerCouponList != null) {
+                if (providerCouponList.size() > 0) {
+                    tvError.setVisibility(View.GONE);
+                    rvProviderCoupons.setLayoutManager(new LinearLayoutManager(CouponActivity.this));
+                    providerCouponsAdapter = new ProviderCouponsAdapter(providerCouponList, CouponActivity.this, accountId);
+                    rvProviderCoupons.setAdapter(providerCouponsAdapter);
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-            @Override
-            public void onFailure(Call<ArrayList<ProviderCouponResponse>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-
-            }
-        });
     }
 }

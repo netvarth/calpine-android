@@ -11,11 +11,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.JdnResponse;
+import com.jaldeeinc.jaldee.response.Provider;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,6 +35,8 @@ public class JdnActivity extends AppCompatActivity {
 
     TextView discount, maxvalue, note;
     Context mContext;
+    private Provider providerResponse = new Provider();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,22 +77,16 @@ public class JdnActivity extends AppCompatActivity {
 
 
         ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+                ApiClient.getClient(mContext).create(ApiInterface.class);
 
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-
-        Call<JdnResponse> call = apiService.getJdnList(Integer.parseInt(uniqueID), sdf.format(currentTime));
-        call.enqueue(new Callback<JdnResponse>() {
+        Call<Provider> call = apiService.getJdn(Integer.parseInt(uniqueID));
+        call.enqueue(new Callback<Provider>() {
             @Override
-            public void onResponse(Call<JdnResponse> call, Response<JdnResponse> response) {
+            public void onResponse(Call<Provider> call, Response<Provider> response) {
                 try {
 
                     if (mDialog.isShowing())
@@ -98,21 +96,25 @@ public class JdnActivity extends AppCompatActivity {
                     Config.logV("Response--code-----detail--------------------" + response.code());
 
                     if (response.code() == 200) {
-                        jdnList = response.body();
+                        providerResponse = response.body();
 //                        jdnDiscount = jdnList.getDiscPercentage();
 //                        jdnMaxvalue = jdnList.getDiscMax();
 //                        jdnNote = jdnList.getDisplayNote();
 
-                        if (jdnList.getDiscMax() != null && jdnList.getDiscPercentage() != null) {
+                        jdnList = new Gson().fromJson(providerResponse.getJaldeediscount(),JdnResponse.class);
+
+                        if (jdnList != null) {
+                            if (jdnList.getDiscMax() != null && jdnList.getDiscPercentage() != null) {
 //                            discount.setText(jdnList.getDiscPercentage() + "%");
 //                            maxvalue.setText("₹" + jdnList.getDiscMax());
-                            discount.setText("You will get a discount of " + Config.getAmountNoDecimalPoints(Double.parseDouble(jdnList.getDiscPercentage())) + "%" + " " + "(" + "upto" + " " + "₹" + " " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(jdnList.getDiscMax())) + ")" + " " + " for every visit.");
-                        }
-                        if (jdnList.getDisplayNote() != null) {
-                            note.setText(jdnList.getDisplayNote());
-                        }
-                        if (jdnList.getDisplayNote() == null) {
-                            note.setVisibility(View.GONE);
+                                discount.setText("You will get a discount of " + Config.getAmountNoDecimalPoints(Double.parseDouble(jdnList.getDiscPercentage())) + "%" + " " + "(" + "upto" + " " + "₹" + " " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(jdnList.getDiscMax())) + ")" + " " + " for every visit.");
+                            }
+                            if (jdnList.getDisplayNote() != null) {
+                                note.setText(jdnList.getDisplayNote());
+                            }
+                            if (jdnList.getDisplayNote() == null) {
+                                note.setVisibility(View.GONE);
+                            }
                         }
                     }
 
@@ -123,7 +125,7 @@ public class JdnActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<JdnResponse> call, Throwable t) {
+            public void onFailure(Call<Provider> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())

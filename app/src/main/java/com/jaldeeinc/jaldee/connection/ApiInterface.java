@@ -29,7 +29,9 @@ import com.jaldeeinc.jaldee.response.OrderResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.PaytmChecksum;
 import com.jaldeeinc.jaldee.response.ProfileModel;
+import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
+import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.RatingResponse;
@@ -58,6 +60,7 @@ import com.jaldeeinc.jaldee.response.ShoppingList;
 import com.jaldeeinc.jaldee.response.SlotsData;
 import com.jaldeeinc.jaldee.response.StoreDetails;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
+import com.jaldeeinc.jaldee.response.UserResponse;
 
 
 import java.util.ArrayList;
@@ -658,6 +661,19 @@ public interface ApiInterface {
     @POST("provider/claim/{accId}")
     Call<ProfileModel> usrProfile(@Path("accId")  int account);
 
+    @GET("consumer/questionnaire/service/{serviceId}/consumer/{consumerId}")
+    Call<Questionnaire> getAppointmentQuestions(@Path("serviceId") String serviceId, @Path("consumerId") String consumerId, @Query("account") int account);
 
+    @GET("provider/account/settings/config/{uniqueId}/settings,terminologies,coupon,providerCoupon,location,businessProfile,virtualFields,services,apptServices,donationServices,departmentProviders")
+    Call<Provider> getProviderDetails(@Path("uniqueId") int uniqueId);
+
+    @GET("provider/account/settings/config/{uniqueId}/{userId}/providerBusinessProfile,providerVirtualFields")
+    Call<UserResponse> getUserDetails(@Path("uniqueId") int uniqueId,@Path("userId") int userId);
+
+    @GET("provider/account/settings/config/{uniqueId}/coupon,providerCoupon")
+    Call<Provider> getCoupons(@Path("uniqueId") int uniqueId);
+
+    @GET("provider/account/settings/config/{uniqueId}/jaldeediscount")
+    Call<Provider> getJdn(@Path("uniqueId") int uniqueId);
 
 }
