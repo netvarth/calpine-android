@@ -76,7 +76,7 @@
                     android:layout_marginStart="@dimen/dimen_5dp"
                     android:layout_marginTop="6dp"
                     android:text=""
-                    android:maxLines="1"
+                    android:maxLines="2"
                     android:ellipsize="end"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/dimen_12dp"

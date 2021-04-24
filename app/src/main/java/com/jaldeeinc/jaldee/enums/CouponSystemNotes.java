@@ -3,7 +3,7 @@ public enum CouponSystemNotes {
 
     MINIMUM_BILL_AMT_REQUIRED("A minimum bill amount is required to redeem this coupon"),
     ONLY_WHEN_FITST_CHECKIN_ON_PROVIDER("Coupon can be applied only for first check in with this provider"),
-    COUPON_APPLIED("Coupon already applied"),
+    COUPON_APPLIED("Coupon Sussessfully applied"),
     SELF_PAY_REQUIRED("Self pay required"),
     NO_OTHER_COUPONS_ALLOWED("No other coupons allowed"),
     EXCEEDS_APPLY_LIMIT("Exceeds apply limit"),
@@ -22,7 +22,11 @@ public enum CouponSystemNotes {
     PROVIDER_COUPON_NOT_APPLICABLE_NOW("Provider coupon not applicable now"),
     JC_NOT_APPLICABLE_DAY("Jaldee Coupon not applicable on this day"),
 
-    COUPON_CAN_NOT_APPLY("Coupon cannot be applied.");
+    COUPON_CAN_NOT_APPLY("Coupon cannot be applied."),
+    PROVIDER_COUPON_NOT_APPLICABLE_ORDER("Provider coupon not applicable for order"),
+    PROVIDER_COUPON_NOT_APPLICABLE_WAITLIST("Provider coupon not applicable for waitlist"),
+    PROVIDER_COUPON_NOT_APPLICABLE_APPOINTMENT("Provider coupon not applicable for appointment"),
+    EXCEEDS_PRO_COUP_APPLY_LIMIT("Coupon reached limit of usage");
     //COUPON_EXPIRED_OR_PASSIVE(JALDEE_COUPON_EXPIRED_OR_PASSIVE),
     //PROVIDER_COUPON_NOT_APPLICABLE_COUPON_BASED_ON(COUPON_NOT_VALID);
 

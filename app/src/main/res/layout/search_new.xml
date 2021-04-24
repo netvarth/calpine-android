@@ -159,7 +159,8 @@
                             android:layout_marginStart="@dimen/dimen_5dp"
                             android:layout_marginTop="@dimen/dimen_4dp"
                             android:paddingEnd="@dimen/dimen_10dp"
-                            android:text="1 Doctor"
+                            android:text=""
+                            android:visibility="gone"
                             android:textColor="@color/dark_blue"
                             android:textSize="14dp">
 
@@ -290,7 +291,7 @@
                                 android:layout_marginEnd="@dimen/dimen_5dp"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:text="Consultation, OpConsultation,WhatappVideo call"
+                                android:text=""
                                 android:textColor="@color/location_theme"
                                 android:textSize="@dimen/dimen_12dp">
 
@@ -337,6 +338,7 @@
                             android:layout_marginTop="@dimen/dimen_8dp"
                             android:layout_marginEnd="@dimen/dimen_10dp"
                             android:visibility="visible">
+
 
                             <ImageView
                                 android:id="@+id/iv_jdn"

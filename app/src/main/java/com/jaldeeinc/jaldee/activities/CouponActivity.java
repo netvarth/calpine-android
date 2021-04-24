@@ -27,6 +27,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

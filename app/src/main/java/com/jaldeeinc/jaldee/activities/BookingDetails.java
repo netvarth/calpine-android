@@ -789,7 +789,7 @@ public class BookingDetails extends AppCompatActivity {
 
                 if (appointmentInfo.getPaymentStatus().equalsIgnoreCase("FullyPaid") || appointmentInfo.getPaymentStatus().equalsIgnoreCase("Refund")) {
                     String amount = "₹" + " " + convertAmountToDecimals(String.valueOf(appointmentInfo.getAmountDue()));
-                    tvAmountToPay.setText(amount);
+                    //tvAmountToPay.setText(amount);
                     tvAmountToPay.setVisibility(View.GONE);
                     cvBill.setVisibility(View.VISIBLE);
                     tvBillText.setVisibility(View.GONE);
@@ -834,6 +834,9 @@ public class BookingDetails extends AppCompatActivity {
                 if(appointmentInfo.getBillViewStatus() == null || appointmentInfo.getBillViewStatus().equalsIgnoreCase("NotShow")  || appointmentInfo.getBillStatus().equals("Settled") || appointmentInfo.getApptStatus().equals("Rejected")){
                     cvBill.setVisibility(View.GONE);
                 }
+                if(appointmentInfo.getApptStatus().equalsIgnoreCase("Cancelled"))
+                    cvBill.setVisibility(View.GONE);
+
                 /***/
 
                 cvBill.setOnClickListener(new View.OnClickListener() {
