@@ -57,7 +57,8 @@
         android:textColor="@color/dark_blue"
         android:layout_below="@id/hint"
         android:layout_marginStart="@dimen/dimen_15sp"
-        android:layout_marginTop="@dimen/dimen_1dp">
+        android:layout_marginTop="@dimen/dimen_1dp"
+        android:gravity="center_vertical">
 
     </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 

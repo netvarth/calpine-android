@@ -216,6 +216,9 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                         }
                     } else if (bookings.getCallingType().equalsIgnoreCase("phone")) {
                         viewHolder.ivServiceIcon.setImageResource(R.drawable.phoneicon_sized);
+                    } else if (bookings.getCallingType().equalsIgnoreCase("VideoCall")) {
+                        viewHolder.ivServiceIcon.setImageResource(R.drawable.ic_jaldeevideo);
+
                     }
                 } else {
                     viewHolder.ivServiceIcon.setVisibility(View.GONE);
