@@ -92,8 +92,8 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ll_amount"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/dimen_10dp"
                         android:layout_marginStart="@dimen/dimen_10dp"
+                        android:layout_marginTop="@dimen/dimen_10dp"
                         android:layout_marginBottom="@dimen/dimen_5dp"
                         android:gravity="center_horizontal"
                         android:visibility="visible">
@@ -127,9 +127,9 @@
                         android:layout_marginStart="@dimen/dimen_10dp"
                         android:layout_marginTop="@dimen/dimen_30dp"
                         android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:background="@drawable/edittext_donation"
                         android:paddingLeft="@dimen/dimen_25dp"
-                        android:paddingRight="@dimen/dimen_25dp"
-                        android:background="@drawable/edittext_donation">
+                        android:paddingRight="@dimen/dimen_25dp">
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                             android:layout_width="wrap_content"
@@ -152,15 +152,15 @@
                             android:gravity="center_vertical"
                             android:hint="0"
                             android:inputType="numberDecimal"
+                            android:paddingTop="@dimen/dimen_0dp"
                             android:paddingRight="@dimen/dimen_10dp"
+                            android:paddingBottom="@dimen/dimen_5dp"
                             android:text=""
                             android:textColor="@color/dark_black"
                             android:textColorHint="@color/button_grey"
+                            android:textCursorDrawable="@drawable/cursor"
                             android:textSize="@dimen/dimen_40dp"
-                            android:textStyle="bold"
-                            android:paddingTop="@dimen/dimen_0dp"
-                            android:paddingBottom="@dimen/dimen_5dp"
-                            android:textCursorDrawable="@drawable/cursor">
+                            android:textStyle="bold">
 
                         </EditText>
 
@@ -346,7 +346,7 @@
                         <ImageView
                             android:layout_width="@dimen/dimen_20dp"
                             android:layout_height="@dimen/dimen_20dp"
-                            android:layout_gravity="center"
+                            android:layout_gravity="bottom"
                             android:src="@drawable/user_filled"
                             app:tint="@color/title_grey">
 
@@ -362,17 +362,17 @@
                                 android:id="@+id/tv_consumerName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:paddingRight="5dp"
                                 android:background="@color/white"
+                                android:cursorVisible="false"
+                                android:drawableRight="@drawable/edit_icon_sized"
+                                android:drawableTint="@color/gray"
+                                android:focusable="false"
                                 android:hint=""
                                 android:inputType="text"
+                                android:paddingRight="5dp"
                                 android:text=""
                                 android:textColor="@color/dark_black"
-                                android:textSize="@dimen/dimen_14sp"
-                                android:cursorVisible="false"
-                                android:focusable="false"
-                                android:drawableRight="@drawable/edit_icon_sized"
-                                android:drawableTint="@color/gray">
+                                android:textSize="@dimen/dimen_14sp">
 
                             </EditText>
                         </com.google.android.material.textfield.TextInputLayout>
@@ -402,33 +402,35 @@
                         <ImageView
                             android:layout_width="@dimen/dimen_20dp"
                             android:layout_height="@dimen/dimen_20dp"
-                            android:layout_gravity="center"
+                            android:layout_gravity="bottom"
                             android:src="@drawable/call_icon"
                             app:tint="@color/title_grey">
 
                         </ImageView>
+
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dimen_10dp"
                             android:hint="Phone">
-                        <EditText
-                            android:id="@+id/tv_mobile"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingRight="@dimen/dimen_5dp"
-                            android:background="@color/white"
-                            android:hint=""
-                            android:inputType="text"
-                            android:text=""
-                            android:textColor="@color/dark_black"
-                            android:textSize="@dimen/dimen_14sp"
-                            android:cursorVisible="false"
-                            android:focusable="false"
-                            android:drawableRight="@drawable/edit_icon_sized"
-                            android:drawableTint="@color/gray">
 
-                        </EditText>
+                            <EditText
+                                android:id="@+id/tv_mobile"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/white"
+                                android:cursorVisible="false"
+                                android:drawableRight="@drawable/edit_icon_sized"
+                                android:drawableTint="@color/gray"
+                                android:focusable="false"
+                                android:hint=""
+                                android:inputType="text"
+                                android:paddingRight="@dimen/dimen_5dp"
+                                android:text=""
+                                android:textColor="@color/dark_black"
+                                android:textSize="@dimen/dimen_14sp">
+
+                            </EditText>
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
 
@@ -443,34 +445,36 @@
                         <ImageView
                             android:layout_width="@dimen/dimen_20dp"
                             android:layout_height="@dimen/dimen_20dp"
-                            android:layout_gravity="center"
+                            android:layout_gravity="bottom"
                             android:src="@drawable/emailicon_sized"
                             app:tint="@color/title_grey">
 
                         </ImageView>
+
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dimen_10dp"
                             android:hint="Mail">
-                        <EditText
-                            android:id="@+id/tv_email"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingRight="@dimen/dimen_5dp"
-                            android:background="@color/white"
-                            android:hint=""
-                            android:inputType="text"
-                            android:maxLines="2"
-                            android:text=""
-                            android:textColor="@color/title_color"
-                            android:textSize="@dimen/dimen_14sp"
-                            android:cursorVisible="false"
-                            android:focusable="false"
-                            android:drawableRight="@drawable/edit_icon_sized"
-                            android:drawableTint="@color/gray">
 
-                        </EditText>
+                            <EditText
+                                android:id="@+id/tv_email"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/white"
+                                android:cursorVisible="false"
+                                android:drawableRight="@drawable/edit_icon_sized"
+                                android:drawableTint="@color/gray"
+                                android:focusable="false"
+                                android:hint=""
+                                android:inputType="text"
+                                android:maxLines="2"
+                                android:paddingRight="@dimen/dimen_5dp"
+                                android:text=""
+                                android:textColor="@color/title_color"
+                                android:textSize="@dimen/dimen_14sp">
+
+                            </EditText>
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
                 </LinearLayout>

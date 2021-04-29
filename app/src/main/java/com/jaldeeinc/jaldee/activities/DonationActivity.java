@@ -645,9 +645,9 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
 
                             if (profileDetails.getUserprofile().getEmail() != null) {
                                 tvEmail.setText(profileDetails.getUserprofile().getEmail());
-                            } else {
+                            } /*else {
                                 tvEmail.setHint("Enter your Mail Id");
-                            }
+                            }*/
                         }
                     } else {
                     }
