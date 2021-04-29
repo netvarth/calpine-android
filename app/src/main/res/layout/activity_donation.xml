@@ -531,7 +531,6 @@
                         android:layout_weight="0.5"
                         android:clickable="true"
                         android:foreground="?android:attr/selectableItemBackground"
-                        app:cardCornerRadius="@dimen/dimen_15dp"
                         app:cardElevation="0dp">
 
                         <TextView
@@ -553,7 +552,6 @@
                         android:layout_weight="0.5"
                         android:clickable="true"
                         android:foreground="?android:attr/selectableItemBackground"
-                        app:cardCornerRadius="@dimen/dimen_15dp"
                         app:cardElevation="0dp">
 
                         <TextView

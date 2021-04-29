@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -212,12 +213,19 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         providerId = intent.getIntExtra("providerId", 0);
         locationId = intent.getIntExtra("locationId", 0);
         serviceInfo = (SearchDonation) intent.getSerializableExtra("donationInfo");
-        cvSubmit.setCardBackgroundColor(Color.parseColor("#7a7a7a"));
-        cvPayTm.setCardBackgroundColor(Color.parseColor("#f1f0f0"));
-        cvRazorpay.setCardBackgroundColor(Color.parseColor("#f1f0f0"));
+        cvSubmit.setCardBackgroundColor(Color.parseColor("#fae8ba"));
         Spanned s1 = null;
         Spanned s2 = null;
         Spanned s3 = null;
+        GradientDrawable payMthdBtnEnabled = new GradientDrawable();
+        payMthdBtnEnabled.setColor(0xFFFFFFFF); //white background
+        payMthdBtnEnabled.setStroke(2, Color.parseColor("#F1B51C"));
+        payMthdBtnEnabled.setCornerRadius(15);
+        GradientDrawable payMthdBtnDisabled = new GradientDrawable();
+        payMthdBtnDisabled.setColor(Color.parseColor("#f1f0f0"));
+        payMthdBtnDisabled.setCornerRadius(15);
+        cvPayTm.setBackground(payMthdBtnDisabled);
+        cvRazorpay.setBackground(payMthdBtnDisabled);
         //etAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(2, 2)}); //etamount max digits allowed
        /* if (providerName != null) {
             tvProviderName.setText(providerName);
@@ -377,7 +385,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                         // cvSubmit.setBackgroundColor(Color.parseColor("#F1B51C"));
                     } else {
                         tvSubmit.setText("Donate");
-                        cvSubmit.setCardBackgroundColor(Color.parseColor("#7a7a7a"));
+                        cvSubmit.setCardBackgroundColor(Color.parseColor("#fae8ba"));
                     }
                 }
                 etAmount.addTextChangedListener(this);
@@ -386,8 +394,9 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         cvPayTm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cvPayTm.setCardBackgroundColor(Color.parseColor("#7a7a7a"));
-                cvRazorpay.setCardBackgroundColor(Color.parseColor("#f1f0f0"));
+
+                cvPayTm.setBackground(payMthdBtnEnabled);
+                cvRazorpay.setBackground(payMthdBtnDisabled);
                 tvErrorPayment.setVisibility(View.GONE);
                 payTm = true;
                 razorPay = false;
@@ -410,8 +419,8 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         cvRazorpay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cvRazorpay.setCardBackgroundColor(Color.parseColor("#7a7a7a"));
-                cvPayTm.setCardBackgroundColor(Color.parseColor("#f1f0f0"));
+                cvRazorpay.setBackground(payMthdBtnEnabled);
+                cvPayTm.setBackground(payMthdBtnDisabled);
                 tvErrorPayment.setVisibility(View.GONE);
                 razorPay = true;
                 payTm = false;
