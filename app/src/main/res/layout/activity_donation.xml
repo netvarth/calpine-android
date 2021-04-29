@@ -12,7 +12,7 @@
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_45dp" 
+        android:layout_height="@dimen/dimen_45dp"
         android:background="@color/white"
         android:backgroundTint="#F1B51C"
         android:orientation="horizontal"
