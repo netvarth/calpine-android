@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 public class MeetingDetailsWindow extends Dialog {
 
@@ -67,6 +68,7 @@ public class MeetingDetailsWindow extends Dialog {
 
             try {
                 if(callingMode!=null) {
+
                     if (callingMode.equalsIgnoreCase("Zoom")) {
                         tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom, 0, 0, 0);
                         tvServiceName.setCompoundDrawablePadding(15);
@@ -84,6 +86,11 @@ public class MeetingDetailsWindow extends Dialog {
                     } else if (callingMode.equalsIgnoreCase("phone")) {
                         tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneicon_sized, 0, 0, 0);
                         tvServiceName.setCompoundDrawablePadding(15);
+                    }
+                    else if (callingMode.equalsIgnoreCase("VideoCall")) {
+                        tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_jaldeevideo, 0, 0, 0);
+                        tvServiceName.setCompoundDrawablePadding(15);
+                        btJoin.setVisibility(View.GONE);
                     }
                 }
 
@@ -114,11 +121,17 @@ public class MeetingDetailsWindow extends Dialog {
             tvLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
                     intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                    intent.setData(Uri.parse(tvLink.getText().toString()));
+                    if(tvLink!=null && callingMode!=null){
+                        String pass = SharedPreference.getInstance(context).getStringValue("password","");
+                        if (callingMode.equalsIgnoreCase("VideoCall")) {
+                            intent.setData(Uri.parse(tvLink.getText().toString() + "?pwd=" + pass));
+                        } else {
+                            intent.setData(Uri.parse(tvLink.getText().toString()));
+                        }
+                    }
                     context.startActivity(intent);
                 }
             });

@@ -220,6 +220,8 @@ public class ActionsDialog extends Dialog {
                                 }
                             } else if (bookings.getAppointmentInfo().getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 ivMeetIcon.setImageResource(R.drawable.phoneicon_sized);
+                            } else if (bookings.getAppointmentInfo().getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("VideoCall")) {
+                                ivMeetIcon.setImageResource(R.drawable.ic_jaldeevideo);
                             }
                         } else {
                             hideView(llMeetingDetails);
@@ -373,6 +375,8 @@ public class ActionsDialog extends Dialog {
                                 }
                             } else if (bookings.getCheckInInfo().getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 ivMeetIcon.setImageResource(R.drawable.phoneicon_sized);
+                            } else if (bookings.getCheckInInfo().getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("VideoCall")) {
+                                ivMeetIcon.setImageResource(R.drawable.ic_jaldeevideo);
                             }
                         } else {
                             hideView(llMeetingDetails);
@@ -1001,6 +1005,10 @@ public class ActionsDialog extends Dialog {
 
                                 showMeetingWindow(info, mode, meetingDetails);
 
+                            } else if (mode.equalsIgnoreCase("VideoCall")) {
+
+                                showMeetingDetailsWindow(info, mode, meetingDetails);
+
                             }
                         }
                     }
@@ -1080,6 +1088,10 @@ public class ActionsDialog extends Dialog {
                             } else if (mode.equalsIgnoreCase("Phone")) {
 
                                 showCheckInMeetingWindow(info, mode, meetingDetails);
+
+                            } else if (mode.equalsIgnoreCase("VideoCall")) {
+
+                                showCheckInMeetingDetailsWindow(info, mode, meetingDetails);
 
                             }
                         }

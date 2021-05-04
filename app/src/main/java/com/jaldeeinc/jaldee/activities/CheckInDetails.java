@@ -642,6 +642,9 @@ public class CheckInDetails extends AppCompatActivity {
                             } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 ivTeleService.setImageResource(R.drawable.phoneicon_sized);
                                 ivMeetingIcon.setImageResource(R.drawable.phoneicon_sized);
+                            } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("VideoCall")) {
+                                ivTeleService.setImageResource(R.drawable.ic_jaldeevideo);
+                                ivMeetingIcon.setImageResource(R.drawable.ic_jaldeevideo);
                             }
                         } else {
                             ivTeleService.setVisibility(View.GONE);
@@ -1115,6 +1118,10 @@ public class CheckInDetails extends AppCompatActivity {
                             } else if (mode.equalsIgnoreCase("Phone")) {
 
                                 showMeetingWindow(info, mode, meetingDetails);
+
+                            }else if (mode.equalsIgnoreCase("VideoCall")) {
+
+                                showMeetingDetailsWindow(info, mode, meetingDetails);
 
                             }
                         }
