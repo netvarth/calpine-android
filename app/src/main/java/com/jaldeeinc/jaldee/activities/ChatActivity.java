@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.adapter.MessageListAdapter;
@@ -299,7 +300,7 @@ public class ChatActivity extends AppCompatActivity {
                                 ApiCommunicateCheckin(uuId, String.valueOf(accountID), etMessage.getText().toString());
                             } else if (from != null && from.equalsIgnoreCase(Constants.ORDERS)){
                                 ApiCommunicateOrders(uuId, String.valueOf(accountID), etMessage.getText().toString());
-                            } else if (from != null && from.equalsIgnoreCase(Constants.PROVIDER)){
+                            } else if (from != null && from.equalsIgnoreCase(Constants.PROVIDER) || from!= null && from.equalsIgnoreCase(Constants.INBOX)){
                                 ApiCommunicate(String.valueOf(accountID),etMessage.getText().toString());
                             } else if (from != null && from.equalsIgnoreCase(Constants.DONATION)){
                                 ApiCommunicateDonation(uuId,String.valueOf(accountID),etMessage.getText().toString());
@@ -338,7 +339,7 @@ public class ChatActivity extends AppCompatActivity {
                         ApiCommunicateCheckin(uuId, String.valueOf(accountID), etMessage.getText().toString());
                     } else if (from != null && from.equalsIgnoreCase(Constants.ORDERS)){
                         ApiCommunicateOrders(uuId, String.valueOf(accountID), etMessage.getText().toString());
-                    } else if (from != null && from.equalsIgnoreCase(Constants.PROVIDER)){
+                    } else if (from != null && from.equalsIgnoreCase(Constants.PROVIDER) || from!= null && from.equalsIgnoreCase(Constants.INBOX)){
                         ApiCommunicate(String.valueOf(accountID),etMessage.getText().toString());
                     } else if (from != null && from.equalsIgnoreCase(Constants.DONATION)){
                         ApiCommunicateDonation(uuId,String.valueOf(accountID),etMessage.getText().toString());
@@ -682,7 +683,17 @@ public class ChatActivity extends AppCompatActivity {
             message = "Please find the attachments";
         }
 
-        mBuilder.addFormDataPart("message", message);
+        JsonObject obj = new JsonObject();
+        obj.addProperty("msg",message);
+        obj.addProperty("messageType","BOOKINGS");
+
+//        String object = obj.toString() +";type=application/json";
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj.toString());
+
+
+        mBuilder.addFormDataPart("message","blob",body);
+
         for (int i = 0; i < imagePathList.size(); i++) {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
@@ -706,7 +717,7 @@ public class ChatActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+//        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = apiService.AppointmentMessage(waitListId, String.valueOf(accId), requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -751,7 +762,16 @@ public class ChatActivity extends AppCompatActivity {
         if (message.equalsIgnoreCase("")) {
             message = "Please find the attachments";
         }
-        mBuilder.addFormDataPart("message", message);
+        JsonObject obj = new JsonObject();
+        obj.addProperty("msg",message);
+        obj.addProperty("messageType","BOOKINGS");
+
+//        String object = obj.toString() +";type=application/json";
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj.toString());
+
+
+        mBuilder.addFormDataPart("message","blob",body);
         for (int i = 0; i < imagePathList.size(); i++) {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
@@ -775,7 +795,7 @@ public class ChatActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+//        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID), requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -819,7 +839,16 @@ public class ChatActivity extends AppCompatActivity {
             message = "Please find the attachments";
         }
 
-        mBuilder.addFormDataPart("message", message);
+        JsonObject obj = new JsonObject();
+        obj.addProperty("msg",message);
+        obj.addProperty("messageType","BOOKINGS");
+
+//        String object = obj.toString() +";type=application/json";
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj.toString());
+
+
+        mBuilder.addFormDataPart("message","blob",body);
         for (int i = 0; i < imagePathList.size(); i++) {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
@@ -843,7 +872,7 @@ public class ChatActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+//        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = apiService.orderMessage(waitListId, String.valueOf(accId), requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -889,7 +918,18 @@ public class ChatActivity extends AppCompatActivity {
             message = "Please find the attachments";
         }
 
-        mBuilder.addFormDataPart("message", message);
+        JsonObject obj = new JsonObject();
+        obj.addProperty("msg",message);
+        if (from.equalsIgnoreCase(Constants.PROVIDER)){
+            obj.addProperty("messageType","ENQUIRY");
+        } else {
+            obj.addProperty("messageType", "CHAT");
+        }
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj.toString());
+
+
+        mBuilder.addFormDataPart("message","blob",body);
         for (int i = 0; i < imagePathList.size(); i++) {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
@@ -913,7 +953,7 @@ public class ChatActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+//        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = apiService.PostMessage(accountID, requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -957,7 +997,16 @@ public class ChatActivity extends AppCompatActivity {
             message = "Please find the attachments";
         }
 
-        mBuilder.addFormDataPart("message", message);
+        JsonObject obj = new JsonObject();
+        obj.addProperty("msg",message);
+        obj.addProperty("messageType","BOOKINGS");
+
+//        String object = obj.toString() +";type=application/json";
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj.toString());
+
+
+        mBuilder.addFormDataPart("message","blob",body);
         for (int i = 0; i < imagePathList.size(); i++) {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
@@ -981,7 +1030,7 @@ public class ChatActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+//        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = apiService.donationMessage(uuId,accountID, requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -1082,6 +1131,9 @@ public class ChatActivity extends AppCompatActivity {
                                         userMessage.setSenderName("");
                                     }
                                     userMessage.setTimeStamp(inbox.getTimeStamp());
+                                    if (inbox.getMessageType() != null){
+                                        userMessage.setMessageType(inbox.getMessageType());
+                                    }
                                     userMessagesList.add(userMessage);
 
                                     if (inbox.getAttachments() != null && inbox.getAttachments().size() > 0) {

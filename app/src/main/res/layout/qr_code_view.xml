@@ -81,7 +81,7 @@
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/icon_share" />
+                android:src="@drawable/icon_share_grey" />
         </LinearLayout>
 
         <ImageView

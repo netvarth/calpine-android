@@ -91,18 +91,18 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
                         intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
                     }
                     intent.putExtra("name", inboxList.getAccountName());
-                    if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_wl")) {
-                        intent.putExtra("from", Constants.CHECKIN);
-                    } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_appt")) {
-                        intent.putExtra("from", Constants.APPOINTMENT);
-                    } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_odr")) {
-                        intent.putExtra("from", Constants.ORDERS);
-                    } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_dtn")) {
-                        intent.putExtra("from", Constants.DONATION);
-                    } else {
-                        intent.putExtra("from", Constants.PROVIDER);
-                    }
-                    intent.putExtra("from1", Constants.INBOX);
+//                    if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_wl")) {
+//                        intent.putExtra("from", Constants.CHECKIN);
+//                    } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_appt")) {
+//                        intent.putExtra("from", Constants.APPOINTMENT);
+//                    } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_odr")) {
+//                        intent.putExtra("from", Constants.ORDERS);
+//                    } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_dtn")) {
+//                        intent.putExtra("from", Constants.DONATION);
+//                    } else {
+//                        intent.putExtra("from", Constants.PROVIDER);
+//                    }
+                    intent.putExtra("from", Constants.INBOX);
                     view.getContext().startActivity(intent);
 
                 }
@@ -137,18 +137,18 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
                             intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
                         }
                         intent.putExtra("name", inboxList.getAccountName());
-                        if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_wl")) {
-                            intent.putExtra("from", Constants.CHECKIN);
-                        } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_appt")) {
-                            intent.putExtra("from", Constants.APPOINTMENT);
-                        } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_odr")) {
-                            intent.putExtra("from", Constants.ORDERS);
-                        } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_dtn")) {
-                            intent.putExtra("from", Constants.DONATION);
-                        } else {
-                            intent.putExtra("from", Constants.PROVIDER);
-                        }
-                        intent.putExtra("from1", Constants.INBOX);
+//                        if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_wl")) {
+//                            intent.putExtra("from", Constants.CHECKIN);
+//                        } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_appt")) {
+//                            intent.putExtra("from", Constants.APPOINTMENT);
+//                        } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_odr")) {
+//                            intent.putExtra("from", Constants.ORDERS);
+//                        } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_dtn")) {
+//                            intent.putExtra("from", Constants.DONATION);
+//                        } else {
+//                            intent.putExtra("from", Constants.PROVIDER);
+//                        }
+                        intent.putExtra("from", Constants.INBOX);
                         mContext.startActivity(intent);
                     }
                 }

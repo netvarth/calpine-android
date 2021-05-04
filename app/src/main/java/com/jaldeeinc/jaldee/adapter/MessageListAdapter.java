@@ -97,6 +97,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     private class SentMessageHolder extends RecyclerView.ViewHolder {
         CustomTextViewMedium mText;
         CustomTextViewRegularItalic timeText;
+        CustomTextViewMedium tvMessageType;
         CustomTextViewSemiBold attachText;
         LinearLayout ll_attachments;
         ImageView iv_attach1,iv_attach2;
@@ -112,6 +113,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             ll_attachments = itemView.findViewById(R.id.attach_sent);
             iv_attach1 = itemView.findViewById(R.id.img_sent1);
             iv_attach2 = itemView.findViewById(R.id.img_sent2);
+            tvMessageType = itemView.findViewById(R.id.tv_messageType);
 
         }
 
@@ -123,6 +125,14 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             }
             // Format the stored timestamp into a readable String using method.
             timeText.setText(formatTimeStamp(message.getTimeStamp()));
+
+            if (message.getMessageType() != null){
+                tvMessageType.setVisibility(View.VISIBLE);
+                String upperString = message.getMessageType().substring(0, 1).toUpperCase() + message.getMessageType().substring(1).toLowerCase();
+                tvMessageType.setText(upperString);
+            } else {
+                tvMessageType.setVisibility(View.GONE);
+            }
 
             if(message.getAttachments()!=null && message.getAttachments().size()>0){
                 mGalleryAttachments.clear();
@@ -249,6 +259,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
         CustomTextViewMedium messageText;
         CustomTextViewRegularItalic timeText;
+        CustomTextViewMedium tvMessageType;
         CustomTextViewSemiBold attachmentsText;
         LinearLayout ll_attachReceiv;
         ImageView iv_img1,iv_img2;
@@ -264,6 +275,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             ll_attachReceiv = itemView.findViewById(R.id.attach_receiv);
             iv_img1 = itemView.findViewById(R.id.img_receiv1);
             iv_img2 = itemView.findViewById(R.id.img_receiv2);
+            tvMessageType = itemView.findViewById(R.id.tv_messageType);
 
         }
 
@@ -276,6 +288,14 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             }
             // Format the stored timestamp into a readable String using method.
             timeText.setText(formatTimeStamp(message.getTimeStamp()));
+
+            if (message.getMessageType() != null){
+                tvMessageType.setVisibility(View.VISIBLE);
+                String upperString = message.getMessageType().substring(0, 1).toUpperCase() + message.getMessageType().substring(1).toLowerCase();
+                tvMessageType.setText(upperString);
+            } else {
+                tvMessageType.setVisibility(View.GONE);
+            }
             if(message.getAttachments()!=null && message.getAttachments().size()>0){
                 mGalleryAttachments.clear();
                 ll_attachReceiv.setVisibility(View.VISIBLE);

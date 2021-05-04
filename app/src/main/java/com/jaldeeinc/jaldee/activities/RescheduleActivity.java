@@ -41,6 +41,7 @@ import android.widget.Toast;
 
 import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.Interface.ISlotInfo;
@@ -60,6 +61,7 @@ import com.jaldeeinc.jaldee.custom.SlotsDialog;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.ProfileModel;
+import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SlotsData;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
@@ -1559,7 +1561,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
 
 
         ApiInterface apiService =
-                ApiClient.getClientS3Cloud(RescheduleActivity.this).create(ApiInterface.class);
+                ApiClient.getClient(RescheduleActivity.this).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(RescheduleActivity.this, RescheduleActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
@@ -1568,23 +1570,29 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<SearchTerminology> call = apiService.getSearchViewTerminology(muniqueID, sdf.format(currentTime));
+        Call<Provider> call = apiService.getTerminologies(muniqueID);
 
-        call.enqueue(new Callback<SearchTerminology>() {
+        call.enqueue(new Callback<Provider>() {
             @Override
-            public void onResponse(Call<SearchTerminology> call, Response<SearchTerminology> response) {
+            public void onResponse(Call<Provider> call, Response<Provider> response) {
 
                 try {
 
                     if (mDialog.isShowing())
                         Config.closeDialog(getParent(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
 
-                        mSearchTerminology = response.body();
+                        Provider providerResponse = new Provider();
+
+                        providerResponse = response.body();
+
+                        if (providerResponse != null){
+
+                            if (providerResponse.getTerminologies() != null) {
+                                mSearchTerminology = new Gson().fromJson(providerResponse.getTerminologies(), SearchTerminology.class);
+                            }
+                        }
                     }
 
 
@@ -1595,7 +1603,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
             }
 
             @Override
-            public void onFailure(Call<SearchTerminology> call, Throwable t) {
+            public void onFailure(Call<Provider> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())

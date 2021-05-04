@@ -676,4 +676,12 @@ public interface ApiInterface {
     @GET("provider/account/settings/config/{uniqueId}/jaldeediscount")
     Call<Provider> getJdn(@Path("uniqueId") int uniqueId);
 
+    @GET("provider/account/settings/config/{uniqueId}/terminologies")
+    Call<Provider> getTerminologies(@Path("uniqueId") int uniqueId);
+
+    @GET("provider/account/settings/config/{uniqueId}/businessProfile")
+    Call<Provider> getProvider(@Path("uniqueId") int uniqueId);
+
+
+
 }

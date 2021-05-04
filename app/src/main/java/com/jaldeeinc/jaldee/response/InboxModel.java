@@ -193,4 +193,14 @@ public class InboxModel {
 
     String accountName;
 
+    public String getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
+    }
+
+    String messageType;
+
 }

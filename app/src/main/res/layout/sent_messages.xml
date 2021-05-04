@@ -19,7 +19,6 @@
         android:layout_height="match_parent"
         android:textSize="@dimen/txtsize_12"
         android:padding="@dimen/dimen_10dp"
-        android:text=""
         android:layout_gravity="end"
         android:gravity="end"
         android:layout_marginEnd="@dimen/dimen_8dp"
@@ -82,16 +81,35 @@
 <!--        android:scrollbars="horizontal" />-->
 
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic
-        android:id="@+id/tv_sentTime"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="12:58 PM"
-        android:textSize="@dimen/txtsize_10"
-        android:layout_gravity="end"
-        android:layout_marginEnd="@dimen/dimen_8dp">
+        android:gravity="end">
 
-    </com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic>
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:id="@+id/tv_messageType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="@dimen/txtsize_10"
+            android:layout_gravity="end"
+            android:textColor="@color/location_theme"
+            android:layout_marginEnd="@dimen/dimen_15dp">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic
+            android:id="@+id/tv_sentTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12:58 PM"
+            android:textSize="@dimen/txtsize_10"
+            android:layout_marginEnd="@dimen/dimen_8dp">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic>
+
+    </LinearLayout>
+
 
 
 

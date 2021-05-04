@@ -9,13 +9,13 @@ import android.widget.SpinnerAdapter;
 
 import androidx.appcompat.widget.AppCompatSpinner;
 
+import com.jaldeeinc.jaldee.Interface.IDocumentType;
+import com.jaldeeinc.jaldee.activities.QuestionareActivity;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by V1k on 08-Sep-17.
- */
 
 public class MultipleSelectionSpinner extends AppCompatSpinner implements
     DialogInterface.OnMultiChoiceClickListener {
@@ -25,6 +25,8 @@ public class MultipleSelectionSpinner extends AppCompatSpinner implements
 
   ArrayAdapter<String> simple_adapter;
   private int sbLength;
+  private IDocumentType iDocumentType;
+  private int spinnerId;
 
   public MultipleSelectionSpinner(Context context) {
     super(context);
@@ -41,6 +43,21 @@ public class MultipleSelectionSpinner extends AppCompatSpinner implements
         android.R.layout.simple_spinner_item);
     super.setAdapter(simple_adapter);
   }
+
+  public MultipleSelectionSpinner(Context context, IDocumentType iDocumentType,int id) {
+    super(context);
+
+    simple_adapter = new ArrayAdapter<String>(context,
+            android.R.layout.simple_spinner_item);
+    super.setAdapter(simple_adapter);
+
+    this.iDocumentType = iDocumentType;
+    this.spinnerId  =  id;
+
+  }
+
+
+
 
   public void onClick(DialogInterface dialog, int which, boolean isChecked) {
     if (mSelection != null && which < mSelection.length) {
@@ -66,6 +83,7 @@ public class MultipleSelectionSpinner extends AppCompatSpinner implements
       @Override
       public void onClick(DialogInterface arg0, int arg1) {
 
+        iDocumentType.onOkClick(spinnerId);
       }
 
     });
@@ -223,5 +241,12 @@ public class MultipleSelectionSpinner extends AppCompatSpinner implements
             sbCheck="Tap to select";
         }*/
     return sb.toString();
+  }
+
+  public String[] getSelectedItems() {
+
+
+
+    return _items;
   }
 }

@@ -28,6 +28,7 @@ public class InboxList implements Serializable {
     private String messageId;
 
     private boolean read;
+    private String messageType;
 
 
 
@@ -136,5 +137,13 @@ public class InboxList implements Serializable {
 
     public void setAttachments(List<FileAttachment> attachments) {
         this.attachments = attachments;
+    }
+
+    public String getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
     }
 }

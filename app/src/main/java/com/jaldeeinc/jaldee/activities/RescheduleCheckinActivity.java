@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.ISelectQ;
 import com.jaldeeinc.jaldee.Interface.ISelectedQueue;
 import com.jaldeeinc.jaldee.R;
@@ -73,6 +74,7 @@ import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.ProfileModel;
+import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SlotsData;
@@ -1279,7 +1281,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
 
         ApiInterface apiService =
-                ApiClient.getClientS3Cloud(RescheduleCheckinActivity.this).create(ApiInterface.class);
+                ApiClient.getClient(RescheduleCheckinActivity.this).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(RescheduleCheckinActivity.this, RescheduleCheckinActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
@@ -1288,11 +1290,11 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<SearchTerminology> call = apiService.getSearchViewTerminology(muniqueID, sdf.format(currentTime));
+        Call<Provider> call = apiService.getTerminologies(muniqueID);
 
-        call.enqueue(new Callback<SearchTerminology>() {
+        call.enqueue(new Callback<Provider>() {
             @Override
-            public void onResponse(Call<SearchTerminology> call, Response<SearchTerminology> response) {
+            public void onResponse(Call<Provider> call, Response<Provider> response) {
 
                 try {
 
@@ -1304,7 +1306,16 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
                     if (response.code() == 200) {
 
-                        mSearchTerminology = response.body();
+                        Provider providerResponse = new Provider();
+
+                        providerResponse = response.body();
+
+                        if (providerResponse != null){
+
+                            if (providerResponse.getTerminologies() != null) {
+                                mSearchTerminology = new Gson().fromJson(providerResponse.getTerminologies(), SearchTerminology.class);
+                            }
+                        }
                     }
 
 
@@ -1315,7 +1326,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
             }
 
             @Override
-            public void onFailure(Call<SearchTerminology> call, Throwable t) {
+            public void onFailure(Call<Provider> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())

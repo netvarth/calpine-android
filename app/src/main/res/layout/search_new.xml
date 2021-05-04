@@ -279,6 +279,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dimen_12dp"
                             android:layout_marginTop="@dimen/dimen_5dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_toStartOf="@id/ll_coupons"
                             android:orientation="horizontal"
                             android:visibility="gone">
 

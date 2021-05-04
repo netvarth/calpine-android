@@ -78,6 +78,7 @@ import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.OrderResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
+import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
 import com.jaldeeinc.jaldee.response.Schedule;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
@@ -1150,51 +1151,52 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
 
 
     private void getProviderDetails(int id) {
-        ApiInterface apiService = ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(CheckoutListActivity.this, CheckoutListActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<SearchViewDetail> call = apiService.getSearchViewDetail(id, sdf.format(currentTime));
-        call.enqueue(new Callback<SearchViewDetail>() {
+        Call<Provider> call = apiService.getProvider(id);
+        call.enqueue(new Callback<Provider>() {
             @Override
-            public void onResponse(Call<SearchViewDetail> call, final Response<SearchViewDetail> response) {
+            public void onResponse(Call<Provider> call, final Response<Provider> response) {
                 try {
                     if (mDialog.isShowing())
                         Config.closeDialog(CheckoutListActivity.this, mDialog);
-                    Config.logV("URL-----1111----------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-----detail--------------------" + response.code());
                     if (response.code() == 200) {
-                        mBusinessDataList = response.body();
 
-                        if (mBusinessDataList != null) {
+                        Provider provider = new Provider();
 
-                            tvSpName.setText(mBusinessDataList.getBusinessName());
+                        provider = response.body();
 
-                            tvLocationName.setText(mBusinessDataList.getBaseLocation().getPlace());
+                        if (provider != null && provider.getBusinessProfile() != null) {
 
-                            if (mBusinessDataList.getLogo() != null) {
+                            mBusinessDataList = provider.getBusinessProfile();
 
-                                shimmer.setVisibility(View.VISIBLE);
-                                PicassoTrustAll.getInstance(CheckoutListActivity.this).load(mBusinessDataList.getLogo().getUrl()).into(ivSpImage, new com.squareup.picasso.Callback() {
-                                    @Override
-                                    public void onSuccess() {
+                            if (mBusinessDataList != null) {
 
-                                        shimmer.setVisibility(View.GONE);
-                                        ivSpImage.setVisibility(View.VISIBLE);
-                                    }
+                                tvSpName.setText(mBusinessDataList.getBusinessName());
 
-                                    @Override
-                                    public void onError() {
+                                tvLocationName.setText(mBusinessDataList.getBaseLocation().getPlace());
 
-                                        shimmer.setVisibility(View.GONE);
-                                        ivSpImage.setVisibility(View.VISIBLE);
-                                        ivSpImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
-                                    }
-                                });
+                                if (mBusinessDataList.getLogo() != null) {
+
+                                    shimmer.setVisibility(View.VISIBLE);
+                                    PicassoTrustAll.getInstance(CheckoutListActivity.this).load(mBusinessDataList.getLogo().getUrl()).into(ivSpImage, new com.squareup.picasso.Callback() {
+                                        @Override
+                                        public void onSuccess() {
+
+                                            shimmer.setVisibility(View.GONE);
+                                            ivSpImage.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onError() {
+
+                                            shimmer.setVisibility(View.GONE);
+                                            ivSpImage.setVisibility(View.VISIBLE);
+                                            ivSpImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
+                                        }
+                                    });
+                                }
                             }
                         }
 
@@ -1207,7 +1209,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
             }
 
             @Override
-            public void onFailure(Call<SearchViewDetail> call, Throwable t) {
+            public void onFailure(Call<Provider> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())

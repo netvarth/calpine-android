@@ -1577,7 +1577,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-
         Call<ResponseBody> call = apiService.appointmentSendAttachments(waitListId, Integer.parseInt(accountID.split("-")[0]), requestBody);
 
         call.enqueue(new Callback<ResponseBody>() {

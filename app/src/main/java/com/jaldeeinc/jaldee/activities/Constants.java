@@ -1,5 +1,7 @@
 package com.jaldeeinc.jaldee.activities;
 
+import com.jaldeeinc.jaldee.R;
+
 public class Constants {
 
 
@@ -60,6 +62,16 @@ public class Constants {
     public static final String PUSH_NOTIFICATION = "pushNotification";
 
 
+    public static int getViewId(int id){
+
+        switch (id){
+
+//            case 1:  return R.id.id1;
+        }
+
+        return 0;
+
+    }
 
 
 }

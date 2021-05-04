@@ -13,6 +13,7 @@ public class UserMessage {
     private String timeStamp;
     @SerializedName("attachements")
     public List<FileAttachment> attachments;
+    private String messageType;
 
     public UserMessage(){
 
@@ -72,5 +73,13 @@ public class UserMessage {
 
     public void setAttachments(List<FileAttachment> attachments) {
         this.attachments = attachments;
+    }
+
+    public String getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
     }
 }
