@@ -199,8 +199,8 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                         viewHolder.llDonationRange.setVisibility(View.VISIBLE);
                         viewHolder.llTime.setVisibility(View.GONE);
                         viewHolder.llEstwaitTime.setVisibility(View.GONE);
-                        viewHolder.tvMinAmount.setText("₹\u00A0" +  Config.getAmountinTwoDecimalPoints(Double.parseDouble(servicesInfoList.get(position).getMinDonationAmount())));
-                        viewHolder.tvMaxAmount.setText("₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(servicesInfoList.get(position).getMaxDonationAmount())));
+                        viewHolder.tvMinAmount.setText("₹\u00A0" +  Config.getAmountNoDecimalPoints(Double.parseDouble(servicesInfoList.get(position).getMinDonationAmount())));
+                        viewHolder.tvMaxAmount.setText("₹\u00A0" + Config.getAmountNoDecimalPoints(Double.parseDouble(servicesInfoList.get(position).getMaxDonationAmount())));
                     } else {
                         viewHolder.llDonationRange.setVisibility(View.GONE);
                     }
