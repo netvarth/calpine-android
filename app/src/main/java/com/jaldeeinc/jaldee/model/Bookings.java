@@ -26,6 +26,8 @@ public class Bookings implements Serializable {
     private boolean hasAttachment;
     private ActiveAppointment appointmentInfo;
     private ActiveCheckIn checkInInfo;
+    String videoCallButton;
+    String videoCallMessage;
 
     public Bookings(){
 
@@ -45,6 +47,21 @@ public class Bookings implements Serializable {
         this.checkInInfo = checkInInfo;
     }
 
+    public String getVideoCallButton() {
+        return videoCallButton;
+    }
+
+    public String getVideoCallMessage() {
+        return videoCallMessage;
+    }
+
+    public void setVideoCallButton(String videoCallButton) {
+        this.videoCallButton = videoCallButton;
+    }
+
+    public void setVideoCallMessage(String videoCallMessage) {
+        this.videoCallMessage = videoCallMessage;
+    }
 
     public String getBookingId() {
         return bookingId;

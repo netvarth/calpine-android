@@ -52,7 +52,17 @@ public class ActiveCheckIn implements Serializable {
     boolean phone_verified;
     boolean email_verified;
     int parent;
-//    int jaldeeConsumer;
+    //    int jaldeeConsumer;
+    String videoCallButton;
+    String videoCallMessage;
+
+    public String getVideoCallButton() {
+        return videoCallButton;
+    }
+
+    public String getVideoCallMessage() {
+        return videoCallMessage;
+    }
 
     public String getCountryCode() {
         return countryCode;
@@ -97,7 +107,6 @@ public class ActiveCheckIn implements Serializable {
 
     @SerializedName("provider")
     private ProviderDetails provider;
-
 
 
     public ArrayList<ServiceDetails> getVirtualCallingModes() {
@@ -158,7 +167,7 @@ public class ActiveCheckIn implements Serializable {
     String queueEndTime;
     int personAhead;
     String waitlistedBy;
-    int personsAhead=-1;
+    int personsAhead = -1;
     @SerializedName("waitlistingFor")
     private ArrayList<ActiveCheckIn> waitlistingFor;
     String phoneNo;
@@ -672,7 +681,6 @@ public class ActiveCheckIn implements Serializable {
     public void setAmountDue(double amountDue) {
         this.amountDue = amountDue;
     }
-
 
 
     public String getBillViewStatus() {
