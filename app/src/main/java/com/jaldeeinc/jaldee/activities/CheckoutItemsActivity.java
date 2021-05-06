@@ -1430,6 +1430,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         try {
 
             boolean tax = false;
+            double billDueAmount = 0;
             if (db.getTaxAmount() >= 0.0) {
                 tax = true;
             }
@@ -1455,21 +1456,21 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     if (catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
 
                         if (tax) {
-                            double totalBill = db.getCartDiscountedPrice() + catalogs.get(0).getHomeDelivery().getDeliveryCharge() + db.getTaxAmount();
-                            tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
+                            billDueAmount = db.getCartDiscountedPrice() + catalogs.get(0).getHomeDelivery().getDeliveryCharge() + db.getTaxAmount();
+                            tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(billDueAmount)));
                         } else {
-                            double totalBill = db.getCartDiscountedPrice() + catalogs.get(0).getHomeDelivery().getDeliveryCharge();
-                            tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
+                            billDueAmount = db.getCartDiscountedPrice() + catalogs.get(0).getHomeDelivery().getDeliveryCharge();
+                            tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(billDueAmount)));
                         }
 
                     } else {
 
                         if (tax) {
-                            double totalBill = db.getCartDiscountedPrice() + db.getTaxAmount();
-                            tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
+                            billDueAmount = db.getCartDiscountedPrice() + db.getTaxAmount();
+                            tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(billDueAmount)));
                         } else {
-                            double totalBill = db.getCartDiscountedPrice();
-                            tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
+                            billDueAmount = db.getCartDiscountedPrice();
+                            tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(billDueAmount)));
                         }
 
                     }
@@ -1477,16 +1478,24 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                 } else {
 
                     if (tax) {
-                        double bill = db.getCartDiscountedPrice() + db.getTaxAmount();
-                        tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(bill)));
+                        billDueAmount = db.getCartDiscountedPrice() + db.getTaxAmount();
+                        tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(billDueAmount)));
                     } else {
-                        double bill = db.getCartDiscountedPrice();
-                        tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(bill)));
+                        billDueAmount = db.getCartDiscountedPrice();
+                        tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(billDueAmount)));
                     }
                 }
-                if (catalog.getAdvanceAmount() != null && !catalog.getAdvanceAmount().isEmpty() && Float.parseFloat(catalogs.get(0).getAdvanceAmount()) > 0) {
-                    tvAdvanceAmount.setText("An advance of ₹\u00a0" + catalog.getAdvanceAmount() + " required");
-                    llAdvanceAmount.setVisibility(View.VISIBLE);
+                if(catalog.getPaymentType().equalsIgnoreCase("FIXED")) {
+                    if (catalog.getAdvanceAmount() != null && !catalog.getAdvanceAmount().isEmpty() && Float.parseFloat(catalogs.get(0).getAdvanceAmount()) > 0) {
+                        tvAdvanceAmount.setText("An advance of ₹\u00a0" + convertAmountToDecimals(catalog.getAdvanceAmount()) + " required");
+                        llAdvanceAmount.setVisibility(View.VISIBLE);
+                    }
+                }
+                if(catalog.getPaymentType().equalsIgnoreCase("FULLAMOUNT")){
+                    if (billDueAmount > 0) {
+                        tvAdvanceAmount.setText("An advance of ₹\u00a0" + convertAmountToDecimals(String.valueOf(billDueAmount)) + " required");
+                        llAdvanceAmount.setVisibility(View.VISIBLE);
+                    }
                 }
             }
 
