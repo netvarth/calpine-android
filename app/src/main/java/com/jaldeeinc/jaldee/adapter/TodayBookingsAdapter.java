@@ -105,15 +105,14 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
 
                             if (bookings.getAppointmentInfo() != null) {
                                 if (bookings.isVirtual() && bookings.getCallingType() != null) {
-                                    if (bookings.getBookingStatus() != null && bookings.getBookingStatus().equals("Cancelled")) {
-                                        viewHolder.tvDateAndTime.setText("Cancelled");
-                                        viewHolder.tvDateAndTime.setTextColor(Color.RED);
-                                    } else if (bookings.getBookingStatus() != null && bookings.getBookingStatus().equals("done")) {
-                                        viewHolder.tvDateAndTime.setText("Completed");
+                                    if ((bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("cancelled")) || (bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("done"))) {
+                                        //viewHolder.tvDateAndTime.setText("Cancelled");
+                                        //viewHolder.tvDateAndTime.setTextColor(Color.RED);
+                                        viewHolder.tvDateAndTime.setVisibility(View.GONE);
                                     } else if (bookings.getVideoCallMessage() != null && bookings.getVideoCallMessage().equals("Meeting session expired")) {
                                         viewHolder.tvDateAndTime.setText(bookings.getVideoCallMessage());
                                         viewHolder.tvDateAndTime.setTextColor(Color.RED);
-                                    }else {
+                                    } else {
                                         if (bookings.getCallingType().equalsIgnoreCase("Zoom")) {
                                             viewHolder.tvDateAndTime.setText(bookings.getVideoCallMessage());
 
@@ -177,15 +176,14 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
 
                             if (bookings.getCheckInInfo() != null) {
                                 if (bookings.isVirtual() && bookings.getCallingType() != null) {
-                                    if (bookings.getBookingStatus() != null && bookings.getBookingStatus().equals("cancelled")) {
-                                        viewHolder.tvDateAndTime.setText("Cancelled");
-                                        viewHolder.tvDateAndTime.setTextColor(Color.RED);
-                                    } else if (bookings.getBookingStatus() != null && bookings.getBookingStatus().equals("done")) {
-                                        viewHolder.tvDateAndTime.setText("Completed");
+                                    if ((bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("cancelled")) || (bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("done"))) {
+                                        //viewHolder.tvDateAndTime.setText("Cancelled");
+                                        //viewHolder.tvDateAndTime.setTextColor(Color.RED);
+                                        viewHolder.tvDateAndTime.setVisibility(View.GONE);
                                     } else if (bookings.getVideoCallMessage() != null && bookings.getVideoCallMessage().equals("Meeting session expired")) {
                                         viewHolder.tvDateAndTime.setText(bookings.getVideoCallMessage());
                                         viewHolder.tvDateAndTime.setTextColor(Color.RED);
-                                    }else {
+                                    } else {
                                         if (bookings.getCallingType().equalsIgnoreCase("Zoom")) {
                                             viewHolder.tvDateAndTime.setText(bookings.getVideoCallMessage());
 
@@ -225,15 +223,14 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                             if (bookings.getCheckInInfo() != null) {
                                 if (bookings.isVirtual() && bookings.getCallingType() != null) {
 
-                                    if (bookings.getBookingStatus() != null && bookings.getBookingStatus().equals("cancelled")) {
-                                        viewHolder.tvDateAndTime.setText("Cancelled");
-                                        viewHolder.tvDateAndTime.setTextColor(Color.RED);
-                                    } else if (bookings.getBookingStatus() != null && bookings.getBookingStatus().equals("done")) {
-                                        viewHolder.tvDateAndTime.setText("Completed");
+                                    if ((bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("cancelled")) || (bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("done"))) {
+                                        //viewHolder.tvDateAndTime.setText("Cancelled");
+                                        //viewHolder.tvDateAndTime.setTextColor(Color.RED);
+                                        viewHolder.tvDateAndTime.setVisibility(View.GONE);
                                     } else if (bookings.getVideoCallMessage() != null && bookings.getVideoCallMessage().equals("Meeting session expired")) {
                                         viewHolder.tvDateAndTime.setText(bookings.getVideoCallMessage());
                                         viewHolder.tvDateAndTime.setTextColor(Color.RED);
-                                    }else {
+                                    } else {
                                         if (bookings.getCallingType().equalsIgnoreCase("Zoom")) {
                                             viewHolder.tvDateAndTime.setText(bookings.getVideoCallMessage());
 
