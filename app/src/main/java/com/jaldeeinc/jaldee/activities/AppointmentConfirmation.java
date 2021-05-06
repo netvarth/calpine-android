@@ -274,6 +274,9 @@ public class AppointmentConfirmation extends AppCompatActivity {
                         } else if (activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                             icon_service.setImageResource(R.drawable.phoneicon_sized);
                         }
+                        else if (activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("VideoCall")) {
+                            icon_service.setImageResource(R.drawable.ic_jaldeevideo);
+                        }
                     } else {
                         icon_service.setVisibility(View.GONE);
                     }

@@ -283,6 +283,11 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                             viewHolder.ivTeleService.setImageResource(R.drawable.phoneaudioicon);
 
                         }
+                        else if (child.getCallingMode().equalsIgnoreCase("VideoCall")){
+
+                            viewHolder.ivTeleService.setImageResource(R.drawable.ic_jaldeevideo);
+
+                        }
                     }
 
                 } else {

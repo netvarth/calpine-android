@@ -372,7 +372,9 @@ public class CheckInConfirmation extends AppCompatActivity {
                             } else if (activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                 icon_service.setImageResource(R.drawable.phoneiconsized_small);
                             }
-
+                            else if (activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("VideoCall")) {
+                                icon_service.setImageResource(R.drawable.ic_jaldeevideo);
+                            }
                         } else {
                             icon_service.setVisibility(View.GONE);
                         }

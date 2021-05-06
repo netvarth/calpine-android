@@ -240,6 +240,13 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             public void onClick(View v) {
 
                 if (providerDetails != null && providerId != 0) {
+
+//                    Intent intent = new Intent(UserDetailActivity.this, ChatActivity.class);
+//                    intent.putExtra("from", Constants.PROVIDER);
+//                    intent.putExtra("accountId", providerDetails.getId());
+//                    intent.putExtra("name", providerDetails.getBusinessName());
+//                    startActivity(intent);
+
                     enquiryDialog = new EnquiryDialog(mContext, providerDetails.getBusinessName(), iSendMessage, providerDetails.getId());
                     enquiryDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     enquiryDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

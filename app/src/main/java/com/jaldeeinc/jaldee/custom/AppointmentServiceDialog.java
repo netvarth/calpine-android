@@ -95,6 +95,9 @@ public class AppointmentServiceDialog extends Dialog {
                         } else if (searchService.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                             tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneicon_sized, 0, 0, 0);
                             tv_toolbartitle.setCompoundDrawablePadding(15);
+                        } else if (searchService.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("VideoCall")) {
+                            tv_toolbartitle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_jaldeevideo, 0, 0, 0);
+                            tv_toolbartitle.setCompoundDrawablePadding(15);
                         }
                     }
                 } catch (Exception e) {

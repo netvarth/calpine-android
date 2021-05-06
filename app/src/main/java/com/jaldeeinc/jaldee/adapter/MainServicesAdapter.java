@@ -284,6 +284,10 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
 
                                 viewHolder.ivTeleService.setImageResource(R.drawable.phoneaudioicon);
 
+                            } else if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("VideoCall")){
+
+                                viewHolder.ivTeleService.setImageResource(R.drawable.ic_jaldeevideo);
+
                             }
                         }
 

@@ -30,13 +30,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/padding5"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/txtprepayment"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="Amount to Pay "
@@ -45,10 +44,12 @@
 
             <TextView
                 android:id="@+id/txtamount"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
                 android:text=""
+                android:gravity="center"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:layout_gravity="center"
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/txtsize_subtitle" />
         </LinearLayout>

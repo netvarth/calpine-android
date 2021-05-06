@@ -281,6 +281,10 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
 
                                 viewHolder.ivTeleService.setImageResource(R.drawable.phoneaudioicon);
 
+                            } else if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("VideoCall")) {
+
+                                viewHolder.ivTeleService.setImageResource(R.drawable.ic_jaldeevideo);
+
                             }
                         }
 

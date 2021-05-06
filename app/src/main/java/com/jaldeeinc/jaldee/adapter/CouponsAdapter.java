@@ -131,7 +131,7 @@ public class CouponsAdapter extends RecyclerView.Adapter<CouponsAdapter.ViewHold
             }
 
 
-            if (couponResponse.getConsumerTermsAndconditions() != null) {
+            if (couponResponse.getConsumerTermsAndconditions() != null && !couponResponse.getConsumerTermsAndconditions().trim().equalsIgnoreCase("")) {
                 viewHolder.llTerms.setVisibility(View.VISIBLE);
                 viewHolder.tvTerms.setText(couponResponse.getConsumerTermsAndconditions());
             } else {

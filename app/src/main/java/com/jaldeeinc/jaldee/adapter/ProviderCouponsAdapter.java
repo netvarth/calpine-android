@@ -151,7 +151,7 @@ public class ProviderCouponsAdapter extends RecyclerView.Adapter<ProviderCoupons
 
             }
 
-            if (couponResponse.getTermsConditions() != null) {
+            if (couponResponse.getTermsConditions() != null && !couponResponse.getTermsConditions().trim().equalsIgnoreCase("")) {
                 viewHolder.llTerms.setVisibility(View.VISIBLE);
                 viewHolder.tvTerms.setText(couponResponse.getTermsConditions());
             } else {

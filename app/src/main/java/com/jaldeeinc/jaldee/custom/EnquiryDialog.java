@@ -19,8 +19,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.adapter.LocationsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -33,6 +35,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -64,7 +68,6 @@ public class EnquiryDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.enquiry);
-
 
 
         tvTo = findViewById(R.id.tv_to);
@@ -125,14 +128,24 @@ public class EnquiryDialog extends Dialog {
                 ApiClient.getClient(context).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(context, context.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
+        MediaType type = MediaType.parse("*/*");
+        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
+        mBuilder.setType(MultipartBody.FORM);
+        JsonObject obj = new JsonObject();
+        obj.addProperty("msg", message);
+        obj.addProperty("messageType", "ENQUIRY");
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj.toString());
+        mBuilder.addFormDataPart("message","blob",body);
+        RequestBody requestBody = mBuilder.build();
+
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("communicationMessage", message);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<ResponseBody> call = apiService.PostMessage(accountID, body);
+        Call<ResponseBody> call = apiService.PostMessage(accountID, requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -144,7 +157,7 @@ public class EnquiryDialog extends Dialog {
                     if (response.code() == 200) {
                         DynamicToast.make(context, "Message sent successfully", AppCompatResources.getDrawable(
                                 context, R.drawable.adt_ic_success),
-                                ContextCompat.getColor(context,R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
+                                ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
                         dismiss();
                     } else if (response.code() == 403) {
                         Toast.makeText(context, "Please complete the details of profile name,location and working hours to continue", Toast.LENGTH_LONG).show();

@@ -480,6 +480,10 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                         ivteleService.setImageResource(R.drawable.phoneaudioicon);
 
+                    } else if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("VideoCall")) {
+
+                        ivteleService.setImageResource(R.drawable.ic_jaldeevideo);
+
                     } else {
                         ivteleService.setVisibility(View.GONE);
                     }
@@ -1612,7 +1616,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     virtualService.put("Zoom", checkInInfo.getVirtualCallingModes().get(0).getValue());
                 } else if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Phone")) {
                     virtualService.put("Phone", countryVirtualCode + etVirtualNumber.getText());
-
+                }else if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("VideoCall")) {
+                    virtualService.put("VideoCall", checkInInfo.getVirtualCallingModes().get(0).getValue());
                 }
             } else {
 

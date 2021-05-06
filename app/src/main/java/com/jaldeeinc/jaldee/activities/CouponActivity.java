@@ -120,12 +120,12 @@ public class CouponActivity extends AppCompatActivity {
                                     mAdapter = new CouponsAdapter(CouponActivity.this, coupanList);
                                     rvCoupons.setAdapter(mAdapter);
                                 } else {
-                                    ApiJaldeegetProviderCoupons(providerResponse.getProviderCoupon());
                                     tvError.setVisibility(View.VISIBLE);
+                                    ApiJaldeegetProviderCoupons(providerResponse.getProviderCoupon());
                                 }
                             } else {
-                                ApiJaldeegetProviderCoupons(providerResponse.getProviderCoupon());
                                 tvError.setVisibility(View.VISIBLE);
+                                ApiJaldeegetProviderCoupons(providerResponse.getProviderCoupon());
                             }
 
                         }
@@ -158,7 +158,7 @@ public class CouponActivity extends AppCompatActivity {
             providerCouponList = new Gson().fromJson(providerCoupons, new TypeToken<ArrayList<ProviderCouponResponse>>() {
             }.getType());
             if (providerCouponList != null) {
-                if (providerCouponList.size() > 0) {
+                if ((coupanList != null && coupanList.size() > 0)||providerCouponList.size() > 0) {
                     tvError.setVisibility(View.GONE);
                     rvProviderCoupons.setLayoutManager(new LinearLayoutManager(CouponActivity.this));
                     providerCouponsAdapter = new ProviderCouponsAdapter(providerCouponList, CouponActivity.this, accountId);

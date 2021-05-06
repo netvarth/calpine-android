@@ -483,9 +483,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             ivteleService.setImageResource(R.drawable.whatsapp_icon);
                         }
 
-                    } else if (serviceInfo.getCallingMode().equalsIgnoreCase("Phone")) {
+                    } else if (serviceInfo.getCallingMode().equalsIgnoreCase("VideoCall")) {
 
-                        ivteleService.setImageResource(R.drawable.phoneaudioicon);
+                        ivteleService.setImageResource(R.drawable.ic_jaldeevideo);
 
                     } else {
                         ivteleService.setVisibility(View.GONE);
@@ -1366,6 +1366,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     virtualService.put("Zoom", serviceInfo.getVirtualCallingValue());
                 } else if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("Phone")) {
                     virtualService.put("Phone", countryVirtualCode + etVirtualNumber.getText());
+                }else if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("VideoCall")) {
+                    virtualService.put("VideoCall", serviceInfo.getVirtualCallingValue());
                 }
             } else {
 
