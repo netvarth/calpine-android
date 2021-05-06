@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class SearchDepartmentServices implements Serializable{
     String departmentName;
-    String departmentId;
+    int departmentId;
     String departmentCode;
     String departmentDescription;
     String departmentStatus;
@@ -22,10 +22,10 @@ public class SearchDepartmentServices implements Serializable{
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
     }
-    public String getDepartmentId() {
+    public int getDepartmentId() {
         return departmentId;
     }
-    public void setDepartmentId(String departmentId) {
+    public void setDepartmentId(int departmentId) {
         this.departmentId = departmentId;
     }
     public String getDepartmentCode() {

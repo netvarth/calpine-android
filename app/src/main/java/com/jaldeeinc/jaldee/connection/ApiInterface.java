@@ -29,6 +29,7 @@ import com.jaldeeinc.jaldee.response.OrderResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.PaytmChecksum;
 import com.jaldeeinc.jaldee.response.ProfileModel;
+import com.jaldeeinc.jaldee.response.ProfilePicture;
 import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
 import com.jaldeeinc.jaldee.response.Questionnaire;
@@ -48,6 +49,7 @@ import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchLocation;
+import com.jaldeeinc.jaldee.response.SearchLogo;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
@@ -64,6 +66,8 @@ import com.jaldeeinc.jaldee.response.UserResponse;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -681,6 +685,9 @@ public interface ApiInterface {
 
     @GET("provider/account/settings/config/{uniqueId}/businessProfile")
     Call<Provider> getProvider(@Path("uniqueId") int uniqueId);
+
+    @GET("provider/imagePropries/logo/{queueId}")
+    Call<LinkedHashMap<String, ArrayList<ProfilePicture>>> getLogo(@Path("queueId") String id);
 
 
 

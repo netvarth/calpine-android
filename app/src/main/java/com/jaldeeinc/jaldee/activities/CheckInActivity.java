@@ -264,8 +264,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     @BindView(R.id.ll_coupons)
     LinearLayout llCoupons;
 
-    static CustomTextViewMedium txtprepayamount;
-    static CustomTextViewMedium txtserviceamount;
+    static CustomTextViewSemiBold txtprepayamount;
+    static CustomTextViewSemiBold txtserviceamount;
 
     static LinearLayout LservicePrepay;
     static LinearLayout LPrepay;

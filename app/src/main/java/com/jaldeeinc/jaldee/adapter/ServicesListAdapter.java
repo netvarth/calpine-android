@@ -52,7 +52,7 @@ public class ServicesListAdapter extends RecyclerView.Adapter<ServicesListAdapte
         public void onBindViewHolder(final com.jaldeeinc.jaldee.adapter.ServicesListAdapter.MyViewHolder myViewHolder, final int position) {
             final SearchService servicesList = mSearchDepartmentServicesList.get(position);
             String serviceName = servicesList.getName();
-            if(servicesList.getDepartment() == Integer.parseInt(searchDepartmentServices.getDepartmentId())){
+            if(servicesList.getDepartment() == searchDepartmentServices.getDepartmentId()){
             myViewHolder.tv_services.setText(serviceName);
             myViewHolder.tv_services.setVisibility(View.VISIBLE);
             }

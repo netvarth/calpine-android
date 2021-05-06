@@ -24,6 +24,16 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-feature android:name="android.hardware.audio.low_latency" />
+    <uses-feature android:name="android.hardware.audio.pro" />
+    <uses-feature android:name="android.hardware.microphone" android:required="true"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature android:name="android.hardware.camera.front" android:required="true" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+
     <application
         android:name=".common.MyApplication"
         android:allowBackup="true"
@@ -37,18 +47,26 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.QuestionareActivity"
+        <activity android:name=".activities.Splash"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".activities.EditProfileActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.ViewAttachmentActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.CheckoutListActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.OrderDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.OrderConfirmation"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.QuestionareActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.EditProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ViewAttachmentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.CheckoutListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.OrderDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.OrderConfirmation"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.CheckoutItemsActivity"
             android:screenOrientation="portrait" />
@@ -113,7 +131,7 @@
         <activity android:name=".activities.CouponFirstActivity" />
         <activity android:name=".activities.CouponActivity" />
         <activity
-            android:name=".activities.Splash"
+            android:name=".activities.WebViewActivity"
             android:launchMode="singleTask"
             android:screenOrientation="unspecified">
             <intent-filter>

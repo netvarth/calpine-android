@@ -614,7 +614,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding2"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:visibility="gone">
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
@@ -623,18 +623,18 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/padding2"
-                        android:layout_weight="0.7"
                         android:gravity="center"
                         android:text="@string/serve_pay"
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_hint_11" />
 
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                         android:id="@+id/txtserviceamount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.3"
                         android:text=" "
+                        android:gravity="center"
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_hint_11" />
 
@@ -645,7 +645,7 @@
                     android:id="@+id/ll_prepay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:visibility="gone">
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
@@ -654,18 +654,16 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/padding2"
-                        android:layout_weight="0.7"
                         android:gravity="center"
                         android:text="@string/serve_prepay"
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_hint_11" />
 
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                         android:id="@+id/txtprepayamount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:text=""
+                        android:gravity="center"
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_hint_11" />
 

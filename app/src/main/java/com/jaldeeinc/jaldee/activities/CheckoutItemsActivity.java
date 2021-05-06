@@ -1863,7 +1863,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             if (providerCoupons != null) {
 
                 providerCouponList.clear();
-                providerCouponList = new Gson().fromJson(providerCoupons, new TypeToken<ArrayList<CoupnResponse>>() {
+                providerCouponList = new Gson().fromJson(providerCoupons, new TypeToken<ArrayList<ProviderCouponResponse>>() {
                 }.getType());
 
                 if (providerCouponList != null) {

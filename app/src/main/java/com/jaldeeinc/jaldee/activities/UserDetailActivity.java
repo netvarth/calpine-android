@@ -179,7 +179,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
         if (providerInfo != null) {
             providerId = providerInfo.getId();
             if (providerInfo.getProfilePicture() != null) {
-                String url = extractUrl(providerInfo.getProfilePicture());
+                String url = providerInfo.getProfilePicture().getUrl();
                 PicassoTrustAll.getInstance(mContext).load(url).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(ivSpImage);
 
             } else {

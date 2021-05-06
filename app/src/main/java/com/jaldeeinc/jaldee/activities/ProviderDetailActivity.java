@@ -111,6 +111,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1553,8 +1554,10 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         try {
             if (providerResponse.getDepartmentProviders() != null) {
 
-                departmentProviders = new Gson().fromJson(providerResponse.getDepartmentProviders(), new TypeToken<ArrayList<SearchDepartmentServices>>() {
-                }.getType());
+                String json = new Gson().toJson(providerResponse.getDepartmentProviders());
+                ArrayList<SearchDepartmentServices> outputList = new Gson().fromJson(json, new TypeToken<ArrayList<SearchDepartmentServices>>() { }.getType());
+                departmentProviders = outputList;
+
             }
 
             if (providerResponse.getDonationServices() != null) {
@@ -1583,8 +1586,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         try {
 
             if (providerResponse.getDepartmentProviders() != null) {
-                providersList = new Gson().fromJson(providerResponse.getDepartmentProviders(), new TypeToken<ArrayList<ProviderUserModel>>() {
-                }.getType());
+                String json = new Gson().toJson(providerResponse.getDepartmentProviders());
+                ArrayList<ProviderUserModel> outputList = new Gson().fromJson(json, new TypeToken<ArrayList<ProviderUserModel>>() { }.getType());
+                providersList = outputList;
             }
 
             if (providerResponse.getDonationServices() != null) {
@@ -2023,7 +2027,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     for (ProviderUserModel provider : providersList) {
 
                         DepServiceInfo serviceInfo = new DepServiceInfo();
-                        serviceInfo.setDepartmentId(Integer.parseInt(provider.getDeptId()));
+                        serviceInfo.setDepartmentId(provider.getDeptId());
                         serviceInfo.setDepartmentName("");
                         serviceInfo.setId(provider.getId());
                         if (provider.getBusinessName() != null) {
@@ -2040,7 +2044,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         serviceInfo.setCallingMode("");
                         serviceInfo.setNextAvailableTime("");
                         if (provider.getProfilePicture() != null) {
-                            String url = extractUrl(provider.getProfilePicture());
+                            String url = provider.getProfilePicture().getUrl();
                             serviceInfo.setProviderImage(url);
                         }
                         // adding all the info
@@ -2232,7 +2236,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     donationServices = donationServices == null ? new ArrayList<SearchDonation>() : donationServices;
 
                     departmentsList.clear();
-                    for (SearchDepartmentServices department : ProviderDetailActivity.this.departmentProviders) {
+                    for (SearchDepartmentServices department : departmentProviders) {
 
                         DepartmentInfo departmentInfo = new DepartmentInfo();
                         ArrayList<DepServiceInfo> services = new ArrayList<DepServiceInfo>();
@@ -2241,7 +2245,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                             for (SearchService checkInService : checkInServicesList) {
 
-                                if (Integer.parseInt(department.getDepartmentId()) == checkInService.getDepartment()) {
+                                if (department.getDepartmentId() == checkInService.getDepartment()) {
 
                                     if (checkInService.getProvider() == null) {  // adding only Sp level services
 
@@ -2286,7 +2290,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         if (schedulesList.get(0).isApptEnabled()) {
                             for (SearchAppoinment appt : apptServicesList) {
 
-                                if (Integer.parseInt(department.getDepartmentId()) == appt.getDepartment()) {
+                                if (department.getDepartmentId() == appt.getDepartment()) {
 
                                     if (appt.getProvider() == null) {  // adding only Sp level services
 
@@ -2323,14 +2327,14 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         }
 
                         // for providers
-                        for (SearchDepartmentServices provider : ProviderDetailActivity.this.departmentProviders) {
+                        for (SearchDepartmentServices provider : departmentProviders) {
 
-                            if (department.getDepartmentId().equalsIgnoreCase(provider.getDepartmentId())) {
+                            if (department.getDepartmentId() == provider.getDepartmentId()) {
 
                                 for (ProviderUserModel user : provider.getUsers()) {
 
                                     DepServiceInfo serviceInfo = new DepServiceInfo();
-                                    serviceInfo.setDepartmentId(Integer.parseInt(provider.getDepartmentId()));
+                                    serviceInfo.setDepartmentId(provider.getDepartmentId());
                                     serviceInfo.setDepartmentName(provider.getDepartmentName());
                                     serviceInfo.setId(user.getId());
                                     if (user.getBusinessName() != null) {
@@ -2347,7 +2351,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                     serviceInfo.setCallingMode("");
                                     serviceInfo.setNextAvailableTime("");
                                     if (user.getProfilePicture() != null) {
-                                        String url = extractUrl(user.getProfilePicture());
+                                        String url = user.getProfilePicture().getUrl();
                                         serviceInfo.setProviderImage(url);
                                     }
                                     // adding all the info

@@ -21,7 +21,7 @@ public class Provider {
 
     @SerializedName("departmentProviders")
     @Expose
-    private String departmentProviders;
+    private Object departmentProviders;
 
     @SerializedName("coupon")
     @Expose
@@ -75,13 +75,6 @@ public class Provider {
         this.terminologies = terminologies;
     }
 
-    public String getDepartmentProviders() {
-        return departmentProviders;
-    }
-
-    public void setDepartmentProviders(String departmentProviders) {
-        this.departmentProviders = departmentProviders;
-    }
 
     public String getCoupon() {
         return coupon;
@@ -137,5 +130,13 @@ public class Provider {
 
     public void setJaldeediscount(String jaldeediscount) {
         this.jaldeediscount = jaldeediscount;
+    }
+
+    public Object getDepartmentProviders() {
+        return departmentProviders;
+    }
+
+    public void setDepartmentProviders(Object departmentProviders) {
+        this.departmentProviders = departmentProviders;
     }
 }

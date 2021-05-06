@@ -387,7 +387,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                                     if (tv_departmentCode.getText().toString().equalsIgnoreCase(serviceList.get(i).getDepartmentCode())) {
 
                                         userSearch.setServices(serviceList.get(i).getServices());
-                                        userSearch.setDepartmentId(serviceList.get(i).getDepartmentId());
+//                                        userSearch.setDepartmentId(serviceList.get(i).getDepartmentId());
 
                                     }
                                 }

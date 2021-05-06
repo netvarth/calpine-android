@@ -1,5 +1,7 @@
 package com.jaldeeinc.jaldee.model;
 
+import com.jaldeeinc.jaldee.response.ProviderPicture;
+
 import java.io.Serializable;
 
 /**
@@ -31,11 +33,11 @@ public class ProviderUserModel implements Serializable {
         this.mobileNo = mobileNo;
     }
 
-    public String getDeptId() {
+    public int getDeptId() {
         return deptId;
     }
 
-    public void setDeptId(String deptId) {
+    public void setDeptId(int deptId) {
         this.deptId = deptId;
     }
 
@@ -58,11 +60,11 @@ public class ProviderUserModel implements Serializable {
     String firstName;
     String lastName;
     String mobileNo;
-    String deptId;
+    int deptId;
     String email;
     int id;
     String businessName;
-    String profilePicture;
+    ProviderPicture profilePicture;
     boolean queues;
     boolean schedules;
     boolean available;
@@ -81,13 +83,6 @@ public class ProviderUserModel implements Serializable {
         this.businessName = businessName;
     }
 
-    public String getProfilePicture() {
-        return profilePicture;
-    }
-
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
-    }
 
 
     public boolean isQueues() {
@@ -112,5 +107,13 @@ public class ProviderUserModel implements Serializable {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public ProviderPicture getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(ProviderPicture profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }

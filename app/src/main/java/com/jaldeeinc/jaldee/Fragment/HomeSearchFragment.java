@@ -7,7 +7,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Address;
@@ -15,13 +14,10 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -44,10 +40,7 @@ import android.widget.Spinner;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -55,11 +48,8 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.JsonArray;
 import com.jaldeeinc.jaldee.Interface.ISelectedPopularSearch;
@@ -68,7 +58,6 @@ import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.JdnActivity;
 import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
 import com.jaldeeinc.jaldee.activities.SearchResultsActivity;
-import com.jaldeeinc.jaldee.activities.Utilss;
 import com.jaldeeinc.jaldee.adapter.PopularSearchAdapter;
 import com.jaldeeinc.jaldee.adapter.SearchListAdpter;
 import com.jaldeeinc.jaldee.adapter.SearchResultsAdapter;
@@ -86,11 +75,11 @@ import com.jaldeeinc.jaldee.model.ListCell;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
+import com.jaldeeinc.jaldee.response.ProfilePicture;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchService;
-import com.jaldeeinc.jaldee.utils.AppPreferences;
 import com.jaldeeinc.jaldee.utils.DialogUtilsKt;
 import com.jaldeeinc.jaldee.utils.EmptySubmitSearchView;
 import com.jaldeeinc.jaldee.utils.PaginationScrollListener;
@@ -98,6 +87,7 @@ import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -1376,12 +1366,12 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
 
     /**
      * Method to combine Cloud response with Estimated waiting time.
-     *
-     * @param queuelist       Estimated Wait time Details
+     *  @param queuelist       Estimated Wait time Details
      * @param mSearchRespPass Cloud response
      * @param mCheck          first/next
+     * @param logo
      */
-    private void ApiQueueList(ArrayList<String> queuelist, final List<SearchAWsResponse> mSearchRespPass, final String mCheck, final ArrayList<ScheduleList> mScheduleList) {
+    private void ApiQueueList(ArrayList<String> queuelist, final List<SearchAWsResponse> mSearchRespPass, final String mCheck, final ArrayList<ScheduleList> mScheduleList, LinkedHashMap<String, ArrayList<ProfilePicture>> logo) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         Config.logV("QUEUELIST @@@@@@@@@@@@@@@@@@@@@@");
@@ -1421,7 +1411,12 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                                     // Cloud Response Setting
                                     SearchListModel searchList = new SearchListModel();
                                     searchList.setId(mSearchRespPass.get(i).getId());
-                                    searchList.setLogo(mSearchRespPass.get(i).getLogo());
+                                    if (logo.values() != null) {
+                                        ArrayList<ArrayList<ProfilePicture>> p = (new ArrayList<ArrayList<ProfilePicture>>(logo.values()));
+                                        if (p.get(i).size() > 0) {
+                                            searchList.setLogo(p.get(i).get(0).getUrl());
+                                        }
+                                    }
                                     searchList.setPlace1(mSearchRespPass.get(i).getPlace1());
                                     searchList.setSector(mSearchRespPass.get(i).getSub_sector_displayname());
                                     searchList.setTitle(mSearchRespPass.get(i).getTitle());
@@ -1600,7 +1595,12 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                                 for (int i = 0; i < mSearchRespPass.size(); i++) {
                                     SearchListModel searchList = new SearchListModel();
                                     searchList.setId(mSearchRespPass.get(i).getId());
-                                    searchList.setLogo(mSearchRespPass.get(i).getLogo());
+                                    if (logo.values() != null) {
+                                        ArrayList<ArrayList<ProfilePicture>> p = (new ArrayList<ArrayList<ProfilePicture>>(logo.values()));
+                                        if (p.get(i).size() > 0) {
+                                            searchList.setLogo(p.get(i).get(0).getUrl());
+                                        }
+                                    }
                                     searchList.setPlace1(mSearchRespPass.get(i).getPlace1());
                                     searchList.setSector(mSearchRespPass.get(i).getSub_sector_displayname());
                                     searchList.setTitle(mSearchRespPass.get(i).getTitle());
@@ -1799,6 +1799,8 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         }
     }
 
+
+
     private void ApiSheduleList(final ArrayList<String> queuelist, final List<SearchAWsResponse> mSearchRespPass, final String mCheck, final ArrayList<ScheduleList> mScheduleList) {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         StringBuilder csvBuilder = new StringBuilder();
@@ -1820,11 +1822,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                             for (int i = 0; i < response.body().size(); i++) {
                                 mScheduleList.add(i, response.body().get(i));
                             }
-                            if (mCheck.equals("next")) {
-                                ApiQueueList(queuelist, mSearchResp, "next", mScheduleList);
-                            } else if (mCheck.equals("first")) {
-                                ApiQueueList(queuelist, mSearchResp, "first", mScheduleList);
-                            }
+                            ApiGetProfilePicture(queuelist, mSearchResp, mScheduleList, mCheck);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1842,6 +1840,57 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
             });
         }
     }
+
+    private void ApiGetProfilePicture(ArrayList<String> queuelist, List<SearchAWsResponse> mSearchResp, ArrayList<ScheduleList> mScheduleList, String mCheck) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        StringBuilder csvBuilder = new StringBuilder();
+        for (String data : queuelist) {
+            csvBuilder.append(data);
+            csvBuilder.append(",");
+        }
+        String csv = csvBuilder.toString();
+        System.out.println(csv);
+        if (csv != "" && csv != null) {
+            Call<LinkedHashMap<String, ArrayList<ProfilePicture>>> call = apiService.getLogo(csv);
+            call.enqueue(new Callback<LinkedHashMap<String, ArrayList<ProfilePicture>>>() {
+                @Override
+                public void onResponse(Call<LinkedHashMap<String, ArrayList<ProfilePicture>>> call, Response<LinkedHashMap<String, ArrayList<ProfilePicture>>> response) {
+                    try {
+                        mScheduleList.clear();
+//                        Log.i("SearchScheduleResp", new Gson().toJson(response.body()));
+                        if (response.code() == 200) {
+
+                            LinkedHashMap<String, ArrayList<ProfilePicture>> logo;
+                            logo = response.body();
+
+                            if (logo != null) {
+
+                                if (mCheck.equals("next")) {
+                                    ApiQueueList(queuelist, mSearchResp, "next", mScheduleList, logo);
+                                } else if (mCheck.equals("first")) {
+                                    ApiQueueList(queuelist, mSearchResp, "first", mScheduleList, logo);
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LinkedHashMap<String, ArrayList<ProfilePicture>>> call, Throwable t) {
+                    // Log error here since request failed
+                    Config.logV("Fail---------------" + t.toString());
+               /* if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+*/
+                }
+            });
+        }
+
+    }
+
 
     private void loadNextPage(String mQueryPass, String mPass, String sort) {
         Log.d("", "loadNextPage: " + currentPage);

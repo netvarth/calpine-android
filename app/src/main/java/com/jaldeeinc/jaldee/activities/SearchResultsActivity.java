@@ -1,11 +1,9 @@
 package com.jaldeeinc.jaldee.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,23 +20,18 @@ import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaldeeinc.jaldee.Fragment.HomeSearchFragment;
-import com.jaldeeinc.jaldee.Fragment.JdnFragment;
 import com.jaldeeinc.jaldee.Interface.IClearFilter;
 import com.jaldeeinc.jaldee.Interface.IFilterOptions;
 import com.jaldeeinc.jaldee.R;
@@ -48,7 +41,6 @@ import com.jaldeeinc.jaldee.adapter.PaginationAdapter;
 import com.jaldeeinc.jaldee.adapter.SearchFiltersAdapter;
 import com.jaldeeinc.jaldee.adapter.SearchListAdpter;
 import com.jaldeeinc.jaldee.adapter.SearchResultsAdapter;
-import com.jaldeeinc.jaldee.adapter.SubDomainAdapter;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -65,6 +57,7 @@ import com.jaldeeinc.jaldee.model.ListCell;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
+import com.jaldeeinc.jaldee.response.ProfilePicture;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.RefinedFilters;
 import com.jaldeeinc.jaldee.response.ScheduleList;
@@ -78,6 +71,7 @@ import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -466,7 +460,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                     @Override
                     public void run() {
                         Config.logV("loadNextPage--------------------" + query);
-                        loadNextPage(query, url,sort);
+                        loadNextPage(query, url, sort);
                     }
                 }, 1000);
 
@@ -1125,8 +1119,9 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
      * @param queuelist       Estimated Wait time Details
      * @param mSearchRespPass Cloud response
      * @param mCheck          first/next
+     * @param logo
      */
-    private void ApiQueueList(ArrayList<String> queuelist, final List<SearchAWsResponse> mSearchRespPass, final String mCheck, final ArrayList<ScheduleList> mScheduleList) {
+    private void ApiQueueList(ArrayList<String> queuelist, final List<SearchAWsResponse> mSearchRespPass, final String mCheck, final ArrayList<ScheduleList> mScheduleList, HashMap<String, ArrayList<ProfilePicture>> logo) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         Config.logV("QUEUELIST @@@@@@@@@@@@@@@@@@@@@@");
@@ -1165,7 +1160,12 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                                     // Cloud Response Setting
                                     SearchListModel searchList = new SearchListModel();
                                     searchList.setId(mSearchRespPass.get(i).getId());
-                                    searchList.setLogo(mSearchRespPass.get(i).getLogo());
+                                    if (logo != null) {
+                                        ArrayList<ArrayList<ProfilePicture>> p = (new ArrayList<ArrayList<ProfilePicture>>(logo.values()));
+                                        if (p.get(i).size() > 0) {
+                                            searchList.setLogo(p.get(i).get(0).getUrl());
+                                        }
+                                    }
                                     searchList.setPlace1(mSearchRespPass.get(i).getPlace1());
                                     searchList.setSector(mSearchRespPass.get(i).getSub_sector_displayname());
                                     searchList.setTitle(mSearchRespPass.get(i).getTitle());
@@ -1344,7 +1344,12 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                                 for (int i = 0; i < mSearchRespPass.size(); i++) {
                                     SearchListModel searchList = new SearchListModel();
                                     searchList.setId(mSearchRespPass.get(i).getId());
-                                    searchList.setLogo(mSearchRespPass.get(i).getLogo());
+                                    if (logo.values() != null) {
+                                        ArrayList<ArrayList<ProfilePicture>> p = (new ArrayList<ArrayList<ProfilePicture>>(logo.values()));
+                                        if (p.get(i).size() > 0) {
+                                            searchList.setLogo(p.get(i).get(0).getUrl());
+                                        }
+                                    }
                                     searchList.setPlace1(mSearchRespPass.get(i).getPlace1());
                                     searchList.setSector(mSearchRespPass.get(i).getSub_sector_displayname());
                                     searchList.setTitle(mSearchRespPass.get(i).getTitle());
@@ -1564,11 +1569,8 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                             for (int i = 0; i < response.body().size(); i++) {
                                 mScheduleList.add(i, response.body().get(i));
                             }
-                            if (mCheck.equals("next")) {
-                                ApiQueueList(queuelist, mSearchResp, "next", mScheduleList);
-                            } else if (mCheck.equals("first")) {
-                                ApiQueueList(queuelist, mSearchResp, "first", mScheduleList);
-                            }
+
+                            ApiGetProfilePicture(queuelist, mSearchResp, mScheduleList, mCheck);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1585,6 +1587,56 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                 }
             });
         }
+    }
+
+    private void ApiGetProfilePicture(ArrayList<String> queuelist, List<SearchAWsResponse> mSearchResp, ArrayList<ScheduleList> mScheduleList, String mCheck) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        StringBuilder csvBuilder = new StringBuilder();
+        for (String data : queuelist) {
+            csvBuilder.append(data);
+            csvBuilder.append(",");
+        }
+        String csv = csvBuilder.toString();
+        System.out.println(csv);
+        if (csv != "" && csv != null) {
+            Call<LinkedHashMap<String, ArrayList<ProfilePicture>>> call = apiService.getLogo(csv);
+            call.enqueue(new Callback<LinkedHashMap<String, ArrayList<ProfilePicture>>>() {
+                @Override
+                public void onResponse(Call<LinkedHashMap<String, ArrayList<ProfilePicture>>> call, Response<LinkedHashMap<String, ArrayList<ProfilePicture>>> response) {
+                    try {
+                        mScheduleList.clear();
+//                        Log.i("SearchScheduleResp", new Gson().toJson(response.body()));
+                        if (response.code() == 200) {
+
+                            LinkedHashMap<String, ArrayList<ProfilePicture>> logo;
+                            logo = response.body();
+
+                            if (logo != null) {
+
+                                if (mCheck.equals("next")) {
+                                    ApiQueueList(queuelist, mSearchResp, "next", mScheduleList, logo);
+                                } else if (mCheck.equals("first")) {
+                                    ApiQueueList(queuelist, mSearchResp, "first", mScheduleList, logo);
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LinkedHashMap<String, ArrayList<ProfilePicture>>> call, Throwable t) {
+                    // Log error here since request failed
+                    Config.logV("Fail---------------" + t.toString());
+               /* if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+*/
+                }
+            });
+        }
+
     }
 
     private int getIndex(ArrayList<Domain_Spinner> spinner, String myString) {

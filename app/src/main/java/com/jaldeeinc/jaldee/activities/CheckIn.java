@@ -2642,7 +2642,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                 for (int i = 0; i < deptProvidersList.size(); i++) {
 
-                    if (selectedDepartment == Integer.parseInt(deptProvidersList.get(i).getDeptId())) {
+                    if (selectedDepartment == deptProvidersList.get(i).getDeptId()) {
 
                         providers.add(deptProvidersList.get(i));
                     }

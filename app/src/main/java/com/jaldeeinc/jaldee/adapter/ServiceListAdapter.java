@@ -247,7 +247,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
     public String getDepartmentName(int department) {
         Log.i("departments", new Gson().toJson(mSearchDepartmentList));
         for (int i = 0; i < mSearchDepartmentList.size(); i++) {
-            if (Integer.parseInt(mSearchDepartmentList.get(i).getDepartmentId()) == department) {
+            if (mSearchDepartmentList.get(i).getDepartmentId() == department) {
                 return mSearchDepartmentList.get(i).getDepartmentName();
             }
         }

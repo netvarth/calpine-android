@@ -263,7 +263,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     EditText et_countryCode;
 
     @BindView(R.id.txtservicepayment)
-    CustomTextViewMedium txtservicepayment;
+    CustomTextViewSemiBold txtservicepayment;
 
     @BindView(R.id.tv_vsHint)
     CustomTextViewMedium tvVsHint;
@@ -271,7 +271,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     @BindView(R.id.ll_coupons)
     LinearLayout llCoupons;
 
-    static CustomTextViewMedium txtserviceamount;
+    static CustomTextViewSemiBold txtserviceamount;
 
     static LinearLayout LPrepay;
     static LinearLayout LserviceAmount;
