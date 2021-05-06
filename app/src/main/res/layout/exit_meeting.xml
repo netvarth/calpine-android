@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/app_background"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/padding20"
+        android:layout_marginRight="@dimen/padding20"
+        android:padding="@dimen/padding15"
+        android:background="@color/app_background"
+        android:orientation="vertical">
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:id="@+id/txtsendmsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:gravity="center"
+            android:text=" Are you sure you want to exit the meeting?"
+            android:textColor="@color/title_grey"
+            android:textSize="@dimen/dimen_15dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/default_padding"
+            android:background="@color/app_background"
+            android:orientation="horizontal">
+
+
+
+            <Button
+                android:id="@+id/bt_no"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimen_40dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/curved_save"
+                android:backgroundTint="@color/special_background"
+                android:text="@string/btn_no"
+                android:layout_marginStart="@dimen/dimen_15dp"
+                android:layout_marginEnd="@dimen/dimen_15dp"
+                android:textColor="@color/title_color"
+                android:textSize="@dimen/txtsize_hint" />
+
+            <Button
+                android:id="@+id/bt_yes"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_marginLeft="@dimen/default_padding"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimen_40dp"
+                android:layout_weight="0.5"
+                android:layout_marginStart="@dimen/dimen_15dp"
+                android:layout_marginEnd="@dimen/dimen_15dp"
+                android:background="@drawable/curved_save"
+                android:text="@string/btn_yes"
+                android:textAllCaps="true"
+                android:textColor="@color/app_background"
+                android:textSize="@dimen/txtsize_hint" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>
