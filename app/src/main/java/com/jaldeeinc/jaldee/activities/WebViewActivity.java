@@ -43,13 +43,14 @@ public class WebViewActivity extends AppCompatActivity {
         browser.setWebViewClient(new MyBrowser());
         browser.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         WebSettings settings = browser.getSettings();
-        settings.setDomStorageEnabled(true);
-        settings.getAllowContentAccess();
-        settings.getAllowFileAccess();
         settings.setJavaScriptEnabled(true);
-        settings.setLoadsImagesAutomatically(true);
-        settings.setJavaScriptCanOpenWindowsAutomatically(true);
-        settings.getLoadWithOverviewMode();
+        settings.setLoadWithOverviewMode(true);
+        settings.setUseWideViewPort(true);
+        settings.setAllowFileAccess(true);
+        settings.setAllowContentAccess(true);
+        settings.setAllowFileAccessFromFileURLs(true);
+        settings.setAllowUniversalAccessFromFileURLs(true);
+        settings.setDomStorageEnabled(true);
 
         browser.loadUrl("https://scale.jaldee.com/meeting/915555000015?pwd=Netvarth1");
 
