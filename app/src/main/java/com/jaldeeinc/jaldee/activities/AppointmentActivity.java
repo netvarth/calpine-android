@@ -1676,7 +1676,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         activeAppointment = response.body();
                         if (activeAppointment != null) {
                             appEncId = activeAppointment.getAppointmentEncId();
-                            if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
+                            if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true") && (prepayAmount != null && Integer.parseInt(prepayAmount) > 0)) {
                                 if (!showPaytmWallet && !showPayU) {
 
                                     //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();

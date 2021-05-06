@@ -1952,7 +1952,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             checkEncId = activeAppointment.getCheckinEncId();
                             dialogPayment = new BottomSheetDialog(mContext);
 
-                            if (checkInInfo.isPrePayment()) {
+                            if (checkInInfo.isPrePayment() && ((totalAmountPay != null && Integer.parseInt(totalAmountPay) > 0) || (prepayAmount != null && Integer.parseInt(prepayAmount) > 0))) {
                                 if (!showPaytmWallet && !showPayU) {
 
                                     //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
