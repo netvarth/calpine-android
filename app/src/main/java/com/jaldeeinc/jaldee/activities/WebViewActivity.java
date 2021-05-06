@@ -5,12 +5,21 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Dialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.R;
@@ -27,12 +36,18 @@ import java.util.List;
 public class WebViewActivity extends AppCompatActivity {
 
     WebView browser;
+    String url = null;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
 
 
+        Intent intent = getIntent();
+        url = intent.getStringExtra("URL");
 
         requestMultiplePermissions();
 
@@ -40,7 +55,6 @@ public class WebViewActivity extends AppCompatActivity {
 
         browser = (WebView) findViewById(R.id.webview);
 
-        browser.setWebViewClient(new MyBrowser());
         browser.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         WebSettings settings = browser.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -51,8 +65,30 @@ public class WebViewActivity extends AppCompatActivity {
         settings.setAllowFileAccessFromFileURLs(true);
         settings.setAllowUniversalAccessFromFileURLs(true);
         settings.setDomStorageEnabled(true);
+        settings.setMediaPlaybackRequiresUserGesture(false);
 
-        browser.loadUrl("https://scale.jaldee.com/meeting/915555000015?pwd=Netvarth1");
+        browser.setWebViewClient(new WebViewClient());
+        browser.setWebChromeClient(new WebChromeClient() {
+            // Grant permissions for cam
+            @Override
+            public void onPermissionRequest(final android.webkit.PermissionRequest request) {
+                Log.d("#$#$#$#", "onPermissionRequest");
+                WebViewActivity.this.runOnUiThread(new Runnable() {
+                    @TargetApi(Build.VERSION_CODES.M)
+                    @Override
+                    public void run() {
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            request.grant(request.getResources());
+                        }
+                    }
+                });
+            }
+
+
+        });
+
+        browser.loadUrl(url);
 
 
 
@@ -101,5 +137,38 @@ public class WebViewActivity extends AppCompatActivity {
                 })
                 .onSameThread()
                 .check();
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+
+        final Dialog dialog = new Dialog(WebViewActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.exit_meeting);
+
+        Button btYes = (Button) dialog.findViewById(R.id.bt_yes);
+        Button btNo = (Button) dialog.findViewById(R.id.bt_no);
+
+        btYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent(WebViewActivity.this,Home.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        btNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }
