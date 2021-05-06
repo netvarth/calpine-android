@@ -346,6 +346,12 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                                 bookingInfo.setCallingType(activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode());
                             }
                         }
+                        if(activeAppointment.getVideoCallButton() != null){
+                            bookingInfo.setVideoCallButton(activeAppointment.getVideoCallButton());
+                        }
+                        if(activeAppointment.getVideoCallMessage() != null){
+                            bookingInfo.setVideoCallMessage(activeAppointment.getVideoCallMessage());
+                        }
                         if (activeAppointment.isHasAttachment()){
                             bookingInfo.setHasAttachment(true);
                         }else {
@@ -423,7 +429,12 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                                 bookingInfo.setCallingType(activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode());
                             }
                         }
-
+                        if(activeCheckIn.getVideoCallButton() != null){
+                            bookingInfo.setVideoCallButton(activeCheckIn.getVideoCallButton());
+                        }
+                        if(activeCheckIn.getVideoCallMessage() != null){
+                            bookingInfo.setVideoCallMessage(activeCheckIn.getVideoCallMessage());
+                        }
                         if (activeCheckIn.isHasAttachment()){
                             bookingInfo.setHasAttachment(true);
                         }else {
@@ -600,6 +611,12 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
 
                         bookingInfo.setCallingType(activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode());
                     }
+                }
+                if (activeCheckIn.getVideoCallMessage() != null) {
+                    bookingInfo.setVideoCallMessage(activeCheckIn.getVideoCallMessage());
+                }
+                if (activeCheckIn.getVideoCallButton() != null) {
+                    bookingInfo.setVideoCallButton(activeCheckIn.getVideoCallButton());
                 }
 
                 bookingInfo.setHasAttachment(false); // for temporary
