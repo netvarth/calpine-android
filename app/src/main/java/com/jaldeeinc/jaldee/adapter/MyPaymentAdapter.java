@@ -92,7 +92,11 @@ public class MyPaymentAdapter extends ArrayAdapter<MyPayments> {
 
             ivIcon.setVisibility(View.VISIBLE);
             if (paymentsList.get(position).getTxnType().equalsIgnoreCase("Waitlist")) {
-                ivIcon.setImageResource(R.drawable.icon_checkin);
+                if(paymentsList.get(position).isShowTokenId()){
+                    ivIcon.setImageResource(R.drawable.icon_token);
+                }else {
+                    ivIcon.setImageResource(R.drawable.icon_checkin);
+                }
             } else if (paymentsList.get(position).getTxnType().equalsIgnoreCase("Appointment")) {
                 ivIcon.setImageResource(R.drawable.appt_icon);
             } else if (paymentsList.get(position).getTxnType().equalsIgnoreCase("Donation")) {

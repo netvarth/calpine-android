@@ -27,6 +27,11 @@ public class MyPayments {
     boolean testTransaction;
     String paymentModeName;
     String accountEncodedId;
+    boolean showTokenId;
+
+    public boolean isShowTokenId() {
+        return showTokenId;
+    }
 
     public int getId() {
         return id;
