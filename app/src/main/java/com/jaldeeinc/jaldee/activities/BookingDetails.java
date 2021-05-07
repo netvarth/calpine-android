@@ -455,7 +455,7 @@ public class BookingDetails extends AppCompatActivity {
 
                         if (apptInfo != null) {
 
-                            if (!apptInfo.getApptStatus().equalsIgnoreCase("Cancelled") && !apptInfo.getApptStatus().equalsIgnoreCase("done")) {
+                            if (!apptInfo.getApptStatus().equalsIgnoreCase("Cancelled") && (!apptInfo.getApptStatus().equalsIgnoreCase("done") || !apptInfo.getApptStatus().equalsIgnoreCase("Completed"))) {
 
                                 try {
                                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -595,7 +595,7 @@ public class BookingDetails extends AppCompatActivity {
                     if (appointmentInfo.getService().getServiceType() != null && appointmentInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
 
                         if (isActive) {
-                            if (appointmentInfo.getApptStatus() != null && appointmentInfo.getApptStatus().equalsIgnoreCase("done")) {
+                            if (appointmentInfo.getApptStatus() != null && (appointmentInfo.getApptStatus().equalsIgnoreCase("done") || (appointmentInfo.getApptStatus().equalsIgnoreCase("Completed")))) {
                                 cvMeetingDetails.setVisibility(View.GONE);
                             } else {
                                 cvMeetingDetails.setVisibility(View.VISIBLE);

@@ -277,7 +277,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
 
                         if (bookings.getAppointmentInfo() != null) {
                             if (bookings.isVirtual() && bookings.getCallingType() != null) {
-                                if ((bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("cancelled")) || (bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("done"))) {
+                                if ((bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("cancelled")) || (bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("done")) || (bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("Completed"))) {
                                     //viewHolder.tvDateAndTime.setText("Cancelled");
                                     //viewHolder.tvDateAndTime.setTextColor(Color.RED);
                                     viewHolder.tvDateAndTime.setVisibility(View.GONE);
@@ -353,7 +353,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
 
                         if (bookings.getCheckInInfo() != null) {
                             if (bookings.isVirtual() && bookings.getCallingType() != null) {
-                                if ((bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("cancelled")) || (bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("done"))) {
+                                if ((bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("cancelled")) || (bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("done")) || (bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("Completed"))) {
                                     //viewHolder.tvDateAndTime.setText("Cancelled");
                                     //viewHolder.tvDateAndTime.setTextColor(Color.RED);
                                     viewHolder.tvDateAndTime.setVisibility(View.GONE);
@@ -396,7 +396,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                                 }
                             }
                         }
-                    } else if (bookings.getBookingType().equalsIgnoreCase(Constants.TOKEN)) {
+                        } else if (bookings.getBookingType().equalsIgnoreCase(Constants.TOKEN)) {
 
                         String builder = "Token " + "<b>" + "#" + bookings.getTokenNo() + "</b>";
                         viewHolder.tokenNo.setText(Html.fromHtml(builder));
@@ -405,7 +405,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                         if (bookings.getCheckInInfo() != null) {
                             if (bookings.isVirtual() && bookings.getCallingType() != null) {
 
-                                if ((bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("cancelled")) || (bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("done"))) {
+                                if ((bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("cancelled")) || (bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("done")) || (bookings.getBookingStatus() != null && bookings.getBookingStatus().equalsIgnoreCase("Completed"))) {
                                     //viewHolder.tvDateAndTime.setText("Cancelled");
                                     //viewHolder.tvDateAndTime.setTextColor(Color.RED);
                                     viewHolder.tvDateAndTime.setVisibility(View.GONE);
