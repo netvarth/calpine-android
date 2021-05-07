@@ -317,7 +317,12 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
                                     tvSlash.setVisibility(View.GONE);
                                 }
 
-                                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 2);
+                                RecyclerView.LayoutManager mLayoutManager = null;
+                                if(mQueueTimeSlotList.size() == 1){
+                                    mLayoutManager = new GridLayoutManager(context, 1);
+                                }else if(mQueueTimeSlotList.size() > 1){
+                                    mLayoutManager = new GridLayoutManager(context, 2);
+                                }
                                 rvQueues.setLayoutManager(mLayoutManager);
                                 qAdapter = new QueuesAdapter(context, mQueueTimeSlotList, iSelectedQueue);
                                 rvQueues.setAdapter(qAdapter);
