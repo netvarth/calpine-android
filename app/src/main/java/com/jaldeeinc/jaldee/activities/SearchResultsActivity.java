@@ -1605,7 +1605,6 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                 @Override
                 public void onResponse(Call<LinkedHashMap<String, ArrayList<ProfilePicture>>> call, Response<LinkedHashMap<String, ArrayList<ProfilePicture>>> response) {
                     try {
-                        mScheduleList.clear();
 //                        Log.i("SearchScheduleResp", new Gson().toJson(response.body()));
                         if (response.code() == 200) {
 
