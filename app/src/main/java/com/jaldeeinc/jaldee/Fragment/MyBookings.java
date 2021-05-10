@@ -770,7 +770,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
 
         boolean isActive = false;
         if (bookings != null && bookings.getBookingStatus() != null) {
-            if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled") && !bookings.getBookingStatus().equalsIgnoreCase("done")) {
+            if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled") && !bookings.getBookingStatus().equalsIgnoreCase("done") && !bookings.getBookingStatus().equalsIgnoreCase("Completed")) {
                 isActive = true;
             }
         } else {
