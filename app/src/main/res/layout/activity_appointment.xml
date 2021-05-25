@@ -501,11 +501,11 @@
                     android:id="@+id/tv_applyCode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/padding15"
                     android:layout_marginTop="@dimen/padding5"
                     android:layout_marginEnd="@dimen/padding15"
                     android:text="Apply Promocode"
-                    android:layout_centerVertical="true"
                     android:textAllCaps="true"
                     android:textColor="@color/location_theme"
                     android:textSize="@dimen/txtsize_12"
@@ -518,15 +518,15 @@
                     android:id="@+id/ll_coupons"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/dimen_15dp"
-                    android:layout_alignParentEnd="true">
+                    android:layout_marginEnd="@dimen/dimen_15dp">
 
                     <ImageView
                         android:layout_width="@dimen/dimen_15dp"
                         android:layout_height="@dimen/dimen_15dp"
-                        android:src="@drawable/discount"
                         android:layout_gravity="center"
+                        android:src="@drawable/discount"
                         app:tint="@color/location_theme">
 
                     </ImageView>
@@ -534,14 +534,14 @@
                     <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Coupons"
                         android:layout_gravity="center"
-                        android:textSize="14dp"
                         android:layout_marginStart="5dp"
-                        android:textColor="@color/location_theme">
+                        android:text="Coupons"
+                        android:textColor="@color/location_theme"
+                        android:textSize="14dp">
 
                     </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
-"
+                    "
 
                 </LinearLayout>
 
@@ -590,8 +590,8 @@
                 android:id="@+id/list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
                 android:layout_marginLeft="15dp"
+                android:layout_marginTop="3dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="10dp"
                 android:visibility="gone" />
@@ -605,7 +605,7 @@
                 android:layout_marginRight="@dimen/default_padding"
                 android:background="@drawable/input_border_gray_bg"
                 android:orientation="vertical"
-                android:padding="@dimen/default_padding"
+                android:padding="@dimen/padding20"
                 android:visibility="gone">
 
 
@@ -621,19 +621,19 @@
                         android:id="@+id/txtservicepayment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingLeft="8dp"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="@dimen/padding2"
-                        android:layout_weight="0.7"
-                        android:gravity="center"
+                        android:layout_weight="0.3"
+                        android:gravity="center_vertical"
                         android:text="@string/serve_pay"
                         android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_hint_11" />
+                        android:textSize="@dimen/txtsize_12"/>
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                         android:id="@+id/txtserviceamount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
+                        android:layout_weight="0.7"
                         android:text=" "
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_hint_11" />
@@ -652,23 +652,51 @@
                         android:id="@+id/txtprepay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingLeft="8dp"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="@dimen/padding2"
-                        android:layout_weight="0.7"
-                        android:gravity="center"
+                        android:layout_weight="0.3"
+                        android:gravity="center_vertical"
                         android:text="@string/serve_prepay"
                         android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_hint_11" />
+                        android:textSize="@dimen/txtsize_12" />
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                         android:id="@+id/txtprepayamount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
+                        android:layout_weight="0.7"
                         android:text=""
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_hint_11" />
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_jCash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <CheckBox
+                        android:id="@+id/cb_jCash"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:buttonTint="@color/blue"
+                        android:checked="true"
+                        android:padding="@dimen/dimen_0dp"
+                        android:text="Use Jaldee cash balance : Rs "
+                        android:textColor="@color/gray"
+                        android:textSize="@dimen/txtsize_12" />
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="33dp"
+                        android:text="Balance amount can be paid by other payment methods"
+                        android:textColor="@color/gray"
+                        android:textSize="@dimen/txtsize_12" />
                 </LinearLayout>
 
 

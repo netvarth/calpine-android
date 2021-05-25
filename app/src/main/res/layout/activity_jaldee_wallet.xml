@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/spinnerbg"
+    tools:context="com.jaldeeinc.jaldee.activities.JaldeeWalletActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_tlbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_60dp"
+        android:background="@color/white">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_back"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="@dimen/padding3">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding5"
+                android:src="@mipmap/img_back_arrow"
+                app:tint="@color/dark_blue" />
+
+        </androidx.cardview.widget.CardView>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            android:id="@+id/toolbartitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="55dp"
+            android:layout_toRightOf="@id/cv_back"
+            android:gravity="center"
+            android:minHeight="?attr/actionBarSize"
+            android:text="@string/jaldee_wallet"
+            android:textColor="@color/dark_blue"
+            android:textSize="@dimen/txtsize_subtitle" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_tlbar"
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+            android:id="@+id/tv_selct_ur_wallet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_16dp"
+            android:layout_marginTop="@dimen/dimen_16dp"
+            android:layout_marginRight="@dimen/dimen_16dp"
+            android:layout_marginBottom="@dimen/dimen_16dp"
+            android:gravity="left"
+            android:text="@string/pls_selct_ur_jaldee_wallet"
+            android:textColor="@color/dark_blue"
+            android:textSize="@dimen/txtsize_subtitle" />
+
+            <include
+                android:id="@+id/jaldeewalletview"
+                layout="@layout/jaldeewalletview" />
+
+
+        <LinearLayout
+            android:id="@+id/ll_noWallet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_40dp"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding5"
+                android:text="No wallet available."
+                android:textColor="@color/title_color">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

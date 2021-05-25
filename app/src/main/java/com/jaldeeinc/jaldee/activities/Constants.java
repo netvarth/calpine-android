@@ -4,7 +4,7 @@ public class Constants {
 
 
     // Must change based on release type
-    public static final String URL = "https://scale.jaldee.com/";
+    public static final String URL = "https://test.jaldee.com/";
 
 //    public static final String URL = "http://103.70.197.233/";
 
@@ -54,6 +54,7 @@ public class Constants {
 
     public static final String NONE = "NONE";
     public static final String FULLAMOUNT = "FULLAMOUNT";
+    public static final String FIXED = "FIXED";
 
 
     // notification purpose

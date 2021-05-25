@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -46,6 +47,8 @@ import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
 import com.jaldeeinc.jaldee.response.RefundDetails;
+import com.jaldeeinc.jaldee.response.WalletCheckSumModel;
+import com.jaldeeinc.jaldee.response.WalletEligibleJCash;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneySdkInitializer;
@@ -55,6 +58,9 @@ import com.payumoney.sdkui.ui.utils.ResultModel;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -62,6 +68,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -82,7 +89,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     TextView tv_paid, tv_totalamt, tv_jaldeeCouponLabel, tv_providerCouponLabel, gstLabel, tv_refundamount;
     RecyclerView recycle_item, recycle_discount_total, coupon_added, proCoupon_added, recycle_display_notes;
     BillServiceAdapter billServiceAdapter;
-    BillCouponAdapter billCouponAdapter,billProCouponAdapter;
+    BillCouponAdapter billCouponAdapter, billProCouponAdapter;
     ArrayList<BillModel> serviceArrayList = new ArrayList<>();
     ArrayList<BillModel> itemArrayList = new ArrayList<>();
     ArrayList<BillModel> serviceItemArrayList = new ArrayList<>();
@@ -93,13 +100,15 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
     Button btn_pay, mbill_applybtn;
     TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax, billLabel, jdnLabel, jdnValue, txtrefund, txtdelivery, tv_deliveryCharge, tv_amount_Saved;
-    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin, jcLayout, pcLayout, jdnLayout, refundLayout, deliveryLayout, llproviderlayout, ll_amount_Saved;
+    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin, jcLayout, pcLayout, jdnLayout, refundLayout, deliveryLayout, llproviderlayout, ll_amount_Saved, llJCash;
+    CheckBox cbJCash;
     String sAmountPay;
     String accountID;
     String payStatus, consumer;
     String coupon_entered;
     String purpose;
     String displayNotes;
+    String payRemainingAmount = "";
     TextView tv_billnotes, tv_notes, tvProviderName;
     int customerId;
     String uniqueId;
@@ -107,7 +116,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     ;
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     ArrayList<ProviderCouponResponse> providerCouponList = new ArrayList<>();
-
+    WalletEligibleJCash walletEligibleJCash = new WalletEligibleJCash();
     private IPaymentResponse paymentResponse;
     String encId;
     String bookingStatus;
@@ -125,6 +134,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         mbill_coupon_edit = findViewById(R.id.bill_coupon_edit);
         paidlayout = findViewById(R.id.paidlayout);
         couponCheckin = findViewById(R.id.couponCheckin);
+        llJCash = findViewById(R.id.ll_jCash);
+        cbJCash = findViewById(R.id.cb_jCash);
         amountlayout = findViewById(R.id.amountlayout);
         tv_grosstotal = findViewById(R.id.grosstotal);
         tv_provider = findViewById(R.id.provider);
@@ -201,7 +212,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             uniqueId = extras.getString("uniqueId");
             encId = extras.getString("encId");
             bookingStatus = extras.getString("bookingStatus");
-            fromPushNotification = extras.getBoolean(Constants.PUSH_NOTIFICATION,false);
+            fromPushNotification = extras.getBoolean(Constants.PUSH_NOTIFICATION, false);
         }
 
         if (encId == null && ynwUUID != null) {   // if encId is null then  the activity is launched from notification, so checking for required values and getting them via API calls
@@ -253,65 +264,182 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         btn_pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (!showPaytmWallet && !showPayU) {
-
-                } else {
-                    try {
-                        btn_pay.setVisibility(View.VISIBLE);
-                        final BottomSheetDialog dialog = new BottomSheetDialog(mCOntext);
-                        dialog.setContentView(R.layout.prepayment);
-                        dialog.show();
-
-                        Button btn_paytm = dialog.findViewById(R.id.btn_paytm);
-                        Button btn_payu = dialog.findViewById(R.id.btn_payu);
-                        if (showPaytmWallet) {
-                            btn_paytm.setVisibility(View.VISIBLE);
-                        } else {
-                            btn_paytm.setVisibility(View.GONE);
-                        }
-                        if (showPayU) {
-                            btn_payu.setVisibility(View.VISIBLE);
-                        } else {
-                            btn_payu.setVisibility(View.GONE);
-                        }
-
-                        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-                        TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
-//                        DecimalFormat format = new DecimalFormat("0.00");
-                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints(Double.parseDouble(sAmountPay)));
-                        Typeface tyface1 = Typeface.createFromAsset(mCOntext.getAssets(),
-                                "fonts/Montserrat_Bold.otf");
-                        txtamt.setTypeface(tyface1);
-                        btn_payu.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, purpose, "bill", customerId, Constants.SOURCE_PAYMENT);
-
-                                dialog.dismiss();
-                            }
-                        });
-
-                        btn_paytm.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                PaytmPayment payment = new PaytmPayment(mCOntext, paymentResponse);
-                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, purpose, mCOntext, mActivity, "", customerId, encId);
-                                dialog.dismiss();
-                            }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                getPrePayRemainingAmntNeeded(sAmountPay);
             }
         });
 
 
     }
 
+    private void getPrePayRemainingAmntNeeded(String amount) {
+        final ApiInterface apiService =
+                ApiClient.getClient(BillActivity.this).create(ApiInterface.class);
+        Call<String> call = apiService.getPrePayRemainingAmnt(cbJCash.isChecked(), false, amount);
+        call.enqueue(new Callback<String>() {
+
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                Config.logV("URL------GET Prepay remaining amount---------" + response.raw().request().url().toString().trim());
+                Config.logV("Response--code-------------------------" + response.code());
+                if (response.code() == 200) {
+                    payRemainingAmount = response.body();
+                    Payment();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.i("PrePayRemainingAmntNeed", t.toString());
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void Payment() {
+
+        if (cbJCash.isChecked() && Double.parseDouble(payRemainingAmount) <= 0) {
+            isGateWayPaymentNeeded(ynwUUID, sAmountPay, accountID, Constants.PURPOSE_PREPAYMENT, true, false, false, false, "JCASH");
+
+        } else {
+            try {
+                btn_pay.setVisibility(View.VISIBLE);
+                final BottomSheetDialog dialog = new BottomSheetDialog(mCOntext);
+                dialog.setContentView(R.layout.prepayment);
+                dialog.show();
+
+                Button btn_paytm = dialog.findViewById(R.id.btn_paytm);
+                Button btn_payu = dialog.findViewById(R.id.btn_payu);
+                if (showPaytmWallet) {
+                    btn_paytm.setVisibility(View.VISIBLE);
+                } else {
+                    btn_paytm.setVisibility(View.GONE);
+                }
+                if (showPayU) {
+                    btn_payu.setVisibility(View.VISIBLE);
+                } else {
+                    btn_payu.setVisibility(View.GONE);
+                }
+
+                final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+                TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+//                        DecimalFormat format = new DecimalFormat("0.00");
+                if (cbJCash.isChecked()) {
+                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints(Double.parseDouble(payRemainingAmount)));
+
+                } else {
+                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints(Double.parseDouble(sAmountPay)));
+                }
+                Typeface tyface1 = Typeface.createFromAsset(mCOntext.getAssets(),
+                        "fonts/Montserrat_Bold.otf");
+                txtamt.setTypeface(tyface1);
+                btn_payu.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (cbJCash.isChecked()) {
+                            new PaymentGateway(mCOntext, mActivity).ApiGenerateHash2(ynwUUID, sAmountPay, accountID, Constants.PURPOSE_PREPAYMENT, "bill", true, false, true, false);
+
+                        } else {
+                            new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, purpose, "bill", customerId, Constants.SOURCE_PAYMENT);
+                        }
+                        dialog.dismiss();
+                    }
+                });
+
+                btn_paytm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        PaytmPayment payment = new PaytmPayment(mCOntext, paymentResponse);
+                        if (cbJCash.isChecked()) {
+                            payment.ApiGenerateHashPaytm2(ynwUUID, sAmountPay, accountID, Constants.PURPOSE_PREPAYMENT, "", true, false, false, true, encId, mCOntext, mActivity);
+
+                        } else {
+                            payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, purpose, mCOntext, mActivity, "", customerId, encId);
+                        }
+                        dialog.dismiss();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void isGateWayPaymentNeeded(String ynwUUID, final String amount, String accountID, String purpose, boolean isJcashUsed, boolean isreditUsed, boolean isRazorPayPayment, boolean isPayTmPayment, String paymentMode) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mCOntext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mCOntext, mCOntext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        //  String uniqueID = UUID.randomUUID().toString();
+        SharedPreference.getInstance(mCOntext).setValue("prePayment", false);
+        JSONObject jsonObj = new JSONObject();
+        try {
+
+            jsonObj.put("accountId", accountID);
+            jsonObj.put("amountToPay", Float.valueOf(amount));
+            jsonObj.put("isJcashUsed", isJcashUsed);
+            jsonObj.put("isPayTmPayment", isPayTmPayment);
+            jsonObj.put("isRazorPayPayment", isRazorPayPayment);
+            jsonObj.put("isreditUsed", isreditUsed);
+            jsonObj.put("paymentMode", paymentMode);
+            jsonObj.put("paymentPurpose", purpose);
+            jsonObj.put("uuid", ynwUUID);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<WalletCheckSumModel> call = apiService.generateHash2(body);
+        call.enqueue(new Callback<WalletCheckSumModel>() {
+
+            @Override
+            public void onResponse(Call<WalletCheckSumModel> call, Response<WalletCheckSumModel> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(mActivity, mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+
+                    if (response.code() == 200) {
+
+                        WalletCheckSumModel respnseWCSumModel = response.body();
+
+                        if (!respnseWCSumModel.isGateWayPaymentNeeded()) {
+                            finish();
+                            startActivity(getIntent());
+
+                            Toast.makeText(BillActivity.this, "Make Bill Payment", Toast.LENGTH_SHORT).show();
+
+                            Config.logV("Response--Array size--Activessssssssss-----------------------" + response.body().toString());
+//                        Config.logV("zxczxczxzc" + new Gson().toJson(response.body()));
+
+                        }
+                    } else {
+                        String responseerror = response.errorBody().string();
+                        Config.logV("Response--error-------------------------" + responseerror);
+                        Toast.makeText(mCOntext, responseerror, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WalletCheckSumModel> call, Throwable t) {
+
+            }
+        });
+    }
     private void UpdateUI() {
 
         if (payStatus != null) {
@@ -320,12 +448,18 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                 tv_title.setText("Receipt");
                 btn_pay.setVisibility(View.GONE);
                 couponCheckin.setVisibility(View.GONE);
+                llJCash.setVisibility(View.GONE);
+                cbJCash.setChecked(false);
             } else {
                 tv_title.setText("Bill");
                 btn_pay.setVisibility(View.VISIBLE);
                 couponCheckin.setVisibility(View.VISIBLE);
+                llJCash.setVisibility(View.VISIBLE);
+                cbJCash.setChecked(true);
+
                 ApiJaldeegetS3Coupons(uniqueId);
                 ApiJaldeegetProviderCoupons(uniqueId);/////////////////
+                APIGetWalletEligibleJCash();
 
             }
         }
@@ -844,34 +978,44 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             paidlayout.setVisibility(View.GONE);
                         }
 
-                        if(!bookingStatus.equals("Cancelled")){
+                        if (!bookingStatus.equals("Cancelled")) {
                             txttotal.setVisibility(View.VISIBLE);
                             tv_totalamt.setVisibility(View.VISIBLE);
                             tv_totalamt.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(Math.abs(mBillData.getAmountDue())));
-                            if(mBillData.getAmountDue() == 0){
+                            if (mBillData.getAmountDue() == 0) {
                                 btn_pay.setVisibility(View.GONE);
                                 couponCheckin.setVisibility(View.GONE);
-                            }else if(mBillData.getAmountDue() < 0) {
+                                llJCash.setVisibility(View.GONE);
+                                cbJCash.setChecked(false);
+
+                            } else if (mBillData.getAmountDue() < 0) {
                                 txttotal.setText("Refund Amount");
                                 btn_pay.setVisibility(View.GONE);
                                 couponCheckin.setVisibility(View.GONE);
-                            }else if(mBillData.getAmountDue() > 0){
+                                llJCash.setVisibility(View.GONE);
+                                cbJCash.setChecked(false);
+
+                            } else if (mBillData.getAmountDue() > 0) {
                                 txttotal.setText("Amount Due");                         //negative amountDue is the refundamound ,there for use getAmountDue() as the refund amount
                                 btn_pay.setVisibility(View.VISIBLE);
                                 sAmountPay = Config.getAmountinTwoDecimalPoints(Math.abs(mBillData.getAmountDue())); //amount to pay
                                 //couponCheckin.setVisibility(View.GONE);  // "couponCheckin" visibility VISIBLE setted at ApiJaldeegetProviderCoupons and ApiJaldeegetS3Coupons methods.
                             }
-                        }else{
+                        } else {
                             tv_totalamt.setVisibility(View.VISIBLE);
                             txttotal.setVisibility(View.VISIBLE);
                             tv_totalamt.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(Math.abs(mBillData.getAmountDue())));  ////negative amountDue is the refundamound ,there for use getAmountDue() as the refund amount
-                            if(mBillData.getAmountDue() < 0) {
+                            if (mBillData.getAmountDue() < 0) {
                                 txttotal.setText("Refund Amount");
-                            }if(mBillData.getAmountDue() > 0) {
+                            }
+                            if (mBillData.getAmountDue() > 0) {
                                 txttotal.setText("Amount Due");
                             }
                             btn_pay.setVisibility(View.GONE);
                             couponCheckin.setVisibility(View.GONE);
+                            llJCash.setVisibility(View.GONE);
+                            cbJCash.setChecked(false);
+
                         }
                         /*total = mBillData.getNetRate() - mBillData.getTotalAmountPaid() + mBillData.getRefundedAmount();//1111111111111
 
@@ -1114,7 +1258,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         s3couponList.clear();
                         s3couponList = response.body();
                         if ((s3couponList.size() > 0 || providerCouponList.size() > 0) && !bookingStatus.equals("Cancelled") && mBillData.getAmountDue() > 0) { //bookingStatus.equals("Cancelled") is seted for if cancelled bookings not need to visible the couponCheckin
-                            couponCheckin.setVisibility(View.VISIBLE );
+                            couponCheckin.setVisibility(View.VISIBLE);
                         } else {
                             couponCheckin.setVisibility(View.GONE);
                         }
@@ -1135,6 +1279,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             }
         });
     }
+
     private void ApiJaldeegetProviderCoupons(String uniqueID) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mActivity).create(ApiInterface.class);
@@ -1169,6 +1314,52 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             public void onFailure(Call<ArrayList<ProviderCouponResponse>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
+
+            }
+        });
+    }
+
+    private void APIGetWalletEligibleJCash() {
+        final ApiInterface apiService =
+                ApiClient.getClient(this).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<WalletEligibleJCash> call = apiService.getWalletEligibleJCash();
+
+        Config.logV("Request--GetWalletEligibleJCash-------------------------");
+        call.enqueue(new Callback<WalletEligibleJCash>() {
+            @Override
+            public void onResponse(Call<WalletEligibleJCash> call, Response<WalletEligibleJCash> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(mActivity, mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+//                    Config.logV("zxczqw" + new Gson().toJson(response.body()));
+
+                    if (response.code() == 200) {
+                        walletEligibleJCash = response.body();
+                        if (walletEligibleJCash != null) {
+                            if (walletEligibleJCash.getjCashAmt() > 0) {
+                                llJCash.setVisibility(View.VISIBLE);
+                                cbJCash.setChecked(true);
+                                cbJCash.append(String.valueOf(walletEligibleJCash.getjCashAmt()));
+                            } else {
+                                llJCash.setVisibility(View.GONE);
+                                cbJCash.setChecked(false);
+
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WalletEligibleJCash> call, Throwable t) {
 
             }
         });
@@ -1287,8 +1478,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     @Override
     public void onBackPressed() {
 
-        if (fromPushNotification){
-            Intent intent = new Intent(BillActivity.this,Home.class);
+        if (fromPushNotification) {
+            Intent intent = new Intent(BillActivity.this, Home.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             super.onBackPressed();
             startActivity(intent);

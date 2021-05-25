@@ -40,8 +40,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.Interface.IAddressInterface;
+import com.jaldeeinc.jaldee.Interface.ICpn;
 import com.jaldeeinc.jaldee.Interface.IEditContact;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.Interface.ISelectedTime;
@@ -76,17 +79,21 @@ import com.jaldeeinc.jaldee.model.StoreOrderBody;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
+import com.jaldeeinc.jaldee.response.AdvancePaymentDetails;
+import com.jaldeeinc.jaldee.response.AdvancePaymentDetailsOrder;
 import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CatalogTimeSlot;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.OrderResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
+import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
 import com.jaldeeinc.jaldee.response.Schedule;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.StoreDetails;
 import com.jaldeeinc.jaldee.response.TimeSlot;
+import com.jaldeeinc.jaldee.response.WalletCheckSumModel;
 import com.jaldeeinc.jaldee.utils.DialogUtilsKt;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
@@ -118,13 +125,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CheckoutItemsActivity extends AppCompatActivity implements IAddressInterface, ISelectedTime, IPaymentResponse, PaymentResultWithDataListener, IEditContact {
+public class CheckoutItemsActivity extends AppCompatActivity implements IAddressInterface, ISelectedTime, IPaymentResponse, PaymentResultWithDataListener, IEditContact, ICpn {
 
     private Context mContext;
     private IAddressInterface iAddressInterface;
     ArrayList<Address> addressList = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
     private AddressAdapter addressAdapter;
+    @BindView(R.id.cb_jCash)
+    CheckBox cbJCash;
+
+    @BindView(R.id.ll_jCash)
+    LinearLayout llJCash;
 
     @BindView(R.id.rv_items)
     RecyclerView rvItems;
@@ -294,10 +306,14 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     private StoreDetailsDialog storeDetailsDialog;
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     ArrayList<ProviderCouponResponse> providerCouponList = new ArrayList<>();
+    AdvancePaymentDetailsOrder advancePaymentDetailsOrder = new AdvancePaymentDetailsOrder();
+    String couponEntered, prePayRemainingAmount = "";
 
     ArrayList<String> couponArraylist = new ArrayList<>();
     private CouponlistAdapter mAdapter;
     private Address selectedAddress = new Address();
+
+    private ICpn iCpn;
 
 
     @Override
@@ -486,11 +502,11 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         tvApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String code = etCouponCode.getEditableText().toString();
+                couponEntered = etCouponCode.getEditableText().toString();
 
                 boolean found = false;
                 for (int index = 0; index < couponArraylist.size(); index++) {
-                    if (couponArraylist.get(index).equals(code)) {
+                    if (couponArraylist.get(index).equals(couponEntered)) {
                         found = true;
                         break;
                     }
@@ -503,27 +519,27 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                 }
                 found = false;
                 for (int i = 0; i < s3couponList.size(); i++) {
-                    if (s3couponList.get(i).getJaldeeCouponCode().equals(code)) {
+                    if (s3couponList.get(i).getJaldeeCouponCode().equals(couponEntered)) {
                         found = true;
                         break;
                     }
                 }
                 for (int i = 0; i < providerCouponList.size(); i++) {
-                    if (providerCouponList.get(i).getCouponCode().equals(code)) {
+                    if (providerCouponList.get(i).getCouponCode().equals(couponEntered)) {
                         found = true;
                         break;
                     }
                 }
                 if (found) {
 
-                    couponArraylist.add(code);
+                    couponArraylist.add(couponEntered);
 
                     etCouponCode.setText("");
-                    Toast.makeText(CheckoutItemsActivity.this, code + " " + "Added", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CheckoutItemsActivity.this, couponEntered + " " + "Added", Toast.LENGTH_SHORT).show();
 
 
                 } else {
-                    if (code.equals("")) {
+                    if (couponEntered.equals("")) {
                         Toast.makeText(CheckoutItemsActivity.this, "Enter a coupon", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(CheckoutItemsActivity.this, "Coupon Invalid", Toast.LENGTH_SHORT).show();
@@ -531,20 +547,13 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
 
                 }
-                Config.logV("couponArraylist--code-------------------------" + couponArraylist);
-                list.setVisibility(View.VISIBLE);
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CheckoutItemsActivity.this);
-                list.setLayoutManager(mLayoutManager);
-                mAdapter = new CouponlistAdapter(CheckoutItemsActivity.this, s3couponList, code, couponArraylist);
-                list.setAdapter(mAdapter);
-                mAdapter.notifyDataSetChanged();
+                cpns(couponArraylist);
             }
         });
 
 
         ApiGetProfileDetail();
-        getS3Coupons(uniqueId);
-        ApiJaldeegetProviderCoupons(uniqueId);
+        getCoupons(uniqueId);
 
 
     }
@@ -729,7 +738,11 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                 }
 
                             }
-                            getConfirmationId(value, accountId);
+                            if (cbJCash.isChecked()) {
+                                getPrePayRemainingAmntNeeded(prepayAmount);
+                            } else {
+                                getConfirmationId(value, accountId);
+                            }
 
                         }
 
@@ -762,6 +775,31 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         });
     }
 
+    private void getPrePayRemainingAmntNeeded(String prepayAmount) {
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<String> call = apiService.getPrePayRemainingAmnt(cbJCash.isChecked(), false, prepayAmount);
+        call.enqueue(new Callback<String>() {
+
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                Config.logV("URL------GET Prepay remaining amount---------" + response.raw().request().url().toString().trim());
+                Config.logV("Response--code-------------------------" + response.code());
+                if (response.code() == 200) {
+                    prePayRemainingAmount = response.body();
+                    getConfirmationId(value, accountId);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.i("PrePayRemainingAmntNeed", t.toString());
+                t.printStackTrace();
+            }
+        });
+    }
+
     private void showAlert(String message) {
 
         DialogUtilsKt.showUIDialog(mContext, "", message, () -> {
@@ -789,7 +827,8 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         if (activeOrders != null) {
                             String orderId = activeOrders.getOrderNumber();
                             if (catalogs.get(0).getPaymentType() != null && !catalogs.get(0).getPaymentType().equalsIgnoreCase(Constants.NONE)) {
-                                if (!showPaytmWallet && !showPayU) {
+                                if (cbJCash.isChecked() && Double.parseDouble(prePayRemainingAmount) <= 0) {
+                                    isGateWayPaymentNeeded(value, prepayAmount, acctId, Constants.PURPOSE_PREPAYMENT, true, false, false, false, "JCASH");
 
                                     //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
                                 } else {
@@ -819,8 +858,11 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                         TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
 
                                         txtprepayment.setText(R.string.ordr_prepay);
-
-                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(prepayAmount))));
+                                        if (cbJCash.isChecked()) {
+                                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints(Double.parseDouble(prePayRemainingAmount)));
+                                        } else {
+                                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(prepayAmount))));
+                                        }
                                         Typeface tyface1 = Typeface.createFromAsset(CheckoutItemsActivity.this.getAssets(),
                                                 "fonts/JosefinSans-SemiBold.ttf");
                                         txtamt.setTypeface(tyface1);
@@ -834,8 +876,11 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                         btn_payu.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-
-                                                new PaymentGateway(CheckoutItemsActivity.this, CheckoutItemsActivity.this).ApiGenerateHash1(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, "checkin", 0, Constants.SOURCE_PAYMENT);
+                                                if (cbJCash.isChecked()) {
+                                                    new PaymentGateway(CheckoutItemsActivity.this, CheckoutItemsActivity.this).ApiGenerateHash2(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, "checkin", true, false, true, false);
+                                                } else {
+                                                    new PaymentGateway(CheckoutItemsActivity.this, CheckoutItemsActivity.this).ApiGenerateHash1(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, "checkin", 0, Constants.SOURCE_PAYMENT);
+                                                }
                                                 dialog.dismiss();
 
                                             }
@@ -846,8 +891,12 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                             public void onClick(View v) {
 
                                                 PaytmPayment payment = new PaytmPayment(CheckoutItemsActivity.this, paymentResponse);
-                                                payment.ApiGenerateHashPaytm(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, CheckoutItemsActivity.this, CheckoutItemsActivity.this, "", 0, orderId);
-                                                //payment.generateCheckSum(sAmountPay);
+                                                if (cbJCash.isChecked()) {
+                                                    payment.ApiGenerateHashPaytm2(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, "checkin", true, false, false, true, orderId, CheckoutItemsActivity.this, CheckoutItemsActivity.this);
+                                                } else {
+                                                    payment.ApiGenerateHashPaytm(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, CheckoutItemsActivity.this, CheckoutItemsActivity.this, "", 0, orderId);
+                                                    //payment.generateCheckSum(sAmountPay);
+                                                }
                                                 dialog.dismiss();
 
                                             }
@@ -882,6 +931,77 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             }
         });
 
+    }
+
+    public void isGateWayPaymentNeeded(String ynwUUID, final String amount, int accountID, String purpose, boolean isJcashUsed, boolean isreditUsed, boolean isRazorPayPayment, boolean isPayTmPayment, String paymentMode) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        //  String uniqueID = UUID.randomUUID().toString();
+        SharedPreference.getInstance(mContext).setValue("prePayment", false);
+        JSONObject jsonObj = new JSONObject();
+        try {
+
+            jsonObj.put("accountId", accountID);
+            jsonObj.put("amountToPay", Float.valueOf(amount));
+            jsonObj.put("isJcashUsed", isJcashUsed);
+            jsonObj.put("isPayTmPayment", isPayTmPayment);
+            jsonObj.put("isRazorPayPayment", isRazorPayPayment);
+            jsonObj.put("isreditUsed", isreditUsed);
+            jsonObj.put("paymentMode", paymentMode);
+            jsonObj.put("paymentPurpose", purpose);
+            jsonObj.put("uuid", ynwUUID);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<WalletCheckSumModel> call = apiService.generateHash2(body);
+        call.enqueue(new Callback<WalletCheckSumModel>() {
+
+            @Override
+            public void onResponse(Call<WalletCheckSumModel> call, Response<WalletCheckSumModel> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(CheckoutItemsActivity.this, mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+
+                    if (response.code() == 200) {
+
+                        WalletCheckSumModel respnseWCSumModel = response.body();
+
+                        if (!respnseWCSumModel.isGateWayPaymentNeeded()) {
+
+                            onOrderSuccess(accountID);
+
+                        }
+                    } else {
+                        String responseerror = response.errorBody().string();
+                        Config.logV("Response--error-------------------------" + responseerror);
+                        Toast.makeText(mContext, responseerror, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WalletCheckSumModel> call, Throwable t) {
+
+            }
+        });
     }
 
     private void onOrderSuccess(int acctId) {
@@ -1085,8 +1205,9 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         if (catalogs != null && catalogs.size() > 0) {
                             getProviderDetails(accountId, catalogs);
                             // to get payment modes
-                            APIPayment(String.valueOf(accountId));
+                            getAdvancePaymentDetails();
 
+                            APIPayment(String.valueOf(accountId));
                             if (catalogs.get(0).getPickUp() != null && catalogs.get(0).getPickUp().isOrderPickUp() && catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
 
                                 rbStore.setVisibility(View.VISIBLE);
@@ -1432,7 +1553,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     private void updateBill() {
 
         try {
-
+            double totalBill;
             boolean tax = false;
             if (db.getTaxAmount() >= 0.0) {
                 tax = true;
@@ -1459,20 +1580,20 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     if (catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
 
                         if (tax) {
-                            double totalBill = db.getCartDiscountedPrice() + catalogs.get(0).getHomeDelivery().getDeliveryCharge() + db.getTaxAmount();
+                            totalBill = db.getCartDiscountedPrice() + catalogs.get(0).getHomeDelivery().getDeliveryCharge() + db.getTaxAmount();
                             tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
                         } else {
-                            double totalBill = db.getCartDiscountedPrice() + catalogs.get(0).getHomeDelivery().getDeliveryCharge();
+                            totalBill = db.getCartDiscountedPrice() + catalogs.get(0).getHomeDelivery().getDeliveryCharge();
                             tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
                         }
 
                     } else {
 
                         if (tax) {
-                            double totalBill = db.getCartDiscountedPrice() + db.getTaxAmount();
+                            totalBill = db.getCartDiscountedPrice() + db.getTaxAmount();
                             tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
                         } else {
-                            double totalBill = db.getCartDiscountedPrice();
+                            totalBill = db.getCartDiscountedPrice();
                             tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
                         }
 
@@ -1481,15 +1602,18 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                 } else {
 
                     if (tax) {
-                        double bill = db.getCartDiscountedPrice() + db.getTaxAmount();
-                        tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(bill)));
+                        totalBill = db.getCartDiscountedPrice() + db.getTaxAmount();
+                        tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
                     } else {
-                        double bill = db.getCartDiscountedPrice();
-                        tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(bill)));
+                        totalBill = db.getCartDiscountedPrice();
+                        tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
                     }
                 }
-                if(catalog.getAdvanceAmount() != null && !catalog.getAdvanceAmount().isEmpty() && Float.parseFloat(catalogs.get(0).getAdvanceAmount()) > 0){
-                    tvAdvanceAmount.setText("An advance of ₹\u00a0"+catalog.getAdvanceAmount()+" required");
+                if (catalog.getPaymentType().equalsIgnoreCase(Constants.FIXED) && catalog.getAdvanceAmount() != null && !catalog.getAdvanceAmount().isEmpty() && Float.parseFloat(catalogs.get(0).getAdvanceAmount()) > 0) {
+                    tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(catalog.getAdvanceAmount())) + " required");
+                    llAdvanceAmount.setVisibility(View.VISIBLE);
+                }else if(catalog.getPaymentType().equalsIgnoreCase(Constants.FULLAMOUNT)){
+                    tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(String.valueOf(totalBill))) + " required");
                     llAdvanceAmount.setVisibility(View.VISIBLE);
                 }
             }
@@ -1800,40 +1924,31 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         return date;
     }
 
-    private void getS3Coupons(int uniqueID) {
+    private void getCoupons(int uniqueID) {
 
         ApiInterface apiService =
-                ApiClient.getClientS3Cloud(CheckoutItemsActivity.this).create(ApiInterface.class);
+                ApiClient.getClient(CheckoutItemsActivity.this).create(ApiInterface.class);
 
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<ArrayList<CoupnResponse>> call = apiService.getCoupanList(uniqueID, sdf.format(currentTime));
-        call.enqueue(new Callback<ArrayList<CoupnResponse>>() {
+        Call<Provider> call = apiService.getCoupons(uniqueID);
+        call.enqueue(new Callback<Provider>() {
             @Override
-            public void onResponse(Call<ArrayList<CoupnResponse>> call, Response<ArrayList<CoupnResponse>> response) {
+            public void onResponse(Call<Provider> call, Response<Provider> response) {
 
                 try {
 
                     if (response.code() == 200) {
-                        s3couponList.clear();
-                        s3couponList = response.body();
 
-                        if (s3couponList != null) {
 
-                            if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
-                                rlCoupon.setVisibility(View.VISIBLE);
-                                cvCoupon.setVisibility(View.VISIBLE);
-                            } else {
-                                rlCoupon.setVisibility(View.GONE);
-                                cvCoupon.setVisibility(View.GONE);
-                            }
+                        Provider providerResponse = new Provider();
+                        providerResponse = response.body();
+
+                        if (providerResponse != null) {
+                            getS3Coupons(providerResponse.getCoupon());
+                            getJaldeeProviderCoupons(providerResponse.getProviderCoupon());
+
                         }
 
                     }
-
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1842,7 +1957,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             }
 
             @Override
-            public void onFailure(Call<ArrayList<CoupnResponse>> call, Throwable t) {
+            public void onFailure(Call<Provider> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
 
@@ -1850,34 +1965,181 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         });
     }
 
-    private void ApiJaldeegetProviderCoupons(int uniqueID) {
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(CheckoutItemsActivity.this).create(ApiInterface.class);
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<ArrayList<ProviderCouponResponse>> call = apiService.getProviderCoupanList(uniqueID, sdf.format(currentTime));
-        call.enqueue(new Callback<ArrayList<ProviderCouponResponse>>() {
+    private void getS3Coupons(String s3Cupons) {
+        try {
+
+
+            if (s3Cupons != null) {
+                s3couponList.clear();
+                s3couponList = new Gson().fromJson(s3Cupons, new TypeToken<ArrayList<CoupnResponse>>() {
+                }.getType());
+
+                if (s3couponList != null) {
+
+                    if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
+                        rlCoupon.setVisibility(View.VISIBLE);
+                        cvCoupon.setVisibility(View.VISIBLE);
+                    } else {
+                        rlCoupon.setVisibility(View.GONE);
+                        cvCoupon.setVisibility(View.GONE);
+                    }
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private void getJaldeeProviderCoupons(String providerCoupons) {
+
+        try {
+
+            if (providerCoupons != null) {
+
+                providerCouponList.clear();
+                providerCouponList = new Gson().fromJson(providerCoupons, new TypeToken<ArrayList<ProviderCouponResponse>>() {
+                }.getType());
+
+                if (providerCouponList != null) {
+
+                    if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
+                        rlCoupon.setVisibility(View.VISIBLE);
+                        cvCoupon.setVisibility(View.VISIBLE);
+                    } else {
+                        rlCoupon.setVisibility(View.GONE);
+                        cvCoupon.setVisibility(View.GONE);
+                    }
+
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void cpns(ArrayList<String> mcouponArraylist) {
+        iCpn = (ICpn) this;
+        couponArraylist = mcouponArraylist;
+        //CouponApliedOrNotDetails c = new CouponApliedOrNotDetails();
+        getAdvancePaymentDetails();
+
+        /*if (userMessage != null) {
+
+
+            if (isUser) {
+                getAdvancePaymentDetails(userMessage, userId);
+            } else {
+                getAdvancePaymentDetails(userMessage, providerId);
+            }
+        }*/
+       /* Config.logV("couponArraylist--code-------------------------" + couponArraylist);
+        list.setVisibility(View.VISIBLE);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CheckInActivity.this);
+        list.setLayoutManager(mLayoutManager);
+        mAdapter = new CouponlistAdapter(CheckInActivity.this, s3couponList, couponEntered, couponArraylist, getCoupnAppliedOrNotDetails(userMessage, providerId), iCpn);
+        list.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();*/
+    }
+
+    public AdvancePaymentDetailsOrder getAdvancePaymentDetails() {
+        final ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        JSONObject inputObj = new JSONObject();
+        JSONArray orderItemsArray = new JSONArray();
+        ArrayList<OrderItem> itemsList = new ArrayList<>();
+
+        itemsList = db.getOrderItems();
+        JSONObject catalog = new JSONObject();
+        JSONArray orderItem = new JSONArray();
+        JSONArray couponList = new JSONArray();
+        try {
+            catalog.put("id", catalogId);
+            if (itemsList != null && itemsList.size() > 0) {
+
+                for (int i = 0; i < itemsList.size(); i++) {
+
+                    JSONObject obj = new JSONObject();
+                    obj.put("id", itemsList.get(i).getId());
+                    obj.put("quantity", itemsList.get(i).getQuantity());
+                    if (itemsList.get(i).getConsumerNote() != null) {
+                        obj.put("consumerNote", itemsList.get(i).getConsumerNote());
+                    } else {
+                        obj.put("consumerNote", "");
+                    }
+                    orderItemsArray.put(obj);
+
+                }
+            }
+            for (int i = 0; i < couponArraylist.size(); i++) {
+
+                couponList.put(couponArraylist.get(i));
+
+            }
+            if (isStore) {
+                if (catalogs != null && catalogs.get(0).getNextAvailablePickUpDetails() != null) {
+                    selectedDate = catalogs.get(0).getNextAvailablePickUpDetails().getAvailableDate();
+                } else if (storePickupSchedulesList != null && storePickupSchedulesList.size() > 0) {
+                    selectedDate = storePickupSchedulesList.get(0).getDate();
+                }
+            }else{
+                if (catalogs != null && catalogs.get(0).getNextAvailableDeliveryDetails() != null) {
+                    selectedDate = catalogs.get(0).getNextAvailableDeliveryDetails().getAvailableDate();
+
+                } else if (homeDeliverySchedulesList != null && homeDeliverySchedulesList.size() > 0) {
+                    selectedDate = homeDeliverySchedulesList.get(0).getDate();
+                }
+            }
+            inputObj.put("catalog", catalog);
+            inputObj.put("orderItem", orderItemsArray);
+            inputObj.put("homeDelivery", rbHome.isChecked());
+            inputObj.put("coupons", couponList);
+            inputObj.put("orderDate", selectedDate);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), inputObj.toString());
+        Call<AdvancePaymentDetailsOrder> call = apiService.getOrderAdvancePaymentDetails(String.valueOf(accountId), requestBody);
+        call.enqueue(new Callback<AdvancePaymentDetailsOrder>() {
             @Override
-            public void onResponse(Call<ArrayList<ProviderCouponResponse>> call, Response<ArrayList<ProviderCouponResponse>> response) {
+            public void onResponse(Call<AdvancePaymentDetailsOrder> call, Response<AdvancePaymentDetailsOrder> response) {
                 try {
-
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
-                        providerCouponList.clear();
-                        providerCouponList = response.body();
-
-                        if (providerCouponList != null) {
-
-                            if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
-                                rlCoupon.setVisibility(View.VISIBLE);
-                                cvCoupon.setVisibility(View.VISIBLE);
+                        advancePaymentDetailsOrder = response.body();
+                        if (couponEntered != null) {
+                            Config.logV("couponArraylist--code-------------------------" + couponArraylist);
+                            list.setVisibility(View.VISIBLE);
+                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CheckoutItemsActivity.this);
+                            list.setLayoutManager(mLayoutManager);
+                            mAdapter = new CouponlistAdapter(CheckoutItemsActivity.this, s3couponList, couponEntered, couponArraylist, advancePaymentDetailsOrder, iCpn);
+                            list.setAdapter(mAdapter);
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            if (advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt") != null && advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt").getAsDouble() > 0) {
+                                if ((catalogs.get(0).getAdvanceAmount() != null && Double.parseDouble(catalogs.get(0).getAdvanceAmount()) > 0) || catalogs.get(0).getPaymentType().equalsIgnoreCase(Constants.FULLAMOUNT)) {
+                                    cbJCash.setChecked(true);
+                                    cbJCash.append(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt").getAsString())));
+                                } else {
+                                    cbJCash.setChecked(false);
+                                    cbJCash.setVisibility(View.GONE);
+                                    llJCash.setVisibility(View.GONE);
+                                }
                             } else {
-                                rlCoupon.setVisibility(View.GONE);
-                                cvCoupon.setVisibility(View.GONE);
+                                cbJCash.setChecked(false);
+                                cbJCash.setVisibility(View.GONE);
+                                llJCash.setVisibility(View.GONE);
                             }
-
                         }
 
                     }
@@ -1887,12 +2149,13 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             }
 
             @Override
-            public void onFailure(Call<ArrayList<ProviderCouponResponse>> call, Throwable t) {
+            public void onFailure(Call<AdvancePaymentDetailsOrder> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
             }
         });
+        return advancePaymentDetailsOrder;
     }
-
 }

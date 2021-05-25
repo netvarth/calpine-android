@@ -13,14 +13,17 @@ import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.ActiveDonation;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
+import com.jaldeeinc.jaldee.response.AdvancePaymentDetailsOrder;
 import com.jaldeeinc.jaldee.response.AppointmentSchedule;
 import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
-import com.jaldeeinc.jaldee.response.CouponApliedOrNotDetails;
+import com.jaldeeinc.jaldee.response.AdvancePaymentDetails;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.InboxList;
 import com.jaldeeinc.jaldee.response.InboxModel;
+import com.jaldeeinc.jaldee.response.JCashAvailable;
+import com.jaldeeinc.jaldee.response.JCashInfo;
 import com.jaldeeinc.jaldee.response.JdnResponse;
 import com.jaldeeinc.jaldee.response.LocationResponse;
 import com.jaldeeinc.jaldee.response.LoginResponse;
@@ -61,6 +64,9 @@ import com.jaldeeinc.jaldee.response.SlotsData;
 import com.jaldeeinc.jaldee.response.StoreDetails;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 import com.jaldeeinc.jaldee.response.UserResponse;
+import com.jaldeeinc.jaldee.response.WalletCheckSumModel;
+import com.jaldeeinc.jaldee.response.WalletEligibleJCash;
+import com.jaldeeinc.jaldee.response.WalletPaytmChecksum;
 
 
 import java.util.ArrayList;
@@ -413,6 +419,10 @@ public interface ApiInterface {
     Call<CheckSumModel> generateHash(@Body RequestBody jsonObj);
 
     @Headers("User-Agent: android")
+    @POST("consumer/payment/wallet")
+    Call<WalletCheckSumModel> generateHash2(@Body RequestBody jsonObj);
+
+    @Headers("User-Agent: android")
     @POST("consumer/payment/status")
     Call<String> verifyRazorpayPayment(@QueryMap(encoded = true) Map<String, String> query);
 
@@ -420,14 +430,24 @@ public interface ApiInterface {
     @POST("consumer/payment")
     Call<PaytmChecksum> generateHashPaytm(@Body RequestBody jsonObj);
 
+    @Headers("User-Agent: android")
+    @POST("consumer/payment/wallet")
+    Call<WalletPaytmChecksum> generateHashPaytm2(@Body RequestBody jsonObj);
+
     @POST("consumer/waitlist")
     Call<ResponseBody> Checkin(@Query("account") String account, @Body RequestBody jsonObj);
 
     @PUT("consumer/waitlist/advancePayment")
-    Call<CouponApliedOrNotDetails> getWlCoupnAppliedOrNotDetails(@Query("account") String account, @Body RequestBody jsonObj);
+    Call<AdvancePaymentDetails> getWlAdvancePaymentDetails(@Query("account") String account, @Body RequestBody jsonObj);
 
     @PUT("consumer/appointment/advancePayment")
-    Call<CouponApliedOrNotDetails> getApptCoupnAppliedOrNotDetails(@Query("account") String account, @Body RequestBody jsonObj);
+    Call<AdvancePaymentDetails> getApptAdvancePaymentDetails(@Query("account") String account, @Body RequestBody jsonObj);
+
+    @PUT("consumer/orders/amount")
+    Call<AdvancePaymentDetailsOrder> getOrderAdvancePaymentDetails(@Query("account") String account, @Body RequestBody jsonObj);
+
+    @GET("consumer/wallet/redeem/remaining/amt")
+    Call<String> getPrePayRemainingAmnt(@Query("useJcash") boolean useJcash, @Query("useJcredit") boolean useJcredit, @Query("advancePayAmount") String advancePayAmount);
 
     @POST("consumer/appointment")
     Call<ResponseBody> Appointment(@Query("account") String account, @Body RequestBody jsonObj);
@@ -436,6 +456,8 @@ public interface ApiInterface {
     @GET("consumer/bill/{ynwuuid}")
     Call<BillModel> getBill(@Path("ynwuuid") String uuid, @Query("account") String account);
 
+    @GET("consumer/wallet/redeem/eligible/amt")
+    Call<WalletEligibleJCash> getWalletEligibleJCash();
 
     @POST("consumer/jaldee/coupons/{coupon}/{ynwuuid}")
     Call<BillModel> getBillCoupon(@Path("coupon") String coupon, @Path("ynwuuid") String uuid, @Query("account") String account);
@@ -633,6 +655,12 @@ public interface ApiInterface {
 
     @GET("consumer/orders/history")
     Call<ArrayList<ActiveOrders>> getOrdersHistory();
+
+    @GET("consumer/wallet/cash/info")
+    Call<JCashInfo> getJCashInfo();
+
+    @GET("consumer/wallet/cash/available")
+    Call<ArrayList<JCashAvailable>> getJCashAvailable();
 
     @GET("consumer/orders/{uuid}")
     Call<ActiveOrders> getOrderDetails(@Path("uuid") String uuid, @Query("account") int account);

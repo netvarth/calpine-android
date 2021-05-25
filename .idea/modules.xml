@@ -18,8 +18,8 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/JaldeeAndroidOrder-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/JaldeeAndroidOrder-app.iml" group="JaldeeAndroidOrder/app" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="calpine-android/app" />
       <module fileurl="file://$PROJECT_DIR$/.idea/calpine-android.iml" filepath="$PROJECT_DIR$/.idea/calpine-android.iml" group="calpine-android" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/order_enhancement.iml" filepath="$PROJECT_DIR$/.idea/modules/order_enhancement.iml" group="order_enhancement" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/order_enhancement-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/order_enhancement-app.iml" group="order_enhancement/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jaldeeCash.iml" filepath="$PROJECT_DIR$/.idea/modules/jaldeeCash.iml" group="jaldeeCash" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/jaldeeCash-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/jaldeeCash-app.iml" group="jaldeeCash/app" />
     </modules>
   </component>
 </project>

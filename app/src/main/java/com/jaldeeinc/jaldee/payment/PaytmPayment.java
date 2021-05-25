@@ -13,7 +13,10 @@ import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.PaytmChecksum;
+import com.jaldeeinc.jaldee.response.WalletCheckSumModel;
+import com.jaldeeinc.jaldee.response.WalletPaytmChecksum;
 import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPGService;
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
@@ -40,6 +43,7 @@ public class PaytmPayment {
 
     Context context;
     private IPaymentResponse iPaymentResponse;
+
     public PaytmPayment(Context mContext, IPaymentResponse paymentResponse) {
         context = mContext;
         iPaymentResponse = paymentResponse;
@@ -125,7 +129,8 @@ public class PaytmPayment {
             return "did not work";
         }
     }
-    public void ApiGenerateHashPaytm(String ynwUUID, String amount, String accountID, String purpose, final Context mContext, final Activity mActivity, final String from,int customerId,String encId) {
+
+    public void ApiGenerateHashPaytm(String ynwUUID, String amount, String accountID, String purpose, final Context mContext, final Activity mActivity, final String from, int customerId, String encId) {
 
 
         ApiInterface apiService =
@@ -145,7 +150,6 @@ public class PaytmPayment {
             jsonObj.put("accountId", accountID);
             jsonObj.put("purpose", purpose);
             jsonObj.put("custId", customerId);
-
 
 
         } catch (JSONException e) {
@@ -193,7 +197,7 @@ public class PaytmPayment {
                             map.put("CALLBACK_URL", response_data.getCALLBACK_URL());
                             map.put("CHECKSUMHASH", response_data.getChecksum());
                             map.put("MERC_UNQ_REF", accountID + "_" + encId);
-                            PaytmPay(map, from, response_data.getPaymentEnv(),purpose);
+                            PaytmPay(map, from, response_data.getPaymentEnv(), purpose);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -213,7 +217,6 @@ public class PaytmPayment {
                 }
 
 
-
             }
 
             @Override
@@ -227,6 +230,99 @@ public class PaytmPayment {
         });
 
 
+    }
+
+    public void ApiGenerateHashPaytm2(String ynwUUID, final String amount, String accountID, String purpose, final String from, boolean isJcashUsed, boolean isreditUsed, boolean isRazorPayPayment, boolean isPayTmPayment, String encId, final Context mContext, final Activity mActivity) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        //  String uniqueID = UUID.randomUUID().toString();
+        JSONObject jsonObj = new JSONObject();
+        try {
+
+            jsonObj.put("accountId", accountID);
+            jsonObj.put("amountToPay", Float.valueOf(amount));
+            jsonObj.put("isJcashUsed", isJcashUsed);
+            jsonObj.put("isPayTmPayment", isPayTmPayment);
+            jsonObj.put("isRazorPayPayment", isRazorPayPayment);
+            jsonObj.put("isreditUsed", isreditUsed);
+            jsonObj.put("paymentMode", "DC");
+            jsonObj.put("paymentPurpose", purpose);
+            jsonObj.put("uuid", ynwUUID);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<WalletPaytmChecksum> call = apiService.generateHashPaytm2(body);
+
+        Config.logV("Request--body------Payment---Amount----------------" + amount);
+        Config.logV("Request--body------Payment-------------------" + bodyToString(body));
+        call.enqueue(new Callback<WalletPaytmChecksum>() {
+            @Override
+            public void onResponse(Call<WalletPaytmChecksum> call, Response<WalletPaytmChecksum> response) {
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(mActivity, mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        WalletPaytmChecksum respnseWPCSumModel = response.body();
+
+                        if (respnseWPCSumModel.isGateWayPaymentNeeded()) {
+                            PaytmChecksum response_data = respnseWPCSumModel.getResponse();
+
+                            try {
+
+                                Map<String, String> map = new HashMap<>();
+
+
+                                map.put("MID", response_data.getMID());
+                                map.put("ORDER_ID", response_data.getORDER_ID());
+                                map.put("CUST_ID", response_data.getCUST_ID());
+                                map.put("INDUSTRY_TYPE_ID", response_data.getINDUSTRY_TYPE_ID());
+                                map.put("CHANNEL_ID", response_data.getCHANNEL_ID());
+                                map.put("TXN_AMOUNT", Config.getAmountinTwoDecimalPoints(Double.parseDouble(response_data.getTXN_AMOUNT())));
+                                map.put("WEBSITE", response_data.getWEBSITE());
+                                Config.logV("Response--Sucess----PAytm-CALLBACK_URL--------------------" + response_data.getCALLBACK_URL());
+                                map.put("CALLBACK_URL", response_data.getCALLBACK_URL());
+                                map.put("CHECKSUMHASH", response_data.getChecksum());
+                                map.put("MERC_UNQ_REF", accountID + "_" + encId);
+                                PaytmPay(map, from, response_data.getPaymentEnv(), purpose);
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } else {
+                        String responseerror = response.errorBody().string();
+                        Config.logV("Response--error-------------------------" + responseerror);
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, responseerror, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WalletPaytmChecksum> call, Throwable t) {
+
+            }
+        });
     }
 
     public void PaytmPay(Map<String, String> paramMap, final String from, String paymentEnv, String purpose) {
@@ -250,18 +346,16 @@ public class PaytmPayment {
             @Override
             public void onTransactionResponse(Bundle inResponse) {
                 Log.d("LOG", "Payment Transaction : " + inResponse);
-                if(inResponse.toString().contains("TXN_SUCCESS")){
+                if (inResponse.toString().contains("TXN_SUCCESS")) {
 
-                    if (purpose.equalsIgnoreCase(Constants.PURPOSE_PREPAYMENT)){
+                    if (purpose.equalsIgnoreCase(Constants.PURPOSE_PREPAYMENT)) {
                         iPaymentResponse.sendPaymentResponse();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(context, "Payment Successful", Toast.LENGTH_LONG).show();
                     }
-                }else {
+                } else {
                     Toast.makeText(context, "Payment Failed ", Toast.LENGTH_LONG).show();
                 }
-
 
 
                 //Toast.makeText(context, "Payment Success", Toast.LENGTH_LONG).show();

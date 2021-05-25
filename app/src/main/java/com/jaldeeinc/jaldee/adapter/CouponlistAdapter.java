@@ -1,46 +1,33 @@
 package com.jaldeeinc.jaldee.adapter;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.Interface.ICpn;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckIn;
-import com.jaldeeinc.jaldee.activities.CheckInActivity;
-import com.jaldeeinc.jaldee.activities.CheckInDetails;
-import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
+import com.jaldeeinc.jaldee.response.AdvancePaymentDetailsOrder;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
-import com.jaldeeinc.jaldee.response.CouponApliedOrNotDetails;
+import com.jaldeeinc.jaldee.response.AdvancePaymentDetails;
 import com.jaldeeinc.jaldee.enums.*;
 import com.jaldeeinc.jaldee.response.CouponSystemNote;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class CouponlistAdapter extends RecyclerView.Adapter<CouponlistAdapter.MyViewHolder> {
@@ -48,7 +35,7 @@ public class CouponlistAdapter extends RecyclerView.Adapter<CouponlistAdapter.My
     ArrayList<CoupnResponse> m3couponList;
     String mcouponEntered;
     ArrayList<String> mcouponArraylist;
-    CouponApliedOrNotDetails couponApliedOrNotDetails;
+    AdvancePaymentDetails couponApliedOrNotDetails;
     private ICpn iCpn;
     JsonObject jcl, pcl;
     CouponSystemNote notes;
@@ -65,14 +52,36 @@ public class CouponlistAdapter extends RecyclerView.Adapter<CouponlistAdapter.My
 
 
     }
+    public CouponlistAdapter(Context Context, ArrayList<CoupnResponse> s3couponList, String couponEntered, ArrayList<String> couponArraylist, ICpn iCpn) {
 
-    public CouponlistAdapter(Context Context, ArrayList<CoupnResponse> s3couponList, String couponEntered, ArrayList<String> couponArraylist, CouponApliedOrNotDetails couponApliedOrNotDetails, ICpn iCpn) {
+        this.mContext = Context;
+        this.m3couponList = s3couponList;
+        this.mcouponEntered = couponEntered;
+        this.mcouponArraylist = couponArraylist;
+        this.iCpn = iCpn;
+
+
+    }
+
+    public CouponlistAdapter(Context Context, ArrayList<CoupnResponse> s3couponList, String couponEntered, ArrayList<String> couponArraylist, AdvancePaymentDetails couponApliedOrNotDetails, ICpn iCpn) {
 
         this.mContext = Context;
         this.m3couponList = s3couponList;
         this.mcouponEntered = couponEntered;
         this.mcouponArraylist = couponArraylist;
         this.couponApliedOrNotDetails = couponApliedOrNotDetails;
+        this.iCpn = iCpn;
+
+
+    }
+    public CouponlistAdapter(Context Context, ArrayList<CoupnResponse> s3couponList, String couponEntered, ArrayList<String> couponArraylist, AdvancePaymentDetailsOrder couponApliedOrNotDetailsOrder, ICpn iCpn) {
+
+        this.mContext = Context;
+        this.m3couponList = s3couponList;
+        this.mcouponEntered = couponEntered;
+        this.mcouponArraylist = couponArraylist;
+        this.couponApliedOrNotDetails.setjCouponList(couponApliedOrNotDetailsOrder.getjCouponList());
+        this.couponApliedOrNotDetails.setProCouponList(couponApliedOrNotDetailsOrder.getProCouponList());
         this.iCpn = iCpn;
 
 

@@ -42,6 +42,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -83,18 +84,18 @@ import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
-import com.jaldeeinc.jaldee.response.CouponApliedOrNotDetails;
+import com.jaldeeinc.jaldee.response.AdvancePaymentDetails;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
-import com.jaldeeinc.jaldee.response.SearchLocation;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.response.ServiceInfo;
 import com.jaldeeinc.jaldee.response.SlotsData;
+import com.jaldeeinc.jaldee.response.WalletCheckSumModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -131,9 +132,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -149,6 +148,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AppointmentActivity extends AppCompatActivity implements PaymentResultWithDataListener, ISlotInfo, IMailSubmit, IPaymentResponse, IMobileSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected, ICpn {
+
+    @BindView(R.id.cb_jCash)
+    CheckBox cbJCash;
+
+    @BindView(R.id.ll_jCash)
+    LinearLayout llJCash;
 
     @BindView(R.id.tv_providerName)
     CustomTextViewBold tvProviderName;
@@ -305,7 +310,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     ArrayList<String> couponArraylist = new ArrayList<>();
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     ArrayList<ProviderCouponResponse> providerCouponList = new ArrayList<>();
-    CouponApliedOrNotDetails couponApliedOrNotDetails = new CouponApliedOrNotDetails();
+    AdvancePaymentDetails advancePaymentDetails = new AdvancePaymentDetails();
 
     RecyclerView list;
     private CouponlistAdapter mAdapter;
@@ -349,7 +354,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     String appEncId;
     private FamilyMemberDialog familyMemberDialog;
     private IFamilyMemberDetails iFamilyMemberDetails;
-    private String prepayAmount = "";
+    private String prepayAmount = "", prePayRemainingAmount = "";
     private String countryCode;
     private Provider providerResponse = new Provider();
     private SearchSetting mSearchSettings;
@@ -397,11 +402,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             tvProviderName.setText(providerName);
         }
 
-        if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
-            tvButtonName.setText("Proceed to Payment");
-        } else {
-            tvButtonName.setText("Confirm Appointment");
-        }
 
         if (serviceInfo.getConsumerNoteTitle() != null && !serviceInfo.getConsumerNoteTitle().equalsIgnoreCase("")) {
             tvAddNotes.setText(serviceInfo.getConsumerNoteTitle());
@@ -503,13 +503,17 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                 if (serviceInfo.isUser()) {
                     APIPayment(String.valueOf(userId));
+                    getAdvancePaymentDetails(userMessage, userId);
                 } else {
                     APIPayment(String.valueOf(providerId));
-
+                    getAdvancePaymentDetails(userMessage, providerId);
                 }
             } else {
 
                 LservicePrepay.setVisibility(View.GONE);
+                cbJCash.setChecked(false);
+                cbJCash.setVisibility(View.GONE);
+                llJCash.setVisibility(View.GONE);
             }
 
             if (serviceInfo.isPreInfoEnabled()) {  //  check if pre-info is available for the service
@@ -538,9 +542,22 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         ApiGetProviderDetails(uniqueId);
         ApiGetProfileDetail();
 
-
         // click actions
+        cbJCash.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                if (cbJCash.isChecked()) {
+                    if (advancePaymentDetails.getEligibleJcashAmt().get("jCashAmt").getAsDouble() >= advancePaymentDetails.getAmountRequiredNow()) {
+                        tvButtonName.setText("Confirm CheckIn");
+                    } else {
+                        tvButtonName.setText("Proceed to Payment");
+                    }
+                } else {
+                    tvButtonName.setText("Proceed to Payment");
+                }
+            }
+        });
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1123,6 +1140,19 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             if (setting != null) {
                 mSearchSettings = new Gson().fromJson(setting, SearchSetting.class);
 
+                if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
+                    if (cbJCash.isChecked()) {
+                        if (advancePaymentDetails.getEligibleJcashAmt().get("jCashAmt").getAsDouble() >= advancePaymentDetails.getAmountRequiredNow()) {
+                            tvButtonName.setText("Confirm Appointment");
+                        } else {
+                            tvButtonName.setText("Proceed to Payment");
+                        }
+                    } else {
+                        tvButtonName.setText("Proceed to Payment");
+                    }
+                } else {
+                    tvButtonName.setText("Confirm Appointment");
+                }
                 calcMode = mSearchSettings.getCalculationMode();
 
             }
@@ -1477,11 +1507,14 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             }
 
                         }
-
-                        if (serviceInfo.isUser()) {
-                            getConfirmationId(userId, txt_addnote, id);
+                        if (cbJCash.isChecked()) {
+                            getPrePayRemainingAmntNeeded(prepayAmount, txt_addnote, id);
                         } else {
-                            getConfirmationId(providerId, txt_addnote, id);
+                            if (serviceInfo.isUser()) {
+                                getConfirmationId(userId, txt_addnote, id);
+                            } else {
+                                getConfirmationId(providerId, txt_addnote, id);
+                            }
                         }
 
                     } else {
@@ -1662,6 +1695,35 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     }
 
+    private void getPrePayRemainingAmntNeeded(String prepayAmount, final String txt_addnote, int id) {
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<String> call = apiService.getPrePayRemainingAmnt(cbJCash.isChecked(), false, prepayAmount);
+        call.enqueue(new Callback<String>() {
+
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                Config.logV("URL------GET Prepay remaining amount---------" + response.raw().request().url().toString().trim());
+                Config.logV("Response--code-------------------------" + response.code());
+                if (response.code() == 200) {
+                    prePayRemainingAmount = response.body();
+                    if (serviceInfo.isUser()) {
+                        getConfirmationId(userId, txt_addnote, id);
+                    } else {
+                        getConfirmationId(providerId, txt_addnote, id);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.i("PrePayRemainingAmntNeed", t.toString());
+                t.printStackTrace();
+            }
+        });
+    }
+
     private void getConfirmationId(int userId, String txt_addnote, int id) {
 
         final ApiInterface apiService =
@@ -1678,8 +1740,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         if (activeAppointment != null) {
                             appEncId = activeAppointment.getAppointmentEncId();
                             if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
-                                if (!showPaytmWallet && !showPayU) {
-
+                                if (cbJCash.isChecked() && Double.parseDouble(prePayRemainingAmount) <= 0) {
+                                    isGateWayPaymentNeeded(value, prepayAmount, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, true, false, false, false, "JCASH", userId, txt_addnote);
                                     //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
                                 } else {
                                     try {
@@ -1709,8 +1771,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                         TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
 
                                         txtprepayment.setText(R.string.serve_prepay);
-
-                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(prepayAmount))));
+                                        if (cbJCash.isChecked()) {
+                                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(prePayRemainingAmount))));
+                                        } else {
+                                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(prepayAmount))));
+                                        }
                                         Typeface tyface1 = Typeface.createFromAsset(AppointmentActivity.this.getAssets(),
                                                 "fonts/JosefinSans-SemiBold.ttf");
                                         txtamt.setTypeface(tyface1);
@@ -1724,8 +1789,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                         btn_payu.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-
-                                                new PaymentGateway(AppointmentActivity.this, AppointmentActivity.this).ApiGenerateHash1(value, prepayAmount, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                                if (cbJCash.isChecked()) {
+                                                    new PaymentGateway(mContext, mActivity).ApiGenerateHash2(value, prepayAmount, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", true, false, true, false);
+                                                } else {
+                                                    new PaymentGateway(AppointmentActivity.this, AppointmentActivity.this).ApiGenerateHash1(value, prepayAmount, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                                }
                                                 dialog.dismiss();
 
                                             }
@@ -1736,8 +1804,12 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                             public void onClick(View v) {
 
                                                 PaytmPayment payment = new PaytmPayment(AppointmentActivity.this, paymentResponse);
-                                                payment.ApiGenerateHashPaytm(value, prepayAmount, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, AppointmentActivity.this, AppointmentActivity.this, "", familyMEmID, appEncId);
-                                                //payment.generateCheckSum(sAmountPay);
+                                                if (cbJCash.isChecked()) {
+                                                    payment.ApiGenerateHashPaytm2(value, prepayAmount, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", true, false, false, true, appEncId, mContext, mActivity);
+                                                } else {
+                                                    payment.ApiGenerateHashPaytm(value, prepayAmount, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, AppointmentActivity.this, AppointmentActivity.this, "", familyMEmID, appEncId);
+                                                    //payment.generateCheckSum(sAmountPay);
+                                                }
                                                 dialog.dismiss();
 
                                             }
@@ -1782,6 +1854,90 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     }
 
+
+    public void isGateWayPaymentNeeded(String ynwUUID, final String amount, String accountID, String purpose, boolean isJcashUsed, boolean isreditUsed, boolean isRazorPayPayment, boolean isPayTmPayment, String paymentMode, int userId, String txt_addnote) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        //  String uniqueID = UUID.randomUUID().toString();
+        SharedPreference.getInstance(mContext).setValue("prePayment", false);
+        JSONObject jsonObj = new JSONObject();
+        try {
+
+            jsonObj.put("accountId", accountID);
+            jsonObj.put("amountToPay", Float.valueOf(amount));
+            jsonObj.put("isJcashUsed", isJcashUsed);
+            jsonObj.put("isPayTmPayment", isPayTmPayment);
+            jsonObj.put("isRazorPayPayment", isRazorPayPayment);
+            jsonObj.put("isreditUsed", isreditUsed);
+            jsonObj.put("paymentMode", paymentMode);
+            jsonObj.put("paymentPurpose", purpose);
+            jsonObj.put("uuid", ynwUUID);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<WalletCheckSumModel> call = apiService.generateHash2(body);
+        call.enqueue(new Callback<WalletCheckSumModel>() {
+
+            @Override
+            public void onResponse(Call<WalletCheckSumModel> call, Response<WalletCheckSumModel> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(mActivity, mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+
+                    if (response.code() == 200) {
+
+                        WalletCheckSumModel respnseWCSumModel = response.body();
+
+                        if (!respnseWCSumModel.isGateWayPaymentNeeded()) {
+
+
+                            if (serviceInfo.isUser()) {
+                                if (imagePathList.size() > 0) {
+                                    ApiCommunicateAppointment(value, String.valueOf(userId), txt_addnote, dialog);
+                                }
+                                getConfirmationDetails(userId);
+
+                            } else {
+
+                                if (imagePathList.size() > 0) {
+                                    ApiCommunicateAppointment(value, String.valueOf(providerId), txt_addnote, dialog);
+                                }
+                                getConfirmationDetails(providerId);
+
+                            }
+                        }
+                    } else {
+                        String responseerror = response.errorBody().string();
+                        Config.logV("Response--error-------------------------" + responseerror);
+                        Toast.makeText(mContext, responseerror, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WalletCheckSumModel> call, Throwable t) {
+
+            }
+        });
+    }
 
     public static String convertDate(String date) {
 
@@ -2436,9 +2592,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
 
             if (serviceInfo.isUser()) {
-                getCoupnAppliedOrNotDetails(userMessage, userId);
+                getAdvancePaymentDetails(userMessage, userId);
             } else {
-                getCoupnAppliedOrNotDetails(userMessage, providerId);
+                getAdvancePaymentDetails(userMessage, providerId);
             }
         }
        /* Config.logV("couponArraylist--code-------------------------" + couponArraylist);
@@ -2450,7 +2606,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         mAdapter.notifyDataSetChanged();*/
     }
 
-    public CouponApliedOrNotDetails getCoupnAppliedOrNotDetails(final String txt_addnote, int id) {
+    public AdvancePaymentDetails getAdvancePaymentDetails(final String txt_addnote, int id) {
         final Dialog mDialog = Config.getProgressDialog(AppointmentActivity.this, AppointmentActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         String number = tvNumber.getText().toString();
@@ -2537,10 +2693,10 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
         Log.i("QueueObj Appointment", queueobj.toString());
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), queueobj.toString());
-        Call<CouponApliedOrNotDetails> call = apiService.getApptCoupnAppliedOrNotDetails(String.valueOf(id), body);
-        call.enqueue(new Callback<CouponApliedOrNotDetails>() {
+        Call<AdvancePaymentDetails> call = apiService.getApptAdvancePaymentDetails(String.valueOf(id), body);
+        call.enqueue(new Callback<AdvancePaymentDetails>() {
             @Override
-            public void onResponse(Call<CouponApliedOrNotDetails> call, Response<CouponApliedOrNotDetails> response) {
+            public void onResponse(Call<AdvancePaymentDetails> call, Response<AdvancePaymentDetails> response) {
 
                 try {
 
@@ -2553,15 +2709,25 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                     MultiplefamilyList.clear();
                     if (response.code() == 200) {
-                        couponApliedOrNotDetails = response.body();
-
-                        Config.logV("couponArraylist--code-------------------------" + couponArraylist);
-                        list.setVisibility(View.VISIBLE);
-                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppointmentActivity.this);
-                        list.setLayoutManager(mLayoutManager);
-                        mAdapter = new CouponlistAdapter(AppointmentActivity.this, s3couponList, couponEntered, couponArraylist, couponApliedOrNotDetails, iCpn);
-                        list.setAdapter(mAdapter);
-                        mAdapter.notifyDataSetChanged();
+                        advancePaymentDetails = response.body();
+                        if (couponEntered != null) {
+                            Config.logV("couponArraylist--code-------------------------" + couponArraylist);
+                            list.setVisibility(View.VISIBLE);
+                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppointmentActivity.this);
+                            list.setLayoutManager(mLayoutManager);
+                            mAdapter = new CouponlistAdapter(AppointmentActivity.this, s3couponList, couponEntered, couponArraylist, advancePaymentDetails, iCpn);
+                            list.setAdapter(mAdapter);
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            if (advancePaymentDetails.getEligibleJcashAmt().get("jCashAmt") != null && advancePaymentDetails.getEligibleJcashAmt().get("jCashAmt").getAsDouble() > 0) {
+                                cbJCash.setChecked(true);
+                                cbJCash.append(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(advancePaymentDetails.getEligibleJcashAmt().get("jCashAmt").getAsString())));
+                            } else {
+                                cbJCash.setChecked(false);
+                                cbJCash.setVisibility(View.GONE);
+                                llJCash.setVisibility(View.GONE);
+                            }
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2569,7 +2735,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             }
 
             @Override
-            public void onFailure(Call<CouponApliedOrNotDetails> call, Throwable t) {
+            public void onFailure(Call<AdvancePaymentDetails> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
@@ -2577,6 +2743,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
             }
         });
-        return couponApliedOrNotDetails;
+        return advancePaymentDetails;
     }
 }

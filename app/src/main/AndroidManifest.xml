@@ -37,7 +37,9 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.QuestionareActivity"></activity>
+        <activity android:name=".activities.JaldeeCashActivity"></activity>
+        <activity android:name=".activities.JaldeeWalletActivity" />
+        <activity android:name=".activities.QuestionareActivity" />
         <activity android:name=".activities.EditProfileActivity" />
         <activity android:name=".activities.ViewAttachmentActivity" />
         <activity android:name=".activities.CheckoutListActivity" />

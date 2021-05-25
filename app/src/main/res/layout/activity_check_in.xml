@@ -602,7 +602,7 @@
                 android:layout_marginRight="@dimen/default_padding"
                 android:background="@drawable/input_border_gray_bg"
                 android:orientation="vertical"
-                android:padding="@dimen/default_padding"
+                android:padding="@dimen/padding20"
                 android:visibility="visible">
 
                 <LinearLayout
@@ -617,22 +617,22 @@
                         android:id="@+id/txtservicepayment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingLeft="8dp"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="@dimen/dimen_15dp"
-                        android:layout_weight="0.7"
+                        android:layout_weight="0.3"
                         android:gravity="center_vertical"
                         android:text="@string/serve_pay"
                         android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_hint_11" />
+                        android:textSize="@dimen/txtsize_12" />
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                         android:id="@+id/txtserviceamount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
+                        android:layout_weight="0.7"
                         android:text=" "
                         android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_hint_11" />
+                        android:textSize="@dimen/txtsize_12" />
 
                 </LinearLayout>
 
@@ -647,23 +647,49 @@
                         android:id="@+id/txtprepay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingLeft="8dp"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="@dimen/dimen_15dp"
-                        android:layout_weight="0.7"
+                        android:layout_weight="0.3"
                         android:gravity="center_vertical"
                         android:text="@string/serve_prepay"
                         android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_hint_11" />
+                        android:textSize="@dimen/txtsize_12" />
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                         android:id="@+id/txtprepayamount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
+                        android:layout_weight="0.7"
                         android:text=""
                         android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_hint_11" />
+                        android:textSize="@dimen/txtsize_12" />
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_jCash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+                    <CheckBox
+                        android:id="@+id/cb_jCash"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="@dimen/dimen_0dp"
+                        android:checked="true"
+                        android:buttonTint="@color/blue"
+                        android:text="Use Jaldee cash balance : Rs "
+                        android:textColor="@color/gray"
+                        android:textSize="@dimen/txtsize_12"/>
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="33dp"
+                        android:text="Balance amount can be paid by other payment methods"
+                        android:textColor="@color/gray"
+                        android:textSize="@dimen/txtsize_12" />
                 </LinearLayout>
 
 
