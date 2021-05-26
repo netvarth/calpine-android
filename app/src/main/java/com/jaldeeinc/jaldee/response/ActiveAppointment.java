@@ -141,6 +141,11 @@ public class ActiveAppointment implements Serializable {
     boolean hasAttachment;
     String videoCallButton;
     String videoCallMessage;
+    String prescShortUrl;
+
+    public String getPrescShortUrl() {
+        return prescShortUrl;
+    }
 
     public String getVideoCallButton() {
         return videoCallButton;
