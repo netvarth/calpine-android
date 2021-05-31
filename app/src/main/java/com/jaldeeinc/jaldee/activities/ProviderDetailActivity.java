@@ -1743,7 +1743,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                 if (appt.getAppointServiceAvailability() != null) {
                                     serviceInfo.setAvailability(true);
                                     serviceInfo.setNextAvailableDate(appt.getAppointServiceAvailability().getNextAvailableDate());
-                                    serviceInfo.setNextAvailableTime(appt.getAppointServiceAvailability().getNextAvailable().split("-")[0]);
+                                    if (appt.getAppointServiceAvailability().getNextAvailable() != null) {
+                                        serviceInfo.setNextAvailableTime(appt.getAppointServiceAvailability().getNextAvailable().split("-")[0]);
+                                    }
 
                                 }
                                 // adding all the info

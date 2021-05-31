@@ -386,6 +386,8 @@ public interface ApiInterface {
     @POST("consumer/communications")
     Call<ResponseBody> PostMessage(@Query("account") String account, @Body RequestBody jsonObj);
 
+    @POST("consumer/communications")
+    Call<ResponseBody> postProviderMessage(@Query("account") String account, @Query("provider") String provider, @Body RequestBody jsonObj);
 
     @GET("consumer/communications")
     Call<ArrayList<InboxModel>> getMessage();
@@ -666,7 +668,7 @@ public interface ApiInterface {
     Call<ProfileModel> usrProfile(@Path("accId")  int account);
 
     @GET("consumer/questionnaire/service/{serviceId}/consumer/{consumerId}")
-    Call<Questionnaire> getAppointmentQuestions(@Path("serviceId") String serviceId, @Path("consumerId") String consumerId, @Query("account") int account);
+    Call<Questionnaire> getAppointmentQuestions(@Path("serviceId") int serviceId, @Path("consumerId") int consumerId, @Query("account") int account);
 
     @GET("provider/account/settings/config/{uniqueId}/settings,terminologies,coupon,providerCoupon,location,businessProfile,virtualFields,services,apptServices,donationServices,departmentProviders")
     Call<Provider> getProviderDetails(@Path("uniqueId") int uniqueId);
@@ -688,6 +690,9 @@ public interface ApiInterface {
 
     @GET("provider/imagePropries/logo/{queueId}")
     Call<LinkedHashMap<String, ArrayList<ProfilePicture>>> getLogo(@Path("queueId") String id);
+
+    @POST("appointment/questionnaire/{uid}")
+    Call<ResponseBody> submitAppointmentQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj);
 
 
 

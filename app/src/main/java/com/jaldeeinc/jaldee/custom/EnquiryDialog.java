@@ -51,16 +51,17 @@ public class EnquiryDialog extends Dialog {
     private CustomTextViewSemiBold tvTo;
     private EditText etMessage;
     private Button btCancel, btSend;
-    int uniqueId;
+    int uniqueId,providerid;
     String providerName;
     private ISendMessage iSendMessage;
 
-    public EnquiryDialog(@NonNull Context context, String businessName, ISendMessage iSendMessage, int id) {
+    public EnquiryDialog(@NonNull Context context, String businessName, ISendMessage iSendMessage, int id, int providerid) {
         super(context);
         this.context = context;
         this.providerName = businessName;
         this.iSendMessage = iSendMessage;
         this.uniqueId = id;
+        this.providerid = providerid;
 
     }
 
@@ -145,7 +146,7 @@ public class EnquiryDialog extends Dialog {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Call<ResponseBody> call = apiService.PostMessage(accountID, requestBody);
+        Call<ResponseBody> call = apiService.postProviderMessage(accountID,String.valueOf(providerid), requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

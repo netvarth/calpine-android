@@ -3,7 +3,9 @@ package com.jaldeeinc.jaldee.response;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ListProperties {
+import java.io.Serializable;
+
+public class ListProperties implements Serializable {
 
     @SerializedName("minAnswers")
     @Expose

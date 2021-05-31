@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import com.jaldeeinc.jaldee.Interface.IDocumentType;
 import com.jaldeeinc.jaldee.activities.QuestionareActivity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class MultipleSelectionSpinner extends AppCompatSpinner implements
   private int sbLength;
   private IDocumentType iDocumentType;
   private int spinnerId;
+  private ArrayList<SpinnerItem> items = new ArrayList<>();
 
   public MultipleSelectionSpinner(Context context) {
     super(context);

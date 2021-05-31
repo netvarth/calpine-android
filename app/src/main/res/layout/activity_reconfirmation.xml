@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jaldeeinc.jaldee.activities.ReconfirmationActivity">
+
+
+    <LinearLayout
+        android:id="@+id/LservicePrepay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_padding"
+        android:layout_marginTop="@dimen/padding7"
+        android:layout_marginRight="@dimen/default_padding"
+        android:background="@drawable/input_border_gray_bg"
+        android:orientation="vertical"
+        android:padding="@dimen/default_padding"
+        android:visibility="gone">
+
+
+        <LinearLayout
+            android:id="@+id/ll_serviceamount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding2"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/txtservicepayment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/padding2"
+                android:gravity="center"
+                android:text="@string/serve_pay"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_hint_11" />
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                android:id="@+id/txtserviceamount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text=" "
+                android:gravity="center"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_hint_11" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll_prepay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/txtprepay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/padding2"
+                android:gravity="center"
+                android:text="@string/serve_prepay"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_hint_11" />
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                android:id="@+id/txtprepayamount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_hint_11" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_submit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/padding45"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/padding5"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginBottom="@dimen/dimen_15dp"
+        app:cardBackgroundColor="@color/location_theme"
+        app:cardCornerRadius="@dimen/padding3">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                android:id="@+id/tv_buttonName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Confirm Appointment"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dimen_18sp">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+            <ImageView
+                android:layout_width="@dimen/dimen_20dp"
+                android:layout_height="@dimen/dimen_16sp"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/txtsize_10"
+                android:src="@drawable/rightarrow"
+                app:tint="@color/white">
+
+            </ImageView>
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+</RelativeLayout>

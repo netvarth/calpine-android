@@ -7,8 +7,8 @@ android {
         applicationId "com.nv.ynw"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 69
-        versionName "1.8.3"
+        versionCode 70
+        versionName "1.4.62"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         multiDexEnabled true
     }
@@ -113,6 +113,8 @@ dependencies {
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
 
     implementation 'com.github.st235:expandablebottombar:0.4'
+
+
 
 
 

@@ -247,7 +247,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
 //                    intent.putExtra("name", providerDetails.getBusinessName());
 //                    startActivity(intent);
 
-                    enquiryDialog = new EnquiryDialog(mContext, providerDetails.getBusinessName(), iSendMessage, providerDetails.getId());
+                    enquiryDialog = new EnquiryDialog(mContext, providerDetails.getBusinessName(), iSendMessage, providerDetails.getId(),providerId);
                     enquiryDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     enquiryDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     enquiryDialog.show();

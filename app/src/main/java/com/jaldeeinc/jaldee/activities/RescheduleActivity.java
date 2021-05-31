@@ -94,10 +94,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -956,10 +960,44 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
 
                     } else if (response.code() == 422) {
 
-                        DynamicToast.make(RescheduleActivity.this, response.errorBody().string(), AppCompatResources.getDrawable(
-                                RescheduleActivity.this, R.drawable.ic_info_black),
-                                ContextCompat.getColor(RescheduleActivity.this, R.color.white), ContextCompat.getColor(RescheduleActivity.this, R.color.red), Toast.LENGTH_SHORT).show();
+                        if (response.errorBody() != null) {
+                            String errorString = response.errorBody().string();
 
+
+                            Config.logV("Error String-----------" + errorString);
+
+                            Map<String, String> tokens = new HashMap<String, String>();
+                            tokens.put("Customer", Config.toTitleCase(mSearchTerminology.getCustomer()));
+                            tokens.put("provider", mSearchTerminology.getProvider());
+                            tokens.put("arrived", mSearchTerminology.getArrived());
+                            tokens.put("waitlisted", mSearchTerminology.getWaitlist());
+
+                            tokens.put("start", mSearchTerminology.getStart());
+                            tokens.put("cancelled", mSearchTerminology.getCancelled());
+                            tokens.put("done", mSearchTerminology.getDone());
+
+
+                            StringBuffer sb = new StringBuffer();
+
+                            Pattern p3 = Pattern.compile("\\[(.*?)]");
+
+                            Matcher matcher = p3.matcher(errorString);
+
+                            while (matcher.find()) {
+                                System.out.println(matcher.group(1));
+                                matcher.appendReplacement(sb, tokens.get(matcher.group(1)));
+                            }
+                            matcher.appendTail(sb);
+
+                            System.out.println("SubString@@@@@@@@@@@@@" + sb.toString());
+
+
+                            //  Toast.makeText(mContext, sb.toString(), Toast.LENGTH_LONG).show();
+
+                            DynamicToast.make(RescheduleActivity.this, sb.toString(), AppCompatResources.getDrawable(
+                                    RescheduleActivity.this, R.drawable.ic_info_black),
+                                    ContextCompat.getColor(RescheduleActivity.this, R.color.white), ContextCompat.getColor(RescheduleActivity.this, R.color.red), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -3,7 +3,9 @@ package com.jaldeeinc.jaldee.response;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PlainTextProperties {
+import java.io.Serializable;
+
+public class PlainTextProperties implements Serializable {
 
     @SerializedName("minNoOfLetter")
     @Expose

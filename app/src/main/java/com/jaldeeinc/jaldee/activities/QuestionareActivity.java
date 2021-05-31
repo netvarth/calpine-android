@@ -50,6 +50,9 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomEditTextRegular;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
+import com.jaldeeinc.jaldee.custom.MultiSpinnerListener;
+import com.jaldeeinc.jaldee.custom.MultiSpinnerSearch;
 import com.jaldeeinc.jaldee.custom.MultipleSelectionSpinner;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.response.Questionnaire;
@@ -67,6 +70,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -84,8 +88,11 @@ public class QuestionareActivity extends AppCompatActivity implements IDocumentT
     String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
     private int GALLERY_FOR_ONE = 1, CAMERA_FOR_ONE = 2;
+    private int GALLERY = 3, CAMERA = 4;
+
     private Uri mImageUri;
     File f;
+    ArrayList<String> multipleFilePaths = new ArrayList<>();
     String singleFilePath, fileName;
     Bitmap bitmap;
     LinearLayout llFileName;
@@ -109,7 +116,7 @@ public class QuestionareActivity extends AppCompatActivity implements IDocumentT
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<Questionnaire> call = apiService.getAppointmentQuestions("36091", "0", 125976);
+        Call<Questionnaire> call = apiService.getAppointmentQuestions(36958, 0, 126254);
         call.enqueue(new Callback<Questionnaire>() {
             @Override
             public void onResponse(Call<Questionnaire> call, Response<Questionnaire> response) {
@@ -173,8 +180,8 @@ public class QuestionareActivity extends AppCompatActivity implements IDocumentT
 
                 if (question.getGetQuestion().getFileProperties() != null && question.getGetQuestion().getFileProperties().getAllowedDocuments() != null && question.getGetQuestion().getFileProperties().getAllowedDocuments().size() > 1) {
 
-                    MultipleSelectionSpinner multipleSelectionSpinner = new MultipleSelectionSpinner(this, iDocumentType, R.id.id2);
-                    multipleSelectionSpinner.setItems(question.getGetQuestion().getFileProperties().getAllowedDocuments());
+                    MultiSpinnerSearch multipleSelectionSpinner = new MultiSpinnerSearch(this);
+//                    multipleSelectionSpinner.setItems(question.getGetQuestion().getFileProperties().getAllowedDocuments());
                     LinearLayout.LayoutParams spinnerParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     spinnerParams.setMargins(35, 15, 35, 0);
                     multipleSelectionSpinner.setLayoutParams(spinnerParams);
@@ -183,27 +190,23 @@ public class QuestionareActivity extends AppCompatActivity implements IDocumentT
                     linearLayout.addView(multipleSelectionSpinner);
 
 
-//                    multipleSelectionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                        @Override
-//                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//
-//                            if (i > 0) {
-//                                CardView cvFile = (CardView) findViewById(30 + (i -1));
-//                                cvFile.setVisibility(View.VISIBLE);
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//                        }
-//                    });
+                    ArrayList<KeyPairBoolData> list = new ArrayList<>();
+
 
                     for (int i = 0; i < question.getGetQuestion().getFileProperties().getAllowedDocuments().size(); i++) {
+
+                        KeyPairBoolData obj = new KeyPairBoolData();
+
+                        LinearLayout imagesLayout = new LinearLayout(this);
+                        imagesLayout.setOrientation(LinearLayout.HORIZONTAL);
+                        LinearLayout.LayoutParams il = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        il.setMargins(35, 15, 35, 15);
+                        imagesLayout.setLayoutParams(il);
 
                         CardView cardView = new CardView(this);
                         CustomTextViewSemiBold tvUpload = new CustomTextViewSemiBold(this);
                         String fileName = question.getGetQuestion().getFileProperties().getAllowedDocuments().get(i);
+                        obj.setName(fileName);
                         tvUpload.setText("Upload " + fileName);
                         tvUpload.setTextSize(15);
                         tvUpload.setTextColor(mContext.getResources().getColor(R.color.title_color));
@@ -212,19 +215,86 @@ public class QuestionareActivity extends AppCompatActivity implements IDocumentT
                         upload.setMargins(35, 15, 35, 15);
                         tvUpload.setLayoutParams(upload);
                         tvUpload.setGravity(Gravity.CENTER);
-                        LinearLayout.LayoutParams cardUpload = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                        cardUpload.setMargins(35, 15, 35, 15);
-                        cardView.setLayoutParams(cardUpload);
                         cardView.setCardBackgroundColor(getResources().getColor(R.color.spinnerbg));
                         cardView.addView(tvUpload);
                         cardView.setId(i + 30);
+                        obj.setViewId(i + 30);
+                        obj.setSelected(false);
                         cardView.setVisibility(View.GONE);
-                        linearLayout.addView(cardView);
+                        imagesLayout.addView(cardView);
 
+                        LinearLayout nameLayout = new LinearLayout(this);
+                        nameLayout.setId(i + 100);
+                        obj.setLayoutId(i+100);
+                        CustomTextViewMedium tvFileName = new CustomTextViewMedium(this);
+                        tvFileName.setText("fileName");
+                        tvFileName.setId(i + 200);
+                        obj.setNameViewId(i+200);
+                        LinearLayout.LayoutParams fileNameUpload = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        fileNameUpload.setMargins(35, 15, 35, 15);
+                        tvFileName.setLayoutParams(fileNameUpload);
+                        tvFileName.setGravity(Gravity.CENTER);
+                        nameLayout.addView(tvFileName);
+
+                        ImageView ivClose = new ImageView(this);
+                        ivClose.setImageDrawable(getResources().getDrawable(R.drawable.close));
+                        LinearLayout.LayoutParams closeIcon = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        closeIcon.setMargins(35, 15, 35, 15);
+                        ivClose.setLayoutParams(closeIcon);
+                        ivClose.setId(i + 300);
+
+                        ivClose.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+
+
+                            }
+                        });
+
+                        nameLayout.addView(ivClose);
+                        nameLayout.setVisibility(View.GONE);
+
+                        imagesLayout.addView(nameLayout);
+
+                        linearLayout.addView(imagesLayout);
+                        obj.setObject(cardView);
+                        list.add(obj);
                     }
 
+                    multipleSelectionSpinner.setItems(list, new MultiSpinnerListener() {
+                        @Override
+                        public void onItemsSelected(List<KeyPairBoolData> selectedItems) {
 
-                } else if (question.getGetQuestion().getFileProperties() != null && question.getGetQuestion().getFileProperties().getAllowedDocuments() != null && question.getGetQuestion().getFileProperties().getAllowedDocuments().size() == 1) {
+                            for (int i = 0; i < list.size(); i++) {
+                                    CardView cvFile = (CardView) findViewById((int)list.get(i).getViewId());
+                                    cvFile.setVisibility(View.GONE);
+                            }
+
+                            for (int i = 0; i < selectedItems.size(); i++) {
+                                if (selectedItems.get(i).isSelected()) {
+                                    CardView cvFile = (CardView) findViewById((int)selectedItems.get(i).getViewId());
+                                    LinearLayout nLayout = (LinearLayout) findViewById((int)selectedItems.get(i).getLayoutId());
+                                    CustomTextViewMedium nTextView = (CustomTextViewMedium) findViewById((int)selectedItems.get(i).getNameViewId());
+
+                                    cvFile.setVisibility(View.VISIBLE);
+                                    nLayout.setVisibility(View.VISIBLE);
+
+                                    cvFile.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+
+                                            openImageOptions();
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
+
+
+                }
+                else if (question.getGetQuestion().getFileProperties() != null && question.getGetQuestion().getFileProperties().getAllowedDocuments() != null && question.getGetQuestion().getFileProperties().getAllowedDocuments().size() == 1) {
 
                     LinearLayout fileLayout = new LinearLayout(this);
                     fileLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -487,6 +557,110 @@ public class QuestionareActivity extends AppCompatActivity implements IDocumentT
 
     }
 
+    private void openImageOptions() {
+
+        try {
+
+            Dialog dialog = new Dialog(QuestionareActivity.this);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.camera_options);
+            dialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+            DisplayMetrics metrics = QuestionareActivity.this.getResources().getDisplayMetrics();
+            int width = (int) (metrics.widthPixels * 1);
+            dialog.getWindow().setGravity(Gravity.BOTTOM);
+            dialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout llGallery = dialog.findViewById(R.id.ll_gallery);
+            LinearLayout llCamera = dialog.findViewById(R.id.ll_camera);
+
+            llCamera.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    openCamera();
+                    dialog.dismiss();
+                }
+            });
+
+            llGallery.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    openGallery();
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openGallery() {
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{
+                            Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
+
+                    return;
+                } else {
+                    Intent intent = new Intent();
+                    intent.setType("*/*");
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+                }
+            } else {
+
+                Intent intent = new Intent();
+                intent.setType("*/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    private void openCamera() {
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+
+                    requestPermissions(new String[]{
+                            Manifest.permission.CAMERA}, CAMERA);
+
+                    return;
+                } else {
+                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    Intent cameraIntent = new Intent();
+                    cameraIntent.setType("image/*");
+                    cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+                    cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(intent, CAMERA);
+                }
+            } else {
+
+                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                Intent cameraIntent = new Intent();
+                cameraIntent.setType("image/*");
+                cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+                cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent, CAMERA);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
     private void openGalleryForOneImage() {
 
         try {
@@ -666,7 +840,8 @@ public class QuestionareActivity extends AppCompatActivity implements IDocumentT
                 }
             }
 
-        } else if (requestCode == CAMERA_FOR_ONE) {
+        }
+        else if (requestCode == CAMERA_FOR_ONE) {
             if (data != null) {
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 String path = saveImage(bitmap);
@@ -679,6 +854,96 @@ public class QuestionareActivity extends AppCompatActivity implements IDocumentT
                     fileName = getFileName(mImageUri);
                     llFileName.setVisibility(View.VISIBLE);
                     tvSingleFileName.setText(fileName);
+
+                }
+                try {
+                    bytes.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }
+        else if (requestCode == GALLERY){
+
+            if (data != null) {
+                try {
+                    if (data.getData() != null) {
+                        Uri uri = data.getData();
+                        String orgFilePath = getRealPathFromURI(uri, this);
+                        String filepath = "";//default fileName
+
+                        String mimeType = this.mContext.getContentResolver().getType(uri);
+                        String uriString = uri.toString();
+                        String extension = "";
+                        if (uriString.contains(".")) {
+                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
+                        }
+
+                        if (mimeType != null) {
+                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
+                        }
+                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                            if (orgFilePath == null) {
+                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
+                            }
+                        } else {
+                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        multipleFilePaths.add(orgFilePath);
+
+
+                    } else if (data.getClipData() != null) {
+                        ClipData mClipData = data.getClipData();
+                        for (int i = 0; i < mClipData.getItemCount(); i++) {
+                            ClipData.Item item = mClipData.getItemAt(i);
+                            Uri imageUri = item.getUri();
+                            String orgFilePath = getRealPathFromURI(imageUri, this);
+                            String filepath = "";//default fileName
+
+                            String mimeType = mContext.getContentResolver().getType(imageUri);
+                            String uriString = imageUri.toString();
+                            String extension = "";
+                            if (uriString.contains(".")) {
+                                extension = uriString.substring(uriString.lastIndexOf(".") + 1);
+                            }
+
+                            if (mimeType != null) {
+                                extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
+                            }
+                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                                if (orgFilePath == null) {
+                                    orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
+                                }
+                            } else {
+                                Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            multipleFilePaths.add(orgFilePath);
+
+                        }
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } else if (requestCode == CAMERA){
+
+            if (data != null) {
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                String path = saveImage(bitmap);
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                if (path != null) {
+                    mImageUri = Uri.parse(path);
+
+                    multipleFilePaths.add(path);
 
                 }
                 try {

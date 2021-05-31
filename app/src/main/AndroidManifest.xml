@@ -23,12 +23,12 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
-
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
 
-
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:name=".common.MyApplication"
@@ -43,8 +43,13 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.WebViewActivity"
+        <activity android:name=".activities.ReconfirmationActivity"
             android:screenOrientation="portrait"></activity>
+        <activity android:name=".activities.CustomQuestionnaire"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.WebViewActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.QuestionareActivity"
             android:screenOrientation="portrait" />

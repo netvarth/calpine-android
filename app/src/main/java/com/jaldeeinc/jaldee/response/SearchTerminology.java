@@ -1,10 +1,12 @@
 package com.jaldeeinc.jaldee.response;
 
+import java.io.Serializable;
+
 /**
  * Created by sharmila on 31/7/18.
  */
 
-public class SearchTerminology {
+public class SearchTerminology implements Serializable {
 
     String customer;
     String provider;

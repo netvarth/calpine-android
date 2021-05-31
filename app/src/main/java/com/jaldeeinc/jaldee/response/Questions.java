@@ -3,7 +3,9 @@ package com.jaldeeinc.jaldee.response;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Questions {
+import java.io.Serializable;
+
+public class Questions implements Serializable {
 
     @SerializedName("question")
     @Expose

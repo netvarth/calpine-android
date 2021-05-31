@@ -3,7 +3,9 @@ package com.jaldeeinc.jaldee.response;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class DateProperties {
+import java.io.Serializable;
+
+public class DateProperties implements Serializable {
 
     @SerializedName("startDate")
     @Expose

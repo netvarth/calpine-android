@@ -3,7 +3,9 @@ package com.jaldeeinc.jaldee.response;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class NumberProperties {
+import java.io.Serializable;
+
+public class NumberProperties implements Serializable {
 
     @SerializedName("start")
     @Expose
