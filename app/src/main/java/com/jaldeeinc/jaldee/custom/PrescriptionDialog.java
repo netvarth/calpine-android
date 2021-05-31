@@ -67,17 +67,17 @@ public class PrescriptionDialog extends Dialog {
         tv_share = findViewById(R.id.presc_share);
 
 
-        if(bookings.getCheckInInfo()!=null && bookings.getCheckInInfo().getPrescUrl()!=null){
-            url = bookings.getCheckInInfo().getPrescUrl();
+        if(bookings.getCheckInInfo()!=null && bookings.getCheckInInfo().getPrescShortUrl()!=null){
+            url = bookings.getCheckInInfo().getPrescShortUrl();
         }
-        else if(bookings.getAppointmentInfo()!=null && bookings.getAppointmentInfo().getPrescUrl()!=null){
-            url = bookings.getAppointmentInfo().getPrescUrl();
+        else if(bookings.getAppointmentInfo()!=null && bookings.getAppointmentInfo().getPrescShortUrl()!=null){
+            url = bookings.getAppointmentInfo().getPrescShortUrl();
         }
-        else if(checkInInfo!=null && checkInInfo.getPrescUrl()!=null){
-            url = checkInInfo.getPrescUrl();
+        else if(checkInInfo!=null && checkInInfo.getPrescShortUrl()!=null){
+            url = checkInInfo.getPrescShortUrl();
         }
-        else if(appointmentInfo!=null && appointmentInfo.getPrescUrl()!=null){
-            url = appointmentInfo.getPrescUrl();
+        else if(appointmentInfo!=null && appointmentInfo.getPrescShortUrl()!=null){
+            url = appointmentInfo.getPrescShortUrl();
         }
 
 

@@ -218,11 +218,15 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         Spanned s2 = null;
         Spanned s3 = null;
         GradientDrawable payMthdBtnEnabled = new GradientDrawable();
-        payMthdBtnEnabled.setColor(0xFFFFFFFF); //white background
-        payMthdBtnEnabled.setStroke(2, Color.parseColor("#F1B51C"));
+        payMthdBtnEnabled.setColor(Color.parseColor("#F1B51C"));
+        //payMthdBtnEnabled.setStroke(2, Color.parseColor("#F1B51C"));
         payMthdBtnEnabled.setCornerRadius(15);
         GradientDrawable payMthdBtnDisabled = new GradientDrawable();
-        payMthdBtnDisabled.setColor(Color.parseColor("#f1f0f0"));
+       // payMthdBtnDisabled.setColor(Color.parseColor("#f1f0f0"));
+        payMthdBtnDisabled.setColor(Color.parseColor("#FFFFFF"));
+
+        payMthdBtnDisabled.setStroke(2, Color.parseColor("#d5d5d5"));
+
         payMthdBtnDisabled.setCornerRadius(15);
         cvPayTm.setBackground(payMthdBtnDisabled);
         cvRazorpay.setBackground(payMthdBtnDisabled);

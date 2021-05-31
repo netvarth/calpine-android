@@ -237,6 +237,14 @@
                                     android:text="Female"
                                     android:textColor="@color/title_grey"
                                     android:textSize="@dimen/txtsize_hint"></RadioButton>
+
+                                <RadioButton
+                                    android:id="@+id/radioOthr"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Other"
+                                    android:textColor="@color/title_grey"
+                                    android:textSize="@dimen/txtsize_hint"></RadioButton>
                             </RadioGroup>
                         </LinearLayout>
 
