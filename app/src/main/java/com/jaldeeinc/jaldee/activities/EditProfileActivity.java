@@ -272,7 +272,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
             txtdob.setText(finalDate);
         }
-
         if (getProfile.getGender() != null) {
             if (!getProfile.getGender().equalsIgnoreCase("")) {
                 radiogender = getProfile.getGender();
