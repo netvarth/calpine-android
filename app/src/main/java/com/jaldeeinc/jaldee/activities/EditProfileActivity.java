@@ -54,7 +54,7 @@ public class EditProfileActivity extends AppCompatActivity {
     RadioGroup radio_gender;
     String radiogender = "";
     Button btn_edtSubmit;
-    RadioButton rMale, rFemale;
+    RadioButton rMale, rFemale, rOther;
     TextView tv_phone;
     TextInputEditText tv_email;
     DatabaseHandler db;
@@ -95,8 +95,10 @@ public class EditProfileActivity extends AppCompatActivity {
         radio_gender = (RadioGroup)findViewById(R.id.radiogender);
         rFemale = (RadioButton)findViewById(R.id.radioF);
         rMale = (RadioButton)findViewById(R.id.radioM);
+        rOther = (RadioButton) findViewById(R.id.radioOthr);
         tv_phone = (TextView)findViewById(R.id.txtphone);
         tv_email = (TextInputEditText)findViewById(R.id.txtemail);
+
 
 //        txtfirstname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 //        txtlastname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
@@ -139,11 +141,14 @@ public class EditProfileActivity extends AppCompatActivity {
                     case R.id.radioM:
                         // do operations specific to this selection
                         radiogender = "male";
-
                         break;
                     case R.id.radioF:
                         // do operations specific to this selection
                         radiogender = "female";
+                        break;
+                    case R.id.radioOthr:
+                        // do operations specific to this selection
+                        radiogender = "other";
                         break;
 
                 }
@@ -273,8 +278,10 @@ public class EditProfileActivity extends AppCompatActivity {
                 radiogender = getProfile.getGender();
                 if (radiogender.equalsIgnoreCase("Male")) {
                     rMale.setChecked(true);
-                } else {
+                } else if (radiogender.equalsIgnoreCase("Female")) {
                     rFemale.setChecked(true);
+                } else  if (radiogender.equalsIgnoreCase("Other")){
+                    rOther.setChecked(true);
                 }
             }
         } else {
@@ -304,8 +311,10 @@ public class EditProfileActivity extends AppCompatActivity {
            /* if(radiogender.equalsIgnoreCase("")){
                 radiogender=getGender;
             }*/
-            jsonObj.put("gender", radiogender);
 
+            if(radio_gender.getCheckedRadioButtonId() != -1) {
+                jsonObj.put("gender", radiogender);
+            }
             String selectedDate = txtdob.getText().toString();
 
             String finalDate = "";
