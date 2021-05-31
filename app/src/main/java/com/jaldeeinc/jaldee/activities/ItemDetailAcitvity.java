@@ -129,6 +129,9 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
     @BindView(R.id.ll_actions)
     LinearLayout llActions;
 
+    @BindView(R.id.tv_similarItems)
+    CustomTextViewSemiBold tvSimilarItems;
+
     private int accountId, uniqueId;
     private CardView cvPlus;
     private Context mContext;
@@ -183,7 +186,7 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
                 // to set item Name
                 tvItemName.setText(itemDetails.getItems().getDisplayName());
 
-                if (itemDetails.getItems().isStockAvailable()){
+                if (itemDetails.getItems().isStockAvailable()) {
                     tvStock.setVisibility(View.GONE);
                     llActions.setEnabled(true);
                 } else {
@@ -420,6 +423,12 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
         ArrayList<CatalogItem> catalogItemsList = new ArrayList<>();
         catalogItemsList = updateCatalogItemsDiscount(remainingItemsList);
         catalogItemsList = updateCatalogItemsQuantity(catalogItemsList);
+        if (catalogItemsList != null && catalogItemsList.size() > 0) {
+
+            tvSimilarItems.setVisibility(View.VISIBLE);
+        } else {
+            tvSimilarItems.setVisibility(View.GONE);
+        }
         detailPageItemsAdapter = new DetailPageItemsAdapter(catalogItemsList, mContext, false, iItemInterface, accountId, uniqueId);
         rvItems.setAdapter(detailPageItemsAdapter);
         rvItems.setItemTransformer(new ScaleTransformer.Builder().setMinScale(0.8f).build());

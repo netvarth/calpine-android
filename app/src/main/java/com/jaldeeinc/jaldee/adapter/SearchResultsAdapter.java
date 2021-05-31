@@ -222,7 +222,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     }
                 });
 
-                if (searchdetailList.getCoupon_enabled() >= 1 || searchdetailList.getFirst_checkin_provider_coupon_count() >=1) {
+                if (searchdetailList.getCoupon_enabled() >= 1 || searchdetailList.getFirst_checkin_provider_coupon_count() >= 1) {
                     myViewHolder.ivProviderCoupon.setVisibility(View.VISIBLE);
 
                     myViewHolder.ivProviderCoupon.setOnClickListener(new View.OnClickListener() {
@@ -231,7 +231,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                             Intent iCoupons = new Intent(context, CouponActivity.class);
                             iCoupons.putExtra("uniqueID", searchdetailList.getUniqueid());
-                            if (searchdetailList.getId()!= null) {
+                            if (searchdetailList.getId() != null) {
                                 iCoupons.putExtra("accountId", searchdetailList.getId().split("-")[0]);
                             }
                             context.startActivity(iCoupons);
@@ -273,14 +273,16 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 // to set no of doctors only for "Hospital" subdomain
 
-                if (searchdetailList.getSub_sector() != null && searchdetailList.getSub_sector().equalsIgnoreCase("hospital")){
+                if (searchdetailList.getSub_sector() != null && searchdetailList.getSub_sector().equalsIgnoreCase("hospital")) {
                     if (searchdetailList.getProviders() != null) {
                         myViewHolder.tvNoOfDoctors.setVisibility(View.VISIBLE);
-                        if (searchdetailList.getProviders().size() > 1){
+                        if (searchdetailList.getProviders().size() > 1) {
                             myViewHolder.tvNoOfDoctors.setText(searchdetailList.getProviders().size() + " Doctors");
                         } else {
                             myViewHolder.tvNoOfDoctors.setText(searchdetailList.getProviders().size() + " Doctor");
                         }
+                    } else {
+                        myViewHolder.tvNoOfDoctors.setVisibility(View.GONE);
                     }
                 } else {
                     myViewHolder.tvNoOfDoctors.setVisibility(View.GONE);
@@ -413,7 +415,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         }
                         setServices(myViewHolder, searchdetailList.getServices());
                         handleWaitlist(formattedDate, searchdetailList, myViewHolder);
-                        handleAppointment(searchdetailList,myViewHolder,formattedDate);
+                        handleAppointment(searchdetailList, myViewHolder, formattedDate);
 
 
                     } else if (actionName.equalsIgnoreCase("appointment")) {
@@ -453,10 +455,10 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     myViewHolder.llAction.setVisibility(View.GONE);
                 }
 
-                if (myViewHolder.llWaitlist.getVisibility() == View.VISIBLE || myViewHolder.llAppointment.getVisibility() == View.VISIBLE){
+                if (myViewHolder.llWaitlist.getVisibility() == View.VISIBLE || myViewHolder.llAppointment.getVisibility() == View.VISIBLE) {
 
                     myViewHolder.rlStatus.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     myViewHolder.rlStatus.setVisibility(View.GONE);
                 }
 
@@ -832,6 +834,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         });
 
     }
+
     private void getAccProfile(SearchListModel searchdetailList) {
         String accountId = "0";
         accountId = searchdetailList.getId().split("-")[0];
@@ -850,22 +853,23 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
-                            Intent intent = new Intent();
-                            intent.setAction(Intent.ACTION_VIEW);
-                            intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                            boolean claimable = false;
-                            if (searchdetailList.getClaimable() != null && searchdetailList.getClaimable().equalsIgnoreCase("1")) {
-                                claimable = true;
-                            }
-                            String accountId = "0";
-                            accountId = searchdetailList.getId().split("-")[0];
-                            intent.setData(Uri.parse(Constants.URL + "business/signup?" + "claimable=" + claimable + "&phoneNo=" + response.body().getUserprofile().getPrimaryMobileNo() +"&accountId=" + accountId + "&sector=" + searchdetailList.getSectorname() + "&subSector=" + searchdetailList.getSub_sector()));
-                            context.startActivity(intent);
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                        boolean claimable = false;
+                        if (searchdetailList.getClaimable() != null && searchdetailList.getClaimable().equalsIgnoreCase("1")) {
+                            claimable = true;
+                        }
+                        String accountId = "0";
+                        accountId = searchdetailList.getId().split("-")[0];
+                        intent.setData(Uri.parse(Constants.URL + "business/signup?" + "claimable=" + claimable + "&phoneNo=" + response.body().getUserprofile().getPrimaryMobileNo() + "&accountId=" + accountId + "&sector=" + searchdetailList.getSectorname() + "&subSector=" + searchdetailList.getSub_sector()));
+                        context.startActivity(intent);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ProfileModel> call, Throwable t) {
                 // Log error here since request failed
@@ -1044,7 +1048,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             rlStatusBar = view.findViewById(R.id.rl_statusBar);
             llActionBar = view.findViewById(R.id.ll_actionBar);
             llCoupons = view.findViewById(R.id.ll_coupons);
-            tvNoOfDoctors  = view.findViewById(R.id.tv_noofDoctors);
+            tvNoOfDoctors = view.findViewById(R.id.tv_noofDoctors);
 
         }
     }
