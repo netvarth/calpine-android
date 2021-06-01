@@ -423,7 +423,7 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
         ArrayList<CatalogItem> catalogItemsList = new ArrayList<>();
         catalogItemsList = updateCatalogItemsDiscount(remainingItemsList);
         catalogItemsList = updateCatalogItemsQuantity(catalogItemsList);
-        if (catalogItemsList != null && catalogItemsList.size() > 0) {
+        if (catalogItemsList.size() > 0) {
 
             tvSimilarItems.setVisibility(View.VISIBLE);
         } else {

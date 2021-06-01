@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -33,6 +34,7 @@ public class PrescriptionDialog extends Dialog {
     private ActiveAppointment appointmentInfo;
     private String type = "";
     private String url ="";
+    private String longUrl = "";
 
 
     public PrescriptionDialog(@NonNull Context context, boolean isActive, Bookings bookings) {
@@ -69,15 +71,27 @@ public class PrescriptionDialog extends Dialog {
 
         if(bookings.getCheckInInfo()!=null && bookings.getCheckInInfo().getPrescShortUrl()!=null){
             url = bookings.getCheckInInfo().getPrescShortUrl();
+            if (bookings.getCheckInInfo().getPrescUrl() != null) {
+                longUrl = bookings.getCheckInInfo().getPrescUrl();
+            }
         }
         else if(bookings.getAppointmentInfo()!=null && bookings.getAppointmentInfo().getPrescShortUrl()!=null){
             url = bookings.getAppointmentInfo().getPrescShortUrl();
+            if (bookings.getAppointmentInfo().getPrescUrl() != null) {
+                longUrl = bookings.getAppointmentInfo().getPrescUrl();
+            }
         }
         else if(checkInInfo!=null && checkInInfo.getPrescShortUrl()!=null){
             url = checkInInfo.getPrescShortUrl();
+            if (checkInInfo.getPrescUrl() != null) {
+                longUrl = checkInInfo.getPrescUrl();
+            }
         }
         else if(appointmentInfo!=null && appointmentInfo.getPrescShortUrl()!=null){
             url = appointmentInfo.getPrescShortUrl();
+            if (appointmentInfo.getPrescUrl() != null) {
+                longUrl = appointmentInfo.getPrescUrl();
+            }
         }
 
 
@@ -108,11 +122,14 @@ public class PrescriptionDialog extends Dialog {
                         // Download code here
 
                         File file = new File(Uri.parse(url).toString());
-                        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+                        Uri uri = Uri.parse(url);
+                        DownloadManager.Request request = new DownloadManager.Request(uri);
                         request.setDescription(file.getName());
                         request.setTitle(file.getName());
-                        // request.setMimeType(".jpg");
-// in order for this if to run, you must use the android 3.2 to compile your app
+                        request.setMimeType(getMimeType(longUrl));
+//                        request.setMimeType("application/pdf");
+//                        request.setMimeType("image/jpeg");
+                        // in order for this if to run, you must use the android 3.2 to compile your app
                         request.allowScanningByMediaScanner();
                         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, url);
@@ -128,9 +145,15 @@ public class PrescriptionDialog extends Dialog {
             }
         });
 
+    }
 
-
-
+    public static String getMimeType(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        return type;
     }
 
     private static Activity unwrap(Context context) {
