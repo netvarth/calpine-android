@@ -624,7 +624,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/padding2"
                         android:gravity="center"
-                        android:text="@string/serve_pay"
+                        android:text="Service Fee"
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_hint_11" />
 
