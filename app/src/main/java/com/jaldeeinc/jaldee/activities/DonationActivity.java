@@ -460,7 +460,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                     emailEditWindow.show();
                     DisplayMetrics metrics = DonationActivity.this.getResources().getDisplayMetrics();
                     int width = (int) (metrics.widthPixels * 1);
-                    emailEditWindow.getWindow().setGravity(Gravity.BOTTOM);
+                    emailEditWindow.getWindow().setGravity(Gravity.CENTER);
                     emailEditWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                 }
                 return false;
@@ -481,7 +481,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                         mobileNumberDialog.show();
                         DisplayMetrics metrics = DonationActivity.this.getResources().getDisplayMetrics();
                         int width = (int) (metrics.widthPixels * 1);
-                        mobileNumberDialog.getWindow().setGravity(Gravity.BOTTOM);
+                        mobileNumberDialog.getWindow().setGravity(Gravity.CENTER);
                         mobileNumberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                     }
                 }
@@ -502,7 +502,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                         consumerNameDialog.show();
                         DisplayMetrics metrics = DonationActivity.this.getResources().getDisplayMetrics();
                         int width = (int) (metrics.widthPixels * 1);
-                        consumerNameDialog.getWindow().setGravity(Gravity.BOTTOM);
+                        consumerNameDialog.getWindow().setGravity(Gravity.CENTER);
                         consumerNameDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                     }
                 }

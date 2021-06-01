@@ -10,14 +10,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/dimen_20dp"
+        android:layout_marginRight="@dimen/dimen_20dp">
 
         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_20dp"
             android:layout_marginTop="@dimen/padding30"
-            android:text="Details will be saved to your profile"
+            android:text="Phone Number"
             android:textColor="@color/title_color"
             android:textSize="@dimen/txtsize_12">
 
@@ -26,8 +27,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_20dp"
-            android:layout_marginEnd="@dimen/dimen_20dp"
             android:background="@drawable/textbox_curved"
             android:orientation="horizontal">
 
@@ -86,11 +85,10 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/padding40"
         android:layout_marginTop="@dimen/padding20"
-        android:layout_marginLeft="@dimen/dimen_10dp"
         android:layout_marginBottom="@dimen/dimen_25dp"
         android:textSize="@dimen/dimen_12sp"
         android:textColor="@color/white"
-        android:text="Submit"
+        android:text="OK"
         android:textAllCaps="false"
         android:textStyle="bold"
         android:padding="@dimen/padding5"

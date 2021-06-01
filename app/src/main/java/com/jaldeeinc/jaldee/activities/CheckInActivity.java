@@ -396,6 +396,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
         MultiplefamilyList.clear();
 
+        int consumerId = SharedPreference.getInstance(CheckInActivity.this).getIntValue("consumerId", 0);
+        familyMEmID = consumerId;
         if (providerName != null) {
             tvProviderName.setText(providerName);
         }
