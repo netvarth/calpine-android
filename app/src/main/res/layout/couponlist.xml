@@ -75,7 +75,7 @@
                     android:id="@+id/tv_error"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No Coupons at the moment"
+                    android:text="No coupons available at the moment"
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/dimen_15dp"
                     android:layout_marginTop="@dimen/dimen_25dp"
