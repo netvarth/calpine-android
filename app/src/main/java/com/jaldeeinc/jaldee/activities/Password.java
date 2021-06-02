@@ -512,6 +512,8 @@ public class Password extends AppCompatActivity {
                         SharedPreference.getInstance(mContext).setValue("mobile", response.body().getPrimaryPhoneNumber());
                         SharedPreference.getInstance(mContext).setValue("s3Url", response.body().getS3Url());
                         SharedPreference.getInstance(mContext).setValue("countryCode", countryCode);
+                        SharedPreference.getInstance(mContext).setValue("firstBooking", response.body().isFirstCheckIn());
+
 
                         Intent iReg = new Intent(mContext, Home.class);
                         iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
