@@ -568,7 +568,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="payTm"
+                            android:text="Paytm"
                             android:textSize="@dimen/dimen_15dp"
                             android:textStyle="bold" />
                     </androidx.cardview.widget.CardView>
@@ -589,7 +589,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="CC/DC/NB"
+                            android:text="CC/DC/NB/UPI"
                             android:textSize="@dimen/dimen_15dp"
                             android:textStyle="bold" />
                     </androidx.cardview.widget.CardView>

@@ -679,6 +679,17 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
 
     private void APIPayment(int accountID) {
 
+        GradientDrawable payMthdBtnEnabled = new GradientDrawable();
+        payMthdBtnEnabled.setColor(Color.parseColor("#F1B51C"));
+        //payMthdBtnEnabled.setStroke(2, Color.parseColor("#F1B51C"));
+        payMthdBtnEnabled.setCornerRadius(15);
+        GradientDrawable payMthdBtnDisabled = new GradientDrawable();
+        // payMthdBtnDisabled.setColor(Color.parseColor("#f1f0f0"));
+        payMthdBtnDisabled.setColor(Color.parseColor("#FFFFFF"));
+
+        payMthdBtnDisabled.setStroke(2, Color.parseColor("#d5d5d5"));
+
+        payMthdBtnDisabled.setCornerRadius(15);
 
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -711,7 +722,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                                 showPaytmWallet = true;
                             }
 
-                            if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
+                            if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB") || mPaymentData.get(i).getName().equalsIgnoreCase("UPI")) {
                                 showPayU = true;
                             }
                         }
@@ -720,7 +731,29 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                             Config.logV("URL----%%%%%---@@--");
 
                         }
+                        if((showPayU && showPaytmWallet) || (!showPayU && showPaytmWallet)){
 
+                            cvRazorpay.setBackground(payMthdBtnDisabled);
+                            cvPayTm.setBackground(payMthdBtnEnabled);
+                            razorPay = false;
+                            payTm = true;
+
+                        }else if (showPayU && !showPaytmWallet){
+
+                            cvRazorpay.setBackground(payMthdBtnEnabled);
+                            cvPayTm.setBackground(payMthdBtnDisabled);
+                            razorPay = true;
+                            payTm = false;
+                        }
+                        if(showPayU)
+                            cvRazorpay.setVisibility(View.VISIBLE);
+                        else
+                            cvRazorpay.setVisibility(View.GONE);
+
+                        if(showPaytmWallet)
+                            cvPayTm.setVisibility(View.VISIBLE);
+                        else
+                            cvPayTm.setVisibility(View.GONE);
                     } else {
                         Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
                     }
