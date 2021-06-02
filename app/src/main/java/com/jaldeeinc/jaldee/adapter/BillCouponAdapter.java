@@ -95,7 +95,7 @@ public class BillCouponAdapter extends RecyclerView.Adapter<BillCouponAdapter.Bi
             holder.txt_coupon_value.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(holder.txt_coupon_value.getContext(), "black", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(holder.txt_coupon_value.getContext(), "black", Toast.LENGTH_SHORT).show();
                 }
             });
         }else{
