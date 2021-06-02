@@ -390,7 +390,7 @@ public class PaymentDetail extends AppCompatActivity {
 
     public String formatDateandTime(String time) {
         String inputPattern = "yyyy-MM-dd HH:mm:ss aaa";
-        String outputPattern = "dd-MMM-yyyy hh:mm:ss aaa";
+        String outputPattern = "dd-MMM-yyyy hh:mm aaa";
         SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
         SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
 
