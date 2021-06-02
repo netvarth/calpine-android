@@ -107,6 +107,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
     Animation slideUp, slideRight;
     CountryCodePicker cCodePicker;
     String countryCode = "";
+    String gender = null;
 
 
     public FamilyMemberDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode) {
@@ -163,6 +164,17 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         cCodePicker = findViewById(R.id.ccp);
         et_countryCode = findViewById(R.id.edt_Ccode);
 
+        if (profileDetails.getUserprofile().getGender() != null) {
+            if (!profileDetails.getUserprofile().getGender().equalsIgnoreCase("")) {
+                if (profileDetails.getUserprofile().getGender().equalsIgnoreCase("Male")) {
+                    gender = "male";
+                } else if (profileDetails.getUserprofile().getGender().equalsIgnoreCase("Female")) {
+                    gender = "female";
+                } else if (profileDetails.getUserprofile().getGender().equalsIgnoreCase("Other")) {
+                    gender = "other";
+                }
+            }
+        }
         this.iFamillyListSelected = this;
         if (update == 1) {
             checkList = (ArrayList<FamilyArrayModel>) checkedfamilyList;
@@ -537,8 +549,9 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
             jsonObj.put("lastName", profileDetails.getUserprofile().getLastName());
 
             jsonObj.put("email", et_email.getText().toString());
-
-            jsonObj.put("gender", profileDetails.getUserprofile().getGender());
+            if (gender != null) {
+                jsonObj.put("gender", gender);
+            }
 
 
             jsonObj.put("dob", profileDetails.getUserprofile().getDob());
