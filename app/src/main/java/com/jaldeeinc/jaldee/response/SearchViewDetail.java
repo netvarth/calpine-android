@@ -17,6 +17,11 @@ public class  SearchViewDetail implements Serializable {
     String resource;
     String instance;
     String permission;
+    ArrayList<String> languagesSpoken;
+
+    public ArrayList<String> getLanguagesSpoken() {
+        return languagesSpoken;
+    }
 
     public String getName() {
         return name;
