@@ -159,12 +159,26 @@ public class MobileNumberDialog extends Dialog {
         final int consumerId = SharedPreference.getInstance(context).getIntValue("consumerId", 0);
         JSONObject jsonObj = new JSONObject();
         try {
+            String gender = null;
+            if (profileDetails.getUserprofile().getGender() != null) {
+                if (!profileDetails.getUserprofile().getGender().equalsIgnoreCase("")) {
+                    if (profileDetails.getUserprofile().getGender().equalsIgnoreCase("Male")) {
+                        gender = "male";
+                    } else if (profileDetails.getUserprofile().getGender().equalsIgnoreCase("Female")) {
+                        gender = "female";
+                    } else if (profileDetails.getUserprofile().getGender().equalsIgnoreCase("Other")) {
+                        gender = "other";
+                    }
+                }
+            }
             jsonObj.put("id", consumerId);
             jsonObj.put("firstName", profileDetails.getUserprofile().getFirstName());
             jsonObj.put("lastName", profileDetails.getUserprofile().getLastName());
             jsonObj.put("email", profileDetails.getUserprofile().getEmail());
             jsonObj.put("phone",phone.getText().toString());
-            jsonObj.put("gender", profileDetails.getUserprofile().getGender());
+            if (gender != null) {
+                jsonObj.put("gender", gender);
+            }
             jsonObj.put("dob", profileDetails.getUserprofile().getDob());
             jsonObj.put("countryCode", countryCode);
 
