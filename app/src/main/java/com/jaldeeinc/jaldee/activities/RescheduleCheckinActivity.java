@@ -1554,6 +1554,8 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
                                             } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                                                 ivteleService.setImageResource(R.drawable.phoneaudioicon);
+                                            } else if (checkInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("VideoCall")) {
+                                                ivteleService.setImageResource(R.drawable.ic_jaldeevideo);
                                             }
                                         } else {
                                             ivteleService.setVisibility(View.GONE);
