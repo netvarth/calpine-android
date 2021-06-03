@@ -75,7 +75,7 @@ public class FilterChipsAdapter extends RecyclerView.Adapter<FilterChipsAdapter.
                 @Override
                 public void onClick(View view) {
 
-                    iClearAppliedFilter.clearSelectedFilter(filterChips, position);
+                    iClearAppliedFilter.clearSelectedFilter(filterChips, position, filterChipsList.size()-1);
                     filterChipsList.remove(position);
                     notifyDataSetChanged();
 

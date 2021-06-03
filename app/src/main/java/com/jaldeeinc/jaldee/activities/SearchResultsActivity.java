@@ -429,6 +429,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
                             ApiMoreRefinedFilters(recycle_morefilter, selectedDomain, "No", "", passedFormulaArray, show_subdomain);
                         }
                         ApiSEARCHAWSLoadFirstData(query, url, sort);
+                        tvApplyFilters.setVisibility(View.GONE);
                     }
                 });
 
@@ -2330,9 +2331,13 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
     }
 
     @Override
-    public void clearSelectedFilter(FilterChips filterChips, int position) {
+    public void clearSelectedFilter(FilterChips filterChips, int position, int filterChipListSize) {
 
         searchFiltersAdapter.onChipRemoved(filterChips.getView());
         ApiSEARCHAWSLoadFirstData(searchQuery, url, sort);
+        if(filterChipListSize < 1){
+            tvApplyFilters.setVisibility(View.GONE);
+        }
+
     }
 }
