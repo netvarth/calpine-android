@@ -183,18 +183,37 @@
                     android:visibility="gone" />
 
 
-                <ImageView
-                    android:id="@+id/iv_more"
-                    android:layout_width="30dp"
-                    android:layout_height="15dp"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginTop="@dimen/dimen_10dp"
-                    android:layout_marginRight="@dimen/dimen_10dp"
-                    android:src="@drawable/more"
-                    android:visibility="visible"
-                    app:tint="@color/title_color">
+                    android:orientation="horizontal">
 
-                </ImageView>
+                    <ImageView
+                        android:id="@+id/iv_rescheduled"
+                        android:layout_width="30dp"
+                        android:layout_height="15dp"
+                        android:layout_alignStart="@+id/iv_more"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:layout_marginRight="@dimen/dimen_10dp"
+                        android:src="@drawable/ic_reschedule"
+                        android:visibility="gone"
+                        app:tint="@color/title_color">
+
+                    </ImageView>
+
+                    <ImageView
+                        android:id="@+id/iv_more"
+                        android:layout_width="30dp"
+                        android:layout_height="15dp"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:layout_marginRight="@dimen/dimen_10dp"
+                        android:src="@drawable/more"
+                        android:visibility="visible"
+                        app:tint="@color/title_color">
+
+                    </ImageView>
+                </LinearLayout>
             </RelativeLayout>
 
 

@@ -28,6 +28,9 @@ public class Bookings implements Serializable {
     private ActiveCheckIn checkInInfo;
     String videoCallButton;
     String videoCallMessage;
+    boolean isRescheduled;
+
+
 
     public Bookings(){
 
@@ -45,6 +48,13 @@ public class Bookings implements Serializable {
         this.date = date;
         this.appointmentInfo = appointmentInfo;
         this.checkInInfo = checkInInfo;
+    }
+    public boolean isRescheduled() {
+        return isRescheduled;
+    }
+
+    public void setRescheduled(boolean rescheduled) {
+        isRescheduled = rescheduled;
     }
 
     public String getVideoCallButton() {

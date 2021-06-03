@@ -298,6 +298,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                         bookingInfo.setBookingId(activeAppointment.getUid());
                         bookingInfo.setBookingType(Constants.APPOINTMENT);
                         bookingInfo.setAppointmentInfo(activeAppointment);
+                        bookingInfo.setRescheduled(activeAppointment.isRescheduled());
                         if (activeAppointment.getProviderAccount() != null) {
                             bookingInfo.setSpName(activeAppointment.getProviderAccount().getBusinessName());
                         }
@@ -366,6 +367,8 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
 
                         Bookings bookingInfo = new Bookings();
                         bookingInfo.setBookingId(activeCheckIn.getYnwUuid());
+                        bookingInfo.setRescheduled(activeCheckIn.isRescheduled());
+
                         if (activeCheckIn.getShowToken().equalsIgnoreCase("true")) {
                             bookingInfo.setBookingType(Constants.TOKEN);
                         } else {

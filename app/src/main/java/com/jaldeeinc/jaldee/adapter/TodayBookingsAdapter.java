@@ -96,7 +96,11 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                     viewHolder.tvSpName.setText(bookings.getSpName());
 
                 }
-
+                if (bookings.isRescheduled()) {
+                    viewHolder.ivRescheduled.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.ivRescheduled.setVisibility(View.GONE);
+                }
                 viewHolder.tvServiceName.setText(bookings.getServiceName());
                 String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
@@ -399,7 +403,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                                         String time = convertTime(bookings.getCheckInInfo().getCheckInTime().split("-")[0]);
                                         viewHolder.tvDateAndTime.setText("Today," + " " + time);
                                     }
-                                }else{
+                                } else {
                                     viewHolder.tvDateAndTime.setText(bookings.getDate());
                                 }
                             }
@@ -453,10 +457,10 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                                 if (date.equalsIgnoreCase(bookings.getBookingOn())) {
 
                                     if (bookings.getCheckInInfo().getAppmtTime() != null) {
-                                    String time = convertTime(bookings.getCheckInInfo().getCheckInTime().split("-")[0]);
-                                    viewHolder.tvDateAndTime.setText("Today," + " " + time);
+                                        String time = convertTime(bookings.getCheckInInfo().getCheckInTime().split("-")[0]);
+                                        viewHolder.tvDateAndTime.setText("Today," + " " + time);
                                     }
-                                }else {
+                                } else {
                                     viewHolder.tvDateAndTime.setText(bookings.getDate());
 
                                 }
@@ -607,7 +611,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView ivBookingType, ivServiceIcon, ivMore;
+        ImageView ivBookingType, ivServiceIcon, ivMore, ivRescheduled;
         CustomTextViewBold tvSpName;
         CustomTextViewSemiBold tvProviderName;
         CustomTextViewMedium tvStatus, tvServiceName, tvDateAndTime, tvpayment, tokenNo;
@@ -629,6 +633,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                 tvDateAndTime = itemView.findViewById(R.id.tv_dateAndTime);
                 cvBooking = itemView.findViewById(R.id.cv_booking);
                 ivMore = itemView.findViewById(R.id.iv_more);
+                ivRescheduled = itemView.findViewById(R.id.iv_rescheduled);
                 rlStatus = itemView.findViewById(R.id.rl_status);
                 tvpayment = itemView.findViewById(R.id.tv_payment);
                 tokenNo = itemView.findViewById(R.id.tv_tokenno);
