@@ -241,8 +241,13 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 String name = serviceInfo.getName();
                 tvServiceName.setText(name.substring(0, 1).toUpperCase() + name.substring(1));
                 tvDonationName.setText(name.substring(0, 1).toUpperCase() + name.substring(1));
-
-                tvAmountHint.setText("Amount must be in range between" + " ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())) + " and ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMaxDonationAmount())) + " (multiples of ₹\u00A0" + Config.getAmountinTwoDecimalPoints(serviceInfo.getMultiples()) + ")");
+                if( serviceInfo.getMultiples() != 1) {
+                    //tvAmountHint.setText("Amount must be in range between" + " ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())) + " and ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMaxDonationAmount())) + " (multiples of ₹\u00A0" + Config.getAmountinTwoDecimalPoints(serviceInfo.getMultiples()) + ")");
+                    tvAmountHint.setText("Minimum " + " ₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())) + " Maximum ₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMaxDonationAmount())) + " (multiples of ₹" + Config.getAmountinTwoDecimalPoints(serviceInfo.getMultiples()) + ")");
+                }else{
+                    //tvAmountHint.setText("Amount must be in range between" + " ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())) + " and ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMaxDonationAmount())));
+                    tvAmountHint.setText("Minimum" + " ₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())) + " Maximum ₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMaxDonationAmount())));
+                }
                 llAmountHint.setVisibility(View.VISIBLE);
                 tvErrorAmount.setVisibility(View.GONE);
                 et_note.setHint(serviceInfo.getConsumerNoteTitle());
@@ -686,30 +691,19 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         GradientDrawable payMthdBtnDisabled = new GradientDrawable();
         // payMthdBtnDisabled.setColor(Color.parseColor("#f1f0f0"));
         payMthdBtnDisabled.setColor(Color.parseColor("#FFFFFF"));
-
         payMthdBtnDisabled.setStroke(2, Color.parseColor("#d5d5d5"));
-
         payMthdBtnDisabled.setCornerRadius(15);
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-
         Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(String.valueOf(accountID));
-
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
             public void onResponse(Call<ArrayList<PaymentModel>> call, Response<ArrayList<PaymentModel>> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getParent(), mDialog);
-
                     Config.logV("URL----%%%%%-----------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
 
@@ -718,7 +712,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                         mPaymentData = response.body();
 
                         for (int i = 0; i < mPaymentData.size(); i++) {
-                            if (mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")) {
+                            if (mPaymentData.get(i).getName().equalsIgnoreCase("PPI")) {
                                 showPaytmWallet = true;
                             }
 

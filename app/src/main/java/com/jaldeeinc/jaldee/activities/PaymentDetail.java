@@ -28,9 +28,11 @@ import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.MyPayments;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -179,7 +181,7 @@ public class PaymentDetail extends AppCompatActivity {
                                 dateandtime.setVisibility(View.GONE);
                             }
 
-                            if (response.body().getPaymentMode() != null) {
+                            if (response.body().getPaymentMode() != null && (response.body().getStatus().equalsIgnoreCase("SUCCESS") || response.body().getStatus().equalsIgnoreCase("FAILED"))) {
                                 if (response.body().getPaymentModeName() != null) {
                                     paymentModeLayout.setVisibility(View.VISIBLE);
                                     paymentMode.setText(response.body().getPaymentModeName());
@@ -190,22 +192,37 @@ public class PaymentDetail extends AppCompatActivity {
                                 paymentModeLayout.setVisibility(View.GONE);
                             }
 
-                            if (response.body().getAcceptPaymentBy() != null) {
+                            /*if (response.body().getAcceptPaymentBy() != null) {                                // mode
                                 mode.setText(response.body().getAcceptPaymentBy());
                                 mode.setVisibility(View.VISIBLE);
                             } else {
                                 mode.setVisibility(View.GONE);
-                            }
+                            }*/
 
-                            if (response.body().getPaymentGateway() != null) {
+                            /*if (response.body().getPaymentGateway() != null) {                                // Payment GateWay
                                 paymentGateway.setText(response.body().getPaymentGateway());
                                 paymentGatewayLayout.setVisibility(View.VISIBLE);
                             } else {
                                 paymentGatewayLayout.setVisibility(View.GONE);
-                            }
+                            }*/
 
+                            /*if (response.body().getStatus() != null && response.body().getStatus().equals("FAILED")) { // Refund amount
+                                refundableLayout.setVisibility(View.GONE);
+                            } else {
+
+                                if (response.body().getRefundableAmount() != null) {
+                                    refundable.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(response.body().getRefundableAmount())));
+                                    refundable.setVisibility(View.VISIBLE);
+                                } else {
+                                    refundable.setVisibility(View.GONE);
+                                }
+                            }*/
                             if (response.body().getAmount() != null) {
+                              //  Locale indian = new Locale("en", "IN");
+                               // NumberFormat formatter=NumberFormat.getCurrencyInstance(indian);
+                                //String currency=formatter.format(Double.parseDouble(response.body().getAmount()));
                                 amount.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(response.body().getAmount())));
+
                                 amount.setVisibility(View.VISIBLE);
                             } else {
                                 amount.setVisibility(View.GONE);
@@ -217,17 +234,6 @@ public class PaymentDetail extends AppCompatActivity {
                                 status.setVisibility(View.VISIBLE);
                             } else {
                                 status.setVisibility(View.GONE);
-                            }
-                            if (response.body().getStatus() != null && response.body().getStatus().equals("FAILED")) {
-                                refundableLayout.setVisibility(View.GONE);
-                            } else {
-
-                                if (response.body().getRefundableAmount() != null) {
-                                    refundable.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(response.body().getRefundableAmount())));
-                                    refundable.setVisibility(View.VISIBLE);
-                                } else {
-                                    refundable.setVisibility(View.GONE);
-                                }
                             }
                             if (myPayments != null) {
                                 if (myPayments.getYnwUuid().endsWith("_wl")) {
@@ -390,7 +396,7 @@ public class PaymentDetail extends AppCompatActivity {
 
     public String formatDateandTime(String time) {
         String inputPattern = "yyyy-MM-dd HH:mm:ss aaa";
-        String outputPattern = "dd-MMM-yyyy hh:mm:ss aaa";
+        String outputPattern = "dd-MMM-yyyy hh:mm aaa";
         SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
         SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
 

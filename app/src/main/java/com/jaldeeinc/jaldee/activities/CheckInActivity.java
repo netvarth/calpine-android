@@ -776,6 +776,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     etCode.setText("");
                     Toast.makeText(CheckInActivity.this, couponEntered + " " + "Added", Toast.LENGTH_SHORT).show();
 
+                    cpns(couponArraylist);
 
                 } else {
                     if (couponEntered.equals("")) {
@@ -786,7 +787,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
 
                 }
-                cpns(couponArraylist);
             }
         });
 
@@ -1407,8 +1407,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         JSONObject service = new JSONObject();
         JSONArray waitlistArray = new JSONArray();
         JSONObject consumerObj = new JSONObject();
+        JSONObject providerObj = new JSONObject();
+
         try {
             consumerObj.put("id", consumerID);
+            providerObj.put("id", providerId);
+
             qjsonObj.put("id", queueId);
             queueobj.put("date", apiDate);
             queueobj.put("consumerNote", txt_addnote);
@@ -1453,6 +1457,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             queueobj.putOpt("queue", qjsonObj);
             queueobj.putOpt("waitlistingFor", waitlistArray);
             queueobj.putOpt("consumer", consumerObj);
+            queueobj.putOpt("provider", providerObj);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

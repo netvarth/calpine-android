@@ -239,6 +239,8 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                 viewHolder.tvServiceType.setVisibility(View.VISIBLE);
                 viewHolder.tvServiceType.setText("Donate");
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.donation_theme));
+                viewHolder.ivService.setImageResource(R.drawable.donation);             // to set Donation icon
+                viewHolder.ivService.setVisibility(View.VISIBLE);
 
             } else if (servicesInfoList.get(position).getType() != null && servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.PROVIDER)) {
 
@@ -486,7 +488,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
 
 
-        private ImageView ivImage, ivTeleService, ivMore;
+        private ImageView ivImage, ivTeleService, ivMore,ivService;
         private CardView cvImage, cvCard;
         private CustomTextViewBold tvName, tvEstWaitTime, tvMinAmount, tvMaxAmount, tvNextAvailableTime;
         private LinearLayout llTime, llEstwaitTime, llDonationRange;
@@ -499,6 +501,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
             super(itemView);
 
             if (!isLoading) {
+                ivService = itemView.findViewById(R.id.iv_service);
 
                 ivImage = itemView.findViewById(R.id.iv_image);
                 ivTeleService = itemView.findViewById(R.id.iv_teleService);

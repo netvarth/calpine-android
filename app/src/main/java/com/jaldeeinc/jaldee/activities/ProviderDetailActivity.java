@@ -136,6 +136,11 @@ import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 public class ProviderDetailActivity extends AppCompatActivity implements IGetSelectedLocation, ISelectedService, ISendMessage {
 
+    @BindView(R.id.tv_spLanguagesKnown)
+    CustomTextViewMedium tvSpLanguagesKnown;
+
+    @BindView(R.id.tv_languagesKnownHint)
+    CustomTextViewMedium tvLanguagesKnownHint;
 
     @BindView(R.id.tv_spName)
     CustomTextViewBold tvSpName;
@@ -1028,6 +1033,20 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 }
             }
 
+            // Languages Known
+            if (mBusinessDataList.getLanguagesSpoken() != null && !mBusinessDataList.getLanguagesSpoken().isEmpty()) {
+                tvSpLanguagesKnown.setVisibility(View.VISIBLE);
+                tvLanguagesKnownHint.setVisibility(View.VISIBLE);
+                ArrayList<String> language = new ArrayList<String>();
+                for (String value : mBusinessDataList.getLanguagesSpoken()) {
+                    language.add(value.substring(0, 1).toUpperCase() + value.substring(1));
+                }
+                tvSpLanguagesKnown.setText(language.toString().replace("[","").replace("]",""));
+            } else {
+                tvSpLanguagesKnown.setVisibility(View.GONE);
+                tvLanguagesKnownHint.setVisibility(View.GONE);
+            }
+
             // About
 
             if (mBusinessDataList.getBusinessDesc() != null) {
@@ -1555,7 +1574,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             if (providerResponse.getDepartmentProviders() != null) {
 
                 String json = new Gson().toJson(providerResponse.getDepartmentProviders());
-                ArrayList<SearchDepartmentServices> outputList = new Gson().fromJson(json, new TypeToken<ArrayList<SearchDepartmentServices>>() { }.getType());
+                ArrayList<SearchDepartmentServices> outputList = new Gson().fromJson(json, new TypeToken<ArrayList<SearchDepartmentServices>>() {
+                }.getType());
                 departmentProviders = outputList;
 
             }
@@ -1587,7 +1607,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
             if (providerResponse.getDepartmentProviders() != null) {
                 String json = new Gson().toJson(providerResponse.getDepartmentProviders());
-                ArrayList<ProviderUserModel> outputList = new Gson().fromJson(json, new TypeToken<ArrayList<ProviderUserModel>>() { }.getType());
+                ArrayList<ProviderUserModel> outputList = new Gson().fromJson(json, new TypeToken<ArrayList<ProviderUserModel>>() {
+                }.getType());
                 providersList = outputList;
             }
 

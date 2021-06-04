@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
@@ -77,6 +79,10 @@ public class DonationServiceDialog extends Dialog {
                 tv_toolbartitle.setVisibility(View.VISIBLE);
                 String name = donationInfo.getName();
                 tv_toolbartitle.setText(name);
+                Drawable img = ContextCompat.getDrawable(context,R.drawable.donation);
+                img.setBounds(0, 0, 40, 40);
+                tv_toolbartitle.setCompoundDrawables(img, null, null, null);
+                tv_toolbartitle.setCompoundDrawablePadding(15);
             } else {
                 tv_toolbartitle.setVisibility(View.GONE);
             }
@@ -100,14 +106,14 @@ public class DonationServiceDialog extends Dialog {
                 LmaxAmountlayout.setVisibility(View.GONE);
             }
 
-            if (multiples != null) {
+            /*if (multiples != null) {
                 tv_multiples.setVisibility(View.VISIBLE);
                 tv_multiples.setText(multiples);
                 Lmultilayout.setVisibility(View.VISIBLE);
             } else {
                 tv_multiples.setVisibility(View.GONE);
                 Lmultilayout.setVisibility(View.GONE);
-            }
+            }*/
 
             if (donationInfo.isPrePayment()) {
                 Lprepayment.setVisibility(View.VISIBLE);

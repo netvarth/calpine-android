@@ -49,6 +49,16 @@
                 android:layout_marginEnd="@dimen/padding5">
 
                 <ImageView
+                    android:id="@+id/iv_service"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/dimen_4dp"
+                    android:src="@drawable/google_meet"
+                    android:visibility="gone">
+
+                </ImageView>
+                <ImageView
                     android:id="@+id/iv_teleService"
                     android:layout_width="20dp"
                     android:layout_height="20dp"

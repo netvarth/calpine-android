@@ -56,6 +56,11 @@ public class ActiveCheckIn implements Serializable {
     String videoCallButton;
     String videoCallMessage;
 
+    boolean isRescheduled;
+
+    public boolean isRescheduled() {
+        return isRescheduled;
+    }
     public String getVideoCallButton() {
         return videoCallButton;
     }
