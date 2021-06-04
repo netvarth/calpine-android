@@ -2800,6 +2800,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             Intent intent = new Intent(ProviderDetailActivity.this, CheckInActivity.class);
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
+            intent.putExtra("locationName",tvLocationName.getText().toString());
             intent.putExtra("providerId", providerId);
             intent.putExtra("locationId", locationId);
             intent.putExtra("checkInInfo", checkinServiceInfo);
@@ -2815,6 +2816,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             Intent intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
+            intent.putExtra("locationName",tvLocationName.getText().toString());
             intent.putExtra("locationId", locationId);
             intent.putExtra("providerId", providerId);
             intent.putExtra("fromUser", false);

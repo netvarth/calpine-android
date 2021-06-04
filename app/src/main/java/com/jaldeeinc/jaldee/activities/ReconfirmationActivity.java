@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.media.Image;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.QuestionnaireInput;
@@ -97,8 +99,50 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
     @BindView(R.id.cv_submit)
     CardView cvSubmit;
 
+    @BindView(R.id.cv_paytm)
+    CardView cvPaytm;
+
+    @BindView(R.id.cv_razorpay)
+    CardView cvRazorpay;
+
+    @BindView(R.id.ll_paymentOptions)
+    LinearLayout llPaymentOptions;
+
     @BindView(R.id.tv_buttonName)
     CustomTextViewBold tvButtonName;
+
+    @BindView(R.id.tv_paytm)
+    CustomTextViewMedium tvPaytm;
+
+    @BindView(R.id.tv_razorpay)
+    CustomTextViewMedium tvRazorpay;
+
+    @BindView(R.id.tv_providerName)
+    CustomTextViewBold tvProviderName;
+
+    @BindView(R.id.tv_locationName)
+    CustomTextViewMedium tvLocationName;
+
+    @BindView(R.id.tv_serviceName)
+    CustomTextViewSemiBold tvServiceName;
+
+    @BindView(R.id.iv_serviceIcon)
+    ImageView ivServiceIcon;
+
+    @BindView(R.id.tv_date)
+    CustomTextViewBold tvDate;
+
+    @BindView(R.id.tv_time)
+    CustomTextViewBold tvTime;
+
+    @BindView(R.id.tv_customerName)
+    CustomTextViewBold tvCustomerName;
+
+    @BindView(R.id.tv_email)
+    CustomTextViewBold tvEmail;
+
+    @BindView(R.id.tv_phoneNumber)
+    CustomTextViewBold tvPhoneNumber;
 
     String value = null;
     int familyMEmID;
@@ -123,7 +167,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
     Bitmap bitmap;
     File file;
     public JSONObject jsonObject;
-
+    public boolean isPaytm = false;
 
 
     @Override
@@ -145,6 +189,93 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                 e.printStackTrace();
             }
 
+            // to set providerName
+            if (bookingModel.getProviderName() != null) {
+
+                if (bookingModel.getAccountBusinessName() != null) {
+
+                    tvProviderName.setText(bookingModel.getProviderName() + ", " + bookingModel.getAccountBusinessName());
+
+                } else {
+
+                    tvProviderName.setText(bookingModel.getProviderName());
+                }
+            }
+
+            if (bookingModel.getLocationName() != null){
+                tvLocationName.setText(bookingModel.getLocationName());
+            }
+
+            if (bookingModel.getServiceInfo() != null){
+
+                if (bookingModel.getServiceInfo().getServiceName() != null){
+
+                    tvServiceName.setText(bookingModel.getServiceInfo().getServiceName());
+
+                    if (bookingModel.getServiceInfo().getServiceType() != null && bookingModel.getServiceInfo().getServiceType().equalsIgnoreCase("virtualService")) {
+
+                        if (bookingModel.getServiceInfo().getCallingMode() != null) {
+
+                            ivServiceIcon.setVisibility(View.VISIBLE);
+                            if (bookingModel.getServiceInfo().getCallingMode().equalsIgnoreCase("Zoom")) {
+
+                                ivServiceIcon.setImageResource(R.drawable.zoom);
+
+                            } else if (bookingModel.getServiceInfo().getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+
+                                ivServiceIcon.setImageResource(R.drawable.googlemeet);
+
+                            } else if (bookingModel.getServiceInfo().getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                                if (bookingModel.getServiceInfo().getVirtualServiceType() != null && bookingModel.getServiceInfo().getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                    ivServiceIcon.setImageResource(R.drawable.whatsapp_videoicon);
+                                } else {
+                                    ivServiceIcon.setImageResource(R.drawable.whatsapp_icon);
+                                }
+
+                            } else if (bookingModel.getServiceInfo().getCallingMode().equalsIgnoreCase("VideoCall")) {
+
+                                ivServiceIcon.setImageResource(R.drawable.ic_jaldeevideo);
+
+                            } else {
+                                ivServiceIcon.setVisibility(View.GONE);
+                            }
+                        } else {
+
+                            ivServiceIcon.setVisibility(View.GONE);
+
+                        }
+                    } else {
+
+                        ivServiceIcon.setVisibility(View.GONE);
+                    }
+
+                }
+            }
+
+            if (bookingModel.getDate() != null){
+
+                tvDate.setText(bookingModel.getDate());
+            }
+
+            if (bookingModel.getTime() != null){
+
+                tvTime.setText(bookingModel.getTime());
+            }
+
+            if (bookingModel.getCustomerName() != null){
+
+                tvCustomerName.setText(bookingModel.getCustomerName());
+            }
+
+            if (bookingModel.getEmailId() != null){
+
+                tvEmail.setText(bookingModel.getEmailId());
+            }
+
+            if (bookingModel.getPhoneNumber() != null && bookingModel.getCountryCode() != null){
+                tvPhoneNumber.setText(bookingModel.getCountryCode() +" "+ bookingModel.getPhoneNumber());
+            }
+
             bookingImagesList = bookingModel.getImagesList();
             imagePathList = bookingModel.getQuestionnaireImages();
             mSearchTerminology = bookingModel.getmSearchTerminology();
@@ -153,7 +284,60 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                 APIPayment(String.valueOf(bookingModel.getAccountId()));
             }
 
+            if (bookingModel.getServiceInfo() != null && bookingModel.getServiceInfo().getTotalAmount() != null && !bookingModel.getServiceInfo().getTotalAmount().equalsIgnoreCase("0.0")) {
+                LservicePrepay.setVisibility(View.VISIBLE);
+                LserviceAmount.setVisibility(View.VISIBLE);
+
+                String firstWord = "";
+                String thirdWord;
+                thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getServiceInfo().getTotalAmount()));
+
+
+                Spannable spannable = new SpannableString(firstWord + thirdWord);
+                spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
+                        firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                txtserviceamount.setText(spannable);
+            }
+
+            if (bookingModel.getServiceInfo() != null) {
+
+                if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true")) {
+
+                    llPaymentOptions.setVisibility(View.VISIBLE);
+                } else {
+
+                    llPaymentOptions.setVisibility(View.GONE);
+                }
+            }
         }
+
+
+        cvPaytm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                isPaytm = true;
+                cvRazorpay.setCardBackgroundColor(getResources().getColor(R.color.unselect));
+                tvRazorpay.setTextColor(getResources().getColor(R.color.location_theme));
+                cvPaytm.setCardBackgroundColor(getResources().getColor(R.color.location_theme));
+                tvPaytm.setTextColor(getResources().getColor(R.color.white));
+
+
+            }
+        });
+
+        cvRazorpay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                isPaytm = false;
+                cvPaytm.setCardBackgroundColor(getResources().getColor(R.color.unselect));
+                tvPaytm.setTextColor(getResources().getColor(R.color.location_theme));
+                cvRazorpay.setCardBackgroundColor(getResources().getColor(R.color.location_theme));
+                tvRazorpay.setTextColor(getResources().getColor(R.color.white));
+
+            }
+        });
 
         cvSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -376,12 +560,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                             Config.logV("URL----%%%%%---@@--");
                             LservicePrepay.setVisibility(View.VISIBLE);
                             LPrepay.setVisibility(View.VISIBLE);
-                            Typeface tyface = Typeface.createFromAsset(getAssets(),
-                                    "fonts/Montserrat_Bold.otf");
-//                            txtprepay.setTypeface(tyface);
-//                            txtprepayamount.setTypeface(tyface);
-//                            txtservicepayment.setTypeface(tyface);
-//                            txtserviceamount.setTypeface(tyface);
+
                             String firstWord = "";
                             String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getServiceInfo().getMinPrePaymentAmount()));
                             String thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getServiceInfo().getTotalAmount()));
@@ -395,6 +574,17 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                             spannable1.setSpan(new ForegroundColorSpan(ReconfirmationActivity.this.getResources().getColor(R.color.colorAccent)),
                                     firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             txtserviceamount.setText(spannable1);
+                        }
+
+                        if (showPaytmWallet) {
+                            cvPaytm.setVisibility(View.VISIBLE);
+                        } else {
+                            cvPaytm.setVisibility(View.GONE);
+                        }
+                        if (showPayU) {
+                            cvRazorpay.setVisibility(View.VISIBLE);
+                        } else {
+                            cvRazorpay.setVisibility(View.GONE);
                         }
 
                     } else {
@@ -437,83 +627,22 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                         activeAppointment = response.body();
                         if (activeAppointment != null) {
                             appEncId = activeAppointment.getAppointmentEncId();
-                            if (bookingModel.getQuestionnaireInput() != null){
+                            if (bookingModel.getQuestionnaireInput() != null) {
 
                                 ApiSubmitQuestionnnaire(bookingModel.getQuestionnaireInput());
                             }
                             if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true") && (prepayAmount != null && Integer.parseInt(prepayAmount) > 0)) {
-                                if (!showPaytmWallet && !showPayU) {
 
-                                    //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
+                                if (isPaytm) {
+
+                                    PaytmPayment payment = new PaytmPayment(ReconfirmationActivity.this, iPaymentResponse);
+                                    payment.ApiGenerateHashPaytm(value, prepayAmount, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, ReconfirmationActivity.this, ReconfirmationActivity.this, "", familyMEmID, appEncId);
+
                                 } else {
-                                    try {
-                                        dialog = new BottomSheetDialog(ReconfirmationActivity.this);
-                                        dialog.setContentView(R.layout.prepayment);
-                                        dialog.setCancelable(false);
-                                        dialog.show();
 
-
-                                        Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
-                                        Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
-                                        ImageView ivClose = dialog.findViewById(R.id.iv_close);
-                                        ivClose.setVisibility(View.VISIBLE);
-                                        if (showPaytmWallet) {
-                                            btn_paytm.setVisibility(View.VISIBLE);
-                                        } else {
-                                            btn_paytm.setVisibility(View.GONE);
-                                        }
-                                        if (showPayU) {
-                                            btn_payu.setVisibility(View.VISIBLE);
-                                        } else {
-                                            btn_payu.setVisibility(View.GONE);
-                                        }
-                                        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-                                        TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
-
-                                        TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
-
-                                        txtprepayment.setText(R.string.serve_prepay);
-
-                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(prepayAmount))));
-                                        Typeface tyface1 = Typeface.createFromAsset(ReconfirmationActivity.this.getAssets(),
-                                                "fonts/JosefinSans-SemiBold.ttf");
-                                        txtamt.setTypeface(tyface1);
-                                        ivClose.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-
-                                                finish();
-                                            }
-                                        });
-                                        btn_payu.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-
-                                                new PaymentGateway(ReconfirmationActivity.this, ReconfirmationActivity.this).ApiGenerateHash1(value, prepayAmount, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
-                                                dialog.dismiss();
-
-                                            }
-                                        });
-
-                                        btn_paytm.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-
-                                                PaytmPayment payment = new PaytmPayment(ReconfirmationActivity.this, iPaymentResponse);
-                                                payment.ApiGenerateHashPaytm(value, prepayAmount, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, ReconfirmationActivity.this, ReconfirmationActivity.this, "", familyMEmID, appEncId);
-                                                //payment.generateCheckSum(sAmountPay);
-                                                dialog.dismiss();
-
-                                            }
-                                        });
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+                                    new PaymentGateway(ReconfirmationActivity.this, ReconfirmationActivity.this).ApiGenerateHash1(value, prepayAmount, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
                                 }
-
-
                             } else {
-
                                 if (imagePathList.size() > 0) {
                                     ApiCommunicateAppointment(value, String.valueOf(bookingModel.getAccountId()), txt_addnote, dialog);
                                 }
@@ -686,7 +815,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
     @Override
     public void sendPaymentResponse() {
 
-        if (imagePathList.size() > 0) {
+        if (imagePathList != null && imagePathList.size() > 0) {
             ApiCommunicateAppointment(value, String.valueOf(bookingModel.getAccountId()), bookingModel.getMessage(), dialog);
         }
         getConfirmationDetails(bookingModel.getAccountId());
@@ -707,7 +836,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
 
     private void paymentFinished(RazorpayModel razorpayModel) {
 
-        if (imagePathList.size() > 0) {
+        if (imagePathList != null && imagePathList.size() > 0) {
             ApiCommunicateAppointment(value, String.valueOf(bookingModel.getAccountId()), bookingModel.getMessage(), dialog);
         }
         getConfirmationDetails(bookingModel.getAccountId());

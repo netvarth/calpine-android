@@ -686,6 +686,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     etCode.setText("");
                     Toast.makeText(AppointmentActivity.this, couponEntered + " " + "Added", Toast.LENGTH_SHORT).show();
 
+                    cpns(couponArraylist);
 
                 } else {
                     if (couponEntered.equals("")) {
@@ -696,7 +697,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
 
                 }
-                cpns(couponArraylist);
 
             }
         });
@@ -2581,3 +2581,4 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         return couponApliedOrNotDetails;
     }
 }
+

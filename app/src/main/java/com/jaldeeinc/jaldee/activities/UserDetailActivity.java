@@ -708,6 +708,8 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             Intent intent = new Intent(UserDetailActivity.this, CheckInActivity.class);
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
+            intent.putExtra("accountBusinessName", tvProviderName.getText().toString());
+            intent.putExtra("locationName",tvLocationName.getText().toString());
             intent.putExtra("providerId", providerId);
             intent.putExtra("locationId", locationId);
             intent.putExtra("checkInInfo", checkinServiceInfo);
@@ -724,6 +726,8 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             Intent intent = new Intent(UserDetailActivity.this, AppointmentActivity.class);
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
+            intent.putExtra("accountBusinessName", tvProviderName.getText().toString());
+            intent.putExtra("locationName",tvLocationName.getText().toString());
             intent.putExtra("locationId", locationId);
             intent.putExtra("providerId", providerId);
             intent.putExtra("userId", userId);

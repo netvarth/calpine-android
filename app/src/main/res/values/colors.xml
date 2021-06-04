@@ -20,6 +20,7 @@
     <color name="dark_blue">#1E4079</color>
 
     <color name="action_color">#5B84B1FF</color>
+    <color name="unselect">#F2F2F2</color>
 
 
     <color name="dark_yellow">#FFC107</color>

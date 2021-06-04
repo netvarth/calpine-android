@@ -23,7 +23,14 @@ public class BookingModel implements Serializable {
     public String from;
     public QuestionnaireInput questionnaireInput;
     public ArrayList<String> questionnaireImages;
-
+    public String providerName;
+    public String accountBusinessName;
+    public String locationName;
+    public String date;
+    public String time;
+    public String customerName;
+    public String emailId;
+    public String countryCode;
 
 
     public ArrayList<String> getImagesList() {
@@ -120,5 +127,69 @@ public class BookingModel implements Serializable {
 
     public void setQuestionnaireImages(ArrayList<String> questionnaireImages) {
         this.questionnaireImages = questionnaireImages;
+    }
+
+    public String getProviderName() {
+        return providerName;
+    }
+
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
+    }
+
+    public String getAccountBusinessName() {
+        return accountBusinessName;
+    }
+
+    public void setAccountBusinessName(String accountBusinessName) {
+        this.accountBusinessName = accountBusinessName;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getEmailId() {
+        return emailId;
+    }
+
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
     }
 }

@@ -2,7 +2,9 @@ package com.jaldeeinc.jaldee.model;
 
 import org.json.JSONObject;
 
-public class AnswerLine {
+import java.io.Serializable;
+
+public class AnswerLine implements Serializable {
 
     private String labelName = "";
     private JSONObject answer = new JSONObject();
