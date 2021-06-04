@@ -776,6 +776,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     etCode.setText("");
                     Toast.makeText(CheckInActivity.this, couponEntered + " " + "Added", Toast.LENGTH_SHORT).show();
 
+                    cpns(couponArraylist);
 
                 } else {
                     if (couponEntered.equals("")) {
@@ -786,7 +787,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
 
                 }
-                cpns(couponArraylist);
             }
         });
 
