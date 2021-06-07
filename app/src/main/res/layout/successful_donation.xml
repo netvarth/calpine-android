@@ -2,45 +2,311 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:gravity="center"
-    android:orientation="vertical"
-    android:background="@color/white">
+    android:orientation="vertical">
 
-    <pl.droidsonroids.gif.GifImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/donate">
-
-    </pl.droidsonroids.gif.GifImageView>
-
-    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Donation Successful"
-        android:textSize="18sp"
-        android:textColor="@color/title_color">
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+        <pl.droidsonroids.gif.GifImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/donate">
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-        android:layout_width="wrap_content"
+        </pl.droidsonroids.gif.GifImageView>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Donation Successful"
+            android:textColor="@color/title_color"
+            android:textSize="18sp">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding5"
+            android:layout_marginBottom="@dimen/dimen_25dp"
+            android:text="Thank you for donating"
+            android:textColor="@color/title_color">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_15dp"
+            android:layout_marginEnd="@dimen/dimen_15dp"
+            android:layout_marginBottom="@dimen/dimen_25dp"
+            android:text="@string/donation_quote"
+            android:textColor="@color/black"
+            android:textSize="@dimen/txtsize_14">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Thank you for donating"
-        android:textColor="@color/title_color"
-        android:layout_marginTop="@dimen/padding5"
-        android:layout_marginBottom="@dimen/dimen_25dp">
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:id="@+id/tv_donationDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Donation details"
+            android:textColor="@color/title_color">
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/donation_quote"
-        android:textColor="@color/black"
-        android:textSize="@dimen/txtsize_14"
-        android:layout_marginStart="@dimen/dimen_15dp"
-        android:layout_marginEnd="@dimen/dimen_15dp"
-        android:layout_marginBottom="@dimen/dimen_25dp">
+        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-    </com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1dp"
+            android:layout_marginStart="@dimen/dimen_8dp"
+            android:layout_marginTop="@dimen/dimen_8dp"
+            android:layout_marginEnd="@dimen/dimen_8dp"
+            android:layout_marginBottom="@dimen/dimen_8dp"
+            android:background="#EDEDED">
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/tv_divider1"
+                android:text="Name of the provider"
+                android:textColor="@color/title_color"
+                android:gravity="right">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/tv_divider1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text=" : "
+                android:layout_alignParentTop="true"
+                android:textColor="@color/title_color">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/tv_providerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tv_divider1"
+                android:text=""
+                android:textColor="@color/title_color"
+                android:gravity="left">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/tv_divider2"
+                android:text="Location"
+                android:textColor="@color/title_color"
+                android:gravity="right">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/tv_divider2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text=" : "
+                android:layout_alignParentTop="true"
+                android:textColor="@color/title_color">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/tv_locationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tv_divider2"
+                android:text=""
+                android:textColor="@color/title_color"
+                android:gravity="left">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/tv_divider3"
+                android:text="Donor"
+                android:textColor="@color/title_color"
+                android:gravity="right">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/tv_divider3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text=" : "
+                android:layout_alignParentTop="true"
+                android:textColor="@color/title_color">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/tv_donorName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tv_divider3"
+                android:text=""
+                android:textColor="@color/title_color"
+                android:gravity="left">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/tv_divider4"
+                android:text="Cause"
+                android:textColor="@color/title_color"
+                android:gravity="right">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/tv_divider4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text=" : "
+                android:layout_alignParentTop="true"
+                android:textColor="@color/title_color">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/tv_cause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tv_divider4"
+                android:text=""
+                android:textColor="@color/title_color"
+                android:gravity="left">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/tv_divider5"
+                android:text="Amount paid"
+                android:textColor="@color/title_color"
+                android:gravity="right">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/tv_divider5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text=" : "
+                android:layout_alignParentTop="true"
+                android:textColor="@color/title_color">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/tv_amountPaid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tv_divider5"
+                android:text=""
+                android:textColor="@color/title_color"
+                android:gravity="left">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+        </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/ll_postInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:gravity="center"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_8dp"
+                android:background="@drawable/default_border"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_weight="0.6"
+                android:padding="@dimen/dimen_8dp">
+                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:id="@+id/tv_postInfoTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv_divider5"
+                    android:text="sdfsdf"
+                    android:textColor="@color/title_color"
+                    android:gravity="left"
+                    android:visibility="gone">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                <com.jaldeeinc.jaldee.custom.CustomTextViewLight
+                    android:id="@+id/tv_postInfoText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tv_divider5"
+                    android:text="sfsf"
+                    android:textColor="@color/title_color"
+                    android:gravity="left"
+                    android:visibility="gone">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewLight>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
