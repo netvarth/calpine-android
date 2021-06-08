@@ -45,7 +45,6 @@ import com.jaldeeinc.jaldee.custom.ConsumerNameDialog;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
@@ -1166,7 +1165,13 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //set what would happen when positive button is clicked
+
                         finish();
+
+                        Intent homeIntent = new Intent(DonationActivity.this, Home.class);
+                        homeIntent.putExtra("isDonation", "DONATION");
+                        startActivity(homeIntent);
+
                     }
                 })
                 .show();
@@ -1240,6 +1245,10 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //set what would happen when positive button is clicked
                         finish();
+
+                        Intent homeIntent = new Intent(DonationActivity.this, Home.class);
+                        homeIntent.putExtra("isDonation", "DONATION");
+                        startActivity(homeIntent);
                     }
                 })
                 .show();

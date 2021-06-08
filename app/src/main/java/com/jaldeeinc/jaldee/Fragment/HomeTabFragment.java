@@ -204,7 +204,7 @@ public class HomeTabFragment extends Fragment {
         tab1Fragment = new Tab1Fragment();
         myJaldeeFragment = new MyJaldee();
         Bundle bundle = new Bundle();
-        if (myJaldeeTab == 2){
+        if (myJaldeeTab == 2 || myJaldeeTab == 1){
             bundle.putInt("myJaldeeTab", myJaldeeTab);
         }
         if (message != null && !message.equalsIgnoreCase("")) {

@@ -43,6 +43,7 @@ public class Home extends AppCompatActivity {
     String path;
     String message = null;
     String from = null;
+    String fromDonation = null;
 
 
     Intent mLiveTrackClient;
@@ -317,12 +318,20 @@ public class Home extends AppCompatActivity {
             }
 
             from = intent.getStringExtra("isOrder");   // to set orders tab by default after completion of placing order.
+            fromDonation = intent.getStringExtra("isDonation"); // to set payment tab by default after completion of Donation.
             String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
             Config.logV("Push Notification Foreground @@@@@@@@@@@@@@@@@@@@@" + loginId);
             if (!loginId.equalsIgnoreCase("")) {
                 mHomeTab = new HomeTabFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("tab", "1");
+
+                if (fromDonation != null && !fromDonation.equalsIgnoreCase("")) {
+                    if (fromDonation.equalsIgnoreCase("DONATION")) {
+
+                        bundle.putInt("myJaldeeTab", 1);  // to set payment tab by default after completion of Donation.
+                    }
+                }
                 if (from != null && !from.equalsIgnoreCase("")) {
                     if (from.equalsIgnoreCase("ORDER")) {
 
