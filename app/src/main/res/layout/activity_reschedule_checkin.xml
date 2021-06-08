@@ -385,7 +385,7 @@
                 android:layout_marginStart="@dimen/dimen_16dp"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:layout_marginEnd="@dimen/padding5"
-                android:text="Current Date and Time"
+                android:text="Date/Time"
                 android:textColor="@color/title_color"
                 android:textSize="@dimen/dimen_14sp">
 
