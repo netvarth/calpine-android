@@ -657,7 +657,7 @@
                         android:layout_height="wrap_content"
                         android:text=""
                         android:gravity="center"
-                        android:textColor="@color/title_grey"
+                        android:textColor="@color/colorAccent"
                         android:textSize="@dimen/txtsize_hint_11" />
 
                 </LinearLayout>

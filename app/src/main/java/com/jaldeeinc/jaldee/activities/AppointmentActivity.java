@@ -1265,11 +1265,13 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinPrePaymentAmount()));
                             String thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getTotalAmount()));
 
-                            Spannable spannable = new SpannableString(firstWord + secondWord);
-                            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
-                                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            txtprepayamount.setText(spannable);
 
+                            if (serviceInfo.isUser()) {
+                                getAdvancePaymentDetails(userMessage, userId);
+                            } else {
+                                getAdvancePaymentDetails(userMessage, providerId);
+                            }
+                            
                             Spannable spannable1 = new SpannableString(firstWord + thirdWord);
                             spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                                     firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1933,7 +1935,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     static ArrayList<FamilyArrayModel> MultiplefamilyList = new ArrayList<>();
 
-    public static void refreshMultipleMEmList(ArrayList<FamilyArrayModel> familyList) {
+
+    @Override
+    public void refreshMultipleMEmList(ArrayList<FamilyArrayModel> familyList) {
         MultiplefamilyList.clear();
         MultiplefamilyList.addAll(familyList);
 
@@ -2437,9 +2441,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
 
             if (serviceInfo.isUser()) {
-                getCoupnAppliedOrNotDetails(userMessage, userId);
+                getAdvancePaymentDetails(userMessage, userId);
             } else {
-                getCoupnAppliedOrNotDetails(userMessage, providerId);
+                getAdvancePaymentDetails(userMessage, providerId);
             }
         }
        /* Config.logV("couponArraylist--code-------------------------" + couponArraylist);
@@ -2451,7 +2455,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         mAdapter.notifyDataSetChanged();*/
     }
 
-    public CouponApliedOrNotDetails getCoupnAppliedOrNotDetails(final String txt_addnote, int id) {
+    public CouponApliedOrNotDetails getAdvancePaymentDetails(final String txt_addnote, int id) {
         final Dialog mDialog = Config.getProgressDialog(AppointmentActivity.this, AppointmentActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         String number = tvNumber.getText().toString();
@@ -2563,6 +2567,14 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         mAdapter = new CouponlistAdapter(AppointmentActivity.this, s3couponList, couponEntered, couponArraylist, couponApliedOrNotDetails, iCpn);
                         list.setAdapter(mAdapter);
                         mAdapter.notifyDataSetChanged();
+                        if (couponApliedOrNotDetails.getAmountRequiredNow() > 0) {       //Prepayment now only show if prepayment > 0
+                            LPrepay.setVisibility(View.VISIBLE);
+                            txtprepayamount.setText("₹ " + Config.getAmountinTwoDecimalPoints(couponApliedOrNotDetails.getAmountRequiredNow()));
+                            tvButtonName.setText("Proceed to Payment");
+                        } else {
+                            LPrepay.setVisibility(View.GONE);
+                            tvButtonName.setText("Confirm Appointment");
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

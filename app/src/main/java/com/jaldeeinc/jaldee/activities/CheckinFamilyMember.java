@@ -123,7 +123,7 @@ public class CheckinFamilyMember extends AppCompatActivity {
 
                         if (i == data.size() - 1) {
                             Config.logV("family refresh-------@@@@---------" + familyList.size());
-                            CheckInActivity.refreshMultipleMEmList(familyList);
+                           //////////////// CheckInActivity.refreshMultipleMEmList(familyList);
                             finish();
                         }
 
