@@ -17,6 +17,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -99,6 +100,9 @@ public class OrderConfirmation extends AppCompatActivity {
     @BindView(R.id.nested)
     ScrollView scrollView;
 
+    @BindView(R.id.cv_ok)
+    Button btnOk;
+
     private Context mContext;
     private String orderUUid;
     private int accountId;
@@ -130,6 +134,16 @@ public class OrderConfirmation extends AppCompatActivity {
 
         }
 
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent homeIntent = new Intent(OrderConfirmation.this, Home.class);
+                homeIntent.putExtra("isOrder", "ORDER");
+                startActivity(homeIntent);
+
+            }
+        });
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
