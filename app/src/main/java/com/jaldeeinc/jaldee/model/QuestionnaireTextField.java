@@ -6,6 +6,8 @@ public class QuestionnaireTextField {
     public String questionName;
     public String labelName;
     public boolean isManditory = false;
+    public String text = "";
+    public String hint = "";
 
     public String getQuestionName() {
         return questionName;
@@ -37,5 +39,21 @@ public class QuestionnaireTextField {
 
     public void setLabelName(String labelName) {
         this.labelName = labelName;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
     }
 }

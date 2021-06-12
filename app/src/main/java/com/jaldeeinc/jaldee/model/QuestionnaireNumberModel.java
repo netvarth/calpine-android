@@ -6,6 +6,9 @@ public class QuestionnaireNumberModel {
     public String questionName;
     public String labelName;
     public boolean isManditory = false;
+    public String number = "";
+    public String hint = "";
+
 
     public String getQuestionName() {
         return questionName;
@@ -37,5 +40,21 @@ public class QuestionnaireNumberModel {
 
     public void setLabelName(String labelName) {
         this.labelName = labelName;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
     }
 }

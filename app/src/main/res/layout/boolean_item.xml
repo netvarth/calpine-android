@@ -52,6 +52,20 @@
 
             </LinearLayout>
 
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/tv_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginStart="@dimen/dimen_8dp"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:visibility="gone"
+                android:textColor="@color/tab_disable"
+                android:textSize="@dimen/dimen_12dp">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+
             <RadioGroup
                 android:id="@+id/rg_radioGroup"
                 android:layout_width="wrap_content"

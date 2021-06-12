@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class QuestionnaireInput implements Serializable {
 
     private int questionnaireId;
-    private ArrayList<AnswerLine> answerLine;
+    private ArrayList<AnswerLine> answerLine = new ArrayList<>();
 
     public int getQuestionnaireId() {
         return questionnaireId;

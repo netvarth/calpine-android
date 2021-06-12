@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,15 +14,20 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.Interface.IEditAddress;
 import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.CustomQuestionnaire;
+import com.jaldeeinc.jaldee.activities.ImageActivity;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
 import com.jaldeeinc.jaldee.model.Address;
 
+import java.security.Key;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> {
@@ -66,40 +72,70 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 
             viewHolder.tvFileText.setText(data.getName());
 
-            if (data.getImagePath() != null) {
+            if (data.getImagePath() != null && !data.getImagePath().trim().equalsIgnoreCase("")) {
+
+                if (data.getImagePath().contains("http://") || data.getImagePath().contains("https://")) {
+
+                    Glide.with(context).load(data.getImagePath()).into(viewHolder.ivFile);
+                } else {
+                    viewHolder.ivFile.setImageBitmap(BitmapFactory.decodeFile(data.getImagePath()));
+
+                }
                 viewHolder.llFileLayout.setVisibility(View.VISIBLE);
-                viewHolder.ivFile.setImageBitmap(BitmapFactory.decodeFile(data.getImagePath()));
             } else {
 
+                viewHolder.ivFile.setImageDrawable(null);
                 viewHolder.llFileLayout.setVisibility(View.VISIBLE);
 
             }
+
+            viewHolder.ivFile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent intent = new Intent(context, ImageActivity.class);
+                    intent.putExtra("urlOrPath",data.getImagePath());
+                    context.startActivity(intent);
+                }
+            });
 
             viewHolder.llUpload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    iFilesInterface.onFileUploadClick(data,labelName);
+                    iFilesInterface.onFileUploadClick(data, labelName);
                 }
             });
+
+            if (viewHolder.ivFile.getDrawable() != null) {
+
+                viewHolder.ivClose.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.ivClose.setVisibility(View.GONE);
+            }
 
             viewHolder.ivClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    iFilesInterface.onCloseClick(data);
+//                    iFilesInterface.onCloseClick(data);
 
-                    for (KeyPairBoolData obj: filesList) {
+                    viewHolder.ivFile.setImageDrawable(null);
+                    filesList.remove(position);
+                    notifyDataSetChanged();
 
-                        if (data.getId() == obj.getId()){
+//                    for (KeyPairBoolData obj : filesList) {
+//
+//                        if (data.getId() == obj.getId()) {
+//
+////                            viewHolder.ivFile.setImageDrawable(null);
+//                            filesList.remove(data);
+//                            notifyDataSetChanged();
+//                        }
+//                    }
 
-                            filesList.remove(data);
-                            notifyDataSetChanged();
-                        }
-                    }
                 }
             });
-
 
 
         } else {
@@ -116,13 +152,13 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
         return isLoading ? 10 : filesList.size();
     }
 
-    public void setLabelName(String label){
+    public void setLabelName(String label) {
 
         this.labelName = label;
 
     }
 
-    public List<KeyPairBoolData> getFiles(){
+    public List<KeyPairBoolData> getFiles() {
 
 
         return filesList;
@@ -132,7 +168,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 
         private CustomTextViewSemiBold tvFileText;
         private ImageView ivFile;
-        private LinearLayout llFileLayout,llUpload;
+        private LinearLayout llFileLayout, llUpload;
         private ImageView ivClose;
 
         public ViewHolder(@NonNull View itemView, boolean isLoading) {
@@ -152,18 +188,18 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
         }
     }
 
-    public void updateData(List<KeyPairBoolData> list){
+    public void updateData(List<KeyPairBoolData> list) {
 
         list = list == null ? new ArrayList<>() : list;
         this.filesList = list;
         notifyDataSetChanged();
     }
 
-    public void updateFileObject(KeyPairBoolData obj){
+    public void updateFileObject(KeyPairBoolData obj) {
 
-        for (KeyPairBoolData file: filesList) {
+        for (KeyPairBoolData file : filesList) {
 
-            if (file.getId() == obj.getId()){
+            if (file.getName() == obj.getName()) {
 
                 file.setName(obj.getName());
                 file.setImagePath(obj.getImagePath());

@@ -227,6 +227,8 @@ public class CheckInDetails extends AppCompatActivity {
     private Bookings bookings = new Bookings();
     String ynwUUid, accountId, countryCode;
     private boolean fromPushNotification = false;
+    String uid;
+    int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -238,6 +240,8 @@ public class CheckInDetails extends AppCompatActivity {
         Intent i = getIntent();
         if (i != null) {
             bookingInfo = (Bookings) i.getSerializableExtra("bookingInfo");
+            uid = i.getStringExtra("uid");
+            id = i.getIntExtra("accountId",0);
             isActive = i.getBooleanExtra("isActive", true);
             ynwUUid = i.getStringExtra("uuid");
             accountId = i.getStringExtra("account");
@@ -440,8 +444,8 @@ public class CheckInDetails extends AppCompatActivity {
         try {
 
             // Api call
-            if (bookingInfo != null && bookingInfo.getCheckInInfo() != null) {
-                getBookingDetails(bookingInfo.getCheckInInfo().getYnwUuid(), bookingInfo.getCheckInInfo().getProviderAccount().getId());
+            if (uid != null) {
+                getBookingDetails(uid,id);
             } else {
 
                 // this gets called when activity is launched from push notification

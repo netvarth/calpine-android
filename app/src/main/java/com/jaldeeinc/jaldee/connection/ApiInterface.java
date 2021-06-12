@@ -668,7 +668,7 @@ public interface ApiInterface {
     Call<ProfileModel> usrProfile(@Path("accId")  int account);
 
     @GET("consumer/questionnaire/service/{serviceId}/consumer/{consumerId}")
-    Call<Questionnaire> getAppointmentQuestions(@Path("serviceId") int serviceId, @Path("consumerId") int consumerId, @Query("account") int account);
+    Call<Questionnaire> getQuestions(@Path("serviceId") int serviceId, @Path("consumerId") int consumerId, @Query("account") int account);
 
     @GET("provider/account/settings/config/{uniqueId}/settings,terminologies,coupon,providerCoupon,location,businessProfile,virtualFields,services,apptServices,donationServices,departmentProviders")
     Call<Provider> getProviderDetails(@Path("uniqueId") int uniqueId);
@@ -691,9 +691,16 @@ public interface ApiInterface {
     @GET("provider/imagePropries/logo/{queueId}")
     Call<LinkedHashMap<String, ArrayList<ProfilePicture>>> getLogo(@Path("queueId") String id);
 
-    @POST("appointment/questionnaire/{uid}")
-    Call<ResponseBody> submitAppointmentQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj);
+    @POST("consumer/appointment/questionnaire/{uid}?")
+    Call<ResponseBody> submitAppointmentQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
 
+    @POST("consumer/waitlist/questionnaire/{uid}?")
+    Call<ResponseBody> submitWaitListQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
 
+    @POST("consumer/appointment/questionnaire/resubmit/{uid}?")
+    Call<ResponseBody> reSubmitAppQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
+
+    @POST("consumer/waitlist/questionnaire/resubmit/{uid}?")
+    Call<ResponseBody> reSubmitWlQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
 
 }

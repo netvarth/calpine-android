@@ -216,6 +216,8 @@ public class BookingDetails extends AppCompatActivity {
     private PrescriptionDialog prescriptionDialog;
     String ynwUUid, accountId, countryCode;
     private boolean fromPushNotification = false;
+    String uid;
+    int id;
 
 
     @Override
@@ -231,6 +233,8 @@ public class BookingDetails extends AppCompatActivity {
         Intent i = getIntent();
         if (i != null) {
             bookingInfo = (Bookings) i.getSerializableExtra("bookingInfo");
+            uid = i.getStringExtra("uid");
+            id = i.getIntExtra("accountId",0);
             isActive = i.getBooleanExtra("isActive", true);
             ynwUUid = i.getStringExtra("uuid");
             accountId = i.getStringExtra("account");
@@ -423,8 +427,8 @@ public class BookingDetails extends AppCompatActivity {
     protected void onResume() {
 
         // Api call
-        if (bookingInfo != null && bookingInfo.getAppointmentInfo() != null) {
-            getAppointmentDetails(bookingInfo.getAppointmentInfo().getUid(), bookingInfo.getAppointmentInfo().getProviderAccount().getId());
+        if (uid != null) {
+            getAppointmentDetails(uid,id);
         } else {
 
             // this gets called when activity is launched from push notification

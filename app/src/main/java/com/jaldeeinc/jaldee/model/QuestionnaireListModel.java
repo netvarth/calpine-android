@@ -4,12 +4,15 @@ import java.util.ArrayList;
 
 public class QuestionnaireListModel {
 
+
     public int id;
     public String questionName;
     public String labelName;
     public boolean isManditory = false;
     public ArrayList<String> labels = new ArrayList<>();
     public ArrayList<String> properties = new ArrayList<>();
+    public ArrayList<String> selectedItems = new ArrayList<>();
+    public String hint = "";
 
     public int getId() {
         return id;
@@ -57,5 +60,21 @@ public class QuestionnaireListModel {
 
     public void setLabelName(String labelName) {
         this.labelName = labelName;
+    }
+
+    public ArrayList<String> getSelectedItems() {
+        return selectedItems;
+    }
+
+    public void setSelectedItems(ArrayList<String> selectedItems) {
+        this.selectedItems = selectedItems;
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
     }
 }

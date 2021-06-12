@@ -14,9 +14,9 @@ public class KeyPairBoolData {
 	public KeyPairBoolData() {
 	}
 
-	public KeyPairBoolData(String name, boolean isSelected) {
+	public KeyPairBoolData(String name, String imagePath) {
 		this.name = name;
-		this.isSelected = isSelected;
+		this.imagePath = imagePath;
 	}
 
 	public Object getObject() {

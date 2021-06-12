@@ -11,6 +11,9 @@ public class QuestionnaireFileUploadModel {
     public String labelName;
     public ArrayList<KeyPairBoolData> fileNames;
     public boolean isManditory = false;
+    public ArrayList<KeyPairBoolData> files = new ArrayList<>();
+    public String hint = "";
+
 
     public String getQuestionName() {
         return questionName;
@@ -50,5 +53,21 @@ public class QuestionnaireFileUploadModel {
 
     public void setLabelName(String labelName) {
         this.labelName = labelName;
+    }
+
+    public ArrayList<KeyPairBoolData> getFiles() {
+        return files;
+    }
+
+    public void setFiles(ArrayList<KeyPairBoolData> files) {
+        this.files = files;
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
     }
 }

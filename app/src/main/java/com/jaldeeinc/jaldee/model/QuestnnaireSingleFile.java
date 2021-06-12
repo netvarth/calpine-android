@@ -10,6 +10,8 @@ public class QuestnnaireSingleFile {
     public String labelName;
     public String questionName;
     public boolean isManditory = false;
+    public String filePath = "";
+    public String hint = "";
 
     public String getQuestionName() {
         return questionName;
@@ -41,5 +43,21 @@ public class QuestnnaireSingleFile {
 
     public void setLabelName(String labelName) {
         this.labelName = labelName;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
     }
 }

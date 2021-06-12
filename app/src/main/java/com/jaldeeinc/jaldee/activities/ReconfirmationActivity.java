@@ -31,6 +31,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
@@ -40,6 +44,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.BookingModel;
+import com.jaldeeinc.jaldee.model.LabelPath;
 import com.jaldeeinc.jaldee.model.QuestionnaireInput;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
@@ -60,6 +65,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -154,7 +160,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
     BottomSheetDialog dialog;
     public IPaymentResponse iPaymentResponse;
-    ArrayList<String> imagePathList = new ArrayList<>();
+    ArrayList<LabelPath> imagePathList = new ArrayList<>();
     ArrayList<String> bookingImagesList = new ArrayList<>();
     public Context mContext;
 
@@ -202,13 +208,13 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                 }
             }
 
-            if (bookingModel.getLocationName() != null){
+            if (bookingModel.getLocationName() != null) {
                 tvLocationName.setText(bookingModel.getLocationName());
             }
 
-            if (bookingModel.getServiceInfo() != null){
+            if (bookingModel.getServiceInfo() != null) {
 
-                if (bookingModel.getServiceInfo().getServiceName() != null){
+                if (bookingModel.getServiceInfo().getServiceName() != null) {
 
                     tvServiceName.setText(bookingModel.getServiceInfo().getServiceName());
 
@@ -252,32 +258,46 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                 }
             }
 
-            if (bookingModel.getDate() != null){
+            if (bookingModel.getDate() != null) {
 
                 tvDate.setText(bookingModel.getDate());
             }
 
-            if (bookingModel.getTime() != null){
+            if (bookingModel.getTime() != null) {
 
                 tvTime.setText(bookingModel.getTime());
             }
 
-            if (bookingModel.getCustomerName() != null){
+            if (bookingModel.getCustomerName() != null) {
 
                 tvCustomerName.setText(bookingModel.getCustomerName());
             }
 
-            if (bookingModel.getEmailId() != null){
+            if (bookingModel.getEmailId() != null) {
 
                 tvEmail.setText(bookingModel.getEmailId());
             }
 
-            if (bookingModel.getPhoneNumber() != null && bookingModel.getCountryCode() != null){
-                tvPhoneNumber.setText(bookingModel.getCountryCode() +" "+ bookingModel.getPhoneNumber());
+            if (bookingModel.getPhoneNumber() != null && bookingModel.getCountryCode() != null) {
+                tvPhoneNumber.setText(bookingModel.getCountryCode() + " " + bookingModel.getPhoneNumber());
             }
 
             bookingImagesList = bookingModel.getImagesList();
-            imagePathList = bookingModel.getQuestionnaireImages();
+            String imagesString = SharedPreference.getInstance(mContext).getStringValue(Constants.QIMAGES, "");
+
+            if (imagesString != null && !imagesString.trim().equalsIgnoreCase("")) {
+
+                Type labelPathType = new TypeToken<ArrayList<LabelPath>>(){}.getType();
+
+                try {
+                    ArrayList<LabelPath> pathList = new Gson().fromJson(imagesString, labelPathType);
+                    imagePathList = pathList;
+                } catch (JsonSyntaxException e) {
+                    imagePathList = new ArrayList<>();
+                    e.printStackTrace();
+                }
+
+            }
             mSearchTerminology = bookingModel.getmSearchTerminology();
             familyMEmID = bookingModel.getFamilyEMIID();
             if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true")) {
@@ -448,17 +468,16 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
 
     }
 
-    private void ApiSubmitQuestionnnaire(QuestionnaireInput input) {
+    private void ApiSubmitQuestionnnaire(QuestionnaireInput input, String uid) {
 
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         MediaType type = MediaType.parse("*/*");
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
-        mBuilder.addFormDataPart("question", input.toString());
         for (int i = 0; i < imagePathList.size(); i++) {
 
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getPath())));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -466,15 +485,20 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                 path = saveImage(bitmap);
                 file = new File(path);
             } else {
-                file = new File(imagePathList.get(i));
+                file = new File(imagePathList.get(i).getPath());
             }
             mBuilder.addFormDataPart("files", file.getName(), RequestBody.create(type, file));
         }
+
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(input);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+        mBuilder.addFormDataPart("question", "blob", body);
         RequestBody requestBody = mBuilder.build();
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ResponseBody> call = apiService.submitAppointmentQuestionnaire("uid", requestBody);
+        Call<ResponseBody> call = apiService.submitAppointmentQuestionnaire(uid, requestBody,bookingModel.getAccountId());
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -627,9 +651,14 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                         activeAppointment = response.body();
                         if (activeAppointment != null) {
                             appEncId = activeAppointment.getAppointmentEncId();
-                            if (bookingModel.getQuestionnaireInput() != null) {
+                            String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
 
-                                ApiSubmitQuestionnnaire(bookingModel.getQuestionnaireInput());
+                            if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
+
+                                QuestionnaireInput input = new QuestionnaireInput();
+                                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                                input = gson.fromJson(inputString, QuestionnaireInput.class);
+                                ApiSubmitQuestionnnaire(input,activeAppointment.getUid());
                             }
                             if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true") && (prepayAmount != null && Integer.parseInt(prepayAmount) > 0)) {
 
@@ -643,7 +672,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                                     new PaymentGateway(ReconfirmationActivity.this, ReconfirmationActivity.this).ApiGenerateHash1(value, prepayAmount, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
                                 }
                             } else {
-                                if (imagePathList.size() > 0) {
+                                if (bookingImagesList.size() > 0) {
                                     ApiCommunicateAppointment(value, String.valueOf(bookingModel.getAccountId()), txt_addnote, dialog);
                                 }
                                 getConfirmationDetails(bookingModel.getAccountId());
@@ -673,11 +702,11 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
-        for (int i = 0; i < imagePathList.size(); i++) {
+        for (int i = 0; i < bookingImagesList.size(); i++) {
 
 
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(ReconfirmationActivity.this.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
+                bitmap = MediaStore.Images.Media.getBitmap(ReconfirmationActivity.this.getApplicationContext().getContentResolver(), Uri.fromFile(new File(bookingImagesList.get(i))));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -685,7 +714,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                 path = saveImage(bitmap);
                 file = new File(path);
             } else {
-                file = new File(imagePathList.get(i));
+                file = new File(bookingImagesList.get(i));
             }
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
@@ -712,7 +741,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
-                        imagePathList.clear();
+                        bookingImagesList.clear();
                         dialog.dismiss();
 
 
@@ -751,6 +780,9 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         activeAppointment = response.body();
+                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE,"");
+                        SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES,"");
+
                         if (activeAppointment != null) {
                             appEncId = activeAppointment.getAppointmentEncId();
                             Bundle b = new Bundle();
@@ -759,7 +791,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                             b.putString("from", "");
                             b.putString("waitlistPhonenumber", bookingModel.getPhoneNumber());
                             b.putString("accountID", String.valueOf(bookingModel.getAccountId()));
-                            b.putString("livetrack", bookingModel.serviceInfo.getLivetrack());
+                            b.putString("livetrack", bookingModel.getServiceInfo().getLivetrack());
                             b.putString("confId", value);
                             Intent checkin = new Intent(ReconfirmationActivity.this, AppointmentConfirmation.class);
                             checkin.putExtras(b);
@@ -815,7 +847,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
     @Override
     public void sendPaymentResponse() {
 
-        if (imagePathList != null && imagePathList.size() > 0) {
+        if (bookingImagesList != null && bookingImagesList.size() > 0) {
             ApiCommunicateAppointment(value, String.valueOf(bookingModel.getAccountId()), bookingModel.getMessage(), dialog);
         }
         getConfirmationDetails(bookingModel.getAccountId());
@@ -836,7 +868,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
 
     private void paymentFinished(RazorpayModel razorpayModel) {
 
-        if (imagePathList != null && imagePathList.size() > 0) {
+        if (bookingImagesList != null && bookingImagesList.size() > 0) {
             ApiCommunicateAppointment(value, String.valueOf(bookingModel.getAccountId()), bookingModel.getMessage(), dialog);
         }
         getConfirmationDetails(bookingModel.getAccountId());

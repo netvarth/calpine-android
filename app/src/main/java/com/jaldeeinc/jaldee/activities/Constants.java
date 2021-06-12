@@ -37,6 +37,12 @@ public class Constants {
     public static final String PROVIDER = "Provider";
     public static final String ORDERS = "Orders";
 
+    public static final String BOOKING_CHECKIN = "bCheckIn";
+
+    public static final String BOOKING_APPOINTMENT = "bAppointment";
+
+
+
 
     public static final String CONFIRMED = "Confirmed";
     public static final String ARRIVED = "Arrived";
@@ -56,6 +62,9 @@ public class Constants {
 
     public static final String NONE = "NONE";
     public static final String FULLAMOUNT = "FULLAMOUNT";
+
+    public static final String QUESTIONNAIRE = "questionnaire";
+    public static final String QIMAGES = "qImages";
 
 
     // notification purpose

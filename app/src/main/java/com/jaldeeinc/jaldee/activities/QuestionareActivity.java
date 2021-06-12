@@ -107,455 +107,455 @@ public class QuestionareActivity extends AppCompatActivity implements IDocumentT
         mContext = QuestionareActivity.this;
         iDocumentType = this;
 
-        getQuestionnaire();
+//        getQuestionnaire();
     }
 
-    private void getQuestionnaire() {
-
-        final ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Call<Questionnaire> call = apiService.getAppointmentQuestions(36958, 0, 126254);
-        call.enqueue(new Callback<Questionnaire>() {
-            @Override
-            public void onResponse(Call<Questionnaire> call, Response<Questionnaire> response) {
-                try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
-                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-                    if (response.code() == 200) {
-                        Questionnaire questionnaire = response.body();
-
-                        if (questionnaire != null) {
-
-                            Toast.makeText(mContext, "Success", Toast.LENGTH_SHORT).show();
-
-                            if (questionnaire.getQuestionsList() != null) {
-                                updateUI(questionnaire.getQuestionsList());
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Questionnaire> call, Throwable t) {
-                if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
-            }
-        });
-    }
-
-    private void updateUI(ArrayList<Questions> questionsList) {
-
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.container);
-
-        CustomTextViewSemiBold tvOne = new CustomTextViewSemiBold(this);
-        tvOne.setText("Please provide us with a little more information to complete your booking");
-        tvOne.setGravity(Gravity.CENTER);
-        tvOne.setTextColor(mContext.getResources().getColor(R.color.dark_black));
-        tvOne.setTextSize(15);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(15, 60, 15, 50);
-        tvOne.setLayoutParams(params);
-        linearLayout.addView(tvOne);
-
-        for (Questions question : questionsList) {
-
-            if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("fileUpload")) {
-
-                CustomTextViewSemiBold txtView = new CustomTextViewSemiBold(this);
-                txtView.setText(question.getGetQuestion().getLabel());
-                txtView.setId(R.id.id1);//need for better use
-                txtView.setTextColor(mContext.getResources().getColor(R.color.title_color));
-                txtView.setTextSize(15);
-                LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                textParams.setMargins(35, 35, 35, 0);
-                txtView.setLayoutParams(textParams);
-                linearLayout.addView(txtView);
-
-                if (question.getGetQuestion().getFileProperties() != null && question.getGetQuestion().getFileProperties().getAllowedDocuments() != null && question.getGetQuestion().getFileProperties().getAllowedDocuments().size() > 1) {
-
-                    MultiSpinnerSearch multipleSelectionSpinner = new MultiSpinnerSearch(this);
-//                    multipleSelectionSpinner.setItems(question.getGetQuestion().getFileProperties().getAllowedDocuments());
-                    LinearLayout.LayoutParams spinnerParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    spinnerParams.setMargins(35, 15, 35, 0);
-                    multipleSelectionSpinner.setLayoutParams(spinnerParams);
-                    multipleSelectionSpinner.setId(R.id.id2);
-                    multipleSelectionSpinner.setBackground(mContext.getResources().getDrawable(R.drawable.new_spinner_bg));
-                    linearLayout.addView(multipleSelectionSpinner);
-
-
-                    ArrayList<KeyPairBoolData> list = new ArrayList<>();
-
-
-                    for (int i = 0; i < question.getGetQuestion().getFileProperties().getAllowedDocuments().size(); i++) {
-
-                        KeyPairBoolData obj = new KeyPairBoolData();
-
-                        LinearLayout imagesLayout = new LinearLayout(this);
-                        imagesLayout.setOrientation(LinearLayout.HORIZONTAL);
-                        LinearLayout.LayoutParams il = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                        il.setMargins(35, 15, 35, 15);
-                        imagesLayout.setLayoutParams(il);
-
-                        CardView cardView = new CardView(this);
-                        CustomTextViewSemiBold tvUpload = new CustomTextViewSemiBold(this);
-                        String fileName = question.getGetQuestion().getFileProperties().getAllowedDocuments().get(i);
-                        obj.setName(fileName);
-                        tvUpload.setText("Upload " + fileName);
-                        tvUpload.setTextSize(15);
-                        tvUpload.setTextColor(mContext.getResources().getColor(R.color.title_color));
-                        tvUpload.setId(i + 20);
-                        LinearLayout.LayoutParams upload = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                        upload.setMargins(35, 15, 35, 15);
-                        tvUpload.setLayoutParams(upload);
-                        tvUpload.setGravity(Gravity.CENTER);
-                        cardView.setCardBackgroundColor(getResources().getColor(R.color.spinnerbg));
-                        cardView.addView(tvUpload);
-                        cardView.setId(i + 30);
-                        obj.setViewId(i + 30);
-                        obj.setSelected(false);
-                        cardView.setVisibility(View.GONE);
-                        imagesLayout.addView(cardView);
-
-                        LinearLayout nameLayout = new LinearLayout(this);
-                        nameLayout.setId(i + 100);
-                        obj.setLayoutId(i+100);
-                        CustomTextViewMedium tvFileName = new CustomTextViewMedium(this);
-                        tvFileName.setText("fileName");
-                        tvFileName.setId(i + 200);
-                        obj.setNameViewId(i+200);
-                        LinearLayout.LayoutParams fileNameUpload = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                        fileNameUpload.setMargins(35, 15, 35, 15);
-                        tvFileName.setLayoutParams(fileNameUpload);
-                        tvFileName.setGravity(Gravity.CENTER);
-                        nameLayout.addView(tvFileName);
-
-                        ImageView ivClose = new ImageView(this);
-                        ivClose.setImageDrawable(getResources().getDrawable(R.drawable.close));
-                        LinearLayout.LayoutParams closeIcon = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                        closeIcon.setMargins(35, 15, 35, 15);
-                        ivClose.setLayoutParams(closeIcon);
-                        ivClose.setId(i + 300);
-
-                        ivClose.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
-
-
-                            }
-                        });
-
-                        nameLayout.addView(ivClose);
-                        nameLayout.setVisibility(View.GONE);
-
-                        imagesLayout.addView(nameLayout);
-
-                        linearLayout.addView(imagesLayout);
-                        obj.setObject(cardView);
-                        list.add(obj);
-                    }
-
-                    multipleSelectionSpinner.setItems(list, new MultiSpinnerListener() {
-                        @Override
-                        public void onItemsSelected(List<KeyPairBoolData> selectedItems) {
-
-                            for (int i = 0; i < list.size(); i++) {
-                                    CardView cvFile = (CardView) findViewById((int)list.get(i).getViewId());
-                                    cvFile.setVisibility(View.GONE);
-                            }
-
-                            for (int i = 0; i < selectedItems.size(); i++) {
-                                if (selectedItems.get(i).isSelected()) {
-                                    CardView cvFile = (CardView) findViewById((int)selectedItems.get(i).getViewId());
-                                    LinearLayout nLayout = (LinearLayout) findViewById((int)selectedItems.get(i).getLayoutId());
-                                    CustomTextViewMedium nTextView = (CustomTextViewMedium) findViewById((int)selectedItems.get(i).getNameViewId());
-
-                                    cvFile.setVisibility(View.VISIBLE);
-                                    nLayout.setVisibility(View.VISIBLE);
-
-                                    cvFile.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-
-                                            openImageOptions();
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    });
-
-
-                }
-                else if (question.getGetQuestion().getFileProperties() != null && question.getGetQuestion().getFileProperties().getAllowedDocuments() != null && question.getGetQuestion().getFileProperties().getAllowedDocuments().size() == 1) {
-
-                    LinearLayout fileLayout = new LinearLayout(this);
-                    fileLayout.setOrientation(LinearLayout.HORIZONTAL);
-//                    LinearLayout.LayoutParams Horizontallinearlayoutlayoutparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//    private void getQuestionnaire() {
 //
-//                    setContentView(fileLayout, Horizontallinearlayoutlayoutparams);
-                    CardView cardView = new CardView(this);
-                    CustomTextViewSemiBold tvUpload = new CustomTextViewSemiBold(this);
-                    tvUpload.setText("Upload file");
-                    tvUpload.setTextSize(15);
-                    tvUpload.setTextColor(mContext.getResources().getColor(R.color.title_color));
-                    tvUpload.setId(R.id.id3);
-                    LinearLayout.LayoutParams upload = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    upload.setMargins(35, 15, 35, 15);
-                    tvUpload.setLayoutParams(upload);
-                    tvUpload.setGravity(Gravity.CENTER);
-                    LinearLayout.LayoutParams cardUpload = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    cardUpload.setMargins(35, 15, 35, 15);
-                    cardView.setLayoutParams(cardUpload);
-                    cardView.setCardBackgroundColor(getResources().getColor(R.color.spinnerbg));
-                    cardView.addView(tvUpload);
-                    fileLayout.addView(cardView);
-
-                    cardView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                            openGalleryForOneImage();
-                        }
-                    });
-
-
-                    LinearLayout fileName = new LinearLayout(this);
-                    fileName.setId(R.id.id13);
-                    CustomTextViewMedium tvFileName = new CustomTextViewMedium(this);
-                    tvFileName.setText("fileName");
-                    tvFileName.setId(R.id.id11);
-                    LinearLayout.LayoutParams fileNameUpload = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    fileNameUpload.setMargins(35, 15, 35, 15);
-                    tvFileName.setLayoutParams(fileNameUpload);
-                    tvFileName.setGravity(Gravity.CENTER);
-                    fileName.addView(tvFileName);
-
-                    ImageView ivClose = new ImageView(this);
-                    ivClose.setImageDrawable(getResources().getDrawable(R.drawable.close));
-                    LinearLayout.LayoutParams closeIcon = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    closeIcon.setMargins(35, 15, 35, 15);
-                    ivClose.setLayoutParams(closeIcon);
-                    ivClose.setId(R.id.id12);
-
-                    fileName.addView(ivClose);
-                    fileLayout.addView(fileName);
-                    linearLayout.addView(fileLayout);
-
-                    llFileName = (LinearLayout) findViewById(R.id.id13);
-                    llFileName.setVisibility(View.GONE);
-                    tvSingleFileName = (CustomTextViewMedium) findViewById(R.id.id11);
-                    ivSingleFileClose = (ImageView) findViewById(R.id.id12);
-
-                    ivSingleFileClose.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                            singleFilePath = "";
-                            tvSingleFileName.setText("");
-                            llFileName.setVisibility(View.GONE);
-                        }
-                    });
-
-                }
-
-                LinearLayout dividerOne = new LinearLayout(this);
-                dividerOne.setBackgroundColor(getResources().getColor(R.color.black));
-                LinearLayout.LayoutParams dividerOneParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1);
-                dividerOneParams.setMargins(35, 15, 35, 0);
-                dividerOne.setLayoutParams(dividerOneParams);
-                linearLayout.addView(dividerOne);
-
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("list")) {
-
-                CustomTextViewSemiBold txtView = new CustomTextViewSemiBold(this);
-                txtView.setText(question.getGetQuestion().getLabel());
-                txtView.setId(4);//need for better use
-                txtView.setTextColor(mContext.getResources().getColor(R.color.title_color));
-                txtView.setTextSize(15);
-                LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                textParams.setMargins(35, 35, 35, 0);
-                txtView.setLayoutParams(textParams);
-                linearLayout.addView(txtView);
-
-                ArrayList values = (ArrayList) question.getGetQuestion().getLabelValues();
-
-                for (int i = 0; i < values.size(); i++) {
-                    CheckBox rdbtn = new CheckBox(this);
-                    rdbtn.setId(40 + i);
-                    rdbtn.setText(values.get(i).toString());
-                    rdbtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton cb, boolean b) {
-
-//                            if (data.selectedLabels.size() > question.getGetQuestion().getListProperties().getMaxAnswers()) {
-
-                            Log.e("$#$$#$$$", " Name " + ((CheckBox) cb).getText() + " Id is " + cb.getId());
+//        final ApiInterface apiService =
+//                ApiClient.getClient(mContext).create(ApiInterface.class);
+//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+//        mDialog.show();
+//        Call<Questionnaire> call = apiService.getAppointmentQuestions(36958, 0, 126254);
+//        call.enqueue(new Callback<Questionnaire>() {
+//            @Override
+//            public void onResponse(Call<Questionnaire> call, Response<Questionnaire> response) {
+//                try {
+//                    if (mDialog.isShowing())
+//                        Config.closeDialog(getParent(), mDialog);
+//                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+//                    Config.logV("Response--code-------------------------" + response.code());
+//                    if (response.code() == 200) {
+//                        Questionnaire questionnaire = response.body();
+//
+//                        if (questionnaire != null) {
+//
+//                            Toast.makeText(mContext, "Success", Toast.LENGTH_SHORT).show();
+//
+//                            if (questionnaire.getQuestionsList() != null) {
+//                                updateUI(questionnaire.getQuestionsList());
 //                            }
-                        }
-                    });
-                    linearLayout.addView(rdbtn);
-                }
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Questionnaire> call, Throwable t) {
+//                if (mDialog.isShowing())
+//                    Config.closeDialog(getParent(), mDialog);
+//            }
+//        });
+//    }
 
-
-                // underline
-                LinearLayout dividerOne = new LinearLayout(this);
-                dividerOne.setBackgroundColor(getResources().getColor(R.color.black));
-                LinearLayout.LayoutParams dividerOneParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1);
-                dividerOneParams.setMargins(35, 15, 35, 0);
-                dividerOne.setLayoutParams(dividerOneParams);
-                linearLayout.addView(dividerOne);
-
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("date")) {
-
-                CustomTextViewSemiBold txtView = new CustomTextViewSemiBold(this);
-                txtView.setText(question.getGetQuestion().getLabel());
-                txtView.setId(5);//need for better use
-                txtView.setTextColor(mContext.getResources().getColor(R.color.title_color));
-                txtView.setTextSize(15);
-                LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                textParams.setMargins(35, 35, 35, 0);
-                txtView.setLayoutParams(textParams);
-                linearLayout.addView(txtView);
-
-                LinearLayout dateLayout = new LinearLayout(this);
-                CustomTextViewSemiBold text = new CustomTextViewSemiBold(this);
-                text.setText("Select Date");
-                text.setTextSize(15);
-                text.setId(R.id.id6);
-                text.setTextColor(mContext.getResources().getColor(R.color.title_color));
-                LinearLayout.LayoutParams calenderText = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                calenderText.setMargins(35, 25, 25, 25);
-                text.setLayoutParams(calenderText);
-                ImageView imageView = new ImageView(this);
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.icon_calendar));
-                imageView.setPadding(50, 0, 35, 0);
-
-                dateLayout.addView(text);
-                dateLayout.addView(imageView);
-                dateLayout.setBackgroundColor(getResources().getColor(R.color.spinnerbg));
-                LinearLayout.LayoutParams calenderLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                calenderLayout.setMargins(35, 35, 35, 0);
-                dateLayout.setGravity(Gravity.CENTER);
-                dateLayout.setId(R.id.id10);
-                dateLayout.setLayoutParams(calenderLayout);
-                linearLayout.addView(dateLayout);
-
-                // underline
-                LinearLayout dividerOne = new LinearLayout(this);
-                dividerOne.setBackgroundColor(getResources().getColor(R.color.black));
-                LinearLayout.LayoutParams dividerOneParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1);
-                dividerOneParams.setMargins(35, 15, 35, 0);
-                dividerOne.setLayoutParams(dividerOneParams);
-                linearLayout.addView(dividerOne);
-
-                dateLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        com.jaldeeinc.jaldee.custom.DatePicker mDatePickerDialogFragment;
-                        mDatePickerDialogFragment = new com.jaldeeinc.jaldee.custom.DatePicker();
-                        mDatePickerDialogFragment.show(getSupportFragmentManager(), "DATE PICK");
-                    }
-                });
-
-
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("plainText")) {
-
-                CustomTextViewSemiBold txtView = new CustomTextViewSemiBold(this);
-                txtView.setText(question.getGetQuestion().getLabel());
-                txtView.setId(R.id.id7);//need for better use
-                txtView.setTextColor(mContext.getResources().getColor(R.color.title_color));
-                txtView.setTextSize(15);
-                LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                textParams.setMargins(35, 35, 35, 0);
-                txtView.setLayoutParams(textParams);
-                linearLayout.addView(txtView);
-
-                CustomEditTextRegular editText = new CustomEditTextRegular(this);
-                editText.setBackground(getResources().getDrawable(R.drawable.edittext));
-                editText.setHeight(120);
-                editText.setPadding(15, 0, 0, 0);
-                editText.setId(R.id.id8);
-                LinearLayout.LayoutParams editTextParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                editTextParams.setMargins(35, 35, 35, 0);
-                editText.setLayoutParams(editTextParams);
-                linearLayout.addView(editText);
-
-
-                // underline
-                LinearLayout dividerOne = new LinearLayout(this);
-                dividerOne.setBackgroundColor(getResources().getColor(R.color.black));
-                LinearLayout.LayoutParams dividerOneParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1);
-                dividerOneParams.setMargins(35, 15, 35, 0);
-                dividerOne.setLayoutParams(dividerOneParams);
-                linearLayout.addView(dividerOne);
-
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("bool")) {
-
-                CustomTextViewSemiBold txtView = new CustomTextViewSemiBold(this);
-                txtView.setText(question.getGetQuestion().getLabel());
-                txtView.setId(9);//need for better use
-                txtView.setTextColor(mContext.getResources().getColor(R.color.title_color));
-                txtView.setTextSize(15);
-                LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                textParams.setMargins(35, 35, 35, 0);
-                txtView.setLayoutParams(textParams);
-                linearLayout.addView(txtView);
-
-                ArrayList values = (ArrayList) question.getGetQuestion().getLabelValues();
-
-
-// Create RadioButton Dynamically
-                RadioButton radioButton1 = new RadioButton(this);
-                radioButton1.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                radioButton1.setText(values.get(0).toString());
-                radioButton1.setId(0);
-
-                RadioButton radioButton2 = new RadioButton(this);
-                radioButton2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                radioButton2.setText(values.get(1).toString());
-                radioButton2.setId(1);
-
-                RadioGroup radioGroup = new RadioGroup(this);
-                LinearLayout.LayoutParams radioParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                radioParams.setMargins(35, 0, 0, 0);
-                radioGroup.setLayoutParams(radioParams);
-
-                radioGroup.addView(radioButton1);
-                radioGroup.addView(radioButton2);
-                linearLayout.addView(radioGroup);
-
-                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(RadioGroup group, int checkedId) {
-//                            String text = getString(R.string.you_selected);
-//                            text += " " + getString((checkedId == 0) ? R.string.male : R.string.female);
-//                            Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-
-                // underline
-                LinearLayout dividerOne = new LinearLayout(this);
-                dividerOne.setBackgroundColor(getResources().getColor(R.color.black));
-                LinearLayout.LayoutParams dividerOneParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1);
-                dividerOneParams.setMargins(35, 15, 35, 0);
-                dividerOne.setLayoutParams(dividerOneParams);
-                linearLayout.addView(dividerOne);
-
-
-            }
-        }
-
-    }
+//    private void updateUI(ArrayList<Questions> questionsList) {
+//
+//        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.container);
+//
+//        CustomTextViewSemiBold tvOne = new CustomTextViewSemiBold(this);
+//        tvOne.setText("Please provide us with a little more information to complete your booking");
+//        tvOne.setGravity(Gravity.CENTER);
+//        tvOne.setTextColor(mContext.getResources().getColor(R.color.dark_black));
+//        tvOne.setTextSize(15);
+//        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//        params.setMargins(15, 60, 15, 50);
+//        tvOne.setLayoutParams(params);
+//        linearLayout.addView(tvOne);
+//
+//        for (Questions question : questionsList) {
+//
+//            if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("fileUpload")) {
+//
+//                CustomTextViewSemiBold txtView = new CustomTextViewSemiBold(this);
+//                txtView.setText(question.getGetQuestion().getLabel());
+//                txtView.setId(R.id.id1);//need for better use
+//                txtView.setTextColor(mContext.getResources().getColor(R.color.title_color));
+//                txtView.setTextSize(15);
+//                LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                textParams.setMargins(35, 35, 35, 0);
+//                txtView.setLayoutParams(textParams);
+//                linearLayout.addView(txtView);
+//
+//                if (question.getGetQuestion().getFileProperties() != null && question.getGetQuestion().getFileProperties().getAllowedDocuments() != null && question.getGetQuestion().getFileProperties().getAllowedDocuments().size() > 1) {
+//
+//                    MultiSpinnerSearch multipleSelectionSpinner = new MultiSpinnerSearch(this);
+////                    multipleSelectionSpinner.setItems(question.getGetQuestion().getFileProperties().getAllowedDocuments());
+//                    LinearLayout.LayoutParams spinnerParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                    spinnerParams.setMargins(35, 15, 35, 0);
+//                    multipleSelectionSpinner.setLayoutParams(spinnerParams);
+//                    multipleSelectionSpinner.setId(R.id.id2);
+//                    multipleSelectionSpinner.setBackground(mContext.getResources().getDrawable(R.drawable.new_spinner_bg));
+//                    linearLayout.addView(multipleSelectionSpinner);
+//
+//
+//                    ArrayList<KeyPairBoolData> list = new ArrayList<>();
+//
+//
+//                    for (int i = 0; i < question.getGetQuestion().getFileProperties().getAllowedDocuments().size(); i++) {
+//
+//                        KeyPairBoolData obj = new KeyPairBoolData();
+//
+//                        LinearLayout imagesLayout = new LinearLayout(this);
+//                        imagesLayout.setOrientation(LinearLayout.HORIZONTAL);
+//                        LinearLayout.LayoutParams il = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                        il.setMargins(35, 15, 35, 15);
+//                        imagesLayout.setLayoutParams(il);
+//
+//                        CardView cardView = new CardView(this);
+//                        CustomTextViewSemiBold tvUpload = new CustomTextViewSemiBold(this);
+//                        String fileName = question.getGetQuestion().getFileProperties().getAllowedDocuments().get(i);
+//                        obj.setName(fileName);
+//                        tvUpload.setText("Upload " + fileName);
+//                        tvUpload.setTextSize(15);
+//                        tvUpload.setTextColor(mContext.getResources().getColor(R.color.title_color));
+//                        tvUpload.setId(i + 20);
+//                        LinearLayout.LayoutParams upload = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                        upload.setMargins(35, 15, 35, 15);
+//                        tvUpload.setLayoutParams(upload);
+//                        tvUpload.setGravity(Gravity.CENTER);
+//                        cardView.setCardBackgroundColor(getResources().getColor(R.color.spinnerbg));
+//                        cardView.addView(tvUpload);
+//                        cardView.setId(i + 30);
+//                        obj.setViewId(i + 30);
+//                        obj.setSelected(false);
+//                        cardView.setVisibility(View.GONE);
+//                        imagesLayout.addView(cardView);
+//
+//                        LinearLayout nameLayout = new LinearLayout(this);
+//                        nameLayout.setId(i + 100);
+//                        obj.setLayoutId(i+100);
+//                        CustomTextViewMedium tvFileName = new CustomTextViewMedium(this);
+//                        tvFileName.setText("fileName");
+//                        tvFileName.setId(i + 200);
+//                        obj.setNameViewId(i+200);
+//                        LinearLayout.LayoutParams fileNameUpload = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                        fileNameUpload.setMargins(35, 15, 35, 15);
+//                        tvFileName.setLayoutParams(fileNameUpload);
+//                        tvFileName.setGravity(Gravity.CENTER);
+//                        nameLayout.addView(tvFileName);
+//
+//                        ImageView ivClose = new ImageView(this);
+//                        ivClose.setImageDrawable(getResources().getDrawable(R.drawable.close));
+//                        LinearLayout.LayoutParams closeIcon = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                        closeIcon.setMargins(35, 15, 35, 15);
+//                        ivClose.setLayoutParams(closeIcon);
+//                        ivClose.setId(i + 300);
+//
+//                        ivClose.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//
+//
+//
+//                            }
+//                        });
+//
+//                        nameLayout.addView(ivClose);
+//                        nameLayout.setVisibility(View.GONE);
+//
+//                        imagesLayout.addView(nameLayout);
+//
+//                        linearLayout.addView(imagesLayout);
+//                        obj.setObject(cardView);
+//                        list.add(obj);
+//                    }
+//
+//                    multipleSelectionSpinner.setItems(list, new MultiSpinnerListener() {
+//                        @Override
+//                        public void onItemsSelected(List<KeyPairBoolData> selectedItems) {
+//
+//                            for (int i = 0; i < list.size(); i++) {
+//                                    CardView cvFile = (CardView) findViewById((int)list.get(i).getViewId());
+//                                    cvFile.setVisibility(View.GONE);
+//                            }
+//
+//                            for (int i = 0; i < selectedItems.size(); i++) {
+//                                if (selectedItems.get(i).isSelected()) {
+//                                    CardView cvFile = (CardView) findViewById((int)selectedItems.get(i).getViewId());
+//                                    LinearLayout nLayout = (LinearLayout) findViewById((int)selectedItems.get(i).getLayoutId());
+//                                    CustomTextViewMedium nTextView = (CustomTextViewMedium) findViewById((int)selectedItems.get(i).getNameViewId());
+//
+//                                    cvFile.setVisibility(View.VISIBLE);
+//                                    nLayout.setVisibility(View.VISIBLE);
+//
+//                                    cvFile.setOnClickListener(new View.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(View view) {
+//
+//                                            openImageOptions();
+//                                        }
+//                                    });
+//                                }
+//                            }
+//                        }
+//                    });
+//
+//
+//                }
+//                else if (question.getGetQuestion().getFileProperties() != null && question.getGetQuestion().getFileProperties().getAllowedDocuments() != null && question.getGetQuestion().getFileProperties().getAllowedDocuments().size() == 1) {
+//
+//                    LinearLayout fileLayout = new LinearLayout(this);
+//                    fileLayout.setOrientation(LinearLayout.HORIZONTAL);
+////                    LinearLayout.LayoutParams Horizontallinearlayoutlayoutparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+////
+////                    setContentView(fileLayout, Horizontallinearlayoutlayoutparams);
+//                    CardView cardView = new CardView(this);
+//                    CustomTextViewSemiBold tvUpload = new CustomTextViewSemiBold(this);
+//                    tvUpload.setText("Upload file");
+//                    tvUpload.setTextSize(15);
+//                    tvUpload.setTextColor(mContext.getResources().getColor(R.color.title_color));
+//                    tvUpload.setId(R.id.id3);
+//                    LinearLayout.LayoutParams upload = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                    upload.setMargins(35, 15, 35, 15);
+//                    tvUpload.setLayoutParams(upload);
+//                    tvUpload.setGravity(Gravity.CENTER);
+//                    LinearLayout.LayoutParams cardUpload = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                    cardUpload.setMargins(35, 15, 35, 15);
+//                    cardView.setLayoutParams(cardUpload);
+//                    cardView.setCardBackgroundColor(getResources().getColor(R.color.spinnerbg));
+//                    cardView.addView(tvUpload);
+//                    fileLayout.addView(cardView);
+//
+//                    cardView.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//
+//                            openGalleryForOneImage();
+//                        }
+//                    });
+//
+//
+//                    LinearLayout fileName = new LinearLayout(this);
+//                    fileName.setId(R.id.id13);
+//                    CustomTextViewMedium tvFileName = new CustomTextViewMedium(this);
+//                    tvFileName.setText("fileName");
+//                    tvFileName.setId(R.id.id11);
+//                    LinearLayout.LayoutParams fileNameUpload = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                    fileNameUpload.setMargins(35, 15, 35, 15);
+//                    tvFileName.setLayoutParams(fileNameUpload);
+//                    tvFileName.setGravity(Gravity.CENTER);
+//                    fileName.addView(tvFileName);
+//
+//                    ImageView ivClose = new ImageView(this);
+//                    ivClose.setImageDrawable(getResources().getDrawable(R.drawable.close));
+//                    LinearLayout.LayoutParams closeIcon = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                    closeIcon.setMargins(35, 15, 35, 15);
+//                    ivClose.setLayoutParams(closeIcon);
+//                    ivClose.setId(R.id.id12);
+//
+//                    fileName.addView(ivClose);
+//                    fileLayout.addView(fileName);
+//                    linearLayout.addView(fileLayout);
+//
+//                    llFileName = (LinearLayout) findViewById(R.id.id13);
+//                    llFileName.setVisibility(View.GONE);
+//                    tvSingleFileName = (CustomTextViewMedium) findViewById(R.id.id11);
+//                    ivSingleFileClose = (ImageView) findViewById(R.id.id12);
+//
+//                    ivSingleFileClose.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//
+//                            singleFilePath = "";
+//                            tvSingleFileName.setText("");
+//                            llFileName.setVisibility(View.GONE);
+//                        }
+//                    });
+//
+//                }
+//
+//                LinearLayout dividerOne = new LinearLayout(this);
+//                dividerOne.setBackgroundColor(getResources().getColor(R.color.black));
+//                LinearLayout.LayoutParams dividerOneParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1);
+//                dividerOneParams.setMargins(35, 15, 35, 0);
+//                dividerOne.setLayoutParams(dividerOneParams);
+//                linearLayout.addView(dividerOne);
+//
+//            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("list")) {
+//
+//                CustomTextViewSemiBold txtView = new CustomTextViewSemiBold(this);
+//                txtView.setText(question.getGetQuestion().getLabel());
+//                txtView.setId(4);//need for better use
+//                txtView.setTextColor(mContext.getResources().getColor(R.color.title_color));
+//                txtView.setTextSize(15);
+//                LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                textParams.setMargins(35, 35, 35, 0);
+//                txtView.setLayoutParams(textParams);
+//                linearLayout.addView(txtView);
+//
+//                ArrayList values = (ArrayList) question.getGetQuestion().getLabelValues();
+//
+//                for (int i = 0; i < values.size(); i++) {
+//                    CheckBox rdbtn = new CheckBox(this);
+//                    rdbtn.setId(40 + i);
+//                    rdbtn.setText(values.get(i).toString());
+//                    rdbtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                        @Override
+//                        public void onCheckedChanged(CompoundButton cb, boolean b) {
+//
+////                            if (data.selectedLabels.size() > question.getGetQuestion().getListProperties().getMaxAnswers()) {
+//
+//                            Log.e("$#$$#$$$", " Name " + ((CheckBox) cb).getText() + " Id is " + cb.getId());
+////                            }
+//                        }
+//                    });
+//                    linearLayout.addView(rdbtn);
+//                }
+//
+//
+//                // underline
+//                LinearLayout dividerOne = new LinearLayout(this);
+//                dividerOne.setBackgroundColor(getResources().getColor(R.color.black));
+//                LinearLayout.LayoutParams dividerOneParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1);
+//                dividerOneParams.setMargins(35, 15, 35, 0);
+//                dividerOne.setLayoutParams(dividerOneParams);
+//                linearLayout.addView(dividerOne);
+//
+//            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("date")) {
+//
+//                CustomTextViewSemiBold txtView = new CustomTextViewSemiBold(this);
+//                txtView.setText(question.getGetQuestion().getLabel());
+//                txtView.setId(5);//need for better use
+//                txtView.setTextColor(mContext.getResources().getColor(R.color.title_color));
+//                txtView.setTextSize(15);
+//                LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                textParams.setMargins(35, 35, 35, 0);
+//                txtView.setLayoutParams(textParams);
+//                linearLayout.addView(txtView);
+//
+//                LinearLayout dateLayout = new LinearLayout(this);
+//                CustomTextViewSemiBold text = new CustomTextViewSemiBold(this);
+//                text.setText("Select Date");
+//                text.setTextSize(15);
+//                text.setId(R.id.id6);
+//                text.setTextColor(mContext.getResources().getColor(R.color.title_color));
+//                LinearLayout.LayoutParams calenderText = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                calenderText.setMargins(35, 25, 25, 25);
+//                text.setLayoutParams(calenderText);
+//                ImageView imageView = new ImageView(this);
+//                imageView.setImageDrawable(getResources().getDrawable(R.drawable.icon_calendar));
+//                imageView.setPadding(50, 0, 35, 0);
+//
+//                dateLayout.addView(text);
+//                dateLayout.addView(imageView);
+//                dateLayout.setBackgroundColor(getResources().getColor(R.color.spinnerbg));
+//                LinearLayout.LayoutParams calenderLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                calenderLayout.setMargins(35, 35, 35, 0);
+//                dateLayout.setGravity(Gravity.CENTER);
+//                dateLayout.setId(R.id.id10);
+//                dateLayout.setLayoutParams(calenderLayout);
+//                linearLayout.addView(dateLayout);
+//
+//                // underline
+//                LinearLayout dividerOne = new LinearLayout(this);
+//                dividerOne.setBackgroundColor(getResources().getColor(R.color.black));
+//                LinearLayout.LayoutParams dividerOneParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1);
+//                dividerOneParams.setMargins(35, 15, 35, 0);
+//                dividerOne.setLayoutParams(dividerOneParams);
+//                linearLayout.addView(dividerOne);
+//
+//                dateLayout.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//
+//                        com.jaldeeinc.jaldee.custom.DatePicker mDatePickerDialogFragment;
+//                        mDatePickerDialogFragment = new com.jaldeeinc.jaldee.custom.DatePicker();
+//                        mDatePickerDialogFragment.show(getSupportFragmentManager(), "DATE PICK");
+//                    }
+//                });
+//
+//
+//            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("plainText")) {
+//
+//                CustomTextViewSemiBold txtView = new CustomTextViewSemiBold(this);
+//                txtView.setText(question.getGetQuestion().getLabel());
+//                txtView.setId(R.id.id7);//need for better use
+//                txtView.setTextColor(mContext.getResources().getColor(R.color.title_color));
+//                txtView.setTextSize(15);
+//                LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                textParams.setMargins(35, 35, 35, 0);
+//                txtView.setLayoutParams(textParams);
+//                linearLayout.addView(txtView);
+//
+//                CustomEditTextRegular editText = new CustomEditTextRegular(this);
+//                editText.setBackground(getResources().getDrawable(R.drawable.edittext));
+//                editText.setHeight(120);
+//                editText.setPadding(15, 0, 0, 0);
+//                editText.setId(R.id.id8);
+//                LinearLayout.LayoutParams editTextParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                editTextParams.setMargins(35, 35, 35, 0);
+//                editText.setLayoutParams(editTextParams);
+//                linearLayout.addView(editText);
+//
+//
+//                // underline
+//                LinearLayout dividerOne = new LinearLayout(this);
+//                dividerOne.setBackgroundColor(getResources().getColor(R.color.black));
+//                LinearLayout.LayoutParams dividerOneParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1);
+//                dividerOneParams.setMargins(35, 15, 35, 0);
+//                dividerOne.setLayoutParams(dividerOneParams);
+//                linearLayout.addView(dividerOne);
+//
+//            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("bool")) {
+//
+//                CustomTextViewSemiBold txtView = new CustomTextViewSemiBold(this);
+//                txtView.setText(question.getGetQuestion().getLabel());
+//                txtView.setId(9);//need for better use
+//                txtView.setTextColor(mContext.getResources().getColor(R.color.title_color));
+//                txtView.setTextSize(15);
+//                LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                textParams.setMargins(35, 35, 35, 0);
+//                txtView.setLayoutParams(textParams);
+//                linearLayout.addView(txtView);
+//
+//                ArrayList values = (ArrayList) question.getGetQuestion().getLabelValues();
+//
+//
+//// Create RadioButton Dynamically
+//                RadioButton radioButton1 = new RadioButton(this);
+//                radioButton1.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//                radioButton1.setText(values.get(0).toString());
+//                radioButton1.setId(0);
+//
+//                RadioButton radioButton2 = new RadioButton(this);
+//                radioButton2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//                radioButton2.setText(values.get(1).toString());
+//                radioButton2.setId(1);
+//
+//                RadioGroup radioGroup = new RadioGroup(this);
+//                LinearLayout.LayoutParams radioParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                radioParams.setMargins(35, 0, 0, 0);
+//                radioGroup.setLayoutParams(radioParams);
+//
+//                radioGroup.addView(radioButton1);
+//                radioGroup.addView(radioButton2);
+//                linearLayout.addView(radioGroup);
+//
+//                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//                    @Override
+//                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+////                            String text = getString(R.string.you_selected);
+////                            text += " " + getString((checkedId == 0) ? R.string.male : R.string.female);
+////                            Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//
+//
+//                // underline
+//                LinearLayout dividerOne = new LinearLayout(this);
+//                dividerOne.setBackgroundColor(getResources().getColor(R.color.black));
+//                LinearLayout.LayoutParams dividerOneParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1);
+//                dividerOneParams.setMargins(35, 15, 35, 0);
+//                dividerOne.setLayoutParams(dividerOneParams);
+//                linearLayout.addView(dividerOne);
+//
+//
+//            }
+//        }
+//
+//    }
 
     private void openImageOptions() {
 

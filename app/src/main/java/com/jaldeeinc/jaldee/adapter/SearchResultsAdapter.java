@@ -933,7 +933,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public void addAll(List<SearchListModel> moveResults) {
 
-        for (SearchListModel searchResult : this.searchResults) {
+        for (SearchListModel searchResult : searchResults) {
             for (SearchListModel result : moveResults) {
                 if (searchResult.getId().equalsIgnoreCase(result.getId())) {
                     moveResults.remove(result);
@@ -948,7 +948,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void updateData(List<SearchListModel> results) {
 
         results = results == null ? new ArrayList<>() : results;
-        this.searchResults = results;
+        searchResults = results;
         notifyDataSetChanged();
     }
 

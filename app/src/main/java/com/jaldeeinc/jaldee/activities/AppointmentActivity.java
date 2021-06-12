@@ -76,6 +76,7 @@ import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.custom.FamilyMemberDialog;
 import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
 import com.jaldeeinc.jaldee.custom.SlotsDialog;
+import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
@@ -88,7 +89,7 @@ import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
-import com.jaldeeinc.jaldee.response.SearchLocation;
+import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
@@ -121,6 +122,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -128,15 +130,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -353,6 +348,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     private String countryCode;
     private Provider providerResponse = new Provider();
     private SearchSetting mSearchSettings;
+    private String accountBusinessName;
+    private String locationName;
 
     private ICpn iCpn;
 
@@ -370,10 +367,16 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         iSendMessage = this;
         iFamilyMemberDetails = this;
 
+        SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, "");
+        SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, "");
+
+
         // getting necessary details from intent
         Intent intent = getIntent();
         uniqueId = intent.getIntExtra("uniqueID", 0);
         providerName = intent.getStringExtra("providerName");
+        accountBusinessName = intent.getStringExtra("accountBusinessName");
+        locationName = intent.getStringExtra("locationName");
         serviceInfo = (ServiceInfo) intent.getSerializableExtra("serviceInfo");
         locationId = intent.getIntExtra("locationId", 0);
         providerId = intent.getIntExtra("providerId", 0);
@@ -398,9 +401,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         }
 
         if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
-            tvButtonName.setText("Proceed to Payment");
+            tvButtonName.setText("Next");
         } else {
-            tvButtonName.setText("Confirm Appointment");
+            tvButtonName.setText("Next");
         }
 
         if (serviceInfo.getConsumerNoteTitle() != null && !serviceInfo.getConsumerNoteTitle().equalsIgnoreCase("")) {
@@ -686,7 +689,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     etCode.setText("");
                     Toast.makeText(AppointmentActivity.this, couponEntered + " " + "Added", Toast.LENGTH_SHORT).show();
 
-                    cpns(couponArraylist);
 
                 } else {
                     if (couponEntered.equals("")) {
@@ -697,6 +699,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
 
                 }
+                cpns(couponArraylist);
 
             }
         });
@@ -1366,7 +1369,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     virtualService.put("Zoom", serviceInfo.getVirtualCallingValue());
                 } else if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("Phone")) {
                     virtualService.put("Phone", countryVirtualCode + etVirtualNumber.getText());
-                }else if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("VideoCall")) {
+                } else if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("VideoCall")) {
                     virtualService.put("VideoCall", serviceInfo.getVirtualCallingValue());
                 }
             } else {
@@ -1447,104 +1450,190 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
         Log.i("QueueObj Checkin", queueobj.toString());
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), queueobj.toString());
-        Call<ResponseBody> call = apiService.Appointment(String.valueOf(id), body);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                try {
+        if (mDialog.isShowing())
+            Config.closeDialog(getParent(), mDialog);
 
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
+        if (serviceInfo.isUser()) {
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-                    Config.logV("Response--code-------------------------" + response.body());
+            getQuestionnaire(serviceInfo.getServiceId(), userId, queueobj, txt_addnote);
+        } else {
+            getQuestionnaire(serviceInfo.getServiceId(), providerId, queueobj, txt_addnote);
+        }
 
-                    MultiplefamilyList.clear();
-                    if (response.code() == 200) {
-
-
-                        SharedPreference.getInstance(AppointmentActivity.this).setValue("refreshcheckin", "true");
-
-                        JSONObject reader = new JSONObject(response.body().string());
-                        Iterator iteratorObj = reader.keys();
-
-                        while (iteratorObj.hasNext()) {
-                            String getJsonObj = (String) iteratorObj.next();
-                            System.out.println("KEY: " + "------>" + getJsonObj);
-                            value = reader.getString(getJsonObj);
-                            if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
-                                prepayAmount = reader.getString("_prepaymentAmount");
-                            }
-
-                        }
-
-                        if (serviceInfo.isUser()) {
-                            getConfirmationId(userId, txt_addnote, id);
-                        } else {
-                            getConfirmationId(providerId, txt_addnote, id);
-                        }
-
-                    } else {
-                        if (response.code() == 422) {
-
-                            String errorString = response.errorBody().string();
-
-                            Config.logV("Error String-----------" + errorString);
-                            Map<String, String> tokens = new HashMap<String, String>();
-                            tokens.put("Customer", Config.toTitleCase(mSearchTerminology.getCustomer()));
-                            tokens.put("provider", mSearchTerminology.getProvider());
-                            tokens.put("arrived", mSearchTerminology.getArrived());
-                            tokens.put("waitlisted", mSearchTerminology.getWaitlist());
-
-                            tokens.put("start", mSearchTerminology.getStart());
-                            tokens.put("cancelled", mSearchTerminology.getCancelled());
-                            tokens.put("done", mSearchTerminology.getDone());
-
-
-                            StringBuffer sb = new StringBuffer();
-
-                            Pattern p3 = Pattern.compile("\\[(.*?)\\]");
-
-                            Matcher matcher = p3.matcher(errorString);
-                            while (matcher.find()) {
-                                System.out.println(matcher.group(1));
-                                matcher.appendReplacement(sb, tokens.get(matcher.group(1)));
-                            }
-                            matcher.appendTail(sb);
-
-                            System.out.println("SubString@@@@@@@@@@@@@" + sb.toString());
-
-
-                            Toast.makeText(AppointmentActivity.this, sb.toString(), Toast.LENGTH_LONG).show();
-                        } else {
-                            String responseerror = response.errorBody().string();
-                            Config.logV("Response--error-------------------------" + responseerror);
-                            if (response.code() != 419)
-                                Toast.makeText(AppointmentActivity.this, responseerror, Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
-
-            }
-        });
+        MultiplefamilyList.clear();
+//        Call<ResponseBody> call = apiService.Appointment(String.valueOf(id), body);
+//        call.enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//
+//                try {
+//
+//                    if (mDialog.isShowing())
+//                        Config.closeDialog(getParent(), mDialog);
+//
+//                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+//                    Config.logV("Response--code-------------------------" + response.code());
+//                    Config.logV("Response--code-------------------------" + response.body());
+//
+//                    MultiplefamilyList.clear();
+//                    if (response.code() == 200) {
+//
+//
+//                        SharedPreference.getInstance(AppointmentActivity.this).setValue("refreshcheckin", "true");
+//
+//                        JSONObject reader = new JSONObject(response.body().string());
+//                        Iterator iteratorObj = reader.keys();
+//
+//                        while (iteratorObj.hasNext()) {
+//                            String getJsonObj = (String) iteratorObj.next();
+//                            System.out.println("KEY: " + "------>" + getJsonObj);
+//                            value = reader.getString(getJsonObj);
+//                            if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
+//                                prepayAmount = reader.getString("_prepaymentAmount");
+//                            }
+//
+//                        }
+//
+//                        if (serviceInfo.isUser()) {
+//                            getConfirmationId(userId, txt_addnote, id);
+//                        } else {
+//                            getConfirmationId(providerId, txt_addnote, id);
+//                        }
+//
+//                    } else {
+//                        if (response.code() == 422) {
+//
+//                            String errorString = response.errorBody().string();
+//
+//                            Config.logV("Error String-----------" + errorString);
+//                            Map<String, String> tokens = new HashMap<String, String>();
+//                            tokens.put("Customer", Config.toTitleCase(mSearchTerminology.getCustomer()));
+//                            tokens.put("provider", mSearchTerminology.getProvider());
+//                            tokens.put("arrived", mSearchTerminology.getArrived());
+//                            tokens.put("waitlisted", mSearchTerminology.getWaitlist());
+//
+//                            tokens.put("start", mSearchTerminology.getStart());
+//                            tokens.put("cancelled", mSearchTerminology.getCancelled());
+//                            tokens.put("done", mSearchTerminology.getDone());
+//
+//
+//                            StringBuffer sb = new StringBuffer();
+//
+//                            Pattern p3 = Pattern.compile("\\[(.*?)\\]");
+//
+//                            Matcher matcher = p3.matcher(errorString);
+//                            while (matcher.find()) {
+//                                System.out.println(matcher.group(1));
+//                                matcher.appendReplacement(sb, tokens.get(matcher.group(1)));
+//                            }
+//                            matcher.appendTail(sb);
+//
+//                            System.out.println("SubString@@@@@@@@@@@@@" + sb.toString());
+//
+//
+//                            Toast.makeText(AppointmentActivity.this, sb.toString(), Toast.LENGTH_LONG).show();
+//                        } else {
+//                            String responseerror = response.errorBody().string();
+//                            Config.logV("Response--error-------------------------" + responseerror);
+//                            if (response.code() != 419)
+//                                Toast.makeText(AppointmentActivity.this, responseerror, Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                // Log error here since request failed
+//                Config.logV("Fail---------------" + t.toString());
+//                if (mDialog.isShowing())
+//                    Config.closeDialog(getParent(), mDialog);
+//
+//            }
+//        });
 
 
     }
+
+    private void getQuestionnaire(int serviceId, int accountId, JSONObject queueobj, String txt_addnote) {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<Questionnaire> call = apiService.getQuestions(serviceId, 0, accountId);
+        call.enqueue(new Callback<Questionnaire>() {
+            @Override
+            public void onResponse(Call<Questionnaire> call, Response<Questionnaire> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        Questionnaire questionnaire = response.body();
+
+                        BookingModel model = new BookingModel();
+                        model.setJsonObject(queueobj.toString());
+                        model.setImagesList(imagePathList);
+                        model.setMessage(txt_addnote);
+                        model.setAccountId(accountId);
+                        model.setServiceInfo(serviceInfo);
+                        model.setmSearchTerminology(mSearchTerminology);
+                        model.setFamilyEMIID(familyMEmID);
+                        model.setPhoneNumber(phoneNumber);
+                        model.setQuestionnaire(questionnaire);
+                        model.setFrom(Constants.APPOINTMENT);
+                        model.setProviderName(providerName);
+                        model.setAccountBusinessName(accountBusinessName);
+                        model.setLocationName(locationName);
+                        model.setDate(tvDate.getText().toString());
+                        model.setTime(tvTime.getText().toString());
+                        model.setCustomerName(tvConsumerName.getText().toString());
+                        model.setEmailId(tvEmail.getText().toString());
+                        model.setCountryCode(countryCode);
+
+                        if (questionnaire != null) {
+
+                            if (questionnaire.getQuestionsList() != null) {
+
+                                Intent intent = new Intent(AppointmentActivity.this, CustomQuestionnaire.class);
+                                intent.putExtra("data", model);
+                                intent.putExtra("from",Constants.APPOINTMENT);
+                                startActivity(intent);
+
+                            } else {
+
+                                Intent intent = new Intent(AppointmentActivity.this, ReconfirmationActivity.class);
+                                intent.putExtra("data", model);
+                                startActivity(intent);
+                            }
+                        } else {
+
+                            Intent intent = new Intent(AppointmentActivity.this, ReconfirmationActivity.class);
+                            intent.putExtra("data", model);
+                            startActivity(intent);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Questionnaire> call, Throwable t) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+    }
+
 
     private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
 
@@ -2581,4 +2670,3 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         return couponApliedOrNotDetails;
     }
 }
-

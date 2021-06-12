@@ -1,5 +1,9 @@
 package com.jaldeeinc.jaldee.model;
 
+import com.google.gson.JsonObject;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -7,7 +11,9 @@ import java.io.Serializable;
 public class AnswerLine implements Serializable {
 
     private String labelName = "";
-    private JSONObject answer = new JSONObject();
+    @SerializedName("answer")
+    @Expose
+    private JsonObject answer = new JsonObject();
 
 
     public String getLabelName() {
@@ -18,11 +24,11 @@ public class AnswerLine implements Serializable {
         this.labelName = labelName;
     }
 
-    public JSONObject getAnswer() {
+    public JsonObject getAnswer() {
         return answer;
     }
 
-    public void setAnswer(JSONObject answer) {
+    public void setAnswer(JsonObject answer) {
         this.answer = answer;
     }
 }

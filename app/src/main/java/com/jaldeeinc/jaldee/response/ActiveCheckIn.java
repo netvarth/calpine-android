@@ -58,6 +58,9 @@ public class ActiveCheckIn implements Serializable {
 
     boolean isRescheduled;
 
+    private QuestionnaireResponse questionnaire;
+
+
     public boolean isRescheduled() {
         return isRescheduled;
     }
@@ -827,5 +830,17 @@ public class ActiveCheckIn implements Serializable {
 
     public void setAppmtTime(String appmtTime) {
         this.appmtTime = appmtTime;
+    }
+
+    public void setVideoCallButton(String videoCallButton) {
+        this.videoCallButton = videoCallButton;
+    }
+
+    public QuestionnaireResponse getQuestionnaire() {
+        return questionnaire;
+    }
+
+    public void setQuestionnaire(QuestionnaireResponse questionnaire) {
+        this.questionnaire = questionnaire;
     }
 }

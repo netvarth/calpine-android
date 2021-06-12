@@ -143,6 +143,7 @@ public class ActiveAppointment implements Serializable {
     String videoCallMessage;
     String prescShortUrl;
     boolean isRescheduled;
+    private QuestionnaireResponse questionnaire;
 
     public boolean isRescheduled() {
         return isRescheduled;
@@ -1147,5 +1148,13 @@ public class ActiveAppointment implements Serializable {
 
     public void setConsumerNoteTitle(String consumerNoteTitle) {
         this.consumerNoteTitle = consumerNoteTitle;
+    }
+
+    public QuestionnaireResponse getQuestionnaire() {
+        return questionnaire;
+    }
+
+    public void setQuestionnaire(QuestionnaireResponse questionnaire) {
+        this.questionnaire = questionnaire;
     }
 }

@@ -1,6 +1,8 @@
 package com.jaldeeinc.jaldee.model;
 
+import com.jaldeeinc.jaldee.activities.CheckinFamilyMember;
 import com.jaldeeinc.jaldee.response.Questionnaire;
+import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.ServiceInfo;
 
@@ -16,12 +18,12 @@ public class BookingModel implements Serializable {
     public String message;
     public int accountId;
     public ServiceInfo serviceInfo;
+    public SearchService checkInInfo;
     SearchTerminology mSearchTerminology;
     public int familyEMIID;
     public String phoneNumber;
     public Questionnaire questionnaire;
     public String from;
-    public QuestionnaireInput questionnaireInput;
     public ArrayList<String> questionnaireImages;
     public String providerName;
     public String accountBusinessName;
@@ -31,6 +33,12 @@ public class BookingModel implements Serializable {
     public String customerName;
     public String emailId;
     public String countryCode;
+    public String hint;
+    public String peopleWaiting;
+    public String checkInOrToken;
+    public ArrayList<FamilyArrayModel> multipleFamilyMembers = new ArrayList<>();
+    public String totalAmount;
+    public String totalServicePay;
 
 
     public ArrayList<String> getImagesList() {
@@ -113,14 +121,6 @@ public class BookingModel implements Serializable {
         this.from = from;
     }
 
-    public QuestionnaireInput getQuestionnaireInput() {
-        return questionnaireInput;
-    }
-
-    public void setQuestionnaireInput(QuestionnaireInput questionnaireInput) {
-        this.questionnaireInput = questionnaireInput;
-    }
-
     public ArrayList<String> getQuestionnaireImages() {
         return questionnaireImages;
     }
@@ -191,5 +191,61 @@ public class BookingModel implements Serializable {
 
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
+    }
+
+    public SearchService getCheckInInfo() {
+        return checkInInfo;
+    }
+
+    public void setCheckInInfo(SearchService checkInInfo) {
+        this.checkInInfo = checkInInfo;
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
+    }
+
+    public String getPeopleWaiting() {
+        return peopleWaiting;
+    }
+
+    public void setPeopleWaiting(String peopleWaiting) {
+        this.peopleWaiting = peopleWaiting;
+    }
+
+    public String getCheckInOrToken() {
+        return checkInOrToken;
+    }
+
+    public void setCheckInOrToken(String checkInOrToken) {
+        this.checkInOrToken = checkInOrToken;
+    }
+
+    public ArrayList<FamilyArrayModel> getMultipleFamilyMembers() {
+        return multipleFamilyMembers;
+    }
+
+    public void setMultipleFamilyMembers(ArrayList<FamilyArrayModel> multipleFamilyMembers) {
+        this.multipleFamilyMembers = multipleFamilyMembers;
+    }
+
+    public String getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(String totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public String getTotalServicePay() {
+        return totalServicePay;
+    }
+
+    public void setTotalServicePay(String totalServicePay) {
+        this.totalServicePay = totalServicePay;
     }
 }

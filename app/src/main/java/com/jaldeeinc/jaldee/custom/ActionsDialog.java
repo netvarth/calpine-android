@@ -1,29 +1,17 @@
 package com.jaldeeinc.jaldee.custom;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.ClipData;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -37,60 +25,46 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.jaldeeinc.jaldee.Interface.ISendData;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
-import com.jaldeeinc.jaldee.activities.BookingDetails;
 import com.jaldeeinc.jaldee.activities.ChatActivity;
-import com.jaldeeinc.jaldee.activities.CheckInDetails;
 import com.jaldeeinc.jaldee.activities.CheckinShareLocation;
 import com.jaldeeinc.jaldee.activities.CheckinShareLocationAppointment;
 import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.activities.CustomQuestionnaire;
 import com.jaldeeinc.jaldee.activities.RescheduleActivity;
 import com.jaldeeinc.jaldee.activities.RescheduleCheckinActivity;
-import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.Bookings;
+import com.jaldeeinc.jaldee.model.LabelPath;
+import com.jaldeeinc.jaldee.model.QuestionnaireResponseInput;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
+import com.jaldeeinc.jaldee.response.AnswerLineResponse;
+import com.jaldeeinc.jaldee.response.QuestionAnswers;
+import com.jaldeeinc.jaldee.response.QuestionnaireResponse;
 import com.jaldeeinc.jaldee.response.RatingResponse;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.DexterError;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.PermissionRequestErrorListener;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.payumoney.core.entity.TransactionResponse;
-import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
-import com.payumoney.sdkui.ui.utils.ResultModel;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import okhttp3.RequestBody;
@@ -99,14 +73,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
 import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 public class ActionsDialog extends Dialog {
 
     private Context mContext;
-    private LinearLayout llReschedule, llMessages, llRating, llCancel, llTrackingOn, llInstructions, llCustomerNotes, llMeetingDetails, llBillDetails, llPrescription, llSendAttachments, llViewAttachments;
+    private LinearLayout llReschedule, llMessages, llRating, llCancel, llTrackingOn, llInstructions, llCustomerNotes, llMeetingDetails, llBillDetails, llPrescription, llSendAttachments, llViewAttachments, llQuestionnaire;
     private CustomTextViewMedium tvTrackingText, tvBillText;
     private boolean isActive = false;
     private Bookings bookings = new Bookings();
@@ -169,6 +141,16 @@ public class ActionsDialog extends Dialog {
                 } else {
 
                     hideView(llCancel);
+                }
+
+                // to show questionnaire option
+
+                if (bookings.getAppointmentInfo().getQuestionnaire() != null && bookings.getAppointmentInfo().getQuestionnaire().getQuestionAnswers() != null && bookings.getAppointmentInfo().getQuestionnaire().getQuestionAnswers().size() > 0) {
+
+                    llQuestionnaire.setVisibility(View.VISIBLE);
+                } else {
+
+                    hideView(llQuestionnaire);
                 }
 
                 // about liveTracking option
@@ -257,7 +239,7 @@ public class ActionsDialog extends Dialog {
                         }
                     }
                     /**26-3-21*/
-                    if(bookings.getAppointmentInfo().getBillViewStatus() == null || bookings.getAppointmentInfo().getBillViewStatus().equalsIgnoreCase("NotShow")  || bookings.getAppointmentInfo().getBillStatus().equals("Settled") || bookings.getAppointmentInfo().getApptStatus().equals("Rejected")){
+                    if (bookings.getAppointmentInfo().getBillViewStatus() == null || bookings.getAppointmentInfo().getBillViewStatus().equalsIgnoreCase("NotShow") || bookings.getAppointmentInfo().getBillStatus().equals("Settled") || bookings.getAppointmentInfo().getApptStatus().equals("Rejected")) {
                         ivBillIcon.setVisibility(View.GONE);
                         hideView(llBillDetails);
                     }
@@ -322,6 +304,15 @@ public class ActionsDialog extends Dialog {
                 } else {
 
                     hideView(llCancel);
+                }
+
+                // to show Questionnaire option
+                if (bookings.getCheckInInfo().getQuestionnaire() != null && bookings.getCheckInInfo().getQuestionnaire().getQuestionAnswers() != null && bookings.getCheckInInfo().getQuestionnaire().getQuestionAnswers().size() > 0) {
+
+                    llQuestionnaire.setVisibility(View.VISIBLE);
+                } else {
+
+                    hideView(llQuestionnaire);
                 }
 
                 // about liveTracking option
@@ -417,7 +408,7 @@ public class ActionsDialog extends Dialog {
                     }
                 }
                 /**26-3-21*/
-                if(bookings.getCheckInInfo().getBillViewStatus() == null || bookings.getCheckInInfo().getBillViewStatus().equalsIgnoreCase("NotShow") || bookings.getCheckInInfo().getBillStatus().equals("Settled") || bookings.getCheckInInfo().getWaitlistStatus().equals("Rejected")){
+                if (bookings.getCheckInInfo().getBillViewStatus() == null || bookings.getCheckInInfo().getBillViewStatus().equalsIgnoreCase("NotShow") || bookings.getCheckInInfo().getBillStatus().equals("Settled") || bookings.getCheckInInfo().getWaitlistStatus().equals("Rejected")) {
                     ivBillIcon.setVisibility(View.GONE);
                     hideView(llBillDetails);
                 }
@@ -482,8 +473,7 @@ public class ActionsDialog extends Dialog {
             }
 
 
-        }
-        else {
+        } else {
 
             hideView(llReschedule);
             hideView(llCancel);
@@ -491,8 +481,9 @@ public class ActionsDialog extends Dialog {
             hideView(llInstructions);
             hideView(llCustomerNotes);
             hideView(llMeetingDetails);
-            if (bookings != null && bookings.getCheckInInfo()!= null){
-                if (bookings.getCheckInInfo().isPrescShared()){
+            hideView(llQuestionnaire);
+            if (bookings != null && bookings.getCheckInInfo() != null) {
+                if (bookings.getCheckInInfo().isPrescShared()) {
                     llPrescription.setVisibility(View.VISIBLE);
                     llPrescription.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -511,8 +502,8 @@ public class ActionsDialog extends Dialog {
                 } else {
                     hideView(llPrescription);
                 }
-            } else if (bookings != null && bookings.getAppointmentInfo()!= null){
-                if (bookings.getAppointmentInfo().isPrescShared()){
+            } else if (bookings != null && bookings.getAppointmentInfo() != null) {
+                if (bookings.getAppointmentInfo().isPrescShared()) {
                     llPrescription.setVisibility(View.VISIBLE);
                     llPrescription.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -574,7 +565,7 @@ public class ActionsDialog extends Dialog {
                     }
                 }
                 /**26-3-21*/
-                if(bookings.getAppointmentInfo().getBillViewStatus() == null || bookings.getAppointmentInfo().getBillViewStatus().equalsIgnoreCase("NotShow")  || bookings.getAppointmentInfo().getBillStatus().equals("Settled") || bookings.getAppointmentInfo().getApptStatus().equals("Rejected")){
+                if (bookings.getAppointmentInfo().getBillViewStatus() == null || bookings.getAppointmentInfo().getBillViewStatus().equalsIgnoreCase("NotShow") || bookings.getAppointmentInfo().getBillStatus().equals("Settled") || bookings.getAppointmentInfo().getApptStatus().equals("Rejected")) {
                     ivBillIcon.setVisibility(View.GONE);
                     hideView(llBillDetails);
                 }
@@ -624,7 +615,7 @@ public class ActionsDialog extends Dialog {
                     }
                 }
                 /**26-3-21*/
-                if(bookings.getCheckInInfo().getBillViewStatus() == null || bookings.getCheckInInfo().getBillViewStatus().equalsIgnoreCase("NotShow") || bookings.getCheckInInfo().getBillStatus().equals("Settled") || bookings.getCheckInInfo().getWaitlistStatus().equals("Rejected")){
+                if (bookings.getCheckInInfo().getBillViewStatus() == null || bookings.getCheckInInfo().getBillViewStatus().equalsIgnoreCase("NotShow") || bookings.getCheckInInfo().getBillStatus().equals("Settled") || bookings.getCheckInInfo().getWaitlistStatus().equals("Rejected")) {
                     ivBillIcon.setVisibility(View.GONE);
                     hideView(llBillDetails);
                 }
@@ -946,6 +937,93 @@ public class ActionsDialog extends Dialog {
             }
         });
 
+        llQuestionnaire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (bookings.getAppointmentInfo() != null) {
+
+                    QuestionnaireResponseInput input = buildQuestionnaireInput(bookings.getAppointmentInfo().getQuestionnaire());
+                    ArrayList<LabelPath> labelPaths = buildQuestionnaireLabelPaths(bookings.getAppointmentInfo().getQuestionnaire());
+
+                    SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
+                    SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
+
+                    Intent intent = new Intent(mContext, CustomQuestionnaire.class);
+                    intent.putExtra("serviceId", bookings.getAppointmentInfo().getService().getId());
+                    intent.putExtra("accountId", bookings.getAppointmentInfo().getProviderAccount().getId());
+                    intent.putExtra("uid", bookings.getAppointmentInfo().getUid());
+                    intent.putExtra("isEdit",true);
+                    intent.putExtra("from", Constants.BOOKING_APPOINTMENT);
+                    mContext.startActivity(intent);
+
+                } else if (bookings.getCheckInInfo() != null) {
+
+                    QuestionnaireResponseInput input = buildQuestionnaireInput(bookings.getCheckInInfo().getQuestionnaire());
+                    ArrayList<LabelPath> labelPaths = buildQuestionnaireLabelPaths(bookings.getCheckInInfo().getQuestionnaire());
+
+                    SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
+                    SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
+
+                    Intent intent = new Intent(mContext, CustomQuestionnaire.class);
+                    intent.putExtra("serviceId", bookings.getCheckInInfo().getService().getId());
+                    intent.putExtra("accountId", bookings.getCheckInInfo().getProviderAccount().getId());
+                    intent.putExtra("uid", bookings.getCheckInInfo().getYnwUuid());
+                    intent.putExtra("isEdit",true);
+                    intent.putExtra("from", Constants.BOOKING_CHECKIN);
+                    mContext.startActivity(intent);
+                }
+
+
+            }
+        });
+
+    }
+
+    private QuestionnaireResponseInput buildQuestionnaireInput(QuestionnaireResponse questionnaire) {
+
+        QuestionnaireResponseInput responseInput = new QuestionnaireResponseInput();
+        responseInput.setQuestionnaireId(questionnaire.getQuestionnaireId());
+        ArrayList<AnswerLineResponse> answerLineResponse = new ArrayList<>();
+
+        for (QuestionAnswers qAnswers : questionnaire.getQuestionAnswers()) {
+
+            answerLineResponse.add(qAnswers.getAnswerLine());
+
+        }
+
+        responseInput.setAnswerLines(answerLineResponse);
+
+        return responseInput;
+
+    }
+
+    private ArrayList<LabelPath> buildQuestionnaireLabelPaths(QuestionnaireResponse questionnaire) {
+
+        ArrayList<LabelPath> labelPaths = new ArrayList<>();
+
+        for (QuestionAnswers qAnswers : questionnaire.getQuestionAnswers()) {
+
+            if (qAnswers.getGetQuestion().getFieldDataType().equalsIgnoreCase("fileUpload")) {
+
+                JsonArray jsonArray = new JsonArray();
+                jsonArray = qAnswers.getAnswerLine().getAnswer().get("fileUpload").getAsJsonArray();
+                for (int i = 0; i < jsonArray.size(); i++) {
+
+                    LabelPath path = new LabelPath();
+                    path.setId(labelPaths.size());
+                    path.setFileName(jsonArray.get(i).getAsJsonObject().get("caption").getAsString());
+                    path.setLabelName(qAnswers.getAnswerLine().getLabelName());
+                    path.setPath(jsonArray.get(i).getAsJsonObject().get("s3path").getAsString());
+
+                    labelPaths.add(path);
+                }
+
+            }
+
+        }
+
+        return labelPaths;
 
     }
 
@@ -969,6 +1047,7 @@ public class ActionsDialog extends Dialog {
         llPrescription = findViewById(R.id.ll_prescriptionDetails);
         llSendAttachments = findViewById(R.id.ll_sendAttachments);
         llViewAttachments = findViewById(R.id.ll_viewAttachments);
+        llQuestionnaire = findViewById(R.id.ll_questionnaire);
 
     }
 

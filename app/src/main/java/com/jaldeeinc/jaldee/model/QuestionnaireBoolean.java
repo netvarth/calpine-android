@@ -9,6 +9,8 @@ public class QuestionnaireBoolean {
     public String labelName;
     public boolean isManditory = false;
     public ArrayList<String> labels = new ArrayList<>();
+    public Boolean isSelected = null;
+    public String hint = "";
 
     public String getQuestionName() {
         return questionName;
@@ -48,5 +50,26 @@ public class QuestionnaireBoolean {
 
     public void setLabelName(String labelName) {
         this.labelName = labelName;
+    }
+
+
+    public Boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(Boolean selected) {
+        isSelected = selected;
+    }
+
+    public Boolean getSelected() {
+        return isSelected;
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
     }
 }

@@ -740,7 +740,8 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
             if (bookings.getBookingType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
                 Intent intent = new Intent(mContext, BookingDetails.class);
-                intent.putExtra("bookingInfo", bookings);
+                intent.putExtra("uid", bookings.getAppointmentInfo().getUid());
+                intent.putExtra("accountId", bookings.getAppointmentInfo().getProviderAccount().getId());
                 if (bookings.getBookingStatus() != null) {
                     if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled") && !bookings.getBookingStatus().equalsIgnoreCase("Completed")) {
                         intent.putExtra("isActive", true);
@@ -752,7 +753,8 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
             } else if (bookings.getBookingType().equalsIgnoreCase(Constants.CHECKIN) || bookings.getBookingType().equalsIgnoreCase(Constants.TOKEN)) {
 
                 Intent intent = new Intent(mContext, CheckInDetails.class);
-                intent.putExtra("bookingInfo", bookings);
+                intent.putExtra("uid", bookings.getCheckInInfo().getYnwUuid());
+                intent.putExtra("accountId", bookings.getCheckInInfo().getProviderAccount().getId());
                 if (bookings.getBookingStatus() != null) {
                     if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled")) {
                         intent.putExtra("isActive", true);

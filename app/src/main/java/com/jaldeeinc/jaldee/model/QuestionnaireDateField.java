@@ -6,6 +6,9 @@ public class QuestionnaireDateField {
     public String questionName;
     public String labelName;
     public boolean isManditory = false;
+    public String date = "";
+    public String hint = "";
+
 
     public String getQuestionName() {
         return questionName;
@@ -37,5 +40,21 @@ public class QuestionnaireDateField {
 
     public void setLabelName(String labelName) {
         this.labelName = labelName;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
     }
 }
