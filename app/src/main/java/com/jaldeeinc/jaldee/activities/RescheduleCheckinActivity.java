@@ -1601,11 +1601,15 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                                 }
                             }
 
-                            if (checkInInfo.getDate() != null && checkInInfo.getCheckInTime() != null) {
+                            //if (checkInInfo.getDate() != null && checkInInfo.getCheckInTime() != null) {
+                            if (checkInInfo.getDate() != null && checkInInfo.getQueue().getQueueStartTime() != null && checkInInfo.getQueue().getQueueEndTime() != null) {
                                 String oldDate = convertDate(checkInInfo.getDate());
-                                String time = checkInInfo.getCheckInTime().split("-")[0];
-                                String oldtime = convertTime(time);
-                                tvActualTime.setText(oldDate + ", " + oldtime);
+                                //String stTime = checkInInfo.getQueue().getQueueStartTime().split(":")[0];
+                                //String enTime = checkInInfo.getQueue().getQueueEndTime().split(":")[0];
+
+                                String sTime = convertTime(checkInInfo.getQueue().getQueueStartTime());
+                                String eTime = convertTime(checkInInfo.getQueue().getQueueEndTime());
+                                tvActualTime.setText(oldDate + ", " + checkInInfo.getQueue().getQueueStartTime()+" - "+checkInInfo.getQueue().getQueueEndTime());
                             }
 
                         }

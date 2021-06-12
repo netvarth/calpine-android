@@ -396,7 +396,8 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
 
                         if (passformula != null && !passformula.trim().equalsIgnoreCase("")) {
                             ApiSEARCHAWSLoadFirstData(searchQuery, url, sort);
-                            tvApplyFilters.setVisibility(View.VISIBLE);
+                            if(!filterChipsList.isEmpty())
+                                tvApplyFilters.setVisibility(View.VISIBLE);
                             filterChipsAdapter = new FilterChipsAdapter(mContext, filterChipsList, iClearFilter);
                             GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 2, GridLayoutManager.HORIZONTAL, false);
                             rvAppliedFilters.setLayoutManager(gridLayoutManager);
@@ -2155,6 +2156,11 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
         keyList = keyFormula;
         filterChipsList = chipsList;
         filterChipsAdapter = new FilterChipsAdapter(mContext, filterChipsList, iClearFilter);
+        if(!filterChipsList.isEmpty()){
+            tvApplyFilters.setVisibility(View.VISIBLE);
+        }else {
+            tvApplyFilters.setVisibility(View.GONE);
+        }
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 2, GridLayoutManager.HORIZONTAL, false);
         rvChips.setLayoutManager(gridLayoutManager);
         rvChips.setAdapter(filterChipsAdapter);

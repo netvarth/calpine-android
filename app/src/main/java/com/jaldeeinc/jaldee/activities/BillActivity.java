@@ -345,7 +345,6 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         tv_provider.setText(Config.toTitleCase(mprovider));
 
 
-        APIPayment(accountID);
 
 
     }
@@ -1099,7 +1098,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
+                APIPayment(accountID);
             }
 
             @Override
@@ -1110,6 +1109,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                     Config.closeDialog(mActivity, mDialog);
 
             }
+
         });
 
     }

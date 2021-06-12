@@ -280,7 +280,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                                     if (i == data.size() - 1) {
                                         Config.logV("family refresh-------@@@@---------" + familyList.size());
                                         if (familyList.size() > 0) {
-                                            CheckInActivity.refreshMultipleMEmList(familyList);
+                                            iFamilyMemberDetails.refreshMultipleMEmList(familyList);
                                             dismiss();
                                         }
                                     }
