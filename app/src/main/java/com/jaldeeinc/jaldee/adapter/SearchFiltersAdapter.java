@@ -495,8 +495,6 @@ public class SearchFiltersAdapter extends RecyclerView.Adapter<SearchFiltersAdap
 
                 @Override
                 public void onLongClick(View view, int position) {
-                    Toast.makeText(mContext, "Long press on position :" + position,
-                            Toast.LENGTH_LONG).show();
                 }
             }));
 
@@ -666,8 +664,6 @@ public class SearchFiltersAdapter extends RecyclerView.Adapter<SearchFiltersAdap
 
                 @Override
                 public void onLongClick(View view, int position) {
-                    Toast.makeText(mContext, "Long press on position :" + position,
-                            Toast.LENGTH_LONG).show();
                 }
             }));
 
@@ -1174,8 +1170,6 @@ public class SearchFiltersAdapter extends RecyclerView.Adapter<SearchFiltersAdap
 
                             @Override
                             public void onLongClick(View view, int position) {
-                                Toast.makeText(mContext, "Long press on position :" + position,
-                                        Toast.LENGTH_LONG).show();
                             }
                         }));
 
@@ -1333,8 +1327,6 @@ public class SearchFiltersAdapter extends RecyclerView.Adapter<SearchFiltersAdap
 
                             @Override
                             public void onLongClick(View view, int position) {
-                                Toast.makeText(mContext, "Long press on position :" + position,
-                                        Toast.LENGTH_LONG).show();
                             }
                         }));
 
