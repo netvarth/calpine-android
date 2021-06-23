@@ -1,6 +1,8 @@
 package com.jaldeeinc.jaldee.connection;
 
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.model.Address;
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
@@ -64,6 +66,8 @@ import com.jaldeeinc.jaldee.response.StoreDetails;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 import com.jaldeeinc.jaldee.response.UserResponse;
 
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -212,6 +216,9 @@ public interface ApiInterface {
 
     @GET("consumer/familyMember")
     Call<ArrayList<FamilyArrayModel>> getFamilyList();
+
+    @GET("provider/account/settings/locations/{pincode}")
+    Call<ArrayList<JsonObject>> getPinLocations(@Path("pincode") int id);
 
     @DELETE("consumer/familyMember/{memberId}")
     Call<ResponseBody> getFamilyMEmberDelete(@Path("memberId") int id);

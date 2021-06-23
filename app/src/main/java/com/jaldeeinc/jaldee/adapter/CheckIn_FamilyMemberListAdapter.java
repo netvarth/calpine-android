@@ -38,7 +38,7 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
     //private List<FamilyArrayModel> checkeditemList=new ArrayList<>();
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public RadioButton name;
-        CheckBox Checkmemeber;
+        public CheckBox Checkmemeber;
 
         public MyViewHolder(View view) {
             super(view);
@@ -135,6 +135,11 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
 
           //  Config.logV("Checkin@@@"+familylist.getFirstName()+"status-----"+familylist.isCheck());
             myViewHolder.name.setChecked(familylist.isCheck());
+            if(familylist.isCheck()){
+                //store the clicked radiobutton
+                lastCheckedRB = myViewHolder.name;
+                iFamillyListSelected.changeMemberName(myViewHolder.name.getText().toString(), familylist);
+            }
 
 
         }
@@ -157,7 +162,7 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
               //  familyList.get(position).setCheck(isChecked);
                 //familyList.get(myViewHolder.getAdapterPosition()).setCheck(isChecked);
                // CheckinFamilyMember.changeMemberName(myViewHolder.name.getText().toString(), familylist.getId());
-                iFamillyListSelected.changeMemberName(myViewHolder.name.getText().toString(), familylist.getId());
+                iFamillyListSelected.changeMemberName(myViewHolder.name.getText().toString(), familylist);
             }
         });
 

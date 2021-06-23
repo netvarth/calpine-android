@@ -1,12 +1,79 @@
 package com.jaldeeinc.jaldee.response;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 
 /**
  * Created by sharmila on 9/7/18.
  */
 
 public class ProfileModel {
+    private JsonObject whatsAppNum;
+    private JsonObject telegramNum;
+    private String whtsAppCountryCode;
+    private String telgrmCountryCode;
+    private String whtsAppNumber;
+    private String telgrmNumber;
+    private Integer pinCode;
+
+    public Integer getPinCode() {
+        return pinCode;
+    }
+
+    public void setPinCode(Integer pinCode) {
+        this.pinCode = pinCode;
+    }
+
+    public void setWhtsAppNumber(String whtsAppNumber) {
+        this.whtsAppNumber = whtsAppNumber;
+    }
+
+    public void setTelgrmNumber(String telgrmNumber) {
+        this.telgrmNumber = telgrmNumber;
+    }
+
+    public String getWhtsAppNumber() {
+        return whtsAppNumber;
+    }
+
+    public String getTelgrmNumber() {
+        return telgrmNumber;
+    }
+
+    public JsonObject getWhatsAppNum() {
+        return whatsAppNum;
+    }
+
+    public JsonObject getTelegramNum() {
+        return telegramNum;
+    }
+
+    public String getWhtsAppCountryCode() {
+        return whtsAppCountryCode;
+    }
+
+    public String getTelgrmCountryCode() {
+        return telgrmCountryCode;
+    }
+
+    public void setWhatsAppNum(JsonObject whatsAppNum) {
+        this.whatsAppNum = whatsAppNum;
+    }
+
+    public void setTelegramNum(JsonObject telegramNum) {
+        this.telegramNum = telegramNum;
+    }
+
+    public void setWhtsAppCountryCode(String whtsAppCountryCode) {
+        this.whtsAppCountryCode = whtsAppCountryCode;
+    }
+
+    public void setTelgrmCountryCode(String telgrmCountryCode) {
+        this.telgrmCountryCode = telgrmCountryCode;
+    }
+
 
     @SerializedName("userProfile")
     ProfileModel userprofile;
@@ -118,5 +185,13 @@ public class ProfileModel {
     String userName;
     boolean emailVerified,phoneVerified;
     String countryCode;
+    ArrayList<String> preferredLanguages;
 
+    public ArrayList<String> getPreferredLanguages() {
+        return preferredLanguages;
+    }
+
+    public void setPreferredLanguages(ArrayList<String> preferredLanguages) {
+        this.preferredLanguages = preferredLanguages;
+    }
 }

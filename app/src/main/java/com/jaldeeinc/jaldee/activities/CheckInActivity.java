@@ -53,6 +53,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.Interface.ICpn;
 import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
@@ -75,6 +76,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomToolTip;
+import com.jaldeeinc.jaldee.custom.CustomerInformationDialog;
 import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.custom.FamilyMemberDialog;
 import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
@@ -352,6 +354,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     private String userMessage = "";
     String checkEncId;
     private FamilyMemberDialog familyMemberDialog;
+    private CustomerInformationDialog customerInformationDialog;
     private IFamilyMemberDetails iFamilyMemberDetails;
     String emailId, prepayAmount = "";
     private String countryCode;
@@ -360,6 +363,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     private String accountBusinessName;
     private String locationName;
     private ICpn iCpn;
+    boolean virtualService;
 
 
     @Override
@@ -414,6 +418,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             tvDescription.setText(checkInInfo.getDescription());
             llCheckIn.setVisibility(View.VISIBLE);
             llAppointment.setVisibility(View.GONE);
+            if (checkInInfo.getServiceType() != null && checkInInfo.getServiceType().equalsIgnoreCase("virtualService")) {
+                virtualService = true;
+            }else {
+                virtualService = false;
+            }
+
             if (checkInInfo.getCheckInServiceAvailability() != null) {
                 if (checkInInfo.getCheckInServiceAvailability().getCalculationMode() != null && !checkInInfo.getCheckInServiceAvailability().getCalculationMode().equalsIgnoreCase("NoCalc")) {
                     String time = getWaitingTime(checkInInfo.getCheckInServiceAvailability().getAvailableDate(), checkInInfo.getCheckInServiceAvailability().getServiceTime(), checkInInfo.getCheckInServiceAvailability().getQueueWaitingTime());
@@ -568,7 +578,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             @Override
             public void onClick(View v) {
                 if (tvEmail.getText().toString().equalsIgnoreCase("")) {
-                    familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode);
+                    familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService);
                     familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     familyMemberDialog.show();
@@ -614,7 +624,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             @Override
             public void onClick(View v) {
 
-                familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode);
+                familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService);
                 familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                 familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 familyMemberDialog.show();
@@ -1199,6 +1209,19 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             } else {
                                 tvEmail.setHint("Enter your Mail Id");
                             }
+                            if (checkInInfo.getServiceType() != null && checkInInfo.getServiceType().equalsIgnoreCase("virtualService")) {
+
+                                customerInformationDialog = new CustomerInformationDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode);
+                                customerInformationDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+                                customerInformationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                customerInformationDialog.show();
+                                DisplayMetrics metrics = CheckInActivity.this.getResources().getDisplayMetrics();
+                                int width = (int) (metrics.widthPixels * 1);
+                                customerInformationDialog.setCancelable(false);
+                                customerInformationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            }
+
+
                         }
                     } else {
                     }
@@ -1498,7 +1521,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             } else {
                                 tvButtonName.setText("Proceed to Payment");
                             }
-                            if(MultiplefamilyList.size() > 1){
+                            if (MultiplefamilyList.size() > 1) {
                                 totalAmountPay = String.valueOf(couponApliedOrNotDetails.getAmountRequiredNow());
                             }
                         } else {
@@ -1878,7 +1901,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                                 Intent intent = new Intent(CheckInActivity.this, CustomQuestionnaire.class);
                                 intent.putExtra("data", model);
-                                intent.putExtra("from",Constants.CHECKIN);
+                                intent.putExtra("from", Constants.CHECKIN);
                                 startActivity(intent);
 
                             } else {
@@ -2081,7 +2104,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         if (activeAppointment != null) {
                             checkEncId = activeAppointment.getCheckinEncId();
                             dialogPayment = new BottomSheetDialog(mContext);
-                            
+
                             if (checkInInfo.isPrePayment() && ((totalAmountPay != null && Float.parseFloat(totalAmountPay) > 0) || (prepayAmount != null && Integer.parseInt(prepayAmount) > 0))) {
                                 if (!showPaytmWallet && !showPayU) {
 
@@ -2240,6 +2263,19 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         recycle_family.setAdapter(mFamilyAdpater);
         mFamilyAdpater.notifyDataSetChanged();
         tvConsumerName.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void sendFamilyMbrPhoneAndEMail(String phone, String email) {
+        phoneNumber = phone;
+        emailId = email;
+        tvNumber.setText(phone);
+        tvEmail.setText(emailId);
+    }
+
+    @Override
+    public void closeActivity() {
+        finish();
     }
 
 
@@ -2861,6 +2897,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     }
 
     @Override
+    public void changeMemberName(String name, FamilyArrayModel familylist) {
+
+    }
+
+    @Override
     public void CheckedFamilyList(List<FamilyArrayModel> familyList) {
 //        MultiplefamilyList.clear();
 //        MultiplefamilyList.addAll(familyList);
@@ -2886,6 +2927,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 //        recycle_family.setAdapter(mFamilyAdpater);
 //        mFamilyAdpater.notifyDataSetChanged();
 //        tvConsumerName.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void SelectedPincodeLocation(JsonObject selectedPincodeLocation) {
 
     }
 
