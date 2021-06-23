@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.jaldeeinc.jaldee.activities.CustomQuestionnaire">
+    tools:context="com.jaldeeinc.jaldee.activities.UpdateQuestionnaire">
 
     <LinearLayout
         android:id="@+id/toolbar"
@@ -124,7 +124,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Next"
+                android:text="Update"
                 android:textColor="@color/white"
                 android:textSize="@dimen/dimen_18sp">
 
@@ -135,6 +135,7 @@
                 android:layout_width="@dimen/dimen_20dp"
                 android:layout_height="@dimen/dimen_16sp"
                 android:layout_gravity="center"
+                android:visibility="gone"
                 android:layout_marginStart="@dimen/txtsize_10"
                 android:src="@drawable/rightarrow"
                 app:tint="@color/white">

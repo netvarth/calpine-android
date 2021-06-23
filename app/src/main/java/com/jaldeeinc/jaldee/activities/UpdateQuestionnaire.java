@@ -8,18 +8,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.DownloadManager;
-import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
@@ -27,7 +22,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -109,9 +103,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,7 +110,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -131,8 +121,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CustomQuestionnaire extends AppCompatActivity implements IFilesInterface, DatePickerDialog.OnDateSetListener {
-
+public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInterface, DatePickerDialog.OnDateSetListener  {
 
     @BindView(R.id.ll_mainLayout)
     LinearLayout llParentLayout;
@@ -148,6 +137,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
     @BindView(R.id.cv_back)
     CardView cvBack;
+
 
     private static Context mContext;
     private IFilesInterface iFilesInterface;
@@ -179,17 +169,15 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
     private int serviceId;
     public BookingModel bookingModel;
     QuestionnaireInput qInput = new QuestionnaireInput();
-    private QuestionnaireResponse questionnaireResponse = new QuestionnaireResponse();
     public String from, uid,bookingStatus = "";
     private boolean isEdit = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_custom_questionnaire);
+        setContentView(R.layout.activity_update_questionnaire);
         ButterKnife.bind(this);
-        mContext = CustomQuestionnaire.this;
+        mContext = UpdateQuestionnaire.this;
         iFilesInterface = this;
 
         requestMultiplePermissions();
@@ -208,33 +196,10 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
         if (bookingStatus == null){
             bookingStatus = "";
         }
-        questionnaireResponse = (QuestionnaireResponse) intent.getSerializableExtra("editQuestionnaire");
-        if (bookingModel != null) {
-            if (bookingModel.getServiceInfo() != null) {
-                serviceId = bookingModel.getServiceInfo().getServiceId();
-            } else if (bookingModel.getCheckInInfo() != null) {
-                serviceId = bookingModel.getCheckInInfo().getId();
-            }
-            accountId = bookingModel.getAccountId();
-            questionnaire = bookingModel.getQuestionnaire();
-            bookingImagesList = bookingModel.getImagesList();
-            userNotes = bookingModel.getMessage();
-        }
 
-        if (isEdit) {
+        if (!bookingStatus.trim().equalsIgnoreCase("") && !(bookingStatus.equalsIgnoreCase("Confirmed") || bookingStatus.equalsIgnoreCase("Arrived") || bookingStatus.equalsIgnoreCase("checkedIn") || bookingStatus.equalsIgnoreCase("arrived"))){
 
-            tvButtonName.setText("Update");
-            ivNext.setVisibility(View.GONE);
-
-            if (!bookingStatus.trim().equalsIgnoreCase("") && !(bookingStatus.equalsIgnoreCase("Confirmed") || bookingStatus.equalsIgnoreCase("Arrived") || bookingStatus.equalsIgnoreCase("checkedIn") || bookingStatus.equalsIgnoreCase("arrived"))){
-
-                showAlert();
-            }
-
-        } else {
-
-            tvButtonName.setText("Next");
-            ivNext.setVisibility(View.VISIBLE);
+            showAlert();
         }
 
         cvBack.setOnClickListener(new View.OnClickListener() {
@@ -286,22 +251,6 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
             labelPaths = new ArrayList<>();
         }
 
-        // Api to get questionnaire
-        if (isEdit){
-
-            if (qInput != null && qInput.getQuestions() != null){
-
-                try {
-                    UpdateQuestionnaire(qInput.getQuestions());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }else {
-            getQuestionnaire();
-        }
-
         cvSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -315,6 +264,16 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
             }
         });
+
+        if (qInput != null && qInput.getQuestions() != null){
+
+            try {
+                UpdateQuestionnaire(qInput.getQuestions());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     private void showAlert() {
@@ -322,69 +281,23 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
         Config.showAlertBuilder(mContext,"Service has started","The given details cannot be edited as the service has started.");
     }
 
-
-    private void getQuestionnaire() {
-
-        final ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Call<Questionnaire> call = apiService.getQuestions(serviceId, 0, accountId);
-        call.enqueue(new Callback<Questionnaire>() {
-            @Override
-            public void onResponse(Call<Questionnaire> call, Response<Questionnaire> response) {
-                try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
-                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-                    if (response.code() == 200) {
-                        questionnaire = response.body();
-
-
-                        if (questionnaire != null) {
-
-                            if (questionnaire.getQuestionsList() != null) {
-
-                                createQuestionnaire(questionnaire.getQuestionsList());
-                            } else {
-
-                            }
-                        } else {
-
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Questionnaire> call, Throwable t) {
-                if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
-            }
-        });
-    }
-
-
     private void submitQuestionnaire() throws JSONException {
 
         QuestionnaireInput input = new QuestionnaireInput();
-        input.setQuestionnaireId(questionnaire.getId());
+        input.setQuestionnaireId(qInput.getQuestionnaireId());
         ArrayList<AnswerLine> answerLines = new ArrayList<>();
 
-        if (validForm(questionnaire.getQuestionsList())) {
+        if (validForm(qInput.getQuestions())) {
 
             labelPaths = new ArrayList<>();
 
-            for (Questions question : questionnaire.getQuestionsList()) {
+            for (GetQuestion question : qInput.getQuestions()) {
 
-                if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("fileUpload")) {
+                if (question.getFieldDataType().equalsIgnoreCase("fileUpload")) {
 
-                    if (question.getGetQuestion().getFileProperties().getAllowedDocuments().size() == 1) {
+                    if (question.getFileProperties().getAllowedDocuments().size() == 1) {
 
-                        View singleFileUploadView = viewsList.get(question.getGetQuestion().getLabelName());
+                        View singleFileUploadView = viewsList.get(question.getLabelName());
                         ImageView ivSingleFile = (ImageView) singleFileUploadView.findViewById(R.id.iv_file);
                         CustomTextViewMedium tvPath = (CustomTextViewMedium) singleFileUploadView.findViewById(R.id.tv_path);
 
@@ -403,19 +316,19 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                             if (!(path.contains("http://") || path.contains("https://"))) {
 
                                 AnswerLine obj = new AnswerLine();
-                                obj.setLabelName(question.getGetQuestion().getLabelName());
+                                obj.setLabelName(question.getLabelName());
                                 JsonObject answer = new JsonObject();
                                 JsonArray uploadList = new JsonArray();
                                 JsonObject fileInfo = new JsonObject();
                                 fileInfo.addProperty("index", labelPaths.size());
-                                fileInfo.addProperty("caption", question.getGetQuestion().getFileProperties().getAllowedDocuments().get(0));
+                                fileInfo.addProperty("caption", question.getFileProperties().getAllowedDocuments().get(0));
                                 fileInfo.addProperty("action", isEdit ? "update" : "add");
                                 uploadList.add(fileInfo);
                                 answer.add("fileUpload", uploadList);
                                 obj.setAnswer(answer);
                                 answerLines.add(obj);
 
-                                LabelPath lPath = new LabelPath(labelPaths.size(), question.getGetQuestion().getLabelName(), path);
+                                LabelPath lPath = new LabelPath(labelPaths.size(), question.getLabelName(), path);
                                 labelPaths.add(lPath);
                             }
 
@@ -424,11 +337,11 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                     } else {
 
                         AnswerLine obj = new AnswerLine();
-                        obj.setLabelName(question.getGetQuestion().getLabelName());
+                        obj.setLabelName(question.getLabelName());
                         JsonObject answer = new JsonObject();
                         JsonArray uploadList = new JsonArray();
 
-                        View fileUploadView = viewsList.get(question.getGetQuestion().getLabelName());
+                        View fileUploadView = viewsList.get(question.getLabelName());
                         RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
                         FilesAdapter filesAdapter = (FilesAdapter) rvFiles.getAdapter();
 
@@ -450,7 +363,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                                     obj.setAnswer(answer);
                                     answerLines.add(obj);
 
-                                    LabelPath lPath = new LabelPath(labelPaths.size(), question.getGetQuestion().getLabelName(), files.get(i).getImagePath(), files.get(i).getName());
+                                    LabelPath lPath = new LabelPath(labelPaths.size(), question.getLabelName(), files.get(i).getImagePath(), files.get(i).getName());
                                     labelPaths.add(lPath);
                                 }
                             }
@@ -459,9 +372,9 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
                     }
 
-                } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("list")) {
+                } else if (question.getFieldDataType().equalsIgnoreCase("list")) {
 
-                    View listFieldView = viewsList.get(question.getGetQuestion().getLabelName());
+                    View listFieldView = viewsList.get(question.getLabelName());
                     RecyclerView rvCheckBoxes = (RecyclerView) listFieldView.findViewById(R.id.rv_checkBoxes);
                     CheckBoxAdapter checkBoxAdapter = (CheckBoxAdapter) rvCheckBoxes.getAdapter();
                     ArrayList<QuestionnaireCheckbox> selectedCheckboxes = new ArrayList<>();
@@ -470,7 +383,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                         selectedCheckboxes = checkBoxAdapter.getSelectedCheckboxes();
                     }
                     AnswerLine obj = new AnswerLine();
-                    obj.setLabelName(question.getGetQuestion().getLabelName());
+                    obj.setLabelName(question.getLabelName());
                     JsonObject answer = new JsonObject();
                     JsonArray list = new JsonArray();
                     for (QuestionnaireCheckbox item : selectedCheckboxes) {
@@ -483,13 +396,13 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                     answerLines.add(obj);
 
 
-                } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("bool")) {
+                } else if (question.getFieldDataType().equalsIgnoreCase("bool")) {
 
-                    View boolFieldView = viewsList.get(question.getGetQuestion().getLabelName());
+                    View boolFieldView = viewsList.get(question.getLabelName());
                     RadioButton radioButtonYes = (RadioButton) boolFieldView.findViewById(R.id.rb_yes);
 
                     AnswerLine obj = new AnswerLine();
-                    obj.setLabelName(question.getGetQuestion().getLabelName());
+                    obj.setLabelName(question.getLabelName());
 
                     JsonObject answer = new JsonObject();
                     answer.addProperty("bool", radioButtonYes.isSelected());
@@ -497,13 +410,13 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                     obj.setAnswer(answer);
                     answerLines.add(obj);
 
-                } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("plainText")) {
+                } else if (question.getFieldDataType().equalsIgnoreCase("plainText")) {
 
-                    View textFieldView = viewsList.get(question.getGetQuestion().getLabelName());
+                    View textFieldView = viewsList.get(question.getLabelName());
                     CustomEditTextRegular etTextField = (CustomEditTextRegular) textFieldView.findViewById(R.id.et_textBox);
 
                     AnswerLine obj = new AnswerLine();
-                    obj.setLabelName(question.getGetQuestion().getLabelName());
+                    obj.setLabelName(question.getLabelName());
 
                     JsonObject answer = new JsonObject();
                     answer.addProperty("plainText", etTextField.getText().toString());
@@ -511,13 +424,13 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                     obj.setAnswer(answer);
                     answerLines.add(obj);
 
-                } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("number")) {
+                } else if (question.getFieldDataType().equalsIgnoreCase("number")) {
 
-                    View numberFieldView = viewsList.get(question.getGetQuestion().getLabelName());
+                    View numberFieldView = viewsList.get(question.getLabelName());
                     CustomEditTextRegular etTextField = (CustomEditTextRegular) numberFieldView.findViewById(R.id.et_textBox);
 
                     AnswerLine obj = new AnswerLine();
-                    obj.setLabelName(question.getGetQuestion().getLabelName());
+                    obj.setLabelName(question.getLabelName());
 
                     JsonObject answer = new JsonObject();
                     answer.addProperty("number", etTextField.getText().toString());
@@ -525,13 +438,13 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                     obj.setAnswer(answer);
                     answerLines.add(obj);
 
-                } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("date")) {
+                } else if (question.getFieldDataType().equalsIgnoreCase("date")) {
 
-                    View numberFieldView = viewsList.get(question.getGetQuestion().getLabelName());
+                    View numberFieldView = viewsList.get(question.getLabelName());
                     CustomTextViewSemiBold tvDate = (CustomTextViewSemiBold) numberFieldView.findViewById(R.id.tv_date);
 
                     AnswerLine obj = new AnswerLine();
-                    obj.setLabelName(question.getGetQuestion().getLabelName());
+                    obj.setLabelName(question.getLabelName());
 
                     JsonObject answer = new JsonObject();
                     answer.addProperty("date", tvDate.getText().toString());
@@ -548,15 +461,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
             SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
             SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
 
-            if (from.equalsIgnoreCase(Constants.CHECKIN)) {
-                Intent intent = new Intent(CustomQuestionnaire.this, CheckInReconfirmation.class);
-                intent.putExtra("data", bookingModel);
-                startActivity(intent);
-            } else if (from.equalsIgnoreCase(Constants.APPOINTMENT)) {
-                Intent intent = new Intent(CustomQuestionnaire.this, ReconfirmationActivity.class);
-                intent.putExtra("data", bookingModel);
-                startActivity(intent);
-            } else if (from.equalsIgnoreCase(Constants.BOOKING_APPOINTMENT)) {
+           if (from.equalsIgnoreCase(Constants.BOOKING_APPOINTMENT)) {
 
                 if (bookingStatus.trim().equalsIgnoreCase("Confirmed") || bookingStatus.trim().equalsIgnoreCase("Arrived")) {
                     ApiUpdateApptQuestionnaire(input, labelPaths);
@@ -581,6 +486,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
     }
 
+
     private void ApiUpdateApptQuestionnaire(QuestionnaireInput input, ArrayList<LabelPath> imagePathList) {
 
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -592,11 +498,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
             try {
                 if (imagePathList.get(i).getPath().contains("http://") || imagePathList.get(i).getPath().contains("https://")) {
 
-//                    bitmap = new GetImage().doInBackground(imagePathList.get(i).getPath());
-//                    if (bitmap != null) {
-//                        String path = saveImage(bitmap);
-//                        file = new File(path);
-//                    }
+
                 } else {
                     bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getPath())));
                     if (bitmap != null) {
@@ -674,11 +576,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
             try {
                 if (imagePathList.get(i).getPath().contains("http://") || imagePathList.get(i).getPath().contains("https://")) {
 
-//                    bitmap = returnBitMap(imagePathList.get(i).getPath());
-//                    if (bitmap != null) {
-//                        String path = saveImage(bitmap);
-//                        file = new File(path);
-//                    }
+
                 } else {
                     bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getPath())));
                     if (bitmap != null) {
@@ -746,32 +644,31 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
     }
 
+    private boolean validForm(ArrayList<GetQuestion> questions) {
 
-    private boolean validForm(ArrayList<Questions> questionsList) {
+        for (GetQuestion question : questions) {
 
-        for (Questions question : questionsList) {
+            if (question.getFieldDataType().equalsIgnoreCase("fileUpload") && question.isMandatory()) {
 
-            if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("fileUpload") && question.getGetQuestion().isMandatory()) {
+                if (question.getFileProperties().getAllowedDocuments().size() > 1) {
 
-                if (question.getGetQuestion().getFileProperties().getAllowedDocuments().size() > 1) {
-
-                    View fileUploadView = viewsList.get(question.getGetQuestion().getLabelName());
+                    View fileUploadView = viewsList.get(question.getLabelName());
                     RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
                     FilesAdapter filesAdapter = (FilesAdapter) rvFiles.getAdapter();
                     CustomItalicTextViewNormal tvError = (CustomItalicTextViewNormal) fileUploadView.findViewById(R.id.tv_error);
 
                     List<KeyPairBoolData> files = filesAdapter.getFiles();
 
-                    if (files.size() > question.getGetQuestion().getFileProperties().getMaxNoOfFile()) {
+                    if (files.size() > question.getFileProperties().getMaxNoOfFile()) {
 
                         tvError.setVisibility(View.VISIBLE);
-                        tvError.setText("Maximum allowed files " + question.getGetQuestion().getFileProperties().getMaxNoOfFile());
+                        tvError.setText("Maximum allowed files " + question.getFileProperties().getMaxNoOfFile());
                         return false;
 
-                    } else if (files.size() < question.getGetQuestion().getFileProperties().getMinNoOfFile()) {
+                    } else if (files.size() < question.getFileProperties().getMinNoOfFile()) {
 
                         tvError.setVisibility(View.VISIBLE);
-                        tvError.setText("Upload atleast " + question.getGetQuestion().getFileProperties().getMinNoOfFile() + " file(s)");
+                        tvError.setText("Upload atleast " + question.getFileProperties().getMinNoOfFile() + " file(s)");
 
                         return false;
 
@@ -792,7 +689,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 } else {
 
-                    View singleFileUploadView = viewsList.get(question.getGetQuestion().getLabelName());
+                    View singleFileUploadView = viewsList.get(question.getLabelName());
                     ImageView ivSingleFile = (ImageView) singleFileUploadView.findViewById(R.id.iv_file);
                     CustomItalicTextViewNormal tvError = (CustomItalicTextViewNormal) singleFileUploadView.findViewById(R.id.tv_error);
 
@@ -807,15 +704,15 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 }
 
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("list") && question.getGetQuestion().isMandatory()) {
+            } else if (question.getFieldDataType().equalsIgnoreCase("list") && question.isMandatory()) {
 
-                View listFieldView = viewsList.get(question.getGetQuestion().getLabelName());
+                View listFieldView = viewsList.get(question.getLabelName());
                 RecyclerView rvCheckBoxes = (RecyclerView) listFieldView.findViewById(R.id.rv_checkBoxes);
                 CheckBoxAdapter checkBoxAdapter = (CheckBoxAdapter) rvCheckBoxes.getAdapter();
                 CustomItalicTextViewNormal tvError = (CustomItalicTextViewNormal) listFieldView.findViewById(R.id.tv_error);
 
                 ListProperties properties = new ListProperties();
-                properties = question.getGetQuestion().getListProperties();
+                properties = question.getListProperties();
                 int minAnswers = properties.getMinAnswers();
                 int maxAnswers = properties.getMaxAnswers();
                 int checkedCount = 0;
@@ -835,9 +732,9 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 }
 
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("bool") && question.getGetQuestion().isMandatory()) {
+            } else if (question.getFieldDataType().equalsIgnoreCase("bool") && question.isMandatory()) {
 
-                View boolFieldView = viewsList.get(question.getGetQuestion().getLabelName());
+                View boolFieldView = viewsList.get(question.getLabelName());
                 RadioGroup radioGroup = (RadioGroup) boolFieldView.findViewById(R.id.rg_radioGroup);
                 RadioButton radioButtonYes = (RadioButton) boolFieldView.findViewById(R.id.rb_yes);
                 RadioButton radioButtonNo = (RadioButton) boolFieldView.findViewById(R.id.rb_no);
@@ -850,42 +747,42 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                     return false;
                 }
 
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("plainText") && question.getGetQuestion().isMandatory()) {
+            } else if (question.getFieldDataType().equalsIgnoreCase("plainText") && question.isMandatory()) {
 
-                View textFieldView = viewsList.get(question.getGetQuestion().getLabelName());
+                View textFieldView = viewsList.get(question.getLabelName());
                 CustomEditTextRegular etTextField = (CustomEditTextRegular) textFieldView.findViewById(R.id.et_textBox);
                 CustomItalicTextViewNormal tvError = (CustomItalicTextViewNormal) textFieldView.findViewById(R.id.tv_error);
 
                 if (etTextField.getText().toString().trim().equalsIgnoreCase("")) {
 
                     tvError.setVisibility(View.VISIBLE);
-                    tvError.setText("Enter " + question.getGetQuestion().getLabelName());
+                    tvError.setText("Enter " + question.getLabelName());
                     return false;
                 }
 
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("number") && question.getGetQuestion().isMandatory()) {
+            } else if (question.getFieldDataType().equalsIgnoreCase("number") && question.isMandatory()) {
 
-                View numberFieldView = viewsList.get(question.getGetQuestion().getLabelName());
+                View numberFieldView = viewsList.get(question.getLabelName());
                 CustomEditTextRegular etTextField = (CustomEditTextRegular) numberFieldView.findViewById(R.id.et_textBox);
                 CustomItalicTextViewNormal tvError = (CustomItalicTextViewNormal) numberFieldView.findViewById(R.id.tv_error);
 
                 if (etTextField.getText().toString().trim().equalsIgnoreCase("")) {
 
                     tvError.setVisibility(View.VISIBLE);
-                    tvError.setText("Enter " + question.getGetQuestion().getLabelName());
+                    tvError.setText("Enter " + question.getLabelName());
                     return false;
                 }
 
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("date") && question.getGetQuestion().isMandatory()) {
+            } else if (question.getFieldDataType().equalsIgnoreCase("date") && question.isMandatory()) {
 
-                View dateFieldView = viewsList.get(question.getGetQuestion().getLabelName());
+                View dateFieldView = viewsList.get(question.getLabelName());
                 CustomTextViewSemiBold tvDate = (CustomTextViewSemiBold) dateFieldView.findViewById(R.id.tv_date);
                 CustomItalicTextViewNormal tvError = (CustomItalicTextViewNormal) dateFieldView.findViewById(R.id.tv_error);
 
                 if (tvDate.getText().toString().trim().equalsIgnoreCase("")) {
 
                     tvError.setVisibility(View.VISIBLE);
-                    tvError.setText("Select " + question.getGetQuestion().getLabelName());
+                    tvError.setText("Select " + question.getLabelName());
                     return false;
                 }
 
@@ -897,174 +794,6 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
     }
 
 
-    private void createQuestionnaire(ArrayList<Questions> questionsList) throws JSONException {
-
-        for (Questions question : questionsList) {
-
-            if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("fileUpload")) {
-
-                if (question.getGetQuestion().getFileProperties() != null && question.getGetQuestion().getFileProperties().getAllowedDocuments() != null && question.getGetQuestion().getFileProperties().getAllowedDocuments().size() > 1) {
-
-                    QuestionnaireFileUploadModel model = new QuestionnaireFileUploadModel();
-                    model.setQuestionName(question.getGetQuestion().getLabel());
-                    model.setManditory(question.getGetQuestion().isMandatory());
-                    model.setLabelName(question.getGetQuestion().getLabelName());
-                    model.setHint(question.getGetQuestion().getHint());
-                    ArrayList<KeyPairBoolData> filesList = new ArrayList<>();
-
-                    for (int i = 0; i < question.getGetQuestion().getFileProperties().getAllowedDocuments().size(); i++) {
-
-                        KeyPairBoolData obj = new KeyPairBoolData();
-                        obj.setName(question.getGetQuestion().getFileProperties().getAllowedDocuments().get(i));
-                        obj.setId(i);
-                        filesList.add(obj);
-
-                    }
-                    model.setFileNames(filesList);
-
-                    ArrayList<KeyPairBoolData> dataList = new ArrayList<>();
-                    for (LabelPath l : labelPaths) {
-                        if (l.getLabelName().equalsIgnoreCase(question.getGetQuestion().getLabelName())) {
-                            KeyPairBoolData file = new KeyPairBoolData(l.getFileName(), l.getPath(), l.getType());
-                            dataList.add(file);
-                        }
-                    }
-                    model.setFiles(dataList);
-
-                    addFileUploadView(model);
-
-                } else {
-
-                    QuestnnaireSingleFile singleFile = new QuestnnaireSingleFile();
-                    singleFile.setQuestionName(question.getGetQuestion().getLabel());
-                    singleFile.setManditory(question.getGetQuestion().isMandatory());
-                    singleFile.setLabelName(question.getGetQuestion().getLabelName());
-                    singleFile.setHint(question.getGetQuestion().getHint());
-
-                    for (LabelPath l : labelPaths) {
-                        if (l.getLabelName().equalsIgnoreCase(question.getGetQuestion().getLabelName())) {
-                            singleFile.setFilePath(l.getPath());
-                            singleFile.setType(l.getType());
-                        }
-                    }
-
-                    addSingleFileUploadView(singleFile);
-                }
-
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("plainText")) {
-
-                QuestionnaireTextField textField = new QuestionnaireTextField();
-                textField.setQuestionName(question.getGetQuestion().getLabel());
-                textField.setManditory(question.getGetQuestion().isMandatory());
-                textField.setLabelName(question.getGetQuestion().getLabelName());
-                textField.setHint(question.getGetQuestion().getHint());
-
-                for (AnswerLine answerLine : qInput.getAnswerLines()) {
-                    if (answerLine.getLabelName().equalsIgnoreCase(question.getGetQuestion().getLabelName())) {
-                        JSONObject txtObj = new JSONObject(answerLine.getAnswer().toString());
-                        String text = txtObj.optString("plainText");
-                        if (text.equalsIgnoreCase("05:30 AM")) {
-                            textField.setText("");
-                        } else {
-                            textField.setText(text);
-                        }
-                    }
-                }
-                addTextFieldView(textField);
-
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("date")) {
-
-                QuestionnaireDateField dateField = new QuestionnaireDateField();
-                dateField.setQuestionName(question.getGetQuestion().getLabel());
-                dateField.setManditory(question.getGetQuestion().isMandatory());
-                dateField.setLabelName(question.getGetQuestion().getLabelName());
-                dateField.setHint(question.getGetQuestion().getHint());
-
-                for (AnswerLine answerLine : qInput.getAnswerLines()) {
-                    if (answerLine.getLabelName().equalsIgnoreCase(question.getGetQuestion().getLabelName())) {
-                        JSONObject txtObj = new JSONObject(answerLine.getAnswer().toString());
-                        String text = txtObj.optString("date");
-                        if (text.equalsIgnoreCase("05:30 AM")) {
-                            dateField.setDate("");
-                        } else {
-                            dateField.setDate(text);
-                        }
-                    }
-                }
-
-                addDateFieldView(dateField);
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("number")) {
-
-                QuestionnaireNumberModel numberField = new QuestionnaireNumberModel();
-                numberField.setQuestionName(question.getGetQuestion().getLabel());
-                numberField.setManditory(question.getGetQuestion().isMandatory());
-                numberField.setLabelName(question.getGetQuestion().getLabelName());
-                numberField.setHint(question.getGetQuestion().getHint());
-
-                for (AnswerLine answerLine : qInput.getAnswerLines()) {
-                    if (answerLine.getLabelName().equalsIgnoreCase(question.getGetQuestion().getLabelName())) {
-                        JSONObject txtObj = new JSONObject(answerLine.getAnswer().toString());
-                        int number = txtObj.optInt("number");
-                        numberField.setNumber(String.valueOf(number));
-                    }
-                }
-
-                addNumberFieldView(numberField);
-
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("bool")) {
-
-                QuestionnaireBoolean boolField = new QuestionnaireBoolean();
-                boolField.setQuestionName(question.getGetQuestion().getLabel());
-                boolField.setManditory(question.getGetQuestion().isMandatory());
-                boolField.setLabelName(question.getGetQuestion().getLabelName());
-                boolField.setHint(question.getGetQuestion().getHint());
-
-                ArrayList values = (ArrayList) question.getGetQuestion().getLabelValues();
-                boolField.setLabels(values);
-
-                for (AnswerLine answerLine : qInput.getAnswerLines()) {
-                    if (answerLine.getLabelName().equalsIgnoreCase(question.getGetQuestion().getLabelName())) {
-                        JSONObject txtObj = new JSONObject(answerLine.getAnswer().toString());
-                        Boolean isSelected = txtObj.optBoolean("bool");
-                        boolField.setSelected(isSelected);
-                    }
-                }
-
-                addBooleanField(boolField);
-
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("list")) {
-
-                QuestionnaireListModel listModel = new QuestionnaireListModel();
-                listModel.setQuestionName(question.getGetQuestion().getLabel());
-                listModel.setManditory(question.getGetQuestion().isMandatory());
-                listModel.setLabelName(question.getGetQuestion().getLabelName());
-                listModel.setHint(question.getGetQuestion().getHint());
-                ArrayList values = (ArrayList) question.getGetQuestion().getLabelValues();
-                listModel.setLabels(values);
-
-                for (AnswerLine answerLine : qInput.getAnswerLines()) {
-                    if (answerLine.getLabelName().equalsIgnoreCase(question.getGetQuestion().getLabelName())) {
-
-                        JSONObject txtObj = new JSONObject(answerLine.getAnswer().toString());
-//                        LinkedTreeMap list = (LinkedTreeMap) txtObj.get("list");
-                        JSONArray list = (JSONArray) txtObj.get("list");
-                        ArrayList<String> selectedItems = new ArrayList<>();
-//                        for (Object obj : list.values()) {
-//                            selectedItems.add(obj.toString().replace("[", "").replace("]", ""));
-//                        }
-                        for (int i = 0; i < list.length(); i++) {
-                            selectedItems.add(list.optString(i));
-                        }
-                        listModel.setSelectedItems(selectedItems);
-                    }
-                }
-
-
-                addListField(listModel);
-
-            }
-        }
-    }
 
     private void UpdateQuestionnaire(ArrayList<GetQuestion> questions) throws JSONException {
 
@@ -1334,7 +1063,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
                     } else {
 
-                        Intent intent = new Intent(CustomQuestionnaire.this, ImageActivity.class);
+                        Intent intent = new Intent(UpdateQuestionnaire.this, ImageActivity.class);
                         intent.putExtra("urlOrPath", singleFile.getFilePath());
                         startActivity(intent);
                     }
@@ -1347,7 +1076,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
                     } else {
 
-                        Intent intent = new Intent(CustomQuestionnaire.this, ImageActivity.class);
+                        Intent intent = new Intent(UpdateQuestionnaire.this, ImageActivity.class);
                         intent.putExtra("urlOrPath", singleFile.getFilePath());
                         startActivity(intent);
                     }
@@ -1698,11 +1427,11 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
         try {
 
-            Dialog dialog = new Dialog(CustomQuestionnaire.this);
+            Dialog dialog = new Dialog(UpdateQuestionnaire.this);
             dialog.setCancelable(true);
             dialog.setContentView(R.layout.camera_options);
             dialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
-            DisplayMetrics metrics = CustomQuestionnaire.this.getResources().getDisplayMetrics();
+            DisplayMetrics metrics = UpdateQuestionnaire.this.getResources().getDisplayMetrics();
             int width = (int) (metrics.widthPixels * 1);
             dialog.getWindow().setGravity(Gravity.BOTTOM);
             dialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -2042,11 +1771,11 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
         try {
 
-            Dialog dialog = new Dialog(CustomQuestionnaire.this);
+            Dialog dialog = new Dialog(UpdateQuestionnaire.this);
             dialog.setCancelable(true);
             dialog.setContentView(R.layout.camera_options);
             dialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
-            DisplayMetrics metrics = CustomQuestionnaire.this.getResources().getDisplayMetrics();
+            DisplayMetrics metrics = UpdateQuestionnaire.this.getResources().getDisplayMetrics();
             int width = (int) (metrics.widthPixels * 1);
             dialog.getWindow().setGravity(Gravity.BOTTOM);
             dialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);

@@ -100,6 +100,21 @@
 
             </RelativeLayout>
 
+
+            <com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal
+                android:id="@+id/tv_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/dimen_12dp"
+                android:textColor="@color/red"
+                android:visibility="gone"
+                android:layout_marginStart="@dimen/dimen_8dp"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:text="">
+
+            </com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal>
+
+
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

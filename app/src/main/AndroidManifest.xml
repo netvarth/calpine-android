@@ -44,7 +44,8 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.ImageActivity"></activity>
+        <activity android:name=".activities.UpdateQuestionnaire"></activity>
+        <activity android:name=".activities.ImageActivity" />
         <activity android:name=".activities.CheckInReconfirmation" />
         <activity
             android:name=".activities.ReconfirmationActivity"

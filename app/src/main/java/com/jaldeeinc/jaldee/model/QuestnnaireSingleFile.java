@@ -12,6 +12,7 @@ public class QuestnnaireSingleFile {
     public boolean isManditory = false;
     public String filePath = "";
     public String hint = "";
+    public String type = "";
 
     public String getQuestionName() {
         return questionName;
@@ -59,5 +60,13 @@ public class QuestnnaireSingleFile {
 
     public void setHint(String hint) {
         this.hint = hint;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

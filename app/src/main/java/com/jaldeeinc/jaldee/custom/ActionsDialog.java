@@ -43,6 +43,7 @@ import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.CustomQuestionnaire;
 import com.jaldeeinc.jaldee.activities.RescheduleActivity;
 import com.jaldeeinc.jaldee.activities.RescheduleCheckinActivity;
+import com.jaldeeinc.jaldee.activities.UpdateQuestionnaire;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -52,6 +53,7 @@ import com.jaldeeinc.jaldee.model.QuestionnaireResponseInput;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AnswerLineResponse;
+import com.jaldeeinc.jaldee.response.GetQuestion;
 import com.jaldeeinc.jaldee.response.QuestionAnswers;
 import com.jaldeeinc.jaldee.response.QuestionnaireResponse;
 import com.jaldeeinc.jaldee.response.RatingResponse;
@@ -949,12 +951,13 @@ public class ActionsDialog extends Dialog {
                     SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
                     SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
 
-                    Intent intent = new Intent(mContext, CustomQuestionnaire.class);
+                    Intent intent = new Intent(mContext, UpdateQuestionnaire.class);
                     intent.putExtra("serviceId", bookings.getAppointmentInfo().getService().getId());
                     intent.putExtra("accountId", bookings.getAppointmentInfo().getProviderAccount().getId());
                     intent.putExtra("uid", bookings.getAppointmentInfo().getUid());
                     intent.putExtra("isEdit",true);
                     intent.putExtra("from", Constants.BOOKING_APPOINTMENT);
+                    intent.putExtra("status",bookings.getBookingStatus());
                     mContext.startActivity(intent);
 
                 } else if (bookings.getCheckInInfo() != null) {
@@ -965,12 +968,13 @@ public class ActionsDialog extends Dialog {
                     SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
                     SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
 
-                    Intent intent = new Intent(mContext, CustomQuestionnaire.class);
+                    Intent intent = new Intent(mContext, UpdateQuestionnaire.class);
                     intent.putExtra("serviceId", bookings.getCheckInInfo().getService().getId());
                     intent.putExtra("accountId", bookings.getCheckInInfo().getProviderAccount().getId());
                     intent.putExtra("uid", bookings.getCheckInInfo().getYnwUuid());
                     intent.putExtra("isEdit",true);
                     intent.putExtra("from", Constants.BOOKING_CHECKIN);
+                    intent.putExtra("status",bookings.getBookingStatus());
                     mContext.startActivity(intent);
                 }
 
@@ -985,14 +989,17 @@ public class ActionsDialog extends Dialog {
         QuestionnaireResponseInput responseInput = new QuestionnaireResponseInput();
         responseInput.setQuestionnaireId(questionnaire.getQuestionnaireId());
         ArrayList<AnswerLineResponse> answerLineResponse = new ArrayList<>();
+        ArrayList<GetQuestion> questions = new ArrayList<>();
 
         for (QuestionAnswers qAnswers : questionnaire.getQuestionAnswers()) {
 
             answerLineResponse.add(qAnswers.getAnswerLine());
+            questions.add(qAnswers.getGetQuestion());
 
         }
 
         responseInput.setAnswerLines(answerLineResponse);
+        responseInput.setQuestions(questions);
 
         return responseInput;
 
@@ -1015,6 +1022,7 @@ public class ActionsDialog extends Dialog {
                     path.setFileName(jsonArray.get(i).getAsJsonObject().get("caption").getAsString());
                     path.setLabelName(qAnswers.getAnswerLine().getLabelName());
                     path.setPath(jsonArray.get(i).getAsJsonObject().get("s3path").getAsString());
+                    path.setType(jsonArray.get(i).getAsJsonObject().get("type").getAsString());
 
                     labelPaths.add(path);
                 }

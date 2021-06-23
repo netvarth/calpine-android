@@ -6,6 +6,7 @@ public class LabelPath {
     private String labelName = "";
     private String path = "";
     private String fileName = "";
+    private String type = "";
 
     public LabelPath(){
 
@@ -55,5 +56,13 @@ public class LabelPath {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

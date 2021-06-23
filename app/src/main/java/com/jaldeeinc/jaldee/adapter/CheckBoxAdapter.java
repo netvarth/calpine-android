@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +57,12 @@ public class CheckBoxAdapter extends RecyclerView.Adapter<CheckBoxAdapter.ViewHo
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
                 checkboxList.get(position).setChecked(b);
-                notifyDataSetChanged();
+
+//                try {
+//                    notifyDataSetChanged();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
             }
         });
 

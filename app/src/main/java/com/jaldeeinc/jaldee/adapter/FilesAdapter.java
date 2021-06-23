@@ -2,7 +2,10 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +29,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
 import com.jaldeeinc.jaldee.model.Address;
 
+import java.io.File;
 import java.security.Key;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -76,10 +81,23 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 
                 if (data.getImagePath().contains("http://") || data.getImagePath().contains("https://")) {
 
-                    Glide.with(context).load(data.getImagePath()).into(viewHolder.ivFile);
-                } else {
-                    viewHolder.ivFile.setImageBitmap(BitmapFactory.decodeFile(data.getImagePath()));
+                    if (data.getType().equalsIgnoreCase(".pdf")) {
 
+                        viewHolder.ivFile.setImageDrawable(context.getResources().getDrawable(R.drawable.pdfs));
+
+                    } else {
+                        Glide.with(context).load(data.getImagePath()).into(viewHolder.ivFile);
+                    }
+                } else {
+
+                    if (data.getImagePath().substring(data.getImagePath().lastIndexOf(".") + 1).equals("pdf")) {
+
+                        viewHolder.ivFile.setImageDrawable(context.getResources().getDrawable(R.drawable.pdfs));
+
+                    } else {
+
+                        viewHolder.ivFile.setImageBitmap(BitmapFactory.decodeFile(data.getImagePath()));
+                    }
                 }
                 viewHolder.llFileLayout.setVisibility(View.VISIBLE);
             } else {
@@ -93,9 +111,33 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
                 @Override
                 public void onClick(View view) {
 
-                    Intent intent = new Intent(context, ImageActivity.class);
-                    intent.putExtra("urlOrPath",data.getImagePath());
-                    context.startActivity(intent);
+
+                    if (data.getImagePath().contains("http://") || data.getImagePath().contains("https://")) {
+
+                        if (data.getType().equalsIgnoreCase(".pdf")) {
+
+                            openOnlinePdf(context, data.getImagePath());
+
+                        } else {
+
+                            Intent intent = new Intent(context, ImageActivity.class);
+                            intent.putExtra("urlOrPath", data.getImagePath());
+                            context.startActivity(intent);
+                        }
+
+                    } else {
+
+                        if (data.getImagePath().substring(data.getImagePath().lastIndexOf(".") + 1).equals("pdf")) {
+
+                            openPdf(context, data.getImagePath());
+
+                        } else {
+                            Intent intent = new Intent(context, ImageActivity.class);
+                            intent.putExtra("urlOrPath", data.getImagePath());
+                            context.startActivity(intent);
+                        }
+                    }
+
                 }
             });
 
@@ -206,6 +248,36 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
             }
         }
         notifyDataSetChanged();
+    }
+
+
+    public void openPdf(Context context, String path) {
+        File file = new File(path);
+        if (file.exists()) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+            PackageManager pm = context.getPackageManager();
+            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+            sendIntent.setType("application/pdf");
+            Intent openInChooser = Intent.createChooser(intent, "Choose");
+            List<ResolveInfo> resInfo = pm.queryIntentActivities(sendIntent, 0);
+            if (resInfo.size() > 0) {
+                try {
+                    context.startActivity(openInChooser);
+                } catch (Throwable throwable) {
+                    Toast.makeText(context, "PDF apps are not installed", Toast.LENGTH_SHORT).show();
+                    // PDF apps are not installed
+                }
+            } else {
+                Toast.makeText(context, "PDF apps are not installed", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void openOnlinePdf(Context mContext, String filePath) {
+
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(filePath));
+        context.startActivity(browserIntent);
     }
 
 }

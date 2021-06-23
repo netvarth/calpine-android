@@ -2081,7 +2081,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         if (activeAppointment != null) {
                             checkEncId = activeAppointment.getCheckinEncId();
                             dialogPayment = new BottomSheetDialog(mContext);
-                            
+
                             if (checkInInfo.isPrePayment() && ((totalAmountPay != null && Float.parseFloat(totalAmountPay) > 0) || (prepayAmount != null && Integer.parseInt(prepayAmount) > 0))) {
                                 if (!showPaytmWallet && !showPayU) {
 

@@ -9,6 +9,7 @@ public class KeyPairBoolData {
 	private int nameViewId;
 	private int layoutId;
 	private String imagePath;
+	private String type;
 
 
 	public KeyPairBoolData() {
@@ -18,6 +19,13 @@ public class KeyPairBoolData {
 		this.name = name;
 		this.imagePath = imagePath;
 	}
+
+	public KeyPairBoolData(String name, String imagePath,String type) {
+		this.name = name;
+		this.imagePath = imagePath;
+		this.type = type;
+	}
+
 
 	public Object getObject() {
 		return object;
@@ -99,5 +107,13 @@ public class KeyPairBoolData {
 
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }

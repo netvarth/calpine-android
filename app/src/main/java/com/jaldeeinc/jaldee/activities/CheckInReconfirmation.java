@@ -105,6 +105,9 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
     @BindView(R.id.cv_submit)
     CardView cvSubmit;
 
+    @BindView(R.id.cv_back)
+    CardView cvBack;
+
     @BindView(R.id.cv_paytm)
     CardView cvPaytm;
 
@@ -382,6 +385,14 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                 }
             }
         }
+
+        cvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                finish();
+            }
+        });
 
         cvPaytm.setOnClickListener(new View.OnClickListener() {
             @Override
