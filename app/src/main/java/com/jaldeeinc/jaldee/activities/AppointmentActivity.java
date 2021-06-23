@@ -51,6 +51,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.Interface.ICpn;
 import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
@@ -2039,6 +2040,16 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         tvConsumerName.setVisibility(View.GONE);
     }
 
+    @Override
+    public void sendFamilyMbrPhoneAndEMail(String phone, String email) {
+
+    }
+
+    @Override
+    public void closeActivity() {
+
+    }
+
     public void paymentFinished(RazorpayModel razorpayModel) {
 
 
@@ -2516,8 +2527,18 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     }
 
     @Override
+    public void changeMemberName(String name, FamilyArrayModel familylist) {
+
+    }
+
+    @Override
     public void CheckedFamilyList(List<FamilyArrayModel> familyList) {
         MultiplefamilyList.addAll(familyList);
+
+    }
+
+    @Override
+    public void SelectedPincodeLocation(JsonObject selectedPincodeLocation) {
 
     }
 

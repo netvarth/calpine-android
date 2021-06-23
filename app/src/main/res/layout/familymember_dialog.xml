@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:android.support.design="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:android.support.design="http://schemas.android.com/tools"
     android:layout_margin="@dimen/dimen_10dp"
     android:orientation="vertical">
 
@@ -24,51 +24,59 @@
         android:id="@+id/ll_changemember"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:animateLayoutChanges="true"
         android:layout_marginTop="@dimen/padding5"
-        android:orientation="vertical">
+        android:animateLayoutChanges="true"
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <LinearLayout
+            android:id="@+id/ll_chooseMember"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/dimen_5dp">
+            android:orientation="vertical"
+            android:visibility="visible">
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.20"
-                android:padding="@dimen/dimen_5dp"
-                android:text="Select a person booking for"
-                android:textSize="@dimen/dimen_16sp" />
+                android:orientation="horizontal"
+                android:padding="@dimen/dimen_5dp">
 
+                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.20"
+                    android:padding="@dimen/dimen_5dp"
+                    android:text="Select a person booking for"
+                    android:textSize="@dimen/dimen_16sp" />
+
+
+                <ImageView
+                    android:id="@+id/addmember"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.80"
+                    android:src="@drawable/ic_baseline_person_add_24" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycle_familyMember"
+                android:layout_width="match_parent"
+                android:layout_height="155dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:paddingLeft="@dimen/dimen_5dp" />
 
             <ImageView
-                android:id="@+id/addmember"
+                android:id="@+id/lImage"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="0.80"
-                android:src="@drawable/ic_baseline_person_add_24" />
+                android:layout_height="2dp"
+                android:layout_marginStart="@dimen/padding3"
+                android:layout_marginEnd="@dimen/padding3"
+                android:src="@drawable/dash_gap"
+
+                />
         </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycle_familyMember"
-            android:layout_width="match_parent"
-            android:layout_height="155dp"
-            android:layout_marginBottom="@dimen/dimen_10dp"
-            android:paddingLeft="@dimen/dimen_5dp" />
-
-        <ImageView
-            android:id="@+id/lImage"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginStart="@dimen/padding3"
-            android:layout_marginEnd="@dimen/padding3"
-            android:src="@drawable/dash_gap"
-
-            />
 
         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
             android:layout_width="match_parent"
@@ -95,32 +103,32 @@
                 android:id="@+id/ccp"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/padding40"
-                android:layout_marginLeft="@dimen/dimen_5dp"
                 android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/dimen_5dp"
                 android:layout_weight="0.3"
                 android:background="@drawable/edittext_color"
+                android:visibility="gone"
+                app:ccp_autoDetectCountry="true"
                 app:ccp_showFlag="false"
                 app:ccp_showNameCode="false"
-                app:ccp_textSize="@dimen/dimen_15dp"
-                app:ccp_autoDetectCountry="true"
-                android:visibility="gone"/>
+                app:ccp_textSize="@dimen/dimen_15dp" />
 
             <EditText
                 android:id="@+id/edt_Ccode"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/padding40"
-                android:layout_weight="0.3"
                 android:layout_marginLeft="@dimen/dimen_5dp"
                 android:layout_marginEnd="@dimen/dimen_5dp"
+                android:layout_weight="0.3"
                 android:background="@drawable/edittext_color"
                 android:hint="Enter Country Code"
                 android:inputType="phone"
                 android:maxLength="4"
-                android:visibility="visible"
                 android:paddingStart="@dimen/padding3"
                 android:paddingEnd="@dimen/padding3"
                 android:textColor="@color/black"
                 android:textSize="@dimen/dimen_15sp"
+                android:visibility="visible"
                 app:tint="@color/spinnerbg" />
 
 
@@ -128,8 +136,8 @@
                 android:id="@+id/edtPhone"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/padding40"
-                android:layout_weight="0.7"
                 android:layout_marginLeft="@dimen/dimen_5dp"
+                android:layout_weight="0.7"
                 android:background="@drawable/edittext_color"
                 android:hint="Enter Phone Number"
                 android:inputType="number"
@@ -145,8 +153,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_70dp"
-            android:text="* This field is mandatory"
             android:layout_marginBottom="@dimen/padding3"
+            android:text="* This field is mandatory"
             android:textColor="@color/red"
             android:textSize="@dimen/txtsize_12"
             android:visibility="gone">
@@ -215,9 +223,9 @@
         android:id="@+id/ll_addmember"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:orientation="vertical"
         android:padding="@dimen/dimen_5dp"
-        android:animateLayoutChanges="true"
         android:visibility="gone">
 
         <LinearLayout

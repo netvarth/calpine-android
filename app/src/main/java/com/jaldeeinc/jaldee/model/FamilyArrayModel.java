@@ -1,8 +1,10 @@
 package com.jaldeeinc.jaldee.model;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by sharmila on 11/7/18.
@@ -10,11 +12,84 @@ import java.io.Serializable;
 
 public class FamilyArrayModel  implements Serializable{
 
-  /*  public List<FamilyModel> getmArrayuserProfile() {
-        return mArrayuserProfile;
+    Integer pincode;
+    private JsonObject whatsAppNum;
+    private JsonObject telegramNum;
+    private String whtsAppCountryCode;
+    private String telgrmCountryCode;
+    private String whtsAppNumber;
+    private String telgrmNumber;
+
+    public void setWhtsAppNumber(String whtsAppNumber) {
+        this.whtsAppNumber = whtsAppNumber;
     }
 
-    private List<FamilyModel>  mArrayuserProfile;*/
+    public void setTelgrmNumber(String telgrmNumber) {
+        this.telgrmNumber = telgrmNumber;
+    }
+
+    public String getWhtsAppNumber() {
+        return whtsAppNumber;
+    }
+
+    public String getTelgrmNumber() {
+        return telgrmNumber;
+    }
+
+    public JsonObject getWhatsAppNum() {
+        return whatsAppNum;
+    }
+
+    public JsonObject getTelegramNum() {
+        return telegramNum;
+    }
+
+    public String getWhtsAppCountryCode() {
+       return whtsAppCountryCode;
+    }
+
+    public String getTelgrmCountryCode() {
+        return telgrmCountryCode;
+    }
+
+    public void setWhatsAppNum(JsonObject whatsAppNum) {
+        this.whatsAppNum = whatsAppNum;
+    }
+
+    public void setTelegramNum(JsonObject telegramNum) {
+        this.telegramNum = telegramNum;
+    }
+
+    public void setWhtsAppCountryCode(String whtsAppCountryCode) {
+        this.whtsAppCountryCode = whtsAppCountryCode;
+    }
+
+    public void setTelgrmCountryCode(String telgrmCountryCode) {
+        this.telgrmCountryCode = telgrmCountryCode;
+    }
+
+    ArrayList<String> preferredLanguages;
+
+    public ArrayList<String> getPreferredLanguages() {
+        return preferredLanguages;
+    }
+
+    public void setPreferredLanguages(ArrayList<String> preferredLanguages) {
+        this.preferredLanguages = preferredLanguages;
+    }
+    public Integer getPincode() {
+        return pincode;
+    }
+
+    public void setPincode(Integer pincode) {
+        this.pincode = pincode;
+    }
+
+    /*  public List<FamilyModel> getmArrayuserProfile() {
+                return mArrayuserProfile;
+            }
+
+            private List<FamilyModel>  mArrayuserProfile;*/
   public FamilyArrayModel getUserProfile() {
       return userProfile;
   }
@@ -36,6 +111,16 @@ public class FamilyArrayModel  implements Serializable{
 
     @SerializedName("userProfile")
     private FamilyArrayModel userProfile;
+
+    private JsonObject bookingLocation;
+
+    public JsonObject getBookingLocation() {
+        return bookingLocation;
+    }
+
+    public void setBookingLocation(JsonObject bookingLocation) {
+        this.bookingLocation = bookingLocation;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -93,5 +178,9 @@ public class FamilyArrayModel  implements Serializable{
     boolean check=false;
     public String toString() {
         return this.firstName + " " + lastName; // Value to be displayed in the Spinner
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

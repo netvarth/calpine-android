@@ -347,15 +347,15 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                                 bookingInfo.setCallingType(activeAppointment.getService().getVirtualCallingModes().get(0).getCallingMode());
                             }
                         }
-                        if(activeAppointment.getVideoCallButton() != null){
+                        if (activeAppointment.getVideoCallButton() != null) {
                             bookingInfo.setVideoCallButton(activeAppointment.getVideoCallButton());
                         }
-                        if(activeAppointment.getVideoCallMessage() != null){
+                        if (activeAppointment.getVideoCallMessage() != null) {
                             bookingInfo.setVideoCallMessage(activeAppointment.getVideoCallMessage());
                         }
-                        if (activeAppointment.isHasAttachment()){
+                        if (activeAppointment.isHasAttachment()) {
                             bookingInfo.setHasAttachment(true);
-                        }else {
+                        } else {
                             bookingInfo.setHasAttachment(false);
                         }
 
@@ -432,15 +432,15 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                                 bookingInfo.setCallingType(activeCheckIn.getService().getVirtualCallingModes().get(0).getCallingMode());
                             }
                         }
-                        if(activeCheckIn.getVideoCallButton() != null){
+                        if (activeCheckIn.getVideoCallButton() != null) {
                             bookingInfo.setVideoCallButton(activeCheckIn.getVideoCallButton());
                         }
-                        if(activeCheckIn.getVideoCallMessage() != null){
+                        if (activeCheckIn.getVideoCallMessage() != null) {
                             bookingInfo.setVideoCallMessage(activeCheckIn.getVideoCallMessage());
                         }
-                        if (activeCheckIn.isHasAttachment()){
+                        if (activeCheckIn.isHasAttachment()) {
                             bookingInfo.setHasAttachment(true);
-                        }else {
+                        } else {
                             bookingInfo.setHasAttachment(false);
                         }
 
@@ -779,7 +779,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                 isActive = true;
             }
         } else {
-            if (bookings != null && bookings.isVirtual()){
+            if (bookings != null && bookings.isVirtual()) {
                 isActive = true;
             }
         }
@@ -908,7 +908,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
 
                             return;
                         } else {
-                            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);   
                             Intent cameraIntent = new Intent();
                             cameraIntent.setType("image/*");
                             cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
@@ -964,16 +964,15 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
     }
 
 
-
     @Override
     public void viewAttachments(Bookings bookings) {
 
 
-        if (bookings.getCheckInInfo() != null){
+        if (bookings.getCheckInInfo() != null) {
 
-            getWaitlistImages(bookings.getCheckInInfo().getYnwUuid(),bookings.getCheckInInfo().getProviderAccount().getId());
+            getWaitlistImages(bookings.getCheckInInfo().getYnwUuid(), bookings.getCheckInInfo().getProviderAccount().getId());
         } else {
-            getAppointmentImages(bookings.getAppointmentInfo().getUid(),bookings.getAppointmentInfo().getProviderAccount().getId());
+            getAppointmentImages(bookings.getAppointmentInfo().getUid(), bookings.getAppointmentInfo().getProviderAccount().getId());
         }
 
     }
@@ -990,7 +989,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ArrayList<ShoppingList>> call = apiService.getAppointmentAttachments(uid,id);
+        Call<ArrayList<ShoppingList>> call = apiService.getAppointmentAttachments(uid, id);
         call.enqueue(new Callback<ArrayList<ShoppingList>>() {
             @Override
             public void onResponse(Call<ArrayList<ShoppingList>> call, Response<ArrayList<ShoppingList>> response) {
@@ -1000,13 +999,13 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
 
                     if (response.code() == 200) {
 
-                        ArrayList<ShoppingList>  attachments = new ArrayList<>();
+                        ArrayList<ShoppingList> attachments = new ArrayList<>();
                         attachments = response.body();
 
-                        if (attachments != null && attachments.size() > 0){
+                        if (attachments != null && attachments.size() > 0) {
 
                             Intent intent = new Intent(mContext, ViewAttachmentActivity.class);
-                            intent.putExtra("imagesList",attachments);
+                            intent.putExtra("imagesList", attachments);
                             startActivity(intent);
 
                         }
@@ -1035,7 +1034,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ArrayList<ShoppingList>> call = apiService.getWaitlistAttachments(ynwUuid,id);
+        Call<ArrayList<ShoppingList>> call = apiService.getWaitlistAttachments(ynwUuid, id);
         call.enqueue(new Callback<ArrayList<ShoppingList>>() {
             @Override
             public void onResponse(Call<ArrayList<ShoppingList>> call, Response<ArrayList<ShoppingList>> response) {
@@ -1046,13 +1045,13 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
 
                     if (response.code() == 200) {
 
-                        ArrayList<ShoppingList>  attachments = new ArrayList<>();
+                        ArrayList<ShoppingList> attachments = new ArrayList<>();
                         attachments = response.body();
 
-                        if (attachments != null && attachments.size() > 0){
+                        if (attachments != null && attachments.size() > 0) {
 
                             Intent intent = new Intent(mContext, ViewAttachmentActivity.class);
-                            intent.putExtra("imagesList",attachments);
+                            intent.putExtra("imagesList", attachments);
                             startActivity(intent);
 
 

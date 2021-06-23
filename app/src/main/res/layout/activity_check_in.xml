@@ -19,7 +19,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_back"
-            android:layout_width="35dp"
+            android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/dimen_16dp"
