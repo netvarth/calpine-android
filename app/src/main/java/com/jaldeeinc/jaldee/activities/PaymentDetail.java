@@ -174,8 +174,14 @@ public class PaymentDetail extends AppCompatActivity {
                                 providerLayout.setVisibility(View.GONE);
                             }
                             if (response.body().getPaymentOn() != null) {
-                                String date = formatDateandTime(response.body().getPaymentOn());
-                                dateandtime.setText(date);
+                                String date = "";
+                                try {
+                                    date = formatDate(response.body().getPaymentOn().split(" ")[0]);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                String time = convertTime(response.body().getPaymentOn().split(" ")[1]);
+                                dateandtime.setText(date+" "+ time);
                                 dateandtime.setVisibility(View.VISIBLE);
                             } else {
                                 dateandtime.setVisibility(View.GONE);
@@ -394,21 +400,30 @@ public class PaymentDetail extends AppCompatActivity {
         });
     }
 
-    public String formatDateandTime(String time) {
-        String inputPattern = "yyyy-MM-dd HH:mm:ss aaa";
-        String outputPattern = "dd-MMM-yyyy hh:mm aaa";
+    public String formatDate(String date) throws ParseException {
+        String inputPattern = "yyyy-MM-dd";
+        String outputPattern = "dd-MMM-yyyy";
+
         SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
         SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
 
-        Date date = null;
-        String str = null;
+        Date date1 = inputFormat.parse(date);
+        String date2 = outputFormat.format(date1);
 
+        return date2;
+    }
+    public static String convertTime(String time) {
+
+        String formattedTime = "";
         try {
-            date = inputFormat.parse(time);
-            str = outputFormat.format(date);
-        } catch (ParseException e) {
+            final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            final Date dateObj = sdf.parse(time);
+            time = new SimpleDateFormat("hh:mm aa").format(dateObj);
+            formattedTime = time.replace("am", "AM").replace("pm", "PM");
+
+        } catch (final ParseException e) {
             e.printStackTrace();
         }
-        return str;
+        return formattedTime;
     }
 }
