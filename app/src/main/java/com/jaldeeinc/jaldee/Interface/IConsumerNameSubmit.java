@@ -1,5 +1,5 @@
 package com.jaldeeinc.jaldee.Interface;
 
 public interface IConsumerNameSubmit {
-    void consumerNameUpdated();
+    void consumerNameUpdated(String mFirstName, String mLastName);
 }

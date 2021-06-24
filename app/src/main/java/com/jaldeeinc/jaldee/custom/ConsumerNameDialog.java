@@ -7,13 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.Interface.IConsumerNameSubmit;
-import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.DonationActivity;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -33,43 +30,53 @@ import retrofit2.Response;
 
 public class ConsumerNameDialog extends Dialog {
     Context context;
-    EditText name;
+    EditText fName, lName;
     Button btnsave;
     DatabaseHandler db;
     ProfileModel profileDetails;
-    CustomTextViewMedium tvErrorMessage;
+    CustomTextViewMedium tvFNameErrorMessage, tvLNameErrorMessage;
     private IConsumerNameSubmit iConsumerNameSubmit;
     String consumerName;
+    String mFirstName;
+    String mLastName;
 
-    public ConsumerNameDialog(Context mContext, ProfileModel profileDetails, IConsumerNameSubmit iConsumerNameSubmit, String consumerName) {
+    public ConsumerNameDialog(Context mContext, ProfileModel profileDetails, IConsumerNameSubmit iConsumerNameSubmit, String mFirstName, String mLastName) {
         super(mContext);
         this.context = mContext;
         this.profileDetails = profileDetails;
         this.iConsumerNameSubmit = iConsumerNameSubmit;
         this.consumerName = consumerName;
+        this.mFirstName = mFirstName;
+        this.mLastName = mLastName;
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.consumer_name);
-        name = findViewById(R.id.name);
+        fName = findViewById(R.id.fname);
+        lName = findViewById(R.id.lname);
         btnsave = findViewById(R.id.btnSave);
-        tvErrorMessage = findViewById(R.id.error_mesg);
+        tvFNameErrorMessage = findViewById(R.id.fname_error_mesg);
+        tvLNameErrorMessage = findViewById(R.id.lname_error_mesg);
+
         Typeface tyface = Typeface.createFromAsset(context.getAssets(),
                 "fonts/JosefinSans-SemiBold.ttf");
-        name.setTypeface(tyface);
+        fName.setTypeface(tyface);
+        lName.setTypeface(tyface);
+
         btnsave.setTypeface(tyface);
-        if (consumerName != null) {
-
-            name.setText(consumerName);
-
+        if (mLastName != null) {
+            fName.setText(mFirstName);
+            if (mLastName != null) {
+                lName.setText(mLastName);
+            }
         }
 
         btnsave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                checkMail();
+                saveName();
             }
         });
     }
@@ -79,19 +86,19 @@ public class ConsumerNameDialog extends Dialog {
                 .matches();
     }
 
-    private void checkMail() {
+    private void saveName() {
 
-        String cName = name.getText().toString();
-
-        if (cName.trim().length() > 0) {
+        if(fName.getText() == null || fName.getText().toString().equals("")){
+            tvFNameErrorMessage.setVisibility(View.VISIBLE);
+        }else if(lName.getText() == null || lName.getText().toString().equals("")){
+            tvLNameErrorMessage.setVisibility(View.VISIBLE);
+        }else {
+            mFirstName = fName.getText().toString();
+            mLastName = lName.getText().toString();
             Toast.makeText(context, "Donor name has been updated successfully ", Toast.LENGTH_LONG).show();
-            SharedPreference.getInstance(context).setValue("consumerName", name.getText().toString());
-            iConsumerNameSubmit.consumerNameUpdated();
+            //SharedPreference.getInstance(context).setValue("consumerName", fName.getText().toString());
+            iConsumerNameSubmit.consumerNameUpdated(mFirstName, mLastName);
             dismiss();
-        } else {
-
-            tvErrorMessage.setVisibility(View.VISIBLE);
-            tvErrorMessage.setText("This field is required");
         }
 
     }
@@ -136,10 +143,10 @@ public class ConsumerNameDialog extends Dialog {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
-                            SharedPreference.getInstance(context).setValue("email", name.getText().toString());
+                            SharedPreference.getInstance(context).setValue("email", fName.getText().toString());
 
                             Toast.makeText(context, "Email has been updated successfully ", Toast.LENGTH_LONG).show();
-                            iConsumerNameSubmit.consumerNameUpdated();
+                            iConsumerNameSubmit.consumerNameUpdated(profileDetails.getUserprofile().getFirstName(), profileDetails.getUserprofile().getLastName());
                             dismiss();
 
 

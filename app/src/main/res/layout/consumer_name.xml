@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -8,65 +7,99 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginLeft="@dimen/dimen_20dp"
-        android:layout_marginRight="@dimen/dimen_20dp">
+        android:layout_marginRight="@dimen/dimen_20dp"
+        android:orientation="vertical">
 
         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/txtsize_12"
             android:layout_marginTop="@dimen/padding30"
+            android:text="First Name"
             android:textColor="@color/title_color"
-            android:text="Name">
+            android:textSize="@dimen/txtsize_12">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
 
         <EditText
-            android:id="@+id/name"
+            android:id="@+id/fname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/txtsize_10"
             android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@drawable/edittext_color"
+            android:hint="First Name"
+            android:paddingStart="@dimen/txtsize_10"
             android:paddingTop="@dimen/padding5"
             android:paddingBottom="@dimen/padding3"
-            android:textSize="@dimen/dimen_15sp"
-            android:background="@drawable/edittext_color"
-            android:hint="Enter Donor Name"
-            android:textColor="@color/title_grey"/>
+            android:textColor="@color/title_grey"
+            android:textSize="@dimen/dimen_15sp" />
 
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:id="@+id/fname_error_mesg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding5"
+            android:text="Please enter the first name"
+            android:textColor="@color/red"
+            android:textSize="@dimen/txtsize_12"
+            android:visibility="gone">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:text="Last Name"
+            android:textColor="@color/title_color"
+            android:textSize="@dimen/txtsize_12">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+        <EditText
+            android:id="@+id/lname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@drawable/edittext_color"
+            android:hint="Last Name"
+            android:paddingStart="@dimen/txtsize_10"
+            android:paddingTop="@dimen/padding5"
+            android:paddingBottom="@dimen/padding3"
+            android:textColor="@color/title_grey"
+            android:textSize="@dimen/dimen_15sp" />
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:id="@+id/lname_error_mesg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding5"
+            android:text="Please enter the last name"
+            android:textColor="@color/red"
+            android:textSize="@dimen/txtsize_12"
+            android:visibility="gone">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
     </LinearLayout>
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-        android:id="@+id/error_mesg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_18dp"
-        android:layout_marginTop="@dimen/padding5"
-        android:text="* This field is manditory"
-        android:textSize="@dimen/txtsize_12"
-        android:visibility="gone"
-        android:textColor="@color/red">
-
-    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
     <Button
         android:id="@+id/btnSave"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/padding40"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/padding20"
         android:layout_marginBottom="@dimen/padding25"
-        android:textSize="@dimen/dimen_12sp"
-        android:textColor="@color/white"
-        android:text="OK"
-        android:textAllCaps="false"
-        android:textStyle="bold"
-        android:padding="@dimen/padding5"
         android:background="@drawable/curved_save"
         android:backgroundTint="@color/button_background"
         android:fontFamily="@font/customfont"
-        android:layout_gravity="center_horizontal"/>
+        android:padding="@dimen/padding5"
+        android:text="OK"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimen_12sp"
+        android:textStyle="bold" />
 
 </LinearLayout>

@@ -186,7 +186,8 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     private String countryCode;
     private boolean payTm = false;
     private boolean razorPay = false;
-
+    String mFirstName;
+    String mLastName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -303,8 +304,8 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
             e.printStackTrace();
         }
 
-        String mFirstName = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
-        String mLastName = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
+        mFirstName = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
+        mLastName = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
         int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
         familyMEmID = consumerId;
         tvConsumerName.setText(mFirstName + " " + mLastName);
@@ -502,7 +503,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                         etAmount.clearFocus();
                     }
                     if (tvConsumerName.getText().toString() != null) {
-                        consumerNameDialog = new ConsumerNameDialog(DonationActivity.this, profileDetails, iConsumerNameSubmit, tvConsumerName.getText().toString());
+                        consumerNameDialog = new ConsumerNameDialog(DonationActivity.this, profileDetails, iConsumerNameSubmit, mFirstName, mLastName);
                         consumerNameDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                         consumerNameDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         consumerNameDialog.show();
@@ -648,6 +649,8 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                     if (response.code() == 200) {
                         profileDetails = response.body();
                         if (profileDetails != null) {
+                            mFirstName = profileDetails.getUserprofile().getFirstName();
+                            mLastName = profileDetails.getUserprofile().getLastName();
                             tvConsumerName.setText(profileDetails.getUserprofile().getFirstName() + " " + profileDetails.getUserprofile().getLastName());
                             countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
                             phoneNumber = profileDetails.getUserprofile().getPrimaryMobileNo();
@@ -874,7 +877,8 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
 
             consumer.put("id", familyMEmID);
             providerConsumer.put("id", familyMEmID);
-            donor.put("firstName", tvConsumerName.getText().toString());
+            donor.put("firstName", mFirstName);
+            donor.put("lastName", mLastName);
 
             queueobj.putOpt("service", service);
             queueobj.putOpt("consumer", consumer);
@@ -1362,8 +1366,10 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     }
 
     @Override
-    public void consumerNameUpdated() {
-        String consumerName = SharedPreference.getInstance(mContext).getStringValue("consumerName", "");
-        tvConsumerName.setText(consumerName);
+    public void consumerNameUpdated(String firstName, String lastName) {
+        this.mFirstName = firstName;
+        this.mLastName = lastName;
+        //String consumerName = SharedPreference.getInstance(mContext).getStringValue("consumerName", "");
+        tvConsumerName.setText(mFirstName + " " + mLastName);
     }
 }
