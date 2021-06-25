@@ -74,6 +74,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
     private IFamilyMemberDetails iFamilyMemberDetails;
     CustomTextViewSemiBold tv_errorphone, tv_error_mail, tv_errorfirstname, tv_errorChooseLanguage, tv_phoneNumber, tv_gender_errormesg, tv_age_errormesg, tv_pin_errormesg, tv_lName_errormesg, tv_fName_errormesg;
     CustomTextViewMedium tv_languaes;
+    CustomTextViewBold tv_cstmr_infrmn;
     boolean isPrepayment;
     ProfileModel profileDetails;
     ArrayList<FamilyArrayModel> LCheckList = new ArrayList<>();
@@ -101,6 +102,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
     ChooseLanguagesAdapter chooseLanguagesAdapter;
     FamilyArrayModel familylist;
     ScrollView scrollView;
+    String domain;
         /*public CustomerInformationDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode) {
         super(appointmentActivity);
         this.context = appointmentActivity;
@@ -115,7 +117,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         this.countryCode = countryCode;
     }*/
 
-    public CustomerInformationDialog(CheckInActivity checkInActivity, int familyMEmID, String email, String phone, boolean prePayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode) {
+    public CustomerInformationDialog(CheckInActivity checkInActivity, int familyMEmID, String email, String phone, boolean prePayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode, String domain) {
         super(checkInActivity);
         this.context = checkInActivity;
         this.memId = familyMEmID;
@@ -127,6 +129,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         this.multiple = multiple;
         this.update = update;
         this.countryCode = countryCode;
+        this.domain = domain;
     }
 
 
@@ -135,7 +138,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customerinformation_dialog);
 
-
+        tv_cstmr_infrmn = findViewById(R.id.tv_cstmr_infrmn);
         ivClose = findViewById(R.id.iv_close);
         //ivAddMember = findViewById(R.id.addmember);
         edtWhtsAppNumber = findViewById(R.id.edtWhtsAppNumber);
@@ -186,7 +189,13 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         tv_fName_errormesg = findViewById(R.id.tv_fName_errormesg);
         tv_lName_errormesg = findViewById(R.id.tv_lName_errormesg);
 
-
+        if(domain != null){
+            if(domain.equalsIgnoreCase("healthCare")){
+                tv_cstmr_infrmn.setText("Patient Information");
+            } else {
+                tv_cstmr_infrmn.setText("Customer Information");
+            }
+        }
         if (profileDetails.getUserprofile().getGender() != null) {
             if (!profileDetails.getUserprofile().getGender().equalsIgnoreCase("")) {
                 if (profileDetails.getUserprofile().getGender().equalsIgnoreCase("Male")) {
