@@ -3,8 +3,6 @@ package com.jaldeeinc.jaldee.custom;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,15 +26,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckInActivity;
-import com.jaldeeinc.jaldee.activities.PaymentDetail;
-import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.adapter.CheckIn_FamilyMemberListAdapter;
 import com.jaldeeinc.jaldee.adapter.ChooseLanguagesAdapter;
 import com.jaldeeinc.jaldee.adapter.PincodeLocationsAdapter;
@@ -52,6 +47,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import okhttp3.RequestBody;
@@ -72,10 +68,10 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
     ArrayList<FamilyArrayModel> familyMembersList = new ArrayList<>();
     List<FamilyArrayModel> LuserProfileList = new ArrayList<>();
     private Spinner memberSpinner;
-    private EditText edtTelegram, edtWhtsAppNumber, et_email, et_firstname, et_lastName, et_pincode, et_age;
+    private EditText edtTelegram, edtWhtsAppNumber, et_email, et_pincode, et_age, et_firstname, et_lastName;
     private Button bt_save, btn_language_ok, btn_language_cancel;
     private IFamilyMemberDetails iFamilyMemberDetails;
-    CustomTextViewSemiBold tv_errorphone, tv_error_mail, tv_errorfirstname, tv_errorChooseLanguage, tv_phoneNumber, tv_gender_errormesg, tv_age_errormesg, tv_pin_errormesg;
+    CustomTextViewSemiBold tv_errorphone, tv_error_mail, tv_errorfirstname, tv_errorChooseLanguage, tv_phoneNumber, tv_gender_errormesg, tv_age_errormesg, tv_pin_errormesg, tv_lName_errormesg, tv_fName_errormesg;
     CustomTextViewMedium tv_languaes;
     boolean isPrepayment;
     ProfileModel profileDetails;
@@ -89,10 +85,10 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
     ArrayList<FamilyArrayModel> familyList = new ArrayList<>();
     ArrayList<FamilyArrayModel> data = new ArrayList<>();
     ArrayList<FamilyArrayModel> checkList = new ArrayList<>();
-    private LinearLayout ll_changeMember, ll_chooselanguages, ll_languages, ll_edit_languaes;
+    private LinearLayout ll_changeMember, ll_chooselanguages, ll_languages, ll_edit_languaes, ll_add_member;
     Animation slideUp, slideRight;
     CountryCodePicker WhtsappCCodePicker, TelegramCCodePicker;
-    String countryCode = "", whatsappCountryCode, telegramCountryCode, whatsappNumber, telegramNumber;
+    String countryCode = "";
     String gender = null;
     RadioGroup radio_gender, radio_language;
     RadioButton radioM, radioF, radioO, radioEnglishlng, radioOtherlng;
@@ -102,7 +98,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
     TextWatcher tw_et_pincode;
     ArrayList<String> preferredLanguages = new ArrayList<String>();
     ChooseLanguagesAdapter chooseLanguagesAdapter;
-    FamilyArrayModel familylist, fList;
+    FamilyArrayModel familylist;
     ScrollView scrollView;
         /*public CustomerInformationDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode) {
         super(appointmentActivity);
@@ -182,6 +178,14 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         tv_age_errormesg = findViewById(R.id.tv_age_errormesg);
         et_age = findViewById(R.id.et_age);
         tv_pin_errormesg = findViewById(R.id.tv_pin_errormesg);
+
+        ll_add_member = findViewById(R.id.ll_add_member);
+        et_firstname = findViewById(R.id.et_fName);
+        et_lastName = findViewById(R.id.et_lName);
+        tv_fName_errormesg = findViewById(R.id.tv_fName_errormesg);
+        tv_lName_errormesg = findViewById(R.id.tv_lName_errormesg);
+
+
         if (profileDetails.getUserprofile().getGender() != null) {
             if (!profileDetails.getUserprofile().getGender().equalsIgnoreCase("")) {
                 if (profileDetails.getUserprofile().getGender().equalsIgnoreCase("Male")) {
@@ -287,12 +291,12 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 }
             }
         });
-       radio_gender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-           @Override
-           public void onCheckedChanged(RadioGroup group, int checkedId) {
-               tv_gender_errormesg.setVisibility(View.GONE);
-           }
-       });
+        radio_gender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                tv_gender_errormesg.setVisibility(View.GONE);
+            }
+        });
         /*
         radioEnglishlng.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -354,7 +358,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(et_age.getText() != null && !et_age.getText().toString().equals("") && Integer.parseInt(et_age.getText().toString()) > 150){
+                if (et_age.getText() != null && !et_age.getText().toString().equals("") && Integer.parseInt(et_age.getText().toString()) > 150) {
                     tv_age_errormesg.setText("Maximum age is 150");
                     tv_age_errormesg.setVisibility(View.VISIBLE);
                 } else {
@@ -367,30 +371,65 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         bt_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                boolean isOk = true;
+                if (familylist.isAddMember()) {
+                    if (et_firstname.getText() == null || et_firstname.getText().toString().equals("")) {
+                        tv_fName_errormesg.setVisibility(View.VISIBLE);
+                        //scrollView.smoothScrollTo(0, scrollView.getTop());
+                        isOk = false;
+                    } else if (et_firstname.getText().toString().length() < 3) {
+                        tv_fName_errormesg.setText("Firstname is too short");
+                        tv_fName_errormesg.setVisibility(View.VISIBLE);
+                        //scrollView.smoothScrollTo(0, scrollView.getTop());
+                        isOk = false;
+                    } else {
+                        tv_fName_errormesg.setVisibility(View.GONE);
+                    }
+                    if (et_lastName.getText() == null || et_lastName.getText().toString().equals("")) {
+                        tv_lName_errormesg.setVisibility(View.VISIBLE);
+                        //scrollView.smoothScrollTo(0, scrollView.getTop());
+                        isOk = false;
+                    } else {
+                        tv_lName_errormesg.setVisibility(View.GONE);
+                    }
+                }
                 if (radio_gender.getCheckedRadioButtonId() == -1) {
                     tv_gender_errormesg.setVisibility(View.VISIBLE);
-                    scrollView.smoothScrollTo(0, scrollView.getTop());
-                } else if (et_age.getText() == null || et_age.getText().toString().equals("")) {
+                    //scrollView.smoothScrollTo(0, scrollView.getTop());
+                    isOk = false;
+                }
+                if (et_age.getText() == null || et_age.getText().toString().equals("")) {
                     tv_age_errormesg.setVisibility(View.VISIBLE);
-                    scrollView.smoothScrollTo(0, scrollView.getTop());
-                } else if(Integer.parseInt(et_age.getText().toString()) > 150){
+                    //scrollView.smoothScrollTo(0, scrollView.getTop());
+                    isOk = false;
+                } else if (Integer.parseInt(et_age.getText().toString()) > 150) {
                     tv_age_errormesg.setText("Maximum age is 150");
                     tv_age_errormesg.setVisibility(View.VISIBLE);
-                    scrollView.smoothScrollTo(0, scrollView.getTop());
-                } else if (et_pincode.getText() == null || et_pincode.getText().toString().equals("")) {
+                    //scrollView.smoothScrollTo(0, scrollView.getTop());
+                    isOk = false;
+                }
+                if (et_pincode.getText() == null || et_pincode.getText().toString().equals("")) {
                     tv_pin_errormesg.setVisibility(View.VISIBLE);
-                    scrollView.smoothScrollTo(0, scrollView.getTop());
-                } else if(et_pincode.getText().length() < 6){
+                    //scrollView.smoothScrollTo(0, scrollView.getTop());
+                    isOk = false;
+                } else if (et_pincode.getText().length() < 6) {
                     tv_pin_errormesg.setText("Please provide a valid pincode");
                     tv_pin_errormesg.setVisibility(View.VISIBLE);
-                    scrollView.smoothScrollTo(0, scrollView.getTop());
-                } else {
-                    if(familylist.getId() == consumerId)
-                    {
+                    //scrollView.smoothScrollTo(0, scrollView.getTop());
+                    isOk = false;
+                }
+                if (isOk) {
+                    if (familylist.getId() == consumerId) {
                         ApiEditProfileDetail();
-                    }else {
-                        ApiUpdateFamilyMember();
+                    } else {
+                        if (familylist.isAddMember()) {
+                            ApiAddFamilyMember();
+                        } else {
+                            ApiUpdateFamilyMember();
+                        }
                     }
+                } else {
+                    scrollView.smoothScrollTo(0, scrollView.getTop());
                 }
                 /*email = et_email.getText().toString();
                 phone = tv_phoneNumber.getText().toString();
@@ -594,14 +633,21 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                             if (profileDetails.getUserprofile().getWhatsAppNum() != null && profileDetails.getUserprofile().getWhatsAppNum().size() != 0) {
                                 family.setWhtsAppCountryCode(profileDetails.getUserprofile().getWhatsAppNum().getAsJsonPrimitive("countryCode").getAsString());
                                 family.setWhtsAppNumber(profileDetails.getUserprofile().getWhatsAppNum().getAsJsonPrimitive("number").getAsString());
+                            } else {
+                                family.setWhtsAppNumber(profileDetails.getUserprofile().getPrimaryMobileNo());
+                                family.setWhtsAppCountryCode(profileDetails.getUserprofile().getCountryCode());
                             }
                             if (profileDetails.getUserprofile().getTelegramNum() != null && profileDetails.getUserprofile().getTelegramNum().size() != 0) {
                                 family.setTelgrmCountryCode(profileDetails.getUserprofile().getTelegramNum().getAsJsonPrimitive("countryCode").getAsString());
                                 family.setTelgrmNumber(profileDetails.getUserprofile().getTelegramNum().getAsJsonPrimitive("number").getAsString());
+                            } else {
+                                family.setTelgrmNumber(profileDetails.getUserprofile().getPrimaryMobileNo());
+                                family.setTelgrmCountryCode(profileDetails.getUserprofile().getCountryCode());
                             }
                             if (profileDetails.getUserprofile().getPinCode() != null) {
                                 family.setPincode(profileDetails.getUserprofile().getPinCode());
                             }
+                            family.setAddMember(false);
                             LuserProfileList.add(family);
                             if (LuserProfileList.size() > 0) {
 
@@ -628,10 +674,20 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                                             family1.setTelgrmCountryCode(response.body().get(i).getUserProfile().getTelegramNum().getAsJsonPrimitive("countryCode").getAsString());
                                             family1.setTelgrmNumber(response.body().get(i).getUserProfile().getTelegramNum().getAsJsonPrimitive("number").getAsString());
                                         }
+                                        family1.setAddMember(false);
                                         LuserProfileList.add(family1);
                                     }
                                 }
                             }
+                            FamilyArrayModel family2 = new FamilyArrayModel();  // model for "Someone else" field
+                            family2.setFirstName("Someone");
+                            family2.setLastName("else");
+                            family2.setAddMember(true);
+                            family2.setWhtsAppCountryCode(profileDetails.getUserprofile().getCountryCode());
+                            family2.setTelgrmNumber(profileDetails.getUserprofile().getPrimaryMobileNo());
+                            family2.setTelgrmCountryCode(profileDetails.getUserprofile().getCountryCode());
+                            family2.setWhtsAppNumber(profileDetails.getUserprofile().getPrimaryMobileNo());
+                            LuserProfileList.add(family2);
 
                             LCheckList.clear();
 
@@ -751,7 +807,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 if (radio_language.getCheckedRadioButtonId() == radioEnglishlng.getId()) {
                     jsonObj4.put("English");
                 } else if (radio_language.getCheckedRadioButtonId() == radioOtherlng.getId()) {
-                    for(String lang : preferredLanguages) {
+                    for (String lang : preferredLanguages) {
                         jsonObj4.put(lang);
                     }
                 }
@@ -828,17 +884,55 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         final Dialog mDialog = Config.getProgressDialog(context, context.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject userProfile = new JSONObject();
-        JSONObject jsonObj = new JSONObject();
-        try {
+        JSONObject jsonObj1 = new JSONObject();
+        JSONObject jsonObj2 = new JSONObject();
+        JSONObject jsonObj3 = new JSONObject();
+        JSONArray jsonObj4 = new JSONArray();
+        //ArrayList<String> jsonObj4 = new ArrayList<String>();
 
-            jsonObj.put("firstName", et_firstname.getText().toString());
-            jsonObj.put("lastName", et_lastName.getText().toString());
-            userProfile.putOpt("userProfile", jsonObj);
-            //  userProfile.put("parent",consumerId);
+
+        try {
+            jsonObj1.put("firstName", et_firstname.getText().toString());
+            jsonObj1.put("lastName", et_lastName.getText().toString());
+            if (radio_gender.getCheckedRadioButtonId() != -1) {
+                if (radio_gender.getCheckedRadioButtonId() == radioO.getId()) {
+                    jsonObj1.put("gender", "other");
+                } else if (radio_gender.getCheckedRadioButtonId() == radioM.getId()) {
+                    jsonObj1.put("gender", "male");
+                } else if (radio_gender.getCheckedRadioButtonId() == radioF.getId()) {
+                    jsonObj1.put("gender", "female");
+                }
+            }
+            if (edtWhtsAppNumber.getText() != null && !edtWhtsAppNumber.getText().toString().isEmpty()) {
+                jsonObj2.put("countryCode", WhtsappCCodePicker.getSelectedCountryCodeWithPlus());
+                jsonObj2.put("number", edtWhtsAppNumber.getText());
+                jsonObj1.putOpt("whatsAppNum", jsonObj2);
+            }
+            if (edtTelegram.getText() != null && !edtTelegram.getText().toString().isEmpty()) {
+                jsonObj3.put("countryCode", TelegramCCodePicker.getSelectedCountryCodeWithPlus());
+                jsonObj3.put("number", edtTelegram.getText());
+                jsonObj1.putOpt("telegramNum", jsonObj3);
+            }
+            if (selectedPincode != null) {
+                userProfile.putOpt("bookingLocation", selectedPincode);
+            }
+            if (radio_language.getCheckedRadioButtonId() != -1) {
+                if (radio_language.getCheckedRadioButtonId() == radioEnglishlng.getId()) {
+                    jsonObj4.put("English");
+                } else if (radio_language.getCheckedRadioButtonId() == radioOtherlng.getId()) {
+                    for (String lang : preferredLanguages) {
+                        jsonObj4.put(lang);
+                    }
+                }
+                userProfile.putOpt("preferredLanguages", jsonObj4);
+            }
+            userProfile.put("email", et_email.getText().toString());
+            userProfile.putOpt("userProfile", jsonObj1);
+
+            // userProfile.put("id", mUser);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), userProfile.toString());
         Call<ResponseBody> call = apiService.AddFamilyMEmber(body);
@@ -856,16 +950,9 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                     Config.logV("Response--code-------------------------" + response.code());
                     Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
-                        // bt_save.setEnabled(false);
-                        bt_save.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
-                        et_firstname.setText("");
-                        et_lastName.setText("");
-                        ll_chooselanguages.setVisibility(View.GONE);
-                        ll_chooselanguages.startAnimation(slideRight);
-                        ll_changeMember.setVisibility(View.VISIBLE);
-                        ll_changeMember.startAnimation(slideUp);
-                        ApiListFamilyMember();
-
+                        Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
+                        iFamilyMemberDetails.sendFamilyMemberDetails(memId, et_firstname.getText().toString(), et_lastName.getText().toString(), phone, et_email.getText().toString(), countryCode);
+                        dismiss();
 
                     } else {
                         String responseerror = response.errorBody().string();
@@ -939,6 +1026,13 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
 
 
     public void updateUi(String name, FamilyArrayModel familylist) {
+        if (familylist.isAddMember()) {
+            ll_add_member.setVisibility(View.VISIBLE);
+        } else {
+            ll_add_member.setVisibility(View.GONE);
+        }
+        tv_fName_errormesg.setVisibility(View.GONE);
+        tv_lName_errormesg.setVisibility(View.GONE);
         tv_gender_errormesg.setVisibility(View.GONE);
         tv_age_errormesg.setVisibility(View.GONE);
         tv_pin_errormesg.setVisibility(View.GONE);
@@ -962,8 +1056,11 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-            //selectedPincode.addProperty("pincode", familylist.getPincode());
+        } else {
+            et_pincode.setText("");
+            while (this.selectedPincode.length() > 0) {
+                this.selectedPincode.remove((String) this.selectedPincode.keys().next());
+            }
         }
         if (familylist.getWhtsAppCountryCode() != null && familylist.getWhtsAppNumber() != null) {
             String cCode = familylist.getWhtsAppCountryCode().replace("+", "");
@@ -1002,6 +1099,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
             chooseLanguagesAdapter = new ChooseLanguagesAdapter(context, (Activity) context, new ArrayList<String>());
             preferredLanguages = new ArrayList<String>();
         }*/
+        et_age.setText("");
         mRecycleChooseLanguages.setVisibility(View.VISIBLE);
         RecyclerView.LayoutManager mChooseLanguagesLayoutManager = new LinearLayoutManager(context);
         mRecycleChooseLanguages.setLayoutManager(mChooseLanguagesLayoutManager);
@@ -1037,9 +1135,10 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                             mRecyclePincode.setAdapter(mPincodeLocationAdapter);
                             mPincodeLocationAdapter.notifyDataSetChanged();
                         }
-                    } else if(response.code() == 500){
+                    } else if (response.code() == 500) {
                         tv_pin_errormesg.setText("Please provide a valid pincode");
-                        tv_pin_errormesg.setVisibility(View.VISIBLE);               }
+                        tv_pin_errormesg.setVisibility(View.VISIBLE);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1118,7 +1217,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 if (radio_language.getCheckedRadioButtonId() == radioEnglishlng.getId()) {
                     jsonObj4.put("English");
                 } else if (radio_language.getCheckedRadioButtonId() == radioOtherlng.getId()) {
-                    for(String lang : preferredLanguages) {
+                    for (String lang : preferredLanguages) {
                         jsonObj4.put(lang);
                     }
                 }

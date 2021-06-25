@@ -19,6 +19,15 @@ public class FamilyArrayModel  implements Serializable{
     private String telgrmCountryCode;
     private String whtsAppNumber;
     private String telgrmNumber;
+    private boolean isAddMember;
+
+    public boolean isAddMember() {
+        return isAddMember;
+    }
+
+    public void setAddMember(boolean addMember) {
+        isAddMember = addMember;
+    }
 
     public void setWhtsAppNumber(String whtsAppNumber) {
         this.whtsAppNumber = whtsAppNumber;
