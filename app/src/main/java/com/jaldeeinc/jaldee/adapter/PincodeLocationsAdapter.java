@@ -19,12 +19,14 @@ import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
+import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class PincodeLocationsAdapter extends RecyclerView.Adapter<PincodeLocationsAdapter.MyViewHolder> {
     Context mContext;
-    JsonArray pincodeLocations;
+    ArrayList<PincodeLocationsResponse> pincodeLocations;
     Activity activity;
     private RadioButton lastCheckedRB = null;
     private IFamillyListSelected iFamillyListSelected;
@@ -40,12 +42,12 @@ public class PincodeLocationsAdapter extends RecyclerView.Adapter<PincodeLocatio
         }
     }
 
-    public PincodeLocationsAdapter(Context mContext, Activity mActivity, JsonArray pincodeLocations, IFamillyListSelected iFamillyListSelected) {
+    public PincodeLocationsAdapter(Context mContext, Activity mActivity, ArrayList<PincodeLocationsResponse> pincodeLocations, IFamillyListSelected iFamillyListSelected) {
         this.mContext = mContext;
         this.activity = mActivity;
         this.pincodeLocations = pincodeLocations;
         this.iFamillyListSelected = iFamillyListSelected;
-        pincodeLocations.get(0).getAsJsonObject().addProperty("isCheck", true);
+        pincodeLocations.get(0).setCheck(true);
     }
 
     @NonNull
@@ -60,10 +62,10 @@ public class PincodeLocationsAdapter extends RecyclerView.Adapter<PincodeLocatio
 
     @Override
     public void onBindViewHolder(final PincodeLocationsAdapter.MyViewHolder myViewHolder, final int position) {
-        final JsonObject locationObject = pincodeLocations.get(position).getAsJsonObject();
+        final PincodeLocationsResponse locationObject = pincodeLocations.get(position);
         myViewHolder.location.setVisibility(View.VISIBLE);
-        myViewHolder.location.setText(locationObject.get("Name").getAsString()+", "+locationObject.get("State").getAsString());
-        if(locationObject.get("isCheck") != null && locationObject.get("isCheck").getAsBoolean()) {
+        myViewHolder.location.setText(locationObject.getName()+", "+locationObject.getState());
+        if(locationObject.isCheck()) {
             myViewHolder.location.setChecked(true);
 
             //store the clicked radiobutton
@@ -84,8 +86,8 @@ public class PincodeLocationsAdapter extends RecyclerView.Adapter<PincodeLocatio
                 Config.logV("lastCheckedRB------@@@@--------------" + lastCheckedRB);
 
 
-                pincodeLocations.get(position).getAsJsonObject().addProperty("isCheck", isChecked);
-                iFamillyListSelected.SelectedPincodeLocation(pincodeLocations.get(position).getAsJsonObject());
+                pincodeLocations.get(position).setCheck(true);;
+                iFamillyListSelected.SelectedPincodeLocation(pincodeLocations.get(position));
 
 
                 //  familyList.get(position).setCheck(isChecked);

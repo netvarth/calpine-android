@@ -39,6 +39,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
+import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
@@ -93,7 +94,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
     RadioGroup radio_gender, radio_language;
     RadioButton radioM, radioF, radioO, radioEnglishlng, radioOtherlng;
     JSONObject selectedPincode = new JSONObject();
-    JsonArray pincodeLocations;
+    ArrayList<PincodeLocationsResponse> pincodeLocations;
     PincodeLocationsAdapter mPincodeLocationAdapter;
     TextWatcher tw_et_pincode;
     ArrayList<String> preferredLanguages = new ArrayList<String>();
@@ -1013,11 +1014,11 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
     }
 
     @Override
-    public void SelectedPincodeLocation(JsonObject selectedPincodeLocation) {
+    public void SelectedPincodeLocation(PincodeLocationsResponse selectedPincodeLocation) {
         try {
-            this.selectedPincode.put("pincode", String.valueOf(selectedPincodeLocation.get("Pincode")));
-            this.selectedPincode.put("state", String.valueOf(selectedPincodeLocation.get("State")));
-            this.selectedPincode.put("city", String.valueOf(selectedPincodeLocation.get("Name")));
+            this.selectedPincode.put("pincode", selectedPincodeLocation.getPincode());
+            this.selectedPincode.put("state", selectedPincodeLocation.getState());
+            this.selectedPincode.put("city", selectedPincodeLocation.getName());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1114,10 +1115,10 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         final Dialog mDialog = Config.getProgressDialog(context, context.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
-        Call<ArrayList<JsonObject>> call = apiService.getPinLocations(pin);
-        call.enqueue(new Callback<ArrayList<JsonObject>>() {
+        Call<ArrayList<PincodeLocationsResponse>> call = apiService.getPinLocations(pin);
+        call.enqueue(new Callback<ArrayList<PincodeLocationsResponse>>() {
             @Override
-            public void onResponse(Call<ArrayList<JsonObject>> call, Response<ArrayList<JsonObject>> response) {
+            public void onResponse(Call<ArrayList<PincodeLocationsResponse>> call, Response<ArrayList<PincodeLocationsResponse>> response) {
                 try {
                     if (mDialog.isShowing())
                         Config.closeDialog((Activity) context, mDialog);
@@ -1127,7 +1128,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                     if (response.code() == 200) {
 
                         if (response.body() != null) {
-                            pincodeLocations = response.body().get(0).getAsJsonArray("PostOffice");
+                            pincodeLocations = response.body().get(0).getPostOffice();
                             mRecyclePincode.setVisibility(View.VISIBLE);
                             RecyclerView.LayoutManager mPincodeLayoutManager = new LinearLayoutManager(context);
                             mRecyclePincode.setLayoutManager(mPincodeLayoutManager);
@@ -1145,7 +1146,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
             }
 
             @Override
-            public void onFailure(Call<ArrayList<JsonObject>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<PincodeLocationsResponse>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())

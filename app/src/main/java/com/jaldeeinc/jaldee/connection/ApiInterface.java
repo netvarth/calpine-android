@@ -8,6 +8,7 @@ import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
+import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.TestModel;
@@ -218,7 +219,7 @@ public interface ApiInterface {
     Call<ArrayList<FamilyArrayModel>> getFamilyList();
 
     @GET("provider/account/settings/locations/{pincode}")
-    Call<ArrayList<JsonObject>> getPinLocations(@Path("pincode") int id);
+    Call<ArrayList<PincodeLocationsResponse>> getPinLocations(@Path("pincode") int id);
 
     @DELETE("consumer/familyMember/{memberId}")
     Call<ResponseBody> getFamilyMEmberDelete(@Path("memberId") int id);
