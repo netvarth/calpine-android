@@ -1212,7 +1212,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             }
                             if (checkInInfo.getServiceType() != null && checkInInfo.getServiceType().equalsIgnoreCase("virtualService")) {
 
-                                customerInformationDialog = new CustomerInformationDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, mBusinessDataList.getServiceSector().getDomain());
+                                customerInformationDialog = new CustomerInformationDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode);
                                 customerInformationDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                                 customerInformationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 customerInformationDialog.show();
