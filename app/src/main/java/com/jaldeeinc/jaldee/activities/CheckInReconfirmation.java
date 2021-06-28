@@ -244,25 +244,25 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
                     if (bookingModel.getCheckInInfo().getServiceType() != null && bookingModel.getCheckInInfo().getServiceType().equalsIgnoreCase("virtualService")) {
 
-                        if (bookingModel.getCheckInInfo().getCallingMode() != null) {
+                        if (bookingModel.getCheckInInfo().getVirtualCallingModes().get(0).getCallingMode() != null) {
 
                             ivServiceIcon.setVisibility(View.VISIBLE);
-                            if (bookingModel.getCheckInInfo().getCallingMode().equalsIgnoreCase("Zoom")) {
+                            if (bookingModel.getCheckInInfo().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
 
                                 ivServiceIcon.setImageResource(R.drawable.zoom);
 
-                            } else if (bookingModel.getCheckInInfo().getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                            } else if (bookingModel.getCheckInInfo().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
 
                                 ivServiceIcon.setImageResource(R.drawable.googlemeet);
 
-                            } else if (bookingModel.getCheckInInfo().getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                            } else if (bookingModel.getCheckInInfo().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
                                 if (bookingModel.getCheckInInfo().getVirtualServiceType() != null && bookingModel.getCheckInInfo().getVirtualServiceType().equalsIgnoreCase("videoService")) {
                                     ivServiceIcon.setImageResource(R.drawable.whatsapp_videoicon);
                                 } else {
                                     ivServiceIcon.setImageResource(R.drawable.whatsapp_icon);
                                 }
 
-                            } else if (bookingModel.getCheckInInfo().getCallingMode().equalsIgnoreCase("VideoCall")) {
+                            } else if (bookingModel.getCheckInInfo().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("VideoCall")) {
 
                                 ivServiceIcon.setImageResource(R.drawable.ic_jaldeevideo);
 
