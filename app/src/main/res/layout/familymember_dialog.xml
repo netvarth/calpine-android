@@ -107,30 +107,11 @@
                 android:layout_marginLeft="@dimen/dimen_5dp"
                 android:layout_weight="0.3"
                 android:background="@drawable/edittext_color"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:ccp_autoDetectCountry="true"
                 app:ccp_showFlag="false"
                 app:ccp_showNameCode="false"
                 app:ccp_textSize="@dimen/dimen_15dp" />
-
-            <EditText
-                android:id="@+id/edt_Ccode"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/padding40"
-                android:layout_marginLeft="@dimen/dimen_5dp"
-                android:layout_marginEnd="@dimen/dimen_5dp"
-                android:layout_weight="0.3"
-                android:background="@drawable/edittext_color"
-                android:hint="Enter Country Code"
-                android:inputType="phone"
-                android:maxLength="4"
-                android:paddingStart="@dimen/padding3"
-                android:paddingEnd="@dimen/padding3"
-                android:textColor="@color/black"
-                android:textSize="@dimen/dimen_15sp"
-                android:visibility="visible"
-                app:tint="@color/spinnerbg" />
-
 
             <EditText
                 android:id="@+id/edtPhone"

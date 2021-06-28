@@ -2268,10 +2268,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     }
 
     @Override
-    public void sendFamilyMbrPhoneAndEMail(String phone, String email) {
+    public void sendFamilyMbrPhoneAndEMail(String phone, String email, String conCode) {
         phoneNumber = phone;
         emailId = email;
-        tvNumber.setText(phone);
+        countryCode = conCode;
+        tvNumber.setText(countryCode + " " + phoneNumber);
         tvEmail.setText(emailId);
     }
 

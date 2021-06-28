@@ -89,7 +89,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
     ArrayList<FamilyArrayModel> familyMembersList = new ArrayList<>();
     List<FamilyArrayModel> LuserProfileList = new ArrayList<>();
     private Spinner memberSpinner;
-    private EditText et_phone, et_email, et_firstname, et_lastName, et_countryCode;
+    private EditText et_phone, et_email, et_firstname, et_lastName;
     private Button bt_save, bt_add;
     private IFamilyMemberDetails iFamilyMemberDetails;
     CustomTextViewSemiBold tv_errorphone, tv_error_mail, tv_errorfirstname, tv_errorlastname;
@@ -169,7 +169,6 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         slideUp = AnimationUtils.loadAnimation(context, R.anim.slide_in_left);
         slideRight = AnimationUtils.loadAnimation(context, R.anim.slide_out_right);
         cCodePicker = findViewById(R.id.ccp);
-        et_countryCode = findViewById(R.id.edt_Ccode);
         if (isCheckin && isVirtualService) {
             ll_chooseMember.setVisibility(View.GONE);
         }
@@ -194,38 +193,19 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         if (email != null) {
             et_email.setText(email);
         }
-        if (phone != null) {
-            et_phone.setText(phone);
-        }
 
         firstName = SharedPreference.getInstance(context).getStringValue("firstname", "");
         lastName = SharedPreference.getInstance(context).getStringValue("lastname", "");
         consumerId = SharedPreference.getInstance(context).getIntValue("consumerId", 0);
         mRecycleFamily = findViewById(R.id.recycle_familyMember);
 
-        if (countryCode != null) {
-            et_countryCode.setText(countryCode);
+        if (countryCode != null && phone != null) {
+            String cCode = countryCode.replace("+", "");
+            cCodePicker.setCountryForPhoneCode(Integer.parseInt(cCode));
+            et_phone.setText(phone);
+        } else {
+            et_phone.setText("");
         }
-
-        et_countryCode.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                et_countryCode.setVisibility(View.GONE);
-                cCodePicker.setVisibility(View.VISIBLE);
-                countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-
 
         cCodePicker.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
             @Override
@@ -244,9 +224,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                cCodePicker.setVisibility(View.VISIBLE);
                 countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
-                et_countryCode.setVisibility(View.GONE);
             }
 
             @Override
@@ -272,7 +250,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                 if (!phone.equalsIgnoreCase("")) {
                     if (phone.trim().length() > 9) {
                         if (isCheckin && isVirtualService) {
-                            iFamilyMemberDetails.sendFamilyMbrPhoneAndEMail(phone, email);
+                            iFamilyMemberDetails.sendFamilyMbrPhoneAndEMail(phone, email, countryCode);
                             dismiss();
 
                         } else {
