@@ -93,7 +93,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
         if(value!=null && providerId!=null){
             getConfirmationDetails(Integer.parseInt(providerId));
         } else {
-            UpdateMainUI();
+
         }
 
 

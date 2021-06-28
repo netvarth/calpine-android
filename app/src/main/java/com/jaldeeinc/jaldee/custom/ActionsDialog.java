@@ -717,7 +717,9 @@ public class ActionsDialog extends Dialog {
                 try {
                     if (bookings.getAppointmentInfo() != null) {
                         Intent intent = new Intent(mContext, RescheduleActivity.class);
-                        intent.putExtra("appointmentInfo", bookings.getAppointmentInfo());
+                        intent.putExtra("uniqueId", bookings.getAppointmentInfo().getProviderAccount().getUniqueId());
+                        intent.putExtra("ynwuuid", bookings.getAppointmentInfo().getUid());
+                        intent.putExtra("providerId", bookings.getAppointmentInfo().getProviderAccount().getId());
                         mContext.startActivity(intent);
                     } else if (bookings.getCheckInInfo() != null) {
 
@@ -978,6 +980,7 @@ public class ActionsDialog extends Dialog {
                     mContext.startActivity(intent);
                 }
 
+                dismiss();
 
             }
         });

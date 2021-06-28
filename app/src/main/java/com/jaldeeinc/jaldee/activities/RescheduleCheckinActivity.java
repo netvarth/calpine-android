@@ -1251,13 +1251,13 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                         activeCheckIn = response.body();
                         if (activeCheckIn != null) {
                             Bundle b = new Bundle();
-                            b.putSerializable("BookingDetails", activeCheckIn);
                             b.putString("terminology", mSearchTerminology.getProvider());
                             b.putString("from", "Reschedule");
                             b.putBoolean("livetrack", Boolean.parseBoolean(activeCheckIn.getLivetrack()));
                             if (activeCheckIn.getYnwUuid() != null) {
                                 b.putString("confId", activeCheckIn.getYnwUuid());
                             }
+                            b.putString("accountID",String.valueOf(activeCheckIn.getProviderAccount().getId()));
                             Intent checkin = new Intent(RescheduleCheckinActivity.this, CheckInConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);

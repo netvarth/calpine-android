@@ -59,6 +59,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.SlotsDialog;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
+import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.Provider;
@@ -224,6 +225,8 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
     ActiveAppointment activeAppointment = new ActiveAppointment();
     SearchTerminology mSearchTerminology;
     int userId;
+    String uniqueId, ynwuuid;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -239,190 +242,18 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
         initializations();
 
         Intent i = getIntent();
-        appointmentInfo = (ActiveAppointment) i.getSerializableExtra("appointmentInfo");
+        uniqueId = i.getStringExtra("uniqueId");
+        ynwuuid = i.getStringExtra("ynwuuid");
+        userId = i.getIntExtra("providerId", 0);
 
-        if (appointmentInfo != null) {
-
-            ApiSearchViewTerminology(Integer.parseInt(appointmentInfo.getProviderAccount().getUniqueId()));
-
-            if(appointmentInfo.getService()!=null && appointmentInfo.getService().getConsumerNoteTitle()!=null && !appointmentInfo.getService().getConsumerNoteTitle().equalsIgnoreCase("")){
-                tvAddNotes.setText(appointmentInfo.getService().getConsumerNoteTitle());
-            }
-            else{
-                tvAddNotes.setText("Add Note");
-            }
-
+        if (ynwuuid != null) {
+            getApptInfo(ynwuuid, userId);
         }
 
-
-        if (appointmentInfo != null && appointmentInfo.getAppmtDate() != null) {
-
-            Date sDate = null;
-            String dtStart = appointmentInfo.getAppmtDate();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                sDate = format.parse(dtStart);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            Calendar cal = Calendar.getInstance();
-            Date today = cal.getTime();
-            cal.add(Calendar.DAY_OF_YEAR, 1);
-            Date tomorow = cal.getTime();
-            try {
-                tvCalenderDate.setText(getCalenderDateFormat(appointmentInfo.getAppmtDate()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            if (today.before(sDate)) {
-                Config.logV("Date Enabled---------------");
-                ivMinus.setEnabled(true);
-                ivMinus.setColorFilter(ContextCompat.getColor(RescheduleActivity.this, R.color.location_theme), android.graphics.PorterDuff.Mode.SRC_IN);
-
-            } else {
-                Config.logV("Date Disabled---------------");
-                ivMinus.setEnabled(false);
-                ivMinus.setColorFilter(ContextCompat.getColor(RescheduleActivity.this, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-            }
+        if (uniqueId != null) {
+            ApiSearchViewTerminology(Integer.parseInt(uniqueId));
         }
 
-        if (appointmentInfo != null) {
-
-            String name = appointmentInfo.getProviderAccount().getBusinessName();
-            //name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-
-            tvSpName.setText(name);
-
-            if (appointmentInfo.getProvider() != null) {
-                String username = "";
-                if (appointmentInfo.getProvider().getBusinessName() != null) {
-                    username = appointmentInfo.getProvider().getBusinessName();
-                } else {
-                    username = appointmentInfo.getProvider().getFirstName() + " " + appointmentInfo.getProvider().getLastName();
-                }
-                //username = username.substring(0, 1).toUpperCase() + username.substring(1).toLowerCase();
-                tv_userName.setText(username);
-                tv_userName.setVisibility(View.VISIBLE);
-                tvSpName.setTextSize(16);
-                userId = appointmentInfo.getProvider().getId();
-            } else {
-                userId = appointmentInfo.getProviderAccount().getId();
-            }
-
-
-            try {
-                if (appointmentInfo.getLocation().getGoogleMapUrl() != null) {
-                    String geoUri = appointmentInfo.getLocation().getGoogleMapUrl();
-                    if (geoUri != null) {
-
-                        tvLocationName.setVisibility(View.VISIBLE);
-                        tvLocationName.setText(appointmentInfo.getLocation().getPlace());
-                    } else {
-                        tvLocationName.setVisibility(View.GONE);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            tvLocationName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    String geoUri = appointmentInfo.getLocation().getGoogleMapUrl();
-                    try {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
-                        startActivity(intent);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            // to set service name
-            if (appointmentInfo.getService() != null) {
-
-                if (appointmentInfo.getService().getName() != null) {
-                    String sName = appointmentInfo.getService().getName();
-                    sName = sName.substring(0, 1).toUpperCase() + sName.substring(1).toLowerCase();
-                    tvServiceName.setText(sName);
-                }
-
-                try {
-                    if (appointmentInfo.getService().getServiceType() != null) {
-                        if (appointmentInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
-                            ivteleService.setVisibility(View.VISIBLE);
-                            if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
-                                ivteleService.setImageResource(R.drawable.zoom);
-                            } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
-                                ivteleService.setImageResource(R.drawable.googlemeet);
-                            } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
-                                if (appointmentInfo.getService().getVirtualServiceType() != null && appointmentInfo.getService().getVirtualServiceType().equalsIgnoreCase("videoService")) {
-                                    ivteleService.setImageResource(R.drawable.whatsapp_videoicon);
-                                } else {
-                                    ivteleService.setImageResource(R.drawable.whatsapp_icon);
-                                }
-
-                            } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
-                                ivteleService.setImageResource(R.drawable.phoneaudioicon);
-                            } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("VideoCall")) {
-                                ivteleService.setImageResource(R.drawable.ic_jaldeevideo);
-                            }
-                        } else {
-                            ivteleService.setVisibility(View.GONE);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            if (appointmentInfo.getAppmtDate() != null && appointmentInfo.getService() != null && appointmentInfo.getLocation() != null && appointmentInfo.getProviderAccount() != null) {
-
-                apiDate = appointmentInfo.getAppmtDate();
-                serviceId = appointmentInfo.getService().getId();
-                locationId = appointmentInfo.getLocation().getId();
-                accountId = appointmentInfo.getProviderAccount().getId();
-                // api call to get slots on default date (appointment date)
-                getSlotsOnDate(serviceId, locationId, apiDate, accountId);
-
-            }
-
-            if (appointmentInfo.getAppmtFor() != null) {
-                String cName = Config.toTitleCase(appointmentInfo.getAppmtFor().get(0).getFirstName()) + " " + Config.toTitleCase(appointmentInfo.getAppmtFor().get(0).getLastName());
-                tvConsumerName.setText(cName);
-                if (appointmentInfo.getPhoneNumber() != null) {
-                    tvNumber.setVisibility(View.VISIBLE);
-                    if(appointmentInfo.getCountryCode()!=null) {
-                        tvNumber.setText(appointmentInfo.getCountryCode() + " " + appointmentInfo.getPhoneNumber());
-                    }
-                    else{
-                        tvNumber.setText(appointmentInfo.getPhoneNumber());
-                    }
-                } else {
-                    tvNumber.setVisibility(View.GONE);
-                }
-
-                if (appointmentInfo.getAppmtFor().get(0).getEmail() != null) {
-                    tvEmail.setVisibility(View.VISIBLE);
-                    tvEmail.setText(appointmentInfo.getAppmtFor().get(0).getEmail());
-                } else {
-                    tvEmail.setVisibility(View.GONE);
-                }
-            }
-
-            if (appointmentInfo.getAppmtDate() != null && appointmentInfo.getAppmtTime() != null) {
-                String oldDate = convertDate(appointmentInfo.getAppmtDate());
-                String time = appointmentInfo.getAppmtTime().split("-")[0];
-                String oldtime = convertTime(time);
-                tvActualTime.setText(oldDate + ", " + oldtime);
-            }
-            if (appointmentInfo.getConsumerNote() != null) {
-                userMessage = appointmentInfo.getConsumerNote();
-            }
-
-        }
 
         // click actions
 
@@ -484,11 +315,6 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
         });
 
 
-        if (appointmentInfo.getProvider() != null) {
-            user = tv_userName.getText().toString();
-        } else {
-            user = tvSpName.getText().toString();
-        }
         cvAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -743,6 +569,222 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
             public void onClick(View view) {
 
                 reScheduleAppointment(appointmentInfo.getProviderAccount().getId());
+            }
+        });
+    }
+
+    private void getApptInfo(String ynwuuid, int id) {
+
+         ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(ynwuuid, String.valueOf(id));
+        call.enqueue(new Callback<ActiveAppointment>() {
+            @Override
+            public void onResponse(Call<ActiveAppointment> call, Response<ActiveAppointment> response) {
+                try {
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        appointmentInfo = response.body();
+
+                        if (appointmentInfo != null) {
+
+                            if(appointmentInfo.getService()!=null && appointmentInfo.getService().getConsumerNoteTitle()!=null && !appointmentInfo.getService().getConsumerNoteTitle().equalsIgnoreCase("")){
+                                tvAddNotes.setText(appointmentInfo.getService().getConsumerNoteTitle());
+                            }
+                            else{
+                                tvAddNotes.setText("Add Note");
+                            }
+
+                        }
+
+
+                        if (appointmentInfo != null && appointmentInfo.getAppmtDate() != null) {
+
+                            Date sDate = null;
+                            String dtStart = appointmentInfo.getAppmtDate();
+                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                            try {
+                                sDate = format.parse(dtStart);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            Calendar cal = Calendar.getInstance();
+                            Date today = cal.getTime();
+                            cal.add(Calendar.DAY_OF_YEAR, 1);
+                            Date tomorow = cal.getTime();
+                            try {
+                                tvCalenderDate.setText(getCalenderDateFormat(appointmentInfo.getAppmtDate()));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            if (today.before(sDate)) {
+                                Config.logV("Date Enabled---------------");
+                                ivMinus.setEnabled(true);
+                                ivMinus.setColorFilter(ContextCompat.getColor(RescheduleActivity.this, R.color.location_theme), android.graphics.PorterDuff.Mode.SRC_IN);
+
+                            } else {
+                                Config.logV("Date Disabled---------------");
+                                ivMinus.setEnabled(false);
+                                ivMinus.setColorFilter(ContextCompat.getColor(RescheduleActivity.this, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                            }
+                        }
+
+                        if (appointmentInfo != null) {
+
+                            String name = appointmentInfo.getProviderAccount().getBusinessName();
+                            //name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+
+                            tvSpName.setText(name);
+
+                            if (appointmentInfo.getProvider() != null) {
+                                String username = "";
+                                if (appointmentInfo.getProvider().getBusinessName() != null) {
+                                    username = appointmentInfo.getProvider().getBusinessName();
+                                } else {
+                                    username = appointmentInfo.getProvider().getFirstName() + " " + appointmentInfo.getProvider().getLastName();
+                                }
+                                //username = username.substring(0, 1).toUpperCase() + username.substring(1).toLowerCase();
+                                tv_userName.setText(username);
+                                tv_userName.setVisibility(View.VISIBLE);
+                                tvSpName.setTextSize(16);
+                                userId = appointmentInfo.getProvider().getId();
+                            } else {
+                                userId = appointmentInfo.getProviderAccount().getId();
+                            }
+
+
+                            try {
+                                if (appointmentInfo.getLocation().getGoogleMapUrl() != null) {
+                                    String geoUri = appointmentInfo.getLocation().getGoogleMapUrl();
+                                    if (geoUri != null) {
+
+                                        tvLocationName.setVisibility(View.VISIBLE);
+                                        tvLocationName.setText(appointmentInfo.getLocation().getPlace());
+                                    } else {
+                                        tvLocationName.setVisibility(View.GONE);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            tvLocationName.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    String geoUri = appointmentInfo.getLocation().getGoogleMapUrl();
+                                    try {
+                                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                                        startActivity(intent);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+
+                            // to set service name
+                            if (appointmentInfo.getService() != null) {
+
+                                if (appointmentInfo.getService().getName() != null) {
+                                    String sName = appointmentInfo.getService().getName();
+                                    sName = sName.substring(0, 1).toUpperCase() + sName.substring(1).toLowerCase();
+                                    tvServiceName.setText(sName);
+                                }
+
+                                try {
+                                    if (appointmentInfo.getService().getServiceType() != null) {
+                                        if (appointmentInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
+                                            ivteleService.setVisibility(View.VISIBLE);
+                                            if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                                                ivteleService.setImageResource(R.drawable.zoom);
+                                            } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                                                ivteleService.setImageResource(R.drawable.googlemeet);
+                                            } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                                                if (appointmentInfo.getService().getVirtualServiceType() != null && appointmentInfo.getService().getVirtualServiceType().equalsIgnoreCase("videoService")) {
+                                                    ivteleService.setImageResource(R.drawable.whatsapp_videoicon);
+                                                } else {
+                                                    ivteleService.setImageResource(R.drawable.whatsapp_icon);
+                                                }
+
+                                            } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+                                                ivteleService.setImageResource(R.drawable.phoneaudioicon);
+                                            } else if (appointmentInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("VideoCall")) {
+                                                ivteleService.setImageResource(R.drawable.ic_jaldeevideo);
+                                            }
+                                        } else {
+                                            ivteleService.setVisibility(View.GONE);
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+
+                            if (appointmentInfo.getAppmtDate() != null && appointmentInfo.getService() != null && appointmentInfo.getLocation() != null && appointmentInfo.getProviderAccount() != null) {
+
+                                apiDate = appointmentInfo.getAppmtDate();
+                                serviceId = appointmentInfo.getService().getId();
+                                locationId = appointmentInfo.getLocation().getId();
+                                accountId = appointmentInfo.getProviderAccount().getId();
+                                // api call to get slots on default date (appointment date)
+                                getSlotsOnDate(serviceId, locationId, apiDate, accountId);
+
+                            }
+
+                            if (appointmentInfo.getAppmtFor() != null) {
+                                String cName = Config.toTitleCase(appointmentInfo.getAppmtFor().get(0).getFirstName()) + " " + Config.toTitleCase(appointmentInfo.getAppmtFor().get(0).getLastName());
+                                tvConsumerName.setText(cName);
+                                if (appointmentInfo.getPhoneNumber() != null) {
+                                    tvNumber.setVisibility(View.VISIBLE);
+                                    if(appointmentInfo.getCountryCode()!=null) {
+                                        tvNumber.setText(appointmentInfo.getCountryCode() + " " + appointmentInfo.getPhoneNumber());
+                                    }
+                                    else{
+                                        tvNumber.setText(appointmentInfo.getPhoneNumber());
+                                    }
+                                } else {
+                                    tvNumber.setVisibility(View.GONE);
+                                }
+
+                                if (appointmentInfo.getAppmtFor().get(0).getEmail() != null) {
+                                    tvEmail.setVisibility(View.VISIBLE);
+                                    tvEmail.setText(appointmentInfo.getAppmtFor().get(0).getEmail());
+                                } else {
+                                    tvEmail.setVisibility(View.GONE);
+                                }
+                            }
+
+                            if (appointmentInfo.getAppmtDate() != null && appointmentInfo.getAppmtTime() != null) {
+                                String oldDate = convertDate(appointmentInfo.getAppmtDate());
+                                String time = appointmentInfo.getAppmtTime().split("-")[0];
+                                String oldtime = convertTime(time);
+                                tvActualTime.setText(oldDate + ", " + oldtime);
+                            }
+                            if (appointmentInfo.getConsumerNote() != null) {
+                                userMessage = appointmentInfo.getConsumerNote();
+                            }
+
+                            if (appointmentInfo.getProvider() != null) {
+                                user = tv_userName.getText().toString();
+                            } else {
+                                user = tvSpName.getText().toString();
+                            }
+
+                        }
+
+
+
+                    }
+                } catch (Exception e) {
+                    Log.i("mnbbnmmnbbnm", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveAppointment> call, Throwable t) {
             }
         });
     }
@@ -1573,11 +1615,11 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                         activeAppointment = response.body();
                         if (activeAppointment != null) {
                             Bundle b = new Bundle();
-                            b.putSerializable("BookingDetails", activeAppointment);
                             b.putString("terminology", mSearchTerminology.getProvider());
                             b.putString("from", "Reschedule");
                             b.putString("livetrack", activeAppointment.getLivetrack());
                             b.putString("confId", activeAppointment.getUid());
+                            b.putString("accountID",String.valueOf(activeAppointment.getProviderAccount().getId()));
                             Intent checkin = new Intent(RescheduleActivity.this, AppointmentConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);

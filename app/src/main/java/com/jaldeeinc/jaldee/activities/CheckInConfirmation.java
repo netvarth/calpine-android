@@ -105,11 +105,6 @@ public class CheckInConfirmation extends AppCompatActivity {
         if (value != null && providerId != null) {
             getConfirmationDetails(Integer.parseInt(providerId));
         } else {
-            try {
-                UpdateMainUI();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
         }
 
 

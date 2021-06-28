@@ -118,10 +118,13 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         }
 
         void bind(UserMessage message) {
-            if (message.getMessage() != null) {
+            if (message.getMessage() != null && !message.getMessage().trim().equalsIgnoreCase("")) {
+
+                mText.setVisibility(View.VISIBLE);
                 mText.setText(message.getMessage());
-//                messageText.setMovementMethod(LinkMovementMethod.getInstance());
                 Linkify.addLinks(mText, Linkify.WEB_URLS);
+            } else {
+                mText.setVisibility(View.GONE);
             }
             // Format the stored timestamp into a readable String using method.
             timeText.setText(formatTimeStamp(message.getTimeStamp()));
@@ -280,10 +283,14 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         }
 
         void bind(UserMessage message) {
-            if (message.getMessage() != null) {
+            if (message.getMessage() != null && !message.getMessage().trim().equalsIgnoreCase("")) {
+
+                messageText.setVisibility(View.VISIBLE);
                 messageText.setText(message.getMessage());
-//                messageText.setMovementMethod(LinkMovementMethod.getInstance());
                 Linkify.addLinks(messageText, Linkify.WEB_URLS);
+
+            } else {
+                messageText.setVisibility(View.GONE);
 
             }
             // Format the stored timestamp into a readable String using method.
