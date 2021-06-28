@@ -153,7 +153,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
     private ISendMessage iSendMessage;
     private EnquiryDialog enquiryDialog;
     private UserResponse userResponse = new UserResponse();
-
+    String sector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +174,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             locationName = intent.getStringExtra("locationName");
             isToken = intent.getBooleanExtra("isToken", false);
             providerName = intent.getStringExtra("providerName");
+            sector = intent.getStringExtra("sector");
         }
 
         if (providerInfo != null) {
@@ -715,6 +716,8 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             intent.putExtra("checkInInfo", checkinServiceInfo);
             intent.putExtra("userId", userId);
             intent.putExtra("fromUser", true);
+            intent.putExtra("sector", sector);
+
             startActivity(intent);
         }
     }

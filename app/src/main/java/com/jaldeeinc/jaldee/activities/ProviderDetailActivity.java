@@ -2826,6 +2826,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             intent.putExtra("locationId", locationId);
             intent.putExtra("checkInInfo", checkinServiceInfo);
             intent.putExtra("fromUser", false);
+            intent.putExtra("sector", mBusinessDataList.getServiceSector().getDomain());
+
             startActivity(intent);
         }
     }
@@ -2897,6 +2899,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         providerIntent.putExtra("locationName", tvLocationName.getText().toString());
         providerIntent.putExtra("isToken", isToken);
         providerIntent.putExtra("providerName", tvSpName.getText().toString());
+        providerIntent.putExtra("sector",  mBusinessDataList.getServiceSector());
+
         startActivity(providerIntent);
 
     }
