@@ -188,6 +188,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     private boolean razorPay = false;
     String mFirstName;
     String mLastName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -243,27 +244,27 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 String name = serviceInfo.getName();
                 tvServiceName.setText(name.substring(0, 1).toUpperCase() + name.substring(1));
                 tvDonationName.setText(name.substring(0, 1).toUpperCase() + name.substring(1));
-                if (serviceInfo.getMultiples() != 1) {
-                    //tvAmountHint.setText("Amount must be in range between" + " ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())) + " and ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMaxDonationAmount())) + " (multiples of ₹\u00A0" + Config.getAmountinTwoDecimalPoints(serviceInfo.getMultiples()) + ")");
-                    tvAmountHint.setText("Minimum " + " ₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())) + " Maximum ₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMaxDonationAmount())) + " (multiples of ₹" + Config.getAmountinTwoDecimalPoints(serviceInfo.getMultiples()) + ")");
-                } else {
-                    //tvAmountHint.setText("Amount must be in range between" + " ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())) + " and ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMaxDonationAmount())));
-                    tvAmountHint.setText("Minimum" + " ₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())) + " Maximum ₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMaxDonationAmount())));
-                }
+                //if (serviceInfo.getMultiples() != 1) {
+                //tvAmountHint.setText("Amount must be in range between" + " ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())) + " and ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMaxDonationAmount())) + " (multiples of ₹\u00A0" + Config.getAmountinTwoDecimalPoints(serviceInfo.getMultiples()) + ")");
+                //   tvAmountHint.setText("Minimum " + " ₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())) + " Maximum ₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMaxDonationAmount())) + " (multiples of ₹" + Config.getAmountinTwoDecimalPoints(serviceInfo.getMultiples()) + ")");
+                //} else {
+                //tvAmountHint.setText("Amount must be in range between" + " ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())) + " and ₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMaxDonationAmount())));
+                tvAmountHint.setText("Minimum" + " ₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())) + " Maximum ₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMaxDonationAmount())));
+                //}
                 llAmountHint.setVisibility(View.VISIBLE);
                 tvErrorAmount.setVisibility(View.GONE);
                 et_note.setHint(serviceInfo.getConsumerNoteTitle());
                 SpannableStringBuilder builder = new SpannableStringBuilder();
 
-                if (!serviceInfo.getDescription().equals("")) {
+                if (serviceInfo.getDescription() != null && !serviceInfo.getDescription().equals("")) {
                     s1 = Html.fromHtml(serviceInfo.getDescription() + "<br><br>");
                     builder.append(s1);
                 }
-                if (!serviceInfo.getPreInfoTitle().equals("")) {
+                if (serviceInfo.getPreInfoTitle() != null && !serviceInfo.getPreInfoTitle().equals("")) {
                     s2 = Html.fromHtml("<b><font color='#484848'>" + serviceInfo.getPreInfoTitle() + "</font></b>");
                     builder.append(s2);
                 }
-                if (!serviceInfo.getPreInfoText().equals("")) {
+                if (serviceInfo.getPreInfoText() != null && !serviceInfo.getPreInfoText().equals("")) {
                     s3 = Html.fromHtml("<br><font color='#484848'>" + serviceInfo.getPreInfoText() + "</font>");
                     builder.append(s3);
                 }
@@ -538,6 +539,10 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         cvSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                float amount = Float.valueOf(etAmount.getText().toString());
+                float minAmount = Float.valueOf(serviceInfo.getMinDonationAmount());
+                float maxAmount = Float.valueOf(serviceInfo.getMaxDonationAmount());
+                int multipls = Integer.valueOf(serviceInfo.getMultiples());
                 if (etAmount.isFocused()) {
                     etAmount.clearFocus();
                 }
@@ -545,6 +550,15 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                     tvErrorAmount.setVisibility(View.VISIBLE);
                     Toast.makeText(DonationActivity.this, "Please enter donation amount", Toast.LENGTH_SHORT).show();
                     llAmountHint.setVisibility(View.GONE);
+                } else if (!(amount >= minAmount && amount <= maxAmount)) {
+                    tvAmountHint.setTextColor(Color.parseColor("#dc3545"));
+                    llAmountHint.setVisibility(View.VISIBLE);
+                    tvErrorAmount.setVisibility(View.GONE);
+                } else if ((multipls != 1) && (amount % multipls != 0)) {
+                    Toast.makeText(DonationActivity.this, "Donation amount must be multiples of " + multipls, Toast.LENGTH_SHORT).show();
+                    tvAmountHint.setTextColor(Color.parseColor("#484848"));
+                    llAmountHint.setVisibility(View.VISIBLE);
+                    tvErrorAmount.setVisibility(View.GONE);
                 } else if (serviceInfo.isConsumerNoteMandatory() && (et_note.getText().toString().isEmpty() || et_note.getText().toString() == null)) {
                     et_note.setBackground(getResources().getDrawable(R.drawable.donate_error_edittext));
                     Toast.makeText(DonationActivity.this, "Please provide add notes", Toast.LENGTH_SHORT).show();
@@ -558,9 +572,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                         ApiDonation("");
                     } else {
                         Toast.makeText(DonationActivity.this, "Mobile number should have 10 digits", Toast.LENGTH_SHORT).show();
-
                     }
-
                 }
             }
         });
@@ -1199,25 +1211,25 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
             }
             if (activeDonation.getDonor() != null) {
                 String firstName = "", lastName = "";
-                if(activeDonation.getDonor().getAsJsonObject().get("firstName") != null){
+                if (activeDonation.getDonor().getAsJsonObject().get("firstName") != null) {
                     firstName = activeDonation.getDonor().getAsJsonObject().get("firstName").getAsString();
                 }
-                if(activeDonation.getDonor().getAsJsonObject().get("lastName") != null){
+                if (activeDonation.getDonor().getAsJsonObject().get("lastName") != null) {
                     lastName = activeDonation.getDonor().getAsJsonObject().get("lastName").getAsString();
                 }
-                tvDonorName.setText(firstName+ " "+lastName);
+                tvDonorName.setText(firstName + " " + lastName);
             }
             if (activeDonation.getService() != null) {
                 tvCause.setText(activeDonation.getService().getAsJsonObject().get("name").getAsString());
             }
             tvAmountPaid.setText(currency);
-            if(activeDonation.getService().getAsJsonObject().get("postInfoEnabled") != null && activeDonation.getService().getAsJsonObject().get("postInfoEnabled").getAsBoolean()){
-                if(activeDonation.getService().getAsJsonObject().get("postInfoTitle") != null && !activeDonation.getService().getAsJsonObject().get("postInfoTitle").getAsString().isEmpty()){
+            if (activeDonation.getService().getAsJsonObject().get("postInfoEnabled") != null && activeDonation.getService().getAsJsonObject().get("postInfoEnabled").getAsBoolean()) {
+                if (activeDonation.getService().getAsJsonObject().get("postInfoTitle") != null && !activeDonation.getService().getAsJsonObject().get("postInfoTitle").getAsString().isEmpty()) {
                     tvPostInfoTitle.setText(activeDonation.getService().getAsJsonObject().get("postInfoTitle").getAsString());
                     tvPostInfoTitle.setVisibility(View.VISIBLE);
                     llPostInfo.setVisibility(View.VISIBLE);
                 }
-                if(activeDonation.getService().getAsJsonObject().get("postInfoText") != null && !activeDonation.getService().getAsJsonObject().get("postInfoText").getAsString().isEmpty()){
+                if (activeDonation.getService().getAsJsonObject().get("postInfoText") != null && !activeDonation.getService().getAsJsonObject().get("postInfoText").getAsString().isEmpty()) {
                     tvPostInfoText.setText(activeDonation.getService().getAsJsonObject().get("postInfoText").getAsString());
                     tvPostInfoText.setVisibility(View.VISIBLE);
                     llPostInfo.setVisibility(View.VISIBLE);
@@ -1276,25 +1288,25 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
             }
             if (activeDonation.getDonor() != null) {
                 String firstName = "", lastName = "";
-                if(activeDonation.getDonor().getAsJsonObject().get("firstName") != null){
+                if (activeDonation.getDonor().getAsJsonObject().get("firstName") != null) {
                     firstName = activeDonation.getDonor().getAsJsonObject().get("firstName").getAsString();
                 }
-                if(activeDonation.getDonor().getAsJsonObject().get("lastName") != null){
+                if (activeDonation.getDonor().getAsJsonObject().get("lastName") != null) {
                     lastName = activeDonation.getDonor().getAsJsonObject().get("lastName").getAsString();
                 }
-                    tvDonorName.setText(firstName+ " "+lastName);
+                tvDonorName.setText(firstName + " " + lastName);
             }
             if (activeDonation.getService() != null) {
                 tvCause.setText(activeDonation.getService().getAsJsonObject().get("name").getAsString());
             }
             tvAmountPaid.setText(currency);
-            if(activeDonation.getService().getAsJsonObject().get("postInfoEnabled") != null && activeDonation.getService().getAsJsonObject().get("postInfoEnabled").getAsBoolean()){
-                if(activeDonation.getService().getAsJsonObject().get("postInfoTitle") != null && !activeDonation.getService().getAsJsonObject().get("postInfoTitle").getAsString().isEmpty()){
+            if (activeDonation.getService().getAsJsonObject().get("postInfoEnabled") != null && activeDonation.getService().getAsJsonObject().get("postInfoEnabled").getAsBoolean()) {
+                if (activeDonation.getService().getAsJsonObject().get("postInfoTitle") != null && !activeDonation.getService().getAsJsonObject().get("postInfoTitle").getAsString().isEmpty()) {
                     tvPostInfoTitle.setText(activeDonation.getService().getAsJsonObject().get("postInfoTitle").getAsString());
                     tvPostInfoTitle.setVisibility(View.VISIBLE);
                     llPostInfo.setVisibility(View.VISIBLE);
                 }
-                if(activeDonation.getService().getAsJsonObject().get("postInfoText") != null && !activeDonation.getService().getAsJsonObject().get("postInfoText").getAsString().isEmpty()){
+                if (activeDonation.getService().getAsJsonObject().get("postInfoText") != null && !activeDonation.getService().getAsJsonObject().get("postInfoText").getAsString().isEmpty()) {
                     tvPostInfoText.setText(activeDonation.getService().getAsJsonObject().get("postInfoText").getAsString());
                     tvPostInfoText.setVisibility(View.VISIBLE);
                     llPostInfo.setVisibility(View.VISIBLE);
