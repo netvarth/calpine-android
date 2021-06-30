@@ -320,23 +320,22 @@
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-                        <com.jaldeeinc.jaldee.custom.CustomEditTextRegular
-                            android:id="@+id/et_countryCode"
+                        <com.hbb20.CountryCodePicker
+                            android:id="@+id/virtual_NmbrCCPicker"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/padding3"
-                            android:inputType="number"
-                            android:maxLength="4"
-                            android:text=""
-                            android:textSize="@dimen/txtsize_14">
-
-                        </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
+                            android:layout_height="@dimen/padding40"
+                            android:layout_gravity="bottom"
+                            android:visibility="visible"
+                            app:ccp_autoDetectCountry="true"
+                            app:ccp_showArrow="false"
+                            app:ccp_showFlag="false"
+                            app:ccp_showNameCode="false"
+                            app:ccp_textSize="@dimen/txtsize_14" />
 
                         <com.jaldeeinc.jaldee.custom.CustomEditTextRegular
                             android:id="@+id/et_virtualNumber"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/padding3"
                             android:inputType="number"
                             android:maxLength="10"
                             android:text=""
@@ -627,8 +626,8 @@
                         android:id="@+id/txtserviceamount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=" "
                         android:gravity="center"
+                        android:text=" "
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_hint_11" />
 
@@ -655,8 +654,8 @@
                         android:id="@+id/txtprepayamount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=""
                         android:gravity="center"
+                        android:text=""
                         android:textColor="@color/colorAccent"
                         android:textSize="@dimen/txtsize_hint_11" />
 

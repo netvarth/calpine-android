@@ -55,6 +55,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.Interface.ICpn;
 import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
@@ -255,8 +256,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     @BindView(R.id.tv_addNote)
     CustomTextViewMedium tvAddNotes;
 
-    @BindView(R.id.et_countryCode)
-    EditText et_countryCode;
+    // @BindView(R.id.et_countryCode)
+    // EditText et_countryCode;
 
     @BindView(R.id.txtservicepayment)
     CustomTextViewMedium txtservicepayment;
@@ -276,6 +277,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
     @BindView(R.id.cv_back)
     CardView cvBack;
+    CountryCodePicker virtual_NmbrCCPicker;
     CustomTextViewSemiBold tvErrorMessage;
     static Activity mActivity;
     static Context mContext;
@@ -406,6 +408,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         recycle_family = findViewById(R.id.recycle_family);
         txtserviceamount = findViewById(R.id.txtserviceamount);
 
+        virtual_NmbrCCPicker = findViewById(R.id.virtual_NmbrCCPicker);
         MultiplefamilyList.clear();
 
         int consumerId = SharedPreference.getInstance(CheckInActivity.this).getIntValue("consumerId", 0);
@@ -422,7 +425,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             llAppointment.setVisibility(View.GONE);
             if (checkInInfo.getServiceType() != null && checkInInfo.getServiceType().equalsIgnoreCase("virtualService")) {
                 virtualService = true;
-            }else {
+            } else {
                 virtualService = false;
             }
 
@@ -1202,7 +1205,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
                             phoneNumber = profileDetails.getUserprofile().getPrimaryMobileNo();
                             tvNumber.setText(countryCode + " " + phoneNumber);
-                            et_countryCode.setText(countryCode);
+                            //  et_countryCode.setText(countryCode);
+                            String cCode = countryCode.replace("+", "");
+                            virtual_NmbrCCPicker.setCountryForPhoneCode(Integer.parseInt(cCode));
                             etVirtualNumber.setText(profileDetails.getUserprofile().getPrimaryMobileNo());
 
 
@@ -1617,10 +1622,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         mDialog.show();
         String number = etVirtualNumber.getText().toString();
         uuid = UUID.randomUUID().toString();
-        String virtual_code = et_countryCode.getText().toString();
+        //String virtual_code = virtual_NmbrCCPicker.getSelectedCountryCode();
         String countryVirtualCode = "";
-        if (!virtual_code.equalsIgnoreCase("")) {
-            countryVirtualCode = virtual_code.substring(1);
+        /*if (!virtual_code.equalsIgnoreCase("")) {
+            countryVirtualCode = virtual_code.substring(1);*/
+        if (virtual_NmbrCCPicker.getSelectedCountryCode() != null) {
+            countryVirtualCode = virtual_NmbrCCPicker.getSelectedCountryCode();
         } else {
             DynamicToast.make(CheckInActivity.this, "Country code needed", AppCompatResources.getDrawable(
                     CheckInActivity.this, R.drawable.ic_info_black),
@@ -1628,13 +1635,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             mDialog.dismiss();
             return;
         }
-        if (!virtual_code.matches("^(\\+)?(\\d{1,3})$")) {
+        /*if (!virtual_code.matches("^(\\+)?(\\d{1,3})$")) {
             DynamicToast.make(CheckInActivity.this, "Please enter valid Country code", AppCompatResources.getDrawable(
                     CheckInActivity.this, R.drawable.ic_info_black),
                     ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
             mDialog.dismiss();
             return;
-        }
+        }*/
 
 
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -2884,7 +2891,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         emailId = email;
         countryCode = conCode;
         tvNumber.setText(countryCode + " " + phoneNumber);
-        et_countryCode.setText(countryCode);
+        String cCode = countryCode.replace("+", "");
+        virtual_NmbrCCPicker.setCountryForPhoneCode(Integer.parseInt(cCode));
+        // et_countryCode.setText(countryCode);
 
         if (!emailId.equalsIgnoreCase("")) {
             tvEmail.setText(emailId);
