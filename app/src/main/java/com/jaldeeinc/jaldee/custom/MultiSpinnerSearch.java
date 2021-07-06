@@ -157,11 +157,12 @@ public class MultiSpinnerSearch extends AppCompatSpinner implements OnCancelList
 		ArrayList<KeyPairBoolData> selectedData = new ArrayList<>();
 		for (int i = 0; i < items.size(); i++) {
 			KeyPairBoolData currentData = items.get(i);
-			currentData.setImagePath("");
 			if (currentData.isSelected()) {
 				selectedData.add(currentData);
 				spinnerBuffer.append(currentData.getName());
 				spinnerBuffer.append(", ");
+			} else {
+				currentData.setImagePath("");
 			}
 		}
 

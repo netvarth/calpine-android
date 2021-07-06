@@ -14,6 +14,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ContentUris;
@@ -835,7 +836,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 }
 
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("bool") && question.getGetQuestion().isMandatory()) {
+            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("bool")) {
 
                 View boolFieldView = viewsList.get(question.getGetQuestion().getLabelName());
                 RadioGroup radioGroup = (RadioGroup) boolFieldView.findViewById(R.id.rg_radioGroup);
@@ -843,7 +844,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                 RadioButton radioButtonNo = (RadioButton) boolFieldView.findViewById(R.id.rb_no);
                 CustomItalicTextViewNormal tvError = (CustomItalicTextViewNormal) boolFieldView.findViewById(R.id.tv_error);
 
-                if (!radioButtonYes.isSelected() && !radioButtonNo.isSelected()) {
+                if (radioButtonYes.isChecked() || radioButtonNo.isChecked()) {
 
                     tvError.setVisibility(View.VISIBLE);
                     tvError.setText("Select atleast one option");
@@ -860,6 +861,13 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
                     tvError.setVisibility(View.VISIBLE);
                     tvError.setText("Enter " + question.getGetQuestion().getLabelName());
+                    return false;
+                }
+
+                if (etTextField.getText().toString().trim().length() < question.getGetQuestion().getPlainTextProperties().getMinNoOfLetter()){
+
+                    tvError.setVisibility(View.VISIBLE);
+                    tvError.setText("Enter minimum " + question.getGetQuestion().getPlainTextProperties().getMinNoOfLetter() +" Characters");
                     return false;
                 }
 
@@ -1324,7 +1332,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
             @Override
             public void onClick(View view) {
 
-                String imagePath = singleFile.getFilePath();
+                String imagePath = tvPath.getText().toString();
 
                 if (imagePath.contains("http://") || imagePath.contains("https://")) {
 
@@ -1348,7 +1356,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                     } else {
 
                         Intent intent = new Intent(CustomQuestionnaire.this, ImageActivity.class);
-                        intent.putExtra("urlOrPath", singleFile.getFilePath());
+                        intent.putExtra("urlOrPath", imagePath);
                         startActivity(intent);
                     }
                 }
@@ -2362,25 +2370,39 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
 
     public void openPdf(Context context, String path) {
-        File file = new File(path);
-        if (file.exists()) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.fromFile(file), "application/pdf");
-            PackageManager pm = context.getPackageManager();
-            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
-            sendIntent.setType("application/pdf");
-            Intent openInChooser = Intent.createChooser(intent, "Choose");
-            List<ResolveInfo> resInfo = pm.queryIntentActivities(sendIntent, 0);
-            if (resInfo.size() > 0) {
-                try {
-                    context.startActivity(openInChooser);
-                } catch (Throwable throwable) {
-                    Toast.makeText(context, "PDF apps are not installed", Toast.LENGTH_SHORT).show();
-                    // PDF apps are not installed
-                }
-            } else {
-                Toast.makeText(context, "PDF apps are not installed", Toast.LENGTH_SHORT).show();
-            }
+
+//        File file = new File(path);
+//        if (file.exists()) {
+//            Intent intent = new Intent(Intent.ACTION_VIEW);
+//            intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+//            PackageManager pm = context.getPackageManager();
+//            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+//            sendIntent.setType("application/pdf");
+//            Intent openInChooser = Intent.createChooser(intent, "Choose");
+//            List<ResolveInfo> resInfo = pm.queryIntentActivities(sendIntent, 0);
+//            if (resInfo.size() > 0) {
+//                try {
+//                    getApplicationContext().startActivity(openInChooser);
+//                } catch (Throwable throwable) {
+//                    Toast.makeText(context, "PDF apps are not installed", Toast.LENGTH_SHORT).show();
+//                    // PDF apps are not installed
+//                }
+//            } else {
+//                Toast.makeText(context, "PDF apps are not installed", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+
+        File file = new File(Environment.getExternalStorageDirectory(),
+                path);
+        Uri uri = Uri.fromFile(file);
+        Intent pdfOpenintent = new Intent(Intent.ACTION_VIEW);
+        pdfOpenintent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        pdfOpenintent.setDataAndType(uri, "application/pdf");
+        try {
+            startActivity(pdfOpenintent);
+        }
+        catch (ActivityNotFoundException e) {
+
         }
     }
 

@@ -159,7 +159,7 @@ public class Register extends AppCompatActivity {
     }
 
     private boolean validatePhone() {
-        if (mEdtMobno.getText().toString().trim().isEmpty() || mEdtMobno.getText().toString().length() > 10 || mEdtMobno.getText().toString().length() < 10) {
+        if (mEdtMobno.getText().toString().trim().isEmpty() || mEdtMobno.getText().toString().length() > 10 || mEdtMobno.getText().toString().length() < 7) {
 
             SpannableString s = new SpannableString(getString(R.string.err_msg_phone));
             Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
