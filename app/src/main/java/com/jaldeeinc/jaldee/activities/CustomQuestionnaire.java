@@ -215,6 +215,8 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                 serviceId = bookingModel.getServiceInfo().getServiceId();
             } else if (bookingModel.getCheckInInfo() != null) {
                 serviceId = bookingModel.getCheckInInfo().getId();
+            } else if(bookingModel.getDonationServiceInfo() != null) {
+                serviceId = bookingModel.getDonationServiceInfo().getId();
             }
             accountId = bookingModel.getAccountId();
             questionnaire = bookingModel.getQuestionnaire();
@@ -557,6 +559,10 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                 Intent intent = new Intent(CustomQuestionnaire.this, ReconfirmationActivity.class);
                 intent.putExtra("data", bookingModel);
                 startActivity(intent);
+            } else if (from.equalsIgnoreCase(Constants.DONATION)) {
+                Intent intent = new Intent(CustomQuestionnaire.this, DonationReconfirmation.class);
+                intent.putExtra("data", bookingModel);
+                startActivity(intent);
             } else if (from.equalsIgnoreCase(Constants.BOOKING_APPOINTMENT)) {
 
                 if (bookingStatus.trim().equalsIgnoreCase("Confirmed") || bookingStatus.trim().equalsIgnoreCase("Arrived")) {
@@ -844,7 +850,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                 RadioButton radioButtonNo = (RadioButton) boolFieldView.findViewById(R.id.rb_no);
                 CustomItalicTextViewNormal tvError = (CustomItalicTextViewNormal) boolFieldView.findViewById(R.id.tv_error);
 
-                if (radioButtonYes.isChecked() || radioButtonNo.isChecked()) {
+                if (!radioButtonYes.isChecked() && !radioButtonNo.isChecked()) {
 
                     tvError.setVisibility(View.VISIBLE);
                     tvError.setText("Select atleast one option");

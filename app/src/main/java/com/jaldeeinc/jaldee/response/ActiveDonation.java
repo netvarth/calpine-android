@@ -11,6 +11,10 @@ public class ActiveDonation {
     JsonObject donor;
     JsonObject service;
     String donationAmount;
+    String uid;
+
+    public String getUid() { return uid; }
+
     public String getDonationEncId() {
         return donationEncId;
     }

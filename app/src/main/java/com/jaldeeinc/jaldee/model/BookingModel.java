@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.model;
 
 import com.jaldeeinc.jaldee.activities.CheckinFamilyMember;
 import com.jaldeeinc.jaldee.response.Questionnaire;
+import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.ServiceInfo;
@@ -19,6 +20,7 @@ public class BookingModel implements Serializable {
     public int accountId;
     public ServiceInfo serviceInfo;
     public SearchService checkInInfo;
+    private SearchDonation donationServiceInfo;
     SearchTerminology mSearchTerminology;
     public int familyEMIID;
     public String phoneNumber;
@@ -39,7 +41,23 @@ public class BookingModel implements Serializable {
     public ArrayList<FamilyArrayModel> multipleFamilyMembers = new ArrayList<>();
     public String totalAmount;
     public String totalServicePay;
+    public String donationAmount;
 
+    public void setDonationAmount(String donationAmount) {
+        this.donationAmount = donationAmount;
+    }
+
+    public String getDonationAmount() {
+        return donationAmount;
+    }
+
+    public SearchDonation getDonationServiceInfo() {
+        return donationServiceInfo;
+    }
+
+    public void setDonationServiceInfo(SearchDonation donationServiceInfo) {
+        this.donationServiceInfo = donationServiceInfo;
+    }
 
     public ArrayList<String> getImagesList() {
         return imagesList;

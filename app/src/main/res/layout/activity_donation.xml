@@ -538,7 +538,8 @@
                     android:textAllCaps="true"
                     android:textColor="@color/dark_black"
                     android:textSize="@dimen/txtsize_12"
-                    android:textStyle="bold">
+                    android:textStyle="bold"
+                    android:visibility="gone">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -551,7 +552,8 @@
                     android:layout_marginTop="@dimen/dimen_5dp"
                     android:layout_marginEnd="@dimen/dimen_25dp"
                     android:layout_marginBottom="@dimen/dimen_15dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/cv_payTm"
