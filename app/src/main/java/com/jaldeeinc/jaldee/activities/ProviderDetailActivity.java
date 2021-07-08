@@ -2884,6 +2884,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             }
 
             intent.putExtra("serviceInfo", serviceInfo);
+            intent.putExtra("sector", mBusinessDataList.getServiceSector().getDomain());
 
             startActivity(intent);
         }

@@ -31,6 +31,7 @@ import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.AppointmentActivity;
 import com.jaldeeinc.jaldee.activities.CheckInActivity;
 import com.jaldeeinc.jaldee.adapter.CheckIn_FamilyMemberListAdapter;
 import com.jaldeeinc.jaldee.adapter.ChooseLanguagesAdapter;
@@ -103,7 +104,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
     FamilyArrayModel familylist;
     ScrollView scrollView;
     String domain;
-        /*public CustomerInformationDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode) {
+        public CustomerInformationDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode, String domain) {
         super(appointmentActivity);
         this.context = appointmentActivity;
         this.memId = familyMEmID;
@@ -115,7 +116,8 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         this.multiple = multiple;
         this.update = update;
         this.countryCode = countryCode;
-    }*/
+        this.domain = domain;
+    }
 
     public CustomerInformationDialog(CheckInActivity checkInActivity, int familyMEmID, String email, String phone, boolean prePayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode, String domain) {
         super(checkInActivity);

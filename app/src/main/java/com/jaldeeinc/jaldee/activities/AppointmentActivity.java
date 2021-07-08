@@ -53,6 +53,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.Interface.ICpn;
 import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
@@ -73,6 +74,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomToolTip;
+import com.jaldeeinc.jaldee.custom.CustomerInformationDialog;
 import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.custom.FamilyMemberDialog;
 import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
@@ -256,8 +258,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     @BindView(R.id.tv_addNote)
     CustomTextViewMedium tvAddNotes;
 
-    @BindView(R.id.et_countryCode)
-    EditText et_countryCode;
+    //@BindView(R.id.et_countryCode)
+    //EditText et_countryCode;
 
     @BindView(R.id.txtservicepayment)
     CustomTextViewMedium txtservicepayment;
@@ -268,6 +270,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     @BindView(R.id.ll_coupons)
     LinearLayout llCoupons;
 
+    CountryCodePicker virtual_NmbrCCPicker;
     static CustomTextViewSemiBold txtserviceamount;
 
     static LinearLayout LPrepay;
@@ -352,8 +355,10 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     private SearchSetting mSearchSettings;
     private String accountBusinessName;
     private String locationName;
-
+    private CustomerInformationDialog customerInformationDialog;
     private ICpn iCpn;
+    boolean virtualService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -390,6 +395,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         LPrepay = findViewById(R.id.ll_prepay);
         LserviceAmount = findViewById(R.id.ll_serviceamount);
         txtserviceamount = findViewById(R.id.txtserviceamount);
+        virtual_NmbrCCPicker = findViewById(R.id.virtual_NmbrCCPicker);
 
         int consumerId = SharedPreference.getInstance(AppointmentActivity.this).getIntValue("consumerId", 0);
         familyMEmID = consumerId;
@@ -419,6 +425,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             String name = serviceInfo.getServiceName();
             tvServiceName.setText(name);
             tvDescription.setText(serviceInfo.getDescription());
+            if (serviceInfo.getServiceType() != null && serviceInfo.getServiceType().equalsIgnoreCase("virtualService")) {
+                virtualService = true;
+            } else {
+                virtualService = false;
+            }
             try {
                 if (serviceInfo.getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
                     if (serviceInfo.getAvailableDate() != null) {
@@ -558,7 +569,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             @Override
             public void onClick(View v) {
                 if (tvEmail.getText().toString().equalsIgnoreCase("")) {
-                    familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, serviceInfo.getIsPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode);
+                    familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, serviceInfo.getIsPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService);
                     familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     familyMemberDialog.show();
@@ -603,7 +614,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         llEditDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, serviceInfo.getIsPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode);
+                familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, serviceInfo.getIsPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService);
                 familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                 familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 familyMemberDialog.show();
@@ -1090,7 +1101,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
                             phoneNumber = profileDetails.getUserprofile().getPrimaryMobileNo();
                             tvNumber.setText(countryCode + " " + phoneNumber);
-                            et_countryCode.setText(countryCode);
+                            //et_countryCode.setText(countryCode);
+                            String cCode = countryCode.replace("+", "");
+                            virtual_NmbrCCPicker.setCountryForPhoneCode(Integer.parseInt(cCode));
                             etVirtualNumber.setText(profileDetails.getUserprofile().getPrimaryMobileNo());
 
 
@@ -1099,6 +1112,17 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                 tvEmail.setText(emailId);
                             } else {
                                 tvEmail.setHint("Enter your Mail Id");
+                            }
+                            if (serviceInfo.getServiceType() != null && serviceInfo.getServiceType().equalsIgnoreCase("virtualService")) {
+
+                                customerInformationDialog = new CustomerInformationDialog(AppointmentActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, serviceInfo.getIsPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, sector);
+                                customerInformationDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+                                customerInformationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                customerInformationDialog.show();
+                                DisplayMetrics metrics = AppointmentActivity.this.getResources().getDisplayMetrics();
+                                int width = (int) (metrics.widthPixels * 1);
+                                customerInformationDialog.setCancelable(false);
+                                customerInformationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
                         }
                     } else {
@@ -1314,10 +1338,12 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         mDialog.show();
         String number = tvNumber.getText().toString();
         uuid = UUID.randomUUID().toString();
-        String virtual_code = et_countryCode.getText().toString();
+        //String virtual_code = et_countryCode.getText().toString();
         String countryVirtualCode = "";
-        if (!virtual_code.equalsIgnoreCase("")) {
-            countryVirtualCode = virtual_code.substring(1);
+        /*if (!virtual_code.equalsIgnoreCase("")) {
+            countryVirtualCode = virtual_code.substring(1);*/
+        if (virtual_NmbrCCPicker.getSelectedCountryCode() != null) {
+            countryVirtualCode = virtual_NmbrCCPicker.getSelectedCountryCode();
         } else {
             DynamicToast.make(AppointmentActivity.this, "Countrycode needed", AppCompatResources.getDrawable(
                     AppointmentActivity.this, R.drawable.ic_info_black),
@@ -2042,14 +2068,16 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     }
 
     @Override
-    public void sendFamilyMbrPhoneAndEMail(String phone, String email, String countryCode) {
-
+    public void sendFamilyMbrPhoneAndEMail(String phone, String email, String conCode) {
+        phoneNumber = phone;
+        emailId = email;
+        countryCode = conCode;
+        tvNumber.setText(countryCode + " " + phoneNumber);
+        tvEmail.setText(emailId);
     }
 
     @Override
-    public void closeActivity() {
-
-    }
+    public void closeActivity() { finish(); }
 
     public void paymentFinished(RazorpayModel razorpayModel) {
 
@@ -2510,7 +2538,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         emailId = email;
         countryCode = conCode;
         tvNumber.setText(countryCode + " " + phoneNumber);
-        et_countryCode.setText(countryCode);
+        String cCode = countryCode.replace("+", "");
+        virtual_NmbrCCPicker.setCountryForPhoneCode(Integer.parseInt(cCode));
+        //et_countryCode.setText(countryCode);
 
         if (!emailId.equalsIgnoreCase("")) {
             tvEmail.setText(emailId);
@@ -2569,9 +2599,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     public CouponApliedOrNotDetails getAdvancePaymentDetails(final String txt_addnote, int id) {
         final Dialog mDialog = Config.getProgressDialog(AppointmentActivity.this, AppointmentActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        String number = tvNumber.getText().toString();
         uuid = UUID.randomUUID().toString();
-        String virtual_code = et_countryCode.getText().toString();
 
         ApiInterface apiService = ApiClient.getClient(AppointmentActivity.this).create(ApiInterface.class);
 

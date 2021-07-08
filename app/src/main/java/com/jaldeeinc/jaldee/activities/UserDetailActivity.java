@@ -776,6 +776,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             }
 
             intent.putExtra("serviceInfo", serviceInfo);
+            intent.putExtra("sector", sector);
 
             startActivity(intent);
         }

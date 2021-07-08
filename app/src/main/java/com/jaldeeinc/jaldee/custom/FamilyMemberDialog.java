@@ -113,7 +113,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
     boolean isVirtualService, isCheckin, isAppointment;
 
 
-    public FamilyMemberDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode) {
+    public FamilyMemberDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode, boolean isVirtualService) {
         super(appointmentActivity);
         this.context = appointmentActivity;
         this.memId = familyMEmID;
@@ -125,6 +125,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         this.multiple = multiple;
         this.update = update;
         this.countryCode = countryCode;
+        this.isVirtualService = isVirtualService;
         this.isAppointment = true;
     }
 
@@ -169,7 +170,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         slideUp = AnimationUtils.loadAnimation(context, R.anim.slide_in_left);
         slideRight = AnimationUtils.loadAnimation(context, R.anim.slide_out_right);
         cCodePicker = findViewById(R.id.ccp);
-        if (isCheckin && isVirtualService) {
+        if (isVirtualService) {
             ll_chooseMember.setVisibility(View.GONE);
         }
         if (profileDetails.getUserprofile().getGender() != null) {
@@ -233,7 +234,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
             }
         });
 
-        if (isCheckin && isVirtualService) {
+        if (isVirtualService) {
             bt_save.setEnabled(true);
             bt_save.setBackground(context.getResources().getDrawable(R.drawable.curved_save));
             bt_save.setTextColor(context.getResources().getColor(R.color.white));
@@ -249,7 +250,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
 
                 if (!phone.equalsIgnoreCase("")) {
                     if (phone.trim().length() > 9) {
-                        if (isCheckin && isVirtualService) {
+                        if (isVirtualService) {
                             iFamilyMemberDetails.sendFamilyMbrPhoneAndEMail(phone, email, countryCode);
                             dismiss();
 
