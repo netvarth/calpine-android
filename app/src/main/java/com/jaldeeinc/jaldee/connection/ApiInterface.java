@@ -708,7 +708,7 @@ public interface ApiInterface {
     @POST("consumer/waitlist/questionnaire/{uid}?")
     Call<ResponseBody> submitWaitListQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
 
-    @POST("consumer/donation/questionnaire/{uid}?")
+    @POST("consumer/donation/questionnaire/submit/{uid}?")
     Call<ResponseBody> submitDonationQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
 
     @POST("consumer/appointment/questionnaire/resubmit/{uid}?")
