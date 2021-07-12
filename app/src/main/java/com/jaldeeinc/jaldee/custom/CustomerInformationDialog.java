@@ -1235,7 +1235,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 }
                 userProfile.putOpt("preferredLanguages", jsonObj4);
             }
-            userProfile.put("email", et_email.getText().toString());
+            jsonObj1.put("email", et_email.getText().toString());
             userProfile.putOpt("userProfile", jsonObj1);
 
             // userProfile.put("id", mUser);
@@ -1261,7 +1261,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                     //   Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
                         Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
-                        iFamilyMemberDetails.sendFamilyMemberDetails(memId, familylist.getFirstName(), familylist.getLastName(), phone, et_email.getText().toString(), countryCode);
+                        iFamilyMemberDetails.sendFamilyMemberDetails(memId, familylist.getFirstName(), familylist.getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getDefaultCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode);
                         dismiss();
                         //Toast.makeText(context, "Member updated successfully ", Toast.LENGTH_LONG).show();
 

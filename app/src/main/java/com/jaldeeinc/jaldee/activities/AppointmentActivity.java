@@ -350,7 +350,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     private FamilyMemberDialog familyMemberDialog;
     private IFamilyMemberDetails iFamilyMemberDetails;
     private String prepayAmount = "";
-    private String countryCode;
+    private String countryCode, mWhtsappCountryCode, mWhatsappNumber, mTelegramCountryCode, mTelegramNumber, mAge;
+    private JSONArray mPreferredLanguages = new JSONArray();
+    private JSONObject mBookingLocation = new JSONObject();
     private Provider providerResponse = new Provider();
     private SearchSetting mSearchSettings;
     private String accountBusinessName;
@@ -1366,6 +1368,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         JSONObject virtualService = new JSONObject();
         JSONObject pjsonobj = new JSONObject();
 
+        JSONObject jsonObj2 = new JSONObject();
+        JSONObject jsonObj3 = new JSONObject();
 
         try {
 
@@ -1393,12 +1397,15 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             if (etVirtualNumber.getText().toString().trim().length() > 9) {
                 if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("whatsApp")) {
                     virtualService.put("WhatsApp", countryVirtualCode + etVirtualNumber.getText());
+                    mWhtsappCountryCode = countryVirtualCode;
+                    mWhatsappNumber = etVirtualNumber.getText().toString();
                 } else if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("GoogleMeet")) {
                     virtualService.put("GoogleMeet", serviceInfo.getVirtualCallingValue());
                 } else if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("Zoom")) {
                     virtualService.put("Zoom", serviceInfo.getVirtualCallingValue());
                 } else if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("Phone")) {
                     virtualService.put("Phone", countryVirtualCode + etVirtualNumber.getText());
+                    phoneNumber = etVirtualNumber.getText().toString();
                 } else if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("VideoCall")) {
                     virtualService.put("VideoCall", serviceInfo.getVirtualCallingValue());
                 }
@@ -1460,6 +1467,28 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                 waitobj.put("apptTime", slotTime);
 
+                if (mWhatsappNumber != null && !mWhatsappNumber.isEmpty()) {
+                    jsonObj2.put("countryCode", mWhtsappCountryCode);
+                    jsonObj2.put("number", mWhatsappNumber);
+                    waitobj.putOpt("whatsAppNum", jsonObj2);
+                }
+                if (mTelegramNumber != null && !mTelegramNumber.isEmpty()) {
+                    jsonObj3.put("countryCode", mTelegramCountryCode);
+                    jsonObj3.put("number", mTelegramNumber);
+                    waitobj.putOpt("telegramNum", jsonObj3);
+                }
+                if(mAge != null && !mAge.isEmpty()) {
+                    waitobj.put("age", mAge);
+                }
+                if(mPreferredLanguages != null) {
+                    waitobj.putOpt("preferredLanguage", mPreferredLanguages);
+                }
+                if(mBookingLocation != null) {
+                    waitobj.putOpt("bookingLocation", mBookingLocation);
+                }
+                if (emailId != null && !emailId.equalsIgnoreCase("")) {
+                    waitobj.put("email", emailId);
+                }
             }
             waitlistArray.put(waitobj);
 
@@ -2530,6 +2559,41 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     }
 
     @Override
+    public void sendFamilyMemberDetails(int consumerId, String firstName, String lastName, String phone, String email, String conCode, String whtsappCountryCode, String whatsappNumber, String telegramCountryCode, String telegramNumber, String age, JSONArray preferredLanguages, JSONObject bookingLocation) {
+        mFirstName = firstName;
+        mLastName = lastName;
+        phoneNumber = phone;
+        familyMEmID = consumerId;
+        emailId = email;
+        countryCode = conCode;
+        mWhtsappCountryCode = whtsappCountryCode;
+        mWhatsappNumber = whatsappNumber;
+        mTelegramCountryCode = telegramCountryCode;
+        mTelegramNumber = telegramNumber;
+        mAge = age;
+        mPreferredLanguages = preferredLanguages;
+        mBookingLocation = bookingLocation;
+        tvNumber.setText(countryCode + " " + phoneNumber);
+        if (serviceInfo.getCallingMode().equalsIgnoreCase("WhatsApp")) {
+            String cCode = whtsappCountryCode.replace("+", "");
+            virtual_NmbrCCPicker.setCountryForPhoneCode(Integer.parseInt(cCode));
+            etVirtualNumber.setText(whatsappNumber);
+        } else {
+            String cCode = conCode.replace("+", "");
+            virtual_NmbrCCPicker.setCountryForPhoneCode(Integer.parseInt(cCode));
+            etVirtualNumber.setText(phone);
+        }
+
+        // et_countryCode.setText(countryCode);
+
+        if (!emailId.equalsIgnoreCase("")) {
+            tvEmail.setText(emailId);
+        } else {
+            tvEmail.setText("");
+        }
+        tvConsumerName.setText(mFirstName);
+    }
+    @Override
     public void sendFamilyMemberDetails(int consumerId, String firstName, String lastName, String phone, String email, String conCode) {
         mFirstName = firstName;
         mLastName = lastName;
@@ -2551,6 +2615,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
 
     }
+
 
     @Override
     public void changeMemberName(String name, int id) {

@@ -670,7 +670,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                                 input = gson.fromJson(inputString, QuestionnaireInput.class);
                                 ApiSubmitQuestionnnaire(input,activeAppointment.getUid());
                             }
-                            if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true") && (prepayAmount != null && Integer.parseInt(prepayAmount) > 0)) {
+                            if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true") && (prepayAmount != null && Float.parseFloat(prepayAmount) > 0)) {
 
                                 if (isPaytm) {
 
