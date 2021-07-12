@@ -1081,7 +1081,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         } else {
             edtWhtsAppNumber.setText("");
         }
-        if (familylist.getTelgrmCountryCode() != null && familylist.getTelgrmCountryCode() != null) {
+        if (familylist.getTelgrmCountryCode() != null && familylist.getTelgrmNumber() != null) {
             String cCode = familylist.getTelgrmCountryCode().replace("+", "");
             TelegramCCodePicker.setCountryForPhoneCode(Integer.parseInt(cCode));
             edtTelegram.setText(familylist.getTelgrmNumber());

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -53,17 +54,18 @@ import retrofit2.Response;
 public class FamilyMemberFragment extends RootFragment {
     Context mContext;
     ImageView calenderclick;
-    static EditText dob;
+    static EditText dob, edtTelegramNumber, edtWhtsAppNumber, et_email;
     TextInputEditText edtfirstname, edtmobileno;
     TextInputEditText lastname;
     RadioGroup gender;
     String radiogender = "";
     Button btn_Save;
-    RadioButton rFemale, rMale;
+    RadioButton rFemale, rMale, rOther;
     String ValueCheck = "";
-    String mPassfname = "", mPassLastname = "", mPassgender = "", mPassDob = "", mPassPh = "", mUser;
+    String mPassfname = "", mPassLastname = "", mPassgender = "", mPassDob = "", mPassPh = "", mUser, mWhtsAppCountryCode = "", mWhtsAppNumber = "", mTelgrmCountryCode = "", mTelgrmNumber = "", mEmail = "";
     TextInputLayout text_input_lastname, text_input_firstname;
     TextInputLayout txt_InputMob;
+    CountryCodePicker WhtsappCCodePicker, TelegramCCodePicker;
     private static final String DATE_PATTERN =
             "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";
     @Override
@@ -102,14 +104,17 @@ public class FamilyMemberFragment extends RootFragment {
 
             if (ValueCheck.equalsIgnoreCase("edit")) {
 
-
                 mPassfname = bundle.getString("firstName", "");
                 mPassLastname = bundle.getString("lastname", "");
                 mPassDob = bundle.getString("dob", "");
                 mPassgender = bundle.getString("gender", "");
                 mPassPh = bundle.getString("mobile", "");
                 mUser = bundle.getString("user", "");
-
+                mWhtsAppCountryCode = bundle.getString("whtsAppCountryCode", "");
+                mWhtsAppNumber = bundle.getString("whtsAppNumber", "");
+                mTelgrmCountryCode = bundle.getString("telgrmCountryCode", "");
+                mTelgrmNumber = bundle.getString("telgrmNumber", "");
+                mEmail = bundle.getString("email", "");
                 Config.logV("Dob--1111----------" + mPassDob);
             }
         }
@@ -140,9 +145,17 @@ public class FamilyMemberFragment extends RootFragment {
         gender = (RadioGroup) row.findViewById(R.id.radiogender);
         rFemale = (RadioButton) row.findViewById(R.id.radioF);
         rMale = (RadioButton) row.findViewById(R.id.radioM);
+        rOther = (RadioButton) row.findViewById(R.id.radioO);
         rMale.setTypeface(tyFaceEdit);
         rFemale.setTypeface(tyFaceEdit);
+        rOther.setTypeface(tyFaceEdit);
         edtmobileno = (TextInputEditText) row.findViewById(R.id.edtmobileno);
+        WhtsappCCodePicker = (CountryCodePicker) row.findViewById(R.id.Wccp);
+        TelegramCCodePicker = (CountryCodePicker) row.findViewById(R.id.Tccp);
+        edtWhtsAppNumber = row.findViewById(R.id.edtWhtsAppNumber);
+        edtTelegramNumber = row.findViewById(R.id.edtTelegram);
+        et_email = row.findViewById(R.id.edtMail);
+
         gender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -150,13 +163,15 @@ public class FamilyMemberFragment extends RootFragment {
                     case R.id.radioM:
                         // do operations specific to this selection
                         radiogender = "male";
-
                         break;
                     case R.id.radioF:
                         // do operations specific to this selection
                         radiogender = "female";
                         break;
-
+                    case R.id.radioO:
+                        // do operations specific to this selection
+                        radiogender = "other";
+                        break;
                 }
             }
         });
@@ -224,12 +239,22 @@ public class FamilyMemberFragment extends RootFragment {
         if (ValueCheck.equalsIgnoreCase("edit")) {
             edtfirstname.setText(mPassfname);
             lastname.setText(mPassLastname);
-
+            if(mWhtsAppCountryCode != null && !mWhtsAppCountryCode.equalsIgnoreCase("")) {
+                WhtsappCCodePicker.setCountryForPhoneCode(Integer.parseInt(mWhtsAppCountryCode.replace("+", "")));
+                edtWhtsAppNumber.setText(mWhtsAppNumber);
+            }
+            if(mTelgrmCountryCode != null && !mTelgrmCountryCode.equalsIgnoreCase("")) {
+                TelegramCCodePicker.setCountryForPhoneCode(Integer.parseInt(mTelgrmCountryCode.replace("+", "")));
+                edtTelegramNumber.setText(mTelgrmNumber);
+            }
+            et_email.setText(mEmail);
             if (!mPassgender.equalsIgnoreCase("")) {
                 if (mPassgender.equalsIgnoreCase("male")) {
                     rMale.setChecked(true);
-                } else {
+                } else if(mPassgender.equalsIgnoreCase("female")) {
                     rFemale.setChecked(true);
+                } else if(mPassgender.equalsIgnoreCase("other")) {
+                    rOther.setChecked(true);
                 }
             }
 
@@ -255,7 +280,6 @@ public class FamilyMemberFragment extends RootFragment {
                     SimpleDateFormat timeFormat = new SimpleDateFormat(
                             "dd-MM-yyyy");
                     String finalDate = timeFormat.format(myDate);
-
 
                     dob.setText(finalDate);
                 }
@@ -319,7 +343,9 @@ public class FamilyMemberFragment extends RootFragment {
         mDialog.show();
         JSONObject userProfile = new JSONObject();
         JSONObject jsonObj = new JSONObject();
-        try {
+        JSONObject jsonObj1 = new JSONObject();
+        JSONObject jsonObj2 = new JSONObject();
+         try {
             if (!edtmobileno.getText().toString().equalsIgnoreCase("") && edtmobileno.getText().toString() != null) {
                 jsonObj.put("primaryMobileNo", edtmobileno.getText().toString());
             }
@@ -337,6 +363,18 @@ public class FamilyMemberFragment extends RootFragment {
             if (!edtmobileno.getText().toString().equalsIgnoreCase("") && edtmobileno.getText().toString() != null) {
                 jsonObj.put("countryCode", "+91");
             }
+
+            if (edtWhtsAppNumber.getText() != null && !edtWhtsAppNumber.getText().toString().isEmpty()) {
+                jsonObj1.put("countryCode", WhtsappCCodePicker.getSelectedCountryCodeWithPlus());
+                jsonObj1.put("number", edtWhtsAppNumber.getText());
+                jsonObj.putOpt("whatsAppNum", jsonObj1);
+            }
+            if (edtTelegramNumber.getText() != null && !edtTelegramNumber.getText().toString().isEmpty()) {
+                jsonObj2.put("countryCode", TelegramCCodePicker.getSelectedCountryCodeWithPlus());
+                jsonObj2.put("number", edtTelegramNumber.getText());
+                jsonObj.putOpt("telegramNum", jsonObj2);
+            }
+            jsonObj.put("email", et_email.getText().toString());
 
             userProfile.putOpt("userProfile", jsonObj);
            // userProfile.put("id", mUser);
@@ -412,6 +450,9 @@ public class FamilyMemberFragment extends RootFragment {
         mDialog.show();
         JSONObject userProfile = new JSONObject();
         JSONObject jsonObj = new JSONObject();
+        JSONObject jsonObj1 = new JSONObject();
+        JSONObject jsonObj2 = new JSONObject();
+
         try {
             if (!edtmobileno.getText().toString().equalsIgnoreCase("") && edtmobileno.getText().toString() != null) {
                 jsonObj.put("primaryMobileNo", edtmobileno.getText().toString());
@@ -430,6 +471,17 @@ public class FamilyMemberFragment extends RootFragment {
                 jsonObj.put("countryCode", "+91");
             }
 
+            if (edtWhtsAppNumber.getText() != null && !edtWhtsAppNumber.getText().toString().isEmpty()) {
+                jsonObj1.put("countryCode", WhtsappCCodePicker.getSelectedCountryCodeWithPlus());
+                jsonObj1.put("number", edtWhtsAppNumber.getText());
+                jsonObj.putOpt("whatsAppNum", jsonObj1);
+            }
+            if (edtTelegramNumber.getText() != null && !edtTelegramNumber.getText().toString().isEmpty()) {
+                jsonObj2.put("countryCode", TelegramCCodePicker.getSelectedCountryCodeWithPlus());
+                jsonObj2.put("number", edtTelegramNumber.getText());
+                jsonObj.putOpt("telegramNum", jsonObj2);
+            }
+            jsonObj.put("email", et_email.getText().toString());
             userProfile.putOpt("userProfile", jsonObj);
             //  userProfile.put("parent",consumerId);
         } catch (JSONException e) {

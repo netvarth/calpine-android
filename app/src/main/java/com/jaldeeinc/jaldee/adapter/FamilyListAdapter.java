@@ -112,6 +112,28 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
                         bundle.putString("mobile", familylist.getUserProfile().getPrimaryMobileNo());
                     }
                 }
+
+                if(familylist.getUserProfile().getWhatsAppNum() != null) {
+                    if (familylist.getUserProfile().getWhatsAppNum().getAsJsonObject().get("countryCode") != null && familylist.getUserProfile().getWhatsAppNum().getAsJsonObject().get("number") != null) {
+                        //if (!familylist.getWhtsAppCountryCode().equalsIgnoreCase("") && !familylist.getWhtsAppNumber().equalsIgnoreCase("")) {
+                            bundle.putString("whtsAppCountryCode", familylist.getUserProfile().getWhatsAppNum().getAsJsonObject().get("countryCode").getAsString());
+                            bundle.putString("whtsAppNumber", familylist.getUserProfile().getWhatsAppNum().getAsJsonObject().get("number").getAsString());
+                        //}
+                    }
+                }
+                if(familylist.getUserProfile().getTelegramNum() != null) {
+                    if (familylist.getUserProfile().getTelegramNum().getAsJsonObject().get("countryCode") != null && familylist.getUserProfile().getTelegramNum().getAsJsonObject().get("number") != null) {
+                        //if (!familylist.getTelgrmCountryCode().equalsIgnoreCase("") && !familylist.getTelgrmNumber().equalsIgnoreCase("")) {
+                            bundle.putString("telgrmCountryCode", familylist.getUserProfile().getTelegramNum().getAsJsonObject().get("countryCode").getAsString());
+                            bundle.putString("telgrmNumber", familylist.getUserProfile().getTelegramNum().getAsJsonObject().get("number").getAsString());
+                        //}
+                    }
+                }
+                if (familylist.getUserProfile().getEmail() != null) {
+                    if (!familylist.getUserProfile().getEmail().equalsIgnoreCase("")) {
+                        bundle.putString("email", familylist.getUserProfile().getEmail());
+                    }
+                }
                 callback.onMethodCallback(bundle);
                 /*
 
