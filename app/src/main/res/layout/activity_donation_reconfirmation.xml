@@ -199,6 +199,7 @@
                                     android:layout_height="wrap_content"
                                     android:text=""
                                     android:layout_gravity="center"
+                                    android:gravity="center"
                                     android:layout_marginTop="@dimen/dimen_5dp"
                                     android:textSize="@dimen/dimen_16dp"
                                     android:textColor="@color/location_theme">
@@ -211,6 +212,7 @@
                                     android:layout_height="wrap_content"
                                     android:text=""
                                     android:layout_gravity="center"
+                                    android:gravity="center"
                                     android:layout_marginTop="@dimen/dimen_5dp"
                                     android:textSize="@dimen/dimen_12dp"
                                     android:textColor="@color/location_theme">
@@ -223,6 +225,7 @@
                                     android:layout_height="wrap_content"
                                     android:text=""
                                     android:layout_gravity="center"
+                                    android:gravity="center"
                                     android:layout_marginTop="@dimen/dimen_5dp"
                                     android:textSize="@dimen/dimen_12dp"
                                     android:textColor="@color/location_theme">
@@ -268,6 +271,7 @@
                                     android:layout_height="wrap_content"
                                     android:text=""
                                     android:layout_gravity="center"
+                                    android:gravity="center"
                                     android:layout_marginTop="@dimen/dimen_5dp"
                                     android:textSize="@dimen/dimen_18dp"
                                     android:textColor="@color/location_theme">
