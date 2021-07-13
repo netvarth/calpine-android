@@ -1776,7 +1776,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 // et_countryCode.setText(countryCode);
 
 
-                tvConsumerName.setText(mFirstName);
 
             }
 
@@ -2955,7 +2954,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         } else {
             tvEmail.setText("");
         }
-        tvConsumerName.setText(mFirstName);
+        tvConsumerName.setText(mFirstName+" "+mLastName);
     }
     @Override
     public void sendFamilyMemberDetails(int consumerId, String firstName, String lastName, String phone, String email, String conCode) {
@@ -2975,7 +2974,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         } else {
             tvEmail.setText("");
         }
-        tvConsumerName.setText(mFirstName);
+        tvConsumerName.setText(mFirstName+" "+mLastName);
     }
 
     @Override

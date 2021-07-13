@@ -2591,7 +2591,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         } else {
             tvEmail.setText("");
         }
-        tvConsumerName.setText(mFirstName);
+        tvConsumerName.setText(mFirstName+" "+mLastName);
     }
     @Override
     public void sendFamilyMemberDetails(int consumerId, String firstName, String lastName, String phone, String email, String conCode) {
@@ -2611,7 +2611,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         } else {
             tvEmail.setText("");
         }
-        tvConsumerName.setText(mFirstName);
+        tvConsumerName.setText(mFirstName+" "+mLastName);
 
 
     }

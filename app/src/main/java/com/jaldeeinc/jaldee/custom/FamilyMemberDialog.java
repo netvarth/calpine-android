@@ -374,7 +374,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                     tv_error_mail.setVisibility(View.VISIBLE);
                 }
             } else {
-                iFamilyMemberDetails.sendFamilyMemberDetails(memId, selectedMemberName, lastName, phone, email, countryCode);
+                iFamilyMemberDetails.sendFamilyMemberDetails(memId, firstName, lastName, phone, email, countryCode);
                 Toast.makeText(context, "Details saved successfully", Toast.LENGTH_SHORT).show();
                 dismiss();
             }
@@ -403,7 +403,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                     tv_error_mail.setVisibility(View.VISIBLE);
                 }
             } else {
-                iFamilyMemberDetails.sendFamilyMemberDetails(memId, selectedMemberName, lastName, phone, email, countryCode);
+                iFamilyMemberDetails.sendFamilyMemberDetails(memId, firstName, lastName, phone, email, countryCode);
                 iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
                 Toast.makeText(context, "Details saved successfully", Toast.LENGTH_SHORT).show();
                 dismiss();
@@ -579,7 +579,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                             SharedPreference.getInstance(context).setValue("email", et_email.getText().toString());
 
                             Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
-                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, selectedMemberName, lastName, phone, email, countryCode);
+                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, firstName, lastName, phone, email, countryCode);
                             iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
                             dismiss();
 
@@ -694,20 +694,16 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
     static String s_changename;
     static int memberid;
 
-
     @Override
     public void changeMemberName(String name, int id) {
-        selectedMemberName = name;
-        memId = id;
-        bt_save.setBackground(context.getResources().getDrawable(R.drawable.curved_save));
-        bt_save.setTextColor(context.getResources().getColor(R.color.white));
-        bt_save.setEnabled(true);
 
     }
 
     @Override
     public void changeMemberName(String name, FamilyArrayModel familylist) {
         selectedMemberName = name;
+        firstName = familylist.getFirstName();
+        lastName = familylist.getLastName();
         memId = familylist.getId();
         bt_save.setBackground(context.getResources().getDrawable(R.drawable.curved_save));
         bt_save.setTextColor(context.getResources().getColor(R.color.white));
