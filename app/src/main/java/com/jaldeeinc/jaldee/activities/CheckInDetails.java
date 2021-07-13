@@ -853,7 +853,7 @@ public class CheckInDetails extends AppCompatActivity {
                     hideView(llCustomerNotes);
                 }
 
-                if (checkInInfo.getPaymentStatus().equalsIgnoreCase("FullyPaid") || checkInInfo.getPaymentStatus().equalsIgnoreCase("Refund") || checkInInfo.getBillViewStatus().equalsIgnoreCase("Show")) {
+                if (checkInInfo.getPaymentStatus().equalsIgnoreCase("FullyPaid") || checkInInfo.getPaymentStatus().equalsIgnoreCase("Refund")) {
                     String amount = "₹" + " " + convertAmountToDecimals(checkInInfo.getAmountDue());
                     tvAmountToPay.setText(amount);
                     tvAmountToPay.setVisibility(View.GONE);
