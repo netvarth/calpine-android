@@ -2885,6 +2885,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             }
 
             intent.putExtra("serviceInfo", serviceInfo);
+            intent.putExtra("sector", mBusinessDataList.getServiceSector().getDomain());
 
             startActivity(intent);
         }
@@ -2915,6 +2916,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         intent.putExtra("providerName", tvSpName.getText().toString());
         intent.putExtra("providerId", providerId);
         intent.putExtra("donationInfo", donationServiceInfo);
+        intent.putExtra("locationName", tvLocationName.getText().toString());
         startActivity(intent);
     }
 

@@ -20,6 +20,7 @@ public class FamilyArrayModel  implements Serializable{
     private String whtsAppNumber;
     private String telgrmNumber;
     private boolean isAddMember;
+    private String email;
 
     public boolean isAddMember() {
         return isAddMember;
@@ -47,6 +48,14 @@ public class FamilyArrayModel  implements Serializable{
 
     public JsonObject getWhatsAppNum() {
         return whatsAppNum;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public JsonObject getTelegramNum() {

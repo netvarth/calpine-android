@@ -31,6 +31,7 @@ import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.AppointmentActivity;
 import com.jaldeeinc.jaldee.activities.CheckInActivity;
 import com.jaldeeinc.jaldee.adapter.CheckIn_FamilyMemberListAdapter;
 import com.jaldeeinc.jaldee.adapter.ChooseLanguagesAdapter;
@@ -103,7 +104,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
     FamilyArrayModel familylist;
     ScrollView scrollView;
     String domain;
-        /*public CustomerInformationDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode) {
+        public CustomerInformationDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode, String domain) {
         super(appointmentActivity);
         this.context = appointmentActivity;
         this.memId = familyMEmID;
@@ -115,7 +116,8 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         this.multiple = multiple;
         this.update = update;
         this.countryCode = countryCode;
-    }*/
+        this.domain = domain;
+    }
 
     public CustomerInformationDialog(CheckInActivity checkInActivity, int familyMEmID, String email, String phone, boolean prePayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode, String domain) {
         super(checkInActivity);
@@ -1079,7 +1081,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         } else {
             edtWhtsAppNumber.setText("");
         }
-        if (familylist.getTelgrmCountryCode() != null && familylist.getTelgrmCountryCode() != null) {
+        if (familylist.getTelgrmCountryCode() != null && familylist.getTelgrmNumber() != null) {
             String cCode = familylist.getTelgrmCountryCode().replace("+", "");
             TelegramCCodePicker.setCountryForPhoneCode(Integer.parseInt(cCode));
             edtTelegram.setText(familylist.getTelgrmNumber());
@@ -1233,7 +1235,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 }
                 userProfile.putOpt("preferredLanguages", jsonObj4);
             }
-            userProfile.put("email", et_email.getText().toString());
+            jsonObj1.put("email", et_email.getText().toString());
             userProfile.putOpt("userProfile", jsonObj1);
 
             // userProfile.put("id", mUser);
@@ -1259,7 +1261,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                     //   Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
                         Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
-                        iFamilyMemberDetails.sendFamilyMemberDetails(memId, familylist.getFirstName(), familylist.getLastName(), phone, et_email.getText().toString(), countryCode);
+                        iFamilyMemberDetails.sendFamilyMemberDetails(memId, familylist.getFirstName(), familylist.getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getDefaultCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode);
                         dismiss();
                         //Toast.makeText(context, "Member updated successfully ", Toast.LENGTH_LONG).show();
 

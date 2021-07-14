@@ -44,10 +44,16 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.VideoActivity"></activity>
-        <activity android:name=".activities.UpdateQuestionnaire" />
-        <activity android:name=".activities.ImageActivity" />
-        <activity android:name=".activities.CheckInReconfirmation" />
+        <activity android:name=".activities.VideoActivity"
+            android:screenOrientation="portrait" ></activity>
+        <activity android:name=".activities.DonationReconfirmation"
+            android:screenOrientation="portrait" ></activity>
+        <activity android:name=".activities.UpdateQuestionnaire"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.ImageActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.CheckInReconfirmation"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ReconfirmationActivity"
             android:screenOrientation="portrait" />

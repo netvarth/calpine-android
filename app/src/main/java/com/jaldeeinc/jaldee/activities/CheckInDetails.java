@@ -900,7 +900,7 @@ public class CheckInDetails extends AppCompatActivity {
                     /***/
                 }
                 /**26-3-21*/
-                if(checkInInfo.getBillViewStatus() == null || checkInInfo.getBillViewStatus().equalsIgnoreCase("NotShow")  || checkInInfo.getBillStatus().equals("Settled") || checkInInfo.getWaitlistStatus().equals("Rejected")){
+                if(checkInInfo.getBillViewStatus() == null || checkInInfo.getBillViewStatus().equalsIgnoreCase("NotShow") || checkInInfo.getWaitlistStatus().equals("Rejected")){
                     cvBill.setVisibility(View.GONE);
                 }
                 if(checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled"))

@@ -557,7 +557,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                                 ApiSubmitQuestionnnaire(input, activeAppointment.getYnwUuid());
                             }
 
-                            if (bookingModel.getCheckInInfo().isPrePayment() && ((totalAmountPay != null && !totalAmountPay.equalsIgnoreCase("0.0")) || (prepayAmount != null && Integer.parseInt(prepayAmount) > 0))) {
+                            if (bookingModel.getCheckInInfo().isPrePayment() && ((totalAmountPay != null && !totalAmountPay.equalsIgnoreCase("0.0")) || (prepayAmount != null && Float.parseFloat(prepayAmount) > 0))) {
 
                                 if (isPaytm) {
 
