@@ -246,13 +246,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                         iv_attach1.getContext()
                                 .startActivity(intent);
                     }
-//                    RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext,3);
-//                    recyclerImageSent.setLayoutManager(mLayoutManager);
-//                    if (message.getAttachments() != null) {
-//                        ImageAdapter imageAdapter = new ImageAdapter(message.getAttachments(),mContext);
-//                        recyclerImageSent.setAdapter(imageAdapter);
-//                        imageAdapter.notifyDataSetChanged();
-//                    }
+
                 }
             });
 
@@ -414,13 +408,6 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                                 .startActivity(intent);
                     }
 
-//                    RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext,3);
-//                    recyclerImage.setLayoutManager(mLayoutManager);
-//                    if (message.getAttachments() != null) {
-//                        ImageAdapter imageAdapter = new ImageAdapter(message.getAttachments(),mContext);
-//                        recyclerImage.setAdapter(imageAdapter);
-//                        imageAdapter.notifyDataSetChanged();
-//                    }
                 }
             });
 

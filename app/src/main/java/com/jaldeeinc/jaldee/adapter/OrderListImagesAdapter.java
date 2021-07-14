@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.adapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -82,26 +83,56 @@ public class OrderListImagesAdapter extends RecyclerView.Adapter<OrderListImages
         } else {
             myViewHolder.iv_file_attach.setVisibility(View.VISIBLE);
 
-            if (!((Activity) mContext).isFinishing()) {
+            if (itemList.get(position).getType().equalsIgnoreCase("application/pdf"))
+            {
 
-                Glide.with(mContext)
-                        .load(itemList.get(position).getS3path())
-                        .apply(new RequestOptions().error(R.drawable.icon_noimage))
-                        .listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                //on load failed
-                                myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
-                                return false;
-                            }
+                if (!((Activity) mContext).isFinishing()) {
 
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                //on load success
-                                return false;
-                            }
-                        })
-                        .into(myViewHolder.iv_file_attach);
+                    Glide.with(mContext)
+                            .load(itemList.get(position).getThumbPath())
+                            .apply(new RequestOptions().error(R.drawable.icon_noimage))
+                            .listener(new RequestListener<Drawable>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    //on load failed
+                                    myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    //on load success
+                                    return false;
+                                }
+                            })
+                            .into(myViewHolder.iv_file_attach);
+
+                }
+
+            }else {
+
+                if (!((Activity) mContext).isFinishing()) {
+
+                    Glide.with(mContext)
+                            .load(itemList.get(position).getS3path())
+                            .apply(new RequestOptions().error(R.drawable.icon_noimage))
+                            .listener(new RequestListener<Drawable>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    //on load failed
+                                    myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    //on load success
+                                    return false;
+                                }
+                            })
+                            .into(myViewHolder.iv_file_attach);
+
+                }
 
             }
 
@@ -120,7 +151,14 @@ public class OrderListImagesAdapter extends RecyclerView.Adapter<OrderListImages
             @Override
             public void onClick(View v) {
 
-                showFullImage(position);
+                if (itemList.get(position).getType().equalsIgnoreCase("application/pdf")){
+
+                    openOnlinePdf(mContext,itemList.get(position).getS3path());
+
+                } else {
+
+                    showFullImage(position);
+                }
 
             }
         });
@@ -201,6 +239,13 @@ public class OrderListImagesAdapter extends RecyclerView.Adapter<OrderListImages
             e.printStackTrace();
         }
 
+    }
+
+
+    private void openOnlinePdf(Context mContext, String filePath) {
+
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(filePath));
+        mContext.startActivity(browserIntent);
     }
 
 }

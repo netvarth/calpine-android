@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -52,6 +53,11 @@ public class PaymentGateway {
         final Dialog mDialog = Config.getProgressDialog(mCOntext, mCOntext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
+        String deviceName = Build.MANUFACTURER
+                + " " + Build.MODEL + " " + Build.VERSION.RELEASE
+                + " " + Build.VERSION_CODES.class.getFields()[android.os.Build.VERSION.SDK_INT].getName();
+
+
         //  String uniqueID = UUID.randomUUID().toString();
         SharedPreference.getInstance(mCOntext).setValue("prePayment",false);
         JSONObject jsonObj = new JSONObject();
@@ -72,7 +78,7 @@ public class PaymentGateway {
 
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<CheckSumModel> call = apiService.generateHash(body);
+        Call<CheckSumModel> call = apiService.generateHash(deviceName,body);
         call.enqueue(new Callback<CheckSumModel>() {
             @Override
             public void onResponse(Call<CheckSumModel> call, Response<CheckSumModel> response) {

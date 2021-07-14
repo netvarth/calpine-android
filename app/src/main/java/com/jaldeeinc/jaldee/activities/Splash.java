@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.utils.AppPreferences;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 /**
@@ -48,6 +50,8 @@ public class Splash extends AppCompatActivity {
 
         animation = AnimationUtils.loadAnimation(Splash.this, R.anim.sample);
         ivLogo.startAnimation(animation);
+
+
 
         Config.logV("SPLASH @@@@@@@@@@@");
     }

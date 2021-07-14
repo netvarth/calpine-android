@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.connection;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.model.Address;
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
@@ -66,6 +67,7 @@ import com.jaldeeinc.jaldee.response.SlotsData;
 import com.jaldeeinc.jaldee.response.StoreDetails;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 import com.jaldeeinc.jaldee.response.UserResponse;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 
 import org.json.JSONObject;
@@ -422,9 +424,9 @@ public interface ApiInterface {
     @POST("consumer/donation/communicate/{uuid}")
     Call<ResponseBody> donationMessage(@Path("uuid") String uuid, @Query("account") String account, @Body RequestBody jsonObj);
 
-    @Headers("User-Agent: android")
+    @Headers({"User-Agent: android"})
     @POST("consumer/payment")
-    Call<CheckSumModel> generateHash(@Body RequestBody jsonObj);
+    Call<CheckSumModel> generateHash(@Header("device-name") String deviceName,@Body RequestBody jsonObj);
 
     @Headers("User-Agent: android")
     @POST("consumer/payment/status")

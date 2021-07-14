@@ -2796,11 +2796,12 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
 
     private void openMapView(String latitude, String longitude, String locationName) {
-        Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude + "?q=" + locationName);
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-        mapIntent.setPackage("com.google.android.apps.maps");
-        if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
-            context.startActivity(mapIntent);
+        String geoUri = "http://maps.google.com/maps?q=loc:" + latitude + "," + longitude + " (" + locationName + ")";
+
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+        mapIntent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+        if (mapIntent.resolveActivity(mContext.getPackageManager()) != null) {
+            mContext.startActivity(mapIntent);
         }
     }
 

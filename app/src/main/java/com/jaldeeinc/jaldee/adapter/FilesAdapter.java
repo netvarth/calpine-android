@@ -24,6 +24,7 @@ import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CustomQuestionnaire;
 import com.jaldeeinc.jaldee.activities.ImageActivity;
+import com.jaldeeinc.jaldee.activities.VideoActivity;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
@@ -32,6 +33,7 @@ import com.jaldeeinc.jaldee.model.Address;
 import java.io.File;
 import java.security.Key;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -44,6 +46,8 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
     private int selectedPosition = 0;
     private IFilesInterface iFilesInterface;
     private String labelName = "";
+    String[] videoFormats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi"};
+
 
     public FilesAdapter(ArrayList<KeyPairBoolData> fList, Context context, boolean isLoading, IFilesInterface iFilesInterface) {
         this.filesList = fList;
@@ -90,9 +94,19 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
                     }
                 } else {
 
+                    String extension = "";
+
+                    if (data.getImagePath().contains(".")) {
+                        extension = data.getImagePath().substring(data.getImagePath().lastIndexOf(".") + 1);
+                    }
+
                     if (data.getImagePath().substring(data.getImagePath().lastIndexOf(".") + 1).equals("pdf")) {
 
                         viewHolder.ivFile.setImageDrawable(context.getResources().getDrawable(R.drawable.pdfs));
+
+                    } else if (Arrays.asList(videoFormats).contains(extension)) {
+
+                        viewHolder.ivFile.setImageDrawable(context.getResources().getDrawable(R.drawable.video_icon));
 
                     } else {
 
@@ -127,9 +141,21 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 
                     } else {
 
+                        String extension = "";
+
+                        if (data.getImagePath().contains(".")) {
+                            extension = data.getImagePath().substring(data.getImagePath().lastIndexOf(".") + 1);
+                        }
+
                         if (data.getImagePath().substring(data.getImagePath().lastIndexOf(".") + 1).equals("pdf")) {
 
                             openPdf(context, data.getImagePath());
+
+                        } else if (Arrays.asList(videoFormats).contains(extension)) {
+
+                            Intent intent = new Intent(context, VideoActivity.class);
+                            intent.putExtra("urlOrPath", data.getImagePath());
+                            context.startActivity(intent);
 
                         } else {
                             Intent intent = new Intent(context, ImageActivity.class);

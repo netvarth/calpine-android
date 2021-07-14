@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -153,11 +154,14 @@ public class CheckInCopy extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        String deviceName = Build.MANUFACTURER
+                + " " + Build.MODEL + " " + Build.VERSION.RELEASE
+                + " " + Build.VERSION_CODES.class.getFields()[android.os.Build.VERSION.SDK_INT].getName();
 
 
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<CheckSumModel> call = apiService.generateHash(body);
+        Call<CheckSumModel> call = apiService.generateHash(deviceName,body);
 
         call.enqueue(new Callback<CheckSumModel>() {
             @Override

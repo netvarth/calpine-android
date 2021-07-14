@@ -154,10 +154,11 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
     private IFilesInterface iFilesInterface;
     private KeyPairBoolData fileObject = new KeyPairBoolData();
     private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
-    String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
-    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
+    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf", "mp3", "wmv", "mp4", "webm", "flw", "mov", "avi"};
+    String[] videoFormats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi"};
     private int GALLERY_FOR_ONE = 1, CAMERA_FOR_ONE = 2;
     private int GALLERY = 3, CAMERA = 4;
+    private static final int SELECT_VIDEO = 3;
 
     private Uri mImageUri;
     File f;
@@ -181,7 +182,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
     public BookingModel bookingModel;
     QuestionnaireInput qInput = new QuestionnaireInput();
     private QuestionnaireResponse questionnaireResponse = new QuestionnaireResponse();
-    public String from, uid,bookingStatus = "";
+    public String from, uid, bookingStatus = "";
     private boolean isEdit = false;
 
 
@@ -206,7 +207,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
         isEdit = intent.getBooleanExtra("isEdit", false);
         from = intent.getStringExtra("from");
         bookingStatus = intent.getStringExtra("status");
-        if (bookingStatus == null){
+        if (bookingStatus == null) {
             bookingStatus = "";
         }
         questionnaireResponse = (QuestionnaireResponse) intent.getSerializableExtra("editQuestionnaire");
@@ -227,7 +228,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
             tvButtonName.setText("Update");
             ivNext.setVisibility(View.GONE);
 
-            if (!bookingStatus.trim().equalsIgnoreCase("") && !(bookingStatus.equalsIgnoreCase("Confirmed") || bookingStatus.equalsIgnoreCase("Arrived") || bookingStatus.equalsIgnoreCase("checkedIn") || bookingStatus.equalsIgnoreCase("arrived"))){
+            if (!bookingStatus.trim().equalsIgnoreCase("") && !(bookingStatus.equalsIgnoreCase("Confirmed") || bookingStatus.equalsIgnoreCase("Arrived") || bookingStatus.equalsIgnoreCase("checkedIn") || bookingStatus.equalsIgnoreCase("arrived"))) {
 
                 showAlert();
             }
@@ -288,9 +289,9 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
         }
 
         // Api to get questionnaire
-        if (isEdit){
+        if (isEdit) {
 
-            if (qInput != null && qInput.getQuestions() != null){
+            if (qInput != null && qInput.getQuestions() != null) {
 
                 try {
                     UpdateQuestionnaire(qInput.getQuestions());
@@ -299,7 +300,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                 }
             }
 
-        }else {
+        } else {
             getQuestionnaire();
         }
 
@@ -320,7 +321,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
     private void showAlert() {
 
-        Config.showAlertBuilder(mContext,"Service has started","The given details cannot be edited as the service has started.");
+        Config.showAlertBuilder(mContext, "Service has started", "The given details cannot be edited as the service has started.");
     }
 
 
@@ -563,7 +564,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                     ApiUpdateApptQuestionnaire(input, labelPaths);
                 } else {
 
-                    Toast.makeText(mContext,"The given details cannot be edited as the service has started.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "The given details cannot be edited as the service has started.", Toast.LENGTH_SHORT).show();
                 }
 
             } else if (from.equalsIgnoreCase(Constants.BOOKING_CHECKIN)) {
@@ -573,7 +574,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                     ApiUpdateWaitListQuestionnaire(input, labelPaths);
                 } else {
 
-                    Toast.makeText(mContext,"The given details cannot be edited as the service has started.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "The given details cannot be edited as the service has started.", Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -864,10 +865,10 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                     return false;
                 }
 
-                if (etTextField.getText().toString().trim().length() < question.getGetQuestion().getPlainTextProperties().getMinNoOfLetter()){
+                if (etTextField.getText().toString().trim().length() < question.getGetQuestion().getPlainTextProperties().getMinNoOfLetter()) {
 
                     tvError.setVisibility(View.VISIBLE);
-                    tvError.setText("Enter minimum " + question.getGetQuestion().getPlainTextProperties().getMinNoOfLetter() +" Characters");
+                    tvError.setText("Enter minimum " + question.getGetQuestion().getPlainTextProperties().getMinNoOfLetter() + " Characters");
                     return false;
                 }
 
@@ -1338,7 +1339,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
                     if (singleFile.getType().equalsIgnoreCase(".pdf")) {
 
-                        openOnlinePdf(mContext,singleFile.getFilePath());
+                        openOnlinePdf(mContext, singleFile.getFilePath());
 
                     } else {
 
@@ -1349,9 +1350,21 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 } else {
 
+                    String extension = "";
+
+                    if (imagePath.contains(".")) {
+                        extension = imagePath.substring(imagePath.lastIndexOf(".") + 1);
+                    }
+
                     if (imagePath.substring(imagePath.lastIndexOf(".") + 1).equals("pdf")) {
 
                         openPdf(getApplicationContext(), imagePath);
+
+                    } else if (Arrays.asList(videoFormats).contains(extension)){
+
+                        Intent intent = new Intent(CustomQuestionnaire.this, VideoActivity.class);
+                        intent.putExtra("urlOrPath", imagePath);
+                        startActivity(intent);
 
                     } else {
 
@@ -2400,8 +2413,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
         pdfOpenintent.setDataAndType(uri, "application/pdf");
         try {
             startActivity(pdfOpenintent);
-        }
-        catch (ActivityNotFoundException e) {
+        } catch (ActivityNotFoundException e) {
 
         }
     }

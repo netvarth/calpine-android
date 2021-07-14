@@ -19,6 +19,10 @@ public class ViewAttachments implements Serializable {
     @Expose
     private String caption;
 
+    @SerializedName("type")
+    @Expose
+    private String type;
+
     public String getS3path() {
         return s3path;
     }
@@ -41,5 +45,13 @@ public class ViewAttachments implements Serializable {
 
     public void setCaption(String caption) {
         this.caption = caption;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

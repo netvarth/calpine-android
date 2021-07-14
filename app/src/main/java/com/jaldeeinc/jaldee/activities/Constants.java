@@ -1,5 +1,7 @@
 package com.jaldeeinc.jaldee.activities;
 
+import android.os.Build;
+
 import com.jaldeeinc.jaldee.R;
 
 public class Constants {
@@ -67,6 +69,7 @@ public class Constants {
     public static final String QIMAGES = "qImages";
 
 
+
     // notification purpose
     public static final String PUSH_NOTIFICATION = "pushNotification";
 
@@ -80,6 +83,16 @@ public class Constants {
 
         return 0;
 
+    }
+
+    public static final String getDeviceName(){
+
+        String deviceName = Build.MANUFACTURER
+                + " " + Build.MODEL + " " + Build.VERSION.RELEASE
+                + " " + Build.VERSION_CODES.class.getFields()[android.os.Build.VERSION.SDK_INT].getName();
+
+
+        return deviceName;
     }
 
 
