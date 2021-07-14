@@ -311,7 +311,7 @@
                         android:layout_marginBottom="@dimen/padding5"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                             android:id="@+id/tv_vsHint"
