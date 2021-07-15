@@ -822,8 +822,6 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
 
     private void ApiDonation(String txt_addnote) {
 
-        phoneNumber = etNumber.getText().toString();
-//        uuid = UUID.randomUUID().toString();
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
 
@@ -1307,10 +1305,9 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     @Override
     public void mobileUpdated() {
 
-        String phone = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+        phoneNumber = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
         countryCode = SharedPreference.getInstance(mContext).getStringValue("cCodeDonation", "");
-        phoneNumber = phone;
-        etNumber.setText(countryCode + " " + phone);
+        etNumber.setText(countryCode + " " + phoneNumber);
     }
 
     public static String getMoneyFormat(String number) {
