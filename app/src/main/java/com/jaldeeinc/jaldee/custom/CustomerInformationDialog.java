@@ -330,6 +330,11 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 tv_pin_errormesg.setVisibility(View.GONE);
                 if (count != 6 && s.length() == 6) {
                     ApiGetPinLocations(Integer.parseInt(et_pincode.getText().toString()));
+                    try {
+                        selectedPincode.put("pincode", et_pincode.getText().toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     mRecyclePincode.setVisibility(View.GONE);
                 }
@@ -812,7 +817,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 jsonObj1.putOpt("telegramNum", jsonObj3);
             }
             if (selectedPincode != null) {
-                jsonObj1.putOpt("pinCode", selectedPincode.get("pinCode"));
+                jsonObj1.putOpt("pinCode", selectedPincode.get("pincode"));
             }
 
             if (radio_language.getCheckedRadioButtonId() != -1) {
