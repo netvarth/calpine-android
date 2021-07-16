@@ -3,6 +3,7 @@
     xmlns:android.support.design="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainlayout"
     android:layout_width="match_parent"
     android:clickable="true"
@@ -290,7 +291,116 @@
                                 android:src="@drawable/icon_calendar" />
                         </LinearLayout>
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/padding3"
+                            android:orientation="vertical">
 
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/whatsapp_logo_sized"
+                                android:padding="@dimen/dimen_5dp"
+                                android:text=" Whatsapp #"
+                                android:textColor="@color/dark_black"
+                                android:textSize="@dimen/dimen_15sp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding3"
+                                android:orientation="horizontal"
+                                android:paddingLeft="@dimen/dimen_5dp">
+
+                                <com.hbb20.CountryCodePicker
+                                    android:id="@+id/Wccp"
+                                    android:layout_width="0dp"
+                                    android:layout_height="@dimen/padding40"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="@dimen/dimen_5dp"
+                                    android:layout_marginEnd="@dimen/dimen_5dp"
+                                    android:layout_weight="0.22"
+                                    android:background="@drawable/edittext_color"
+                                    android:visibility="visible"
+                                    app:ccp_autoDetectCountry="true"
+                                    app:ccp_showFlag="false"
+                                    app:ccp_showNameCode="false"
+                                    app:ccp_textSize="@dimen/dimen_15dp"
+                                    android:gravity="center"/>
+
+
+                                <EditText
+                                    android:id="@+id/edtWhtsAppNumber"
+                                    android:layout_width="0dp"
+                                    android:layout_height="@dimen/padding40"
+                                    android:layout_marginLeft="@dimen/dimen_5dp"
+                                    android:layout_weight="0.78"
+                                    android:background="@drawable/edittext_color"
+                                    android:hint="Enter Whatsapp Number"
+                                    android:inputType="number"
+                                    android:maxLength="10"
+                                    android:paddingStart="@dimen/padding5"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/dimen_15sp"
+                                    app:tint="@color/spinnerbg" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/padding3"
+                            android:orientation="vertical">
+
+                            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/telegram_icon_sized"
+                                android:padding="@dimen/dimen_5dp"
+                                android:text=" Telegram #"
+                                android:textColor="@color/dark_black"
+                                android:textSize="@dimen/dimen_15sp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding3"
+                                android:orientation="horizontal"
+                                android:paddingLeft="@dimen/dimen_5dp">
+
+                                <com.hbb20.CountryCodePicker
+                                    android:id="@+id/Tccp"
+                                    android:layout_width="0dp"
+                                    android:layout_height="@dimen/padding40"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="@dimen/dimen_5dp"
+                                    android:layout_marginEnd="@dimen/dimen_5dp"
+                                    android:layout_weight="0.22"
+                                    android:background="@drawable/edittext_color"
+                                    android:visibility="visible"
+                                    app:ccp_autoDetectCountry="true"
+                                    app:ccp_showFlag="false"
+                                    app:ccp_showNameCode="false"
+                                    app:ccp_textSize="@dimen/dimen_15dp"
+                                    android:gravity="center"/>
+
+                                <EditText
+                                    android:id="@+id/edtTelegram"
+                                    android:layout_width="0dp"
+                                    android:layout_height="@dimen/padding40"
+                                    android:layout_marginLeft="@dimen/dimen_5dp"
+                                    android:layout_weight="0.78"
+                                    android:background="@drawable/edittext_color"
+                                    android:hint="Enter Telegram Number"
+                                    android:inputType="number"
+                                    android:maxLength="10"
+                                    android:paddingStart="@dimen/padding5"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/dimen_15sp"
+                                    app:tint="@color/spinnerbg" />
+                            </LinearLayout>
+                        </LinearLayout>
                         <Button
                             android:id="@+id/btn_edtSubmit"
                             style="?android:attr/borderlessButtonStyle"

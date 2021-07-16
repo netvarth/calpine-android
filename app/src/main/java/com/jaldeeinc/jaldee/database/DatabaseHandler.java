@@ -131,7 +131,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "emailVerified boolean,"
                 + "phoneVerified boolean,"
                 + "gender TEXT,"
-                + "dob TEXT)";
+                + "dob TEXT,"
+                + "telgrmCountryCode TEXT,"
+                + "telgrmNumber TEXT,"
+                + "whtsAppCountryCode TEXT,"
+                + "whtsAppNumber TEXT)";
 
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_userinfo) + tblFields;
@@ -1289,8 +1293,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put("phoneVerified", profileModel.getPhoneVerified());
             values.put("gender", profileModel.getGender());
             values.put("dob", profileModel.getDob());
-
-
+            if(profileModel.getTelegramNum() != null){
+                values.put("telgrmCountryCode", profileModel.getTelegramNum().get("countryCode").getAsString());
+                values.put("telgrmNumber", profileModel.getTelegramNum().get("number").getAsString());
+            }
+            if(profileModel.getWhatsAppNum() != null){
+                values.put("whtsAppCountryCode", profileModel.getTelegramNum().get("countryCode").getAsString());
+                values.put("whtsAppNumber", profileModel.getTelegramNum().get("number").getAsString());
+            }
             db.insert(mContext.getString(R.string.db_table_userinfo), null, values);
 
 
@@ -1321,6 +1331,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put("phoneVerified", profileModel.getPhoneVerified());
             values.put("gender", profileModel.getGender());
             values.put("dob", profileModel.getDob());
+            if(profileModel.getTelegramNum() != null){
+                values.put("telgrmCountryCode", profileModel.getTelegramNum().get("countryCode").getAsString());
+                values.put("telgrmNumber", profileModel.getTelegramNum().get("number").getAsString());
+            }
+            if(profileModel.getWhatsAppNum() != null){
+                values.put("whtsAppCountryCode", profileModel.getTelegramNum().get("countryCode").getAsString());
+                values.put("whtsAppNumber", profileModel.getTelegramNum().get("number").getAsString());
+            }
 
 
             db.update(mContext.getString(R.string.db_table_userinfo), values, "id=" + profileModel.getId(), null);
@@ -1353,7 +1371,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
 
         String table = mContext.getString(R.string.db_table_userinfo);
-        String[] columns = {"id", "firstname", "lastname", "email", "primaryMobNo", "emailVerified", "phoneVerified", "gender", "dob"};
+        String[] columns = {"id", "firstname", "lastname", "email", "primaryMobNo", "emailVerified", "phoneVerified", "gender", "dob", "telgrmCountryCode", "telgrmNumber", "whtsAppCountryCode", "whtsAppNumber"};
 
         String selection = " id =?";
         String[] selectionArgs = new String[]{String.valueOf(consumerID)};
@@ -1373,6 +1391,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         profile.setPhoneVerified(Boolean.parseBoolean(cursor.getString(6)));
         profile.setGender(cursor.getString(7));
         profile.setDob(cursor.getString(8));
+        profile.setTelgrmCountryCode(cursor.getString(9));
+        profile.setTelgrmNumber(cursor.getString(10));
+        profile.setWhtsAppCountryCode(cursor.getString(11));
+        profile.setWhtsAppNumber(cursor.getString(12));
 
         db.setTransactionSuccessful();
         db.endTransaction();

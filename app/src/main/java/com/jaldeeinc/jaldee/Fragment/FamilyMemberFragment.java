@@ -54,7 +54,7 @@ import retrofit2.Response;
 public class FamilyMemberFragment extends RootFragment {
     Context mContext;
     ImageView calenderclick;
-    static EditText dob, edtTelegramNumber, edtWhtsAppNumber, et_email;
+                                static EditText dob, edtTelegramNumber, edtWhtsAppNumber, et_email;
     TextInputEditText edtfirstname, edtmobileno;
     TextInputEditText lastname;
     RadioGroup gender;

@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.Fragment.EditProfileFragment;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
@@ -62,6 +64,8 @@ public class EditProfileActivity extends AppCompatActivity {
     static SimpleDateFormat simpleDateFormat;
     LinearLayout Llayout;
     String countryCode = "";
+    static EditText edtTelegramNumber, edtWhtsAppNumber;
+    CountryCodePicker WhtsappCCodePicker, TelegramCCodePicker;
 
     private static final String DATE_PATTERN =
             "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";
@@ -86,19 +90,22 @@ public class EditProfileActivity extends AppCompatActivity {
 
         tv_title.setText("Update Profile");
 
-        Llayout = (LinearLayout)findViewById(R.id.Llayout);
-        calenderclick = (ImageView)findViewById(R.id.calenderclick);
-        txtdob = (TextInputEditText)findViewById(R.id.edtdob);
-        txtfirstname = (TextInputEditText)findViewById(R.id.edtFirstName);
-        txtlastname = (TextInputEditText)findViewById(R.id.edtLastName);
-        btn_edtSubmit = (Button)findViewById(R.id.btn_edtSubmit);
-        radio_gender = (RadioGroup)findViewById(R.id.radiogender);
-        rFemale = (RadioButton)findViewById(R.id.radioF);
-        rMale = (RadioButton)findViewById(R.id.radioM);
+        Llayout = (LinearLayout) findViewById(R.id.Llayout);
+        calenderclick = (ImageView) findViewById(R.id.calenderclick);
+        txtdob = (TextInputEditText) findViewById(R.id.edtdob);
+        txtfirstname = (TextInputEditText) findViewById(R.id.edtFirstName);
+        txtlastname = (TextInputEditText) findViewById(R.id.edtLastName);
+        btn_edtSubmit = (Button) findViewById(R.id.btn_edtSubmit);
+        radio_gender = (RadioGroup) findViewById(R.id.radiogender);
+        rFemale = (RadioButton) findViewById(R.id.radioF);
+        rMale = (RadioButton) findViewById(R.id.radioM);
         rOther = (RadioButton) findViewById(R.id.radioOthr);
-        tv_phone = (TextView)findViewById(R.id.txtphone);
-        tv_email = (TextInputEditText)findViewById(R.id.txtemail);
-
+        tv_phone = (TextView) findViewById(R.id.txtphone);
+        tv_email = (TextInputEditText) findViewById(R.id.txtemail);
+        WhtsappCCodePicker = (CountryCodePicker) findViewById(R.id.Wccp);
+        TelegramCCodePicker = (CountryCodePicker) findViewById(R.id.Tccp);
+        edtWhtsAppNumber = findViewById(R.id.edtWhtsAppNumber);
+        edtTelegramNumber = findViewById(R.id.edtTelegram);
 
 //        txtfirstname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 //        txtlastname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
@@ -253,6 +260,14 @@ public class EditProfileActivity extends AppCompatActivity {
         tv_phone.setText(countryCode + " " + getProfile.getPrimaryMobileNo());
         tv_email.setText(getProfile.getEmail());
 
+        if (getProfile.getWhtsAppCountryCode() != null && !getProfile.getWhtsAppCountryCode().equalsIgnoreCase("")) {
+            WhtsappCCodePicker.setCountryForPhoneCode(Integer.parseInt(getProfile.getWhtsAppCountryCode().replace("+", "")));
+            edtWhtsAppNumber.setText(getProfile.getWhtsAppNumber());
+        }
+        if (getProfile.getTelgrmCountryCode() != null && !getProfile.getTelgrmCountryCode().equalsIgnoreCase("")) {
+            TelegramCCodePicker.setCountryForPhoneCode(Integer.parseInt(getProfile.getTelgrmCountryCode().replace("+", "")));
+            edtTelegramNumber.setText(getProfile.getTelgrmNumber());
+        }
         String selectedDate = getProfile.getDob();
         if (selectedDate != null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -279,7 +294,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     rMale.setChecked(true);
                 } else if (radiogender.equalsIgnoreCase("Female")) {
                     rFemale.setChecked(true);
-                } else  if (radiogender.equalsIgnoreCase("Other")){
+                } else if (radiogender.equalsIgnoreCase("Other")) {
                     rOther.setChecked(true);
                 }
             }
@@ -301,17 +316,29 @@ public class EditProfileActivity extends AppCompatActivity {
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject jsonObj = new JSONObject();
+        JSONObject jsonObj1 = new JSONObject();
+        JSONObject jsonObj2 = new JSONObject();
         try {
             jsonObj.put("id", consumerId);
             jsonObj.put("firstName", txtfirstname.getText().toString());
             jsonObj.put("lastName", txtlastname.getText().toString());
 
             jsonObj.put("email", tv_email.getText().toString());
+            if (edtWhtsAppNumber.getText() != null && !edtWhtsAppNumber.getText().toString().isEmpty()) {
+                jsonObj1.put("countryCode", WhtsappCCodePicker.getSelectedCountryCodeWithPlus());
+                jsonObj1.put("number", edtWhtsAppNumber.getText());
+                jsonObj.putOpt("whatsAppNum", jsonObj1);
+            }
+            if (edtTelegramNumber.getText() != null && !edtTelegramNumber.getText().toString().isEmpty()) {
+                jsonObj2.put("countryCode", TelegramCCodePicker.getSelectedCountryCodeWithPlus());
+                jsonObj2.put("number", edtTelegramNumber.getText());
+                jsonObj.putOpt("telegramNum", jsonObj2);
+            }
            /* if(radiogender.equalsIgnoreCase("")){
                 radiogender=getGender;
             }*/
 
-            if(radio_gender.getCheckedRadioButtonId() != -1) {
+            if (radio_gender.getCheckedRadioButtonId() != -1) {
                 jsonObj.put("gender", radiogender);
             }
             String selectedDate = txtdob.getText().toString();
