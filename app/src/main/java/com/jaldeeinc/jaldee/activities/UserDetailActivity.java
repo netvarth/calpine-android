@@ -735,6 +735,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             intent.putExtra("providerId", providerId);
             intent.putExtra("userId", userId);
             intent.putExtra("fromUser", true);
+            intent.putExtra("sector", sector);
             ServiceInfo serviceInfo = new ServiceInfo();
             serviceInfo.setServiceId(appointmentServiceInfo.getId());
             serviceInfo.setServiceName(appointmentServiceInfo.getName());

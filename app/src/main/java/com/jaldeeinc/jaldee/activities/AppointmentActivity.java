@@ -390,6 +390,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         locationId = intent.getIntExtra("locationId", 0);
         providerId = intent.getIntExtra("providerId", 0);
         userId = intent.getIntExtra("userId", 0);
+        sector = intent.getStringExtra("sector");
         tvConsumerName = findViewById(R.id.tv_consumerName);
         list = findViewById(R.id.list);
         recycle_family = findViewById(R.id.recycle_family);

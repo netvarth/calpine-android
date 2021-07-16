@@ -2844,6 +2844,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             intent.putExtra("locationId", locationId);
             intent.putExtra("providerId", providerId);
             intent.putExtra("fromUser", false);
+            intent.putExtra("sector", mBusinessDataList.getServiceSector().getDomain());
             ServiceInfo serviceInfo = new ServiceInfo();
             serviceInfo.setServiceId(appointmentServiceInfo.getId());
             serviceInfo.setServiceName(appointmentServiceInfo.getName());
