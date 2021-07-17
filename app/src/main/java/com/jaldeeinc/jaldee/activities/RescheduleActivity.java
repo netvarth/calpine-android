@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.Interface.ISlotInfo;
@@ -58,6 +59,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.SlotsDialog;
+import com.jaldeeinc.jaldee.model.FileAttachment;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
@@ -94,6 +96,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -211,6 +214,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
     TextView tv_attach, tv_camera;
     RecyclerView recycle_image_attachment;
     ArrayList<String> imagePathList = new ArrayList<>();
+    ArrayList<String> s3ImgPathList = new ArrayList<>();
     ArrayList<String> imagePathLists = new ArrayList<>();
     private int GALLERY = 1, CAMERA = 2;
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
@@ -490,10 +494,9 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(imagePathList.size()>0){
+                        if (imagePathList.size() > 0) {
                             tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
-                        }
-                        else {
+                        } else {
                             tvAttachFileSize.setText("Attach File");
                         }
                         dialog.dismiss();
@@ -575,7 +578,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
 
     private void getApptInfo(String ynwuuid, int id) {
 
-         ApiInterface apiService =
+        ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(ynwuuid, String.valueOf(id));
         call.enqueue(new Callback<ActiveAppointment>() {
@@ -589,13 +592,23 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
 
                         if (appointmentInfo != null) {
 
-                            if(appointmentInfo.getService()!=null && appointmentInfo.getService().getConsumerNoteTitle()!=null && !appointmentInfo.getService().getConsumerNoteTitle().equalsIgnoreCase("")){
+                            if (appointmentInfo.getService() != null && appointmentInfo.getService().getConsumerNoteTitle() != null && !appointmentInfo.getService().getConsumerNoteTitle().equalsIgnoreCase("")) {
                                 tvAddNotes.setText(appointmentInfo.getService().getConsumerNoteTitle());
-                            }
-                            else{
+                            } else {
                                 tvAddNotes.setText("Add Note");
                             }
+                            if (appointmentInfo.getAttchment() != null && appointmentInfo.getAttchment().size() > 0) {
+                                tvAttachFileSize.setText("Attach File" + "(" + appointmentInfo.getAttchment().size() + ")");
 
+                            } else {
+                                tvAttachFileSize.setText("Attach File");
+                            }
+                            if (appointmentInfo.getAttchment() != null && appointmentInfo.getAttchment().size() > 0) {
+                                for (FileAttachment attachment : appointmentInfo.getAttchment()) {
+                                    imagePathList.add(attachment.getThumbPath());
+                                    s3ImgPathList.add(attachment.getThumbPath());
+                                }
+                            }
                         }
 
 
@@ -738,10 +751,9 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                                 tvConsumerName.setText(cName);
                                 if (appointmentInfo.getPhoneNumber() != null) {
                                     tvNumber.setVisibility(View.VISIBLE);
-                                    if(appointmentInfo.getCountryCode()!=null) {
+                                    if (appointmentInfo.getCountryCode() != null) {
                                         tvNumber.setText(appointmentInfo.getCountryCode() + " " + appointmentInfo.getPhoneNumber());
-                                    }
-                                    else{
+                                    } else {
                                         tvNumber.setText(appointmentInfo.getPhoneNumber());
                                     }
                                 } else {
@@ -773,7 +785,6 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                             }
 
                         }
-
 
 
                     }
@@ -992,6 +1003,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                     if (response.code() == 200) {
 
                         Toast.makeText(RescheduleActivity.this, "Appointment rescheduled successfully", Toast.LENGTH_SHORT).show();
+                        imagePathList.removeAll(s3ImgPathList);
 
                         if (imagePathList.size() > 0) {
                             if (appointmentInfo.getUid() != null) {
@@ -1429,10 +1441,9 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
 
                         imagePathList.add(orgFilePath);
 
-                        if(imagePathList.size()>0){
+                        if (imagePathList.size() > 0) {
                             tvErrorMessage.setVisibility(View.GONE);
-                        }
-                        else{
+                        } else {
                             tvErrorMessage.setVisibility(View.VISIBLE);
                         }
 
@@ -1470,10 +1481,9 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                             }
                             imagePathList.add(orgFilePath);
 
-                            if(imagePathList.size()>0){
+                            if (imagePathList.size() > 0) {
                                 tvErrorMessage.setVisibility(View.GONE);
-                            }
-                            else{
+                            } else {
                                 tvErrorMessage.setVisibility(View.VISIBLE);
                             }
                         }
@@ -1501,10 +1511,9 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                     mImageUri = Uri.parse(path);
                     imagePathList.add(mImageUri.toString());
 
-                    if(imagePathList.size()>0){
+                    if (imagePathList.size() > 0) {
                         tvErrorMessage.setVisibility(View.GONE);
-                    }
-                    else{
+                    } else {
                         tvErrorMessage.setVisibility(View.VISIBLE);
                     }
                 }
@@ -1619,7 +1628,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                             b.putString("from", "Reschedule");
                             b.putString("livetrack", activeAppointment.getLivetrack());
                             b.putString("confId", activeAppointment.getUid());
-                            b.putString("accountID",String.valueOf(activeAppointment.getProviderAccount().getId()));
+                            b.putString("accountID", String.valueOf(activeAppointment.getProviderAccount().getId()));
                             Intent checkin = new Intent(RescheduleActivity.this, AppointmentConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);
@@ -1669,7 +1678,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
 
                         providerResponse = response.body();
 
-                        if (providerResponse != null){
+                        if (providerResponse != null) {
 
                             if (providerResponse.getTerminologies() != null) {
                                 mSearchTerminology = new Gson().fromJson(providerResponse.getTerminologies(), SearchTerminology.class);

@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.response;
 
 import com.google.gson.annotations.SerializedName;
+import com.jaldeeinc.jaldee.model.FileAttachment;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -144,6 +145,11 @@ public class ActiveAppointment implements Serializable {
     String prescShortUrl;
     boolean isRescheduled;
     private QuestionnaireResponse questionnaire;
+    ArrayList<FileAttachment> attchment;
+
+    public ArrayList<FileAttachment> getAttchment() {
+        return attchment;
+    }
 
     public boolean isRescheduled() {
         return isRescheduled;

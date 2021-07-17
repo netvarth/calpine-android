@@ -70,6 +70,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.SlotsDialog;
+import com.jaldeeinc.jaldee.model.FileAttachment;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
@@ -231,6 +232,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
     TextView tv_attach, tv_camera;
     RecyclerView recycle_image_attachment;
     ArrayList<String> imagePathList = new ArrayList<>();
+    ArrayList<String> s3ImgPathList = new ArrayList<>();
     ArrayList<String> imagePathLists = new ArrayList<>();
     private int GALLERY = 1, CAMERA = 2;
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
@@ -700,6 +702,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                         } else {
                             Toast.makeText(RescheduleCheckinActivity.this, "Checkin rescheduled successfully", Toast.LENGTH_SHORT).show();
                         }
+                        imagePathList.removeAll(s3ImgPathList);
 
                         if (imagePathList.size() > 0) {
                             if (checkInInfo.getYnwUuid() != null) {
@@ -1257,7 +1260,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                             if (activeCheckIn.getYnwUuid() != null) {
                                 b.putString("confId", activeCheckIn.getYnwUuid());
                             }
-                            b.putString("accountID",String.valueOf(activeCheckIn.getProviderAccount().getId()));
+                            b.putString("accountID", String.valueOf(activeCheckIn.getProviderAccount().getId()));
                             Intent checkin = new Intent(RescheduleCheckinActivity.this, CheckInConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);
@@ -1310,7 +1313,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
                         providerResponse = response.body();
 
-                        if (providerResponse != null){
+                        if (providerResponse != null) {
 
                             if (providerResponse.getTerminologies() != null) {
                                 mSearchTerminology = new Gson().fromJson(providerResponse.getTerminologies(), SearchTerminology.class);
@@ -1489,7 +1492,18 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                             } else {
                                 tvAddNotes.setText("Add Note");
                             }
+                            if (checkInInfo.getAttchment() != null && checkInInfo.getAttchment().size() > 0) {
+                                tvAttachFileSize.setText("Attach File" + "(" + checkInInfo.getAttchment().size() + ")");
 
+                            } else {
+                                tvAttachFileSize.setText("Attach File");
+                            }
+                            if (checkInInfo.getAttchment() != null && checkInInfo.getAttchment().size() > 0) {
+                                for (FileAttachment attachment : checkInInfo.getAttchment()) {
+                                    imagePathList.add(attachment.getThumbPath());
+                                    s3ImgPathList.add(attachment.getThumbPath());
+                                }
+                            }
 //                            if(checkInInfo.getProvider()!=null){
 //                                user = tv_userName.getText().toString();
 //                            }
@@ -1609,7 +1623,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
                                 String sTime = convertTime(checkInInfo.getQueue().getQueueStartTime());
                                 String eTime = convertTime(checkInInfo.getQueue().getQueueEndTime());
-                                tvActualTime.setText(oldDate + ", " + checkInInfo.getQueue().getQueueStartTime()+" - "+checkInInfo.getQueue().getQueueEndTime());
+                                tvActualTime.setText(oldDate + ", " + checkInInfo.getQueue().getQueueStartTime() + " - " + checkInInfo.getQueue().getQueueEndTime());
                             }
 
                         }

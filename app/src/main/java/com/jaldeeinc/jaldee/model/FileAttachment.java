@@ -1,6 +1,8 @@
 package com.jaldeeinc.jaldee.model;
 
-public class FileAttachment {
+import java.io.Serializable;
+
+public class FileAttachment implements Serializable {
     String s3path;
     String thumbPath;
     String caption;

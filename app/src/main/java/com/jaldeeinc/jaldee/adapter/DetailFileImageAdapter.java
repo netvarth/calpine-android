@@ -19,16 +19,21 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
+import com.jaldeeinc.jaldee.model.FileAttachment;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class DetailFileImageAdapter extends RecyclerView.Adapter<DetailFileImageAdapter.MyViewHolder> {
     private final ArrayList<String> imagePathList;
     Context mContext;
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView iv_file_attach;
         LinearLayout fileList;
@@ -39,6 +44,7 @@ public class DetailFileImageAdapter extends RecyclerView.Adapter<DetailFileImage
             iv_file_attach = view.findViewById(R.id.file);
             fileList = view.findViewById(R.id.fileList);
             delete_file = view.findViewById(R.id.deletefile);
+            delete_file.setVisibility(View.GONE);
 
         }
     }
@@ -48,6 +54,7 @@ public class DetailFileImageAdapter extends RecyclerView.Adapter<DetailFileImage
         this.imagePathList = mfileList;
         this.mContext = mContext;
     }
+
 
     @Override
     public DetailFileImageAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -66,9 +73,20 @@ public class DetailFileImageAdapter extends RecyclerView.Adapter<DetailFileImage
             myViewHolder.iv_file_attach.setVisibility(View.VISIBLE);
         } else {
 
-            Uri imgUri = Uri.parse(imagePathList.get(position));
-            myViewHolder.iv_file_attach.setImageURI(imgUri);
+            /*Uri imgUri = Uri.parse(imagePathList.get(position));
+            myViewHolder.iv_file_attach.setImageURI(imgUri);*/
 
+            Picasso.Builder builder = new Picasso.Builder(myViewHolder.iv_file_attach.getContext());
+            builder.listener(new Picasso.Listener() {
+                @Override
+                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                    //exception.printStackTrace();
+                    Uri imgUri = Uri.parse(imagePathList.get(position));
+                    myViewHolder.iv_file_attach.setImageURI(imgUri);
+                    myViewHolder.delete_file.setVisibility(View.VISIBLE);
+                }
+            });
+            builder.build().load(imagePathList.get(position)).fit().into(myViewHolder.iv_file_attach);
         }
 
         myViewHolder.delete_file.setOnClickListener(new View.OnClickListener() {
