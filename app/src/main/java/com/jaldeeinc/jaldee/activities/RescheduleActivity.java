@@ -598,16 +598,19 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                                 tvAddNotes.setText("Add Note");
                             }
                             if (appointmentInfo.getAttchment() != null && appointmentInfo.getAttchment().size() > 0) {
-                                tvAttachFileSize.setText("Attach File" + "(" + appointmentInfo.getAttchment().size() + ")");
-
+                                for (FileAttachment attachment : appointmentInfo.getAttchment()) {
+                                    if (attachment != null ) {
+                                        if(attachment.getThumbPath() != null && !attachment.getThumbPath().isEmpty()) {
+                                            imagePathList.add(attachment.getThumbPath());
+                                            s3ImgPathList.add(attachment.getThumbPath());
+                                        }
+                                    }
+                                }
+                            }
+                            if(imagePathList != null && !imagePathList.isEmpty()){
+                                tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
                             } else {
                                 tvAttachFileSize.setText("Attach File");
-                            }
-                            if (appointmentInfo.getAttchment() != null && appointmentInfo.getAttchment().size() > 0) {
-                                for (FileAttachment attachment : appointmentInfo.getAttchment()) {
-                                    imagePathList.add(attachment.getThumbPath());
-                                    s3ImgPathList.add(attachment.getThumbPath());
-                                }
                             }
                         }
 
