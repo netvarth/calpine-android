@@ -1395,7 +1395,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 //                }
 //            }
 
-            if (etVirtualNumber.getText().toString().trim().length() > 9) {
+            if (etVirtualNumber.getText().toString().trim().length() > 7) {
                 if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("whatsApp")) {
                     virtualService.put("WhatsApp", countryVirtualCode + etVirtualNumber.getText());
                     mWhtsappCountryCode = countryVirtualCode;

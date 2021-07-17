@@ -86,7 +86,7 @@ public class ResetOtp extends AppCompatActivity {
         otpverify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (editotp.getText().toString() != null && !editotp.getText().toString().equalsIgnoreCase("")) {
+                if (editotp.getText().toString().trim() != null && !editotp.getText().toString().trim().equalsIgnoreCase("")) {
                     ApiForgotResetOtp(editotp.getText().toString());
                 }else{
                     Toast.makeText(mContext,"Please enter a valid otp",Toast.LENGTH_SHORT).show();

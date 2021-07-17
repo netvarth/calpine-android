@@ -71,6 +71,8 @@ public class DetailFileImageAdapter extends RecyclerView.Adapter<DetailFileImage
         String imagePath = this.imagePathList.get(position);
         if (imagePath.substring(imagePath.lastIndexOf(".") + 1).equals("pdf")) {
             myViewHolder.iv_file_attach.setVisibility(View.VISIBLE);
+            myViewHolder.delete_file.setVisibility(View.VISIBLE);
+            myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.pdfs));
         } else {
 
             /*Uri imgUri = Uri.parse(imagePathList.get(position));

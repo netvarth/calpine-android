@@ -680,7 +680,7 @@ public class ChatActivity extends AppCompatActivity {
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         if (message.equalsIgnoreCase("")) {
-            message = "Please find the attachments";
+            message = "";
         }
 
         JsonObject obj = new JsonObject();
@@ -760,7 +760,7 @@ public class ChatActivity extends AppCompatActivity {
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         if (message.equalsIgnoreCase("")) {
-            message = "Please find the attachments";
+            message = "";
         }
         JsonObject obj = new JsonObject();
         obj.addProperty("msg",message);
@@ -836,7 +836,7 @@ public class ChatActivity extends AppCompatActivity {
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         if (message.equalsIgnoreCase("")) {
-            message = "Please find the attachments";
+            message = "";
         }
 
         JsonObject obj = new JsonObject();
@@ -915,7 +915,7 @@ public class ChatActivity extends AppCompatActivity {
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         if (message.equalsIgnoreCase("")) {
-            message = "Please find the attachments";
+            message = "";
         }
 
         JsonObject obj = new JsonObject();
@@ -994,7 +994,7 @@ public class ChatActivity extends AppCompatActivity {
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         if (message.equalsIgnoreCase("")) {
-            message = "Please find the attachments";
+            message = "";
         }
 
         JsonObject obj = new JsonObject();
