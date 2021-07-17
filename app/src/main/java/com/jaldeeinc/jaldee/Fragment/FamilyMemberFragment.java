@@ -218,8 +218,6 @@ public class FamilyMemberFragment extends RootFragment {
 
 
                 } else {
-
-
                     if (validateCHeck()) {
                         if(edtmobileno.length()>0){
                             if(validatePhone()){
@@ -228,11 +226,7 @@ public class FamilyMemberFragment extends RootFragment {
                         }else{
                             ApiUpdateFamilyMember(mUser);
                         }
-
                     }
-
-
-
                 }
             }
         });
@@ -363,8 +357,7 @@ public class FamilyMemberFragment extends RootFragment {
             if (!edtmobileno.getText().toString().equalsIgnoreCase("") && edtmobileno.getText().toString() != null) {
                 jsonObj.put("countryCode", "+91");
             }
-
-            if (edtWhtsAppNumber.getText() != null && !edtWhtsAppNumber.getText().toString().isEmpty()) {
+            if (edtWhtsAppNumber.getText() != null) {
                 jsonObj1.put("countryCode", WhtsappCCodePicker.getSelectedCountryCodeWithPlus());
                 jsonObj1.put("number", edtWhtsAppNumber.getText());
                 jsonObj.putOpt("whatsAppNum", jsonObj1);
@@ -374,7 +367,8 @@ public class FamilyMemberFragment extends RootFragment {
                 jsonObj2.put("number", edtTelegramNumber.getText());
                 jsonObj.putOpt("telegramNum", jsonObj2);
             }
-            jsonObj.put("email", et_email.getText().toString());
+
+             jsonObj.put("email", et_email.getText().toString());
 
             userProfile.putOpt("userProfile", jsonObj);
            // userProfile.put("id", mUser);
@@ -471,12 +465,12 @@ public class FamilyMemberFragment extends RootFragment {
                 jsonObj.put("countryCode", "+91");
             }
 
-            if (edtWhtsAppNumber.getText() != null && !edtWhtsAppNumber.getText().toString().isEmpty()) {
+            if (edtWhtsAppNumber.getText() != null) {
                 jsonObj1.put("countryCode", WhtsappCCodePicker.getSelectedCountryCodeWithPlus());
                 jsonObj1.put("number", edtWhtsAppNumber.getText());
                 jsonObj.putOpt("whatsAppNum", jsonObj1);
             }
-            if (edtTelegramNumber.getText() != null && !edtTelegramNumber.getText().toString().isEmpty()) {
+            if (edtTelegramNumber.getText() != null) {
                 jsonObj2.put("countryCode", TelegramCCodePicker.getSelectedCountryCodeWithPlus());
                 jsonObj2.put("number", edtTelegramNumber.getText());
                 jsonObj.putOpt("telegramNum", jsonObj2);

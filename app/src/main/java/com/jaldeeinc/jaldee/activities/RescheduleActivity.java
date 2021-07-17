@@ -1579,7 +1579,8 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
 
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
                     if (response.code() == 200) {
                         imagePathList.clear();
                         //  dialog.dismiss();
