@@ -52,6 +52,8 @@ public class VerifyOtp extends AppCompatActivity {
     TextView txt_enterotp,txtproceed;
     String detail;
     String countryCode ="";
+    boolean isInternationalNumber = false;
+    String email;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +65,10 @@ public class VerifyOtp extends AppCompatActivity {
 
             detail = extras.getString("detail_id");
             countryCode = extras.getString("countryCode");
+            isInternationalNumber = extras.getBoolean("isInternationalNumber", false);
+            if(isInternationalNumber) {
+                email = extras.getString("email", "");
+            }
 
 
         }
@@ -103,7 +109,9 @@ public class VerifyOtp extends AppCompatActivity {
                 "fonts/JosefinSans-Light.ttf");
         txt_input_layout_otp.setTypeface(tyface_edittext_hint);
 
-
+        if(isInternationalNumber){
+            txtResendOtp.setVisibility(View.GONE);
+        }
 
         txtResendOtp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +125,14 @@ public class VerifyOtp extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                new CustomPopUpWindow().showpopupWindowEmail(mContext,getParent());
+                if(isInternationalNumber) {
+                    String firstName = SharedPreference.getInstance(mContext).getStringValue("firstName", "");
+                    String lastNme = SharedPreference.getInstance(mContext).getStringValue("LastName", "");
+                    CustomPopUpWindow cpw = new CustomPopUpWindow();
+                    cpw.ApiResendOTp(firstName, lastNme, email, "email", mContext, getParent());
+                } else{
+                    new CustomPopUpWindow().showpopupWindowEmail(mContext,getParent());
+                }
             }
         });
         Typeface tyface_btn = Typeface.createFromAsset(getAssets(),
