@@ -37,7 +37,6 @@ import com.jaldeeinc.jaldee.response.DepServiceInfo;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
-import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -199,8 +198,11 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                         viewHolder.llDonationRange.setVisibility(View.VISIBLE);
                         viewHolder.llTime.setVisibility(View.GONE);
                         viewHolder.llEstwaitTime.setVisibility(View.GONE);
-                        viewHolder.tvMinAmount.setText("₹\u00A0" +  Config.getAmountNoDecimalPoints(Double.parseDouble(servicesInfoList.get(position).getMinDonationAmount())));
-                        viewHolder.tvMaxAmount.setText("₹\u00A0" + Config.getAmountNoDecimalPoints(Double.parseDouble(servicesInfoList.get(position).getMaxDonationAmount())));
+                        if (Double.parseDouble(servicesInfoList.get(position).getMinDonationAmount()) == Double.parseDouble(servicesInfoList.get(position).getMaxDonationAmount())) {
+                            viewHolder.tvDontnAmount.setText("Donate ₹\u00A0" + getMoneyFormat(servicesInfoList.get(position).getMinDonationAmount()));
+                        } else {
+                            viewHolder.tvDontnAmount.setText("Donate ₹\u00A0" + getMoneyFormat(servicesInfoList.get(position).getMinDonationAmount()) + " or more");
+                        }
                     } else {
                         viewHolder.llDonationRange.setVisibility(View.GONE);
                     }
@@ -286,7 +288,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
 
                                 viewHolder.ivTeleService.setImageResource(R.drawable.phoneaudioicon);
 
-                            } else if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("VideoCall")){
+                            } else if (servicesInfoList.get(position).getCallingMode().equalsIgnoreCase("VideoCall")) {
 
                                 viewHolder.ivTeleService.setImageResource(R.drawable.ic_jaldeevideo);
 
@@ -382,7 +384,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                         if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.CHECKIN)) {
 
                             if (servicesInfoList.get(position).getChecinServiceInfo() != null) {
-                                serviceInfoDialog = new ServiceInfoDialog(context, servicesInfoList.get(position).getChecinServiceInfo(),providerInfo);
+                                serviceInfoDialog = new ServiceInfoDialog(context, servicesInfoList.get(position).getChecinServiceInfo(), providerInfo);
                                 serviceInfoDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                                 serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 serviceInfoDialog.show();
@@ -395,7 +397,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                         } else if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
                             if (servicesInfoList.get(position).getAppointmentServiceInfo() != null) {
-                                appointmentServiceDialog = new AppointmentServiceDialog(context, servicesInfoList.get(position).getAppointmentServiceInfo(),providerInfo);
+                                appointmentServiceDialog = new AppointmentServiceDialog(context, servicesInfoList.get(position).getAppointmentServiceInfo(), providerInfo);
                                 appointmentServiceDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                                 appointmentServiceDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 appointmentServiceDialog.show();
@@ -488,9 +490,9 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
 
 
-        private ImageView ivImage, ivTeleService, ivMore,ivService;
+        private ImageView ivImage, ivTeleService, ivMore, ivService;
         private CardView cvImage, cvCard;
-        private CustomTextViewBold tvName, tvEstWaitTime, tvMinAmount, tvMaxAmount, tvNextAvailableTime;
+        private CustomTextViewBold tvName, tvEstWaitTime, tvDontnAmount, tvNextAvailableTime;
         private LinearLayout llTime, llEstwaitTime, llDonationRange;
         private CustomTextViewMedium tvNextAvailableText, tvPeopleAhead, tvTimeHint;
         private CustomTextViewSemiBold tvServiceType;
@@ -508,8 +510,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                 cvImage = itemView.findViewById(R.id.cv_image);
                 tvName = itemView.findViewById(R.id.tv_serviceName);
                 tvEstWaitTime = itemView.findViewById(R.id.tv_estWaitTime);
-                tvMinAmount = itemView.findViewById(R.id.tv_minAmount);
-                tvMaxAmount = itemView.findViewById(R.id.tv_maxAmount);
+                tvDontnAmount = itemView.findViewById(R.id.tv_dontnAmount);
                 ivMore = itemView.findViewById(R.id.iv_info);
                 llTime = itemView.findViewById(R.id.ll_time);
                 llEstwaitTime = itemView.findViewById(R.id.ll_estWaitTime);
