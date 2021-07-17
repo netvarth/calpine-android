@@ -677,11 +677,25 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
     private void ApiCommunicateCheckin(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type = MediaType.parse("*/*");
+        MediaType type ;
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
         for (int i = 0; i < bookingImagesList.size(); i++) {
+
+            String extension = "";
+
+            if (bookingImagesList.get(i).contains(".")) {
+                extension = bookingImagesList.get(i).substring(bookingImagesList.get(i).lastIndexOf(".") + 1);
+            }
+
+            if (extension.equalsIgnoreCase("pdf")){
+                type = MediaType.parse("application/pdf");
+
+            } else {
+                type = MediaType.parse("image/*");
+
+            }
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(bookingImagesList.get(i))));
             } catch (IOException e) {

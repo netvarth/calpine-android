@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.FileProvider;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -15,10 +16,12 @@ import android.widget.MediaController;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.jaldeeinc.jaldee.BuildConfig;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.widgets.TouchImageView;
 
 import java.io.File;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,14 +60,12 @@ public class VideoActivity extends AppCompatActivity {
 
                 //Creating MediaController
                 MediaController mediaController = new MediaController(this);
-                mediaController.setAnchorView(videoView);
+                mediaController.setMediaPlayer(videoView);
 
-                //specify the location of media file
-//                Uri uri = Uri.parse(urlOrPath);
-                Uri path=Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath()+urlOrPath));
-                //Setting MediaController and URI, then starting the videoView
+                Uri uri = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
+                        BuildConfig.APPLICATION_ID + ".provider", new File(urlOrPath));
+                videoView.setVideoURI(uri);
                 videoView.setMediaController(mediaController);
-                videoView.setVideoPath(urlOrPath);
                 videoView.requestFocus();
                 videoView.start();
 
