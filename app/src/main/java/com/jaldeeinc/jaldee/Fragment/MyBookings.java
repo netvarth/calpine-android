@@ -1091,10 +1091,24 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type = MediaType.parse("*/*");
+        MediaType type;
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         for (int i = 0; i < itemList.size(); i++) {
+
+            String extension = "";
+
+            if (itemList.get(i).getImagePath().contains(".")) {
+                extension = itemList.get(i).getImagePath().substring(itemList.get(i).getImagePath().lastIndexOf(".") + 1);
+            }
+
+            if (extension.equalsIgnoreCase("pdf")){
+                type = MediaType.parse("application/pdf");
+
+            } else {
+                type = MediaType.parse("image/*");
+
+            }
 
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(itemList.get(i).getImagePath())));
@@ -1168,10 +1182,24 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type = MediaType.parse("*/*");
+        MediaType type ;
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         for (int i = 0; i < itemList.size(); i++) {
+
+            String extension = "";
+
+            if (itemList.get(i).getImagePath().contains(".")) {
+                extension = itemList.get(i).getImagePath().substring(itemList.get(i).getImagePath().lastIndexOf(".") + 1);
+            }
+
+            if (extension.equalsIgnoreCase("pdf")){
+                type = MediaType.parse("application/pdf");
+
+            } else {
+                type = MediaType.parse("image/*");
+
+            }
 
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(itemList.get(i).getImagePath())));
@@ -1401,7 +1429,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
             }
 
         } else if (requestCode == CAMERA) {
-            if (data != null) {
+            if (data != null && data.getExtras() != null) {
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 //      imageview.setImageBitmap(bitmap);
                 path = saveImage(bitmap);

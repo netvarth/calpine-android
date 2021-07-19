@@ -1472,12 +1472,11 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
                             tvSpName.setText(name);
 
-                            if (checkInInfo.getProvider() != null) {
+                            if (checkInInfo.getProvider() != null && checkInInfo.getProvider().getBusinessName() != null) {
                                 String username = "";
 
-                                username = checkInInfo.getProvider().getFirstName() + " " + checkInInfo.getProvider().getLastName();
+                                username = checkInInfo.getProvider().getBusinessName();
 
-                                username = username.substring(0, 1).toUpperCase() + username.substring(1).toLowerCase();
                                 tv_userName.setText(username);
                                 tv_userName.setVisibility(View.VISIBLE);
                                 tvSpName.setTextSize(16);

@@ -615,7 +615,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
                 } else {
 
-                    showAlert("Please select an address to deliver");
+                    showAlert("Please add the delivery address to deliver");
                     mDialog.dismiss();
                     return;
                 }

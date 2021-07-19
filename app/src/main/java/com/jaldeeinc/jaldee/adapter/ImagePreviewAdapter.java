@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -26,6 +27,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.widgets.TouchImageView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapter.MyViewHolder> {
@@ -36,12 +38,10 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
     private IDeleteImagesInterface iDeleteImagesInterface;
 
 
-
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView iv_file_attach;
         LinearLayout fileList;
-        ImageView delete_file,ivAddNote;
+        ImageView delete_file, ivAddNote;
 
         public MyViewHolder(View view) {
             super(view);
@@ -53,7 +53,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
         }
     }
 
-    public ImagePreviewAdapter(ArrayList<ShoppingListModel> itemList, Context mContext, boolean isEdit,IDeleteImagesInterface iDeleteImagesInterface) {
+    public ImagePreviewAdapter(ArrayList<ShoppingListModel> itemList, Context mContext, boolean isEdit, IDeleteImagesInterface iDeleteImagesInterface) {
         this.itemList = itemList;
         this.mContext = mContext;
         this.isEdit = isEdit;
@@ -74,7 +74,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
         Log.i("path", itemList.get(position).getImagePath());
         String imagePath = itemList.get(position).getImagePath();
         if (imagePath.substring(imagePath.lastIndexOf(".") + 1).equals("pdf")) {
-            myViewHolder.iv_file_attach.setVisibility(View.VISIBLE);
+            myViewHolder.iv_file_attach.setImageDrawable(mContext.getResources().getDrawable(R.drawable.pdfs));
         } else {
 
             Uri imgUri = Uri.parse(itemList.get(position).getImagePath());
@@ -82,7 +82,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
 
         }
 
-        if (!isEdit){
+        if (!isEdit) {
             myViewHolder.ivAddNote.setVisibility(View.GONE);
             myViewHolder.delete_file.setVisibility(View.GONE);
         } else {
@@ -94,7 +94,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
             @Override
             public void onClick(View v) {
 
-                iDeleteImagesInterface.delete(position,itemList.get(position).getImagePath());
+                iDeleteImagesInterface.delete(position, itemList.get(position).getImagePath());
             }
         });
 
@@ -111,7 +111,14 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
             @Override
             public void onClick(View v) {
 
-                showFullImage(position);
+                if (imagePath.substring(imagePath.lastIndexOf(".") + 1).equals("pdf")) {
+
+                    openOnlinePdf(mContext,imagePath);
+
+                } else {
+
+                    showFullImage(position);
+                }
 
             }
         });
@@ -119,11 +126,20 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
     }
 
 
-
     @Override
     public int getItemCount() {
         Log.i("count", String.valueOf(itemList.size()));
         return itemList.size();
+    }
+
+    private void openOnlinePdf(Context mContext, String filePath) {
+
+//        Intent intent=new Intent(Intent.ACTION_VIEW);
+//        Uri uri = Uri.fromFile(new File(filePath));
+//        intent.setDataAndType(uri, "application/pdf");
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        mContext.startActivity(intent);
+
     }
 
     private void showFullImage(int position) {
@@ -152,7 +168,7 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
                 }
             });
 
-            if (itemList.get(position).getCaption() != null && !itemList.get(position).getCaption().trim().equalsIgnoreCase("")){
+            if (itemList.get(position).getCaption() != null && !itemList.get(position).getCaption().trim().equalsIgnoreCase("")) {
 
                 tvCaption.setVisibility(View.VISIBLE);
             } else {
@@ -174,7 +190,6 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
         }
 
     }
-
 
 
 }

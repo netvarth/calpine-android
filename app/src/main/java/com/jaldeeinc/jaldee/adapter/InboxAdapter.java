@@ -113,14 +113,10 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(inboxList.getTimeStamp());
             myViewHolder.tv_date.setText(formatter.format(calendar.getTime()));
-
-            Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                    "fonts/Montserrat_Bold.otf");
-            myViewHolder.tv_provider.setTypeface(tyface);
-
+            
 
             // String cap_Provider = inboxList.getUserName().substring(0, 1).toUpperCase() + inboxList.getUserName().substring(1);
-            myViewHolder.tv_provider.setText(toTitleCase(inboxList.getAccountName()));
+            myViewHolder.tv_provider.setText(inboxList.getAccountName());
             myViewHolder.linear_inbox_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

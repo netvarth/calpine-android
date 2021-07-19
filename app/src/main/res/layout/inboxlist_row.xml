@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                     android:id="@+id/txt_provider"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
