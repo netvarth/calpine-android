@@ -3,11 +3,11 @@
     xmlns:android.support.design="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools"
+    android:id="@+id/mainlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clickable="true"
-    android:id="@+id/mainlayout"
     android:background="@color/spinnerbg"
+    android:clickable="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -34,10 +34,10 @@
             android:id="@+id/card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_padding"
             android:layout_marginLeft="@dimen/padding5"
-            android:layout_marginRight="@dimen/padding5"
             android:layout_marginTop="@dimen/default_padding"
+            android:layout_marginRight="@dimen/padding5"
+            android:layout_marginBottom="@dimen/default_padding"
             card_view:cardCornerRadius="10dp">
 
             <LinearLayout
@@ -52,15 +52,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding7"
                     android:textColor="@color/title_grey"
-                    android:textSize="@dimen/txtsize_hint"
-                    />
+                    android:textSize="@dimen/txtsize_hint" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    <!--<com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                         android:id="@+id/ccp"
                         android:layout_width="match_parent"
                         android:layout_height="36dp"
@@ -70,46 +69,58 @@
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/dimen_14sp"
                         android:layout_weight="1.8"
-                        />
+                        />-->
+                    <com.hbb20.CountryCodePicker
+                        android:id="@+id/ccp"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/padding40"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="@dimen/dimen_5dp"
+                        android:layout_marginEnd="@dimen/dimen_5dp"
+                        android:layout_weight="1.5"
+                        android:visibility="visible"
+                        app:ccp_autoDetectCountry="true"
+                        app:ccp_showFlag="false"
+                        app:ccp_showNameCode="false"
+                        app:ccp_textSize="@dimen/dimen_14sp" />
 
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/text_input_phone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding7"
-                    android:layout_weight="0.2"
-                    android:textColorHint="@color/title_grey"
-                    android.support.design:hintTextAppearance="@style/GreyTextInputLayoutPassword">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtPhone"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_input_phone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/padding5"
-                        android:hint="@string/new_phonenumber"
-                        android:inputType="number"
-                        android:maxLength="10"
-                        android:textAppearance="@style/GreyTextInputLayoutHintPwd"
-                        android:textColor="@color/title_grey"
-                        android:textColorHint="@color/sec_title_grey" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginTop="@dimen/padding7"
+                        android:layout_weight="0.5"
+                        android:textColorHint="@color/title_grey"
+                        android.support.design:hintTextAppearance="@style/GreyTextInputLayoutPassword">
 
-               </LinearLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtPhone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/padding5"
+                            android:hint="@string/new_phonenumber"
+                            android:inputType="number"
+                            android:maxLength="10"
+                            android:textAppearance="@style/GreyTextInputLayoutHintPwd"
+                            android:textColor="@color/title_grey"
+                            android:textColorHint="@color/sec_title_grey" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
                 <Button
                     android:id="@+id/btnsubmit"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/padding7"
-                    android:textSize="@dimen/txtsize_hint"
-                    android:textColor="@color/app_background"
-                    android:background="@drawable/roundedrect_blue"
                     android:layout_marginTop="@dimen/default_padding"
+                    android:layout_marginBottom="@dimen/padding7"
+                    android:background="@drawable/roundedrect_blue"
                     android:text="@string/changePh"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    android:textColor="@color/app_background"
+                    android:textSize="@dimen/txtsize_hint" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

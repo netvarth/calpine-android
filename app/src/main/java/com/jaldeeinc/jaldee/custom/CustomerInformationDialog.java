@@ -854,7 +854,9 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                             SharedPreference.getInstance(context).setValue("email", et_email.getText().toString());
 
                             Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
-                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, profileDetails.getUserprofile().getFirstName(), profileDetails.getUserprofile().getLastName(), phone, et_email.getText().toString(), countryCode);
+                            //iFamilyMemberDetails.sendFamilyMemberDetails(memId, profileDetails.getUserprofile().getFirstName(), profileDetails.getUserprofile().getLastName(), phone, et_email.getText().toString(), countryCode);
+                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, profileDetails.getUserprofile().getFirstName(), profileDetails.getUserprofile().getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getDefaultCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode);
+
                             //iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
                             dismiss();
 
@@ -1080,15 +1082,19 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
             }
         }
         if (familylist.getWhtsAppCountryCode() != null && familylist.getWhtsAppNumber() != null) {
-            String cCode = familylist.getWhtsAppCountryCode().replace("+", "");
-            WhtsappCCodePicker.setCountryForPhoneCode(Integer.parseInt(cCode));
+            if(!familylist.getWhtsAppCountryCode().equalsIgnoreCase("")) {
+                String cCode = familylist.getWhtsAppCountryCode().replace("+", "");
+                WhtsappCCodePicker.setCountryForPhoneCode(Integer.parseInt(cCode));
+            }
             edtWhtsAppNumber.setText(familylist.getWhtsAppNumber());
         } else {
             edtWhtsAppNumber.setText("");
         }
         if (familylist.getTelgrmCountryCode() != null && familylist.getTelgrmNumber() != null) {
-            String cCode = familylist.getTelgrmCountryCode().replace("+", "");
-            TelegramCCodePicker.setCountryForPhoneCode(Integer.parseInt(cCode));
+            if(!familylist.getTelgrmCountryCode().equalsIgnoreCase("")) {
+                String cCode = familylist.getTelgrmCountryCode().replace("+", "");
+                TelegramCCodePicker.setCountryForPhoneCode(Integer.parseInt(cCode));
+            }
             edtTelegram.setText(familylist.getTelgrmNumber());
         } else {
             edtTelegram.setText("");
