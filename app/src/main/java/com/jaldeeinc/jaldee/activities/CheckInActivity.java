@@ -2838,7 +2838,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             }
 
         } else if (requestCode == CAMERA) {
-            if (data != null) {
+            if (data != null && data.getExtras() != null) {
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 //      imageview.setImageBitmap(bitmap);
                 path = saveImage(bitmap);

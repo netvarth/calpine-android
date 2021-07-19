@@ -2499,7 +2499,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             }
 
         } else if (requestCode == CAMERA) {
-            if (data != null) {
+            if (data != null && data.getExtras() != null) {
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 //      imageview.setImageBitmap(bitmap);
                 path = saveImage(bitmap);
