@@ -4,7 +4,6 @@ package com.jaldeeinc.jaldee.adapter;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,7 +17,7 @@ public class Child extends RecyclerView.ViewHolder {
 
     ImageView ivImage, ivTeleService,ivMore;
     CardView cvImage,cvCard;
-    CustomTextViewBold tvName, tvEstWaitTime, tvMinAmount, tvMaxAmount,tvNextAvailableTime;
+    CustomTextViewBold tvName, tvEstWaitTime, tvDontnAmount, tvNextAvailableTime;
     LinearLayout llTime, llEstwaitTime, llDonationRange;
     CustomTextViewMedium  tvPeopleAhead,tvTimeHint;
     CustomTextViewSemiBold tvServiceType;
@@ -31,8 +30,7 @@ public class Child extends RecyclerView.ViewHolder {
         cvImage = itemView.findViewById(R.id.cv_image);
         tvName = itemView.findViewById(R.id.tv_serviceName);
         tvEstWaitTime = itemView.findViewById(R.id.tv_estWaitTime);
-        tvMinAmount = itemView.findViewById(R.id.tv_minAmount);
-        tvMaxAmount = itemView.findViewById(R.id.tv_maxAmount);
+        tvDontnAmount = itemView.findViewById(R.id.tv_dontnAmount);
         ivMore = itemView.findViewById(R.id.iv_info);
         llTime = itemView.findViewById(R.id.ll_time);
         llEstwaitTime = itemView.findViewById(R.id.ll_estWaitTime);

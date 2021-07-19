@@ -1484,25 +1484,29 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                             } else {
                                 userId = checkInInfo.getId();
                             }
-
-
                             if (checkInInfo.getService() != null && checkInInfo.getService().getConsumerNoteTitle() != null && !checkInInfo.getService().getConsumerNoteTitle().equalsIgnoreCase("")) {
                                 tvAddNotes.setText(checkInInfo.getService().getConsumerNoteTitle());
                             } else {
                                 tvAddNotes.setText("Add Note");
                             }
                             if (checkInInfo.getAttchment() != null && checkInInfo.getAttchment().size() > 0) {
-                                tvAttachFileSize.setText("Attach File" + "(" + checkInInfo.getAttchment().size() + ")");
-
+                                for (FileAttachment attachment : checkInInfo.getAttchment()) {
+                                    if (attachment != null ) {
+                                        if (attachment.getThumbPath() != null && !attachment.getThumbPath().isEmpty()) {
+                                            imagePathList.add(attachment.getThumbPath());
+                                            s3ImgPathList.add(attachment.getThumbPath());
+                                        }
+                                    }
+                                }
+                            }
+                            if(imagePathList != null && !imagePathList.isEmpty()){
+                                tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
                             } else {
                                 tvAttachFileSize.setText("Attach File");
                             }
-                            if (checkInInfo.getAttchment() != null && checkInInfo.getAttchment().size() > 0) {
-                                for (FileAttachment attachment : checkInInfo.getAttchment()) {
-                                    imagePathList.add(attachment.getThumbPath());
-                                    s3ImgPathList.add(attachment.getThumbPath());
-                                }
-                            }
+
+
+
 //                            if(checkInInfo.getProvider()!=null){
 //                                user = tv_userName.getText().toString();
 //                            }

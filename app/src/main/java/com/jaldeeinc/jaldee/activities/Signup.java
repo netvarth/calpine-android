@@ -249,6 +249,12 @@ public class Signup extends AppCompatActivity {
                                 iReg.putExtra("detail_id", (detail));
                                 if(countryCode!=null) {
                                     iReg.putExtra("countryCode", countryCode);
+                                    if(!countryCode.equalsIgnoreCase("+91")){
+                                        iReg.putExtra("email", email.getText().toString());
+                                        iReg.putExtra("isInternationalNumber", true);
+                                    } else{
+                                        iReg.putExtra("isInternationalNumber", false);
+                                    }
                                 }
                             }
                             startActivity(iReg);

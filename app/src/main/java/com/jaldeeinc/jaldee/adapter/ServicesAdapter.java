@@ -195,8 +195,11 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                     viewHolder.llDonationRange.setVisibility(View.VISIBLE);
                     viewHolder.llTime.setVisibility(View.GONE);
                     viewHolder.llEstwaitTime.setVisibility(View.GONE);
-                    viewHolder.tvMinAmount.setText("₹" + getMoneyFormat(child.getMinDonationAmount()));
-                    viewHolder.tvMaxAmount.setText("₹" + getMoneyFormat(child.getMaxDonationAmount()));
+                    if (Double.parseDouble(child.getMaxDonationAmount()) == Double.parseDouble(getMoneyFormat(child.getMinDonationAmount()))) {
+                        viewHolder.tvDontnAmount.setText("Donate ₹\u00A0" + getMoneyFormat(child.getMinDonationAmount()));
+                    } else {
+                        viewHolder.tvDontnAmount.setText("Donate ₹\u00A0" + getMoneyFormat(child.getMinDonationAmount()) + " or more");
+                    }
                 } else {
                     viewHolder.llDonationRange.setVisibility(View.GONE);
                 }
@@ -282,8 +285,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
                             viewHolder.ivTeleService.setImageResource(R.drawable.phoneaudioicon);
 
-                        }
-                        else if (child.getCallingMode().equalsIgnoreCase("VideoCall")){
+                        } else if (child.getCallingMode().equalsIgnoreCase("VideoCall")) {
 
                             viewHolder.ivTeleService.setImageResource(R.drawable.ic_jaldeevideo);
 

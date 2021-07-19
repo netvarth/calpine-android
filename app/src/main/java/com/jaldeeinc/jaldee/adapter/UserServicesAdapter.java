@@ -58,7 +58,6 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
     private SearchViewDetail providerInfo;
 
 
-
     public UserServicesAdapter(ArrayList<DepServiceInfo> servicesInfo, Context context, boolean isLoading, ISelectedProviderService iSelectedService, SearchViewDetail providerDetails) {
         this.servicesInfoList = servicesInfo;
         this.context = context;
@@ -197,8 +196,11 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
                         viewHolder.llDonationRange.setVisibility(View.VISIBLE);
                         viewHolder.llTime.setVisibility(View.GONE);
                         viewHolder.llEstwaitTime.setVisibility(View.GONE);
-                        viewHolder.tvMinAmount.setText("₹" + getMoneyFormat(servicesInfoList.get(position).getMinDonationAmount()));
-                        viewHolder.tvMaxAmount.setText("₹" + getMoneyFormat(servicesInfoList.get(position).getMaxDonationAmount()));
+                        if (Double.parseDouble(servicesInfoList.get(position).getMinDonationAmount()) == Double.parseDouble(servicesInfoList.get(position).getMaxDonationAmount())) {
+                            viewHolder.tvDontnAmount.setText("Donate ₹\u00A0" + getMoneyFormat(servicesInfoList.get(position).getMinDonationAmount()));
+                        } else {
+                            viewHolder.tvDontnAmount.setText("Donate ₹\u00A0" + getMoneyFormat(servicesInfoList.get(position).getMinDonationAmount()) + " or more");
+                        }
                     } else {
                         viewHolder.llDonationRange.setVisibility(View.GONE);
                     }
@@ -501,7 +503,7 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
 
         private ImageView ivImage, ivTeleService, ivMore;
         private CardView cvImage, cvCard;
-        private CustomTextViewBold tvName, tvEstWaitTime, tvMinAmount, tvMaxAmount, tvNextAvailableTime;
+        private CustomTextViewBold tvName, tvEstWaitTime, tvDontnAmount, tvNextAvailableTime;
         private LinearLayout llTime, llEstwaitTime, llDonationRange;
         private CustomTextViewMedium tvNextAvailableText, tvPeopleAhead, tvTimeHint;
         private CustomTextViewSemiBold tvServiceType;
@@ -517,8 +519,7 @@ public class UserServicesAdapter extends RecyclerView.Adapter<UserServicesAdapte
                 cvImage = itemView.findViewById(R.id.cv_image);
                 tvName = itemView.findViewById(R.id.tv_serviceName);
                 tvEstWaitTime = itemView.findViewById(R.id.tv_estWaitTime);
-                tvMinAmount = itemView.findViewById(R.id.tv_minAmount);
-                tvMaxAmount = itemView.findViewById(R.id.tv_maxAmount);
+                tvDontnAmount = itemView.findViewById(R.id.tv_dontnAmount);
                 llTime = itemView.findViewById(R.id.ll_time);
                 llEstwaitTime = itemView.findViewById(R.id.ll_estWaitTime);
                 llDonationRange = itemView.findViewById(R.id.ll_donationRange);
