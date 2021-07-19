@@ -465,12 +465,12 @@ public class FamilyMemberFragment extends RootFragment {
                 jsonObj.put("countryCode", "+91");
             }
 
-            if (edtWhtsAppNumber.getText() != null) {
+            if (edtWhtsAppNumber.getText() != null && !edtWhtsAppNumber.getText().toString().isEmpty()) {
                 jsonObj1.put("countryCode", WhtsappCCodePicker.getSelectedCountryCodeWithPlus());
                 jsonObj1.put("number", edtWhtsAppNumber.getText());
                 jsonObj.putOpt("whatsAppNum", jsonObj1);
             }
-            if (edtTelegramNumber.getText() != null) {
+            if (edtTelegramNumber.getText() != null && !edtTelegramNumber.getText().toString().isEmpty()) {
                 jsonObj2.put("countryCode", TelegramCCodePicker.getSelectedCountryCodeWithPlus());
                 jsonObj2.put("number", edtTelegramNumber.getText());
                 jsonObj.putOpt("telegramNum", jsonObj2);
