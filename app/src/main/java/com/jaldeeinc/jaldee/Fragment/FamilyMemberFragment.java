@@ -362,7 +362,7 @@ public class FamilyMemberFragment extends RootFragment {
                 jsonObj1.put("number", edtWhtsAppNumber.getText());
                 jsonObj.putOpt("whatsAppNum", jsonObj1);
             }
-            if (edtTelegramNumber.getText() != null && !edtTelegramNumber.getText().toString().isEmpty()) {
+            if (edtTelegramNumber.getText() != null) {
                 jsonObj2.put("countryCode", TelegramCCodePicker.getSelectedCountryCodeWithPlus());
                 jsonObj2.put("number", edtTelegramNumber.getText());
                 jsonObj.putOpt("telegramNum", jsonObj2);
