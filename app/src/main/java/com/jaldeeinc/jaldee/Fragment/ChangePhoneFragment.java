@@ -113,10 +113,14 @@ public class ChangePhoneFragment extends RootFragment {
             public void onClick(View v) {
                 if (Config.isOnline(mContext)) {
                     if (validatePhone()) {
-                        if(!countryCode.equalsIgnoreCase("+91")){ Toast.makeText(mContext, "Please recheck the country code and number", Toast.LENGTH_SHORT).show(); } // this code is temporary,need to change if country code check corrected by REST side
-                        else{ApiChangePhone(edtPhone.getText().toString(), countryCode);}
+
+                        Toast.makeText(mContext, "Please recheck the country code and number", Toast.LENGTH_SHORT).show();
+                    } // this code is temporary,need to change if country code check corrected by REST side
+                    else {
+                        ApiChangePhone(edtPhone.getText().toString(), countryCode);
                     }
                 }
+
             }
         });
 
@@ -131,15 +135,16 @@ public class ChangePhoneFragment extends RootFragment {
     }
 
     private boolean validatePhone() {
-        if (edtPhone.getText().toString().trim().isEmpty() || edtPhone.getText().toString().length() > 10 || edtPhone.getText().toString().length() < 10) {
+        if (edtPhone.getText().toString().trim().isEmpty() ||  edtPhone.getText().toString().trim().length() < 7) {
             text_input_phone.setError(getString(R.string.err_msg_phone));
             requestFocus(edtPhone);
-            return false;
+            return true;
         } else {
             text_input_phone.setError(null);
+            return false;
+
         }
 
-        return true;
     }
 
     private void requestFocus(View view) {
