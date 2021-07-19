@@ -261,11 +261,15 @@ public class EditProfileActivity extends AppCompatActivity {
         tv_email.setText(getProfile.getEmail());
 
         if (getProfile.getWhtsAppCountryCode() != null && !getProfile.getWhtsAppCountryCode().equalsIgnoreCase("")) {
-            WhtsappCCodePicker.setCountryForPhoneCode(Integer.parseInt(getProfile.getWhtsAppCountryCode().replace("+", "")));
+            if(!getProfile.getWhtsAppCountryCode().equalsIgnoreCase("")) {
+                WhtsappCCodePicker.setCountryForPhoneCode(Integer.parseInt(getProfile.getWhtsAppCountryCode().replace("+", "")));
+            }
             edtWhtsAppNumber.setText(getProfile.getWhtsAppNumber());
         }
         if (getProfile.getTelgrmCountryCode() != null && !getProfile.getTelgrmCountryCode().equalsIgnoreCase("")) {
-            TelegramCCodePicker.setCountryForPhoneCode(Integer.parseInt(getProfile.getTelgrmCountryCode().replace("+", "")));
+            if(!getProfile.getTelgrmCountryCode().equalsIgnoreCase("")) {
+                TelegramCCodePicker.setCountryForPhoneCode(Integer.parseInt(getProfile.getTelgrmCountryCode().replace("+", "")));
+            }
             edtTelegramNumber.setText(getProfile.getTelgrmNumber());
         }
         String selectedDate = getProfile.getDob();

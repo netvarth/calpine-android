@@ -7,12 +7,17 @@ import android.text.Spannable;
 import android.text.SpannableString;
 
 import com.hbb20.CountryCodePicker;
+import com.jaldeeinc.jaldee.activities.AppointmentActivity;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.response.ProfileModel;
+
 import android.os.Bundle;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.fragment.app.FragmentTransaction;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -52,7 +57,8 @@ public class ChangePhoneFragment extends RootFragment {
     TextInputLayout text_input_phone;
     TextView txtmobile;
     CountryCodePicker cCodePicker;
-    String countryCode = "+91";
+    String countryCode;// = "+91";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,21 +70,21 @@ public class ChangePhoneFragment extends RootFragment {
 
         ApiGetProfileDetail();
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
-        txtmobile=(TextView) row.findViewById(R.id.textmobile);
+        txtmobile = (TextView) row.findViewById(R.id.textmobile);
 
-        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
 
-//        cCodePicker = row.findViewById(R.id.ccp);
-//
-//        cCodePicker.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
-//            @Override
-//            public void onCountrySelected() {
-//
-//                countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
-//            }
-//        });
-//
-//        countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
+        cCodePicker = row.findViewById(R.id.ccp);
+
+        cCodePicker.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
+            @Override
+            public void onCountrySelected() {
+
+                countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
+            }
+        });
+
+        countryCode = cCodePicker.getSelectedCountryCodeWithPlus();
 
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,15 +95,14 @@ public class ChangePhoneFragment extends RootFragment {
         });
 
 
-
-       // setupUI(row.findViewById(R.id.mainlayout));
+        // setupUI(row.findViewById(R.id.mainlayout));
 
         tv_title.setText("Change Phone Number");
 
-        edtPhone=(TextInputEditText) row.findViewById(R.id.edtPhone) ;
-        text_input_phone=(TextInputLayout) row.findViewById(R.id.text_input_phone) ;
+        edtPhone = (TextInputEditText) row.findViewById(R.id.edtPhone);
+        text_input_phone = (TextInputLayout) row.findViewById(R.id.text_input_phone);
         edtPhone.addTextChangedListener(new MyTextWatcher(edtPhone));
-        mDone=(Button)row.findViewById(R.id.btnsubmit) ;
+        mDone = (Button) row.findViewById(R.id.btnsubmit);
 
         Typeface tfButton = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/JosefinSans-Bold.ttf");
@@ -106,11 +111,11 @@ public class ChangePhoneFragment extends RootFragment {
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Config.isOnline(mContext)){
+                if (Config.isOnline(mContext)) {
                     if (validatePhone()) {
-                        ApiChangePhone(edtPhone.getText().toString(), countryCode);
+                        if(!countryCode.equalsIgnoreCase("+91")){ Toast.makeText(mContext, "Please recheck the country code and number", Toast.LENGTH_SHORT).show(); } // this code is temporary,need to change if country code check corrected by REST side
+                        else{ApiChangePhone(edtPhone.getText().toString(), countryCode);}
                     }
-
                 }
             }
         });
@@ -124,8 +129,9 @@ public class ChangePhoneFragment extends RootFragment {
 
         return row;
     }
+
     private boolean validatePhone() {
-        if (edtPhone.getText().toString().trim().isEmpty()||edtPhone.getText().toString().length()>10||edtPhone.getText().toString().length()<10) {
+        if (edtPhone.getText().toString().trim().isEmpty() || edtPhone.getText().toString().length() > 10 || edtPhone.getText().toString().length() < 10) {
             text_input_phone.setError(getString(R.string.err_msg_phone));
             requestFocus(edtPhone);
             return false;
@@ -135,6 +141,7 @@ public class ChangePhoneFragment extends RootFragment {
 
         return true;
     }
+
     private void requestFocus(View view) {
         if (view.requestFocus()) {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -169,20 +176,19 @@ public class ChangePhoneFragment extends RootFragment {
                         Config.logV("Response--mob-------------------------" + response.body().getUserprofile().getPrimaryMobileNo());
 
                         SharedPreference.getInstance(mContext).setValue("mobile", response.body().getUserprofile().getPrimaryMobileNo());
-                       // SharedPreference.getInstance(mContext).setValue("countryCode","");
+                        // SharedPreference.getInstance(mContext).setValue("countryCode","");
 
                         String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
                         String countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
 
 
-                        String firstWord ="Your Current Mobile # ";
-                        String secondWord = countryCode + " " +  mobile;
+                        String firstWord = "Your Current Mobile # ";
+                        String secondWord = countryCode + " " + mobile;
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/JosefinSans-Bold.ttf");
                         Spannable spannable = new SpannableString(firstWord + secondWord);
-                        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length() , firstWord.length() + secondWord.length() , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         txtmobile.setText(spannable);
-
 
 
                     }
@@ -231,6 +237,7 @@ public class ChangePhoneFragment extends RootFragment {
             }
         }
     }
+
     private void ApiChangePhone(final String mPhone, String countryCode) {
 
 
@@ -264,23 +271,23 @@ public class ChangePhoneFragment extends RootFragment {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         Config.logV("Response----------------");
-                      //  if(response.body().string().equalsIgnoreCase("true")) {
+                        //  if(response.body().string().equalsIgnoreCase("true")) {
 
-                            EmailOtpFragment emailFragment = new EmailOtpFragment();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("email", mPhone);
-                            bundle.putString("countryCode", countryCode);
-                            emailFragment.setArguments(bundle);
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                            transaction.addToBackStack(null);
-                            transaction.replace(R.id.mainlayout, emailFragment).commit();
+                        EmailOtpFragment emailFragment = new EmailOtpFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("email", mPhone);
+                        bundle.putString("countryCode", countryCode);
+                        emailFragment.setArguments(bundle);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.addToBackStack(null);
+                        transaction.replace(R.id.mainlayout, emailFragment).commit();
 
                         edtPhone.setText("");
-                            //}
+                        //}
 
 
-                    }else{
-                        Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
                     }
 
 
