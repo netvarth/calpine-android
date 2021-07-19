@@ -59,17 +59,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <!--<com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                        android:id="@+id/ccp"
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:layout_marginTop="30dp"
-                        android:textStyle="bold"
-                        android:text="+91"
-                        android:textColor="@color/title_color"
-                        android:textSize="@dimen/dimen_14sp"
-                        android:layout_weight="1.8"
-                        />-->
                     <com.hbb20.CountryCodePicker
                         android:id="@+id/ccp"
                         android:layout_width="match_parent"
