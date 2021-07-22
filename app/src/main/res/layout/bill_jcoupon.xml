@@ -33,7 +33,7 @@
             android:id="@+id/coupon_value"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.3"
+            android:layout_weight="0.4"
             android:gravity="right"
             android:textSize="@dimen/txtsize_hint" />
     </LinearLayout>
