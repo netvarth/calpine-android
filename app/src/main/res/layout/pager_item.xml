@@ -4,6 +4,12 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.jaldeeinc.jaldee.widgets.TouchImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:id="@+id/imageView"
+        android:layout_weight="1"/>
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,11 +37,6 @@
     </TextView>
     </androidx.cardview.widget.CardView>
 
-    <com.jaldeeinc.jaldee.widgets.TouchImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitCenter"
-        android:id="@+id/imageView" />
 
 
 </LinearLayout>

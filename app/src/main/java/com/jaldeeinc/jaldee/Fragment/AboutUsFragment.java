@@ -226,7 +226,7 @@ public class AboutUsFragment extends RootFragment {
 
                         public void onPageFinished(WebView view, String url) {
 
-                            if (progressBar.isShowing()) {
+                             if (progressBar.isShowing()) {
                                 progressBar.dismiss();
                             }
                         }

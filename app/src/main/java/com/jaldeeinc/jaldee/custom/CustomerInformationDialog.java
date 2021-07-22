@@ -70,10 +70,10 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
     ArrayList<FamilyArrayModel> familyMembersList = new ArrayList<>();
     List<FamilyArrayModel> LuserProfileList = new ArrayList<>();
     private Spinner memberSpinner;
-    private EditText edtTelegram, edtWhtsAppNumber, et_email, et_pincode, et_age, et_firstname, et_lastName;
+    private EditText edtTelegram, edtWhtsAppNumber, et_email, et_pincode, et_age, et_firstname, et_lastName, et_residing_location, et_residing_state;
     private Button bt_save, btn_language_ok, btn_language_cancel;
     private IFamilyMemberDetails iFamilyMemberDetails;
-    CustomTextViewSemiBold tv_errorphone, tv_error_mail, tv_errorfirstname, tv_errorChooseLanguage, tv_phoneNumber, tv_gender_errormesg, tv_age_errormesg, tv_pin_errormesg, tv_lName_errormesg, tv_fName_errormesg;
+    CustomTextViewSemiBold tv_errorphone, tv_error_mail, tv_errorfirstname, tv_errorChooseLanguage, tv_phoneNumber, tv_gender_errormesg, tv_age_errormesg, tv_pin_errormesg, tv_lName_errormesg, tv_fName_errormesg, tv_residing_location_errmsg, tv_residing_state_errmsg;
     CustomTextViewMedium tv_languaes;
     CustomTextViewBold tv_cstmr_infrmn;
     boolean isPrepayment;
@@ -88,7 +88,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
     ArrayList<FamilyArrayModel> familyList = new ArrayList<>();
     ArrayList<FamilyArrayModel> data = new ArrayList<>();
     ArrayList<FamilyArrayModel> checkList = new ArrayList<>();
-    private LinearLayout ll_changeMember, ll_chooselanguages, ll_languages, ll_edit_languaes, ll_add_member;
+    private LinearLayout ll_changeMember, ll_chooselanguages, ll_languages, ll_edit_languaes, ll_add_member, ll_if_interntionl_nmbr, ll_residing_location, ll_residing_state, ll_residing_pincode;
     Animation slideUp, slideRight;
     CountryCodePicker WhtsappCCodePicker, TelegramCCodePicker;
     String countryCode = "";
@@ -104,7 +104,8 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
     FamilyArrayModel familylist;
     ScrollView scrollView;
     String domain;
-        public CustomerInformationDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode, String domain) {
+
+    public CustomerInformationDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode, String domain) {
         super(appointmentActivity);
         this.context = appointmentActivity;
         this.memId = familyMEmID;
@@ -191,8 +192,18 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         tv_fName_errormesg = findViewById(R.id.tv_fName_errormesg);
         tv_lName_errormesg = findViewById(R.id.tv_lName_errormesg);
 
-        if(domain != null){
-            if(domain.equalsIgnoreCase("healthCare")){
+        ll_residing_pincode = findViewById(R.id.ll_residing_pincode);
+        ll_if_interntionl_nmbr = findViewById(R.id.ll_if_interntionl_nmbr);
+        ll_residing_location = findViewById(R.id.ll_residing_location);
+        ll_residing_state = findViewById(R.id.ll_residing_state);
+        et_residing_location = findViewById(R.id.et_residing_location);
+        et_residing_state = findViewById(R.id.et_residing_state);
+        tv_residing_location_errmsg = findViewById(R.id.tv_residing_location_errmsg);
+        tv_residing_state_errmsg = findViewById(R.id.tv_residing_state_errmsg);
+
+
+        if (domain != null) {
+            if (domain.equalsIgnoreCase("healthCare")) {
                 tv_cstmr_infrmn.setText("Patient Information");
             } else {
                 tv_cstmr_infrmn.setText("Customer Information");
@@ -425,15 +436,25 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                     //scrollView.smoothScrollTo(0, scrollView.getTop());
                     isOk = false;
                 }
-                if (et_pincode.getText() == null || et_pincode.getText().toString().equals("")) {
-                    tv_pin_errormesg.setVisibility(View.VISIBLE);
-                    //scrollView.smoothScrollTo(0, scrollView.getTop());
-                    isOk = false;
-                } else if (et_pincode.getText().length() < 6) {
-                    tv_pin_errormesg.setText("Please provide a valid pincode");
-                    tv_pin_errormesg.setVisibility(View.VISIBLE);
-                    //scrollView.smoothScrollTo(0, scrollView.getTop());
-                    isOk = false;
+                if(countryCode.equalsIgnoreCase("+91")) {
+                    if (et_pincode.getText() == null || et_pincode.getText().toString().equals("")) {
+                        tv_pin_errormesg.setVisibility(View.VISIBLE);
+                        //scrollView.smoothScrollTo(0, scrollView.getTop());
+                        isOk = false;
+                    } else if (et_pincode.getText().length() < 6) {
+                        tv_pin_errormesg.setText("Please provide a valid pincode");
+                        tv_pin_errormesg.setVisibility(View.VISIBLE);
+                        //scrollView.smoothScrollTo(0, scrollView.getTop());
+                        isOk = false;
+                    }
+                } else {
+                    if(et_residing_location == null || et_residing_location.getText().toString().equals("")) {
+                        tv_residing_location_errmsg.setVisibility(View.VISIBLE);
+                        isOk = false;
+                    } else if (et_residing_state == null || et_residing_state.getText().toString().equals("")){
+                        tv_residing_state_errmsg.setVisibility(View.VISIBLE);
+                        isOk = false;
+                    }
                 }
                 if (isOk) {
                     if (familylist.getId() == consumerId) {
@@ -661,8 +682,17 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                                 family.setTelgrmNumber(profileDetails.getUserprofile().getPrimaryMobileNo());
                                 family.setTelgrmCountryCode(profileDetails.getUserprofile().getCountryCode());
                             }
-                            if (profileDetails.getUserprofile().getPinCode() != null) {
-                                family.setPincode(profileDetails.getUserprofile().getPinCode());
+                            if (countryCode.equalsIgnoreCase("+91")) {
+                                if (profileDetails.getUserprofile().getPinCode() != null) {
+                                    family.setPincode(profileDetails.getUserprofile().getPinCode());
+                                }
+                            } else {
+                                if (profileDetails.getUserprofile().getCity() != null) {
+                                    family.setCity(profileDetails.getUserprofile().getCity());
+                                }
+                                if (profileDetails.getUserprofile().getState() != null) {
+                                    family.setState(profileDetails.getUserprofile().getState());
+                                }
                             }
                             family.setAddMember(false);
                             LuserProfileList.add(family);
@@ -675,8 +705,17 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                                         family1.setLastName(response.body().get(i).getUserProfile().getLastName());
                                         family1.setId(response.body().get(i).getUserProfile().getId());
                                         family1.setGender(response.body().get(i).getUserProfile().getGender());
-                                        if (response.body().get(i).getBookingLocation().getAsJsonObject().get("pincode") != null) {
-                                            family1.setPincode(response.body().get(i).getBookingLocation().getAsJsonObject().get("pincode").getAsInt());
+                                        if (countryCode.equalsIgnoreCase("+91")) {
+                                            if (response.body().get(i).getBookingLocation().getAsJsonObject().get("pincode") != null) {
+                                                family1.setPincode(response.body().get(i).getBookingLocation().getAsJsonObject().get("pincode").getAsInt());
+                                            }
+                                        } else {
+                                            if (response.body().get(i).getBookingLocation().getAsJsonObject().get("state") != null) {
+                                                family1.setState(response.body().get(i).getBookingLocation().getAsJsonObject().get("state").getAsString());
+                                            }
+                                            if (response.body().get(i).getBookingLocation().getAsJsonObject().get("district") != null) {
+                                                family1.setCity(response.body().get(i).getBookingLocation().getAsJsonObject().get("district").getAsString());
+                                            }
                                         }
                                         if (response.body().get(i).getPreferredLanguages() != null) {
                                             family1.setPreferredLanguages(response.body().get(i).getPreferredLanguages());
@@ -816,8 +855,16 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 jsonObj3.put("number", edtTelegram.getText());
                 jsonObj1.putOpt("telegramNum", jsonObj3);
             }
-            if (selectedPincode != null) {
-                jsonObj1.putOpt("pinCode", selectedPincode.get("pincode"));
+            if(countryCode.equalsIgnoreCase("+91")) {
+                if (selectedPincode != null) {
+                    jsonObj1.putOpt("pinCode", selectedPincode.get("pincode"));
+                }
+            } else {
+                jsonObj1.putOpt("city", et_residing_location.getText().toString());
+                jsonObj1.putOpt("state", et_residing_state.getText().toString());
+                this.selectedPincode.put("state", et_residing_state.getText().toString());
+                this.selectedPincode.put("district", et_residing_location.getText().toString());
+                jsonObj1.putOpt("bookingLocation", selectedPincode);
             }
 
             if (radio_language.getCheckedRadioButtonId() != -1) {
@@ -855,7 +902,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
 
                             Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
                             //iFamilyMemberDetails.sendFamilyMemberDetails(memId, profileDetails.getUserprofile().getFirstName(), profileDetails.getUserprofile().getLastName(), phone, et_email.getText().toString(), countryCode);
-                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, profileDetails.getUserprofile().getFirstName(), profileDetails.getUserprofile().getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getDefaultCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode);
+                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, profileDetails.getUserprofile().getFirstName(), profileDetails.getUserprofile().getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getSelectedCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode);
 
                             //iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
                             dismiss();
@@ -932,7 +979,13 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 jsonObj3.put("number", edtTelegram.getText());
                 jsonObj1.putOpt("telegramNum", jsonObj3);
             }
-            if (selectedPincode != null) {
+            if(countryCode.equalsIgnoreCase("+91")) {
+                if (selectedPincode != null) {
+                    userProfile.putOpt("bookingLocation", selectedPincode);
+                }
+            } else {
+                this.selectedPincode.put("state", et_residing_state.getText().toString());
+                this.selectedPincode.put("district", et_residing_location.getText().toString());
                 userProfile.putOpt("bookingLocation", selectedPincode);
             }
             if (radio_language.getCheckedRadioButtonId() != -1) {
@@ -1068,21 +1121,42 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
             radio_gender.clearCheck();
             gender = null;
         }
-        if (familylist.getPincode() != null) {
-            et_pincode.setText(String.valueOf(familylist.getPincode()));
+        if (countryCode.equalsIgnoreCase("+91")) {          /** if phone number is non internatioanal set pincode **/
+            if (familylist.getPincode() != null) {
+                et_pincode.setText(String.valueOf(familylist.getPincode()));
+                try {
+                    this.selectedPincode.put("pincode", String.valueOf(familylist.getPincode()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                et_pincode.setText("");
+                while (this.selectedPincode.length() > 0) {
+                    this.selectedPincode.remove((String) this.selectedPincode.keys().next());
+                }
+            }
+        } else {                                                        /** if phone number is an international number set location and state **/
+            ll_if_interntionl_nmbr.setVisibility(View.VISIBLE);
+            ll_residing_pincode.setVisibility(View.GONE);
             try {
-                this.selectedPincode.put("pincode", String.valueOf(familylist.getPincode()));
+                if (familylist.getCity() != null) {
+                    et_residing_location.setText(familylist.getCity());
+                    this.selectedPincode.put("district", familylist.getCity());
+                } else {
+                    et_residing_location.setText("");
+                }
+                if (familylist.getState() != null) {
+                    et_residing_state.setText(familylist.getState());
+                    this.selectedPincode.put("state", familylist.getState());
+                } else {
+                    et_residing_state.setText("");
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        } else {
-            et_pincode.setText("");
-            while (this.selectedPincode.length() > 0) {
-                this.selectedPincode.remove((String) this.selectedPincode.keys().next());
-            }
         }
         if (familylist.getWhtsAppCountryCode() != null && familylist.getWhtsAppNumber() != null) {
-            if(!familylist.getWhtsAppCountryCode().equalsIgnoreCase("")) {
+            if (!familylist.getWhtsAppCountryCode().equalsIgnoreCase("")) {
                 String cCode = familylist.getWhtsAppCountryCode().replace("+", "");
                 WhtsappCCodePicker.setCountryForPhoneCode(Integer.parseInt(cCode));
             }
@@ -1091,7 +1165,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
             edtWhtsAppNumber.setText("");
         }
         if (familylist.getTelgrmCountryCode() != null && familylist.getTelgrmNumber() != null) {
-            if(!familylist.getTelgrmCountryCode().equalsIgnoreCase("")) {
+            if (!familylist.getTelgrmCountryCode().equalsIgnoreCase("")) {
                 String cCode = familylist.getTelgrmCountryCode().replace("+", "");
                 TelegramCCodePicker.setCountryForPhoneCode(Integer.parseInt(cCode));
             }
@@ -1233,7 +1307,13 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 jsonObj3.put("number", edtTelegram.getText());
                 jsonObj1.putOpt("telegramNum", jsonObj3);
             }
-            if (selectedPincode != null) {
+            if(countryCode.equalsIgnoreCase("+91")) {
+                if (selectedPincode != null) {
+                    userProfile.putOpt("bookingLocation", selectedPincode);
+                }
+            } else {
+                this.selectedPincode.put("state", et_residing_state.getText().toString());
+                this.selectedPincode.put("district", et_residing_location.getText().toString());
                 userProfile.putOpt("bookingLocation", selectedPincode);
             }
             if (radio_language.getCheckedRadioButtonId() != -1) {
@@ -1272,7 +1352,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                     //   Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
                         Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
-                        iFamilyMemberDetails.sendFamilyMemberDetails(memId, familylist.getFirstName(), familylist.getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getDefaultCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode);
+                        iFamilyMemberDetails.sendFamilyMemberDetails(memId, familylist.getFirstName(), familylist.getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getSelectedCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode);
                         dismiss();
                         //Toast.makeText(context, "Member updated successfully ", Toast.LENGTH_LONG).show();
 
