@@ -251,7 +251,7 @@ public class PaytmPayment {
             jsonObj.put("isPayTmPayment", isPayTmPayment);
             jsonObj.put("isRazorPayPayment", isRazorPayPayment);
             jsonObj.put("isreditUsed", isreditUsed);
-            jsonObj.put("paymentMode", "DC");
+            jsonObj.put("paymentMode", "PPI");
             jsonObj.put("paymentPurpose", purpose);
             jsonObj.put("uuid", ynwUUID);
 

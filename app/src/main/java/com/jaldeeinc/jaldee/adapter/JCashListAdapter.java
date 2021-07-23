@@ -76,7 +76,7 @@ public class JCashListAdapter extends RecyclerView.Adapter<JCashListAdapter.MyVi
             myViewHolder.tvRwrdExpiry.setText("Expires on "+expirylocalDate.format(expiryDtf)+"th");
         }
 
-        myViewHolder.tvRewardName.setText(JCashRewrd.valueOf(jCashReward.getTriggerWhen()).getRewardCause());
+        myViewHolder.tvRewardName.setText(jCashReward.getjCashOffer().get("name").getAsString());
         myViewHolder.tvRwrdEarned.setText(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(jCashReward.getOriginalAmt())));
         if (jCashReward.getOriginalAmt() != null && jCashReward.getRemainingAmt() != null) {
             float spent = Float.parseFloat(jCashReward.getOriginalAmt()) - Float.parseFloat(jCashReward.getRemainingAmt());
