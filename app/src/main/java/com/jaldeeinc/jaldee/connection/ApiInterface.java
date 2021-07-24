@@ -24,6 +24,7 @@ import com.jaldeeinc.jaldee.response.InboxList;
 import com.jaldeeinc.jaldee.response.InboxModel;
 import com.jaldeeinc.jaldee.response.JCashAvailable;
 import com.jaldeeinc.jaldee.response.JCashInfo;
+import com.jaldeeinc.jaldee.response.JCashSpentDetails;
 import com.jaldeeinc.jaldee.response.JdnResponse;
 import com.jaldeeinc.jaldee.response.LocationResponse;
 import com.jaldeeinc.jaldee.response.LoginResponse;
@@ -456,9 +457,6 @@ public interface ApiInterface {
     @GET("consumer/bill/{ynwuuid}")
     Call<BillModel> getBill(@Path("ynwuuid") String uuid, @Query("account") String account);
 
-    @GET("consumer/wallet/redeem/eligible/amt")
-    Call<WalletEligibleJCash> getWalletEligibleJCash();
-
     @POST("consumer/jaldee/coupons/{coupon}/{ynwuuid}")
     Call<BillModel> getBillCoupon(@Path("coupon") String coupon, @Path("ynwuuid") String uuid, @Query("account") String account);
 
@@ -656,12 +654,6 @@ public interface ApiInterface {
     @GET("consumer/orders/history")
     Call<ArrayList<ActiveOrders>> getOrdersHistory();
 
-    @GET("consumer/wallet/cash/info")
-    Call<JCashInfo> getJCashInfo();
-
-    @GET("consumer/wallet/cash/available")
-    Call<ArrayList<JCashAvailable>> getJCashAvailable();
-
     @GET("consumer/orders/{uuid}")
     Call<ActiveOrders> getOrderDetails(@Path("uuid") String uuid, @Query("account") int account);
 
@@ -703,5 +695,17 @@ public interface ApiInterface {
 
     @GET("provider/account/settings/config/{uniqueId}/jaldeediscount")
     Call<Provider> getJdn(@Path("uniqueId") int uniqueId);
+
+    @GET("consumer/wallet/redeem/eligible/amt")
+    Call<WalletEligibleJCash> getWalletEligibleJCash();
+
+    @GET("consumer/wallet/cash/info")
+    Call<JCashInfo> getJCashInfo();
+
+    @GET("consumer/wallet/cash/available")
+    Call<ArrayList<JCashAvailable>> getJCashAvailable();
+
+    @GET("consumer/wallet/cash/spent")
+    Call<ArrayList<JCashSpentDetails>> getAllJCashSpentDetails();
 
 }

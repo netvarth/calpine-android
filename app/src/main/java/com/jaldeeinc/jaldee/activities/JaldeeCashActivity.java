@@ -10,7 +10,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.Window;
+import android.widget.LinearLayout;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
@@ -20,9 +23,11 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.custom.JCashSpentLogDialog;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.JCashAvailable;
 import com.jaldeeinc.jaldee.response.JCashInfo;
+import com.jaldeeinc.jaldee.response.JCashSpentDetails;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -42,11 +47,16 @@ public class JaldeeCashActivity extends AppCompatActivity {
     CustomTextViewSemiBold tvTotCashAwarded;
     @BindView(R.id.tv_totCashSpent)
     CustomTextViewSemiBold tvTotCashSpent;
+    @BindView(R.id.ll_totCashSpentLog)
+    LinearLayout ll_totCashSpentLog;
+    @BindView(R.id.list)
     RecyclerView list;
+
     private JCashListAdapter mAdapter;
     ArrayList<JCashAvailable> listJCashAvailable = new ArrayList<JCashAvailable>();
     static Activity mActivity;
     static Context mContext;
+    private JCashSpentLogDialog jCashSpentLogDialog;
 
     public String totCashAwarded;
     public String totCashSpent;
@@ -66,8 +76,6 @@ public class JaldeeCashActivity extends AppCompatActivity {
         totCashSpent = intent.getStringExtra("totCashSpent");
         totCashAvailable = intent.getStringExtra("totCashAvailable");
 
-        list = findViewById(R.id.list);
-
         tvJcash.setText(Config.getAmountinTwoDecimalPoints(Double.parseDouble(totCashAvailable)));
         tvTotCashAwarded.setText(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(totCashAwarded)));
         tvTotCashSpent.setText(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(totCashSpent)));
@@ -80,12 +88,24 @@ public class JaldeeCashActivity extends AppCompatActivity {
                 finish();
             }
         });
+        ll_totCashSpentLog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jCashSpentLogDialog = new JCashSpentLogDialog(mContext);
+                jCashSpentLogDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogStyle_Default;
+                jCashSpentLogDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                jCashSpentLogDialog.show();
+                DisplayMetrics metrics = JaldeeCashActivity.this.getResources().getDisplayMetrics();
+                int width = (int) (metrics.widthPixels * 1);
+                jCashSpentLogDialog.setCancelable(false);
+                jCashSpentLogDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+            }
+        });
     }
 
     private void ApiGetJCashAvailable() {
 
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<ArrayList<JCashAvailable>> call = apiService.getJCashAvailable();
@@ -109,11 +129,8 @@ public class JaldeeCashActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(Call<ArrayList<JCashAvailable>> call, Throwable t) {
-
-
             }
         });
     }
