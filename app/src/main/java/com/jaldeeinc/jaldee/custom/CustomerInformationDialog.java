@@ -436,7 +436,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                     //scrollView.smoothScrollTo(0, scrollView.getTop());
                     isOk = false;
                 }
-                if(countryCode.equalsIgnoreCase("+91")) {
+                if (countryCode.equalsIgnoreCase("+91")) {
                     if (et_pincode.getText() == null || et_pincode.getText().toString().equals("")) {
                         tv_pin_errormesg.setVisibility(View.VISIBLE);
                         //scrollView.smoothScrollTo(0, scrollView.getTop());
@@ -448,10 +448,10 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                         isOk = false;
                     }
                 } else {
-                    if(et_residing_location == null || et_residing_location.getText().toString().equals("")) {
+                    if (et_residing_location == null || et_residing_location.getText().toString().equals("")) {
                         tv_residing_location_errmsg.setVisibility(View.VISIBLE);
                         isOk = false;
-                    } else if (et_residing_state == null || et_residing_state.getText().toString().equals("")){
+                    } else if (et_residing_state == null || et_residing_state.getText().toString().equals("")) {
                         tv_residing_state_errmsg.setVisibility(View.VISIBLE);
                         isOk = false;
                     }
@@ -706,15 +706,17 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                                         family1.setId(response.body().get(i).getUserProfile().getId());
                                         family1.setGender(response.body().get(i).getUserProfile().getGender());
                                         if (countryCode.equalsIgnoreCase("+91")) {
-                                            if (response.body().get(i).getBookingLocation().getAsJsonObject().get("pincode") != null) {
+                                            if (response.body().get(i).getBookingLocation() != null && response.body().get(i).getBookingLocation().getAsJsonObject().get("pincode") != null) {
                                                 family1.setPincode(response.body().get(i).getBookingLocation().getAsJsonObject().get("pincode").getAsInt());
                                             }
                                         } else {
-                                            if (response.body().get(i).getBookingLocation().getAsJsonObject().get("state") != null) {
-                                                family1.setState(response.body().get(i).getBookingLocation().getAsJsonObject().get("state").getAsString());
-                                            }
-                                            if (response.body().get(i).getBookingLocation().getAsJsonObject().get("district") != null) {
-                                                family1.setCity(response.body().get(i).getBookingLocation().getAsJsonObject().get("district").getAsString());
+                                            if (response.body().get(i).getBookingLocation() != null) {
+                                                if (response.body().get(i).getBookingLocation().getAsJsonObject().get("state") != null) {
+                                                    family1.setState(response.body().get(i).getBookingLocation().getAsJsonObject().get("state").getAsString());
+                                                }
+                                                if (response.body().get(i).getBookingLocation().getAsJsonObject().get("district") != null) {
+                                                    family1.setCity(response.body().get(i).getBookingLocation().getAsJsonObject().get("district").getAsString());
+                                                }
                                             }
                                         }
                                         if (response.body().get(i).getPreferredLanguages() != null) {
@@ -855,7 +857,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 jsonObj3.put("number", edtTelegram.getText());
                 jsonObj1.putOpt("telegramNum", jsonObj3);
             }
-            if(countryCode.equalsIgnoreCase("+91")) {
+            if (countryCode.equalsIgnoreCase("+91")) {
                 if (selectedPincode != null) {
                     jsonObj1.putOpt("pinCode", selectedPincode.get("pincode"));
                 }
@@ -979,7 +981,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 jsonObj3.put("number", edtTelegram.getText());
                 jsonObj1.putOpt("telegramNum", jsonObj3);
             }
-            if(countryCode.equalsIgnoreCase("+91")) {
+            if (countryCode.equalsIgnoreCase("+91")) {
                 if (selectedPincode != null) {
                     userProfile.putOpt("bookingLocation", selectedPincode);
                 }
@@ -1307,7 +1309,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 jsonObj3.put("number", edtTelegram.getText());
                 jsonObj1.putOpt("telegramNum", jsonObj3);
             }
-            if(countryCode.equalsIgnoreCase("+91")) {
+            if (countryCode.equalsIgnoreCase("+91")) {
                 if (selectedPincode != null) {
                     userProfile.putOpt("bookingLocation", selectedPincode);
                 }
