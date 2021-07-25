@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/dimen_14sp">
 
     <RelativeLayout
         android:id="@+id/toolbar"
@@ -52,9 +53,11 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dimen_8dp">
+            android:layout_marginRight="@dimen/dimen_8dp"
+            android:layout_marginLeft="@dimen/dimen_8dp">
 
-            <androidx.recyclerview.widget.RecyclerView
+
+        <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycle_spentlist"
                 android:layout_width="0dp"
                 android:layout_height="0dp"

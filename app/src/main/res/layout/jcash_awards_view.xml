@@ -166,6 +166,7 @@
                         android:background="@color/fadedgrey" />
 
                     <LinearLayout
+                        android:id="@+id/ll_jCashSpentLog"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"

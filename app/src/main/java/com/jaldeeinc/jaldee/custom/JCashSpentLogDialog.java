@@ -33,9 +33,10 @@ public class JCashSpentLogDialog extends Dialog {
     JCashSpentLogAdapter jCashSpentLogAdapter;
     private ImageView ivClose;
 
-    public JCashSpentLogDialog(@NonNull Context context) {
+    public JCashSpentLogDialog(@NonNull Context context, ArrayList<JCashSpentDetails> listJCashSpentDetails) {
         super(context);
         this.mContext = context;
+        this.listJCashSpentDetails = listJCashSpentDetails;
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class JCashSpentLogDialog extends Dialog {
         setContentView(R.layout.jcash_spentlog_dialog);
         ivClose = findViewById(R.id.iv_close);
         recycle_spentlist = findViewById(R.id.recycle_spentlist);
-        ApiGetAllJcashSpentDetails();
+        jcashSpentDetailsDialog(mContext, listJCashSpentDetails);
 
         ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,40 +53,11 @@ public class JCashSpentLogDialog extends Dialog {
             }
         });
     }
-
-    private void ApiGetAllJcashSpentDetails() {
-
-        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, "");
-        mDialog.show();
-
-        Call<ArrayList<JCashSpentDetails>> call = apiService.getAllJCashSpentDetails();
-        call.enqueue(new Callback<ArrayList<JCashSpentDetails>>() {
-            @Override
-            public void onResponse(Call<ArrayList<JCashSpentDetails>> call, Response<ArrayList<JCashSpentDetails>> response) {
-                try {
-                    if (mDialog.isShowing()) {
-                        Config.closeDialog((Activity) mContext, mDialog);
-                    }
-                    if (response.code() == 200) {
-                        listJCashSpentDetails = response.body();
-                        Config.logV("Jaldee Cash Spent details--code-------------------------" + listJCashSpentDetails);
-                        jCashSpentLogAdapter = new JCashSpentLogAdapter(mContext, listJCashSpentDetails);
-                        RecyclerView.LayoutManager mChooseLanguagesLayoutManager = new LinearLayoutManager(mContext);
-                        recycle_spentlist.setLayoutManager(mChooseLanguagesLayoutManager);
-                        recycle_spentlist.setAdapter(jCashSpentLogAdapter);
-                        jCashSpentLogAdapter.notifyDataSetChanged();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<JCashSpentDetails>> call, Throwable t) {
-
-            }
-        });
-
+    public void jcashSpentDetailsDialog(Context context, ArrayList<JCashSpentDetails> listJCashSpentDtls){
+        jCashSpentLogAdapter = new JCashSpentLogAdapter(context, listJCashSpentDtls);
+        RecyclerView.LayoutManager mChooseLanguagesLayoutManager = new LinearLayoutManager(mContext);
+        recycle_spentlist.setLayoutManager(mChooseLanguagesLayoutManager);
+        recycle_spentlist.setAdapter(jCashSpentLogAdapter);
+        jCashSpentLogAdapter.notifyDataSetChanged();
     }
 }

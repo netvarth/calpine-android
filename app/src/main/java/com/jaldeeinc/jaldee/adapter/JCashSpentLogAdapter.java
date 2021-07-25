@@ -75,9 +75,10 @@ public class JCashSpentLogAdapter extends RecyclerView.Adapter<JCashSpentLogAdap
             myViewHolder.tv_amount_spent_or_refunded.setTextColor(Color.RED);
             myViewHolder.tv_date.setText(date);
         }
-        /*if(rowPos%2 != 0){
-            myViewHolder.ll_jcash_spent_list_raw.setBackground(mContext.getResources().getDrawable(R.color.spinnerbg));
-        }*/
+        if(rowPos%2 != 0){
+            //myViewHolder.ll_jcash_spent_list_raw.setBackground(mContext.getResources().getDrawable(R.color.spinnerbg));
+            myViewHolder.ll_jcash_spent_list_raw.setBackgroundColor(Color.parseColor("#f9f9f9"));
+        }
     }
 
     @Override

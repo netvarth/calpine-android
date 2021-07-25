@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
 import com.jaldeeinc.jaldee.adapter.JCashListAdapter;
+import com.jaldeeinc.jaldee.adapter.JCashSpentLogAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -54,6 +55,8 @@ public class JaldeeCashActivity extends AppCompatActivity {
 
     private JCashListAdapter mAdapter;
     ArrayList<JCashAvailable> listJCashAvailable = new ArrayList<JCashAvailable>();
+    ArrayList<JCashSpentDetails> listJCashSpentDetails = new ArrayList<JCashSpentDetails>();
+
     static Activity mActivity;
     static Context mContext;
     private JCashSpentLogDialog jCashSpentLogDialog;
@@ -91,14 +94,7 @@ public class JaldeeCashActivity extends AppCompatActivity {
         ll_totCashSpentLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jCashSpentLogDialog = new JCashSpentLogDialog(mContext);
-                jCashSpentLogDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogStyle_Default;
-                jCashSpentLogDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                jCashSpentLogDialog.show();
-                DisplayMetrics metrics = JaldeeCashActivity.this.getResources().getDisplayMetrics();
-                int width = (int) (metrics.widthPixels * 1);
-                jCashSpentLogDialog.setCancelable(false);
-                jCashSpentLogDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                ApiGetAllJcashSpentDetails();
             }
         });
     }
@@ -133,5 +129,45 @@ public class JaldeeCashActivity extends AppCompatActivity {
             public void onFailure(Call<ArrayList<JCashAvailable>> call, Throwable t) {
             }
         });
+    }
+
+    private void ApiGetAllJcashSpentDetails() {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, "");
+        mDialog.show();
+
+        Call<ArrayList<JCashSpentDetails>> call = apiService.getAllJCashSpentDetails();
+        call.enqueue(new Callback<ArrayList<JCashSpentDetails>>() {
+            @Override
+            public void onResponse(Call<ArrayList<JCashSpentDetails>> call, Response<ArrayList<JCashSpentDetails>> response) {
+                try {
+                    if (mDialog.isShowing()) {
+                        Config.closeDialog((Activity) mContext, mDialog);
+                    }
+                    if (response.code() == 200) {
+                        listJCashSpentDetails = response.body();
+                        Config.logV("Jaldee Cash Spent details--code-------------------------" + listJCashSpentDetails);
+
+                        jCashSpentLogDialog = new JCashSpentLogDialog(mContext, listJCashSpentDetails);
+                        jCashSpentLogDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogStyle_Default;
+                        jCashSpentLogDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        jCashSpentLogDialog.show();
+                        DisplayMetrics metrics = JaldeeCashActivity.this.getResources().getDisplayMetrics();
+                        int width = (int) (metrics.widthPixels * 1);
+                        jCashSpentLogDialog.setCancelable(false);
+                        jCashSpentLogDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<JCashSpentDetails>> call, Throwable t) {
+
+            }
+        });
+
     }
 }
