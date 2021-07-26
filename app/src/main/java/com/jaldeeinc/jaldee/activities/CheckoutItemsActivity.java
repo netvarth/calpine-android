@@ -275,6 +275,10 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     @BindView(R.id.tv_advanceAmount)
     CustomTextViewSemiBold tvAdvanceAmount;
 
+    @BindView(R.id.tv_jCashHint)
+    CustomTextViewMedium tvJCashHint;
+
+    private double totalBill;
     private boolean isStore = true;
     private DatabaseHandler db;
     private String selectedDate;
@@ -550,7 +554,29 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                 cpns(couponArraylist);
             }
         });
+        cbJCash.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt") != null) {
+                    Double amount = 0.0;
+                    if (catalogs.get(0).getPaymentType().equalsIgnoreCase(Constants.FIXED) && catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().isEmpty()) {
+                        amount = Double.parseDouble(catalogs.get(0).getAdvanceAmount());
+                    } else if (catalogs.get(0).getPaymentType().equalsIgnoreCase(Constants.FULLAMOUNT)) {
+                        amount = totalBill;
+                    }
+                    if (isChecked) {
+                        if (advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt").getAsDouble() >= amount) {
+                            tvJCashHint.setVisibility(View.GONE);
+                        } else {
+                            tvJCashHint.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        tvJCashHint.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
 
         ApiGetProfileDetail();
         getCoupons(uniqueId);
@@ -1553,7 +1579,6 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     private void updateBill() {
 
         try {
-            double totalBill;
             boolean tax = false;
             if (db.getTaxAmount() >= 0.0) {
                 tax = true;
@@ -1612,7 +1637,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                 if (catalog.getPaymentType().equalsIgnoreCase(Constants.FIXED) && catalog.getAdvanceAmount() != null && !catalog.getAdvanceAmount().isEmpty() && Float.parseFloat(catalogs.get(0).getAdvanceAmount()) > 0) {
                     tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(catalog.getAdvanceAmount())) + " required");
                     llAdvanceAmount.setVisibility(View.VISIBLE);
-                }else if(catalog.getPaymentType().equalsIgnoreCase(Constants.FULLAMOUNT)){
+                } else if (catalog.getPaymentType().equalsIgnoreCase(Constants.FULLAMOUNT)) {
                     tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(String.valueOf(totalBill))) + " required");
                     llAdvanceAmount.setVisibility(View.VISIBLE);
                 }
@@ -2088,7 +2113,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                 } else if (storePickupSchedulesList != null && storePickupSchedulesList.size() > 0) {
                     selectedDate = storePickupSchedulesList.get(0).getDate();
                 }
-            }else{
+            } else {
                 if (catalogs != null && catalogs.get(0).getNextAvailableDeliveryDetails() != null) {
                     selectedDate = catalogs.get(0).getNextAvailableDeliveryDetails().getAvailableDate();
 
@@ -2130,6 +2155,17 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                 if ((catalogs.get(0).getAdvanceAmount() != null && Double.parseDouble(catalogs.get(0).getAdvanceAmount()) > 0) || catalogs.get(0).getPaymentType().equalsIgnoreCase(Constants.FULLAMOUNT)) {
                                     cbJCash.setChecked(true);
                                     cbJCash.append(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt").getAsString())));
+                                    Double amount = 0.0;
+                                    if (catalogs.get(0).getPaymentType().equalsIgnoreCase(Constants.FIXED) && catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().isEmpty()) {
+                                        amount = Double.parseDouble(catalogs.get(0).getAdvanceAmount());
+                                    } else if (catalogs.get(0).getPaymentType().equalsIgnoreCase(Constants.FULLAMOUNT)) {
+                                        amount = totalBill;
+                                    }
+                                    if (advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt").getAsDouble() >= amount) {
+                                        tvJCashHint.setVisibility(View.GONE);
+                                    } else {
+                                        tvJCashHint.setVisibility(View.VISIBLE);
+                                    }
                                 } else {
                                     cbJCash.setChecked(false);
                                     cbJCash.setVisibility(View.GONE);
