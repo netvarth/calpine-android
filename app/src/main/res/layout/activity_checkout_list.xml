@@ -978,6 +978,7 @@
                                 android:textSize="@dimen/txtsize_12" />
 
                             <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                                android:id="@+id/tv_jCashHint"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="33dp"

@@ -135,6 +135,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     ArrayList<Address> addressList = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
     private AddressAdapter addressAdapter;
+
     @BindView(R.id.cb_jCash)
     CheckBox cbJCash;
 
@@ -266,6 +267,9 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
 
     @BindView(R.id.tv_advanceAmount)
     CustomTextViewSemiBold tvAdvanceAmount;
+
+    @BindView(R.id.tv_jCashHint)
+    CustomTextViewMedium tvJCashHint;
 
     private boolean isStore = true;
     private String selectedDate;
@@ -546,6 +550,22 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
             }
         });
 
+        cbJCash.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    if (isChecked) {
+                        if(walletEligibleJCash.getjCashAmt() >= Float.parseFloat(catalogs.get(0).getAdvanceAmount())){
+                            tvJCashHint.setVisibility(View.GONE);
+                        } else {
+                            tvJCashHint.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        tvJCashHint.setVisibility(View.GONE);
+                    }
+                }
+        });
         ApiGetProfileDetail();
         getCoupons(uniqueId);
 
@@ -2013,10 +2033,14 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                                 llJCash.setVisibility(View.VISIBLE);
                                 cbJCash.setChecked(true);
                                 cbJCash.append(Config.getAmountNoOrTwoDecimalPoints(walletEligibleJCash.getjCashAmt()));
+                                if(walletEligibleJCash.getjCashAmt() >= Float.parseFloat(catalogs.get(0).getAdvanceAmount())){
+                                    tvJCashHint.setVisibility(View.GONE);
+                                } else {
+                                    tvJCashHint.setVisibility(View.VISIBLE);
+                                }
                             } else {
                                 llJCash.setVisibility(View.GONE);
                                 cbJCash.setChecked(false);
-
                             }
                         }
                     }
