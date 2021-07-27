@@ -52,6 +52,7 @@
         android:layout_below="@id/rl_tlbar"
         android:layout_marginLeft="@dimen/dimen_10dp"
         android:layout_marginRight="@dimen/dimen_10dp"
+        android:layout_marginBottom="@dimen/dimen_10dp"
         android:orientation="vertical"
         android:paddingTop="@dimen/dimen_5dp">
 
@@ -241,13 +242,65 @@
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="10dp"
-            android:visibility="gone" />
+            android:layout_below="@id/layout_toolbar"
+            android:fillViewport="true"
+            android:fitsSystemWindows="false"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:scrollbars="none">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="10dp"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/ll_jCash_expired_list_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/padding5"
+                    android:visibility="gone">
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                        android:id="@+id/tv_jCash_expired_list_hint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding2"
+                        android:gravity="left"
+                        android:text="@string/jCash_expired_text"
+                        android:textColor="@color/dark_blue"
+                        android:textSize="@dimen/txtsize_title" />
+
+                    <ImageView
+                        android:id="@+id/iv_expired_jCash_list_hint"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dimen_5dp"
+                        android:src="@drawable/icon_down_arrow_blue"
+                        app:tint="@color/dark_blue" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_expired_jCash_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="10dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 </RelativeLayout>

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,7 +52,7 @@ public class JCashListAdapter extends RecyclerView.Adapter<JCashListAdapter.MyVi
         CustomTextViewSemiBold tvRwrdEarned, tvRwrdSpent;
         CustomTextViewMedium tvRwrdExpiry, tvTAndc, tvJCashIssueDate, tvBookingNo, tvRewardName;
         LinearLayout llJCashSpentLog;
-
+        RelativeLayout rlLayout;
         public MyViewHolder(View view) {
             super(view);
             tvRewardName = (CustomTextViewMedium) view.findViewById(R.id.tv_rewardName);
@@ -62,6 +63,7 @@ public class JCashListAdapter extends RecyclerView.Adapter<JCashListAdapter.MyVi
             tvRwrdExpiry = (CustomTextViewMedium) view.findViewById(R.id.tv_rwrd_expiry);
             tvTAndc = (CustomTextViewMedium) view.findViewById(R.id.tv_t_and_c);
             llJCashSpentLog = (LinearLayout) view.findViewById(R.id.ll_jCashSpentLog);
+            rlLayout = (RelativeLayout) view.findViewById(R.id.rl_layout);
         }
     }
 
@@ -92,7 +94,7 @@ public class JCashListAdapter extends RecyclerView.Adapter<JCashListAdapter.MyVi
             LocalDate expirylocalDate = LocalDate.parse(expiryDtStr);
             myViewHolder.tvRwrdExpiry.setText("Expires on " + expirylocalDate.format(expiryDtf) + "th");
         }
-
+        //myViewHolder.rlLayout.animate().alpha(0.5f);
         myViewHolder.tvRewardName.setText(jCashReward.getjCashOffer().get("name").getAsString());
         myViewHolder.tvRwrdEarned.setText(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(jCashReward.getOriginalAmt())));
         if (jCashReward.getOriginalAmt() != null && jCashReward.getRemainingAmt() != null) {

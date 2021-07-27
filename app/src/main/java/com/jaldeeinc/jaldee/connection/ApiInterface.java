@@ -711,4 +711,6 @@ public interface ApiInterface {
     @GET("consumer/wallet/cash/{cashId}/txn/log")
     Call<ArrayList<JCashSpentDetails>> getJCashSpentDetails(@Path("cashId") int cashId);
 
+    @GET("consumer/wallet/cash/expired")
+    Call<ArrayList<JCashAvailable>> getExpiredJCashAvailable();
 }

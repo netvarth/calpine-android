@@ -186,6 +186,7 @@
     <string name="jaldee_cash">Jaldee Cash</string>
     <string name="jaldee_cash_balance">Jaldee Cash balance</string>
     <string name="jcash_total_trnsctns">Total Transactions</string>
+    <string name="jCash_expired_text"><u>Expired cash</u></string>
 
 
 

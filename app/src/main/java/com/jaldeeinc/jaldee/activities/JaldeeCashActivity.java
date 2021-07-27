@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.jaldeeinc.jaldee.R;
@@ -52,6 +53,12 @@ public class JaldeeCashActivity extends AppCompatActivity {
     LinearLayout ll_totCashSpentLog;
     @BindView(R.id.list)
     RecyclerView list;
+    @BindView(R.id.ll_jCash_expired_list_hint)
+    LinearLayout llJCashExpiredListHint;
+    @BindView(R.id.iv_expired_jCash_list_hint)
+    ImageView ivExpiredJCashListHint;
+    @BindView(R.id.rv_expired_jCash_list)
+    RecyclerView rvExpiredJCashList;
 
     private JCashListAdapter mAdapter;
     ArrayList<JCashAvailable> listJCashAvailable = new ArrayList<JCashAvailable>();
@@ -130,6 +137,39 @@ public class JaldeeCashActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void ApiGetExpiredJCash() {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ArrayList<JCashAvailable>> call = apiService.getJCashAvailable();
+        call.enqueue(new Callback<ArrayList<JCashAvailable>>() {
+            @Override
+            public void onResponse(Call<ArrayList<JCashAvailable>> call, Response<ArrayList<JCashAvailable>> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(JaldeeCashActivity.this, mDialog);
+                    if (response.code() == 200) {
+                        listJCashAvailable = response.body();
+                        Config.logV("Jaldee Cash list--code-------------------------" + listJCashAvailable);
+                        list.setVisibility(View.VISIBLE);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(JaldeeCashActivity.this);
+                        list.setLayoutManager(mLayoutManager);
+                        mAdapter = new JCashListAdapter(JaldeeCashActivity.this, listJCashAvailable);
+                        list.setAdapter(mAdapter);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<JCashAvailable>> call, Throwable t) {
+            }
+        });
+    }
+
 
     private void ApiGetAllJcashSpentDetails() {
 
