@@ -13,7 +13,7 @@ public class QuestionnaireFileUploadModel {
     public boolean isManditory = false;
     public ArrayList<KeyPairBoolData> files = new ArrayList<>();
     public String hint = "";
-
+    public ArrayList<String> allowedTypes;
 
     public String getQuestionName() {
         return questionName;
@@ -69,5 +69,13 @@ public class QuestionnaireFileUploadModel {
 
     public void setHint(String hint) {
         this.hint = hint;
+    }
+
+    public ArrayList<String> getAllowedTypes() {
+        return allowedTypes;
+    }
+
+    public void setAllowedTypes(ArrayList<String> allowedTypes) {
+        this.allowedTypes = allowedTypes;
     }
 }

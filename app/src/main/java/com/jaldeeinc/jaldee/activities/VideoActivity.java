@@ -4,21 +4,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.FileProvider;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
+
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
+
 import android.view.View;
+
 import android.widget.MediaController;
 import android.widget.VideoView;
 
-import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.BuildConfig;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.widgets.TouchImageView;
 
 import java.io.File;
 import java.util.Objects;
@@ -34,7 +34,6 @@ public class VideoActivity extends AppCompatActivity {
     @BindView(R.id.cv_back)
     CardView cvBack;
 
-
     String urlOrPath = null;
 
 
@@ -45,9 +44,6 @@ public class VideoActivity extends AppCompatActivity {
 
         ButterKnife.bind(VideoActivity.this);
 
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
-
         Intent intent = getIntent();
         urlOrPath = intent.getStringExtra("urlOrPath");
 
@@ -55,8 +51,54 @@ public class VideoActivity extends AppCompatActivity {
 
             if (urlOrPath.contains("http://") || urlOrPath.contains("https://")) {
 
+                videoView.setVisibility(View.VISIBLE);
+
+               ProgressDialog pDialog = new ProgressDialog(this);
+
+                // Set progressbar message
+                pDialog.setMessage("Buffering...");
+                pDialog.setIndeterminate(false);
+                pDialog.setCancelable(false);
+                // Show progressbar
+                pDialog.show();
+
+                try {
+                    // Start the MediaController
+                    MediaController mediacontroller = new MediaController(this);
+                    mediacontroller.setAnchorView(videoView);
+
+                    Uri videoUri = Uri.parse(urlOrPath);
+                    videoView.setMediaController(mediacontroller);
+                    videoView.setVideoURI(videoUri);
+                    videoView.setZOrderOnTop(true);
+                    videoView.requestFocus();
+
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+
+                videoView.requestFocus();
+                videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    // Close the progress bar and play the video
+                    public void onPrepared(MediaPlayer mp) {
+                        pDialog.dismiss();
+                        videoView.start();
+                    }
+                });
+                videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                    public void onCompletion(MediaPlayer mp) {
+                        if (pDialog.isShowing()) {
+                            pDialog.dismiss();
+                        }
+                        finish();
+                    }
+                });
 
             } else {
+
+                videoView.setVisibility(View.VISIBLE);
 
                 //Creating MediaController
                 MediaController mediaController = new MediaController(this);
@@ -71,7 +113,6 @@ public class VideoActivity extends AppCompatActivity {
 
 
             }
-            videoView.setVisibility(View.VISIBLE);
         }
 
         cvBack.setOnClickListener(new View.OnClickListener() {

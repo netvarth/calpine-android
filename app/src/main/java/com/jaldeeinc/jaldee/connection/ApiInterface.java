@@ -65,6 +65,7 @@ import com.jaldeeinc.jaldee.response.ShareLocation;
 import com.jaldeeinc.jaldee.response.ShoppingList;
 import com.jaldeeinc.jaldee.response.SlotsData;
 import com.jaldeeinc.jaldee.response.StoreDetails;
+import com.jaldeeinc.jaldee.response.SubmitQuestionnaire;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 import com.jaldeeinc.jaldee.response.UserResponse;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
@@ -83,6 +84,7 @@ import io.reactivex.rxjava3.core.Single;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
@@ -96,6 +98,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Url;
 
 
 /**
@@ -705,18 +708,27 @@ public interface ApiInterface {
     Call<Questionnaire> getDonationQuestions(@Path("serviceId") int serviceId, @Query("account") int account);
 
     @POST("consumer/appointment/questionnaire/{uid}?")
-    Call<ResponseBody> submitAppointmentQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
+    Call<SubmitQuestionnaire> submitAppointmentQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj, @Query("account") int accountId);
 
     @POST("consumer/waitlist/questionnaire/{uid}?")
-    Call<ResponseBody> submitWaitListQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
+    Call<SubmitQuestionnaire> submitWaitListQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
 
     @POST("consumer/donation/questionnaire/submit/{uid}?")
     Call<ResponseBody> submitDonationQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
 
     @POST("consumer/appointment/questionnaire/resubmit/{uid}?")
-    Call<ResponseBody> reSubmitAppQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
+    Call<SubmitQuestionnaire> reSubmitAppQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
 
     @POST("consumer/waitlist/questionnaire/resubmit/{uid}?")
-    Call<ResponseBody> reSubmitWlQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
+    Call<SubmitQuestionnaire> reSubmitWlQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
+
+    @PUT
+    Observable<Response<Void>> uploadPreSignedS3File(@Url String url, @Body RequestBody image);
+
+    @PUT("consumer/appointment/questionnaire/upload/status/{uid}?")
+    Call<ResponseBody> checkAppointmentUploadStatus(@Path("uid") String id,@Query("account") int accountId,@Body RequestBody jsonObj);
+
+    @PUT("consumer/waitlist/questionnaire/upload/status/{uid}?")
+    Call<ResponseBody> checkWaitlistUploadStatus(@Path("uid") String id,@Query("account") int accountId,@Body RequestBody jsonObj);
 
 }

@@ -216,6 +216,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
                 if (llMore.getVisibility() != View.VISIBLE) {
                     llMore.setVisibility(View.VISIBLE);
                     int size = domainVirtual.size();
+//                    int subDomainSize = sub_domainVirtual.size();
                     if (size > 0) {
                         llMore.setVisibility(View.VISIBLE);
                     } else {

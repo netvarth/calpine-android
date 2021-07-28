@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -37,6 +38,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.adapter.ServicesAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -45,13 +47,26 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.LabelPath;
+import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.QuestionnaireInput;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
+import com.jaldeeinc.jaldee.response.Catalog;
+import com.jaldeeinc.jaldee.response.DepServiceInfo;
+import com.jaldeeinc.jaldee.response.DepartmentInfo;
 import com.jaldeeinc.jaldee.response.PaymentModel;
+import com.jaldeeinc.jaldee.response.Questionnaire;
+import com.jaldeeinc.jaldee.response.QuestionnaireUrls;
+import com.jaldeeinc.jaldee.response.QueueList;
+import com.jaldeeinc.jaldee.response.ScheduleList;
+import com.jaldeeinc.jaldee.response.SearchAppoinment;
+import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
+import com.jaldeeinc.jaldee.response.SearchDonation;
+import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
+import com.jaldeeinc.jaldee.response.SubmitQuestionnaire;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.razorpay.PaymentData;
@@ -70,6 +85,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -77,6 +93,9 @@ import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -290,10 +309,11 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
 
             if (imagesString != null && !imagesString.trim().equalsIgnoreCase("")) {
 
-                Type labelPathType = new TypeToken<ArrayList<LabelPath>>(){}.getType();
+                Type labelPathListType = new TypeToken<ArrayList<LabelPath>>() {
+                }.getType();
 
                 try {
-                    ArrayList<LabelPath> pathList = new Gson().fromJson(imagesString, labelPathType);
+                    ArrayList<LabelPath> pathList = new Gson().fromJson(imagesString, labelPathListType);
                     imagePathList = pathList;
                 } catch (JsonSyntaxException e) {
                     imagePathList = new ArrayList<>();
@@ -378,6 +398,146 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                 }
             }
         });
+
+    }
+
+    private void uploadFilesToS3(ArrayList<LabelPath> filesList, SubmitQuestionnaire result) {
+
+        try {
+
+            ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+
+            List<Observable<?>> requests = new ArrayList<>();
+
+            for (LabelPath l : filesList) {
+
+                if (l.getUrl() != null && !l.getUrl().trim().equalsIgnoreCase("")) {
+
+                    RequestBody requestFile = RequestBody.create(MediaType.parse(l.getType()), new File(l.getPath()));
+
+                    requests.add(apiService.uploadPreSignedS3File(l.getUrl(), requestFile));
+                }
+            }
+
+            // Zip all requests with the Function, which will receive the results.
+            Observable.zip(requests, new Function<Object[], Object>() {
+                @Override
+                public Object apply(Object[] objects) throws Exception {
+                    // Objects[] is an array of combined results of completed requests
+
+
+                    // do something with those results and emit new event
+                    return objects;
+                }
+            })
+                    // After all requests had been performed the next observer will receive the Object, returned from Function
+
+                    .subscribe(
+                            // Will be triggered if all requests will end successfully (4xx and 5xx also are successful requests too)
+                            new Consumer<Object>() {
+                                @Override
+                                public void accept(Object object) throws Exception {
+                                    //Do something on successful completion of all requests
+                                    Log.e("ListOf Calls", "0");
+
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            // Stuff that updates the UI
+
+                                            try {
+
+                                                ApiCheckStatus(activeAppointment.getUid(),bookingModel.getAccountId(),result);
+
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        }
+                                    });
+
+                                }
+                            },
+
+                            // Will be triggered if any error during requests will happen
+                            new Consumer<Throwable>() {
+                                @Override
+                                public void accept(Throwable e) throws Exception {
+                                    Log.e("ListOf Calls", "1");
+
+                                    //Do something on error completion of requests
+                                }
+                            }
+                    );
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ApiCheckStatus(String uid, int accountId, SubmitQuestionnaire result) throws JSONException {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        JSONObject uploadObj = new JSONObject();
+        JSONArray uploadArray = new JSONArray();
+
+        for (int i = 0; i<result.getUrls().size(); i++){
+
+            JSONObject urlObj = new JSONObject();
+
+            urlObj.put("uid",result.getUrls().get(i).getUid());
+            urlObj.put("labelName",result.getUrls().get(i).getLabelName());
+
+            uploadArray.put(urlObj);
+
+        }
+
+        uploadObj.putOpt("urls",uploadArray);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
+
+        Call<ResponseBody> call = apiService.checkAppointmentUploadStatus(uid,accountId,body);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    if (response.code() == 200) {
+
+                        getConfirmationDetails(accountId);
+
+
+                    } else {
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+
     }
 
 
@@ -400,7 +560,6 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                         Config.closeDialog(getParent(), mDialog);
 
                     if (response.code() == 200) {
-
 
                         SharedPreference.getInstance(ReconfirmationActivity.this).setValue("refreshcheckin", "true");
 
@@ -429,7 +588,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                             tokens.put("Customer", Config.toTitleCase(mSearchTerminology.getCustomer()));
                             tokens.put("provider", mSearchTerminology.getProvider());
                             tokens.put("arrived", mSearchTerminology.getArrived());
-                            tokens.put("waitlisted", mSearchTerminology.getWaitlist());
+                            tokens.put("waitlisted", mSearchTerminology.getWaitlisted());
 
                             tokens.put("start", mSearchTerminology.getStart());
                             tokens.put("cancelled", mSearchTerminology.getCancelled());
@@ -508,11 +667,11 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ResponseBody> call = apiService.submitAppointmentQuestionnaire(uid, requestBody,bookingModel.getAccountId());
+        Call<SubmitQuestionnaire> call = apiService.submitAppointmentQuestionnaire(uid, requestBody, bookingModel.getAccountId());
 
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new Callback<SubmitQuestionnaire>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<SubmitQuestionnaire> call, Response<SubmitQuestionnaire> response) {
 
                 try {
 
@@ -520,8 +679,28 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                         Config.closeDialog(getParent(), mDialog);
 
                     if (response.code() == 200) {
-                        imagePathList.clear();
 
+                        SubmitQuestionnaire result = response.body();
+
+                        if (result !=  null && result.getUrls().size() > 0){
+
+                            for (QuestionnaireUrls url : result.getUrls()){
+
+                                for (LabelPath p : imagePathList){
+
+                                    if (url.getUrl().contains(p.getFileName())){
+
+                                        p.setUrl(url.getUrl());
+                                    }
+                                }
+                            }
+
+                            uploadFilesToS3(imagePathList,result);
+                        } else {
+
+                            getConfirmationDetails(bookingModel.getAccountId());
+
+                        }
 
                     } else {
                         if (response.code() == 422) {
@@ -537,7 +716,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<SubmitQuestionnaire> call, Throwable t) {
                 // Log error here since request failed
                 if (mDialog.isShowing())
                     Config.closeDialog(getParent(), mDialog);
@@ -661,15 +840,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                         activeAppointment = response.body();
                         if (activeAppointment != null) {
                             appEncId = activeAppointment.getAppointmentEncId();
-                            String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
 
-                            if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
-
-                                QuestionnaireInput input = new QuestionnaireInput();
-                                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                                input = gson.fromJson(inputString, QuestionnaireInput.class);
-                                ApiSubmitQuestionnnaire(input,activeAppointment.getUid());
-                            }
                             if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true") && (prepayAmount != null && Float.parseFloat(prepayAmount) > 0)) {
 
                                 if (isPaytm) {
@@ -685,8 +856,18 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                                 if (bookingImagesList.size() > 0) {
                                     ApiCommunicateAppointment(value, String.valueOf(bookingModel.getAccountId()), txt_addnote, dialog);
                                 }
-                                getConfirmationDetails(bookingModel.getAccountId());
+                                String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
 
+                                if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
+
+                                    QuestionnaireInput input = new QuestionnaireInput();
+                                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                                    input = gson.fromJson(inputString, QuestionnaireInput.class);
+                                    ApiSubmitQuestionnnaire(input, activeAppointment.getUid());
+                                } else {
+
+                                    getConfirmationDetails(bookingModel.getAccountId());
+                                }
                             }
 
                         }
@@ -708,7 +889,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
     private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
 
         ApiInterface apiService = ApiClient.getClient(ReconfirmationActivity.this).create(ApiInterface.class);
-        MediaType type ;
+        MediaType type;
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
@@ -720,7 +901,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                 extension = bookingImagesList.get(i).substring(bookingImagesList.get(i).lastIndexOf(".") + 1);
             }
 
-            if (extension.equalsIgnoreCase("pdf")){
+            if (extension.equalsIgnoreCase("pdf")) {
                 type = MediaType.parse("application/pdf");
 
             } else {
@@ -803,19 +984,19 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         activeAppointment = response.body();
-                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE,"");
-                        SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES,"");
+                        imagePathList.clear();
+                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, "");
+                        SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, "");
 
                         if (activeAppointment != null) {
                             appEncId = activeAppointment.getAppointmentEncId();
                             Bundle b = new Bundle();
-                            b.putSerializable("BookingDetails", activeAppointment);
                             b.putString("terminology", mSearchTerminology.getProvider());
                             b.putString("from", "");
                             b.putString("waitlistPhonenumber", bookingModel.getPhoneNumber());
                             b.putString("accountID", String.valueOf(bookingModel.getAccountId()));
                             b.putString("livetrack", bookingModel.getServiceInfo().getLivetrack());
-                            b.putString("confId", value);
+                            b.putString("uid", activeAppointment.getUid());
                             Intent checkin = new Intent(ReconfirmationActivity.this, AppointmentConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);
@@ -873,7 +1054,19 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
         if (bookingImagesList != null && bookingImagesList.size() > 0) {
             ApiCommunicateAppointment(value, String.valueOf(bookingModel.getAccountId()), bookingModel.getMessage(), dialog);
         }
-        getConfirmationDetails(bookingModel.getAccountId());
+
+        String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
+
+        if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
+
+            QuestionnaireInput input = new QuestionnaireInput();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            input = gson.fromJson(inputString, QuestionnaireInput.class);
+            ApiSubmitQuestionnnaire(input, activeAppointment.getUid());
+        } else {
+
+            getConfirmationDetails(bookingModel.getAccountId());
+        }
     }
 
     @Override
@@ -894,7 +1087,19 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
         if (bookingImagesList != null && bookingImagesList.size() > 0) {
             ApiCommunicateAppointment(value, String.valueOf(bookingModel.getAccountId()), bookingModel.getMessage(), dialog);
         }
-        getConfirmationDetails(bookingModel.getAccountId());
+
+        String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
+
+        if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
+
+            QuestionnaireInput input = new QuestionnaireInput();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            input = gson.fromJson(inputString, QuestionnaireInput.class);
+            ApiSubmitQuestionnnaire(input, activeAppointment.getUid());
+        } else {
+
+            getConfirmationDetails(bookingModel.getAccountId());
+        }
     }
 
     @Override

@@ -129,6 +129,14 @@
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
+            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/tv_supportedTypes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
             <com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal
                 android:id="@+id/tv_error"
                 android:layout_width="wrap_content"

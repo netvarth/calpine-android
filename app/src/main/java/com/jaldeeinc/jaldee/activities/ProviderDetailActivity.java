@@ -2240,7 +2240,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
                         catalogs = (ArrayList<Catalog>) objects[4];
 
-                    } else {
+                    }
+                    else {
 
                         queueList = (ArrayList<QueueList>) objects[0];
                         schedulesList = (ArrayList<ScheduleList>) objects[1];

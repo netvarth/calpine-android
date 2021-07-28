@@ -24,7 +24,6 @@ public class ImageActivity extends AppCompatActivity {
     @BindView(R.id.cv_back)
     CardView cvBack;
 
-
     String urlOrPath = null;
 
     @Override
@@ -33,8 +32,6 @@ public class ImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image);
         ButterKnife.bind(ImageActivity.this);
 
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
 
         Intent intent = getIntent();
         urlOrPath = intent.getStringExtra("urlOrPath");

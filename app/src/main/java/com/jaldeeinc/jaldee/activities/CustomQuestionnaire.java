@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,6 +27,7 @@ import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -43,6 +45,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -58,6 +61,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.jaldeeinc.jaldee.BuildConfig;
 import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CheckBoxAdapter;
@@ -90,6 +94,7 @@ import com.jaldeeinc.jaldee.response.ListProperties;
 import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.QuestionnaireResponse;
 import com.jaldeeinc.jaldee.response.Questions;
+import com.jaldeeinc.jaldee.response.SubmitQuestionnaire;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -155,7 +160,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
     private KeyPairBoolData fileObject = new KeyPairBoolData();
     private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf", "mp3", "wmv", "mp4", "webm", "flw", "mov", "avi"};
-    String[] videoFormats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi"};
+    String[] videoFormats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi", ".wmv", ".mp4", ".webm", ".flw", ".mov", ".avi"};
     private int GALLERY_FOR_ONE = 1, CAMERA_FOR_ONE = 2;
     private int GALLERY = 3, CAMERA = 4;
     private static final int SELECT_VIDEO = 3;
@@ -216,7 +221,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                 serviceId = bookingModel.getServiceInfo().getServiceId();
             } else if (bookingModel.getCheckInInfo() != null) {
                 serviceId = bookingModel.getCheckInInfo().getId();
-            } else if(bookingModel.getDonationServiceInfo() != null) {
+            } else if (bookingModel.getDonationServiceInfo() != null) {
                 serviceId = bookingModel.getDonationServiceInfo().getId();
             }
             accountId = bookingModel.getAccountId();
@@ -391,16 +396,13 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                         View singleFileUploadView = viewsList.get(question.getGetQuestion().getLabelName());
                         ImageView ivSingleFile = (ImageView) singleFileUploadView.findViewById(R.id.iv_file);
                         CustomTextViewMedium tvPath = (CustomTextViewMedium) singleFileUploadView.findViewById(R.id.tv_path);
+                        CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) singleFileUploadView.findViewById(R.id.tv_supportedTypes);
 
-//                        BitmapDrawable drawable = (BitmapDrawable) ivSingleFile.getDrawable();
-//                        Bitmap bitmap = ((BitmapDrawable) ivSingleFile.getDrawable()).getBitmap();
+
                         String path = null;
                         if (!tvPath.getText().toString().trim().equalsIgnoreCase("")) {
-//                            Uri uri = getImageUri(mContext, bitmap);
-//                            path = getPathFromUri(uri);
                             path = tvPath.getText().toString();
                         }
-
 
                         if (path != null && !path.trim().equalsIgnoreCase("")) {
 
@@ -411,7 +413,20 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                                 JsonObject answer = new JsonObject();
                                 JsonArray uploadList = new JsonArray();
                                 JsonObject fileInfo = new JsonObject();
-                                fileInfo.addProperty("index", labelPaths.size());
+                                String filename = "";
+                                String mimeType = getMimeType(path);
+
+                                if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video"))) {
+
+                                    filename = path.substring(path.lastIndexOf("/") + 1);
+
+                                    fileInfo.addProperty("mimeType", mimeType);
+                                    fileInfo.addProperty("url", filename);
+
+                                } else {
+
+                                    fileInfo.addProperty("index", labelPaths.size());
+                                }
                                 fileInfo.addProperty("caption", question.getGetQuestion().getFileProperties().getAllowedDocuments().get(0));
                                 fileInfo.addProperty("action", isEdit ? "update" : "add");
                                 uploadList.add(fileInfo);
@@ -419,7 +434,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                                 obj.setAnswer(answer);
                                 answerLines.add(obj);
 
-                                LabelPath lPath = new LabelPath(labelPaths.size(), question.getGetQuestion().getLabelName(), path);
+                                LabelPath lPath = new LabelPath(labelPaths.size(), question.getGetQuestion().getLabelName(), path, filename, mimeType);
                                 labelPaths.add(lPath);
                             }
 
@@ -434,6 +449,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
                         View fileUploadView = viewsList.get(question.getGetQuestion().getLabelName());
                         RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
+                        CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
                         FilesAdapter filesAdapter = (FilesAdapter) rvFiles.getAdapter();
 
                         List<KeyPairBoolData> files = filesAdapter.getFiles();
@@ -445,7 +461,21 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                                 if (!(files.get(i).getImagePath().contains("http://") || files.get(i).getImagePath().contains("https://"))) {
 
                                     JsonObject fileInfo = new JsonObject();
-                                    fileInfo.addProperty("index", labelPaths.size());
+
+                                    String path = files.get(i).getImagePath();
+                                    String mimeType = getMimeType(path);
+
+                                    if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video"))) {
+
+                                        String filename = path.substring(path.lastIndexOf("/") + 1);
+
+                                        fileInfo.addProperty("mimeType", mimeType);
+                                        fileInfo.addProperty("url", filename);
+
+                                    } else {
+
+                                        fileInfo.addProperty("index", labelPaths.size());
+                                    }
                                     fileInfo.addProperty("caption", files.get(i).getName());
                                     fileInfo.addProperty("action", isEdit ? "update" : "add");
                                     uploadList.add(fileInfo);
@@ -454,7 +484,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                                     obj.setAnswer(answer);
                                     answerLines.add(obj);
 
-                                    LabelPath lPath = new LabelPath(labelPaths.size(), question.getGetQuestion().getLabelName(), files.get(i).getImagePath(), files.get(i).getName());
+                                    LabelPath lPath = new LabelPath(labelPaths.size(), question.getGetQuestion().getLabelName(), files.get(i).getImagePath(), files.get(i).getName(), mimeType);
                                     labelPaths.add(lPath);
                                 }
                             }
@@ -629,11 +659,11 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ResponseBody> call = apiService.reSubmitAppQuestionnaire(uid, requestBody, accountId);
+        Call<SubmitQuestionnaire> call = apiService.reSubmitAppQuestionnaire(uid, requestBody, accountId);
 
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new Callback<SubmitQuestionnaire>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<SubmitQuestionnaire> call, Response<SubmitQuestionnaire> response) {
 
                 try {
 
@@ -660,7 +690,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<SubmitQuestionnaire> call, Throwable t) {
                 // Log error here since request failed
                 if (mDialog.isShowing())
                     Config.closeDialog(getParent(), mDialog);
@@ -713,11 +743,11 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ResponseBody> call = apiService.reSubmitWlQuestionnaire(uid, requestBody, accountId);
+        Call<SubmitQuestionnaire> call = apiService.reSubmitWlQuestionnaire(uid, requestBody, accountId);
 
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new Callback<SubmitQuestionnaire>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<SubmitQuestionnaire> call, Response<SubmitQuestionnaire> response) {
 
                 try {
 
@@ -744,7 +774,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<SubmitQuestionnaire> call, Throwable t) {
                 // Log error here since request failed
                 if (mDialog.isShowing())
                     Config.closeDialog(getParent(), mDialog);
@@ -804,14 +834,12 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                     ImageView ivSingleFile = (ImageView) singleFileUploadView.findViewById(R.id.iv_file);
                     CustomItalicTextViewNormal tvError = (CustomItalicTextViewNormal) singleFileUploadView.findViewById(R.id.tv_error);
 
-
                     if (ivSingleFile.getDrawable() == null) {
 
                         tvError.setVisibility(View.VISIBLE);
                         tvError.setText(R.string.please_upload_file);
                         return false;
                     }
-
 
                 }
 
@@ -925,6 +953,8 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                     model.setManditory(question.getGetQuestion().isMandatory());
                     model.setLabelName(question.getGetQuestion().getLabelName());
                     model.setHint(question.getGetQuestion().getHint());
+                    model.setAllowedTypes(question.getGetQuestion().getFileProperties().getFileTypes());
+
                     ArrayList<KeyPairBoolData> filesList = new ArrayList<>();
 
                     for (int i = 0; i < question.getGetQuestion().getFileProperties().getAllowedDocuments().size(); i++) {
@@ -955,6 +985,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                     singleFile.setManditory(question.getGetQuestion().isMandatory());
                     singleFile.setLabelName(question.getGetQuestion().getLabelName());
                     singleFile.setHint(question.getGetQuestion().getHint());
+                    singleFile.setAllowedTypes(question.getGetQuestion().getFileProperties().getFileTypes());
 
                     for (LabelPath l : labelPaths) {
                         if (l.getLabelName().equalsIgnoreCase(question.getGetQuestion().getLabelName())) {
@@ -1258,14 +1289,15 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
         CustomTextViewSemiBold tvQuestionName = (CustomTextViewSemiBold) fileUploadView.findViewById(R.id.tv_questionName);
         CustomTextViewBold tvMutipleFileManditory = (CustomTextViewBold) fileUploadView.findViewById(R.id.tv_singleFileManditory);
+        CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
         LinearLayout llUpload = (LinearLayout) fileUploadView.findViewById(R.id.ll_upload);
         ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
         ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
         CustomTextViewMedium tvHint = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_hint);
         CustomTextViewMedium tvPath = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_path);
 
-
         tvQuestionName.setText(singleFile.getQuestionName());
+        tvSupportedTypes.setText(singleFile.getAllowedTypes().toString());
 
         if (singleFile.getFilePath() != null && !singleFile.getFilePath().trim().equalsIgnoreCase("")) {
 
@@ -1283,6 +1315,14 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                 if (singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1).equals("pdf")) {
 
                     ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
+
+                } else if (singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1).equals("mp3")) {
+
+                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.audio_icon));
+
+                } else if (Arrays.asList(videoFormats).contains(singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1))) {
+
+                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.video_icon));
 
                 } else {
 
@@ -1366,11 +1406,15 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
                         openPdf(getApplicationContext(), imagePath);
 
-                    } else if (Arrays.asList(videoFormats).contains(extension)){
+                    } else if (Arrays.asList(videoFormats).contains(extension)) {
 
                         Intent intent = new Intent(CustomQuestionnaire.this, VideoActivity.class);
                         intent.putExtra("urlOrPath", imagePath);
                         startActivity(intent);
+
+                    } else if (extension.contains("mp3")) {
+
+                        playAudio(imagePath);
 
                     } else {
 
@@ -1389,6 +1433,16 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
     }
 
 
+    private void playAudio(String imagePath) {
+
+        Intent i = new Intent(android.content.Intent.ACTION_VIEW);
+        i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        i.setDataAndType(FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", new File(imagePath)), "audio/*");
+        startActivity(i);
+    }
+
+
     private void addFileUploadView(QuestionnaireFileUploadModel model) {
 
         View fileUploadView = getLayoutInflater().inflate(R.layout.questnnarefile_upload, null, false);
@@ -1397,9 +1451,11 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
         MultiSpinnerSearch filesSpinner = (MultiSpinnerSearch) fileUploadView.findViewById(R.id.mfilesSpinner);
         RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
         CustomTextViewBold tvMutipleFileManditory = (CustomTextViewBold) fileUploadView.findViewById(R.id.tv_multipleFileManditory);
+        CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
         CustomTextViewMedium tvHint = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_hint);
 
         tvQuestionName.setText(model.getQuestionName());
+        tvSupportedTypes.setText(model.getAllowedTypes().toString());
 
         if (model.getHint() != null && !model.getHint().trim().equalsIgnoreCase("")) {
             tvHint.setVisibility(View.VISIBLE);
@@ -1846,21 +1902,22 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
-                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
-                            if (orgFilePath == null) {
-                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
-                            }
-                        } else {
-                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
-                            return;
+                        if (orgFilePath == null) {
+                            orgFilePath = getFilePathFromURI(mContext, uri, extension);
                         }
 
                         View fileUploadView = viewsList.get(qLabelName);
                         RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
+                        CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
                         FilesAdapter filesAdapter = (FilesAdapter) rvFiles.getAdapter();
 
-                        fileObject.setImagePath(orgFilePath);
-                        filesAdapter.updateFileObject(fileObject);
+                        if (tvSupportedTypes.getText().toString().contains(extension)) {
+                            fileObject.setImagePath(orgFilePath);
+                            filesAdapter.updateFileObject(fileObject);
+                        } else {
+
+                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                        }
 
 
                     } else if (data.getClipData() != null) {
@@ -1881,21 +1938,21 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                             if (mimeType != null) {
                                 extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                             }
-                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
-                                if (orgFilePath == null) {
-                                    orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
-                                }
-                            } else {
-                                Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
-                                return;
+                            if (orgFilePath == null) {
+                                orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
                             }
 
                             View fileUploadView = viewsList.get(qLabelName);
                             RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
+                            CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
                             FilesAdapter filesAdapter = (FilesAdapter) rvFiles.getAdapter();
 
-                            fileObject.setImagePath(orgFilePath);
-                            filesAdapter.updateFileObject(fileObject);
+                            if (tvSupportedTypes.getText().toString().contains(extension)) {
+                                fileObject.setImagePath(orgFilePath);
+                                filesAdapter.updateFileObject(fileObject);
+                            } else {
+                                Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                            }
                         }
 
                     }
@@ -1905,7 +1962,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
             }
 
         } else if (requestCode == CAMERA_FOR_ONE) {
-            if (data != null) {
+            if (data != null && data.getExtras() != null) {
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 String path = saveImage(bitmap);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -1947,36 +2004,42 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
-                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
-                            if (orgFilePath == null) {
-                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
-                            }
-                        } else {
-                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
-                            return;
+                        if (orgFilePath == null) {
+                            orgFilePath = getFilePathFromURI(mContext, uri, extension);
                         }
+
 
                         singleFilePath = orgFilePath;
-                        if (orgFilePath != null && orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("pdf")) {
+                        View fileUploadView = viewsList.get(qLabelName);
+                        ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
+                        CustomTextViewMedium tvPath = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_path);
+                        CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
+                        ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
+                        ivClose.setVisibility(View.VISIBLE);
+                        tvPath.setText(orgFilePath);
 
-                            View fileUploadView = viewsList.get(qLabelName);
-                            ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
-                            CustomTextViewMedium tvPath = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_path);
-                            ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
-                            ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
-                            ivClose.setVisibility(View.VISIBLE);
-                            tvPath.setText(orgFilePath);
+                        if (tvSupportedTypes.getText().toString().contains(extension)) {
+
+                            if (orgFilePath != null && orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("pdf")) {
+
+                                ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
+
+                            } else if (Arrays.asList(videoFormats).contains(extension)) {
+
+                                ivSingleFile.setImageDrawable(mContext.getResources().getDrawable(R.drawable.video_icon));
+
+                            } else if (orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("mp3")) {
+
+                                ivSingleFile.setImageDrawable(mContext.getResources().getDrawable(R.drawable.audio_icon));
+
+                            } else {
+                                ivSingleFile.setImageBitmap(BitmapFactory.decodeFile(orgFilePath));
+                            }
 
                         } else {
-                            View fileUploadView = viewsList.get(qLabelName);
-                            ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
-                            CustomTextViewMedium tvPath = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_path);
-                            ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
-                            ivSingleFile.setImageBitmap(BitmapFactory.decodeFile(orgFilePath));
-                            ivClose.setVisibility(View.VISIBLE);
-                            tvPath.setText(orgFilePath);
-                        }
 
+                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                        }
 
                     } else if (data.getClipData() != null) {
                         ClipData mClipData = data.getClipData();
@@ -1996,34 +2059,38 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                             if (mimeType != null) {
                                 extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                             }
-                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
-                                if (orgFilePath == null) {
-                                    orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
-                                }
-                            } else {
-                                Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
-                                return;
+                            if (orgFilePath == null) {
+                                orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
                             }
 
                             singleFilePath = orgFilePath;
-                            if (orgFilePath != null && orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("pdf")) {
 
-                                View fileUploadView = viewsList.get(qLabelName);
-                                ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
-                                CustomTextViewMedium tvPath = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_path);
-                                ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
-                                ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
-                                ivClose.setVisibility(View.VISIBLE);
-                                tvPath.setText(orgFilePath);
+                            View fileUploadView = viewsList.get(qLabelName);
+                            ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
+                            CustomTextViewMedium tvPath = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_path);
+                            CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
+                            ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
+                            ivClose.setVisibility(View.VISIBLE);
+                            tvPath.setText(orgFilePath);
 
+                            if (tvSupportedTypes.getText().toString().contains(extension)) {
+
+                                if (orgFilePath != null && orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("pdf")) {
+                                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
+
+                                } else if (Arrays.asList(videoFormats).contains(extension)) {
+
+                                    ivSingleFile.setImageDrawable(mContext.getResources().getDrawable(R.drawable.video_icon));
+
+                                } else if (orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("mp3")) {
+
+                                    ivSingleFile.setImageDrawable(mContext.getResources().getDrawable(R.drawable.audio_icon));
+
+                                } else {
+                                    ivSingleFile.setImageBitmap(BitmapFactory.decodeFile(orgFilePath));
+                                }
                             } else {
-                                View fileUploadView = viewsList.get(qLabelName);
-                                ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
-                                CustomTextViewMedium tvPath = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_path);
-                                ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
-                                ivSingleFile.setImageBitmap(BitmapFactory.decodeFile(orgFilePath));
-                                ivClose.setVisibility(View.VISIBLE);
-                                tvPath.setText(orgFilePath);
+                                Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -2035,7 +2102,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
         } else if (requestCode == CAMERA) {
 
-            if (data != null) {
+            if (data != null && data.getExtras() != null) {
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 String path = saveImage(bitmap);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -2430,4 +2497,10 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
         startActivity(browserIntent);
     }
 
+    public static String getMimeType(String path) {
+        String extention = path.substring(path.lastIndexOf("."));
+        String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extention);
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(mimeTypeMap);
+        return mimeType;
+    }
 }

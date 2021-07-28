@@ -13,6 +13,7 @@ public class QuestnnaireSingleFile {
     public String filePath = "";
     public String hint = "";
     public String type = "";
+    public ArrayList<String> allowedTypes;
 
     public String getQuestionName() {
         return questionName;
@@ -68,5 +69,14 @@ public class QuestnnaireSingleFile {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+
+    public ArrayList<String> getAllowedTypes() {
+        return allowedTypes;
+    }
+
+    public void setAllowedTypes(ArrayList<String> allowedTypes) {
+        this.allowedTypes = allowedTypes;
     }
 }

@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.activities;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -35,6 +36,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.adapter.ServicesAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -51,12 +53,15 @@ import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.PaymentModel;
+import com.jaldeeinc.jaldee.response.QuestionnaireUrls;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
+import com.jaldeeinc.jaldee.response.SubmitQuestionnaire;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -69,12 +74,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -173,6 +182,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
     public IPaymentResponse iPaymentResponse;
     ArrayList<LabelPath> imagePathList = new ArrayList<>();
     ArrayList<String> bookingImagesList = new ArrayList<>();
+    ActiveCheckIn activeAppointment;
 
     //files related
     private static final String IMAGE_DIRECTORY = "/Jaldee" +
@@ -212,11 +222,11 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                 MultipleFamilyList = new ArrayList<>();
             }
 
-            if (bookingModel.getTotalAmount() != null){
+            if (bookingModel.getTotalAmount() != null) {
                 totalAmountPay = bookingModel.getTotalAmount();
             }
 
-            if (bookingModel.getTotalServicePay() != null){
+            if (bookingModel.getTotalServicePay() != null) {
                 totalServicePay = bookingModel.getTotalServicePay();
             }
             // to set providerName
@@ -306,18 +316,18 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
                 tvCustomerName.setText(bookingModel.getCustomerName());
 
-            } else if (MultipleFamilyList!= null && MultipleFamilyList.size() > 0){
+            } else if (MultipleFamilyList != null && MultipleFamilyList.size() > 0) {
 
                 ArrayList<String> names = new ArrayList<>();
 
-                for (FamilyArrayModel model: MultipleFamilyList){
+                for (FamilyArrayModel model : MultipleFamilyList) {
 
-                    String name = model.getFirstName()+" "+model.getLastName();
+                    String name = model.getFirstName() + " " + model.getLastName();
 
                     names.add(name);
                 }
 
-                tvCustomerName.setText(TextUtils.join(", ",names));
+                tvCustomerName.setText(TextUtils.join(", ", names));
 
             }
 
@@ -341,11 +351,11 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
             if (imagesString != null && !imagesString.trim().equalsIgnoreCase("")) {
 
-                Type labelPathType = new TypeToken<ArrayList<LabelPath>>() {
+                Type labelPathListType = new TypeToken<ArrayList<LabelPath>>() {
                 }.getType();
 
                 try {
-                    ArrayList<LabelPath> pathList = new Gson().fromJson(imagesString, labelPathType);
+                    ArrayList<LabelPath> pathList = new Gson().fromJson(imagesString, labelPathListType);
                     imagePathList = pathList;
                 } catch (JsonSyntaxException e) {
                     imagePathList = new ArrayList<>();
@@ -482,7 +492,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                             tokens.put("Customer", Config.toTitleCase(mSearchTerminology.getCustomer()));
                             tokens.put("provider", mSearchTerminology.getProvider());
                             tokens.put("arrived", mSearchTerminology.getArrived());
-                            tokens.put("waitlisted", mSearchTerminology.getWaitlist());
+                            tokens.put("waitlisted", mSearchTerminology.getWaitlisted());
 
                             tokens.put("start", mSearchTerminology.getStart());
                             tokens.put("cancelled", mSearchTerminology.getCancelled());
@@ -543,19 +553,10 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
-                        ActiveCheckIn activeAppointment = response.body();
+                        activeAppointment = response.body();
 
                         if (activeAppointment != null) {
                             checkEncId = activeAppointment.getCheckinEncId();
-                            String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
-
-                            if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
-
-                                QuestionnaireInput input = new QuestionnaireInput();
-                                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                                input = gson.fromJson(inputString, QuestionnaireInput.class);
-                                ApiSubmitQuestionnnaire(input, activeAppointment.getYnwUuid());
-                            }
 
                             if (bookingModel.getCheckInInfo().isPrePayment() && ((totalAmountPay != null && !totalAmountPay.equalsIgnoreCase("0.0")) || (prepayAmount != null && Float.parseFloat(prepayAmount) > 0))) {
 
@@ -582,7 +583,19 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                                 if (bookingImagesList.size() > 0) {
                                     ApiCommunicateCheckin(value, String.valueOf(id), txt_addnote, dialog);
                                 }
-                                getConfirmationDetails(id);
+
+                                String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
+
+                                if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
+
+                                    QuestionnaireInput input = new QuestionnaireInput();
+                                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                                    input = gson.fromJson(inputString, QuestionnaireInput.class);
+                                    ApiSubmitQuestionnnaire(input, activeAppointment.getYnwUuid());
+                                } else {
+
+                                    getConfirmationDetails(bookingModel.getAccountId());
+                                }
 
                             }
 
@@ -635,7 +648,162 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ResponseBody> call = apiService.submitWaitListQuestionnaire(uid, requestBody,bookingModel.getAccountId());
+        Call<SubmitQuestionnaire> call = apiService.submitWaitListQuestionnaire(uid, requestBody, bookingModel.getAccountId());
+
+        call.enqueue(new Callback<SubmitQuestionnaire>() {
+            @Override
+            public void onResponse(Call<SubmitQuestionnaire> call, Response<SubmitQuestionnaire> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    if (response.code() == 200) {
+
+                        SubmitQuestionnaire result = response.body();
+
+                        if (result !=  null && result.getUrls().size() > 0){
+
+                            for (QuestionnaireUrls url : result.getUrls()){
+
+                                for (LabelPath p : imagePathList){
+
+                                    if (url.getUrl().contains(p.getFileName())){
+
+                                        p.setUrl(url.getUrl());
+                                    }
+                                }
+                            }
+
+                            uploadFilesToS3(imagePathList,result);
+                        } else {
+
+                            getConfirmationDetails(bookingModel.getAccountId());
+
+                        }
+
+                    } else {
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SubmitQuestionnaire> call, Throwable t) {
+                // Log error here since request failed
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+
+    }
+
+    private void uploadFilesToS3(ArrayList<LabelPath> filesList, SubmitQuestionnaire result) {
+
+        try {
+
+            ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+
+            List<Observable<?>> requests = new ArrayList<>();
+
+            for (LabelPath l : filesList) {
+
+                if (l.getUrl() != null && !l.getUrl().trim().equalsIgnoreCase("")) {
+
+                    RequestBody requestFile = RequestBody.create(MediaType.parse(l.getType()), new File(l.getPath()));
+
+                    requests.add(apiService.uploadPreSignedS3File(l.getUrl(), requestFile));
+                }
+            }
+
+            // Zip all requests with the Function, which will receive the results.
+            Observable.zip(requests, new Function<Object[], Object>() {
+                @Override
+                public Object apply(Object[] objects) throws Exception {
+                    // Objects[] is an array of combined results of completed requests
+
+
+                    // do something with those results and emit new event
+                    return objects;
+                }
+            })
+                    // After all requests had been performed the next observer will receive the Object, returned from Function
+
+                    .subscribe(
+                            // Will be triggered if all requests will end successfully (4xx and 5xx also are successful requests too)
+                            new Consumer<Object>() {
+                                @Override
+                                public void accept(Object object) throws Exception {
+                                    //Do something on successful completion of all requests
+                                    Log.e("ListOf Calls", "0");
+
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            // Stuff that updates the UI
+                                            try {
+                                                ApiCheckStatus(activeAppointment.getYnwUuid(),bookingModel.getAccountId(),result);
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+
+                                }
+                            },
+
+                            // Will be triggered if any error during requests will happen
+                            new Consumer<Throwable>() {
+                                @Override
+                                public void accept(Throwable e) throws Exception {
+                                    Log.e("ListOf Calls", "1");
+
+                                    //Do something on error completion of requests
+                                }
+                            }
+                    );
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ApiCheckStatus(String uid, int accountId, SubmitQuestionnaire result) throws JSONException {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        JSONObject uploadObj = new JSONObject();
+        JSONArray uploadArray = new JSONArray();
+
+        for (int i = 0; i<result.getUrls().size(); i++){
+
+            JSONObject urlObj = new JSONObject();
+
+            urlObj.put("uid",result.getUrls().get(i).getUid());
+            urlObj.put("labelName",result.getUrls().get(i).getLabelName());
+
+            uploadArray.put(urlObj);
+
+        }
+
+
+        uploadObj.putOpt("urls",uploadArray);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
+
+        Call<ResponseBody> call = apiService.checkWaitlistUploadStatus(uid,accountId,body);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -647,7 +815,8 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                         Config.closeDialog(getParent(), mDialog);
 
                     if (response.code() == 200) {
-                        imagePathList.clear();
+
+                        getConfirmationDetails(accountId);
 
 
                     } else {
@@ -677,7 +846,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
     private void ApiCommunicateCheckin(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type ;
+        MediaType type;
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
@@ -689,7 +858,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                 extension = bookingImagesList.get(i).substring(bookingImagesList.get(i).lastIndexOf(".") + 1);
             }
 
-            if (extension.equalsIgnoreCase("pdf")){
+            if (extension.equalsIgnoreCase("pdf")) {
                 type = MediaType.parse("application/pdf");
 
             } else {
@@ -758,22 +927,21 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
             @Override
             public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
                 try {
-                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
+
                     if (response.code() == 200) {
                         ActiveCheckIn activeAppointment = response.body();
-                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE,"");
-                        SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES,"");
+                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, "");
+                        SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, "");
+                        imagePathList.clear();
                         if (activeAppointment != null) {
                             checkEncId = activeAppointment.getCheckinEncId();
 
                             Intent checkin = new Intent(CheckInReconfirmation.this, CheckInConfirmation.class);
-                            checkin.putExtra("BookingDetails", activeAppointment);
                             checkin.putExtra("terminology", mSearchTerminology.getProvider());
                             checkin.putExtra("waitlistPhonenumber", bookingModel.getPhoneNumber());
                             checkin.putExtra("livetrack", bookingModel.getCheckInInfo().isLivetrack());
                             checkin.putExtra("accountID", String.valueOf(id));
-                            checkin.putExtra("confId", value);
+                            checkin.putExtra("uid", activeAppointment.getYnwUuid());
                             startActivity(checkin);
                         }
 
@@ -934,7 +1102,20 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
         if (bookingImagesList != null && bookingImagesList.size() > 0) {
             ApiCommunicateCheckin(value, String.valueOf(bookingModel.getAccountId()), bookingModel.getMessage(), dialog);
         }
-        getConfirmationDetails(bookingModel.getAccountId());
+
+        String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
+
+        if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
+
+            QuestionnaireInput input = new QuestionnaireInput();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            input = gson.fromJson(inputString, QuestionnaireInput.class);
+            ApiSubmitQuestionnnaire(input, activeAppointment.getYnwUuid());
+        } else {
+
+            getConfirmationDetails(bookingModel.getAccountId());
+        }
+
     }
 
     @Override
@@ -955,7 +1136,20 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
         if (bookingImagesList != null && bookingImagesList.size() > 0) {
             ApiCommunicateCheckin(value, String.valueOf(bookingModel.getAccountId()), bookingModel.getMessage(), dialog);
         }
-        getConfirmationDetails(bookingModel.getAccountId());
+
+        String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
+
+        if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
+
+            QuestionnaireInput input = new QuestionnaireInput();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            input = gson.fromJson(inputString, QuestionnaireInput.class);
+            ApiSubmitQuestionnnaire(input, activeAppointment.getYnwUuid());
+        } else {
+
+            getConfirmationDetails(bookingModel.getAccountId());
+        }
+
     }
 
     @Override

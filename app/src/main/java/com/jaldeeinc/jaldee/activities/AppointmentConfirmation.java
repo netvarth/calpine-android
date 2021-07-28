@@ -76,7 +76,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
             phoneNumber = extras.getString("waitlistPhonenumber");
             livetrack = extras.getString("livetrack");
             providerId = extras.getString("accountID");
-            value = extras.getString("confId");
+            value = extras.getString("uid");
         }
 
         initializations();

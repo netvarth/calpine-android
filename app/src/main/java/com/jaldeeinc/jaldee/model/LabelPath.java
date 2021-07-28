@@ -7,6 +7,7 @@ public class LabelPath {
     private String path = "";
     private String fileName = "";
     private String type = "";
+    private String url = "";
 
     public LabelPath(){
 
@@ -23,6 +24,14 @@ public class LabelPath {
         this.labelName = labelName;
         this.path = path;
         this.fileName = fileName;
+    }
+
+    public LabelPath(int id, String labelName, String path, String fileName, String type) {
+        this.id = id;
+        this.labelName = labelName;
+        this.path = path;
+        this.fileName = fileName;
+        this.type = type;
     }
 
 
@@ -64,5 +73,13 @@ public class LabelPath {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

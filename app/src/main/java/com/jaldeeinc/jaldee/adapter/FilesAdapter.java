@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,14 +17,18 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.jaldeeinc.jaldee.BuildConfig;
 import com.jaldeeinc.jaldee.Interface.IEditAddress;
 import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.AudioActivity;
 import com.jaldeeinc.jaldee.activities.CustomQuestionnaire;
 import com.jaldeeinc.jaldee.activities.ImageActivity;
+import com.jaldeeinc.jaldee.activities.UpdateQuestionnaire;
 import com.jaldeeinc.jaldee.activities.VideoActivity;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
@@ -46,7 +51,9 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
     private int selectedPosition = 0;
     private IFilesInterface iFilesInterface;
     private String labelName = "";
-    String[] videoFormats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi"};
+    String[] videoFormats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi",".wmv", ".mp4", ".webm", ".flw", ".mov", ".avi"};
+    String[] formats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi",".wmv", ".mp4", ".webm", ".flw", ".mov", ".avi"};
+
 
 
     public FilesAdapter(ArrayList<KeyPairBoolData> fList, Context context, boolean isLoading, IFilesInterface iFilesInterface) {
@@ -85,11 +92,26 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 
                 if (data.getImagePath().contains("http://") || data.getImagePath().contains("https://")) {
 
-                    if (data.getType().equalsIgnoreCase(".pdf")) {
+                    String extension = "";
+
+                    if (data.getType() != null) {
+                        extension = data.getType().substring(data.getType().lastIndexOf("/") + 1);
+                    }
+
+                    if (data.getType() != null && data.getType().equalsIgnoreCase(".pdf")) {
 
                         viewHolder.ivFile.setImageDrawable(context.getResources().getDrawable(R.drawable.pdfs));
 
-                    } else {
+                    } else if (data.getType()!= null && data.getType().contains("audio")) {
+
+                        viewHolder.ivFile.setImageDrawable(context.getResources().getDrawable(R.drawable.audio_icon));
+
+                    } else if (Arrays.asList(formats).contains(extension)) {
+
+                        viewHolder.ivFile.setImageDrawable(context.getResources().getDrawable(R.drawable.video_icon));
+
+                    }
+                    else {
                         Glide.with(context).load(data.getImagePath()).into(viewHolder.ivFile);
                     }
                 } else {
@@ -104,9 +126,13 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 
                         viewHolder.ivFile.setImageDrawable(context.getResources().getDrawable(R.drawable.pdfs));
 
-                    } else if (Arrays.asList(videoFormats).contains(extension)) {
+                    } else if (Arrays.asList(formats).contains(extension)) {
 
                         viewHolder.ivFile.setImageDrawable(context.getResources().getDrawable(R.drawable.video_icon));
+
+                    } else if (data.getImagePath().substring(data.getImagePath().lastIndexOf(".") + 1).equals("mp3")) {
+
+                        viewHolder.ivFile.setImageDrawable(context.getResources().getDrawable(R.drawable.audio_icon));
 
                     } else {
 
@@ -128,9 +154,29 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 
                     if (data.getImagePath().contains("http://") || data.getImagePath().contains("https://")) {
 
-                        if (data.getType().equalsIgnoreCase(".pdf")) {
+                        String extension = "";
+
+                        if (data.getType() != null) {
+                            extension = data.getType().substring(data.getType().lastIndexOf("/") + 1);
+                        }
+
+                        if (data.getType() != null && data.getType().equalsIgnoreCase(".pdf")) {
 
                             openOnlinePdf(context, data.getImagePath());
+
+                        } else if (Arrays.asList(formats).contains(extension)) {
+
+                            Intent intent = new Intent(context, VideoActivity.class);
+                            intent.putExtra("urlOrPath", data.getImagePath());
+                            context.startActivity(intent);
+
+                        } else if (data.getType()!= null && data.getType().contains("audio")) {
+
+                            Intent viewMediaIntent = new Intent();
+                            viewMediaIntent.setAction(android.content.Intent.ACTION_VIEW);
+                            viewMediaIntent.setDataAndType(Uri.parse(data.getImagePath()), "audio/*");
+                            viewMediaIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            context.startActivity(viewMediaIntent);
 
                         } else {
 
@@ -151,11 +197,16 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 
                             openPdf(context, data.getImagePath());
 
-                        } else if (Arrays.asList(videoFormats).contains(extension)) {
+                        } else if (Arrays.asList(formats).contains(extension)) {
 
                             Intent intent = new Intent(context, VideoActivity.class);
                             intent.putExtra("urlOrPath", data.getImagePath());
                             context.startActivity(intent);
+
+                        } else if (extension.contains("mp3")) {
+
+                           playAudio(data.getImagePath());
+
 
                         } else {
                             Intent intent = new Intent(context, ImageActivity.class);
@@ -189,6 +240,8 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 //                    iFilesInterface.onCloseClick(data);
 
                     viewHolder.ivFile.setImageDrawable(null);
+                    viewHolder.ivFile.setImageBitmap(null);
+                    filesList.get(position).setImagePath(null);
                     filesList.remove(position);
                     notifyDataSetChanged();
 
@@ -213,6 +266,15 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
             skeletonViewHolder.itemView.setLayoutParams(params);
 
         }
+    }
+
+    private void playAudio(String imagePath) {
+
+        Intent i = new Intent(android.content.Intent.ACTION_VIEW);
+        i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        i.setDataAndType(FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider",new File(imagePath)), "audio/*");
+        context.startActivity(i);
     }
 
     @Override

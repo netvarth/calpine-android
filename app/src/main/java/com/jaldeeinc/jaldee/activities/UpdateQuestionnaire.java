@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +26,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.StrictMode;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -51,6 +51,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.jaldeeinc.jaldee.BuildConfig;
 import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CheckBoxAdapter;
@@ -81,8 +82,9 @@ import com.jaldeeinc.jaldee.model.QuestnnaireSingleFile;
 import com.jaldeeinc.jaldee.response.GetQuestion;
 import com.jaldeeinc.jaldee.response.ListProperties;
 import com.jaldeeinc.jaldee.response.Questionnaire;
-import com.jaldeeinc.jaldee.response.QuestionnaireResponse;
+import com.jaldeeinc.jaldee.response.QuestionnaireUrls;
 import com.jaldeeinc.jaldee.response.Questions;
+import com.jaldeeinc.jaldee.response.SubmitQuestionnaire;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -113,6 +115,9 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -121,7 +126,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInterface, DatePickerDialog.OnDateSetListener  {
+public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInterface, DatePickerDialog.OnDateSetListener {
 
     @BindView(R.id.ll_mainLayout)
     LinearLayout llParentLayout;
@@ -143,8 +148,9 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
     private IFilesInterface iFilesInterface;
     private KeyPairBoolData fileObject = new KeyPairBoolData();
     private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
-    String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
-    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
+    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf", "mp3", "wmv", "mp4", "webm", "flw", "mov", "avi"};
+    String[] videoFormats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi", ".wmv", ".mp4", ".webm", ".flw", ".mov", ".avi"};
+    String[] formats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi", ".wmv", ".mp4", ".webm", ".flw", ".mov", ".avi"};
     private int GALLERY_FOR_ONE = 1, CAMERA_FOR_ONE = 2;
     private int GALLERY = 3, CAMERA = 4;
 
@@ -169,7 +175,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
     private int serviceId;
     public BookingModel bookingModel;
     QuestionnaireInput qInput = new QuestionnaireInput();
-    public String from, uid,bookingStatus = "";
+    public String from, uid, bookingStatus = "";
     private boolean isEdit = false;
 
     @Override
@@ -182,9 +188,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
         requestMultiplePermissions();
 
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
-
         Intent intent = getIntent();
         bookingModel = (BookingModel) intent.getSerializableExtra("data");
         serviceId = intent.getIntExtra("serviceId", 0);
@@ -193,11 +196,11 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         isEdit = intent.getBooleanExtra("isEdit", false);
         from = intent.getStringExtra("from");
         bookingStatus = intent.getStringExtra("status");
-        if (bookingStatus == null){
+        if (bookingStatus == null) {
             bookingStatus = "";
         }
 
-        if (!bookingStatus.trim().equalsIgnoreCase("") && !(bookingStatus.equalsIgnoreCase("Confirmed") || bookingStatus.equalsIgnoreCase("Arrived") || bookingStatus.equalsIgnoreCase("checkedIn") || bookingStatus.equalsIgnoreCase("arrived"))){
+        if (!bookingStatus.trim().equalsIgnoreCase("") && !(bookingStatus.equalsIgnoreCase("Confirmed") || bookingStatus.equalsIgnoreCase("Arrived") || bookingStatus.equalsIgnoreCase("checkedIn") || bookingStatus.equalsIgnoreCase("arrived"))) {
 
             showAlert();
         }
@@ -265,7 +268,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
             }
         });
 
-        if (qInput != null && qInput.getQuestions() != null){
+        if (qInput != null && qInput.getQuestions() != null) {
 
             try {
                 UpdateQuestionnaire(qInput.getQuestions());
@@ -278,7 +281,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
     private void showAlert() {
 
-        Config.showAlertBuilder(mContext,"Service has started","The given details cannot be edited as the service has started.");
+        Config.showAlertBuilder(mContext, "Service has started", "The given details cannot be edited as the service has started.");
     }
 
     private void submitQuestionnaire() throws JSONException {
@@ -301,12 +304,9 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                         ImageView ivSingleFile = (ImageView) singleFileUploadView.findViewById(R.id.iv_file);
                         CustomTextViewMedium tvPath = (CustomTextViewMedium) singleFileUploadView.findViewById(R.id.tv_path);
 
-//                        BitmapDrawable drawable = (BitmapDrawable) ivSingleFile.getDrawable();
-//                        Bitmap bitmap = ((BitmapDrawable) ivSingleFile.getDrawable()).getBitmap();
                         String path = null;
                         if (!tvPath.getText().toString().trim().equalsIgnoreCase("")) {
-//                            Uri uri = getImageUri(mContext, bitmap);
-//                            path = getPathFromUri(uri);
+
                             path = tvPath.getText().toString();
                         }
 
@@ -320,7 +320,21 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                                 JsonObject answer = new JsonObject();
                                 JsonArray uploadList = new JsonArray();
                                 JsonObject fileInfo = new JsonObject();
-                                fileInfo.addProperty("index", labelPaths.size());
+                                String filename = "";
+                                String mimeType = mContext.getContentResolver().getType(Uri.fromFile(new File(path)));
+
+
+                                if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video"))) {
+
+                                    filename = path.substring(path.lastIndexOf("/") + 1);
+
+                                    fileInfo.addProperty("mimeType", mimeType);
+                                    fileInfo.addProperty("url", filename);
+
+                                } else {
+
+                                    fileInfo.addProperty("index", labelPaths.size());
+                                }
                                 fileInfo.addProperty("caption", question.getFileProperties().getAllowedDocuments().get(0));
                                 fileInfo.addProperty("action", isEdit ? "update" : "add");
                                 uploadList.add(fileInfo);
@@ -328,7 +342,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                                 obj.setAnswer(answer);
                                 answerLines.add(obj);
 
-                                LabelPath lPath = new LabelPath(labelPaths.size(), question.getLabelName(), path);
+                                LabelPath lPath = new LabelPath(labelPaths.size(), question.getLabelName(), path, filename, mimeType);
                                 labelPaths.add(lPath);
                             }
 
@@ -354,7 +368,21 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                                 if (!(files.get(i).getImagePath().contains("http://") || files.get(i).getImagePath().contains("https://"))) {
 
                                     JsonObject fileInfo = new JsonObject();
-                                    fileInfo.addProperty("index", labelPaths.size());
+
+                                    String path = files.get(i).getImagePath();
+                                    String mimeType = mContext.getContentResolver().getType(Uri.fromFile(new File(path)));
+
+                                    if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video"))) {
+
+                                        String filename = path.substring(path.lastIndexOf("/") + 1);
+
+                                        fileInfo.addProperty("mimeType", mimeType);
+                                        fileInfo.addProperty("url", filename);
+
+                                    } else {
+
+                                        fileInfo.addProperty("index", labelPaths.size());
+                                    }
                                     fileInfo.addProperty("caption", files.get(i).getName());
                                     fileInfo.addProperty("action", isEdit ? "update" : "add");
                                     uploadList.add(fileInfo);
@@ -363,7 +391,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                                     obj.setAnswer(answer);
                                     answerLines.add(obj);
 
-                                    LabelPath lPath = new LabelPath(labelPaths.size(), question.getLabelName(), files.get(i).getImagePath(), files.get(i).getName());
+                                    LabelPath lPath = new LabelPath(labelPaths.size(), question.getLabelName(), files.get(i).getImagePath(), files.get(i).getName(), mimeType);
                                     labelPaths.add(lPath);
                                 }
                             }
@@ -461,13 +489,13 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
             SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
             SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
 
-           if (from.equalsIgnoreCase(Constants.BOOKING_APPOINTMENT)) {
+            if (from.equalsIgnoreCase(Constants.BOOKING_APPOINTMENT)) {
 
                 if (bookingStatus.trim().equalsIgnoreCase("Confirmed") || bookingStatus.trim().equalsIgnoreCase("Arrived")) {
                     ApiUpdateApptQuestionnaire(input, labelPaths);
                 } else {
 
-                    Toast.makeText(mContext,"The given details cannot be edited as the service has started.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "The given details cannot be edited as the service has started.", Toast.LENGTH_SHORT).show();
                 }
 
             } else if (from.equalsIgnoreCase(Constants.BOOKING_CHECKIN)) {
@@ -477,7 +505,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                     ApiUpdateWaitListQuestionnaire(input, labelPaths);
                 } else {
 
-                    Toast.makeText(mContext,"The given details cannot be edited as the service has started.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "The given details cannot be edited as the service has started.", Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -523,7 +551,171 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ResponseBody> call = apiService.reSubmitAppQuestionnaire(uid, requestBody, accountId);
+        Call<SubmitQuestionnaire> call = apiService.reSubmitAppQuestionnaire(uid, requestBody, accountId);
+
+        call.enqueue(new Callback<SubmitQuestionnaire>() {
+            @Override
+            public void onResponse(Call<SubmitQuestionnaire> call, Response<SubmitQuestionnaire> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    if (response.code() == 200) {
+
+                        SubmitQuestionnaire result = response.body();
+
+                        if (result != null && result.getUrls().size() > 0) {
+
+                            for (QuestionnaireUrls url : result.getUrls()) {
+
+                                for (LabelPath p : imagePathList) {
+
+                                    if (url.getUrl().contains(p.getFileName())) {
+
+                                        p.setUrl(url.getUrl());
+                                    }
+                                }
+                            }
+
+                            uploadFilesToS3(imagePathList, result);
+                        } else {
+
+                            Toast.makeText(mContext, "Updated Successfully", Toast.LENGTH_SHORT).show();
+                            finish();
+
+                        }
+
+                    } else {
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SubmitQuestionnaire> call, Throwable t) {
+                // Log error here since request failed
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+
+    }
+
+    private void uploadFilesToS3(ArrayList<LabelPath> filesList, SubmitQuestionnaire result) {
+
+        try {
+
+            ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+
+            List<Observable<?>> requests = new ArrayList<>();
+
+            for (LabelPath l : filesList) {
+
+                if (l.getUrl() != null && !l.getUrl().trim().equalsIgnoreCase("")) {
+
+                    RequestBody requestFile = RequestBody.create(MediaType.parse(l.getType()), new File(l.getPath()));
+
+                    requests.add(apiService.uploadPreSignedS3File(l.getUrl(), requestFile));
+                }
+            }
+
+            // Zip all requests with the Function, which will receive the results.
+            Observable.zip(requests, new Function<Object[], Object>() {
+                @Override
+                public Object apply(Object[] objects) throws Exception {
+                    // Objects[] is an array of combined results of completed requests
+
+
+                    // do something with those results and emit new event
+                    return objects;
+                }
+            })
+                    // After all requests had been performed the next observer will receive the Object, returned from Function
+
+                    .subscribe(
+                            // Will be triggered if all requests will end successfully (4xx and 5xx also are successful requests too)
+                            new Consumer<Object>() {
+                                @Override
+                                public void accept(Object object) throws Exception {
+                                    //Do something on successful completion of all requests
+                                    Log.e("ListOf Calls", "0");
+
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            // Stuff that updates the UI
+                                            try {
+                                                if (from.equalsIgnoreCase(Constants.BOOKING_APPOINTMENT)) {
+
+                                                    ApiCheckStatus(uid, accountId, result);
+
+                                                } else if (from.equalsIgnoreCase(Constants.BOOKING_CHECKIN)) {
+
+                                                    ApiCheckWaitlistUploadStatus(uid, accountId, result);
+                                                }
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+
+
+                                }
+                            },
+
+                            // Will be triggered if any error during requests will happen
+                            new Consumer<Throwable>() {
+                                @Override
+                                public void accept(Throwable e) throws Exception {
+                                    Log.e("ListOf Calls", "1");
+
+                                    //Do something on error completion of requests
+                                }
+                            }
+                    );
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ApiCheckStatus(String uid, int accountId, SubmitQuestionnaire result) throws JSONException {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        JSONObject uploadObj = new JSONObject();
+        JSONArray uploadArray = new JSONArray();
+
+        for (int i = 0; i < result.getUrls().size(); i++) {
+
+            JSONObject urlObj = new JSONObject();
+
+            urlObj.put("uid", result.getUrls().get(i).getUid());
+            urlObj.put("labelName", result.getUrls().get(i).getLabelName());
+
+            uploadArray.put(urlObj);
+
+        }
+
+        uploadObj.putOpt("urls", uploadArray);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
+
+        Call<ResponseBody> call = apiService.checkAppointmentUploadStatus(uid, accountId, body);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -535,8 +727,8 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                         Config.closeDialog(getParent(), mDialog);
 
                     if (response.code() == 200) {
-                        imagePathList.clear();
-                        Toast.makeText(mContext, "Updated successfully", Toast.LENGTH_SHORT).show();
+
+                        Toast.makeText(mContext, "Updated Successfully", Toast.LENGTH_SHORT).show();
                         finish();
 
 
@@ -562,8 +754,73 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
             }
         });
 
+    }
+
+    private void ApiCheckWaitlistUploadStatus(String uid, int accountId, SubmitQuestionnaire result) throws JSONException {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        JSONObject uploadObj = new JSONObject();
+        JSONArray uploadArray = new JSONArray();
+
+        for (int i = 0; i < result.getUrls().size(); i++) {
+
+            JSONObject urlObj = new JSONObject();
+
+            urlObj.put("uid", result.getUrls().get(i).getUid());
+            urlObj.put("labelName", result.getUrls().get(i).getLabelName());
+
+            uploadArray.put(urlObj);
+
+        }
+
+        uploadObj.putOpt("urls", uploadArray);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
+        Call<ResponseBody> call = apiService.checkWaitlistUploadStatus(uid, accountId, body);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    if (response.code() == 200) {
+
+                        Toast.makeText(mContext, "Updated Successfully", Toast.LENGTH_SHORT).show();
+                        finish();
+
+
+                    } else {
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
 
     }
+
 
     private void ApiUpdateWaitListQuestionnaire(QuestionnaireInput input, ArrayList<LabelPath> imagePathList) {
 
@@ -603,11 +860,11 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ResponseBody> call = apiService.reSubmitWlQuestionnaire(uid, requestBody, accountId);
+        Call<SubmitQuestionnaire> call = apiService.reSubmitWlQuestionnaire(uid, requestBody, accountId);
 
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new Callback<SubmitQuestionnaire>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<SubmitQuestionnaire> call, Response<SubmitQuestionnaire> response) {
 
                 try {
 
@@ -615,9 +872,29 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                         Config.closeDialog(getParent(), mDialog);
 
                     if (response.code() == 200) {
-                        imagePathList.clear();
-                        Toast.makeText(mContext, "Updated successfully", Toast.LENGTH_SHORT).show();
-                        finish();
+
+                        SubmitQuestionnaire result = response.body();
+
+                        if (result != null && result.getUrls().size() > 0) {
+
+                            for (QuestionnaireUrls url : result.getUrls()) {
+
+                                for (LabelPath p : imagePathList) {
+
+                                    if (url.getUrl().contains(p.getFileName())) {
+
+                                        p.setUrl(url.getUrl());
+                                    }
+                                }
+                            }
+
+                            uploadFilesToS3(imagePathList, result);
+                        } else {
+
+                            Toast.makeText(mContext, "Updated Successfully", Toast.LENGTH_SHORT).show();
+                            finish();
+
+                        }
 
 
                     } else {
@@ -634,7 +911,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<SubmitQuestionnaire> call, Throwable t) {
                 // Log error here since request failed
                 if (mDialog.isShowing())
                     Config.closeDialog(getParent(), mDialog);
@@ -793,8 +1070,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         return true;
     }
 
-
-
     private void UpdateQuestionnaire(ArrayList<GetQuestion> questions) throws JSONException {
 
         for (GetQuestion question : questions) {
@@ -808,6 +1083,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                     model.setManditory(question.isMandatory());
                     model.setLabelName(question.getLabelName());
                     model.setHint(question.getHint());
+                    model.setAllowedTypes(question.getFileProperties().getFileTypes());
                     ArrayList<KeyPairBoolData> filesList = new ArrayList<>();
 
                     for (int i = 0; i < question.getFileProperties().getAllowedDocuments().size(); i++) {
@@ -838,6 +1114,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                     singleFile.setManditory(question.isMandatory());
                     singleFile.setLabelName(question.getLabelName());
                     singleFile.setHint(question.getHint());
+                    singleFile.setAllowedTypes(question.getFileProperties().getFileTypes());
 
                     for (LabelPath l : labelPaths) {
                         if (l.getLabelName().equalsIgnoreCase(question.getLabelName())) {
@@ -972,6 +1249,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
         CustomTextViewSemiBold tvQuestionName = (CustomTextViewSemiBold) fileUploadView.findViewById(R.id.tv_questionName);
         CustomTextViewBold tvMutipleFileManditory = (CustomTextViewBold) fileUploadView.findViewById(R.id.tv_singleFileManditory);
+        CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
         LinearLayout llUpload = (LinearLayout) fileUploadView.findViewById(R.id.ll_upload);
         ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
         ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
@@ -980,15 +1258,30 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
 
         tvQuestionName.setText(singleFile.getQuestionName());
+        tvSupportedTypes.setText(singleFile.getAllowedTypes().toString());
 
         if (singleFile.getFilePath() != null && !singleFile.getFilePath().trim().equalsIgnoreCase("")) {
 
             tvPath.setText(singleFile.getFilePath());
             if (singleFile.getFilePath().contains("http://") || singleFile.getFilePath().contains("https://")) {
 
-                if (singleFile.getType().equalsIgnoreCase(".pdf")) {
+                String extension = "";
+
+                if (singleFile.getType() != null) {
+                    extension = singleFile.getType().substring(singleFile.getType().lastIndexOf("/") + 1);
+                }
+
+                if (singleFile.getType() != null && singleFile.getType().equalsIgnoreCase(".pdf")) {
 
                     ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
+                } else if (singleFile.getType() != null && singleFile.getType().contains("audio")) {
+
+                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.audio_icon));
+
+                } else if (Arrays.asList(videoFormats).contains(extension)) {
+
+                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.video_icon));
+
                 } else {
 
                     Glide.with(mContext).load(singleFile.getFilePath()).into(ivSingleFile);
@@ -997,6 +1290,14 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 if (singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1).equals("pdf")) {
 
                     ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
+
+                } else if (singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1).equals("mp3")) {
+
+                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.audio_icon));
+
+                } else if (Arrays.asList(formats).contains(singleFile.getFilePath().substring(singleFile.getFilePath().lastIndexOf(".") + 1))) {
+
+                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.video_icon));
 
                 } else {
 
@@ -1057,9 +1358,29 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 if (imagePath.contains("http://") || imagePath.contains("https://")) {
 
-                    if (singleFile.getType().equalsIgnoreCase(".pdf")) {
+                    String extension = "";
 
-                        openOnlinePdf(mContext,singleFile.getFilePath());
+                    if (singleFile.getType() != null) {
+                        extension = singleFile.getType().substring(singleFile.getType().lastIndexOf("/") + 1);
+                    }
+
+                    if (singleFile.getType() != null && singleFile.getType().equalsIgnoreCase(".pdf")) {
+
+                        openOnlinePdf(mContext, singleFile.getFilePath());
+
+                    } else if (Arrays.asList(videoFormats).contains(extension)) {
+
+                        Intent intent = new Intent(UpdateQuestionnaire.this, VideoActivity.class);
+                        intent.putExtra("urlOrPath", imagePath);
+                        startActivity(intent);
+
+                    } else if (singleFile.getType().contains("audio")) {
+
+                        Intent viewMediaIntent = new Intent();
+                        viewMediaIntent.setAction(android.content.Intent.ACTION_VIEW);
+                        viewMediaIntent.setDataAndType(Uri.parse(singleFile.getFilePath()), "audio/*");
+                        viewMediaIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(viewMediaIntent);
 
                     } else {
 
@@ -1070,9 +1391,25 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 } else {
 
+                    String extension = "";
+
+                    if (imagePath.contains(".")) {
+                        extension = imagePath.substring(imagePath.lastIndexOf(".") + 1);
+                    }
+
                     if (imagePath.substring(imagePath.lastIndexOf(".") + 1).equals("pdf")) {
 
                         openPdf(getApplicationContext(), imagePath);
+
+                    } else if (Arrays.asList(formats).contains(extension)) {
+
+                        Intent intent = new Intent(UpdateQuestionnaire.this, VideoActivity.class);
+                        intent.putExtra("urlOrPath", imagePath);
+                        startActivity(intent);
+
+                    } else if (extension.contains("mp3")) {
+
+                        playAudio(imagePath);
 
                     } else {
 
@@ -1090,6 +1427,16 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
     }
 
+    private void playAudio(String imagePath) {
+
+        Intent i = new Intent(android.content.Intent.ACTION_VIEW);
+        i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        i.setDataAndType(FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", new File(imagePath)), "audio/*");
+        startActivity(i);
+
+    }
+
 
     private void addFileUploadView(QuestionnaireFileUploadModel model) {
 
@@ -1099,9 +1446,11 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         MultiSpinnerSearch filesSpinner = (MultiSpinnerSearch) fileUploadView.findViewById(R.id.mfilesSpinner);
         RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
         CustomTextViewBold tvMutipleFileManditory = (CustomTextViewBold) fileUploadView.findViewById(R.id.tv_multipleFileManditory);
+        CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
         CustomTextViewMedium tvHint = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_hint);
 
         tvQuestionName.setText(model.getQuestionName());
+        tvSupportedTypes.setText(model.getAllowedTypes().toString());
 
         if (model.getHint() != null && !model.getHint().trim().equalsIgnoreCase("")) {
             tvHint.setVisibility(View.VISIBLE);
@@ -1548,21 +1897,22 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
-                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
-                            if (orgFilePath == null) {
-                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
-                            }
-                        } else {
-                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
-                            return;
+                        if (orgFilePath == null) {
+                            orgFilePath = getFilePathFromURI(mContext, uri, extension);
                         }
 
                         View fileUploadView = viewsList.get(qLabelName);
                         RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
+                        CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
                         FilesAdapter filesAdapter = (FilesAdapter) rvFiles.getAdapter();
 
-                        fileObject.setImagePath(orgFilePath);
-                        filesAdapter.updateFileObject(fileObject);
+                        if (tvSupportedTypes.getText().toString().contains(extension)) {
+                            fileObject.setImagePath(orgFilePath);
+                            filesAdapter.updateFileObject(fileObject);
+                        } else {
+
+                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                        }
 
 
                     } else if (data.getClipData() != null) {
@@ -1583,21 +1933,23 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                             if (mimeType != null) {
                                 extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                             }
-                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
-                                if (orgFilePath == null) {
-                                    orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
-                                }
-                            } else {
-                                Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
-                                return;
+                            if (orgFilePath == null) {
+                                orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
                             }
+
 
                             View fileUploadView = viewsList.get(qLabelName);
                             RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
+                            CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
                             FilesAdapter filesAdapter = (FilesAdapter) rvFiles.getAdapter();
 
-                            fileObject.setImagePath(orgFilePath);
-                            filesAdapter.updateFileObject(fileObject);
+                            if (tvSupportedTypes.getText().toString().contains(extension)) {
+                                fileObject.setImagePath(orgFilePath);
+                                filesAdapter.updateFileObject(fileObject);
+                            } else {
+
+                                Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                            }
                         }
 
                     }
@@ -1607,7 +1959,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
             }
 
         } else if (requestCode == CAMERA_FOR_ONE) {
-            if (data != null) {
+            if (data != null && data.getExtras() != null) {
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 String path = saveImage(bitmap);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -1649,34 +2001,43 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
-                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
-                            if (orgFilePath == null) {
-                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
-                            }
-                        } else {
-                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
-                            return;
+                        if (orgFilePath == null) {
+                            orgFilePath = getFilePathFromURI(mContext, uri, extension);
                         }
 
                         singleFilePath = orgFilePath;
-                        if (orgFilePath != null && orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("pdf")) {
+                        View fileUploadView = viewsList.get(qLabelName);
+                        ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
+                        CustomTextViewMedium tvPath = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_path);
+                        CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
+                        ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
+                        ivClose.setVisibility(View.VISIBLE);
+                        tvPath.setText(orgFilePath);
 
-                            View fileUploadView = viewsList.get(qLabelName);
-                            ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
-                            CustomTextViewMedium tvPath = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_path);
-                            ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
-                            ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
-                            ivClose.setVisibility(View.VISIBLE);
-                            tvPath.setText(orgFilePath);
+                        if (tvSupportedTypes.getText().toString().contains(extension)) {
 
+                            if (orgFilePath != null) {
+
+                                if (orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("pdf")) {
+
+                                    ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
+
+                                } else if (Arrays.asList(videoFormats).contains(extension)) {
+
+                                    ivSingleFile.setImageDrawable(mContext.getResources().getDrawable(R.drawable.video_icon));
+
+                                } else if (orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("mp3")) {
+
+                                    ivSingleFile.setImageDrawable(mContext.getResources().getDrawable(R.drawable.audio_icon));
+
+                                } else {
+                                    ivSingleFile.setImageBitmap(BitmapFactory.decodeFile(orgFilePath));
+                                }
+
+                            }
                         } else {
-                            View fileUploadView = viewsList.get(qLabelName);
-                            ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
-                            CustomTextViewMedium tvPath = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_path);
-                            ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
-                            ivSingleFile.setImageBitmap(BitmapFactory.decodeFile(orgFilePath));
-                            ivClose.setVisibility(View.VISIBLE);
-                            tvPath.setText(orgFilePath);
+
+                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
                         }
 
 
@@ -1698,34 +2059,43 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                             if (mimeType != null) {
                                 extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                             }
-                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
-                                if (orgFilePath == null) {
-                                    orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
-                                }
-                            } else {
-                                Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
-                                return;
+                            if (orgFilePath == null) {
+                                orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
                             }
 
                             singleFilePath = orgFilePath;
-                            if (orgFilePath != null && orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("pdf")) {
+                            View fileUploadView = viewsList.get(qLabelName);
+                            ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
+                            CustomTextViewMedium tvPath = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_path);
+                            CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
+                            ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
+                            ivClose.setVisibility(View.VISIBLE);
+                            tvPath.setText(orgFilePath);
 
-                                View fileUploadView = viewsList.get(qLabelName);
-                                ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
-                                CustomTextViewMedium tvPath = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_path);
-                                ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
-                                ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
-                                ivClose.setVisibility(View.VISIBLE);
-                                tvPath.setText(orgFilePath);
+                            if (tvSupportedTypes.getText().toString().contains(extension)) {
+
+                                if (orgFilePath != null) {
+
+                                    if (orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("pdf")) {
+
+                                        ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
+
+                                    } else if (Arrays.asList(videoFormats).contains(extension)) {
+
+                                        ivSingleFile.setImageDrawable(mContext.getResources().getDrawable(R.drawable.video_icon));
+
+                                    } else if (orgFilePath.substring(orgFilePath.lastIndexOf(".") + 1).equals("mp3")) {
+
+                                        ivSingleFile.setImageDrawable(mContext.getResources().getDrawable(R.drawable.audio_icon));
+
+                                    } else {
+                                        ivSingleFile.setImageBitmap(BitmapFactory.decodeFile(orgFilePath));
+                                    }
+                                }
 
                             } else {
-                                View fileUploadView = viewsList.get(qLabelName);
-                                ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
-                                CustomTextViewMedium tvPath = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_path);
-                                ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
-                                ivSingleFile.setImageBitmap(BitmapFactory.decodeFile(orgFilePath));
-                                ivClose.setVisibility(View.VISIBLE);
-                                tvPath.setText(orgFilePath);
+
+                                Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -1737,7 +2107,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
         } else if (requestCode == CAMERA) {
 
-            if (data != null) {
+            if (data != null && data.getExtras() != null) {
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 String path = saveImage(bitmap);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();

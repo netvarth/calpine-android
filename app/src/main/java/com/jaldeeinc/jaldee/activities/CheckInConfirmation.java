@@ -88,7 +88,7 @@ public class CheckInConfirmation extends AppCompatActivity {
         phoneNumber = i.getStringExtra("waitlistPhonenumber");
         livetrack = i.getBooleanExtra("livetrack", false);
         providerId = i.getStringExtra("accountID");
-        value = i.getStringExtra("confId");
+        value = i.getStringExtra("uid");
 
 
         initializations();
