@@ -84,7 +84,8 @@ public class BillCouponAdapter extends RecyclerView.Adapter<BillCouponAdapter.Bi
 
 
 
-        holder.txt_coupon_name.setText("( "+couponName+" )");
+        //holder.txt_coupon_name.setText("( "+couponName+" )");
+        holder.txt_coupon_name.setText(couponName);
         couponValue = couponValue.replaceAll("^\"|\"$", "");
         Double jCouponValue = Double.parseDouble(couponValue);
         //Float f= Float.parseFloat(couponValue);

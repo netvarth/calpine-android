@@ -1517,7 +1517,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
             tvName.setText(address.getFirstName() + " " + address.getLastName());
             tvEmailId.setText(address.getEmail());
             tvMobileNumber.setText(address.getPhoneNumber());
-            String fullAddress = address.getAddress() + ", \n" + address.getLandMark() + ", \n" + address.getCity() + ", " + address.getPostalCode();
+            String fullAddress = address.getAddress() + " \n" + address.getCity() + ", \n" + address.getLandMark() + ", " + address.getPostalCode();
             tvDeliveryAddress.setText(fullAddress);
 
         }

@@ -953,7 +953,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         }
 
 
-                        if (mBillData.getJCoupon() != null) {
+                        /*if (mBillData.getJCoupon() != null) {
                             if (mBillData.getJCoupon().size() > 0 && mBillData.getJCoupon().size() == 1) {
                                 jcLayout.setVisibility(View.VISIBLE);
                                 tv_jaldeeCouponLabel.setText("Jaldee Coupon");
@@ -971,8 +971,13 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             billCouponAdapter.notifyDataSetChanged();
                         } else {
                             jcLayout.setVisibility(View.GONE);
-                        }
-                        if (mBillData.getProviderCoupon() != null) {
+                        }*/
+                        RecyclerView.LayoutManager cLayoutManager = new LinearLayoutManager(mCOntext);
+                        coupon_added.setLayoutManager(cLayoutManager);
+                        billCouponAdapter = new BillCouponAdapter(mBillData.getJCoupon());
+                        coupon_added.setAdapter(billCouponAdapter);
+                        billCouponAdapter.notifyDataSetChanged();
+                        /*if (mBillData.getProviderCoupon() != null) {
                             if (mBillData.getProviderCoupon().size() > 0 && mBillData.getProviderCoupon().size() == 1) {
                                 pcLayout.setVisibility(View.VISIBLE);
                                 tv_providerCouponLabel.setText("Provider Coupon");
@@ -983,14 +988,19 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                                 tv_providerCouponLabel.setText("Provider Coupons");
                                 tv_providerCouponLabel.setVisibility(View.VISIBLE);
                             }
-                            RecyclerView.LayoutManager cLayoutManager = new LinearLayoutManager(mCOntext);
-                            proCoupon_added.setLayoutManager(cLayoutManager);
+                            RecyclerView.LayoutManager pcLayoutManager = new LinearLayoutManager(mCOntext);
+                            proCoupon_added.setLayoutManager(pcLayoutManager);
                             billProCouponAdapter = new BillCouponAdapter(mBillData.getProviderCoupon());
                             proCoupon_added.setAdapter(billProCouponAdapter);
                             billProCouponAdapter.notifyDataSetChanged();
                         } else {
                             pcLayout.setVisibility(View.GONE);
-                        }
+                        }*/
+                        RecyclerView.LayoutManager pcLayoutManager = new LinearLayoutManager(mCOntext);
+                        proCoupon_added.setLayoutManager(pcLayoutManager);
+                        billProCouponAdapter = new BillCouponAdapter(mBillData.getProviderCoupon());
+                        proCoupon_added.setAdapter(billProCouponAdapter);
+                        billProCouponAdapter.notifyDataSetChanged();
 
                         if (mBillData.getJdn() != null) {
                             jdnLayout.setVisibility(View.VISIBLE);

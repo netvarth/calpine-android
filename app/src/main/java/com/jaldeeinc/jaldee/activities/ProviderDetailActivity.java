@@ -2939,8 +2939,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @Override
     public void sendAddress(String address, int id, String place) {
         locationId = id;
-        tvLocation.setText(address);
         location = place;
+        tvLocation.setText(address);
+        tvLocationName.setText(location);
         //   ApiCheckInMessage(locationId,place);
         apiSettings_Details(uniqueId, providerId, locationId, location);
 
