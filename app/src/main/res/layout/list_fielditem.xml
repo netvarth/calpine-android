@@ -30,20 +30,23 @@
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                     android:id="@+id/tv_questionName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Enter your age"
                     android:textColor="@color/title_color"
+                    android:layout_weight="0.9"
                     android:textSize="@dimen/dimen_15dp">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                     android:id="@+id/tv_manditory"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimen_5dp"
                     android:text="*"
+                    android:layout_weight="0.1"
+                    android:gravity="center"
                     android:textColor="@color/red"
                     android:textSize="@dimen/dimen_15dp"
                     android:visibility="gone">
