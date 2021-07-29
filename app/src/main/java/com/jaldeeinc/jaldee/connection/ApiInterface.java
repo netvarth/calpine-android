@@ -1,9 +1,6 @@
 package com.jaldeeinc.jaldee.connection;
 
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.model.Address;
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
@@ -17,14 +14,18 @@ import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.ActiveDonation;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
+import com.jaldeeinc.jaldee.response.AdvancePaymentDetails;
+import com.jaldeeinc.jaldee.response.AdvancePaymentDetailsOrder;
 import com.jaldeeinc.jaldee.response.AppointmentSchedule;
 import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
-import com.jaldeeinc.jaldee.response.CouponApliedOrNotDetails;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.InboxList;
 import com.jaldeeinc.jaldee.response.InboxModel;
+import com.jaldeeinc.jaldee.response.JCashAvailable;
+import com.jaldeeinc.jaldee.response.JCashInfo;
+import com.jaldeeinc.jaldee.response.JCashSpentDetails;
 import com.jaldeeinc.jaldee.response.JdnResponse;
 import com.jaldeeinc.jaldee.response.LocationResponse;
 import com.jaldeeinc.jaldee.response.LoginResponse;
@@ -53,7 +54,6 @@ import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchLocation;
-import com.jaldeeinc.jaldee.response.SearchLogo;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
@@ -68,13 +68,12 @@ import com.jaldeeinc.jaldee.response.StoreDetails;
 import com.jaldeeinc.jaldee.response.SubmitQuestionnaire;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 import com.jaldeeinc.jaldee.response.UserResponse;
-import com.jaldeeinc.jaldee.utils.SharedPreference;
+import com.jaldeeinc.jaldee.response.WalletCheckSumModel;
+import com.jaldeeinc.jaldee.response.WalletEligibleJCash;
+import com.jaldeeinc.jaldee.response.WalletPaytmChecksum;
 
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -432,6 +431,10 @@ public interface ApiInterface {
     Call<CheckSumModel> generateHash(@Header("device-name") String deviceName,@Body RequestBody jsonObj);
 
     @Headers("User-Agent: android")
+    @POST("consumer/payment/wallet")
+    Call<WalletCheckSumModel> generateHash2(@Body RequestBody jsonObj);
+
+    @Headers("User-Agent: android")
     @POST("consumer/payment/status")
     Call<String> verifyRazorpayPayment(@QueryMap(encoded = true) Map<String, String> query);
 
@@ -439,14 +442,24 @@ public interface ApiInterface {
     @POST("consumer/payment")
     Call<PaytmChecksum> generateHashPaytm(@Body RequestBody jsonObj);
 
+    @Headers("User-Agent: android")
+    @POST("consumer/payment/wallet")
+    Call<WalletPaytmChecksum> generateHashPaytm2(@Body RequestBody jsonObj);
+
     @POST("consumer/waitlist")
     Call<ResponseBody> Checkin(@Query("account") String account, @Body RequestBody jsonObj);
 
     @PUT("consumer/waitlist/advancePayment")
-    Call<CouponApliedOrNotDetails> getWlCoupnAppliedOrNotDetails(@Query("account") String account, @Body RequestBody jsonObj);
+    Call<AdvancePaymentDetails> getWlAdvancePaymentDetails(@Query("account") String account, @Body RequestBody jsonObj);
 
     @PUT("consumer/appointment/advancePayment")
-    Call<CouponApliedOrNotDetails> getApptCoupnAppliedOrNotDetails(@Query("account") String account, @Body RequestBody jsonObj);
+    Call<AdvancePaymentDetails> getApptAdvancePaymentDetails(@Query("account") String account, @Body RequestBody jsonObj);
+
+    @PUT("consumer/orders/amount")
+    Call<AdvancePaymentDetailsOrder> getOrderAdvancePaymentDetails(@Query("account") String account, @Body RequestBody jsonObj);
+
+    @GET("consumer/wallet/redeem/remaining/amt")
+    Call<String> getPrePayRemainingAmnt(@Query("useJcash") boolean useJcash, @Query("useJcredit") boolean useJcredit, @Query("advancePayAmount") String advancePayAmount);
 
     @POST("consumer/appointment")
     Call<ResponseBody> Appointment(@Query("account") String account, @Body RequestBody jsonObj);
@@ -730,5 +743,23 @@ public interface ApiInterface {
 
     @PUT("consumer/waitlist/questionnaire/upload/status/{uid}?")
     Call<ResponseBody> checkWaitlistUploadStatus(@Path("uid") String id,@Query("account") int accountId,@Body RequestBody jsonObj);
+
+    @GET("consumer/wallet/redeem/eligible/amt")
+    Call<WalletEligibleJCash> getWalletEligibleJCash();
+
+    @GET("consumer/wallet/cash/info")
+    Call<JCashInfo> getJCashInfo();
+
+    @GET("consumer/wallet/cash/available")
+    Call<ArrayList<JCashAvailable>> getJCashAvailable();
+
+    @GET("consumer/wallet/cash/spent")
+    Call<ArrayList<JCashSpentDetails>> getAllJCashSpentDetails();
+
+    @GET("consumer/wallet/cash/{cashId}/txn/log")
+    Call<ArrayList<JCashSpentDetails>> getJCashSpentDetails(@Path("cashId") int cashId);
+
+    @GET("consumer/wallet/cash/expired")
+    Call<ArrayList<JCashAvailable>> getExpiredJCashAvailable();
 
 }

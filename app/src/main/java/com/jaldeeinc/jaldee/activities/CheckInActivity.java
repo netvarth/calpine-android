@@ -9,7 +9,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -33,12 +32,9 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
-import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -53,7 +49,6 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.Interface.ICpn;
@@ -86,11 +81,10 @@ import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
-import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
+import com.jaldeeinc.jaldee.response.AdvancePaymentDetails;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
-import com.jaldeeinc.jaldee.response.CouponApliedOrNotDetails;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.Provider;
@@ -135,13 +129,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -175,8 +164,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
     @BindView(R.id.ll_editDetails)
     LinearLayout llEditDetails;
-
-    static CustomTextViewBold tvConsumerName;
 
     @BindView(R.id.tv_number)
     CustomTextViewMedium tvNumber;
@@ -235,9 +222,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     @BindView(R.id.tv_buttonName)
     CustomTextViewBold tvButtonName;
 
-    @BindView(R.id.txtprepay)
-    CustomTextViewMedium txtprepay;
-
     @BindView(R.id.ll_preinfo)
     LinearLayout llPreInfo;
 
@@ -256,27 +240,16 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     @BindView(R.id.tv_addNote)
     CustomTextViewMedium tvAddNotes;
 
-    // @BindView(R.id.et_countryCode)
-    // EditText et_countryCode;
-
-    @BindView(R.id.txtservicepayment)
-    CustomTextViewMedium txtservicepayment;
-
     @BindView(R.id.tv_vsHint)
     CustomTextViewMedium tvVsHint;
 
     @BindView(R.id.ll_coupons)
     LinearLayout llCoupons;
 
-    static CustomTextViewSemiBold txtprepayamount;
-    static CustomTextViewSemiBold txtserviceamount;
-
-    static LinearLayout LservicePrepay;
-    static LinearLayout LPrepay;
-    static LinearLayout LserviceAmount;
-
     @BindView(R.id.cv_back)
     CardView cvBack;
+
+    static CustomTextViewBold tvConsumerName;
     CountryCodePicker virtual_NmbrCCPicker;
     CustomTextViewSemiBold tvErrorMessage;
     static Activity mActivity;
@@ -311,7 +284,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     ArrayList<String> couponArraylist = new ArrayList<>();
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     ArrayList<ProviderCouponResponse> providerCouponList = new ArrayList<>();
-    CouponApliedOrNotDetails couponApliedOrNotDetails = new CouponApliedOrNotDetails();
+    AdvancePaymentDetails advancePaymentDetails = new AdvancePaymentDetails();
 
     RecyclerView list;
     private CouponlistAdapter mAdapter;
@@ -359,7 +332,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     private FamilyMemberDialog familyMemberDialog;
     private CustomerInformationDialog customerInformationDialog;
     private IFamilyMemberDetails iFamilyMemberDetails;
-    String emailId, prepayAmount = "";
+    String emailId, prepayAmount = "", prePayRemainingAmount = "";
     private String countryCode, mWhtsappCountryCode, mWhatsappNumber, mTelegramCountryCode, mTelegramNumber, mAge;
     private JSONArray mPreferredLanguages = new JSONArray();
     private JSONObject mBookingLocation = new JSONObject();
@@ -401,14 +374,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         isUser = intent.getBooleanExtra("fromUser", false);
         sector = intent.getStringExtra("sector");
         tvConsumerName = findViewById(R.id.tv_consumerName);
-        txtprepayamount = findViewById(R.id.txtprepayamount);
-        LservicePrepay = findViewById(R.id.LservicePrepay);
-        LPrepay = findViewById(R.id.ll_prepay);
-        LserviceAmount = findViewById(R.id.ll_serviceamount);
 
         list = findViewById(R.id.list);
         recycle_family = findViewById(R.id.recycle_family);
-        txtserviceamount = findViewById(R.id.txtserviceamount);
 
         virtual_NmbrCCPicker = findViewById(R.id.virtual_NmbrCCPicker);
         MultiplefamilyList.clear();
@@ -525,14 +493,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             if (checkInInfo.isPrePayment()) {
 
                 if (isUser) {
-                    APIPayment(String.valueOf(userId));
+                    //APIPayment(String.valueOf(userId));
+                    getAdvancePaymentDetails(userMessage, userId);
                 } else {
-                    APIPayment(String.valueOf(providerId));
-
+                    //APIPayment(String.valueOf(providerId));
+                    getAdvancePaymentDetails(userMessage, providerId);
                 }
-            } else {
-
-                LservicePrepay.setVisibility(View.GONE);
             }
 
             if (checkInInfo.isPreInfoEnabled()) { //  check if pre-info is available for the service
@@ -572,7 +538,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
 
         // click actions
-
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -798,7 +763,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     etCode.setText("");
                     Toast.makeText(CheckInActivity.this, couponEntered + " " + "Added", Toast.LENGTH_SHORT).show();
 
-                    cpns(couponArraylist);
 
                 } else {
                     if (couponEntered.equals("")) {
@@ -809,6 +773,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
 
                 }
+                cpns(couponArraylist);
             }
         });
 
@@ -1000,24 +965,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 });
             }
         });
-
-        if (checkInInfo.getTotalAmount() != null && !checkInInfo.getTotalAmount().equalsIgnoreCase("0.0")) {
-            LservicePrepay.setVisibility(View.VISIBLE);
-            LserviceAmount.setVisibility(View.VISIBLE);
-            Typeface tyface = Typeface.createFromAsset(getAssets(),
-                    "fonts/Montserrat_Bold.otf");
-//            txtservicepayment.setTypeface(tyface);
-//            txtserviceamount.setTypeface(tyface);
-            String firstWord = "";
-            String thirdWord;
-            thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(checkInInfo.getTotalAmount()));
-
-
-            Spannable spannable = new SpannableString(firstWord + thirdWord);
-            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
-                    firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            txtserviceamount.setText(spannable);
-        }
 
         llCoupons.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1262,18 +1209,14 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                 if (!checkInInfo.isPrePayment()) {
                     if (isToken) {
-                        tvButtonName.setText("Confirm Token");
                         tvTerm.setText("Token for");
                     } else {
-                        tvButtonName.setText("Confirm CheckIn");
                         tvTerm.setText("CheckIn for");
                     }
                 } else {
                     if (isToken) {
-                        tvButtonName.setText("Proceed to Payment");
                         tvTerm.setText("Token for");
                     } else {
-                        tvButtonName.setText("Proceed to Payment");
                         tvTerm.setText("CheckIn for");
                     }
                 }
@@ -1281,12 +1224,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     calcMode = mSearchSettings.getCalculationMode();
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     private void ApiJaldeegetS3Coupons(String s3Coupons) {
@@ -1382,23 +1322,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                         if ((showPayU) || showPaytmWallet) {
                             Config.logV("URL----%%%%%---@@--");
-                            LservicePrepay.setVisibility(View.VISIBLE);
-                            Typeface tyface = Typeface.createFromAsset(getAssets(),
-                                    "fonts/Montserrat_Bold.otf");
-//                            txtprepay.setTypeface(tyface);
-//                            txtservicepayment.setTypeface(tyface);
-//                            txtserviceamount.setTypeface(tyface);
-//                            txtprepayamount.setTypeface(tyface);
-                            String firstWord = "";
-                            String secondWord;
-                            String thirdWord;
-                            if (MultiplefamilyList.size() > 1) {
-                                secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
-                                thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalServicePay));
-                            } else {
-                                secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(checkInInfo.getMinPrePaymentAmount()));
-                                thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(checkInInfo.getTotalAmount()));
-                            }
+
                             if (userMessage != null) {
                                 if (isUser) {
                                     getAdvancePaymentDetails(userMessage, userId);
@@ -1407,10 +1331,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                 }
                             }
 
-                            Spannable spannable1 = new SpannableString(firstWord + thirdWord);
-                            spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
-                                    firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            txtserviceamount.setText(spannable1);
                         }
 
                     } else {
@@ -1437,7 +1357,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
     }
 
-    public CouponApliedOrNotDetails getAdvancePaymentDetails(final String txt_addnote, int id) {
+    public AdvancePaymentDetails getAdvancePaymentDetails(final String txt_addnote, int id) {
         final ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
@@ -1503,45 +1423,26 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             e.printStackTrace();
         }
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), queueobj.toString());
-        Call<CouponApliedOrNotDetails> call = apiService.getWlCoupnAppliedOrNotDetails(String.valueOf(id), requestBody);
-        call.enqueue(new Callback<CouponApliedOrNotDetails>() {
+        Call<AdvancePaymentDetails> call = apiService.getWlAdvancePaymentDetails(String.valueOf(id), requestBody);
+        call.enqueue(new Callback<AdvancePaymentDetails>() {
 
             @Override
-            public void onResponse(Call<CouponApliedOrNotDetails> call, Response<CouponApliedOrNotDetails> response) {
+            public void onResponse(Call<AdvancePaymentDetails> call, Response<AdvancePaymentDetails> response) {
                 try {
                     if (mDialog.isShowing())
                         Config.closeDialog(getParent(), mDialog);
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
-                        couponApliedOrNotDetails = response.body();
-
-                        Config.logV("couponArraylist--code-------------------------" + couponArraylist);
-                        list.setVisibility(View.VISIBLE);
-                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CheckInActivity.this);
-                        list.setLayoutManager(mLayoutManager);
-                        mAdapter = new CouponlistAdapter(CheckInActivity.this, s3couponList, couponEntered, couponArraylist, couponApliedOrNotDetails, iCpn);
-                        list.setAdapter(mAdapter);
-                        mAdapter.notifyDataSetChanged();
-                        if (couponApliedOrNotDetails.getAmountRequiredNow() > 0) {       //Prepayment now only show if prepayment > 0
-                            LPrepay.setVisibility(View.VISIBLE);
-                            txtprepayamount.setText("₹ " + Config.getAmountinTwoDecimalPoints(couponApliedOrNotDetails.getAmountRequiredNow()));
-                            if (isToken) {
-                                tvButtonName.setText("Proceed to Payment");
-                            } else {
-                                tvButtonName.setText("Proceed to Payment");
-                            }
-                            if (MultiplefamilyList.size() > 1) {
-                                totalAmountPay = String.valueOf(couponApliedOrNotDetails.getAmountRequiredNow());
-                            }
-                        } else {
-                            LPrepay.setVisibility(View.GONE);
-
-                            if (isToken) {
-                                tvButtonName.setText("Confirm Token");
-                            } else {
-                                tvButtonName.setText("Confirm CheckIn");
-                            }
+                        advancePaymentDetails = response.body();
+                        if (couponEntered != null) {
+                            Config.logV("couponArraylist--code-------------------------" + couponArraylist);
+                            list.setVisibility(View.VISIBLE);
+                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CheckInActivity.this);
+                            list.setLayoutManager(mLayoutManager);
+                            mAdapter = new CouponlistAdapter(CheckInActivity.this, s3couponList, couponEntered, couponArraylist, advancePaymentDetails, iCpn);
+                            list.setAdapter(mAdapter);
+                            mAdapter.notifyDataSetChanged();
                         }
                     }
                 } catch (Exception e) {
@@ -1550,14 +1451,14 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             }
 
             @Override
-            public void onFailure(Call<CouponApliedOrNotDetails> call, Throwable t) {
+            public void onFailure(Call<AdvancePaymentDetails> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getParent(), mDialog);
             }
         });
-        return couponApliedOrNotDetails;
+        return advancePaymentDetails;
     }
     /*private JSONObject getCoupnAppliedOrNotDetails(final String txt_addnote, int id) {
         JSONObject qjsonObj = new JSONObject();
@@ -1750,13 +1651,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     jsonObj3.put("number", mTelegramNumber);
                     waitobj.putOpt("telegramNum", jsonObj3);
                 }
-                if(mAge != null && !mAge.isEmpty()) {
+                if (mAge != null && !mAge.isEmpty()) {
                     waitobj.put("age", mAge);
                 }
-                if(mPreferredLanguages != null) {
+                if (mPreferredLanguages != null) {
                     waitobj.putOpt("preferredLanguage", mPreferredLanguages);
                 }
-                if(mBookingLocation != null) {
+                if (mBookingLocation != null) {
                     waitobj.putOpt("bookingLocation", mBookingLocation);
                 }
                 if (emailId != null && !emailId.equalsIgnoreCase("")) {
@@ -1765,7 +1666,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 waitlistArray.put(waitobj);
 
                 // et_countryCode.setText(countryCode);
-
 
 
             }
@@ -1933,7 +1833,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         model.setMultipleFamilyMembers(MultiplefamilyList);
                         model.setTotalAmount(totalAmountPay);
                         model.setTotalServicePay(totalServicePay);
-
+                        // model.setJacshSelected(cbJCash.isChecked());
+                        model.setAmountRequiredNow(advancePaymentDetails.getAmountRequiredNow());
+                        if (advancePaymentDetails.getEligibleJcashAmt() != null) {
+                            model.setEligibleJcashAmt(advancePaymentDetails.getEligibleJcashAmt().get("jCashAmt").getAsDouble());
+                        }
                         if (questionnaire != null) {
 
                             if (questionnaire.getQuestionsList() != null) {
@@ -2126,133 +2030,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     }
 
 
-    private void getConfirmationId(int userId, String txt_addnote, int id) {
-
-        final ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-        Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(value, String.valueOf(id));
-        call.enqueue(new Callback<ActiveCheckIn>() {
-            @Override
-            public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
-                try {
-                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-                    if (response.code() == 200) {
-                        activeAppointment = response.body();
-
-                        if (activeAppointment != null) {
-                            checkEncId = activeAppointment.getCheckinEncId();
-                            dialogPayment = new BottomSheetDialog(mContext);
-
-                            if (checkInInfo.isPrePayment() && ((totalAmountPay != null && Float.parseFloat(totalAmountPay) > 0) || (prepayAmount != null && Integer.parseInt(prepayAmount) > 0))) {
-                                if (!showPaytmWallet && !showPayU) {
-
-                                    //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
-                                } else {
-
-                                    try {
-
-                                        dialogPayment.setContentView(R.layout.prepayment);
-                                        dialogPayment.show();
-
-
-                                        Button btn_paytm = (Button) dialogPayment.findViewById(R.id.btn_paytm);
-                                        Button btn_payu = (Button) dialogPayment.findViewById(R.id.btn_payu);
-                                        if (showPaytmWallet) {
-                                            btn_paytm.setVisibility(View.VISIBLE);
-                                        } else {
-                                            btn_paytm.setVisibility(View.GONE);
-                                        }
-                                        if (showPayU) {
-                                            btn_payu.setVisibility(View.VISIBLE);
-                                        } else {
-                                            btn_payu.setVisibility(View.GONE);
-                                        }
-                                        final EditText edt_message = (EditText) dialogPayment.findViewById(R.id.edt_message);
-                                        TextView txtamt = (TextView) dialogPayment.findViewById(R.id.txtamount);
-
-                                        TextView txtprepayment = (TextView) dialogPayment.findViewById(R.id.txtprepayment);
-
-                                        txtprepayment.setText(R.string.serve_prepay);
-
-                                        if (MultiplefamilyList.size() > 1) {
-                                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(totalAmountPay))));
-                                        } else {
-                                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(prepayAmount))));
-                                        }
-
-
-                                        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                                "fonts/JosefinSans-SemiBold.ttf");
-                                        txtamt.setTypeface(tyface1);
-                                        btn_payu.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                if (MultiplefamilyList.size() > 1) {
-                                                    new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, totalAmountPay, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
-                                                } else {
-                                                    new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, prepayAmount, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
-                                                }
-                                                dialogPayment.dismiss();
-                                            }
-                                        });
-
-                                        btn_paytm.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
-                                                if (MultiplefamilyList.size() > 0) {
-                                                    payment.ApiGenerateHashPaytm(value, totalAmountPay, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID, checkEncId);
-                                                } else {
-                                                    payment.ApiGenerateHashPaytm(value, prepayAmount, String.valueOf(id), Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID, checkEncId);
-                                                }
-                                                dialogPayment.dismiss();
-
-                                            }
-                                        });
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-
-
-                            } else {
-
-                                if (isUser) {
-                                    if (imagePathList.size() > 0) {
-                                        ApiCommunicateCheckin(value, String.valueOf(userId), txt_addnote, dialog);
-                                    }
-                                    getConfirmationDetails(userId);
-
-                                } else {
-                                    if (imagePathList.size() > 0) {
-                                        ApiCommunicateCheckin(value, String.valueOf(providerId), txt_addnote, dialog);
-                                    }
-                                    getConfirmationDetails(providerId);
-
-                                }
-                            }
-
-
-                        }
-
-                    }
-                } catch (Exception e) {
-                    Log.i("mnbbnmmnbbnm", e.toString());
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
-                Log.i("mnbbnmmnbbnm", t.toString());
-                t.printStackTrace();
-            }
-        });
-
-    }
-
-
     @Override
     public void refreshMultipleMEmList(ArrayList<FamilyArrayModel> familyList) {
         MultiplefamilyList.clear();
@@ -2260,12 +2037,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         recycle_family.setVisibility(View.VISIBLE);
         if (checkInInfo.getTotalAmount() != null && !checkInInfo.getTotalAmount().equalsIgnoreCase("0.0")) {
             totalServicePay = String.valueOf(Double.parseDouble(checkInInfo.getTotalAmount()) * MultiplefamilyList.size());
-            String firstWord = "";
-            String thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalServicePay));
-            Spannable spannable1 = new SpannableString(firstWord + thirdWord);
-            spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
-                    firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            txtserviceamount.setText(spannable1);
+
         }
         /*if (checkInInfo.isPrePayment()) {
             totalAmountPay = String.valueOf(Double.parseDouble(checkInInfo.getMinPrePaymentAmount()) * MultiplefamilyList.size());
@@ -2945,8 +2717,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         } else {
             tvEmail.setText("");
         }
-        tvConsumerName.setText(mFirstName+" "+mLastName);
+        tvConsumerName.setText(mFirstName + " " + mLastName);
     }
+
     @Override
     public void sendFamilyMemberDetails(int consumerId, String firstName, String lastName, String phone, String email, String conCode) {
         mFirstName = firstName;
@@ -2965,7 +2738,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         } else {
             tvEmail.setText("");
         }
-        tvConsumerName.setText(mFirstName+" "+mLastName);
+        tvConsumerName.setText(mFirstName + " " + mLastName);
     }
 
     @Override

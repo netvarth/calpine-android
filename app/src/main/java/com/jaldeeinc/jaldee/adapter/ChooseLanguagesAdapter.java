@@ -43,8 +43,6 @@ public class ChooseLanguagesAdapter extends RecyclerView.Adapter<ChooseLanguages
             cb_language = (CheckBox) view.findViewById(R.id.cb_language);
             Typeface font = Typeface.createFromAsset(mContext.getAssets(), "fonts/JosefinSans-SemiBold.ttf");
             cb_language.setTypeface(font);
-
-
         }
     }
 

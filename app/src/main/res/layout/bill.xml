@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:autofit="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:autofit="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/spinnerbg"
@@ -62,9 +62,9 @@
                     <LinearLayout
                         android:id="@+id/ll_providerLayout"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimen_5dp"
-                        android:visibility="gone"
-                        android:layout_height="wrap_content">
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -77,12 +77,11 @@
                             android:id="@+id/tv_providerName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:maxLines="1"
                             android:ellipsize="end"
+                            android:maxLines="1"
                             android:text=""
                             android:textColor="@color/title_color"
-                            android:textSize="@dimen/dimen_15dp"
-                            >
+                            android:textSize="@dimen/dimen_15dp">
 
                         </TextView>
 
@@ -133,15 +132,14 @@
                             android:id="@+id/txtdate"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:singleLine="true"
                             android:layout_marginStart="@dimen/dimen_5dp"
+                            android:layout_weight="1"
                             android:maxLines="1"
-                            autofit:minTextSize="8dp"
+                            android:singleLine="true"
+                            android:textColor="@color/title_grey"
                             android:textSize="14dp"
 
-                            android:textColor="@color/title_grey"
-                            />
+                            autofit:minTextSize="8dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -352,6 +350,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
+
                     <LinearLayout
                         android:id="@+id/pcLayout"
                         android:layout_width="match_parent"
@@ -387,6 +386,7 @@
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/proCoupon_added"
                         android:layout_width="match_parent"
@@ -637,6 +637,7 @@
                             android:textSize="@dimen/txtsize_hint" />
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:id="@+id/ll_amount_Saved"
                         android:layout_width="match_parent"
@@ -654,9 +655,10 @@
                             android:gravity="left"
                             android:text="Amount Saved"
                             android:textColor="@color/colorAccent"
-                            android:textStyle="bold"
-                            android:textSize="@dimen/txtsize_hint" />
+                            android:textSize="@dimen/txtsize_hint"
+                            android:textStyle="bold" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -745,6 +747,35 @@
                             android:textSize="@dimen/txtsize_subtitle"
                             android:textStyle="bold" />
 
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_jCash"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <CheckBox
+                            android:id="@+id/cb_jCash"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:buttonTint="@color/blue"
+                            android:checked="true"
+                            android:padding="@dimen/dimen_0dp"
+                            android:text="Use Jaldee cash balance : Rs "
+                            android:textColor="@color/darker_gray"
+                            android:textSize="@dimen/txtsize_12" />
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                            android:id="@+id/tv_jCashHint"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="33dp"
+                            android:text="Balance amount can be paid by other payment methods"
+                            android:textColor="@color/darker_gray"
+                            android:textSize="@dimen/txtsize_12" />
                     </LinearLayout>
 
 

@@ -64,11 +64,10 @@ public class Constants {
 
     public static final String NONE = "NONE";
     public static final String FULLAMOUNT = "FULLAMOUNT";
+    public static final String FIXED = "FIXED";
 
     public static final String QUESTIONNAIRE = "questionnaire";
     public static final String QIMAGES = "qImages";
-
-
 
     // notification purpose
     public static final String PUSH_NOTIFICATION = "pushNotification";

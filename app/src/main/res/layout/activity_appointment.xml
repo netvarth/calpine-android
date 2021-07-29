@@ -597,83 +597,6 @@
                 android:layout_marginBottom="10dp"
                 android:visibility="gone" />
 
-            <LinearLayout
-                android:id="@+id/LservicePrepay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_padding"
-                android:layout_marginTop="@dimen/padding7"
-                android:layout_marginRight="@dimen/default_padding"
-                android:background="@drawable/input_border_gray_bg"
-                android:orientation="vertical"
-                android:padding="@dimen/default_padding"
-                android:visibility="gone">
-
-
-                <LinearLayout
-                    android:id="@+id/ll_serviceamount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding2"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                        android:id="@+id/txtservicepayment"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="@dimen/padding2"
-                        android:gravity="center"
-                        android:text="Service Fee"
-                        android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_hint_11" />
-
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                        android:id="@+id/txtserviceamount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:gravity="center"
-                        android:text=" "
-                        android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_hint_11" />
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:id="@+id/ll_prepay"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                        android:id="@+id/txtprepay"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="@dimen/padding2"
-                        android:gravity="center"
-                        android:text="@string/serve_prepay"
-                        android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_hint_11" />
-
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                        android:id="@+id/txtprepayamount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="@dimen/txtsize_hint_11" />
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-
         </LinearLayout>
 
     </ScrollView>
@@ -791,7 +714,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Confirm Appointment"
+                android:text="Next"
                 android:textColor="@color/white"
                 android:textSize="@dimen/dimen_18sp">
 

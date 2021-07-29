@@ -1,12 +1,15 @@
 package com.jaldeeinc.jaldee.model;
 
-import com.jaldeeinc.jaldee.activities.CheckinFamilyMember;
+import com.google.gson.*;
+import com.google.gson.JsonObject;
+import com.jaldeeinc.jaldee.response.AdvancePaymentDetails;
 import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.ServiceInfo;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -42,6 +45,24 @@ public class BookingModel implements Serializable {
     public String totalAmount;
     public String totalServicePay;
     public String donationAmount;
+    public double eligibleJcashAmt;
+    public float amountRequiredNow;
+
+    public void setEligibleJcashAmt(double eligibleJcashAmt) {
+        this.eligibleJcashAmt = eligibleJcashAmt;
+    }
+
+    public void setAmountRequiredNow(float amountRequiredNow) {
+        this.amountRequiredNow = amountRequiredNow;
+    }
+
+    public double getEligibleJcashAmt() {
+        return eligibleJcashAmt;
+    }
+
+    public float getAmountRequiredNow() {
+        return amountRequiredNow;
+    }
 
     public void setDonationAmount(String donationAmount) {
         this.donationAmount = donationAmount;

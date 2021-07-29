@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -43,7 +44,9 @@ import android.widget.Toast;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.Interface.IAddressInterface;
+import com.jaldeeinc.jaldee.Interface.ICpn;
 import com.jaldeeinc.jaldee.Interface.IDeleteImagesInterface;
 import com.jaldeeinc.jaldee.Interface.IEditContact;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
@@ -83,6 +86,8 @@ import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
 import com.jaldeeinc.jaldee.response.Schedule;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.StoreDetails;
+import com.jaldeeinc.jaldee.response.WalletCheckSumModel;
+import com.jaldeeinc.jaldee.response.WalletEligibleJCash;
 import com.jaldeeinc.jaldee.utils.DialogUtilsKt;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
@@ -120,7 +125,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CheckoutListActivity extends AppCompatActivity implements IAddressInterface, ISelectedTime, IPaymentResponse, PaymentResultWithDataListener, IEditContact, IDeleteImagesInterface {
+public class CheckoutListActivity extends AppCompatActivity implements IAddressInterface, ISelectedTime, IPaymentResponse, PaymentResultWithDataListener, IEditContact, IDeleteImagesInterface, ICpn {
 
 
     private Context mContext;
@@ -128,6 +133,11 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     ArrayList<Address> addressList = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
     private AddressAdapter addressAdapter;
+    @BindView(R.id.cb_jCash)
+    CheckBox cbJCash;
+
+    @BindView(R.id.ll_jCash)
+    LinearLayout llJCash;
 
     @BindView(R.id.rv_items)
     RecyclerView rvItems;
@@ -180,14 +190,8 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     @BindView(R.id.rl_prepayment)
     RelativeLayout rlPrepayment;
 
-    @BindView(R.id.tv_itemsBill)
-    CustomTextViewMedium tvItemsBill;
-
     @BindView(R.id.tv_deliveryBill)
     CustomTextViewMedium tvDeliveryBill;
-
-    @BindView(R.id.tv_bill)
-    CustomTextViewSemiBold tvBill;
 
     @BindView(R.id.tv_timeSlot)
     CustomTextViewSemiBold tvTimeSlot;
@@ -255,6 +259,15 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     @BindView(R.id.list)
     RecyclerView list;
 
+    @BindView(R.id.ll_advanceAmount)
+    LinearLayout llAdvanceAmount;
+
+    @BindView(R.id.tv_advanceAmount)
+    CustomTextViewSemiBold tvAdvanceAmount;
+
+    @BindView(R.id.tv_jCashHint)
+    CustomTextViewMedium tvJCashHint;
+
     private boolean isStore = true;
     private String selectedDate;
     private String selectedTime = "";
@@ -283,7 +296,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     private StoreDetails storeInfo = new StoreDetails();
     private StoreDetailsDialog storeDetailsDialog;
     ArrayList<ShoppingListModel> imagePathList = new ArrayList<>();
-    String path;
+    String path, couponEntered, prePayRemainingAmount = "";
     Bitmap bitmap;
     File f, file;
     private static final String IMAGE_DIRECTORY = "/demonuts";
@@ -294,6 +307,9 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     ArrayList<String> couponArraylist = new ArrayList<>();
     private CouponlistAdapter mAdapter;
     private Address selectedAddress = new Address();
+    WalletEligibleJCash walletEligibleJCash = new WalletEligibleJCash();
+
+    private ICpn iCpn;
 
 
     @Override
@@ -322,6 +338,28 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
         rbHome.setTypeface(font_style);
         rbStore.setTypeface(font_style);
 
+        cbJCash.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (cbJCash.isChecked()) {
+                    if (walletEligibleJCash.getjCashAmt() >= Float.parseFloat(catalogs.get(0).getAdvanceAmount())) {
+
+                        llAdvanceAmount.setVisibility(View.GONE);
+                    } else {
+                        double amnt = walletEligibleJCash.getjCashAmt() - Float.parseFloat(catalogs.get(0).getAdvanceAmount());
+
+                        tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Math.abs(amnt)) + " required");
+                        llAdvanceAmount.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    if ((catalogs.get(0).getAdvanceAmount() != null && Double.parseDouble(catalogs.get(0).getAdvanceAmount()) > 0) || catalogs.get(0).getPaymentType().equalsIgnoreCase(Constants.FULLAMOUNT)) {
+                        tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(catalogs.get(0).getAdvanceAmount())) + " required");
+                        llAdvanceAmount.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
         tvChangeAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -480,11 +518,11 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
         tvApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String code = etCouponCode.getEditableText().toString();
+                couponEntered = etCouponCode.getEditableText().toString();
 
                 boolean found = false;
                 for (int index = 0; index < couponArraylist.size(); index++) {
-                    if (couponArraylist.get(index).equals(code)) {
+                    if (couponArraylist.get(index).equals(couponEntered)) {
                         found = true;
                         break;
                     }
@@ -497,27 +535,27 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                 }
                 found = false;
                 for (int i = 0; i < s3couponList.size(); i++) {
-                    if (s3couponList.get(i).getJaldeeCouponCode().equals(code)) {
+                    if (s3couponList.get(i).getJaldeeCouponCode().equals(couponEntered)) {
                         found = true;
                         break;
                     }
                 }
                 for (int i = 0; i < providerCouponList.size(); i++) {
-                    if (providerCouponList.get(i).getCouponCode().equals(code)) {
+                    if (providerCouponList.get(i).getCouponCode().equals(couponEntered)) {
                         found = true;
                         break;
                     }
                 }
                 if (found) {
 
-                    couponArraylist.add(code);
+                    couponArraylist.add(couponEntered);
 
                     etCouponCode.setText("");
-                    Toast.makeText(CheckoutListActivity.this, code + " " + "Added", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CheckoutListActivity.this, couponEntered + " " + "Added", Toast.LENGTH_SHORT).show();
 
 
                 } else {
-                    if (code.equals("")) {
+                    if (couponEntered.equals("")) {
                         Toast.makeText(CheckoutListActivity.this, "Enter a coupon", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(CheckoutListActivity.this, "Coupon Invalid", Toast.LENGTH_SHORT).show();
@@ -525,19 +563,13 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
 
 
                 }
-                Config.logV("couponArraylist--code-------------------------" + couponArraylist);
-                list.setVisibility(View.VISIBLE);
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CheckoutListActivity.this);
-                list.setLayoutManager(mLayoutManager);
-                mAdapter = new CouponlistAdapter(CheckoutListActivity.this, s3couponList, code, couponArraylist);
-                list.setAdapter(mAdapter);
-                mAdapter.notifyDataSetChanged();
+                cpns(couponArraylist);
+
             }
         });
 
         ApiGetProfileDetail();
-        getS3Coupons(uniqueId);
-        ApiJaldeegetProviderCoupons(uniqueId);
+        getCoupons(uniqueId);
 
 
     }
@@ -722,7 +754,11 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                                 }
 
                             }
-                            getConfirmationId(value, accountId);
+                            if (cbJCash.isChecked()) {
+                                getPrePayRemainingAmntNeeded(prepayAmount);
+                            } else {
+                                getConfirmationId(value, accountId);
+                            }
 
                         }
 
@@ -759,6 +795,31 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
 
     }
 
+    private void getPrePayRemainingAmntNeeded(String prepayAmount) {
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<String> call = apiService.getPrePayRemainingAmnt(cbJCash.isChecked(), false, prepayAmount);
+        call.enqueue(new Callback<String>() {
+
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                Config.logV("URL------GET Prepay remaining amount---------" + response.raw().request().url().toString().trim());
+                Config.logV("Response--code-------------------------" + response.code());
+                if (response.code() == 200) {
+                    prePayRemainingAmount = response.body();
+                    getConfirmationId(value, accountId);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.i("PrePayRemainingAmntNeed", t.toString());
+                t.printStackTrace();
+            }
+        });
+    }
+
     private void getConfirmationId(String value, int acctId) {
 
         final ApiInterface apiService =
@@ -779,7 +840,8 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                         if (activeOrders != null) {
                             String orderId = activeOrders.getOrderNumber();
                             if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().equalsIgnoreCase("0.0")) {
-                                if (!showPaytmWallet && !showPayU) {
+                                if (cbJCash.isChecked() && Double.parseDouble(prePayRemainingAmount) <= 0) {
+                                    isGateWayPaymentNeeded(value, prepayAmount, acctId, Constants.PURPOSE_PREPAYMENT, true, false, false, false, "JCASH");
 
                                     //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
                                 } else {
@@ -809,8 +871,11 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                                         TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
 
                                         txtprepayment.setText(R.string.serve_prepay);
-
-                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(prepayAmount))));
+                                        if (cbJCash.isChecked()) {
+                                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints(Double.parseDouble(prePayRemainingAmount)));
+                                        } else {
+                                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(prepayAmount))));
+                                        }
                                         Typeface tyface1 = Typeface.createFromAsset(CheckoutListActivity.this.getAssets(),
                                                 "fonts/JosefinSans-SemiBold.ttf");
                                         txtamt.setTypeface(tyface1);
@@ -824,8 +889,11 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                                         btn_payu.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-
-                                                new PaymentGateway(CheckoutListActivity.this, CheckoutListActivity.this).ApiGenerateHash1(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, "checkin", 0, Constants.SOURCE_PAYMENT);
+                                                if (cbJCash.isChecked()) {
+                                                    new PaymentGateway(CheckoutListActivity.this, CheckoutListActivity.this).ApiGenerateHash2(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, "checkin", true, false, true, false);
+                                                } else {
+                                                    new PaymentGateway(CheckoutListActivity.this, CheckoutListActivity.this).ApiGenerateHash1(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, "checkin", 0, Constants.SOURCE_PAYMENT);
+                                                }
                                                 dialog.dismiss();
 
                                             }
@@ -836,7 +904,11 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                                             public void onClick(View v) {
 
                                                 PaytmPayment payment = new PaytmPayment(CheckoutListActivity.this, paymentResponse);
-                                                payment.ApiGenerateHashPaytm(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, CheckoutListActivity.this, CheckoutListActivity.this, "", 0, orderId);
+                                                if (cbJCash.isChecked()) {
+                                                    payment.ApiGenerateHashPaytm2(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, "checkin", true, false, false, true, orderId, CheckoutListActivity.this, CheckoutListActivity.this);
+                                                } else {
+                                                    payment.ApiGenerateHashPaytm(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, CheckoutListActivity.this, CheckoutListActivity.this, "", 0, orderId);
+                                                }
                                                 //payment.generateCheckSum(sAmountPay);
                                                 dialog.dismiss();
 
@@ -874,6 +946,76 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
 
     }
 
+    public void isGateWayPaymentNeeded(String ynwUUID, final String amount, int accountID, String purpose, boolean isJcashUsed, boolean isreditUsed, boolean isRazorPayPayment, boolean isPayTmPayment, String paymentMode) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        //  String uniqueID = UUID.randomUUID().toString();
+        SharedPreference.getInstance(mContext).setValue("prePayment", false);
+        JSONObject jsonObj = new JSONObject();
+        try {
+
+            jsonObj.put("accountId", accountID);
+            jsonObj.put("amountToPay", Float.valueOf(amount));
+            jsonObj.put("isJcashUsed", isJcashUsed);
+            jsonObj.put("isPayTmPayment", isPayTmPayment);
+            jsonObj.put("isRazorPayPayment", isRazorPayPayment);
+            jsonObj.put("isreditUsed", isreditUsed);
+            jsonObj.put("paymentMode", paymentMode);
+            jsonObj.put("paymentPurpose", purpose);
+            jsonObj.put("uuid", ynwUUID);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<WalletCheckSumModel> call = apiService.generateHash2(body);
+        call.enqueue(new Callback<WalletCheckSumModel>() {
+
+            @Override
+            public void onResponse(Call<WalletCheckSumModel> call, Response<WalletCheckSumModel> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(CheckoutListActivity.this, mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+
+                    if (response.code() == 200) {
+
+                        WalletCheckSumModel respnseWCSumModel = response.body();
+
+                        if (!respnseWCSumModel.isGateWayPaymentNeeded()) {
+
+                            onOrderSuccess(accountID);
+
+                        }
+                    } else {
+                        String responseerror = response.errorBody().string();
+                        Config.logV("Response--error-------------------------" + responseerror);
+                        Toast.makeText(mContext, responseerror, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WalletCheckSumModel> call, Throwable t) {
+
+            }
+        });
+    }
 
     private void getCatalogDetails(int accountId) {
 
@@ -1272,11 +1414,14 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
         tvContactNumber.setText(phoneNumber);
         tvCountryCode.setText(countryCode);
         tvContactEmail.setText(email);
-
+        if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().isEmpty() && Float.parseFloat(catalogs.get(0).getAdvanceAmount()) > 0) {
+            tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(catalogs.get(0).getAdvanceAmount())) + " required");
+            llAdvanceAmount.setVisibility(View.VISIBLE);
+        }
         updateImages();
 
         showDeliveryCharge();
-
+        APIGetWalletEligibleJCash(catalogs);
     }
 
     private void showDeliveryCharge() {
@@ -1734,40 +1879,31 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
 
     }
 
-    private void getS3Coupons(int uniqueID) {
+    private void getCoupons(int uniqueID) {
 
         ApiInterface apiService =
-                ApiClient.getClientS3Cloud(CheckoutListActivity.this).create(ApiInterface.class);
+                ApiClient.getClient(CheckoutListActivity.this).create(ApiInterface.class);
 
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<ArrayList<CoupnResponse>> call = apiService.getCoupanList(uniqueID, sdf.format(currentTime));
-        call.enqueue(new Callback<ArrayList<CoupnResponse>>() {
+        Call<Provider> call = apiService.getCoupons(uniqueID);
+        call.enqueue(new Callback<Provider>() {
             @Override
-            public void onResponse(Call<ArrayList<CoupnResponse>> call, Response<ArrayList<CoupnResponse>> response) {
+            public void onResponse(Call<Provider> call, Response<Provider> response) {
 
                 try {
 
                     if (response.code() == 200) {
-                        s3couponList.clear();
-                        s3couponList = response.body();
-                        /**
-                         * below code commented because of "coupons not need to apply in order via list"
-                         */
-                        /*if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
-                            rlCoupon.setVisibility(View.VISIBLE);
-                        } else {
-                            rlCoupon.setVisibility(View.GONE);
-                        }*/
-                        /**
-                         *
-                         * */
+
+
+                        Provider providerResponse = new Provider();
+                        providerResponse = response.body();
+
+                        if (providerResponse != null) {
+                            getS3Coupons(providerResponse.getCoupon());
+                            getJaldeeProviderCoupons(providerResponse.getProviderCoupon());
+
+                        }
 
                     }
-
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1776,7 +1912,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
             }
 
             @Override
-            public void onFailure(Call<ArrayList<CoupnResponse>> call, Throwable t) {
+            public void onFailure(Call<Provider> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
 
@@ -1784,36 +1920,148 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
         });
     }
 
-    private void ApiJaldeegetProviderCoupons(int uniqueID) {
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(CheckoutListActivity.this).create(ApiInterface.class);
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<ArrayList<ProviderCouponResponse>> call = apiService.getProviderCoupanList(uniqueID, sdf.format(currentTime));
-        call.enqueue(new Callback<ArrayList<ProviderCouponResponse>>() {
+    private void getS3Coupons(String s3Cupons) {
+        try {
+
+
+            if (s3Cupons != null) {
+                s3couponList.clear();
+                s3couponList = new Gson().fromJson(s3Cupons, new TypeToken<ArrayList<CoupnResponse>>() {
+                }.getType());
+
+                if (s3couponList != null) {
+
+                    if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
+                        rlCoupon.setVisibility(View.VISIBLE);
+                        // cvCoupon.setVisibility(View.VISIBLE);
+                    } else {
+                        rlCoupon.setVisibility(View.GONE);
+                        // cvCoupon.setVisibility(View.GONE);
+                    }
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private void getJaldeeProviderCoupons(String providerCoupons) {
+
+        try {
+
+            if (providerCoupons != null) {
+
+                providerCouponList.clear();
+                providerCouponList = new Gson().fromJson(providerCoupons, new TypeToken<ArrayList<ProviderCouponResponse>>() {
+                }.getType());
+
+                if (providerCouponList != null) {
+
+                    if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
+                        rlCoupon.setVisibility(View.VISIBLE);
+                        // cvCoupon.setVisibility(View.VISIBLE);
+                    } else {
+                        rlCoupon.setVisibility(View.GONE);
+                        //  cvCoupon.setVisibility(View.GONE);
+                    }
+
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void cpns(ArrayList<String> mcouponArraylist) {
+        iCpn = (ICpn) this;
+        couponArraylist = mcouponArraylist;
+        //CouponApliedOrNotDetails c = new CouponApliedOrNotDetails();
+        Config.logV("couponArraylist--code-------------------------" + couponArraylist);
+        list.setVisibility(View.VISIBLE);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CheckoutListActivity.this);
+        list.setLayoutManager(mLayoutManager);
+        mAdapter = new CouponlistAdapter(CheckoutListActivity.this, s3couponList, couponEntered, couponArraylist, iCpn);
+        list.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+
+        /*if (userMessage != null) {
+
+
+            if (isUser) {
+                getAdvancePaymentDetails(userMessage, userId);
+            } else {
+                getAdvancePaymentDetails(userMessage, providerId);
+            }
+        }*/
+       /* Config.logV("couponArraylist--code-------------------------" + couponArraylist);
+        list.setVisibility(View.VISIBLE);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CheckInActivity.this);
+        list.setLayoutManager(mLayoutManager);
+        mAdapter = new CouponlistAdapter(CheckInActivity.this, s3couponList, couponEntered, couponArraylist, getCoupnAppliedOrNotDetails(userMessage, providerId), iCpn);
+        list.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();*/
+    }
+
+
+    private void APIGetWalletEligibleJCash(ArrayList<Catalog> catalogs) {
+        final ApiInterface apiService =
+                ApiClient.getClient(this).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<WalletEligibleJCash> call = apiService.getWalletEligibleJCash();
+
+        Config.logV("Request--GetWalletEligibleJCash-------------------------");
+        call.enqueue(new Callback<WalletEligibleJCash>() {
             @Override
-            public void onResponse(Call<ArrayList<ProviderCouponResponse>> call, Response<ArrayList<ProviderCouponResponse>> response) {
+            public void onResponse(Call<WalletEligibleJCash> call, Response<WalletEligibleJCash> response) {
                 try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(CheckoutListActivity.this, mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+//                    Config.logV("zxczqw" + new Gson().toJson(response.body()));
 
                     if (response.code() == 200) {
-                        providerCouponList.clear();
-                        providerCouponList = response.body();
-                        Log.i("ProviderCouponResponse", providerCouponList.toString());
-                        /**
-                         * below code commented because of "coupons not need to apply in order via list"
-                         */
-                        /*if (s3couponList.size() != 0 || providerCouponList.size() != 0) {
-                            rlCoupon.setVisibility(View.VISIBLE);
-                        } else {
-                            rlCoupon.setVisibility(View.GONE);
-                        }*/
-                        /**
-                         *
-                         * */
-
+                        walletEligibleJCash = response.body();
+                        if (walletEligibleJCash != null) {
+                            if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().isEmpty() && Float.parseFloat(catalogs.get(0).getAdvanceAmount()) > 0) {
+                                if (walletEligibleJCash.getjCashAmt() > 0) {
+                                    cbJCash.setChecked(true);
+                                    llJCash.setVisibility(View.VISIBLE);
+                                    cbJCash.append(Config.getAmountNoOrTwoDecimalPoints(walletEligibleJCash.getjCashAmt()));
+                                    if (walletEligibleJCash.getjCashAmt() >= Float.parseFloat(catalogs.get(0).getAdvanceAmount())) {
+                                        tvJCashHint.setVisibility(View.GONE);
+                                        llAdvanceAmount.setVisibility(View.GONE);
+                                    } else {
+                                        tvJCashHint.setVisibility(View.VISIBLE);
+                                        double amnt = walletEligibleJCash.getjCashAmt() - Float.parseFloat(catalogs.get(0).getAdvanceAmount());
+                                        tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Math.abs(amnt)) + " required");
+                                        llAdvanceAmount.setVisibility(View.VISIBLE);
+                                    }
+                                } else if (walletEligibleJCash.getjCashAmt() == 0) {
+                                    cbJCash.setChecked(false);
+                                    llJCash.setVisibility(View.GONE);
+                                    tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(catalogs.get(0).getAdvanceAmount())) + " required");
+                                    llAdvanceAmount.setVisibility(View.VISIBLE);
+                                } else {
+                                    cbJCash.setChecked(false);
+                                    llJCash.setVisibility(View.GONE);
+                                    llAdvanceAmount.setVisibility(View.GONE);
+                                }
+                            } else {
+                                cbJCash.setChecked(false);
+                                llJCash.setVisibility(View.GONE);
+                                llAdvanceAmount.setVisibility(View.GONE);
+                            }
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1821,9 +2069,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
             }
 
             @Override
-            public void onFailure(Call<ArrayList<ProviderCouponResponse>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
+            public void onFailure(Call<WalletEligibleJCash> call, Throwable t) {
 
             }
         });

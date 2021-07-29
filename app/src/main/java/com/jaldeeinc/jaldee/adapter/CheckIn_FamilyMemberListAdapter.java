@@ -47,8 +47,6 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
             Typeface font = Typeface.createFromAsset(mContext.getAssets(),  "fonts/JosefinSans-SemiBold.ttf");
             Checkmemeber.setTypeface(font);
             name.setTypeface(font);
-
-
         }
     }
 

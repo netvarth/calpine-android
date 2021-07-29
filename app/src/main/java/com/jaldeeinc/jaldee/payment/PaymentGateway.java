@@ -19,6 +19,7 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
+import com.jaldeeinc.jaldee.response.WalletCheckSumModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.razorpay.Checkout;
 
@@ -43,7 +44,8 @@ public class PaymentGateway {
         mCOntext = mContext;
         mActivity = activity;
     }
-    public void ApiGenerateHash1(String ynwUUID, final String amount, String accountID, String purpose, final String from,int customerId, String source) {
+
+    public void ApiGenerateHash1(String ynwUUID, final String amount, String accountID, String purpose, final String from, int customerId, String source) {
 
 
         ApiInterface apiService =
@@ -59,7 +61,7 @@ public class PaymentGateway {
 
 
         //  String uniqueID = UUID.randomUUID().toString();
-        SharedPreference.getInstance(mCOntext).setValue("prePayment",false);
+        SharedPreference.getInstance(mCOntext).setValue("prePayment", false);
         JSONObject jsonObj = new JSONObject();
         try {
 
@@ -68,8 +70,8 @@ public class PaymentGateway {
             jsonObj.put("uuid", ynwUUID);
             jsonObj.put("accountId", accountID);
             jsonObj.put("purpose", purpose);
-            jsonObj.put("custId",customerId);
-            jsonObj.put("source",source);
+            jsonObj.put("custId", customerId);
+            jsonObj.put("source", source);
 
 
         } catch (JSONException e) {
@@ -78,7 +80,7 @@ public class PaymentGateway {
 
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<CheckSumModel> call = apiService.generateHash(deviceName,body);
+        Call<CheckSumModel> call = apiService.generateHash(deviceName, body);
         call.enqueue(new Callback<CheckSumModel>() {
             @Override
             public void onResponse(Call<CheckSumModel> call, Response<CheckSumModel> response) {
@@ -96,11 +98,10 @@ public class PaymentGateway {
 
                         CheckSumModel response_data = response.body();
                         response_data.setAmount(Config.getAmountinTwoDecimalPoints(Double.parseDouble(response_data.getAmount())));
-                        if (jsonObj.get("purpose").equals(Constants.PURPOSE_PREPAYMENT)){
+                        if (jsonObj.get("purpose").equals(Constants.PURPOSE_PREPAYMENT)) {
                             response_data.setRetry(false);
-                            SharedPreference.getInstance(mCOntext).setValue("prePayment",true);
-                        }
-                        else {
+                            SharedPreference.getInstance(mCOntext).setValue("prePayment", true);
+                        } else {
                             response_data.setRetry(true);
                         }
 
@@ -113,13 +114,13 @@ public class PaymentGateway {
 
                             //CheckIn.launchPaymentFlow(amount, response_data);
 
-                            if (response_data.getPaymentGateway()!=null && response_data.getPaymentGateway().equals("RAZORPAY")) {
+                            if (response_data.getPaymentGateway() != null && response_data.getPaymentGateway().equals("RAZORPAY")) {
                                 RazorpayPayment razorPayment = new RazorpayPayment(mCOntext, mActivity);
                                 razorPayment.startPayment(response_data);
                             } else {
-                                Intent iPayu=new Intent(mCOntext, PayUMoneyWebview.class);
-                                iPayu.putExtra("responsedata",response_data);
-                                iPayu.putExtra("amount",amount);
+                                Intent iPayu = new Intent(mCOntext, PayUMoneyWebview.class);
+                                iPayu.putExtra("responsedata", response_data);
+                                iPayu.putExtra("amount", amount);
                                 mCOntext.startActivity(iPayu);
                             }
 
@@ -129,26 +130,26 @@ public class PaymentGateway {
 //                            Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
 
                             //  BillActivity.launchPaymentFlow(amount, response_data);
-                            if (response_data.getPaymentGateway()!=null && response_data.getPaymentGateway().equals("RAZORPAY")) {
+                            if (response_data.getPaymentGateway() != null && response_data.getPaymentGateway().equals("RAZORPAY")) {
                                 RazorpayPayment razorPayment = new RazorpayPayment(mCOntext, mActivity);
                                 razorPayment.startPayment(response_data);
                             } else {
-                                Intent iPayu=new Intent(mCOntext, PayUMoneyWebview.class);
-                                iPayu.putExtra("responsedata",response_data);
-                                iPayu.putExtra("amount",amount);
+                                Intent iPayu = new Intent(mCOntext, PayUMoneyWebview.class);
+                                iPayu.putExtra("responsedata", response_data);
+                                iPayu.putExtra("amount", amount);
                                 mCOntext.startActivity(iPayu);
                             }
                         } else {
                             // CheckSumModel response_data = response.body();
 
                             // PaymentActivity.launchPaymentFlow(amount, response_data);
-                            if (response_data.getPaymentGateway()!=null && response_data.getPaymentGateway().equals("RAZORPAY")) {
+                            if (response_data.getPaymentGateway() != null && response_data.getPaymentGateway().equals("RAZORPAY")) {
                                 RazorpayPayment razorPayment = new RazorpayPayment(mCOntext, mActivity);
                                 razorPayment.startPayment(response_data);
                             } else {
-                                Intent iPayu=new Intent(mCOntext, PayUMoneyWebview.class);
-                                iPayu.putExtra("responsedata",response_data);
-                                iPayu.putExtra("amount",Config.getAmountinTwoDecimalPoints(Double.parseDouble(amount)));
+                                Intent iPayu = new Intent(mCOntext, PayUMoneyWebview.class);
+                                iPayu.putExtra("responsedata", response_data);
+                                iPayu.putExtra("amount", Config.getAmountinTwoDecimalPoints(Double.parseDouble(amount)));
                                 mCOntext.startActivity(iPayu);
                             }
                         }
@@ -157,7 +158,7 @@ public class PaymentGateway {
                     } else {
                         String responseerror = response.errorBody().string();
                         Config.logV("Response--error-------------------------" + responseerror);
-                        Toast.makeText(mCOntext,responseerror,Toast.LENGTH_LONG).show();
+                        Toast.makeText(mCOntext, responseerror, Toast.LENGTH_LONG).show();
                     }
 
 
@@ -178,7 +179,138 @@ public class PaymentGateway {
         });
 
 
+    }
 
+    public void ApiGenerateHash2(String ynwUUID, final String amount, String accountID, String purpose, final String from, boolean isJcashUsed, boolean isreditUsed, boolean isRazorPayPayment, boolean isPayTmPayment) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mCOntext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mCOntext, mCOntext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        //  String uniqueID = UUID.randomUUID().toString();
+        SharedPreference.getInstance(mCOntext).setValue("prePayment", false);
+        JSONObject jsonObj = new JSONObject();
+        try {
+
+            jsonObj.put("accountId", accountID);
+            jsonObj.put("amountToPay", Float.valueOf(amount));
+            jsonObj.put("isJcashUsed", isJcashUsed);
+            jsonObj.put("isPayTmPayment", isPayTmPayment);
+            jsonObj.put("isRazorPayPayment", isRazorPayPayment);
+            jsonObj.put("isreditUsed", isreditUsed);
+            jsonObj.put("paymentMode", "DC");
+            jsonObj.put("paymentPurpose", purpose);
+            jsonObj.put("uuid", ynwUUID);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<WalletCheckSumModel> call = apiService.generateHash2(body);
+        call.enqueue(new Callback<WalletCheckSumModel>() {
+
+            @Override
+            public void onResponse(Call<WalletCheckSumModel> call, Response<WalletCheckSumModel> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(mActivity, mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+
+                    if (response.code() == 200) {
+
+                        WalletCheckSumModel respnseWCSumModel = response.body();
+
+                        if (respnseWCSumModel.isGateWayPaymentNeeded()) {
+
+                            CheckSumModel response_data = respnseWCSumModel.getResponse();
+                            response_data.setAmount(Config.getAmountinTwoDecimalPoints(Double.parseDouble(response_data.getAmount())));
+                            if (jsonObj.get("paymentPurpose").equals(Constants.PURPOSE_PREPAYMENT)) {
+                                response_data.setRetry(false);
+                                SharedPreference.getInstance(mCOntext).setValue("prePayment", true);
+                            } else {
+                                response_data.setRetry(true);
+                            }
+
+                            if (from.equalsIgnoreCase("checkin")) {
+
+
+//                            Log.i("Response--Sucess----" , new Gson().toJson(response.body()));
+
+                                // Config.logV("Response--Sucess----------@@@@---------------" + response.body().getPaymentEnv());
+
+                                //CheckIn.launchPaymentFlow(amount, response_data);
+
+                                if (response_data.getPaymentGateway() != null && response_data.getPaymentGateway().equals("RAZORPAY")) {
+                                    RazorpayPayment razorPayment = new RazorpayPayment(mCOntext, mActivity);
+                                    razorPayment.startPayment(response_data);
+                                } else {
+                                    Intent iPayu = new Intent(mCOntext, PayUMoneyWebview.class);
+                                    iPayu.putExtra("responsedata", response_data);
+                                    iPayu.putExtra("amount", amount);
+                                    mCOntext.startActivity(iPayu);
+                                }
+
+
+                            } else if (from.equalsIgnoreCase("bill")) {
+                                // CheckSumModel response_data = response.body();
+//                            Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
+
+                                //  BillActivity.launchPaymentFlow(amount, response_data);
+                                if (response_data.getPaymentGateway() != null && response_data.getPaymentGateway().equals("RAZORPAY")) {
+                                    RazorpayPayment razorPayment = new RazorpayPayment(mCOntext, mActivity);
+                                    razorPayment.startPayment(response_data);
+                                } else {
+                                    Intent iPayu = new Intent(mCOntext, PayUMoneyWebview.class);
+                                    iPayu.putExtra("responsedata", response_data);
+                                    iPayu.putExtra("amount", amount);
+                                    mCOntext.startActivity(iPayu);
+                                }
+                            } else {
+                                // CheckSumModel response_data = response.body();
+
+                                // PaymentActivity.launchPaymentFlow(amount, response_data);
+                                if (response_data.getPaymentGateway() != null && response_data.getPaymentGateway().equals("RAZORPAY")) {
+                                    RazorpayPayment razorPayment = new RazorpayPayment(mCOntext, mActivity);
+                                    razorPayment.startPayment(response_data);
+                                } else {
+                                    Intent iPayu = new Intent(mCOntext, PayUMoneyWebview.class);
+                                    iPayu.putExtra("responsedata", response_data);
+                                    iPayu.putExtra("amount", Config.getAmountinTwoDecimalPoints(Double.parseDouble(amount)));
+                                    mCOntext.startActivity(iPayu);
+                                }
+                            }
+
+                        }
+                    } else {
+                        String responseerror = response.errorBody().string();
+                        Config.logV("Response--error-------------------------" + responseerror);
+                        Toast.makeText(mCOntext, responseerror, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WalletCheckSumModel> call, Throwable t) {
+
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(mActivity, mDialog);
+            }
+        });
     }
 
     public void sendPaymentStatus(RazorpayModel razorpayModel, String status) {
