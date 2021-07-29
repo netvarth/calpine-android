@@ -234,11 +234,11 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                 MultipleFamilyList = new ArrayList<>();
             }
 
-            if (bookingModel.getTotalAmount() != null){
+            if (bookingModel.getTotalAmount() != null) {
                 totalAmountPay = bookingModel.getTotalAmount();
             }
 
-            if (bookingModel.getTotalServicePay() != null){
+            if (bookingModel.getTotalServicePay() != null) {
                 totalServicePay = bookingModel.getTotalServicePay();
             }
             // to set providerName
@@ -328,18 +328,18 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
                 tvCustomerName.setText(bookingModel.getCustomerName());
 
-            } else if (MultipleFamilyList!= null && MultipleFamilyList.size() > 0){
+            } else if (MultipleFamilyList != null && MultipleFamilyList.size() > 0) {
 
                 ArrayList<String> names = new ArrayList<>();
 
-                for (FamilyArrayModel model: MultipleFamilyList){
+                for (FamilyArrayModel model : MultipleFamilyList) {
 
-                    String name = model.getFirstName()+" "+model.getLastName();
+                    String name = model.getFirstName() + " " + model.getLastName();
 
                     names.add(name);
                 }
 
-                tvCustomerName.setText(TextUtils.join(", ",names));
+                tvCustomerName.setText(TextUtils.join(", ", names));
 
             }
 
@@ -561,6 +561,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
         });
 
     }
+
     private void getPrePayRemainingAmntNeeded(String prepayAmount, boolean isJcashSelected, int id) {
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -605,7 +606,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
                             if (bookingModel.getCheckInInfo().isPrePayment()) {
                                 if (cbJCash.isChecked() && Double.parseDouble(prePayRemainingAmount) <= 0) {
-                                    isGateWayPaymentNeeded(value, prepayAmount, String.valueOf(userId), Constants.PURPOSE_PREPAYMENT, true, false, false, false, "JCASH", txt_addnote);
+                                    isGateWayPaymentNeeded(value, prepayAmount, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, true, false, false, false, "JCASH", txt_addnote);
                                     //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
                                 } else if ((totalAmountPay != null && !totalAmountPay.equalsIgnoreCase("0.0")) || (prepayAmount != null && Float.parseFloat(prepayAmount) > 0)) {
                                     if (isPaytm) {
@@ -792,20 +793,20 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
                         SubmitQuestionnaire result = response.body();
 
-                        if (result !=  null && result.getUrls().size() > 0){
+                        if (result != null && result.getUrls().size() > 0) {
 
-                            for (QuestionnaireUrls url : result.getUrls()){
+                            for (QuestionnaireUrls url : result.getUrls()) {
 
-                                for (LabelPath p : imagePathList){
+                                for (LabelPath p : imagePathList) {
 
-                                    if (url.getUrl().contains(p.getFileName())){
+                                    if (url.getUrl().contains(p.getFileName())) {
 
                                         p.setUrl(url.getUrl());
                                     }
                                 }
                             }
 
-                            uploadFilesToS3(imagePathList,result);
+                            uploadFilesToS3(imagePathList, result);
                         } else {
 
                             getConfirmationDetails(bookingModel.getAccountId());
@@ -880,7 +881,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                                         public void run() {
                                             // Stuff that updates the UI
                                             try {
-                                                ApiCheckStatus(activeAppointment.getYnwUuid(),bookingModel.getAccountId(),result);
+                                                ApiCheckStatus(activeAppointment.getYnwUuid(), bookingModel.getAccountId(), result);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
@@ -917,22 +918,22 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
         JSONObject uploadObj = new JSONObject();
         JSONArray uploadArray = new JSONArray();
 
-        for (int i = 0; i<result.getUrls().size(); i++){
+        for (int i = 0; i < result.getUrls().size(); i++) {
 
             JSONObject urlObj = new JSONObject();
 
-            urlObj.put("uid",result.getUrls().get(i).getUid());
-            urlObj.put("labelName",result.getUrls().get(i).getLabelName());
+            urlObj.put("uid", result.getUrls().get(i).getUid());
+            urlObj.put("labelName", result.getUrls().get(i).getLabelName());
 
             uploadArray.put(urlObj);
 
         }
 
 
-        uploadObj.putOpt("urls",uploadArray);
+        uploadObj.putOpt("urls", uploadArray);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
 
-        Call<ResponseBody> call = apiService.checkWaitlistUploadStatus(uid,accountId,body);
+        Call<ResponseBody> call = apiService.checkWaitlistUploadStatus(uid, accountId, body);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -975,7 +976,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
     private void ApiCommunicateCheckin(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type ;
+        MediaType type;
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
@@ -987,7 +988,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                 extension = bookingImagesList.get(i).substring(bookingImagesList.get(i).lastIndexOf(".") + 1);
             }
 
-            if (extension.equalsIgnoreCase("pdf")){
+            if (extension.equalsIgnoreCase("pdf")) {
                 type = MediaType.parse("application/pdf");
 
             } else {
