@@ -81,7 +81,7 @@ public class ActionsDialog extends Dialog {
 
     private Context mContext;
     private LinearLayout llReschedule, llMessages, llRating, llCancel, llTrackingOn, llInstructions, llCustomerNotes, llMeetingDetails, llBillDetails, llPrescription, llSendAttachments, llViewAttachments, llQuestionnaire;
-    private CustomTextViewMedium tvTrackingText, tvBillText;
+    private CustomTextViewMedium tvTrackingText, tvBillText, tvCustomerNotes;
     private boolean isActive = false;
     private Bookings bookings = new Bookings();
     boolean firstTimeRating = false;
@@ -181,6 +181,15 @@ public class ActionsDialog extends Dialog {
                 // hide customerNotes when there is no notes from consumer
                 if (bookings.getAppointmentInfo().getConsumerNote() != null && !bookings.getAppointmentInfo().getConsumerNote().equalsIgnoreCase("")) {
                     llCustomerNotes.setVisibility(View.VISIBLE);
+                    if (bookings.getAppointmentInfo().getProviderAccount() != null) {
+                        if (bookings.getAppointmentInfo().getProviderAccount().getServiceSector().getDomain().equalsIgnoreCase("healthCare")) {
+                            tvCustomerNotes.setText("Patient Note");
+                        } else if (bookings.getAppointmentInfo().getProviderAccount().getServiceSector().getDomain().equalsIgnoreCase("educationalInstitution")) {
+                            tvCustomerNotes.setText("Student Note");
+                        } else {
+                            tvCustomerNotes.setText("Customer Notes");
+                        }
+                    }
                 } else {
                     hideView(llCustomerNotes);
                 }
@@ -346,6 +355,15 @@ public class ActionsDialog extends Dialog {
                 if (bookings.getCheckInInfo().getConsumerNote() != null && !bookings.getCheckInInfo().getConsumerNote().equalsIgnoreCase("")) {
                     if (isActive) {
                         llCustomerNotes.setVisibility(View.VISIBLE);
+                        if (bookings.getCheckInInfo().getProviderAccount() != null) {
+                            if (bookings.getCheckInInfo().getProviderAccount().getServiceSector().getDomain().equalsIgnoreCase("healthCare")) {
+                                tvCustomerNotes.setText("Patient Note");
+                            } else if (bookings.getCheckInInfo().getProviderAccount().getServiceSector().getDomain().equalsIgnoreCase("educationalInstitution")) {
+                                tvCustomerNotes.setText("Student Note");
+                            } else {
+                                tvCustomerNotes.setText("Customer Notes");
+                            }
+                        }
                     }
                 } else {
                     hideView(llCustomerNotes);
@@ -957,9 +975,9 @@ public class ActionsDialog extends Dialog {
                     intent.putExtra("serviceId", bookings.getAppointmentInfo().getService().getId());
                     intent.putExtra("accountId", bookings.getAppointmentInfo().getProviderAccount().getId());
                     intent.putExtra("uid", bookings.getAppointmentInfo().getUid());
-                    intent.putExtra("isEdit",true);
+                    intent.putExtra("isEdit", true);
                     intent.putExtra("from", Constants.BOOKING_APPOINTMENT);
-                    intent.putExtra("status",bookings.getBookingStatus());
+                    intent.putExtra("status", bookings.getBookingStatus());
                     mContext.startActivity(intent);
 
                 } else if (bookings.getCheckInInfo() != null) {
@@ -974,9 +992,9 @@ public class ActionsDialog extends Dialog {
                     intent.putExtra("serviceId", bookings.getCheckInInfo().getService().getId());
                     intent.putExtra("accountId", bookings.getCheckInInfo().getProviderAccount().getId());
                     intent.putExtra("uid", bookings.getCheckInInfo().getYnwUuid());
-                    intent.putExtra("isEdit",true);
+                    intent.putExtra("isEdit", true);
                     intent.putExtra("from", Constants.BOOKING_CHECKIN);
-                    intent.putExtra("status",bookings.getBookingStatus());
+                    intent.putExtra("status", bookings.getBookingStatus());
                     mContext.startActivity(intent);
                 }
 
@@ -1059,6 +1077,7 @@ public class ActionsDialog extends Dialog {
         llSendAttachments = findViewById(R.id.ll_sendAttachments);
         llViewAttachments = findViewById(R.id.ll_viewAttachments);
         llQuestionnaire = findViewById(R.id.ll_questionnaire);
+        tvCustomerNotes = findViewById(R.id.tv_customerNotes);
 
     }
 

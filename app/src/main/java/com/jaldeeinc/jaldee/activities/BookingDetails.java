@@ -168,6 +168,9 @@ public class BookingDetails extends AppCompatActivity {
     @BindView(R.id.ll_customerNotes)
     LinearLayout llCustomerNotes;
 
+    @BindView(R.id.tv_customerNotes)
+    CustomTextViewMedium tvCustomerNotes;
+
     @BindView(R.id.ll_instructions)
     LinearLayout llInstructions;
 
@@ -234,7 +237,7 @@ public class BookingDetails extends AppCompatActivity {
         if (i != null) {
             bookingInfo = (Bookings) i.getSerializableExtra("bookingInfo");
             uid = i.getStringExtra("uid");
-            id = i.getIntExtra("accountId",0);
+            id = i.getIntExtra("accountId", 0);
             isActive = i.getBooleanExtra("isActive", true);
             ynwUUid = i.getStringExtra("uuid");
             accountId = i.getStringExtra("account");
@@ -255,8 +258,8 @@ public class BookingDetails extends AppCompatActivity {
 
                 Intent intent = new Intent(BookingDetails.this, RescheduleActivity.class);
                 intent.putExtra("providerId", apptInfo.getProviderAccount().getId());
-                intent.putExtra("ynwuuid",apptInfo.getUid());
-                intent.putExtra("uniqueId",apptInfo.getUniqueId());
+                intent.putExtra("ynwuuid", apptInfo.getUid());
+                intent.putExtra("uniqueId", apptInfo.getUniqueId());
                 startActivity(intent);
             }
         });
@@ -430,7 +433,7 @@ public class BookingDetails extends AppCompatActivity {
 
         // Api call
         if (uid != null) {
-            getAppointmentDetails(uid,id);
+            getAppointmentDetails(uid, id);
         } else {
 
             // this gets called when activity is launched from push notification
@@ -791,6 +794,15 @@ public class BookingDetails extends AppCompatActivity {
                 if (appointmentInfo.getConsumerNote() != null && !appointmentInfo.getConsumerNote().equalsIgnoreCase("")) {
                     if (isActive) {
                         llCustomerNotes.setVisibility(View.VISIBLE);
+                        if (appointmentInfo.getProviderAccount() != null) {
+                            if (appointmentInfo.getProviderAccount().getServiceSector().getDomain().equalsIgnoreCase("healthCare")) {
+                                tvCustomerNotes.setText("Patient Note");
+                            } else if (appointmentInfo.getProviderAccount().getServiceSector().getDomain().equalsIgnoreCase("educationalInstitution")) {
+                                tvCustomerNotes.setText("Student Note");
+                            } else {
+                                tvCustomerNotes.setText("Customer Notes");
+                            }
+                        }
                     }
                 } else {
                     hideView(llCustomerNotes);
@@ -831,7 +843,8 @@ public class BookingDetails extends AppCompatActivity {
 
                 } else {
                     /**26-3-21*/
-                    /**/if (!appointmentInfo.getPaymentStatus().equalsIgnoreCase("NotPaid")) {
+                    /**/
+                    if (!appointmentInfo.getPaymentStatus().equalsIgnoreCase("NotPaid")) {
                         cvBill.setVisibility(View.VISIBLE);
                     } else {
                         cvBill.setVisibility(View.GONE);
@@ -840,10 +853,10 @@ public class BookingDetails extends AppCompatActivity {
                     /***/
                 }
                 /**26-3-21*/
-                if(appointmentInfo.getBillViewStatus() == null || appointmentInfo.getBillViewStatus().equalsIgnoreCase("NotShow")  || appointmentInfo.getBillStatus().equals("Settled") || appointmentInfo.getApptStatus().equals("Rejected")){
+                if (appointmentInfo.getBillViewStatus() == null || appointmentInfo.getBillViewStatus().equalsIgnoreCase("NotShow") || appointmentInfo.getBillStatus().equals("Settled") || appointmentInfo.getApptStatus().equals("Rejected")) {
                     cvBill.setVisibility(View.GONE);
                 }
-                if(appointmentInfo.getApptStatus().equalsIgnoreCase("Cancelled"))
+                if (appointmentInfo.getApptStatus().equalsIgnoreCase("Cancelled"))
                     cvBill.setVisibility(View.GONE);
 
                 /***/
@@ -937,7 +950,7 @@ public class BookingDetails extends AppCompatActivity {
 
                                 showMeetingWindow(info, mode, meetingDetails);
 
-                            }else if (mode.equalsIgnoreCase("VideoCall")) {
+                            } else if (mode.equalsIgnoreCase("VideoCall")) {
 
                                 showMeetingDetailsWindow(info, mode, meetingDetails);
 

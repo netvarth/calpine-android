@@ -10,11 +10,11 @@
         android:id="@+id/fl_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_10dp"
         android:focusable="true"
         android:visibility="visible"
-        android:layout_margin="@dimen/dimen_10dp"
-        app:cardCornerRadius="@dimen/dimen_10dp"
-        app:cardBackgroundColor="#f8f8f8">
+        app:cardBackgroundColor="#f8f8f8"
+        app:cardCornerRadius="@dimen/dimen_10dp">
 
 
         <GridLayout
@@ -26,9 +26,9 @@
             android:layout_marginEnd="@dimen/dimen_20dp"
             android:layout_marginBottom="@dimen/dimen_20dp"
             android:columnCount="3"
-            android:useDefaultMargins="true"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp">
+            android:padding="@dimen/dimen_10dp"
+            android:useDefaultMargins="true">
 
             <LinearLayout
                 android:id="@+id/ll_reschedule"
@@ -56,8 +56,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text="Reschedule"
                         android:gravity="center"
+                        android:text="Reschedule"
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -95,8 +95,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text="  Messages  "
                         android:gravity="center"
+                        android:text="  Messages  "
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -132,8 +132,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text="     Rate    "
                         android:gravity="center"
+                        android:text="     Rate    "
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -169,8 +169,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text="   Cancel   "
                         android:gravity="center"
+                        android:text="   Cancel   "
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -208,8 +208,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text="   Tracking On   "
                         android:gravity="center"
+                        android:text="   Tracking On   "
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -246,8 +246,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text=" Instructions "
                         android:gravity="center"
+                        android:text=" Instructions "
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -282,11 +282,12 @@
                     </ImageView>
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:id="@+id/tv_customerNotes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text="Customer Notes"
                         android:gravity="center"
+                        android:text="Customer Notes"
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -323,8 +324,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text="Meeting Details"
                         android:gravity="center"
+                        android:text="Meeting Details"
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -332,7 +333,6 @@
                     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
                 </LinearLayout>
-
 
 
             </LinearLayout>
@@ -353,19 +353,19 @@
 
                     <ImageView
                         android:id="@+id/iv_billIcon"
-                        android:src="@drawable/icon_receipt"
                         android:layout_width="@dimen/dimen_30dp"
-                        android:layout_height="@dimen/dimen_30dp">
+                        android:layout_height="@dimen/dimen_30dp"
+                        android:src="@drawable/icon_receipt">
 
                     </ImageView>
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:id="@+id/billLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/billLabel"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text="Bill Details"
                         android:gravity="center"
+                        android:text="Bill Details"
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -373,7 +373,6 @@
                     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
                 </LinearLayout>
-
 
 
             </LinearLayout>
@@ -394,9 +393,9 @@
 
                     <ImageView
                         android:id="@+id/iv_prescIcon"
-                        android:src="@drawable/icon_receipt"
                         android:layout_width="@dimen/dimen_30dp"
-                        android:layout_height="@dimen/dimen_30dp">
+                        android:layout_height="@dimen/dimen_30dp"
+                        android:src="@drawable/icon_receipt">
 
                     </ImageView>
 
@@ -404,8 +403,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text="View Prescription"
                         android:gravity="center"
+                        android:text="View Prescription"
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -413,7 +412,6 @@
                     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
                 </LinearLayout>
-
 
 
             </LinearLayout>
@@ -434,9 +432,9 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:src="@drawable/icon_attachments_active_new"
                         android:layout_width="@dimen/dimen_30dp"
                         android:layout_height="@dimen/dimen_30dp"
+                        android:src="@drawable/icon_attachments_active_new"
                         app:tint="@color/title_color">
 
                     </ImageView>
@@ -445,8 +443,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text="Send Attachments"
                         android:gravity="center"
+                        android:text="Send Attachments"
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -454,7 +452,6 @@
                     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
                 </LinearLayout>
-
 
 
             </LinearLayout>
@@ -474,9 +471,9 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:src="@drawable/view_file"
                         android:layout_width="@dimen/dimen_30dp"
                         android:layout_height="@dimen/dimen_30dp"
+                        android:src="@drawable/view_file"
                         app:tint="@color/title_color">
 
                     </ImageView>
@@ -485,8 +482,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text="View Attachments"
                         android:gravity="center"
+                        android:text="View Attachments"
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -494,7 +491,6 @@
                     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
                 </LinearLayout>
-
 
 
             </LinearLayout>
@@ -514,9 +510,9 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:src="@drawable/questionnaire_icon"
                         android:layout_width="@dimen/dimen_30dp"
-                        android:layout_height="@dimen/dimen_30dp">
+                        android:layout_height="@dimen/dimen_30dp"
+                        android:src="@drawable/questionnaire_icon">
 
                     </ImageView>
 
@@ -524,8 +520,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text="Questionnaire"
                         android:gravity="center"
+                        android:text="Questionnaire"
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -535,9 +531,7 @@
                 </LinearLayout>
 
 
-
             </LinearLayout>
-
 
 
         </GridLayout>

@@ -92,6 +92,10 @@ public class ActiveAppointment implements Serializable {
     private ActiveAppointment label;
     @SerializedName("providerAccount")
     private ActiveAppointment providerAccount;
+    @SerializedName("serviceSector")
+    private ActiveAppointment serviceSector;
+    String domain;
+
     String businessName;
     String licensePkgID;
     String uniqueId;
@@ -149,6 +153,14 @@ public class ActiveAppointment implements Serializable {
 
     public ArrayList<FileAttachment> getAttchment() {
         return attchment;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public ActiveAppointment getServiceSector() {
+        return serviceSector;
     }
 
     public boolean isRescheduled() {

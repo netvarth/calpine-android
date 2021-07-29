@@ -28,7 +28,10 @@ public class ActiveCheckIn implements Serializable {
     String date;
     @SerializedName("providerAccount")
     private ActiveCheckIn providerAccount;
+    @SerializedName("serviceSector")
+    private ActiveCheckIn serviceSector;
     int id;
+    String domain;
     String businessName;
     String licensePkgID;
     String uniqueId;
@@ -38,6 +41,14 @@ public class ActiveCheckIn implements Serializable {
     String profileId;
     @SerializedName("consumer")
     private ConsumerDetails consumer;
+
+    public ActiveCheckIn getServiceSector() {
+        return serviceSector;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
 
     public ConsumerDetails getConsumer() {
         return consumer;
@@ -65,6 +76,7 @@ public class ActiveCheckIn implements Serializable {
     public boolean isRescheduled() {
         return isRescheduled;
     }
+
     public String getVideoCallButton() {
         return videoCallButton;
     }
@@ -844,6 +856,7 @@ public class ActiveCheckIn implements Serializable {
     public void setQuestionnaire(QuestionnaireResponse questionnaire) {
         this.questionnaire = questionnaire;
     }
+
     ArrayList<FileAttachment> attchment;
 
     public ArrayList<FileAttachment> getAttchment() {

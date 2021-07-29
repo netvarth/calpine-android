@@ -409,6 +409,7 @@
 
                                         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
                                     </LinearLayout>
+
                                     <LinearLayout
                                         android:id="@+id/ll_phoneNumber"
                                         android:layout_width="0dp"
@@ -436,6 +437,7 @@
 
                                         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
                                     </LinearLayout>
+
                                     <LinearLayout
                                         android:id="@+id/ll_payment"
                                         android:layout_width="0dp"
@@ -707,8 +709,8 @@
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:layout_marginTop="@dimen/padding5"
-                                                    android:text="Reschedule"
                                                     android:gravity="center"
+                                                    android:text="Reschedule"
                                                     android:textColor="@color/title_color"
                                                     android:textSize="@dimen/txtsize_12"
                                                     android:visibility="visible">
@@ -746,8 +748,8 @@
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:layout_marginTop="@dimen/padding5"
-                                                    android:text="  Messages  "
                                                     android:gravity="center"
+                                                    android:text="  Messages  "
                                                     android:textColor="@color/title_color"
                                                     android:textSize="@dimen/txtsize_12"
                                                     android:visibility="visible">
@@ -783,8 +785,8 @@
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:layout_marginTop="@dimen/padding5"
-                                                    android:text="     Rate    "
                                                     android:gravity="center"
+                                                    android:text="     Rate    "
                                                     android:textColor="@color/title_color"
                                                     android:textSize="@dimen/txtsize_12"
                                                     android:visibility="visible">
@@ -820,8 +822,8 @@
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:layout_marginTop="@dimen/padding5"
-                                                    android:text="   Cancel   "
                                                     android:gravity="center"
+                                                    android:text="   Cancel   "
                                                     android:textColor="@color/title_color"
                                                     android:textSize="@dimen/txtsize_12"
                                                     android:visibility="visible">
@@ -859,8 +861,8 @@
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:layout_marginTop="@dimen/padding5"
-                                                    android:text="   Tracking On   "
                                                     android:gravity="center"
+                                                    android:text="   Tracking On   "
                                                     android:textColor="@color/title_color"
                                                     android:textSize="@dimen/txtsize_12"
                                                     android:visibility="visible">
@@ -897,8 +899,8 @@
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:layout_marginTop="@dimen/padding5"
-                                                    android:text=" Instructions "
                                                     android:gravity="center"
+                                                    android:text=" Instructions "
                                                     android:textColor="@color/title_color"
                                                     android:textSize="@dimen/txtsize_12"
                                                     android:visibility="visible">
@@ -933,11 +935,12 @@
                                                 </ImageView>
 
                                                 <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                                                    android:id="@+id/tv_customerNotes"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:layout_marginTop="@dimen/padding5"
-                                                    android:text="Customer Notes"
                                                     android:gravity="center"
+                                                    android:text="Customer Notes"
                                                     android:textColor="@color/title_color"
                                                     android:textSize="@dimen/txtsize_12"
                                                     android:visibility="visible">
@@ -999,6 +1002,7 @@
                                     android:id="@+id/cv_bill"
                                     android:layout_width="150dp"
                                     android:layout_height="50dp"
+                                    android:layout_below="@id/ll_options"
                                     android:layout_gravity="end"
                                     android:layout_marginStart="@dimen/padding5"
                                     android:layout_marginTop="@dimen/dimen_20dp"
@@ -1007,8 +1011,7 @@
                                     android:orientation="vertical"
                                     android:visibility="visible"
                                     app:cardBackgroundColor="@color/location_theme"
-                                    app:cardCornerRadius="@dimen/padding3"
-                                    android:layout_below="@id/ll_options">
+                                    app:cardCornerRadius="@dimen/padding3">
 
                                     <RelativeLayout
                                         android:layout_width="match_parent"

@@ -167,6 +167,9 @@ public class CheckInDetails extends AppCompatActivity {
     @BindView(R.id.ll_customerNotes)
     LinearLayout llCustomerNotes;
 
+    @BindView(R.id.tv_customerNotes)
+    CustomTextViewMedium tvCustomerNotes;
+
     @BindView(R.id.ll_instructions)
     LinearLayout llInstructions;
 
@@ -241,7 +244,7 @@ public class CheckInDetails extends AppCompatActivity {
         if (i != null) {
             bookingInfo = (Bookings) i.getSerializableExtra("bookingInfo");
             uid = i.getStringExtra("uid");
-            id = i.getIntExtra("accountId",0);
+            id = i.getIntExtra("accountId", 0);
             isActive = i.getBooleanExtra("isActive", true);
             ynwUUid = i.getStringExtra("uuid");
             accountId = i.getStringExtra("account");
@@ -445,7 +448,7 @@ public class CheckInDetails extends AppCompatActivity {
 
             // Api call
             if (uid != null) {
-                getBookingDetails(uid,id);
+                getBookingDetails(uid, id);
             } else {
 
                 // this gets called when activity is launched from push notification
@@ -848,6 +851,15 @@ public class CheckInDetails extends AppCompatActivity {
                 if (checkInInfo.getConsumerNote() != null && !checkInInfo.getConsumerNote().equalsIgnoreCase("")) {
                     if (isActive) {
                         llCustomerNotes.setVisibility(View.VISIBLE);
+                        if (checkInInfo.getProviderAccount() != null) {
+                            if (checkInInfo.getProviderAccount().getServiceSector().getDomain().equalsIgnoreCase("healthCare")) {
+                                tvCustomerNotes.setText("Patient Note");
+                            } else if (checkInInfo.getProviderAccount().getServiceSector().getDomain().equalsIgnoreCase("educationalInstitution")) {
+                                tvCustomerNotes.setText("Student Note");
+                            } else {
+                                tvCustomerNotes.setText("Customer Notes");
+                            }
+                        }
                     }
                 } else {
                     hideView(llCustomerNotes);
@@ -888,7 +900,8 @@ public class CheckInDetails extends AppCompatActivity {
 
                 } else {
                     /**26-3-21*/
-                    /**/if (!checkInInfo.getPaymentStatus().equalsIgnoreCase("NotPaid")) {
+                    /**/
+                    if (!checkInInfo.getPaymentStatus().equalsIgnoreCase("NotPaid")) {
                         cvBill.setVisibility(View.VISIBLE);
                         if (checkInInfo.getPaymentStatus().equalsIgnoreCase("Refund")) {
                             cvBill.setVisibility(View.GONE);
@@ -896,14 +909,14 @@ public class CheckInDetails extends AppCompatActivity {
                     } else {
                         cvBill.setVisibility(View.GONE);
                     }/**/
-                   // cvBill.setVisibility(View.GONE);
+                    // cvBill.setVisibility(View.GONE);
                     /***/
                 }
                 /**26-3-21*/
-                if(checkInInfo.getBillViewStatus() == null || checkInInfo.getBillViewStatus().equalsIgnoreCase("NotShow") || checkInInfo.getWaitlistStatus().equals("Rejected")){
+                if (checkInInfo.getBillViewStatus() == null || checkInInfo.getBillViewStatus().equalsIgnoreCase("NotShow") || checkInInfo.getWaitlistStatus().equals("Rejected")) {
                     cvBill.setVisibility(View.GONE);
                 }
-                if(checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled"))
+                if (checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled"))
                     cvBill.setVisibility(View.GONE);
                 /***/
                 if (checkInInfo.getParentUuid() != null) {
@@ -1123,7 +1136,7 @@ public class CheckInDetails extends AppCompatActivity {
 
                                 showMeetingWindow(info, mode, meetingDetails);
 
-                            }else if (mode.equalsIgnoreCase("VideoCall")) {
+                            } else if (mode.equalsIgnoreCase("VideoCall")) {
 
                                 showMeetingDetailsWindow(info, mode, meetingDetails);
 
