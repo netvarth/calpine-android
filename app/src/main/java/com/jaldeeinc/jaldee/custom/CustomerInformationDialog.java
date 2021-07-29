@@ -669,15 +669,19 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                                 family.setPreferredLanguages(preferredLanguages);
                             }
                             if (profileDetails.getUserprofile().getWhatsAppNum() != null && profileDetails.getUserprofile().getWhatsAppNum().size() != 0) {
-                                family.setWhtsAppCountryCode(profileDetails.getUserprofile().getWhatsAppNum().getAsJsonPrimitive("countryCode").getAsString());
-                                family.setWhtsAppNumber(profileDetails.getUserprofile().getWhatsAppNum().getAsJsonPrimitive("number").getAsString());
+                                if (profileDetails.getUserprofile().getWhatsAppNum().getAsJsonPrimitive("number") != null) {
+                                    family.setWhtsAppCountryCode(profileDetails.getUserprofile().getWhatsAppNum().getAsJsonPrimitive("countryCode").getAsString());
+                                    family.setWhtsAppNumber(profileDetails.getUserprofile().getWhatsAppNum().getAsJsonPrimitive("number").getAsString());
+                                }
                             } else {
                                 family.setWhtsAppNumber(profileDetails.getUserprofile().getPrimaryMobileNo());
                                 family.setWhtsAppCountryCode(profileDetails.getUserprofile().getCountryCode());
                             }
                             if (profileDetails.getUserprofile().getTelegramNum() != null && profileDetails.getUserprofile().getTelegramNum().size() != 0) {
-                                family.setTelgrmCountryCode(profileDetails.getUserprofile().getTelegramNum().getAsJsonPrimitive("countryCode").getAsString());
-                                family.setTelgrmNumber(profileDetails.getUserprofile().getTelegramNum().getAsJsonPrimitive("number").getAsString());
+                                if (profileDetails.getUserprofile().getTelegramNum().getAsJsonPrimitive("number") != null) {
+                                    family.setTelgrmCountryCode(profileDetails.getUserprofile().getTelegramNum().getAsJsonPrimitive("countryCode").getAsString());
+                                    family.setTelgrmNumber(profileDetails.getUserprofile().getTelegramNum().getAsJsonPrimitive("number").getAsString());
+                                }
                             } else {
                                 family.setTelgrmNumber(profileDetails.getUserprofile().getPrimaryMobileNo());
                                 family.setTelgrmCountryCode(profileDetails.getUserprofile().getCountryCode());
@@ -729,8 +733,10 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                                             }
                                         }
                                         if (response.body().get(i).getUserProfile().getTelegramNum() != null && response.body().get(i).getUserProfile().getTelegramNum().size() != 0) {
-                                            family1.setTelgrmCountryCode(response.body().get(i).getUserProfile().getTelegramNum().getAsJsonPrimitive("countryCode").getAsString());
-                                            family1.setTelgrmNumber(response.body().get(i).getUserProfile().getTelegramNum().getAsJsonPrimitive("number").getAsString());
+                                            if (response.body().get(i).getUserProfile().getTelegramNum().getAsJsonPrimitive("number") != null) {
+                                                family1.setTelgrmCountryCode(response.body().get(i).getUserProfile().getTelegramNum().getAsJsonPrimitive("countryCode").getAsString());
+                                                family1.setTelgrmNumber(response.body().get(i).getUserProfile().getTelegramNum().getAsJsonPrimitive("number").getAsString());
+                                            }
                                         }
                                         family1.setAddMember(false);
                                         LuserProfileList.add(family1);
@@ -802,8 +808,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                         }
                     }
 
-                } catch (
-                        Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
