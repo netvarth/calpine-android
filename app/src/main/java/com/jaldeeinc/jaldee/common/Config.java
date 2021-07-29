@@ -205,9 +205,19 @@ public class Config {
     public static String getAmountinSingleDecimalPoints(double amount) {
         return String.format("%.1f", amount);
     }
+
     public static String getAmountNoDecimalPoints(double d) {
         int i = (int) d;
         return d == i ? String.valueOf(i) : String.valueOf(d);
+    }
+
+    public static String getAmountNoOrTwoDecimalPoints(double d) {
+        String s = String.format("%.2f", d);
+        d = Double.parseDouble(s);
+        if (d == (long) d)
+            return String.format("%d", (long) d);
+        else
+            return String.format("%s", d);
     }
 
     public static String convert12(String str) {
@@ -282,13 +292,12 @@ public class Config {
             jsonObj.put("mUniqueId", regId);
             jsonObj.put("countryCode", countryCode);
 
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Config.logV("JSON--------------" + jsonObj);
-        Call<LoginResponse> call = apiService.LoginResponse(getDeviceName(),body);
+        Call<LoginResponse> call = apiService.LoginResponse(getDeviceName(), body);
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, retrofit2.Response<LoginResponse> response) {
@@ -529,6 +538,7 @@ public class Config {
 
         return builder.toString();
     }
+
     public static String getDeviceName() {
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;

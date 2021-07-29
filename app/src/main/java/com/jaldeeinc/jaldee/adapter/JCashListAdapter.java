@@ -1,0 +1,175 @@
+package com.jaldeeinc.jaldee.adapter;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.gson.JsonObject;
+import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.connection.ApiClient;
+import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
+import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.custom.JCashSpentLogDialog;
+import com.jaldeeinc.jaldee.response.JCashAvailable;
+import com.jaldeeinc.jaldee.response.JCashSpentDetails;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class JCashListAdapter extends RecyclerView.Adapter<JCashListAdapter.MyViewHolder> {
+    Context mContext;
+    ArrayList<JCashAvailable> listJCashAvailable;
+    JsonObject jCashIssueInfo, jCashSpendRulesInfo;
+    JCashSpentLogDialog jCashSpentLogDialog;
+    ArrayList<JCashSpentDetails> listJCashSpentDetails = new ArrayList<JCashSpentDetails>();
+
+    public JCashListAdapter(Context context, ArrayList<JCashAvailable> listJCashAvailable) {
+        this.mContext = context;
+        this.listJCashAvailable = listJCashAvailable;
+    }
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+        CustomTextViewSemiBold tvRwrdEarned, tvRwrdSpent;
+        CustomTextViewMedium tvRwrdExpiry, tvTAndc, tvJCashIssueDate, tvBookingNo, tvRewardName;
+        LinearLayout llJCashSpentLog;
+        RelativeLayout rlLayout;
+        public MyViewHolder(View view) {
+            super(view);
+            tvRewardName = (CustomTextViewMedium) view.findViewById(R.id.tv_rewardName);
+            tvBookingNo = (CustomTextViewMedium) view.findViewById(R.id.tv_bookingNo);
+            tvJCashIssueDate = (CustomTextViewMedium) view.findViewById(R.id.tv_jCashIssueDate);
+            tvRwrdEarned = (CustomTextViewSemiBold) view.findViewById(R.id.tv_rwrd_earned);
+            tvRwrdSpent = (CustomTextViewSemiBold) view.findViewById(R.id.tv_rwrd_spent);
+            tvRwrdExpiry = (CustomTextViewMedium) view.findViewById(R.id.tv_rwrd_expiry);
+            tvTAndc = (CustomTextViewMedium) view.findViewById(R.id.tv_t_and_c);
+            llJCashSpentLog = (LinearLayout) view.findViewById(R.id.ll_jCashSpentLog);
+            rlLayout = (RelativeLayout) view.findViewById(R.id.rl_layout);
+        }
+    }
+
+    @Override
+    public JCashListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.jcash_awards_view, parent, false);
+
+        return new JCashListAdapter.MyViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(final JCashListAdapter.MyViewHolder myViewHolder, final int position) {
+        final JCashAvailable jCashReward = listJCashAvailable.get(position);
+
+        jCashIssueInfo = jCashReward.getjCashIssueInfo().getAsJsonObject();
+        jCashSpendRulesInfo = jCashReward.getjCashSpendRulesInfo().getAsJsonObject();
+
+        if (jCashIssueInfo != null) {
+            String issuedDtStr = jCashIssueInfo.get("issuedDt").getAsString();
+            DateTimeFormatter issuedDtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate issuedlocalDate = LocalDate.parse(issuedDtStr);
+            myViewHolder.tvJCashIssueDate.setText(issuedlocalDate.format(issuedDtf));
+        }
+        if (jCashSpendRulesInfo != null) {
+            String expiryDtStr = jCashSpendRulesInfo.get("expiryDt").getAsString();
+            DateTimeFormatter expiryDtf = DateTimeFormatter.ofPattern("MMM dd");
+            LocalDate expirylocalDate = LocalDate.parse(expiryDtStr);
+            myViewHolder.tvRwrdExpiry.setText("Expires on " + expirylocalDate.format(expiryDtf) + "th");
+        }
+        //myViewHolder.rlLayout.animate().alpha(0.5f);
+        myViewHolder.tvRewardName.setText(jCashReward.getjCashOffer().get("name").getAsString());
+        myViewHolder.tvRwrdEarned.setText(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(jCashReward.getOriginalAmt())));
+        if (jCashReward.getOriginalAmt() != null && jCashReward.getRemainingAmt() != null) {
+            float spent = Float.parseFloat(jCashReward.getOriginalAmt()) - Float.parseFloat(jCashReward.getRemainingAmt());
+            if (spent >= 0) {
+                myViewHolder.tvRwrdSpent.setText(Config.getAmountNoOrTwoDecimalPoints(spent));
+            }
+        }
+
+        myViewHolder.tvTAndc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle("T & C")
+                        .setMessage(jCashReward.getDisplayNote())
+                        .setCancelable(true)
+                        .setPositiveButton("close", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                //Creating dialog box
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+        myViewHolder.llJCashSpentLog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ApiGetJcashSpentDetails(Integer.parseInt(jCashReward.getId()));
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return listJCashAvailable.size();
+    }
+
+    private void ApiGetJcashSpentDetails(int jCashId) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, "");
+        mDialog.show();
+
+        Call<ArrayList<JCashSpentDetails>> call = apiService.getJCashSpentDetails(jCashId);
+        call.enqueue(new Callback<ArrayList<JCashSpentDetails>>() {
+            @Override
+            public void onResponse(Call<ArrayList<JCashSpentDetails>> call, Response<ArrayList<JCashSpentDetails>> response) {
+                try {
+                    if (mDialog.isShowing()) {
+                        Config.closeDialog((Activity) mContext, mDialog);
+                    }
+                    if (response.code() == 200) {
+                        listJCashSpentDetails = response.body();
+                        Config.logV("Jaldee Cash Spent details--code-------------------------" + listJCashSpentDetails);
+
+                        jCashSpentLogDialog = new JCashSpentLogDialog(mContext, listJCashSpentDetails);
+                        jCashSpentLogDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogStyle_Default;
+                        jCashSpentLogDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        jCashSpentLogDialog.show();
+                        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                        int width = (int) (metrics.widthPixels * 1);
+                        jCashSpentLogDialog.setCancelable(false);
+                        jCashSpentLogDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<JCashSpentDetails>> call, Throwable t) {
+
+            }
+        });
+
+    }
+}

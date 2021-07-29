@@ -3,7 +3,9 @@ package com.jaldeeinc.jaldee.response;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-public class CouponApliedOrNotDetails {
+import java.io.Serializable;
+
+public class AdvancePaymentDetails implements Serializable {
     private float netTotal;
     private float amountRequiredNow;
     private float jdnDiscount;
@@ -14,7 +16,15 @@ public class CouponApliedOrNotDetails {
     //private String systemNote;
     private JsonObject jCouponList;
     private JsonObject proCouponList;
+    private JsonObject eligibleJcashAmt;
 
+    public JsonObject getEligibleJcashAmt() {
+        return eligibleJcashAmt;
+    }
+
+    public void setEligibleJcashAmt(JsonObject eligibleJcashAmt) {
+        this.eligibleJcashAmt = eligibleJcashAmt;
+    }
 
     public JsonObject getjCouponList() {
         return jCouponList;

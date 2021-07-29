@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.EditProfileActivity;
 import com.jaldeeinc.jaldee.activities.Home;
+import com.jaldeeinc.jaldee.activities.JaldeeWalletActivity;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -48,7 +49,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
 
 
     Context mContext;
-    LinearLayout mLprofile, mLchangepwd, mLchangeEmail, mLchangePhone, mLmember, mLogout, mLTerm, mLcontactus, mLshare, mLappfeed, mLEmailId;
+    LinearLayout mLprofile, mLchangepwd, mLchangeEmail, mLchangePhone, mLmember, mLogout, mLTerm, mLcontactus, mLshare, mLappfeed, mLEmailId, mLJCash;
     ImageView ivEdit;
     CustomTextViewBold tvUserName;
     CustomTextViewMedium tvMobileNumber, tvEmailId;
@@ -95,6 +96,8 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
         mLTerm = (LinearLayout) row.findViewById(R.id.lterm);
         mLcontactus = (LinearLayout) row.findViewById(R.id.lcontactus);
         mLshare = (LinearLayout) row.findViewById(R.id.lshare);
+        mLJCash = (LinearLayout) row.findViewById(R.id.ljcash);
+
 
 
         mLappfeed.setOnClickListener(new View.OnClickListener() {
@@ -233,7 +236,23 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
             }
         });
 
+        mLJCash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Config.logV("Update profile--------");
 
+                Intent intent = new Intent(getActivity(), JaldeeWalletActivity.class);
+                startActivity(intent);
+
+//                EditProfileFragment pfFragment = new EditProfileFragment();
+//                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+//                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+//                // Store the Fragment in stack
+//                transaction.addToBackStack(null);
+//                transaction.replace(R.id.mainlayout, pfFragment).commit();
+
+            }
+        });
         return row;
     }
 

@@ -997,7 +997,33 @@
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
                     </LinearLayout>
-
+                    <LinearLayout
+                        android:id="@+id/ll_jCash"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:layout_marginBottom="@dimen/dimen_5dp"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+                        <CheckBox
+                            android:id="@+id/cb_jCash"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="@dimen/dimen_0dp"
+                            android:checked="true"
+                            android:buttonTint="@color/blue"
+                            android:text="Use Jaldee cash balance : Rs "
+                            android:textColor="@color/darker_gray"
+                            android:textSize="@dimen/txtsize_12"/>
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                            android:id="@+id/tv_jCashHint"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="33dp"
+                            android:text="Balance amount can be paid by other payment methods"
+                            android:textColor="@color/darker_gray"
+                            android:textSize="@dimen/txtsize_12" />
+                    </LinearLayout>
                     <RelativeLayout
                         android:id="@+id/rv_totalBill"
                         android:layout_width="match_parent"

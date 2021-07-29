@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_jcash_spent_list_raw"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        android:id="@+id/tv_spent_to"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_weight="1"
+        android:background="@drawable/jcash_spentlist_table_content_cell_bg"
+        android:gravity="center_vertical"
+        android:padding="@dimen/dimen_4dp"
+        android:text=""
+        android:textSize="@dimen/dimen_16sp" />
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        android:id="@+id/tv_amount_spent_or_refunded"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_weight="1"
+        android:background="@drawable/jcash_spentlist_table_content_cell_bg"
+        android:gravity="center_vertical"
+        android:padding="@dimen/dimen_4dp"
+        android:text=""
+        android:textSize="@dimen/dimen_16sp" />
+
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        android:id="@+id/tv_date"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_weight="1"
+        android:background="@drawable/jcash_spentlist_table_content_cell_bg"
+        android:gravity="center_vertical"
+        android:padding="@dimen/dimen_4dp"
+        android:text=""
+        android:textSize="@dimen/dimen_16sp" />
+
+</LinearLayout>

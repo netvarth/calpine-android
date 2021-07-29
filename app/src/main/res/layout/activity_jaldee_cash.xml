@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/special_background"
+    tools:context="com.jaldeeinc.jaldee.activities.JaldeeWalletActivity">
+
+  <RelativeLayout
+      android:id="@+id/rl_tlbar"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/dimen_60dp"
+      android:background="@color/white">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_back"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/dimen_16dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardElevation="@dimen/padding3">
+
+      <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/padding5"
+          android:src="@mipmap/img_back_arrow"
+          app:tint="@color/dark_blue" />
+
+    </androidx.cardview.widget.CardView>
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+        android:id="@+id/toolbartitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="55dp"
+        android:layout_toRightOf="@id/cv_back"
+        android:gravity="center"
+        android:minHeight="?attr/actionBarSize"
+        android:text="@string/jaldee_cash"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/txtsize_subtitle" />
+
+  </RelativeLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/rl_tlbar"
+      android:layout_marginLeft="@dimen/dimen_10dp"
+      android:layout_marginRight="@dimen/dimen_10dp"
+      android:layout_marginBottom="@dimen/dimen_10dp"
+      android:orientation="vertical"
+      android:paddingTop="@dimen/dimen_5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:weightSum="1">
+
+      <androidx.cardview.widget.CardView
+          android:id="@+id/cv_jcash_balance"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_marginTop="@dimen/dimen_10dp"
+          android:layout_marginBottom="@dimen/dimen_15dp"
+          android:layout_weight="0.5"
+          app:cardCornerRadius="@dimen/padding5"
+          app:cardElevation="@dimen/dimen_0dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/dimen_10dp"
+            android:orientation="vertical"
+            android:padding="@dimen/padding5">
+
+          <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+              android:id="@+id/tv_jcash_balance"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:text="@string/jaldee_cash_balance"
+              android:textColor="@color/dark_blue"
+              android:textSize="@dimen/txtsize_title" />
+
+          <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+              android:id="@+id/tv_jcash"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:text="₹ 1500.00"
+              android:textColor="@color/dark_blue"
+              android:textSize="@dimen/txtsize_title"
+              android:textStyle="bold" />
+
+        </LinearLayout>
+      </androidx.cardview.widget.CardView>
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_total_trnsctns"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="@dimen/dimen_0dp">
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:padding="@dimen/padding5">
+
+        <LinearLayout
+            android:id="@+id/ll_trnscnimage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding5">
+
+          <ImageView
+              android:layout_width="@dimen/dimen_45dp"
+              android:layout_height="70dp"
+              android:src="@drawable/ic_mobile_trnscn"
+              app:tint="@color/dark_blue" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_trnscn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="55dp"
+            android:layout_toRightOf="@+id/ll_trnscnimage"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/padding5">
+
+          <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="@dimen/padding2"
+              android:gravity="center"
+              android:text="@string/jcash_total_trnsctns"
+              android:textColor="@color/dark_blue"
+              android:textSize="@dimen/txtsize_title" />
+
+          <LinearLayout
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+              <LinearLayout
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="7dp"
+                    android:layout_height="7dp"
+                    android:baselineAlignBottom="true"
+                    android:src="@drawable/ic_dollar"
+                    app:tint="@color/gray" />
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                    android:id="@+id/tv_totCashAwarded"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding2"
+                    android:gravity="center"
+                    android:text="6000"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/txtsize_small" />
+              </LinearLayout>
+
+              <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:gravity="left"
+                  android:text="Awarded"
+                  android:textColor="@color/gray"
+                  android:textSize="@dimen/txtsize_10" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/padding5"
+                android:layout_marginRight="@dimen/padding5"
+                android:background="@color/fadedgrey" />
+
+            <LinearLayout
+                android:id="@+id/ll_totCashSpentLog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+              <LinearLayout
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="7dp"
+                    android:layout_height="7dp"
+                    android:baselineAlignBottom="true"
+                    android:src="@drawable/ic_dollar"
+                    app:tint="@color/gray" />
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                    android:id="@+id/tv_totCashSpent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding2"
+                    android:gravity="center"
+                    android:text="4500"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/txtsize_small" />
+              </LinearLayout>
+
+              <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:gravity="left"
+                  android:text="Spent"
+                  android:textColor="@color/gray"
+                  android:textSize="@dimen/txtsize_10" />
+
+            </LinearLayout>
+          </LinearLayout>
+        </LinearLayout>
+      </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_toolbar"
+        android:fillViewport="true"
+        android:fitsSystemWindows="false"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollbars="none">
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/ll_jCash_expired_list_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding5"
+            android:visibility="gone">
+
+          <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+              android:id="@+id/tv_jCash_expired_list_hint"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="@dimen/padding2"
+              android:gravity="left"
+              android:text="@string/jCash_expired_text"
+              android:textColor="@color/dark_blue"
+              android:textSize="@dimen/txtsize_title" />
+
+          <ImageView
+              android:id="@+id/iv_expired_jCash_list_hint"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginLeft="@dimen/dimen_5dp"
+              android:src="@drawable/icon_down_arrow_blue"
+              app:tint="@color/dark_blue" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_expired_jCash_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="gone" />
+      </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+  </LinearLayout>
+</RelativeLayout>

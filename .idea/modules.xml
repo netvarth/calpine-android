@@ -2,24 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1.3.11MultiuserJaldee.iml" filepath="$PROJECT_DIR$/.idea/modules/1.3.11MultiuserJaldee.iml" group="1.3.11MultiuserJaldee" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/1.3.11MultiuserJaldee-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/1.3.11MultiuserJaldee-app.iml" group="1.3.11MultiuserJaldee/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1.3.12JaldeeAndroid.iml" filepath="$PROJECT_DIR$/.idea/modules/1.3.12JaldeeAndroid.iml" group="1.3.12JaldeeAndroid" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/1.3.12JaldeeAndroid-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/1.3.12JaldeeAndroid-app.iml" group="1.3.12JaldeeAndroid/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1.3.13JaldeeAndroid.iml" filepath="$PROJECT_DIR$/.idea/modules/1.3.13JaldeeAndroid.iml" group="1.3.13JaldeeAndroid" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/1.3.13JaldeeAndroid-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/1.3.13JaldeeAndroid-app.iml" group="1.3.13JaldeeAndroid/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1.4.0JaldeeAndroid.iml" filepath="$PROJECT_DIR$/.idea/modules/1.4.0JaldeeAndroid.iml" group="1.4.0JaldeeAndroid" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/1.4.0JaldeeAndroid-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/1.4.0JaldeeAndroid-app.iml" group="1.4.0JaldeeAndroid/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1.4.5JaldeeAndroid.iml" filepath="$PROJECT_DIR$/.idea/modules/1.4.5JaldeeAndroid.iml" group="1.4.5JaldeeAndroid" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/1.4.5JaldeeAndroid-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/1.4.5JaldeeAndroid-app.iml" group="1.4.5JaldeeAndroid/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1.4.7JaldeeAndroid.iml" filepath="$PROJECT_DIR$/.idea/modules/1.4.7JaldeeAndroid.iml" group="1.4.7JaldeeAndroid" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/1.4.7JaldeeAndroid-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/1.4.7JaldeeAndroid-app.iml" group="1.4.7JaldeeAndroid/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/JaldeeAndroidOrder.iml" filepath="$PROJECT_DIR$/.idea/modules/JaldeeAndroidOrder.iml" group="JaldeeAndroidOrder" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/JaldeeAndroidOrder-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/JaldeeAndroidOrder-app.iml" group="JaldeeAndroidOrder/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="calpine-android/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/calpine-android.iml" filepath="$PROJECT_DIR$/.idea/calpine-android.iml" group="calpine-android" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/order_enhancement.iml" filepath="$PROJECT_DIR$/.idea/modules/order_enhancement.iml" group="order_enhancement" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/order_enhancement-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/order_enhancement-app.iml" group="order_enhancement/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="order_enhancement (original) (backup)/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/order_enhancement_(original)_(backup).iml" filepath="$PROJECT_DIR$/.idea/modules/order_enhancement_(original)_(backup).iml" group="order_enhancement_(original)_(backup)" />
     </modules>
   </component>
 </project>

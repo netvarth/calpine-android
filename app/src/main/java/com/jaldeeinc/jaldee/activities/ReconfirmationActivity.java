@@ -7,6 +7,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,6 +26,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -57,6 +59,7 @@ import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.DepServiceInfo;
 import com.jaldeeinc.jaldee.response.DepartmentInfo;
 import com.jaldeeinc.jaldee.response.PaymentModel;
+import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.QuestionnaireUrls;
 import com.jaldeeinc.jaldee.response.QueueList;
@@ -66,6 +69,8 @@ import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
+import com.jaldeeinc.jaldee.response.ServiceInfo;
+import com.jaldeeinc.jaldee.response.WalletCheckSumModel;
 import com.jaldeeinc.jaldee.response.SubmitQuestionnaire;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
@@ -172,9 +177,18 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
     @BindView(R.id.tv_phoneNumber)
     CustomTextViewBold tvPhoneNumber;
 
+    @BindView(R.id.cb_jCash)
+    CheckBox cbJCash;
+
+    @BindView(R.id.ll_jCash)
+    LinearLayout llJCash;
+
+    @BindView(R.id.tv_jCashHint)
+    CustomTextViewMedium tvJCashHint;
+
     String value = null;
     int familyMEmID;
-    private String prepayAmount = "";
+    private String prepayAmount = "", prePayRemainingAmount = "";
     BookingModel bookingModel = new BookingModel();
     SearchTerminology mSearchTerminology;
     ActiveAppointment activeAppointment = new ActiveAppointment();
@@ -187,8 +201,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
     public Context mContext;
 
     //files related
-    private static final String IMAGE_DIRECTORY = "/Jaldee" +
-            "";
+    private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
     private Uri mImageUri;
     File f;
     String path;
@@ -205,6 +218,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
         ButterKnife.bind(ReconfirmationActivity.this);
         iPaymentResponse = this;
         mContext = ReconfirmationActivity.this;
+        cbJCash.setChecked(false);
 
         Intent intent = getIntent();
         bookingModel = (BookingModel) intent.getSerializableExtra("data");
@@ -327,22 +341,9 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                 APIPayment(String.valueOf(bookingModel.getAccountId()));
             }
 
-            if (bookingModel.getServiceInfo() != null && bookingModel.getServiceInfo().getTotalAmount() != null && !bookingModel.getServiceInfo().getTotalAmount().equalsIgnoreCase("0.0")) {
-                LservicePrepay.setVisibility(View.VISIBLE);
-                LserviceAmount.setVisibility(View.VISIBLE);
+            updateUI(bookingModel.getServiceInfo(), bookingModel.getEligibleJcashAmt());
 
-                String firstWord = "";
-                String thirdWord;
-                thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getServiceInfo().getTotalAmount()));
-
-
-                Spannable spannable = new SpannableString(firstWord + thirdWord);
-                spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
-                        firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                txtserviceamount.setText(spannable);
-            }
-
-            if (bookingModel.getServiceInfo() != null) {
+            /*if (bookingModel.getServiceInfo() != null) {
 
                 if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true")) {
 
@@ -351,9 +352,28 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
 
                     llPaymentOptions.setVisibility(View.GONE);
                 }
-            }
+            }*/
         }
+        cbJCash.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                if (cbJCash.isChecked()) {
+                    if (bookingModel.getEligibleJcashAmt() >= bookingModel.getAmountRequiredNow()) {
+                        tvButtonName.setText("Confirm");
+                        llPaymentOptions.setVisibility(View.GONE);
+                    } else {
+                        tvButtonName.setText("Proceed to Payment");
+                        llPaymentOptions.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    tvButtonName.setText("Proceed to Payment");
+                    if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true")) {
+                        llPaymentOptions.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -561,6 +581,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
 
                     if (response.code() == 200) {
 
+
                         SharedPreference.getInstance(ReconfirmationActivity.this).setValue("refreshcheckin", "true");
 
                         JSONObject reader = new JSONObject(response.body().string());
@@ -576,7 +597,11 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
 
                         }
 
-                        getConfirmationId(bookingModel.getAccountId(), bookingModel.getMessage());
+                        if (cbJCash.isChecked()) {
+                            getPrePayRemainingAmntNeeded(prepayAmount, cbJCash.isChecked(), bookingModel.getAccountId());
+                        } else {
+                            getConfirmationId(bookingModel.getAccountId(), bookingModel.getMessage());
+                        }
 
                     } else {
                         if (response.code() == 422) {
@@ -635,6 +660,31 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
             }
         });
 
+    }
+
+    private void getPrePayRemainingAmntNeeded(String prepayAmount, boolean isJcashSelected, int id) {
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<String> call = apiService.getPrePayRemainingAmnt(isJcashSelected, false, prepayAmount);
+        call.enqueue(new Callback<String>() {
+
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                Config.logV("URL------GET Prepay remaining amount---------" + response.raw().request().url().toString().trim());
+                Config.logV("Response--code-------------------------" + response.code());
+                if (response.code() == 200) {
+                    prePayRemainingAmount = response.body();
+                    getConfirmationId(bookingModel.getAccountId(), bookingModel.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.i("PrePayRemainingAmntNeed", t.toString());
+                t.printStackTrace();
+            }
+        });
     }
 
     private void ApiSubmitQuestionnnaire(QuestionnaireInput input, String uid) {
@@ -845,12 +895,26 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
 
                                 if (isPaytm) {
 
-                                    PaytmPayment payment = new PaytmPayment(ReconfirmationActivity.this, iPaymentResponse);
-                                    payment.ApiGenerateHashPaytm(value, prepayAmount, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, ReconfirmationActivity.this, ReconfirmationActivity.this, "", familyMEmID, appEncId);
+                            if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true")) {
+                                if (cbJCash.isChecked() && Double.parseDouble(prePayRemainingAmount) <= 0) {
+                                    isGateWayPaymentNeeded(value, prepayAmount, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, true, false, false, false, "JCASH", txt_addnote);
+                                    //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
+                                } else if (prepayAmount != null && Float.parseFloat(prepayAmount) > 0) {
+                                    if (isPaytm) {
 
-                                } else {
-
-                                    new PaymentGateway(ReconfirmationActivity.this, ReconfirmationActivity.this).ApiGenerateHash1(value, prepayAmount, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                        PaytmPayment payment = new PaytmPayment(ReconfirmationActivity.this, iPaymentResponse);
+                                        if (cbJCash.isChecked()) {
+                                            payment.ApiGenerateHashPaytm2(value, prepayAmount, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, "checkin", true, false, false, true, appEncId, mContext, ReconfirmationActivity.this);
+                                        } else {
+                                            payment.ApiGenerateHashPaytm(value, prepayAmount, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, ReconfirmationActivity.this, ReconfirmationActivity.this, "", familyMEmID, appEncId);
+                                        }
+                                    } else {
+                                        if (cbJCash.isChecked()) {
+                                            new PaymentGateway(ReconfirmationActivity.this, ReconfirmationActivity.this).ApiGenerateHash2(value, prepayAmount, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, "checkin", true, false, true, false);
+                                        } else {
+                                            new PaymentGateway(ReconfirmationActivity.this, ReconfirmationActivity.this).ApiGenerateHash1(value, prepayAmount, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
+                                        }
+                                    }
                                 }
                             } else {
                                 if (bookingImagesList.size() > 0) {
@@ -886,10 +950,83 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
 
     }
 
+    public void isGateWayPaymentNeeded(String ynwUUID, final String amount, String accountID, String purpose, boolean isJcashUsed, boolean isreditUsed, boolean isRazorPayPayment, boolean isPayTmPayment, String paymentMode, String txt_addnote) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        //  String uniqueID = UUID.randomUUID().toString();
+        SharedPreference.getInstance(mContext).setValue("prePayment", false);
+        JSONObject jsonObj = new JSONObject();
+        try {
+
+            jsonObj.put("accountId", accountID);
+            jsonObj.put("amountToPay", Float.valueOf(amount));
+            jsonObj.put("isJcashUsed", isJcashUsed);
+            jsonObj.put("isPayTmPayment", isPayTmPayment);
+            jsonObj.put("isRazorPayPayment", isRazorPayPayment);
+            jsonObj.put("isreditUsed", isreditUsed);
+            jsonObj.put("paymentMode", paymentMode);
+            jsonObj.put("paymentPurpose", purpose);
+            jsonObj.put("uuid", ynwUUID);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<WalletCheckSumModel> call = apiService.generateHash2(body);
+        call.enqueue(new Callback<WalletCheckSumModel>() {
+
+            @Override
+            public void onResponse(Call<WalletCheckSumModel> call, Response<WalletCheckSumModel> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(ReconfirmationActivity.this, mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+
+                    if (response.code() == 200) {
+
+                        WalletCheckSumModel respnseWCSumModel = response.body();
+
+                        if (!respnseWCSumModel.isGateWayPaymentNeeded()) {
+
+                            if (bookingImagesList.size() > 0) {
+                                ApiCommunicateAppointment(value, accountID, txt_addnote, dialog);
+                            }
+                            getConfirmationDetails(Integer.parseInt(accountID));
+                        }
+                    } else {
+                        String responseerror = response.errorBody().string();
+                        Config.logV("Response--error-------------------------" + responseerror);
+                        Toast.makeText(mContext, responseerror, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WalletCheckSumModel> call, Throwable t) {
+
+            }
+        });
+    }
+
     private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
 
         ApiInterface apiService = ApiClient.getClient(ReconfirmationActivity.this).create(ApiInterface.class);
-        MediaType type;
+        MediaType type ;
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
@@ -901,7 +1038,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                 extension = bookingImagesList.get(i).substring(bookingImagesList.get(i).lastIndexOf(".") + 1);
             }
 
-            if (extension.equalsIgnoreCase("pdf")) {
+            if (extension.equalsIgnoreCase("pdf")){
                 type = MediaType.parse("application/pdf");
 
             } else {
@@ -1124,6 +1261,51 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
             alertDialog.show();
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
+        }
+    }
+
+    public void updateUI(ServiceInfo serviceInfo, double eligibleJcashAmt) {
+        if (bookingModel.getServiceInfo() != null && bookingModel.getServiceInfo().getTotalAmount() != null && !bookingModel.getServiceInfo().getTotalAmount().equalsIgnoreCase("0.0")) {
+            LservicePrepay.setVisibility(View.VISIBLE);
+            LserviceAmount.setVisibility(View.VISIBLE);
+
+            String firstWord = "";
+            String thirdWord;
+            thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getServiceInfo().getTotalAmount()));
+
+            Spannable spannable = new SpannableString(firstWord + thirdWord);
+            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
+                    firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            txtserviceamount.setText(spannable);
+            if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
+                if (eligibleJcashAmt > 0) {
+                    cbJCash.setChecked(true);
+                    llJCash.setVisibility(View.VISIBLE);
+                    cbJCash.append(Config.getAmountNoOrTwoDecimalPoints(eligibleJcashAmt));
+                    if (eligibleJcashAmt >= Double.parseDouble(serviceInfo.getMinPrePaymentAmount())) {
+                        tvJCashHint.setVisibility(View.GONE);
+                        llPaymentOptions.setVisibility(View.GONE);
+                        tvButtonName.setText("Confirm");
+                    } else {
+                        tvJCashHint.setVisibility(View.VISIBLE);
+                        llPaymentOptions.setVisibility(View.VISIBLE);
+                        tvButtonName.setText("Proceed to Payment");
+                    }
+                } else if (eligibleJcashAmt == 0) {
+                    cbJCash.setChecked(false);
+                    llJCash.setVisibility(View.GONE);
+                    llPaymentOptions.setVisibility(View.VISIBLE);
+                    tvButtonName.setText("Proceed to Payment");
+                } else {
+                    cbJCash.setChecked(false);
+                    llJCash.setVisibility(View.GONE);
+                    llPaymentOptions.setVisibility(View.GONE);
+                }
+            } else {
+                llPaymentOptions.setVisibility(View.GONE);
+            }
+        } else {
+            llPaymentOptions.setVisibility(View.GONE);
         }
     }
 }

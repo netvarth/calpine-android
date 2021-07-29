@@ -20,7 +20,8 @@
         android:name="android.permission.READ_PHONE_STATE"
         tools:node="remove" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" /> -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<!--    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />-->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -43,6 +44,13 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
+
+        <activity
+            android:name=".activities.JaldeeWalletActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activities.JaldeeCashActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".activities.AudioActivity"></activity>
         <activity
             android:name=".activities.VideoActivity"
