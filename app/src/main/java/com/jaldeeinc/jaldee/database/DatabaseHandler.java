@@ -1294,12 +1294,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put("gender", profileModel.getGender());
             values.put("dob", profileModel.getDob());
             if(profileModel.getTelegramNum() != null){
-                values.put("telgrmCountryCode", profileModel.getTelegramNum().get("countryCode").getAsString());
-                values.put("telgrmNumber", profileModel.getTelegramNum().get("number").getAsString());
+                if(profileModel.getTelegramNum().get("countryCode") != null && profileModel.getTelegramNum().get("number") != null) {
+                    values.put("telgrmCountryCode", profileModel.getTelegramNum().get("countryCode").getAsString());
+                    values.put("telgrmNumber", profileModel.getTelegramNum().get("number").getAsString());
+                }
             }
             if(profileModel.getWhatsAppNum() != null){
-                values.put("whtsAppCountryCode", profileModel.getTelegramNum().get("countryCode").getAsString());
-                values.put("whtsAppNumber", profileModel.getTelegramNum().get("number").getAsString());
+                if(profileModel.getWhatsAppNum().get("countryCode") != null && profileModel.getWhatsAppNum().get("number") != null) {
+                    values.put("whtsAppCountryCode", profileModel.getWhatsAppNum().get("countryCode").getAsString());
+                    values.put("whtsAppNumber", profileModel.getWhatsAppNum().get("number").getAsString());
+                }
             }
             db.insert(mContext.getString(R.string.db_table_userinfo), null, values);
 
@@ -1332,12 +1336,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put("gender", profileModel.getGender());
             values.put("dob", profileModel.getDob());
             if(profileModel.getTelegramNum() != null){
-                values.put("telgrmCountryCode", profileModel.getTelegramNum().get("countryCode").getAsString());
-                values.put("telgrmNumber", profileModel.getTelegramNum().get("number").getAsString());
+                if(profileModel.getTelegramNum().get("countryCode") != null && profileModel.getTelegramNum().get("number") != null) {
+                    values.put("telgrmCountryCode", profileModel.getTelegramNum().get("countryCode").getAsString());
+                    values.put("telgrmNumber", profileModel.getTelegramNum().get("number").getAsString());
+                }
             }
             if(profileModel.getWhatsAppNum() != null){
-                values.put("whtsAppCountryCode", profileModel.getTelegramNum().get("countryCode").getAsString());
-                values.put("whtsAppNumber", profileModel.getTelegramNum().get("number").getAsString());
+                if(profileModel.getWhatsAppNum().get("countryCode") != null && profileModel.getWhatsAppNum().get("number") != null) {
+                    values.put("whtsAppCountryCode", profileModel.getTelegramNum().get("countryCode").getAsString());
+                    values.put("whtsAppNumber", profileModel.getTelegramNum().get("number").getAsString());
+                }
             }
 
 
