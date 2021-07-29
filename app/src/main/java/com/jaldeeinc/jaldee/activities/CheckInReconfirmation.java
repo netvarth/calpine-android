@@ -843,6 +843,9 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
             ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
 
+            final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+            mDialog.show();
+
             List<Observable<?>> requests = new ArrayList<>();
 
             for (LabelPath l : filesList) {
@@ -881,6 +884,9 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                                         public void run() {
                                             // Stuff that updates the UI
                                             try {
+
+                                                if (mDialog.isShowing())
+                                                    Config.closeDialog(getParent(), mDialog);
                                                 ApiCheckStatus(activeAppointment.getYnwUuid(), bookingModel.getAccountId(), result);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
@@ -1052,10 +1058,15 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
         Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(value, String.valueOf(id));
         call.enqueue(new Callback<ActiveCheckIn>() {
             @Override
             public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
+
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
                 try {
 
                     if (response.code() == 200) {
@@ -1084,6 +1095,9 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
             @Override
             public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
+
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
             }
         });
 

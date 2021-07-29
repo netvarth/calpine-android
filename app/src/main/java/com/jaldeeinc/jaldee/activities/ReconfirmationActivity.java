@@ -427,6 +427,8 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
 
             ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
 
+            final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+            mDialog.show();
             List<Observable<?>> requests = new ArrayList<>();
 
             for (LabelPath l : filesList) {
@@ -466,6 +468,9 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                                             // Stuff that updates the UI
 
                                             try {
+
+                                                if (mDialog.isShowing())
+                                                    Config.closeDialog(getParent(), mDialog);
 
                                                 ApiCheckStatus(activeAppointment.getUid(), bookingModel.getAccountId(), result);
 
@@ -938,377 +943,393 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
 
                         }
                     }
-                    }catch(Exception e){
-                        Log.i("mnbbnmmnbbnm", e.toString());
-                        e.printStackTrace();
-                    }
-                }
-                @Override
-                public void onFailure (Call < ActiveAppointment > call, Throwable t){
-                }
-            });
-
-        }
-
-        public void isGateWayPaymentNeeded (String ynwUUID,final String amount, String
-        accountID, String purpose,boolean isJcashUsed, boolean isreditUsed,
-        boolean isRazorPayPayment, boolean isPayTmPayment, String paymentMode, String txt_addnote){
-
-            ApiInterface apiService =
-                    ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
-            final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-            mDialog.show();
-
-            //  String uniqueID = UUID.randomUUID().toString();
-            SharedPreference.getInstance(mContext).setValue("prePayment", false);
-            JSONObject jsonObj = new JSONObject();
-            try {
-
-                jsonObj.put("accountId", accountID);
-                jsonObj.put("amountToPay", Float.valueOf(amount));
-                jsonObj.put("isJcashUsed", isJcashUsed);
-                jsonObj.put("isPayTmPayment", isPayTmPayment);
-                jsonObj.put("isRazorPayPayment", isRazorPayPayment);
-                jsonObj.put("isreditUsed", isreditUsed);
-                jsonObj.put("paymentMode", paymentMode);
-                jsonObj.put("paymentPurpose", purpose);
-                jsonObj.put("uuid", ynwUUID);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-            Call<WalletCheckSumModel> call = apiService.generateHash2(body);
-            call.enqueue(new Callback<WalletCheckSumModel>() {
-
-                @Override
-                public void onResponse(Call<WalletCheckSumModel> call, Response<WalletCheckSumModel> response) {
-
-                    try {
-
-                        if (mDialog.isShowing())
-                            Config.closeDialog(ReconfirmationActivity.this, mDialog);
-
-                        Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                        Config.logV("Response--code-------------------------" + response.code());
-
-
-                        if (response.code() == 200) {
-
-                            WalletCheckSumModel respnseWCSumModel = response.body();
-
-                            if (!respnseWCSumModel.isGateWayPaymentNeeded()) {
-
-                                if (bookingImagesList.size() > 0) {
-                                    ApiCommunicateAppointment(value, accountID, txt_addnote, dialog);
-                                }
-                                getConfirmationDetails(Integer.parseInt(accountID));
-                            }
-                        } else {
-                            String responseerror = response.errorBody().string();
-                            Config.logV("Response--error-------------------------" + responseerror);
-                            Toast.makeText(mContext, responseerror, Toast.LENGTH_LONG).show();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<WalletCheckSumModel> call, Throwable t) {
-
-                }
-            });
-        }
-
-        private void ApiCommunicateAppointment (String waitListId, String accountID, String message,
-        final BottomSheetDialog dialog){
-
-            ApiInterface apiService = ApiClient.getClient(ReconfirmationActivity.this).create(ApiInterface.class);
-            MediaType type;
-            MultipartBody.Builder mBuilder = new MultipartBody.Builder();
-            mBuilder.setType(MultipartBody.FORM);
-            mBuilder.addFormDataPart("message", message);
-            for (int i = 0; i < bookingImagesList.size(); i++) {
-
-                String extension = "";
-
-                if (bookingImagesList.get(i).contains(".")) {
-                    extension = bookingImagesList.get(i).substring(bookingImagesList.get(i).lastIndexOf(".") + 1);
-                }
-
-                if (extension.equalsIgnoreCase("pdf")) {
-                    type = MediaType.parse("application/pdf");
-
-                } else {
-                    type = MediaType.parse("image/*");
-
-                }
-
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(ReconfirmationActivity.this.getApplicationContext().getContentResolver(), Uri.fromFile(new File(bookingImagesList.get(i))));
-                } catch (IOException e) {
+                } catch (Exception e) {
+                    Log.i("mnbbnmmnbbnm", e.toString());
                     e.printStackTrace();
                 }
-                if (bitmap != null) {
-                    path = saveImage(bitmap);
-                    file = new File(path);
-                } else {
-                    file = new File(bookingImagesList.get(i));
-                }
-                mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
             }
-            RequestBody requestBody = mBuilder.build();
 
-            final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-            mDialog.show();
-            JSONObject jsonObj = new JSONObject();
+            @Override
+            public void onFailure(Call<ActiveAppointment> call, Throwable t) {
+            }
+        });
+
+    }
+
+    public void isGateWayPaymentNeeded(String ynwUUID, final String amount, String
+            accountID, String purpose, boolean isJcashUsed, boolean isreditUsed,
+                                       boolean isRazorPayPayment, boolean isPayTmPayment, String paymentMode, String txt_addnote) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        //  String uniqueID = UUID.randomUUID().toString();
+        SharedPreference.getInstance(mContext).setValue("prePayment", false);
+        JSONObject jsonObj = new JSONObject();
+        try {
+
+            jsonObj.put("accountId", accountID);
+            jsonObj.put("amountToPay", Float.valueOf(amount));
+            jsonObj.put("isJcashUsed", isJcashUsed);
+            jsonObj.put("isPayTmPayment", isPayTmPayment);
+            jsonObj.put("isRazorPayPayment", isRazorPayPayment);
+            jsonObj.put("isreditUsed", isreditUsed);
+            jsonObj.put("paymentMode", paymentMode);
+            jsonObj.put("paymentPurpose", purpose);
+            jsonObj.put("uuid", ynwUUID);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<WalletCheckSumModel> call = apiService.generateHash2(body);
+        call.enqueue(new Callback<WalletCheckSumModel>() {
+
+            @Override
+            public void onResponse(Call<WalletCheckSumModel> call, Response<WalletCheckSumModel> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(ReconfirmationActivity.this, mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+
+                    if (response.code() == 200) {
+
+                        WalletCheckSumModel respnseWCSumModel = response.body();
+
+                        if (respnseWCSumModel != null && !respnseWCSumModel.isGateWayPaymentNeeded()) {
+
+                            if (bookingImagesList.size() > 0) {
+                                ApiCommunicateAppointment(value, accountID, txt_addnote, dialog);
+                            }
+                            getConfirmationDetails(Integer.parseInt(accountID));
+                        }
+                    } else {
+                        String responseerror = response.errorBody().string();
+                        Config.logV("Response--error-------------------------" + responseerror);
+                        Toast.makeText(mContext, responseerror, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WalletCheckSumModel> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void ApiCommunicateAppointment(String waitListId, String accountID, String message,
+                                           final BottomSheetDialog dialog) {
+
+        ApiInterface apiService = ApiClient.getClient(ReconfirmationActivity.this).create(ApiInterface.class);
+        MediaType type;
+        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
+        mBuilder.setType(MultipartBody.FORM);
+        mBuilder.addFormDataPart("message", message);
+        for (int i = 0; i < bookingImagesList.size(); i++) {
+
+            String extension = "";
+
+            if (bookingImagesList.get(i).contains(".")) {
+                extension = bookingImagesList.get(i).substring(bookingImagesList.get(i).lastIndexOf(".") + 1);
+            }
+
+            if (extension.equalsIgnoreCase("pdf")) {
+                type = MediaType.parse("application/pdf");
+
+            } else {
+                type = MediaType.parse("image/*");
+
+            }
+
             try {
-                jsonObj.put("message", message);
-            } catch (JSONException e) {
+                bitmap = MediaStore.Images.Media.getBitmap(ReconfirmationActivity.this.getApplicationContext().getContentResolver(), Uri.fromFile(new File(bookingImagesList.get(i))));
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-            Call<ResponseBody> call = apiService.appointmentSendAttachments(waitListId, Integer.parseInt(accountID.split("-")[0]), requestBody);
+            if (bitmap != null) {
+                path = saveImage(bitmap);
+                file = new File(path);
+            } else {
+                file = new File(bookingImagesList.get(i));
+            }
+            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+        }
+        RequestBody requestBody = mBuilder.build();
 
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("message", message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call = apiService.appointmentSendAttachments(waitListId, Integer.parseInt(accountID.split("-")[0]), requestBody);
 
-                    try {
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                        Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                        Config.logV("Response--code-------------------------" + response.code());
+                if (mDialog.isShowing())
+                    Config.closeDialog(ReconfirmationActivity.this, mDialog);
 
-                        if (response.code() == 200) {
-                            bookingImagesList.clear();
+                try {
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+                        bookingImagesList.clear();
+                        dialog.dismiss();
+
+
+                    } else {
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(ReconfirmationActivity.this, mDialog);
+
+            }
+        });
+
+    }
+
+    private void getConfirmationDetails(int userId) {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(value, String.valueOf(userId));
+        call.enqueue(new Callback<ActiveAppointment>() {
+            @Override
+            public void onResponse(Call<ActiveAppointment> call, Response<ActiveAppointment> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(ReconfirmationActivity.this, mDialog);
+
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        activeAppointment = response.body();
+                        imagePathList.clear();
+                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, "");
+                        SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, "");
+
+                        if (activeAppointment != null) {
+                            appEncId = activeAppointment.getAppointmentEncId();
+                            Bundle b = new Bundle();
+                            b.putString("terminology", mSearchTerminology.getProvider());
+                            b.putString("from", "");
+                            b.putString("waitlistPhonenumber", bookingModel.getPhoneNumber());
+                            b.putString("accountID", String.valueOf(bookingModel.getAccountId()));
+                            b.putString("livetrack", bookingModel.getServiceInfo().getLivetrack());
+                            b.putString("uid", activeAppointment.getUid());
+                            Intent checkin = new Intent(ReconfirmationActivity.this, AppointmentConfirmation.class);
+                            checkin.putExtras(b);
+                            startActivity(checkin);
+                        }
+
+                    }
+                } catch (Exception e) {
+                    Log.i("mnbbnmmnbbnm", e.toString());
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveAppointment> call, Throwable t) {
+
+                if (mDialog.isShowing())
+                    Config.closeDialog(ReconfirmationActivity.this, mDialog);
+
+            }
+        });
+
+    }
+
+
+    public String saveImage(Bitmap myBitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        if (myBitmap != null) {
+            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        }
+        File wallpaperDirectory = new File(
+                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
+        // have the object build the directory structure, if needed.
+        if (!wallpaperDirectory.exists()) {
+            wallpaperDirectory.mkdirs();
+        }
+
+        try {
+            f = new File(wallpaperDirectory, Calendar.getInstance()
+                    .getTimeInMillis() + ".jpg");
+            f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(bytes.toByteArray());
+            MediaScannerConnection.scanFile(ReconfirmationActivity.this,
+                    new String[]{f.getPath()},
+                    new String[]{"image/jpeg"}, null);
+            fo.close();
+            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
+
+            return f.getAbsolutePath();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return "";
+    }
+
+    @Override
+    public void sendPaymentResponse() {
+
+        if (bookingImagesList != null && bookingImagesList.size() > 0) {
+            ApiCommunicateAppointment(value, String.valueOf(bookingModel.getAccountId()), bookingModel.getMessage(), dialog);
+        }
+
+        String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
+
+        if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
+
+            QuestionnaireInput input = new QuestionnaireInput();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            input = gson.fromJson(inputString, QuestionnaireInput.class);
+            ApiSubmitQuestionnnaire(input, activeAppointment.getUid());
+        } else {
+
+            getConfirmationDetails(bookingModel.getAccountId());
+        }
+    }
+
+    @Override
+    public void onPaymentSuccess(String s, PaymentData paymentData) {
+
+        try {
+            RazorpayModel razorpayModel = new RazorpayModel(paymentData);
+            new PaymentGateway(this.mContext, ReconfirmationActivity.this).sendPaymentStatus(razorpayModel, "SUCCESS");
+            Toast.makeText(this.mContext, "Payment Successful", Toast.LENGTH_LONG).show();
+            paymentFinished(razorpayModel);
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentSuccess", e);
+        }
+    }
+
+    private void paymentFinished(RazorpayModel razorpayModel) {
+
+        if (bookingImagesList != null && bookingImagesList.size() > 0) {
+            ApiCommunicateAppointment(value, String.valueOf(bookingModel.getAccountId()), bookingModel.getMessage(), dialog);
+        }
+
+        String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
+
+        if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
+
+            QuestionnaireInput input = new QuestionnaireInput();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            input = gson.fromJson(inputString, QuestionnaireInput.class);
+            ApiSubmitQuestionnnaire(input, activeAppointment.getUid());
+        } else {
+
+            getConfirmationDetails(bookingModel.getAccountId());
+        }
+    }
+
+    @Override
+    public void onPaymentError(int i, String s, PaymentData paymentData) {
+
+        try {
+            AlertDialog alertDialog = new AlertDialog.Builder(ReconfirmationActivity.this).create();
+            alertDialog.setTitle("Payment Failed");
+            alertDialog.setMessage("Unable to process your request.Please try again after some time");
+            alertDialog.setCancelable(false);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
 
-
-                        } else {
-                            if (response.code() == 422) {
-                                Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    // Log error here since request failed
-                    Config.logV("Fail---------------" + t.toString());
-                }
-            });
-
-        }
-
-        private void getConfirmationDetails ( int userId){
-
-            final ApiInterface apiService =
-                    ApiClient.getClient(mContext).create(ApiInterface.class);
-            Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(value, String.valueOf(userId));
-            call.enqueue(new Callback<ActiveAppointment>() {
-                @Override
-                public void onResponse(Call<ActiveAppointment> call, Response<ActiveAppointment> response) {
-                    try {
-                        Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
-                        Config.logV("Response--code-------------------------" + response.code());
-                        if (response.code() == 200) {
-                            activeAppointment = response.body();
-                            imagePathList.clear();
-                            SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, "");
-                            SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, "");
-
-                            if (activeAppointment != null) {
-                                appEncId = activeAppointment.getAppointmentEncId();
-                                Bundle b = new Bundle();
-                                b.putString("terminology", mSearchTerminology.getProvider());
-                                b.putString("from", "");
-                                b.putString("waitlistPhonenumber", bookingModel.getPhoneNumber());
-                                b.putString("accountID", String.valueOf(bookingModel.getAccountId()));
-                                b.putString("livetrack", bookingModel.getServiceInfo().getLivetrack());
-                                b.putString("uid", activeAppointment.getUid());
-                                Intent checkin = new Intent(ReconfirmationActivity.this, AppointmentConfirmation.class);
-                                checkin.putExtras(b);
-                                startActivity(checkin);
-                            }
+                            Intent homeIntent = new Intent(ReconfirmationActivity.this, Home.class);
+                            startActivity(homeIntent);
+                            finish();
 
                         }
-                    } catch (Exception e) {
-                        Log.i("mnbbnmmnbbnm", e.toString());
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ActiveAppointment> call, Throwable t) {
-                }
-            });
-
+                    });
+            alertDialog.show();
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentError..", e);
         }
+    }
 
+    public void updateUI(ServiceInfo serviceInfo, double eligibleJcashAmt) {
+        if (bookingModel.getServiceInfo() != null && bookingModel.getServiceInfo().getTotalAmount() != null && !bookingModel.getServiceInfo().getTotalAmount().equalsIgnoreCase("0.0")) {
+            LservicePrepay.setVisibility(View.VISIBLE);
+            LserviceAmount.setVisibility(View.VISIBLE);
 
-        public String saveImage (Bitmap myBitmap){
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            if (myBitmap != null) {
-                myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-            }
-            File wallpaperDirectory = new File(
-                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-            // have the object build the directory structure, if needed.
-            if (!wallpaperDirectory.exists()) {
-                wallpaperDirectory.mkdirs();
-            }
+            String firstWord = "";
+            String thirdWord;
+            thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getServiceInfo().getTotalAmount()));
 
-            try {
-                f = new File(wallpaperDirectory, Calendar.getInstance()
-                        .getTimeInMillis() + ".jpg");
-                f.createNewFile();
-                FileOutputStream fo = new FileOutputStream(f);
-                fo.write(bytes.toByteArray());
-                MediaScannerConnection.scanFile(ReconfirmationActivity.this,
-                        new String[]{f.getPath()},
-                        new String[]{"image/jpeg"}, null);
-                fo.close();
-                Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-
-                return f.getAbsolutePath();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            return "";
-        }
-
-        @Override
-        public void sendPaymentResponse () {
-
-            if (bookingImagesList != null && bookingImagesList.size() > 0) {
-                ApiCommunicateAppointment(value, String.valueOf(bookingModel.getAccountId()), bookingModel.getMessage(), dialog);
-            }
-
-            String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
-
-            if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
-
-                QuestionnaireInput input = new QuestionnaireInput();
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                input = gson.fromJson(inputString, QuestionnaireInput.class);
-                ApiSubmitQuestionnnaire(input, activeAppointment.getUid());
-            } else {
-
-                getConfirmationDetails(bookingModel.getAccountId());
-            }
-        }
-
-        @Override
-        public void onPaymentSuccess (String s, PaymentData paymentData){
-
-            try {
-                RazorpayModel razorpayModel = new RazorpayModel(paymentData);
-                new PaymentGateway(this.mContext, ReconfirmationActivity.this).sendPaymentStatus(razorpayModel, "SUCCESS");
-                Toast.makeText(this.mContext, "Payment Successful", Toast.LENGTH_LONG).show();
-                paymentFinished(razorpayModel);
-            } catch (Exception e) {
-                Log.e("TAG", "Exception in onPaymentSuccess", e);
-            }
-        }
-
-        private void paymentFinished (RazorpayModel razorpayModel){
-
-            if (bookingImagesList != null && bookingImagesList.size() > 0) {
-                ApiCommunicateAppointment(value, String.valueOf(bookingModel.getAccountId()), bookingModel.getMessage(), dialog);
-            }
-
-            String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
-
-            if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
-
-                QuestionnaireInput input = new QuestionnaireInput();
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                input = gson.fromJson(inputString, QuestionnaireInput.class);
-                ApiSubmitQuestionnnaire(input, activeAppointment.getUid());
-            } else {
-
-                getConfirmationDetails(bookingModel.getAccountId());
-            }
-        }
-
-        @Override
-        public void onPaymentError ( int i, String s, PaymentData paymentData){
-
-            try {
-                AlertDialog alertDialog = new AlertDialog.Builder(ReconfirmationActivity.this).create();
-                alertDialog.setTitle("Payment Failed");
-                alertDialog.setMessage("Unable to process your request.Please try again after some time");
-                alertDialog.setCancelable(false);
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-
-                                Intent homeIntent = new Intent(ReconfirmationActivity.this, Home.class);
-                                startActivity(homeIntent);
-                                finish();
-
-                            }
-                        });
-                alertDialog.show();
-            } catch (Exception e) {
-                Log.e("TAG", "Exception in onPaymentError..", e);
-            }
-        }
-
-        public void updateUI (ServiceInfo serviceInfo,double eligibleJcashAmt){
-            if (bookingModel.getServiceInfo() != null && bookingModel.getServiceInfo().getTotalAmount() != null && !bookingModel.getServiceInfo().getTotalAmount().equalsIgnoreCase("0.0")) {
-                LservicePrepay.setVisibility(View.VISIBLE);
-                LserviceAmount.setVisibility(View.VISIBLE);
-
-                String firstWord = "";
-                String thirdWord;
-                thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getServiceInfo().getTotalAmount()));
-
-                Spannable spannable = new SpannableString(firstWord + thirdWord);
-                spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
-                        firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                txtserviceamount.setText(spannable);
-                if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
-                    if (eligibleJcashAmt > 0) {
-                        cbJCash.setChecked(true);
-                        llJCash.setVisibility(View.VISIBLE);
-                        cbJCash.append(Config.getAmountNoOrTwoDecimalPoints(eligibleJcashAmt));
-                        if (eligibleJcashAmt >= Double.parseDouble(serviceInfo.getMinPrePaymentAmount())) {
-                            tvJCashHint.setVisibility(View.GONE);
-                            llPaymentOptions.setVisibility(View.GONE);
-                            tvButtonName.setText("Confirm");
-                        } else {
-                            tvJCashHint.setVisibility(View.VISIBLE);
-                            llPaymentOptions.setVisibility(View.VISIBLE);
-                            tvButtonName.setText("Proceed to Payment");
-                        }
-                    } else if (eligibleJcashAmt == 0) {
-                        cbJCash.setChecked(false);
-                        llJCash.setVisibility(View.GONE);
+            Spannable spannable = new SpannableString(firstWord + thirdWord);
+            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
+                    firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            txtserviceamount.setText(spannable);
+            if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
+                if (eligibleJcashAmt > 0) {
+                    cbJCash.setChecked(true);
+                    llJCash.setVisibility(View.VISIBLE);
+                    cbJCash.append(Config.getAmountNoOrTwoDecimalPoints(eligibleJcashAmt));
+                    if (eligibleJcashAmt >= Double.parseDouble(serviceInfo.getMinPrePaymentAmount())) {
+                        tvJCashHint.setVisibility(View.GONE);
+                        llPaymentOptions.setVisibility(View.GONE);
+                        tvButtonName.setText("Confirm");
+                    } else {
+                        tvJCashHint.setVisibility(View.VISIBLE);
                         llPaymentOptions.setVisibility(View.VISIBLE);
                         tvButtonName.setText("Proceed to Payment");
-                    } else {
-                        cbJCash.setChecked(false);
-                        llJCash.setVisibility(View.GONE);
-                        llPaymentOptions.setVisibility(View.GONE);
                     }
+                } else if (eligibleJcashAmt == 0) {
+                    cbJCash.setChecked(false);
+                    llJCash.setVisibility(View.GONE);
+                    llPaymentOptions.setVisibility(View.VISIBLE);
+                    tvButtonName.setText("Proceed to Payment");
                 } else {
+                    cbJCash.setChecked(false);
+                    llJCash.setVisibility(View.GONE);
                     llPaymentOptions.setVisibility(View.GONE);
                 }
             } else {
                 llPaymentOptions.setVisibility(View.GONE);
             }
+        } else {
+            llPaymentOptions.setVisibility(View.GONE);
         }
     }
+}
