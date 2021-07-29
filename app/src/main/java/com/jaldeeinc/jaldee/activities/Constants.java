@@ -27,10 +27,10 @@ public class Constants {
     public static final String FIRST_NAME = "Debajyoti";
     public static final String MOBILE = "7204342561";
     public static final String EMAIL = "d.basak.db@gmail.com";
-    public static final  String PURPOSE_PREPAYMENT = "prePayment";
-    public static final  String PURPOSE_BILLPAYMENT = "billPayment";
-    public static final  String PURPOSE_DONATIONPAYMENT = "donation";
-    public static final  String SOURCE_PAYMENT = "Android";
+    public static final String PURPOSE_PREPAYMENT = "prePayment";
+    public static final String PURPOSE_BILLPAYMENT = "billPayment";
+    public static final String PURPOSE_DONATIONPAYMENT = "donation";
+    public static final String SOURCE_PAYMENT = "Android";
 
     public static final String APPOINTMENT = "Appointments";
     public static final String CHECKIN = "CheckIns";
@@ -42,8 +42,6 @@ public class Constants {
     public static final String BOOKING_CHECKIN = "bCheckIn";
 
     public static final String BOOKING_APPOINTMENT = "bAppointment";
-
-
 
 
     public static final String CONFIRMED = "Confirmed";
@@ -72,10 +70,13 @@ public class Constants {
     // notification purpose
     public static final String PUSH_NOTIFICATION = "pushNotification";
 
+    //Jcash log details
+    public static final String SPENT = "SPENT";
+    public static final String REFUNDED = "REFUNDED";
 
-    public static int getViewId(int id){
+    public static int getViewId(int id) {
 
-        switch (id){
+        switch (id) {
 
 //            case 1:  return R.id.id1;
         }
@@ -84,7 +85,7 @@ public class Constants {
 
     }
 
-    public static final String getDeviceName(){
+    public static final String getDeviceName() {
 
         String deviceName = Build.MANUFACTURER
                 + " " + Build.MODEL + " " + Build.VERSION.RELEASE
