@@ -237,7 +237,7 @@
                             android:justificationMode="inter_word"
                             android:letterSpacing="0.03"
                             android:lineSpacingExtra="@dimen/padding3"
-                            android:text="Jaldee Wallet"
+                            android:text="My Wallet"
                             android:textColor="@color/black"
                             android:textSize="@dimen/txtsize_hint"
                             android:textStyle="bold" />
