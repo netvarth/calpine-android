@@ -633,8 +633,6 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                                         }
                                     }
                                 }
-
-
                             } else {
 
                                 if (bookingImagesList.size() > 0) {
@@ -653,12 +651,8 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
                                     getConfirmationDetails(bookingModel.getAccountId());
                                 }
-
                             }
-
-
                         }
-
                     }
                 } catch (Exception e) {
                     Log.i("mnbbnmmnbbnm", e.toString());
@@ -1360,9 +1354,11 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                 }
             } else {
                 llPaymentOptions.setVisibility(View.GONE);
+                llJCash.setVisibility(View.GONE);
             }
         } else {
             llPaymentOptions.setVisibility(View.GONE);
+            llJCash.setVisibility(View.GONE);
         }
     }
 }
