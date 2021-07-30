@@ -894,9 +894,9 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         activeAppointment = response.body();
+
                         if (activeAppointment != null) {
                             appEncId = activeAppointment.getAppointmentEncId();
-
 
                             if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true")) {
                                 if (cbJCash.isChecked() && Double.parseDouble(prePayRemainingAmount) <= 0) {
@@ -904,7 +904,6 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                                     //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
                                 } else if (prepayAmount != null && Float.parseFloat(prepayAmount) > 0) {
                                     if (isPaytm) {
-
                                         PaytmPayment payment = new PaytmPayment(ReconfirmationActivity.this, iPaymentResponse);
                                         if (cbJCash.isChecked()) {
                                             payment.ApiGenerateHashPaytm2(value, prepayAmount, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, "checkin", true, false, false, true, appEncId, mContext, ReconfirmationActivity.this);

@@ -98,12 +98,6 @@ public class JaldeeCashActivity extends AppCompatActivity {
                 finish();
             }
         });
-        ll_totCashSpentLog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ApiGetAllJcashSpentDetails();
-            }
-        });
     }
 
     private void ApiGetJCashAvailable() {
