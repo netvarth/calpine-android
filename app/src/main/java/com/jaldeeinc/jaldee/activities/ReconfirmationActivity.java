@@ -1286,11 +1286,9 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
         if (bookingModel.getServiceInfo() != null && bookingModel.getServiceInfo().getTotalAmount() != null && !bookingModel.getServiceInfo().getTotalAmount().equalsIgnoreCase("0.0")) {
             LservicePrepay.setVisibility(View.VISIBLE);
             LserviceAmount.setVisibility(View.VISIBLE);
-
             String firstWord = "";
             String thirdWord;
             thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getServiceInfo().getTotalAmount()));
-
             Spannable spannable = new SpannableString(firstWord + thirdWord);
             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                     firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1299,7 +1297,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                 if (eligibleJcashAmt > 0) {
                     cbJCash.setChecked(true);
                     llJCash.setVisibility(View.VISIBLE);
-                    cbJCash.append(Config.getAmountNoOrTwoDecimalPoints(eligibleJcashAmt));
+                    cbJCash.setText("Use Jaldee cash balance : Rs "+Config.getAmountNoOrTwoDecimalPoints(eligibleJcashAmt));
                     if (eligibleJcashAmt >= Double.parseDouble(serviceInfo.getMinPrePaymentAmount())) {
                         tvJCashHint.setVisibility(View.GONE);
                         llPaymentOptions.setVisibility(View.GONE);

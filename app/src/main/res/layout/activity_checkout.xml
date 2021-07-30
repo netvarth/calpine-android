@@ -1012,7 +1012,7 @@
                             android:padding="@dimen/dimen_0dp"
                             android:checked="true"
                             android:buttonTint="@color/blue"
-                            android:text="Use Jaldee cash balance : Rs "
+                            android:text=""
                             android:textColor="@color/darker_gray"
                             android:textSize="@dimen/txtsize_12"/>
                         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium

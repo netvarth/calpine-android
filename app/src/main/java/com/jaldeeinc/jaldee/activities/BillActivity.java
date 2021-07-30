@@ -1463,7 +1463,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             if (walletEligibleJCash.getjCashAmt() > 0) {
                                 llJCash.setVisibility(View.VISIBLE);
                                 cbJCash.setChecked(true);
-                                cbJCash.append(String.valueOf(walletEligibleJCash.getjCashAmt()));
+                                cbJCash.setText("Use Jaldee cash balance : Rs "+Config.getAmountNoOrTwoDecimalPoints(walletEligibleJCash.getjCashAmt()));
                             } else {
                                 llJCash.setVisibility(View.GONE);
                                 cbJCash.setChecked(false);

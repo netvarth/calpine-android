@@ -347,7 +347,8 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                 } else {
                     if ((catalogs.get(0).getAdvanceAmount() != null && Double.parseDouble(catalogs.get(0).getAdvanceAmount()) > 0) || catalogs.get(0).getPaymentType().equalsIgnoreCase(Constants.FULLAMOUNT)) {
                         tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(advancePaymentDetailsOrder.getAdvanceAmount()) + " required");
-                        llAdvanceAmount.setVisibility(View.VISIBLE);                    }
+                        llAdvanceAmount.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });
@@ -400,29 +401,23 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         rbStore.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                 if (isChecked) {
-
                     isStore = true;
                     rbStore.setChecked(true);
                     rbHome.setChecked(false);
                     getStorePickupSchedules(catalogId, accountId);
                     updateBill();
-
                 } else {
                     isStore = false;
                     rbHome.setChecked(true);
                     rbStore.setChecked(false);
                 }
-
             }
         });
-
 
         rbHome.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                 if (isChecked) {
                     isStore = false;
                     rbHome.setChecked(true);
@@ -435,10 +430,8 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     rbHome.setChecked(false);
                     rbStore.setChecked(true);
                 }
-
             }
         });
-
 
         tvChangeTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -515,7 +508,6 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             @Override
             public void onClick(View view) {
                 couponEntered = etCouponCode.getEditableText().toString();
-
                 boolean found = false;
                 for (int index = 0; index < couponArraylist.size(); index++) {
                     if (couponArraylist.get(index).equals(couponEntered)) {
@@ -524,9 +516,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     }
                 }
                 if (found) {
-
                     Toast.makeText(CheckoutItemsActivity.this, "Coupon already added", Toast.LENGTH_SHORT).show();
-
                     return;
                 }
                 found = false;
@@ -543,31 +533,21 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     }
                 }
                 if (found) {
-
                     couponArraylist.add(couponEntered);
-
                     etCouponCode.setText("");
                     Toast.makeText(CheckoutItemsActivity.this, couponEntered + " " + "Added", Toast.LENGTH_SHORT).show();
-
-
                 } else {
                     if (couponEntered.equals("")) {
                         Toast.makeText(CheckoutItemsActivity.this, "Enter a coupon", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(CheckoutItemsActivity.this, "Coupon Invalid", Toast.LENGTH_SHORT).show();
                     }
-
-
                 }
                 cpns(couponArraylist);
             }
         });
-
-
         ApiGetProfileDetail();
         getCoupons(uniqueId);
-
-
     }
 
     boolean showPaytmWallet = false;
@@ -1209,7 +1189,6 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
 
     private void getCatalogDetails(int accountId) {
-
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(CheckoutItemsActivity.this, CheckoutItemsActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
@@ -1228,33 +1207,25 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         if (catalogs != null && catalogs.size() > 0) {
                             getProviderDetails(accountId, catalogs);
                             // to get payment modes
-                            getAdvancePaymentDetails();
-
                             APIPayment(String.valueOf(accountId));
                             if (catalogs.get(0).getPickUp() != null && catalogs.get(0).getPickUp().isOrderPickUp() && catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
-
                                 rbStore.setVisibility(View.VISIBLE);
                                 rbStore.setChecked(true);
                                 rbHome.setChecked(false);
                                 getStorePickupSchedules(catalogs.get(0).getCatLogId(), accountId);
                                 getHomeDeliverySchedules(catalogs.get(0).getCatLogId(), accountId);
-
                             } else if (catalogs.get(0).getPickUp() != null && catalogs.get(0).getPickUp().isOrderPickUp() && catalogs.get(0).getHomeDelivery() == null) {
-
                                 rbHome.setVisibility(View.GONE);
                                 rbStore.setVisibility(View.VISIBLE);
                                 rbStore.setChecked(true);
                                 rbHome.setChecked(false);
                                 getStorePickupSchedules(catalogs.get(0).getCatLogId(), accountId);
-
                             } else if (catalogs.get(0).getPickUp() == null && catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
-
                                 rbStore.setVisibility(View.GONE);
                                 rbHome.setVisibility(View.VISIBLE);
                                 rbHome.setChecked(true);
                                 rbStore.setChecked(false);
                                 getHomeDeliverySchedules(catalogs.get(0).getCatLogId(), accountId);
-
                             }
                         }
                     }
@@ -1434,7 +1405,6 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
 
     private void getProviderDetails(int accountId, ArrayList<Catalog> catalogs) {
-
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(CheckoutItemsActivity.this, CheckoutItemsActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
@@ -1450,10 +1420,8 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     if (response.code() == 200) {
                         orderResponse = response.body();
                         if (orderResponse != null) {
-
                             updateMainUI(orderResponse, catalogs);
                         }
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1468,7 +1436,6 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     Config.closeDialog(getParent(), mDialog);
             }
         });
-
     }
 
     private void getStoreDetails(int accountId) {
@@ -1516,37 +1483,25 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         });
     }
 
-
     private void updateMainUI(OrderResponse orderResponse, ArrayList<Catalog> catalogs) {
-
         if (orderResponse.getStoreInfo() != null) {
-
             tvMailId.setText(orderResponse.getStoreInfo().getEmail());
-
             tvPhoneNumber.setText(orderResponse.getStoreInfo().getPrimaryCountryCode() + " " + orderResponse.getStoreInfo().getPhone());
-
         }
-
-
         countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
         phoneNumber = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
         tvContactNumber.setText(phoneNumber);
         tvCountryCode.setText(countryCode);
         tvContactEmail.setText(email);
-
         // to set items bill
         String amount = "";
         if (db.getCartPrice() == db.getCartDiscountedPrice()) {
-
             amount = convertAmountToDecimals(String.valueOf(db.getCartPrice()));
             tvItemsBill.setText("₹ " + amount);
-
         } else {
             amount = convertAmountToDecimals(String.valueOf(db.getCartDiscountedPrice()));
             tvItemsBill.setText("₹ " + amount);
-
         }
-
         if (db.getTaxAmount() > 0.0) {
             rvTax.setVisibility(View.VISIBLE);
             String tax = Config.getAmountinTwoDecimalPoints(db.getTaxAmount());
@@ -1554,48 +1509,36 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         } else {
             rvTax.setVisibility(View.GONE);
         }
-
-
         updateBill();
         // to set total bill value
-
-
         // to fetch items in cart
         cartItemsList.clear();
         cartItemsList = db.getCartItems();
         if (cartItemsList != null && cartItemsList.size() > 0) {
-
             linearLayoutManager = new LinearLayoutManager(mContext);
             rvItems.setLayoutManager(linearLayoutManager);
             checkoutItemsAdapter = new CheckoutItemsAdapter(cartItemsList, mContext, false);
             rvItems.setAdapter(checkoutItemsAdapter);
         }
-
     }
 
     private void updateBill() {
-
         try {
             double totalBill;
             boolean tax = false;
             if (db.getTaxAmount() >= 0.0) {
                 tax = true;
             }
-
             if (catalogs != null && catalogs.size() > 0) {
                 Catalog catalog = new Catalog();
                 catalog = catalogs.get(0);
                 if (catalog.getHomeDelivery() != null) {
-
                     if (catalog.getHomeDelivery().isHomeDelivery()) {
-
                         rlDeliveryFee.setVisibility(View.VISIBLE);
-
                         String deliveryCharge = convertAmountToDecimals(String.valueOf(catalog.getHomeDelivery().getDeliveryCharge()));
                         tvDeliveryBill.setText("₹ " + deliveryCharge);
                     }
                 }
-
                 if (!isStore) {
                     if (catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
                         if (tax) {
@@ -1623,23 +1566,12 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
                     }
                 }
-                /*if (catalog.getPaymentType().equalsIgnoreCase(Constants.FIXED) && catalog.getAdvanceAmount() != null && !catalog.getAdvanceAmount().isEmpty() && Float.parseFloat(catalogs.get(0).getAdvanceAmount()) > 0) {
-                    tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(catalog.getAdvanceAmount())) + " required");
-                    llAdvanceAmount.setVisibility(View.VISIBLE);
-                } else if (catalog.getPaymentType().equalsIgnoreCase(Constants.FULLAMOUNT)) {
-                    tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(String.valueOf(totalBill))) + " required");
-                    llAdvanceAmount.setVisibility(View.VISIBLE);
-                } else {
-                    llAdvanceAmount.setVisibility(View.GONE);
-                }*/
                 getAdvancePaymentDetails();
             }
-
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
     }
-
 
     private void getAddressList() {
 
@@ -2043,25 +1975,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     public void cpns(ArrayList<String> mcouponArraylist) {
         iCpn = (ICpn) this;
         couponArraylist = mcouponArraylist;
-        //CouponApliedOrNotDetails c = new CouponApliedOrNotDetails();
         getAdvancePaymentDetails();
-
-        /*if (userMessage != null) {
-
-
-            if (isUser) {
-                getAdvancePaymentDetails(userMessage, userId);
-            } else {
-                getAdvancePaymentDetails(userMessage, providerId);
-            }
-        }*/
-       /* Config.logV("couponArraylist--code-------------------------" + couponArraylist);
-        list.setVisibility(View.VISIBLE);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CheckInActivity.this);
-        list.setLayoutManager(mLayoutManager);
-        mAdapter = new CouponlistAdapter(CheckInActivity.this, s3couponList, couponEntered, couponArraylist, getCoupnAppliedOrNotDetails(userMessage, providerId), iCpn);
-        list.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();*/
     }
 
     public AdvancePaymentDetailsOrder getAdvancePaymentDetails() {
@@ -2069,19 +1983,15 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject inputObj = new JSONObject();
+        JSONObject catalog = new JSONObject();
+        JSONArray couponList = new JSONArray();
         JSONArray orderItemsArray = new JSONArray();
         ArrayList<OrderItem> itemsList = new ArrayList<>();
-
         itemsList = db.getOrderItems();
-        JSONObject catalog = new JSONObject();
-        JSONArray orderItem = new JSONArray();
-        JSONArray couponList = new JSONArray();
         try {
             catalog.put("id", catalogId);
             if (itemsList != null && itemsList.size() > 0) {
-
                 for (int i = 0; i < itemsList.size(); i++) {
-
                     JSONObject obj = new JSONObject();
                     obj.put("id", itemsList.get(i).getId());
                     obj.put("quantity", itemsList.get(i).getQuantity());
@@ -2091,13 +2001,10 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         obj.put("consumerNote", "");
                     }
                     orderItemsArray.put(obj);
-
                 }
             }
             for (int i = 0; i < couponArraylist.size(); i++) {
-
                 couponList.put(couponArraylist.get(i));
-
             }
             if (isStore) {
                 if (catalogs != null && catalogs.get(0).getNextAvailablePickUpDetails() != null) {
@@ -2118,7 +2025,6 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             inputObj.put("homeDelivery", rbHome.isChecked());
             inputObj.put("coupons", couponList);
             inputObj.put("orderDate", selectedDate);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2147,7 +2053,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                 if (advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt") != null && advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt").getAsDouble() > 0) {
                                     cbJCash.setChecked(true);
                                     llJCash.setVisibility(View.VISIBLE);
-                                    cbJCash.append(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt").getAsString())));
+                                    cbJCash.setText("Use Jaldee cash balance : Rs "+Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt").getAsString())));
                                     if (advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt").getAsDouble() >= advancePaymentDetailsOrder.getAdvanceAmount()) {
                                         tvJCashHint.setVisibility(View.GONE);
                                         llAdvanceAmount.setVisibility(View.GONE);
@@ -2173,7 +2079,6 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                 llAdvanceAmount.setVisibility(View.GONE);
                             }
                         }
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

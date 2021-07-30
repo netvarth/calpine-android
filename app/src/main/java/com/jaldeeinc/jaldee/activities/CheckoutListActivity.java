@@ -2012,11 +2012,9 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     private void APIGetWalletEligibleJCash(ArrayList<Catalog> catalogs) {
         final ApiInterface apiService =
                 ApiClient.getClient(this).create(ApiInterface.class);
-
         final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<WalletEligibleJCash> call = apiService.getWalletEligibleJCash();
-
         Config.logV("Request--GetWalletEligibleJCash-------------------------");
         call.enqueue(new Callback<WalletEligibleJCash>() {
             @Override
@@ -2024,11 +2022,8 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                 try {
                     if (mDialog.isShowing())
                         Config.closeDialog(CheckoutListActivity.this, mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-//                    Config.logV("zxczqw" + new Gson().toJson(response.body()));
-
                     if (response.code() == 200) {
                         walletEligibleJCash = response.body();
                         if (walletEligibleJCash != null) {
@@ -2036,7 +2031,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                                 if (walletEligibleJCash.getjCashAmt() > 0) {
                                     cbJCash.setChecked(true);
                                     llJCash.setVisibility(View.VISIBLE);
-                                    cbJCash.append(Config.getAmountNoOrTwoDecimalPoints(walletEligibleJCash.getjCashAmt()));
+                                    cbJCash.setText("Use Jaldee cash balance : Rs "+Config.getAmountNoOrTwoDecimalPoints(walletEligibleJCash.getjCashAmt()));
                                     if (walletEligibleJCash.getjCashAmt() >= Float.parseFloat(catalogs.get(0).getAdvanceAmount())) {
                                         tvJCashHint.setVisibility(View.GONE);
                                         llAdvanceAmount.setVisibility(View.GONE);

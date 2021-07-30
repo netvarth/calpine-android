@@ -1319,11 +1319,9 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
         if (bookingModel.getCheckInInfo() != null && bookingModel.getCheckInInfo().getTotalAmount() != null && !bookingModel.getCheckInInfo().getTotalAmount().equalsIgnoreCase("0.0")) {
             LservicePrepay.setVisibility(View.VISIBLE);
             LserviceAmount.setVisibility(View.VISIBLE);
-
             String firstWord = "";
             String thirdWord;
             thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getCheckInInfo().getTotalAmount()));
-
             Spannable spannable = new SpannableString(firstWord + thirdWord);
             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                     firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1332,7 +1330,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                 if (eligibleJcashAmt > 0) {
                     cbJCash.setChecked(true);
                     llJCash.setVisibility(View.VISIBLE);
-                    cbJCash.append(Config.getAmountNoOrTwoDecimalPoints(eligibleJcashAmt));
+                    cbJCash.setText("Use Jaldee cash balance : Rs "+Config.getAmountNoOrTwoDecimalPoints(eligibleJcashAmt));
                     if (eligibleJcashAmt >= Double.parseDouble(checkInInfo.getMinPrePaymentAmount())) {
                         tvJCashHint.setVisibility(View.GONE);
                         llPaymentOptions.setVisibility(View.GONE);
