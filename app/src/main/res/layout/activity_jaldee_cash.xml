@@ -169,8 +169,8 @@
                     android:layout_width="7dp"
                     android:layout_height="7dp"
                     android:baselineAlignBottom="true"
-                    android:src="@drawable/ic_dollar"
-                    app:tint="@color/gray" />
+                    android:src="@drawable/rupees_round"
+                    app:tint="@color/darker_gray" />
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                     android:id="@+id/tv_totCashAwarded"
@@ -214,8 +214,8 @@
                     android:layout_width="7dp"
                     android:layout_height="7dp"
                     android:baselineAlignBottom="true"
-                    android:src="@drawable/ic_dollar"
-                    app:tint="@color/gray" />
+                    android:src="@drawable/rupees_round"
+                    app:tint="@color/darker_gray" />
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                     android:id="@+id/tv_totCashSpent"
