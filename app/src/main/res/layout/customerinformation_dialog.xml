@@ -104,6 +104,7 @@
                 />
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                android:id="@+id/tv_cnsln_for_basic_infrmtn_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dimen_5dp"
