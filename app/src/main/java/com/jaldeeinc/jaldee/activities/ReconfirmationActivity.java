@@ -340,19 +340,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
             if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true")) {
                 APIPayment(String.valueOf(bookingModel.getAccountId()));
             }
-
             updateUI(bookingModel.getServiceInfo(), bookingModel.getEligibleJcashAmt());
-
-            /*if (bookingModel.getServiceInfo() != null) {
-
-                if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true")) {
-
-                    llPaymentOptions.setVisibility(View.VISIBLE);
-                } else {
-
-                    llPaymentOptions.setVisibility(View.GONE);
-                }
-            }*/
         }
         cbJCash.setOnClickListener(new View.OnClickListener() {
 
@@ -365,12 +353,14 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                     } else {
                         tvButtonName.setText("Proceed to Payment");
                         llPaymentOptions.setVisibility(View.VISIBLE);
+                        tvJCashHint.setVisibility(View.VISIBLE);
                     }
                 } else {
                     tvButtonName.setText("Proceed to Payment");
                     if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true")) {
                         llPaymentOptions.setVisibility(View.VISIBLE);
                     }
+                    tvJCashHint.setVisibility(View.GONE);
                 }
             }
         });
@@ -1297,7 +1287,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                 if (eligibleJcashAmt > 0) {
                     cbJCash.setChecked(true);
                     llJCash.setVisibility(View.VISIBLE);
-                    cbJCash.setText("Use Jaldee cash balance : Rs "+Config.getAmountNoOrTwoDecimalPoints(eligibleJcashAmt));
+                    cbJCash.setText("Use Jaldee cash balance : Rs " + Config.getAmountNoOrTwoDecimalPoints(eligibleJcashAmt));
                     if (eligibleJcashAmt >= Double.parseDouble(serviceInfo.getMinPrePaymentAmount())) {
                         tvJCashHint.setVisibility(View.GONE);
                         llPaymentOptions.setVisibility(View.GONE);

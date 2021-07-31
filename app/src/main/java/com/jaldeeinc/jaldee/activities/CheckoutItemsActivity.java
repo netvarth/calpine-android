@@ -343,12 +343,14 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         double amnt = advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt").getAsDouble() - advancePaymentDetailsOrder.getAdvanceAmount();
                         tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Math.abs(amnt)) + " required");
                         llAdvanceAmount.setVisibility(View.VISIBLE);
+                        tvJCashHint.setVisibility(View.VISIBLE);
                     }
                 } else {
                     if ((catalogs.get(0).getAdvanceAmount() != null && Double.parseDouble(catalogs.get(0).getAdvanceAmount()) > 0) || catalogs.get(0).getPaymentType().equalsIgnoreCase(Constants.FULLAMOUNT)) {
                         tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(advancePaymentDetailsOrder.getAdvanceAmount()) + " required");
                         llAdvanceAmount.setVisibility(View.VISIBLE);
                     }
+                    tvJCashHint.setVisibility(View.GONE);
                 }
             }
         });

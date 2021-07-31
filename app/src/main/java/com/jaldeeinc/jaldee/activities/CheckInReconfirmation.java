@@ -380,19 +380,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
             if (bookingModel.getCheckInInfo().isPrePayment()) {
                 APIPayment(String.valueOf(bookingModel.getAccountId()));
             }
-
             updateUI(bookingModel.getCheckInInfo(), bookingModel.getEligibleJcashAmt());
-
-            /*if (bookingModel.getCheckInInfo() != null) {
-
-                if (bookingModel.getCheckInInfo().isPrePayment()) {
-
-                    llPaymentOptions.setVisibility(View.VISIBLE);
-                } else {
-
-                    llPaymentOptions.setVisibility(View.GONE);
-                }
-            }*/
         }
         cbJCash.setOnClickListener(new View.OnClickListener() {
 
@@ -405,12 +393,14 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                     } else {
                         tvButtonName.setText("Proceed to Payment");
                         llPaymentOptions.setVisibility(View.VISIBLE);
+                        tvJCashHint.setVisibility(View.VISIBLE);
                     }
                 } else {
                     tvButtonName.setText("Proceed to Payment");
                     if (bookingModel.getCheckInInfo().isPrePayment()) {
                         llPaymentOptions.setVisibility(View.VISIBLE);
                     }
+                    tvJCashHint.setVisibility(View.GONE);
                 }
             }
         });
