@@ -40,7 +40,7 @@
             android:layout_toRightOf="@id/cv_back"
             android:gravity="center"
             android:minHeight="?attr/actionBarSize"
-            android:text="@string/jaldee_wallet"
+            android:text="@string/my_wallet"
             android:textColor="@color/dark_blue"
             android:textSize="@dimen/txtsize_subtitle" />
 

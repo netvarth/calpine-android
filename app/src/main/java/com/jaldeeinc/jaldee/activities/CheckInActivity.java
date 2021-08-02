@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -493,10 +494,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             if (checkInInfo.isPrePayment()) {
 
                 if (isUser) {
-                    //APIPayment(String.valueOf(userId));
                     getAdvancePaymentDetails(userMessage, userId);
                 } else {
-                    //APIPayment(String.valueOf(providerId));
                     getAdvancePaymentDetails(userMessage, providerId);
                 }
             }
@@ -559,19 +558,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     familyMemberDialog.setCancelable(false);
                     familyMemberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                 }
-
-//                String mailId = "";
-//                if (tvEmail.getText().toString() != null) {
-//                    mailId = tvEmail.getText().toString();
-//                }
-//                emailEditWindow = new EmailEditWindow(CheckInActivity.this, profileDetails, iMailSubmit, mailId);
-//                emailEditWindow.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
-//                emailEditWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//                emailEditWindow.show();
-//                DisplayMetrics metrics = CheckInActivity.this.getResources().getDisplayMetrics();
-//                int width = (int) (metrics.widthPixels * 1);
-//                emailEditWindow.getWindow().setGravity(Gravity.CENTER);
-//                emailEditWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
             }
         });
 
@@ -604,15 +590,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 int width = (int) (metrics.widthPixels * 1);
                 familyMemberDialog.setCancelable(false);
                 familyMemberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-//                Intent familyIntent = new Intent(CheckInActivity.this, CheckinFamilyMember.class);
-//                familyIntent.putExtra("firstname", mFirstName);
-//                familyIntent.putExtra("lastname", mLastName);
-//                familyIntent.putExtra("consumerID", consumerID);
-//                familyIntent.putExtra("multiple", multiplemem);
-//                familyIntent.putExtra("memberID", familyMEmID);
-//                familyIntent.putExtra("update", 0);
-//                startActivity(familyIntent);
-
             }
         });
 
@@ -697,7 +674,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                 DynamicToast.make(CheckInActivity.this, checkInInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
                                         CheckInActivity.this, R.drawable.ic_info_black),
                                         ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
-
                             }
 
                         } else {
@@ -1177,16 +1153,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                 customerInformationDialog.setCancelable(false);
                                 customerInformationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-
-
                         }
-                    } else {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
 
             @Override
             public void onFailure(Call<ProfileModel> call, Throwable t) {
@@ -1196,8 +1168,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     Config.closeDialog(getParent(), mDialog);
             }
         });
-
-
     }
 
     private void ApiSearchViewSetting(String setting) {
@@ -1243,15 +1213,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 } else {
                     tvApplyCode.setVisibility(View.GONE);
                     llCoupons.setVisibility(View.GONE);
-
                 }
-
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void ApiJaldeegetProviderCoupons(String providerCoupons) {
@@ -1275,85 +1241,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-    }
-
-    boolean showPaytmWallet = false;
-    boolean showPayU = false;
-
-    private void APIPayment(String accountID) {
-
-
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-
-
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
-
-        call.enqueue(new Callback<ArrayList<PaymentModel>>() {
-            @Override
-            public void onResponse(Call<ArrayList<PaymentModel>> call, Response<ArrayList<PaymentModel>> response) {
-
-                try {
-
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
-
-                    Config.logV("URL----%%%%%-----------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
-                    if (response.code() == 200) {
-
-                        mPaymentData = response.body();
-
-                        for (int i = 0; i < mPaymentData.size(); i++) {
-                            if (mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")) {
-                                showPaytmWallet = true;
-                            }
-
-                            if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
-                                showPayU = true;
-                            }
-                        }
-
-                        if ((showPayU) || showPaytmWallet) {
-                            Config.logV("URL----%%%%%---@@--");
-
-                            if (userMessage != null) {
-                                if (isUser) {
-                                    getAdvancePaymentDetails(userMessage, userId);
-                                } else {
-                                    getAdvancePaymentDetails(userMessage, providerId);
-                                }
-                            }
-
-                        }
-
-                    } else {
-                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<PaymentModel>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
-
-            }
-        });
-
 
     }
 
@@ -1460,65 +1347,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         });
         return advancePaymentDetails;
     }
-    /*private JSONObject getCoupnAppliedOrNotDetails(final String txt_addnote, int id) {
-        JSONObject qjsonObj = new JSONObject();
-        JSONObject queueobj = new JSONObject();
-        JSONObject waitobj = new JSONObject();
-        JSONObject service = new JSONObject();
-        JSONArray waitlistArray = new JSONArray();
-        JSONObject consumerObj = new JSONObject();
-        try {
-            consumerObj.put("id", consumerID);
-            qjsonObj.put("id", queueId);
-            queueobj.put("date", apiDate);
-            queueobj.put("consumerNote", txt_addnote);
-            queueobj.put("waitlistPhoneNumber", phoneNumber);
-            queueobj.put("countryCode", countryCode);
-
-            JSONArray couponList = new JSONArray();
-
-            for (int i = 0; i < couponArraylist.size(); i++) {
-
-                couponList.put(couponArraylist.get(i));
-
-            }
-            queueobj.put("coupons", couponList);
-            Log.i("couponList", couponList.toString());
-            service.put("id", checkInInfo.getId());
-            if (familyMEmID == 0) {
-                familyMEmID = consumerID;
-            }
-
-            if (MultiplefamilyList.size() > 0) {
-                for (int i = 0; i < MultiplefamilyList.size(); i++) {
-                    JSONObject waitobj1 = new JSONObject();
-                    if (familyMEmID == MultiplefamilyList.get(i).getId()) {
-                        waitobj1.put("id", 0);
-                    } else {
-                        waitobj1.put("id", MultiplefamilyList.get(i).getId());
-                    }
-                    waitobj1.put("firstName", MultiplefamilyList.get(i).getFirstName());
-                    waitobj1.put("lastName", MultiplefamilyList.get(i).getLastName());
-                    waitlistArray.put(waitobj1);
-                }
-            } else {
-                if (familyMEmID == consumerID) {
-                    familyMEmID = 0;
-                }
-                waitobj.put("id", familyMEmID);
-                waitlistArray.put(waitobj);
-            }
-
-            queueobj.putOpt("service", service);
-            queueobj.putOpt("queue", qjsonObj);
-            queueobj.putOpt("waitlistingFor", waitlistArray);
-            queueobj.putOpt("consumer", consumerObj);
-            queueobj.putOpt("id", id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return queueobj;
-    }*/
 
     private void ApiCheckin(final String txt_addnote, int id) {
 
@@ -1539,13 +1367,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             mDialog.dismiss();
             return;
         }
-        /*if (!virtual_code.matches("^(\\+)?(\\d{1,3})$")) {
-            DynamicToast.make(CheckInActivity.this, "Please enter valid Country code", AppCompatResources.getDrawable(
-                    CheckInActivity.this, R.drawable.ic_info_black),
-                    ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
-            mDialog.dismiss();
-            return;
-        }*/
 
 
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1693,101 +1514,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         if (mDialog.isShowing())
             Config.closeDialog(getParent(), mDialog);
 
-
         getQuestionnaire(checkInInfo.getId(), id, queueobj, txt_addnote);
-
-
-//        MultiplefamilyList.clear();
-
-//        Call<ResponseBody> call = apiService.Checkin(String.valueOf(id), body);
-//        call.enqueue(new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                try {
-//                    if (mDialog.isShowing())
-//                        Config.closeDialog(getParent(), mDialog);
-//                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-//                    Config.logV("Response--code-------------------------" + response.code());
-//                    Config.logV("Response--code-------------------------" + response.body());
-//                    if (response.code() == 200) {
-//                        if (!checkInInfo.isPrePayment()) {
-//                            MultiplefamilyList.clear();
-//                        }
-//                        SharedPreference.getInstance(mContext).setValue("refreshcheckin", "true");
-//                        JSONObject reader = new JSONObject(response.body().string());
-//                        Iterator iteratorObj = reader.keys();
-//                        while (iteratorObj.hasNext()) {
-//                            String getJsonObj = (String) iteratorObj.next();
-//                            System.out.println("KEY: " + "------>" + getJsonObj);
-//                            value = reader.getString(getJsonObj);
-//                            if (checkInInfo.isPrePayment()) {
-//                                prepayAmount = reader.getString("_prepaymentAmount");
-//                            }
-//                            break;
-//
-//                        }
-//
-//                        if (isUser) {
-//                            getConfirmationId(userId, txt_addnote, id);
-//                        } else {
-//                            getConfirmationId(providerId, txt_addnote, id);
-//                        }
-//
-//                        System.out.println("VALUE: " + "------>" + value);
-//
-//                    } else {
-//                        if (response.code() == 422) {
-//
-//                            String errorString = response.errorBody().string();
-//
-//                            Config.logV("Error String-----------" + errorString);
-//                            Map<String, String> tokens = new HashMap<String, String>();
-//                            tokens.put("Customer", Config.toTitleCase(mSearchTerminology.getCustomer()));
-//                            tokens.put("provider", mSearchTerminology.getProvider());
-//                            tokens.put("arrived", mSearchTerminology.getArrived());
-//                            tokens.put("waitlisted", mSearchTerminology.getWaitlist());
-//
-//                            tokens.put("start", mSearchTerminology.getStart());
-//                            tokens.put("cancelled", mSearchTerminology.getCancelled());
-//                            tokens.put("done", mSearchTerminology.getDone());
-//
-//
-//                            StringBuffer sb = new StringBuffer();
-//
-//                            Pattern p3 = Pattern.compile("\\[(.*?)\\]");
-//
-//                            Matcher matcher = p3.matcher(errorString);
-//                            while (matcher.find()) {
-//                                System.out.println(matcher.group(1));
-//                                matcher.appendReplacement(sb, tokens.get(matcher.group(1)));
-//                            }
-//                            matcher.appendTail(sb);
-//
-//                            System.out.println("SubString@@@@@@@@@@@@@" + sb.toString());
-//
-//
-//                            Toast.makeText(mContext, sb.toString(), Toast.LENGTH_LONG).show();
-//                        } else {
-//                            String responseerror = response.errorBody().string();
-//                            Config.logV("Response--error-------------------------" + responseerror);
-//                            if (response.code() != 419)
-//                                Toast.makeText(mContext, responseerror, Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                // Log error here since request failed
-//                Config.logV("Fail---------------" + t.toString());
-//                if (mDialog.isShowing())
-//                    Config.closeDialog(getParent(), mDialog);
-//
-//            }
-//        });
 
     }
 
@@ -2039,26 +1766,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             totalServicePay = String.valueOf(Double.parseDouble(checkInInfo.getTotalAmount()) * MultiplefamilyList.size());
 
         }
-        /*if (checkInInfo.isPrePayment()) {
-            totalAmountPay = String.valueOf(Double.parseDouble(checkInInfo.getMinPrePaymentAmount()) * MultiplefamilyList.size());
-            LservicePrepay.setVisibility(View.VISIBLE);
-            LPrepay.setVisibility(View.VISIBLE);
-
-//        Typeface tyface = Typeface.createFromAsset(getAssets(),
-//                "fonts/Montserrat_Bold.otf");
-//        txtprepay.setTypeface(tyface);
-//        txtprepayamount.setTypeface(tyface);
-            String firstWord = "";
-            String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
-
-            Spannable spannable = new SpannableString(firstWord + secondWord);
-            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
-                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            txtprepayamount.setText(spannable);
-
-
-        }*/
-
         if (userMessage != null) {
 
 
@@ -2753,30 +2460,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
     @Override
     public void CheckedFamilyList(List<FamilyArrayModel> familyList) {
-//        MultiplefamilyList.clear();
-//        MultiplefamilyList.addAll(familyList);
-//        recycle_family.setVisibility(View.VISIBLE);
-//        if (checkInInfo.isPrePayment()) {
-//            totalAmountPay = String.valueOf(Double.parseDouble(checkInInfo.getMinPrePaymentAmount()) * MultiplefamilyList.size());
-//            LservicePrepay.setVisibility(View.VISIBLE);
-////        Typeface tyface = Typeface.createFromAsset(getAssets(),
-////                "fonts/Montserrat_Bold.otf");
-////        txtprepay.setTypeface(tyface);
-////        txtprepayamount.setTypeface(tyface);
-//            String firstWord = "Prepayment Amount: ";
-//            String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
-//            Spannable spannable = new SpannableString(firstWord + secondWord);
-//            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
-//                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            txtprepayamount.setText(spannable);
-//        }
-//
-//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-//        recycle_family.setLayoutManager(mLayoutManager);
-//        MultipleFamilyMemberAdapter mFamilyAdpater = new MultipleFamilyMemberAdapter(MultiplefamilyList, mContext, mActivity);
-//        recycle_family.setAdapter(mFamilyAdpater);
-//        mFamilyAdpater.notifyDataSetChanged();
-//        tvConsumerName.setVisibility(View.GONE);
 
     }
 
@@ -2784,7 +2467,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     public void SelectedPincodeLocation(PincodeLocationsResponse selectedPincodeLocation) {
 
     }
-
 
     @Override
     public void cpns(ArrayList<String> mcouponArraylist) {
@@ -2800,18 +2482,5 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 getAdvancePaymentDetails(userMessage, providerId);
             }
         }
-       /* Config.logV("couponArraylist--code-------------------------" + couponArraylist);
-        list.setVisibility(View.VISIBLE);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CheckInActivity.this);
-        list.setLayoutManager(mLayoutManager);
-        mAdapter = new CouponlistAdapter(CheckInActivity.this, s3couponList, couponEntered, couponArraylist, getCoupnAppliedOrNotDetails(userMessage, providerId), iCpn);
-        list.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();*/
     }
-
-    private void ApiAppointment(final String txt_addnote, int id) {
-
-
-    }
-
 }

@@ -256,32 +256,23 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     LinearLayout llCoupons;
 
     CountryCodePicker virtual_NmbrCCPicker;
-
-
     String mFirstName, mLastName;
     int consumerID;
     private int uniqueId;
     private String providerName;
     private int providerId;
     private int locationId;
-    private int serviceId;
-    private String serviceName;
     private String phoneNumber;
     private String emailId;
-    private String serviceDescription;
     private ServiceInfo serviceInfo = new ServiceInfo();
     SearchTerminology mSearchTerminology;
     ProfileModel profileDetails;
-    ArrayList<SlotsData> slotsData = new ArrayList<SlotsData>();
-    ArrayList<AvailableSlotsData> activeSlotsList = new ArrayList<>();
     private SlotsDialog slotsDialog;
     private ISlotInfo iSlotInfo;
     String uuid;
     String value = null;
     String couponEntered;
     private int scheduleId;
-    private EmailEditWindow emailEditWindow;
-    private MobileNumberDialog mobileNumberDialog;
     private IMailSubmit iMailSubmit;
     private IMobileSubmit iMobileSubmit;
     ArrayList<String> couponArraylist = new ArrayList<>();
@@ -499,10 +490,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
 
                 if (serviceInfo.isUser()) {
-                    //APIPayment(String.valueOf(userId));
                     getAdvancePaymentDetails(userMessage, userId);
                 } else {
-                    //APIPayment(String.valueOf(providerId));
                     getAdvancePaymentDetails(userMessage, providerId);
                 }
             }
@@ -556,19 +545,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     familyMemberDialog.setCancelable(false);
                     familyMemberDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                 }
-
-//                String mailId = "";
-//                if (tvEmail.getText().toString() != null) {
-//                    mailId = tvEmail.getText().toString();
-//                }
-//                emailEditWindow = new EmailEditWindow(AppointmentActivity.this, profileDetails, iMailSubmit, mailId);
-//                emailEditWindow.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
-//                emailEditWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//                emailEditWindow.show();
-//                DisplayMetrics metrics = AppointmentActivity.this.getResources().getDisplayMetrics();
-//                int width = (int) (metrics.widthPixels * 1);
-//                emailEditWindow.getWindow().setGravity(Gravity.BOTTOM);
-//                emailEditWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
             }
         });
 
@@ -674,27 +650,19 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     }
                 }
                 if (found) {
-
                     couponArraylist.add(couponEntered);
-
                     etCode.setText("");
                     Toast.makeText(AppointmentActivity.this, couponEntered + " " + "Added", Toast.LENGTH_SHORT).show();
-
-
                 } else {
                     if (couponEntered.equals("")) {
                         Toast.makeText(AppointmentActivity.this, "Enter a coupon", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(AppointmentActivity.this, "Coupon Invalid", Toast.LENGTH_SHORT).show();
                     }
-
-
                 }
                 cpns(couponArraylist);
-
             }
         });
-
 
         cvSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -716,7 +684,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                         ApiAppointment(userMessage, providerId);
                                     }
                                 } else {
-
                                     DynamicToast.make(AppointmentActivity.this, serviceInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
                                             AppointmentActivity.this, R.drawable.ic_info_black),
                                             ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
@@ -1197,84 +1164,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     }
 
-    boolean showPaytmWallet = false;
-    boolean showPayU = false;
-
-    private void APIPayment(String accountID) {
-
-
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-
-
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
-
-        call.enqueue(new Callback<ArrayList<PaymentModel>>() {
-            @Override
-            public void onResponse(Call<ArrayList<PaymentModel>> call, Response<ArrayList<PaymentModel>> response) {
-
-                try {
-
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
-
-                    Config.logV("URL----%%%%%-----------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
-                    if (response.code() == 200) {
-
-                        mPaymentData = response.body();
-
-                        for (int i = 0; i < mPaymentData.size(); i++) {
-                            if (mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")) {
-                                showPaytmWallet = true;
-                            }
-
-                            if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
-                                showPayU = true;
-                            }
-                        }
-
-                        if ((showPayU) || showPaytmWallet) {
-                            Config.logV("URL----%%%%%---@@--");
-
-                            if (serviceInfo.isUser()) {
-                                getAdvancePaymentDetails(userMessage, userId);
-                            } else {
-                                getAdvancePaymentDetails(userMessage, providerId);
-                            }
-
-                        }
-
-                    } else {
-                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<PaymentModel>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
-
-            }
-        });
-
-
-    }
-
-
     private void ApiAppointment(final String txt_addnote, int id) {
 
         final Dialog mDialog = Config.getProgressDialog(AppointmentActivity.this, AppointmentActivity.this.getResources().getString(R.string.dialog_log_in));
@@ -1324,16 +1213,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             } else {
                 pjsonobj.put("id", 0);
             }
-
-//            if (imagePathList != null && imagePathList.size() > 0) {
-//
-//                if (userMessage != null && userMessage.trim().equalsIgnoreCase("")) {
-//
-//                    showToolTip();
-//                    mDialog.dismiss();
-//                    return;
-//                }
-//            }
 
             if (etVirtualNumber.getText().toString().trim().length() > 7) {
                 if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("whatsApp")) {
@@ -1462,103 +1341,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         }
 
         MultiplefamilyList.clear();
-//        Call<ResponseBody> call = apiService.Appointment(String.valueOf(id), body);
-//        call.enqueue(new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//
-//                try {
-//
-//                    if (mDialog.isShowing())
-//                        Config.closeDialog(getParent(), mDialog);
-//
-//                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-//                    Config.logV("Response--code-------------------------" + response.code());
-//                    Config.logV("Response--code-------------------------" + response.body());
-//
-//                    MultiplefamilyList.clear();
-//                    if (response.code() == 200) {
-//
-//
-//                        SharedPreference.getInstance(AppointmentActivity.this).setValue("refreshcheckin", "true");
-//
-//                        JSONObject reader = new JSONObject(response.body().string());
-//                        Iterator iteratorObj = reader.keys();
-//
-//                        while (iteratorObj.hasNext()) {
-//                            String getJsonObj = (String) iteratorObj.next();
-//                            System.out.println("KEY: " + "------>" + getJsonObj);
-//                            value = reader.getString(getJsonObj);
-//                            if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
-//                                prepayAmount = reader.getString("_prepaymentAmount");
-//                            }
-//
-//                        }
-//
-//                        if (serviceInfo.isUser()) {
-//                            getConfirmationId(userId, txt_addnote, id);
-//                        } else {
-//                            getConfirmationId(providerId, txt_addnote, id);
-//                        }
-//
-//                    } else {
-//                        if (response.code() == 422) {
-//
-//                            String errorString = response.errorBody().string();
-//
-//                            Config.logV("Error String-----------" + errorString);
-//                            Map<String, String> tokens = new HashMap<String, String>();
-//                            tokens.put("Customer", Config.toTitleCase(mSearchTerminology.getCustomer()));
-//                            tokens.put("provider", mSearchTerminology.getProvider());
-//                            tokens.put("arrived", mSearchTerminology.getArrived());
-//                            tokens.put("waitlisted", mSearchTerminology.getWaitlist());
-//
-//                            tokens.put("start", mSearchTerminology.getStart());
-//                            tokens.put("cancelled", mSearchTerminology.getCancelled());
-//                            tokens.put("done", mSearchTerminology.getDone());
-//
-//
-//                            StringBuffer sb = new StringBuffer();
-//
-//                            Pattern p3 = Pattern.compile("\\[(.*?)\\]");
-//
-//                            Matcher matcher = p3.matcher(errorString);
-//                            while (matcher.find()) {
-//                                System.out.println(matcher.group(1));
-//                                matcher.appendReplacement(sb, tokens.get(matcher.group(1)));
-//                            }
-//                            matcher.appendTail(sb);
-//
-//                            System.out.println("SubString@@@@@@@@@@@@@" + sb.toString());
-//
-//
-//                            Toast.makeText(AppointmentActivity.this, sb.toString(), Toast.LENGTH_LONG).show();
-//                        } else {
-//                            String responseerror = response.errorBody().string();
-//                            Config.logV("Response--error-------------------------" + responseerror);
-//                            if (response.code() != 419)
-//                                Toast.makeText(AppointmentActivity.this, responseerror, Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                // Log error here since request failed
-//                Config.logV("Fail---------------" + t.toString());
-//                if (mDialog.isShowing())
-//                    Config.closeDialog(getParent(), mDialog);
-//
-//            }
-//        });
-
-
     }
 
     private void getQuestionnaire(int serviceId, int accountId, JSONObject queueobj, String txt_addnote) {
@@ -2467,23 +2249,13 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     public void cpns(ArrayList<String> mcouponArraylist) {
         iCpn = (ICpn) this;
         couponArraylist = mcouponArraylist;
-        //CouponApliedOrNotDetails c = new CouponApliedOrNotDetails();
         if (userMessage != null) {
-
-
             if (serviceInfo.isUser()) {
                 getAdvancePaymentDetails(userMessage, userId);
             } else {
                 getAdvancePaymentDetails(userMessage, providerId);
             }
         }
-       /* Config.logV("couponArraylist--code-------------------------" + couponArraylist);
-        list.setVisibility(View.VISIBLE);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CheckInActivity.this);
-        list.setLayoutManager(mLayoutManager);
-        mAdapter = new CouponlistAdapter(CheckInActivity.this, s3couponList, couponEntered, couponArraylist, getCoupnAppliedOrNotDetails(userMessage, providerId), iCpn);
-        list.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();*/
     }
 
     public AdvancePaymentDetails getAdvancePaymentDetails(final String txt_addnote, int id) {

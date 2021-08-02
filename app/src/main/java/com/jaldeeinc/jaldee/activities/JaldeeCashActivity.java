@@ -86,7 +86,7 @@ public class JaldeeCashActivity extends AppCompatActivity {
         totCashSpent = intent.getStringExtra("totCashSpent");
         totCashAvailable = intent.getStringExtra("totCashAvailable");
 
-        tvJcash.setText(Config.getAmountinTwoDecimalPoints(Double.parseDouble(totCashAvailable)));
+        tvJcash.setText("₹\u00a0"+Config.getAmountinTwoDecimalPoints(Double.parseDouble(totCashAvailable)));
         tvTotCashAwarded.setText(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(totCashAwarded)));
         tvTotCashSpent.setText(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(totCashSpent)));
 
@@ -96,12 +96,6 @@ public class JaldeeCashActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 finish();
-            }
-        });
-        ll_totCashSpentLog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ApiGetAllJcashSpentDetails();
             }
         });
     }

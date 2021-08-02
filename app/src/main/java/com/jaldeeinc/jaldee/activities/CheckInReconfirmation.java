@@ -380,19 +380,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
             if (bookingModel.getCheckInInfo().isPrePayment()) {
                 APIPayment(String.valueOf(bookingModel.getAccountId()));
             }
-
             updateUI(bookingModel.getCheckInInfo(), bookingModel.getEligibleJcashAmt());
-
-            /*if (bookingModel.getCheckInInfo() != null) {
-
-                if (bookingModel.getCheckInInfo().isPrePayment()) {
-
-                    llPaymentOptions.setVisibility(View.VISIBLE);
-                } else {
-
-                    llPaymentOptions.setVisibility(View.GONE);
-                }
-            }*/
         }
         cbJCash.setOnClickListener(new View.OnClickListener() {
 
@@ -405,12 +393,14 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                     } else {
                         tvButtonName.setText("Proceed to Payment");
                         llPaymentOptions.setVisibility(View.VISIBLE);
+                        tvJCashHint.setVisibility(View.VISIBLE);
                     }
                 } else {
                     tvButtonName.setText("Proceed to Payment");
                     if (bookingModel.getCheckInInfo().isPrePayment()) {
                         llPaymentOptions.setVisibility(View.VISIBLE);
                     }
+                    tvJCashHint.setVisibility(View.GONE);
                 }
             }
         });
@@ -633,8 +623,6 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                                         }
                                     }
                                 }
-
-
                             } else {
 
                                 if (bookingImagesList.size() > 0) {
@@ -653,12 +641,8 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
                                     getConfirmationDetails(bookingModel.getAccountId());
                                 }
-
                             }
-
-
                         }
-
                     }
                 } catch (Exception e) {
                     Log.i("mnbbnmmnbbnm", e.toString());
@@ -1325,11 +1309,9 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
         if (bookingModel.getCheckInInfo() != null && bookingModel.getCheckInInfo().getTotalAmount() != null && !bookingModel.getCheckInInfo().getTotalAmount().equalsIgnoreCase("0.0")) {
             LservicePrepay.setVisibility(View.VISIBLE);
             LserviceAmount.setVisibility(View.VISIBLE);
-
             String firstWord = "";
             String thirdWord;
             thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getCheckInInfo().getTotalAmount()));
-
             Spannable spannable = new SpannableString(firstWord + thirdWord);
             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                     firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1338,7 +1320,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                 if (eligibleJcashAmt > 0) {
                     cbJCash.setChecked(true);
                     llJCash.setVisibility(View.VISIBLE);
-                    cbJCash.append(Config.getAmountNoOrTwoDecimalPoints(eligibleJcashAmt));
+                    cbJCash.setText("Use Jaldee cash balance : Rs "+Config.getAmountNoOrTwoDecimalPoints(eligibleJcashAmt));
                     if (eligibleJcashAmt >= Double.parseDouble(checkInInfo.getMinPrePaymentAmount())) {
                         tvJCashHint.setVisibility(View.GONE);
                         llPaymentOptions.setVisibility(View.GONE);
@@ -1360,9 +1342,11 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                 }
             } else {
                 llPaymentOptions.setVisibility(View.GONE);
+                llJCash.setVisibility(View.GONE);
             }
         } else {
             llPaymentOptions.setVisibility(View.GONE);
+            llJCash.setVisibility(View.GONE);
         }
     }
 }

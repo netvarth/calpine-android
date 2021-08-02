@@ -51,6 +51,7 @@ public class JCashListAdapter extends RecyclerView.Adapter<JCashListAdapter.MyVi
         CustomTextViewMedium tvRwrdExpiry, tvTAndc, tvJCashIssueDate, tvBookingNo, tvRewardName;
         LinearLayout llJCashSpentLog;
         RelativeLayout rlLayout;
+
         public MyViewHolder(View view) {
             super(view);
             tvRewardName = (CustomTextViewMedium) view.findViewById(R.id.tv_rewardName);
@@ -76,7 +77,6 @@ public class JCashListAdapter extends RecyclerView.Adapter<JCashListAdapter.MyVi
     @Override
     public void onBindViewHolder(final JCashListAdapter.MyViewHolder myViewHolder, final int position) {
         final JCashAvailable jCashReward = listJCashAvailable.get(position);
-
         jCashIssueInfo = jCashReward.getjCashIssueInfo().getAsJsonObject();
         jCashSpendRulesInfo = jCashReward.getjCashSpendRulesInfo().getAsJsonObject();
 
@@ -96,9 +96,9 @@ public class JCashListAdapter extends RecyclerView.Adapter<JCashListAdapter.MyVi
         myViewHolder.tvRewardName.setText(jCashReward.getjCashOffer().get("name").getAsString());
         myViewHolder.tvRwrdEarned.setText(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(jCashReward.getOriginalAmt())));
         if (jCashReward.getOriginalAmt() != null && jCashReward.getRemainingAmt() != null) {
-            float spent = Float.parseFloat(jCashReward.getOriginalAmt()) - Float.parseFloat(jCashReward.getRemainingAmt());
-            if (spent >= 0) {
-                myViewHolder.tvRwrdSpent.setText(Config.getAmountNoOrTwoDecimalPoints(spent));
+            float spentedAmount = Float.parseFloat(jCashReward.getOriginalAmt()) - Float.parseFloat(jCashReward.getRemainingAmt());
+            if (spentedAmount >= 0) {
+                myViewHolder.tvRwrdSpent.setText(Config.getAmountNoOrTwoDecimalPoints(spentedAmount));
             }
         }
 
@@ -123,7 +123,13 @@ public class JCashListAdapter extends RecyclerView.Adapter<JCashListAdapter.MyVi
         myViewHolder.llJCashSpentLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ApiGetJcashSpentDetails(Integer.parseInt(jCashReward.getId()));
+                float spentedAmount = 0;
+                if (jCashReward.getOriginalAmt() != null && jCashReward.getRemainingAmt() != null) {
+                    spentedAmount = Float.parseFloat(jCashReward.getOriginalAmt()) - Float.parseFloat(jCashReward.getRemainingAmt());
+                }
+                if (spentedAmount > 0) {
+                    ApiGetJcashSpentDetails(Integer.parseInt(jCashReward.getId()));
+                }
             }
         });
     }

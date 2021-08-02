@@ -973,8 +973,8 @@
                                 android:buttonTint="@color/blue"
                                 android:checked="true"
                                 android:padding="@dimen/dimen_0dp"
-                                android:text="Use Jaldee cash balance : Rs "
-                                android:textColor="@color/gray"
+                                android:text=""
+                                android:textColor="@color/darker_gray"
                                 android:textSize="@dimen/txtsize_12" />
 
                             <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
@@ -983,7 +983,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="33dp"
                                 android:text="Balance amount can be paid by other payment methods"
-                                android:textColor="@color/gray"
+                                android:textColor="@color/darker_gray"
                                 android:textSize="@dimen/txtsize_12" />
                         </LinearLayout>
                     </LinearLayout>

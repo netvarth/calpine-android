@@ -186,7 +186,7 @@
     <string name="please_upload_file">Please upload file</string>
 
     <!--JaldeeWalletActivity-->
-    <string name="jaldee_wallet">Jaldee Wallet</string>
+    <string name="my_wallet">My Wallet</string>
     <string name="pls_selct_ur_jaldee_wallet">Please select your jaldee wallet</string>
     <string name="jaldee_cash">Jaldee Cash</string>
     <string name="jaldee_cash_balance">Jaldee Cash balance</string>

@@ -38,6 +38,7 @@ import com.jaldeeinc.jaldee.adapter.CouponsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
@@ -72,6 +73,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import butterknife.BindView;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -106,6 +108,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax, billLabel, jdnLabel, jdnValue, txtrefund, txtdelivery, tv_deliveryCharge, tv_amount_Saved;
     LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin, jcLayout, pcLayout, jdnLayout, refundLayout, deliveryLayout, llproviderlayout, ll_amount_Saved, llJCash;
     CheckBox cbJCash;
+    CustomTextViewMedium tvJCashHint;
     String sAmountPay;
     String accountID;
     String payStatus, consumer;
@@ -142,6 +145,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         couponCheckin = findViewById(R.id.couponCheckin);
         llJCash = findViewById(R.id.ll_jCash);
         cbJCash = findViewById(R.id.cb_jCash);
+        tvJCashHint = findViewById(R.id.tv_jCashHint);
         amountlayout = findViewById(R.id.amountlayout);
         tv_grosstotal = findViewById(R.id.grosstotal);
         tv_provider = findViewById(R.id.provider);
@@ -235,7 +239,19 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             // if launched directly from APP
             UpdateUI();
         }
+        cbJCash.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                if (cbJCash.isChecked()) {
+                    if (walletEligibleJCash.getjCashAmt() < Double.parseDouble(sAmountPay)) {
+                        tvJCashHint.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    tvJCashHint.setVisibility(View.GONE);
+                }
+            }
+        });
 
         mbill_applybtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -305,7 +321,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     private void Payment() {
 
         if (cbJCash.isChecked() && Double.parseDouble(payRemainingAmount) <= 0) {
-            isGateWayPaymentNeeded(ynwUUID, sAmountPay, accountID, Constants.PURPOSE_PREPAYMENT, true, false, false, false, "JCASH");
+            isGateWayPaymentNeeded(ynwUUID, sAmountPay, accountID, purpose, true, false, false, false, "JCASH");
 
         } else {
             try {
@@ -343,7 +359,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                     @Override
                     public void onClick(View v) {
                         if (cbJCash.isChecked()) {
-                            new PaymentGateway(mCOntext, mActivity).ApiGenerateHash2(ynwUUID, sAmountPay, accountID, Constants.PURPOSE_PREPAYMENT, "bill", true, false, true, false);
+                            new PaymentGateway(mCOntext, mActivity).ApiGenerateHash2(ynwUUID, sAmountPay, accountID, purpose, "bill", true, false, true, false);
 
                         } else {
                             new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, purpose, "bill", customerId, Constants.SOURCE_PAYMENT);
@@ -358,7 +374,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                         PaytmPayment payment = new PaytmPayment(mCOntext, paymentResponse);
                         if (cbJCash.isChecked()) {
-                            payment.ApiGenerateHashPaytm2(ynwUUID, sAmountPay, accountID, Constants.PURPOSE_PREPAYMENT, "", true, false, false, true, encId, mCOntext, mActivity);
+                            payment.ApiGenerateHashPaytm2(ynwUUID, sAmountPay, accountID, purpose, "", true, false, false, true, encId, mCOntext, mActivity);
 
                         } else {
                             payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, purpose, mCOntext, mActivity, "", customerId, encId);
@@ -447,6 +463,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         });
     }
     private void UpdateUI() {
+        ApiBill(ynwUUID);
 
         if (payStatus != null) {
 
@@ -463,13 +480,10 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                 llJCash.setVisibility(View.VISIBLE);
                 cbJCash.setChecked(true);
                 ApiJaldeeCoupan(uniqueId);
-                //  ApiJaldeegetS3Coupons(uniqueId);
-                // ApiJaldeegetProviderCoupons(uniqueId);
                 APIGetWalletEligibleJCash();
 
             }
         }
-        ApiBill(ynwUUID);
 
 
         Typeface tyface1 = Typeface.createFromAsset(this.getAssets(),
@@ -1463,7 +1477,12 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             if (walletEligibleJCash.getjCashAmt() > 0) {
                                 llJCash.setVisibility(View.VISIBLE);
                                 cbJCash.setChecked(true);
-                                cbJCash.append(String.valueOf(walletEligibleJCash.getjCashAmt()));
+                                cbJCash.setText("Use Jaldee cash balance : Rs "+Config.getAmountNoOrTwoDecimalPoints(walletEligibleJCash.getjCashAmt()));
+                                if(walletEligibleJCash.getjCashAmt() >= Double.parseDouble(sAmountPay)){
+                                    tvJCashHint.setVisibility(View.GONE);
+                                } else {
+                                    tvJCashHint.setVisibility(View.VISIBLE);
+                                }
                             } else {
                                 llJCash.setVisibility(View.GONE);
                                 cbJCash.setChecked(false);
