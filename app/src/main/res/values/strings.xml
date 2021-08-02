@@ -65,7 +65,7 @@
     <string name="logout">Logout</string>
     <!--        db                   -->
     <string name="db_name">Jaldee_db</string>
-    <string name="db_version">21</string>
+    <string name="db_version">22</string>
 
     <string name="db_table_userinfo">USERINFO_TB</string>
     <string name="db_table_inbox">table_inbox</string>
