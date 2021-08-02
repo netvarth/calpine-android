@@ -127,6 +127,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     private IPaymentResponse paymentResponse;
     String encId;
     String bookingStatus;
+    String location;
     TextView tv_title;
     private boolean fromPushNotification = false;
     private Provider providerResponse = new Provider();
@@ -521,7 +522,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                                 uniqueId = apptInfo.getProviderAccount().getUniqueId();
                                 encId = apptInfo.getAppointmentEncId();
                                 bookingStatus = apptInfo.getApptStatus();
-
+                                //location = apptInfo.getLocation();
                                 // update UI with the data from notification
                                 UpdateUI();
                             } catch (Exception e) {
@@ -927,8 +928,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         String firstName = SharedPreference.getInstance(mCOntext).getStringValue("firstname", "");
                         String lastNme = SharedPreference.getInstance(mCOntext).getStringValue("lastname", "");
                         tv_customer.setText(consumer);
-                        DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
-                        DateFormat targetFormat = new SimpleDateFormat("hh:mm a");
+                        DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm aa", Locale.US);
+                        DateFormat targetFormat = new SimpleDateFormat("hh:mm aa", Locale.US);
                         Date date = originalFormat.parse(mBillData.getCreatedDate());
                         String formattedDate = targetFormat.format(date);
                         DateFormat dateTarget = new SimpleDateFormat("yyyy-MM-dd");
@@ -1478,7 +1479,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                                 llJCash.setVisibility(View.VISIBLE);
                                 cbJCash.setChecked(true);
                                 cbJCash.setText("Use Jaldee cash balance : Rs "+Config.getAmountNoOrTwoDecimalPoints(walletEligibleJCash.getjCashAmt()));
-                                if(walletEligibleJCash.getjCashAmt() >= Double.parseDouble(sAmountPay)){
+                                if(sAmountPay != null && walletEligibleJCash.getjCashAmt() >= Double.parseDouble(sAmountPay)){
                                     tvJCashHint.setVisibility(View.GONE);
                                 } else {
                                     tvJCashHint.setVisibility(View.VISIBLE);

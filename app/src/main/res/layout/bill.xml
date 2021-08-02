@@ -185,6 +185,22 @@
 
                     </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/ll_txtlocn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_padding"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+                    <TextView
+                        android:id="@+id/txtlocn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/title_grey"
+                        android:textSize="@dimen/txtsize_hint"
+                        android:drawableEnd="@drawable/icon_location_lightgray"
+                        android:layout_gravity="left"/>
+                </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
