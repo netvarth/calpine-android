@@ -977,7 +977,9 @@ public class ActionsDialog extends Dialog {
                     intent.putExtra("uid", bookings.getAppointmentInfo().getUid());
                     intent.putExtra("isEdit", true);
                     intent.putExtra("from", Constants.BOOKING_APPOINTMENT);
-                    intent.putExtra("status", bookings.getBookingStatus());
+                    if (bookings.getAppointmentInfo() != null && bookings.getAppointmentInfo().getApptStatus() != null) {
+                        intent.putExtra("status", bookings.getAppointmentInfo().getApptStatus());
+                    }
                     mContext.startActivity(intent);
 
                 } else if (bookings.getCheckInInfo() != null) {
@@ -994,7 +996,9 @@ public class ActionsDialog extends Dialog {
                     intent.putExtra("uid", bookings.getCheckInInfo().getYnwUuid());
                     intent.putExtra("isEdit", true);
                     intent.putExtra("from", Constants.BOOKING_CHECKIN);
-                    intent.putExtra("status", bookings.getBookingStatus());
+                    if (bookings.getCheckInInfo() != null && bookings.getCheckInInfo().getWaitlistStatus() != null) {
+                        intent.putExtra("status", bookings.getCheckInInfo().getWaitlistStatus());
+                    }
                     mContext.startActivity(intent);
                 }
 

@@ -1293,13 +1293,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put("phoneVerified", profileModel.getPhoneVerified());
             values.put("gender", profileModel.getGender());
             values.put("dob", profileModel.getDob());
-            if(profileModel.getTelegramNum() != null){
+            if(profileModel.getTelegramNum() != null && profileModel.getTelegramNum().get("countryCode") != null){
                 values.put("telgrmCountryCode", profileModel.getTelegramNum().get("countryCode").getAsString());
-                values.put("telgrmNumber", profileModel.getTelegramNum().get("number").getAsString());
+                if (profileModel.getTelegramNum().get("number") != null) {
+                    values.put("telgrmNumber", profileModel.getTelegramNum().get("number").getAsString());
+                }
             }
-            if(profileModel.getWhatsAppNum() != null){
+            if(profileModel.getWhatsAppNum() != null && profileModel.getWhatsAppNum().get("countryCode") != null){
                 values.put("whtsAppCountryCode", profileModel.getTelegramNum().get("countryCode").getAsString());
-                values.put("whtsAppNumber", profileModel.getTelegramNum().get("number").getAsString());
+                if (profileModel.getTelegramNum().get("number")!= null) {
+                    values.put("whtsAppNumber", profileModel.getTelegramNum().get("number").getAsString());
+                }
             }
             db.insert(mContext.getString(R.string.db_table_userinfo), null, values);
 
