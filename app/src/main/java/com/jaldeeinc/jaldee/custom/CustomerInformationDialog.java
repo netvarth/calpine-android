@@ -1,5 +1,6 @@
 package com.jaldeeinc.jaldee.custom;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -915,7 +916,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
 
                             Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
                             //iFamilyMemberDetails.sendFamilyMemberDetails(memId, profileDetails.getUserprofile().getFirstName(), profileDetails.getUserprofile().getLastName(), phone, et_email.getText().toString(), countryCode);
-                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, profileDetails.getUserprofile().getFirstName(), profileDetails.getUserprofile().getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getSelectedCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode);
+                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, profileDetails.getUserprofile().getFirstName(), profileDetails.getUserprofile().getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getSelectedCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode, jsonObj1.getString("gender"));
 
                             //iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
                             dismiss();
@@ -1020,11 +1021,11 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         }
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), userProfile.toString());
-        Call<ResponseBody> call = apiService.AddFamilyMEmber(body);
+        Call<Integer> call = apiService.AddFamilyMEmber(body);
         Config.logV("Request--BODY-------------------------" + new Gson().toJson(userProfile.toString()));
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new Callback<Integer>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
 
                 try {
 
@@ -1035,8 +1036,11 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                     Config.logV("Response--code-------------------------" + response.code());
                     Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
+                        Integer newMemId = response.body();
                         Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
-                        iFamilyMemberDetails.sendFamilyMemberDetails(memId, et_firstname.getText().toString(), et_lastName.getText().toString(), phone, et_email.getText().toString(), countryCode);
+                        iFamilyMemberDetails.sendFamilyMemberDetails(newMemId, familylist.getFirstName(), familylist.getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getSelectedCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode, jsonObj1.getString("gender"));
+
+                        //iFamilyMemberDetails.sendFamilyMemberDetails(memId, et_firstname.getText().toString(), et_lastName.getText().toString(), phone, et_email.getText().toString(), countryCode);
                         dismiss();
 
                     } else {
@@ -1053,7 +1057,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<Integer> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
@@ -1365,7 +1369,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                     //   Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
                         Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
-                        iFamilyMemberDetails.sendFamilyMemberDetails(memId, familylist.getFirstName(), familylist.getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getSelectedCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode);
+                        iFamilyMemberDetails.sendFamilyMemberDetails(memId, familylist.getFirstName(), familylist.getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getSelectedCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode, jsonObj1.getString("gender"));
                         dismiss();
                         //Toast.makeText(context, "Member updated successfully ", Toast.LENGTH_LONG).show();
 

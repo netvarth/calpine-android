@@ -213,7 +213,7 @@ public interface ApiInterface {
 
 
     @POST("consumer/familyMember")
-    Call<ResponseBody> AddFamilyMEmber(@Body RequestBody jsonObj);
+    Call<Integer> AddFamilyMEmber(@Body RequestBody jsonObj);
 
     @PUT("consumer/familyMember")
     Call<ResponseBody> UpdateFamilyMEmber(@Body RequestBody jsonObj);

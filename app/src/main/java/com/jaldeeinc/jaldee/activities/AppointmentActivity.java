@@ -264,6 +264,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     private int locationId;
     private String phoneNumber;
     private String emailId;
+    private String mGender;
     private ServiceInfo serviceInfo = new ServiceInfo();
     SearchTerminology mSearchTerminology;
     ProfileModel profileDetails;
@@ -1309,6 +1310,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 if (emailId != null && !emailId.equalsIgnoreCase("")) {
                     waitobj.put("email", emailId);
                 }
+                if(mGender != null && !mGender.isEmpty()) {
+                    waitobj.put("gender", mGender);
+                }
             }
             waitlistArray.put(waitobj);
 
@@ -2166,7 +2170,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     }
 
     @Override
-    public void sendFamilyMemberDetails(int consumerId, String firstName, String lastName, String phone, String email, String conCode, String whtsappCountryCode, String whatsappNumber, String telegramCountryCode, String telegramNumber, String age, JSONArray preferredLanguages, JSONObject bookingLocation) {
+    public void sendFamilyMemberDetails(int consumerId, String firstName, String lastName, String phone, String email, String conCode, String whtsappCountryCode, String whatsappNumber, String telegramCountryCode, String telegramNumber, String age, JSONArray preferredLanguages, JSONObject bookingLocation, String gender) {
         mFirstName = firstName;
         mLastName = lastName;
         phoneNumber = phone;
@@ -2180,6 +2184,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         mAge = age;
         mPreferredLanguages = preferredLanguages;
         mBookingLocation = bookingLocation;
+        mGender = gender;
         tvNumber.setText(countryCode + " " + phoneNumber);
         if (serviceInfo.getCallingMode().equalsIgnoreCase("WhatsApp")) {
             String cCode = whtsappCountryCode.replace("+", "");

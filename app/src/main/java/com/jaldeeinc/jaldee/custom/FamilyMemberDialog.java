@@ -639,11 +639,11 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
 
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), userProfile.toString());
-        Call<ResponseBody> call = apiService.AddFamilyMEmber(body);
+        Call<Integer> call = apiService.AddFamilyMEmber(body);
         Config.logV("Request--BODY-------------------------" + new Gson().toJson(userProfile.toString()));
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new Callback<Integer>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
 
                 try {
 
@@ -679,7 +679,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<Integer> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
