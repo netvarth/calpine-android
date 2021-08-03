@@ -3,11 +3,12 @@
     android:id="@+id/ll_jcash_spent_list_raw"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:weightSum="3">
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:id="@+id/tv_spent_to"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="top"
         android:layout_weight="1"
@@ -19,7 +20,7 @@
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:id="@+id/tv_amount_spent_or_refunded"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="top"
         android:layout_weight="1"
@@ -32,7 +33,7 @@
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
         android:id="@+id/tv_date"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="top"
         android:layout_weight="1"

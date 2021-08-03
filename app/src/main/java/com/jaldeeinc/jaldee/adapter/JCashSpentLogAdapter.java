@@ -74,10 +74,10 @@ public class JCashSpentLogAdapter extends RecyclerView.Adapter<JCashSpentLogAdap
 
             myViewHolder.tv_spent_to.setText(jCashSpentDetails.getSpentToBizName());
             if (jCashSpentDetails.getjCashTxnType() != null && Constants.REFUNDED.equalsIgnoreCase(jCashSpentDetails.getjCashTxnType())) {
-                myViewHolder.tv_amount_spent_or_refunded.setText("(+) ₹\u00A0" + amount);
+                myViewHolder.tv_amount_spent_or_refunded.setText("(+) ₹" + amount);
                 myViewHolder.tv_amount_spent_or_refunded.setTextColor(mContext.getResources().getColor(R.color.green) );
             } else {
-                myViewHolder.tv_amount_spent_or_refunded.setText("₹\u00A0" + amount);
+                myViewHolder.tv_amount_spent_or_refunded.setText("₹" + amount);
                 myViewHolder.tv_amount_spent_or_refunded.setTextColor(Color.RED);
             }
             myViewHolder.tv_date.setText(date);
