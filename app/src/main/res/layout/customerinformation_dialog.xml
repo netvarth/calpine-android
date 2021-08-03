@@ -434,9 +434,9 @@
                         android:layout_height="@dimen/padding40"
                         android:background="@drawable/edittext_color"
                         android:hint=""
-                        android:text=""
                         android:inputType="text"
                         android:paddingStart="@dimen/padding5"
+                        android:text=""
                         android:textColor="@color/black"
                         android:textSize="@dimen/dimen_15sp"
                         app:tint="@color/gray" />
@@ -487,9 +487,9 @@
                         android:layout_height="@dimen/padding40"
                         android:background="@drawable/edittext_color"
                         android:hint=""
-                        android:text=""
                         android:inputType="text"
                         android:paddingStart="@dimen/padding5"
+                        android:text=""
                         android:textColor="@color/black"
                         android:textSize="@dimen/dimen_15sp"
                         app:tint="@color/gray" />
@@ -839,6 +839,17 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/dimen_15sp"
                     app:tint="@color/gray" />
+
+                <CheckBox
+                    android:id="@+id/cb_email_update_to_myaccount"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:buttonTint="@color/blue"
+                    android:checked="true"
+                    android:padding="@dimen/dimen_0dp"
+                    android:text="Update Email to 'My Account'"
+                    android:textColor="@color/darker_gray"
+                    android:textSize="@dimen/txtsize_12" />
             </LinearLayout>
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold

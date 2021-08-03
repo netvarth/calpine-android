@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -105,6 +106,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
     FamilyArrayModel familylist;
     ScrollView scrollView;
     String domain;
+    CheckBox cb_email_update_to_myaccount;
 
     public CustomerInformationDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode, String domain) {
         super(appointmentActivity);
@@ -202,8 +204,8 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         et_residing_state = findViewById(R.id.et_residing_state);
         tv_residing_location_errmsg = findViewById(R.id.tv_residing_location_errmsg);
         tv_residing_state_errmsg = findViewById(R.id.tv_residing_state_errmsg);
-
-
+        cb_email_update_to_myaccount = findViewById(R.id.cb_email_update_to_myaccount);
+        cb_email_update_to_myaccount.setChecked(false);
         if (domain != null) {
             if (domain.equalsIgnoreCase("healthCare")) {
                 tv_cstmr_infrmn.setText("Patient Information");
@@ -891,7 +893,9 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 }
                 jsonObj1.putOpt("preferredLanguages", jsonObj4);
             }
-            jsonObj1.put("email", et_email.getText().toString());
+            if(cb_email_update_to_myaccount.isChecked()) {
+                jsonObj1.put("email", et_email.getText().toString());
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1012,7 +1016,9 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 }
                 userProfile.putOpt("preferredLanguages", jsonObj4);
             }
-            userProfile.put("email", et_email.getText().toString());
+            if(cb_email_update_to_myaccount.isChecked()) {
+                userProfile.put("email", et_email.getText().toString());
+            }
             userProfile.putOpt("userProfile", jsonObj1);
 
             // userProfile.put("id", mUser);
@@ -1343,7 +1349,9 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 }
                 userProfile.putOpt("preferredLanguages", jsonObj4);
             }
-            jsonObj1.put("email", et_email.getText().toString());
+            if(cb_email_update_to_myaccount.isChecked()) {
+                jsonObj1.put("email", et_email.getText().toString());
+            }
             userProfile.putOpt("userProfile", jsonObj1);
 
             // userProfile.put("id", mUser);
