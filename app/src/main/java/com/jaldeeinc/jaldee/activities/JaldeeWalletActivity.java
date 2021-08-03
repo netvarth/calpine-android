@@ -76,8 +76,14 @@ public class JaldeeWalletActivity extends AppCompatActivity {
         });
 
     }
+    @Override
+    public void onRestart() {
 
-    private void ApiGetJCashInfo() {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
+        private void ApiGetJCashInfo() {
 
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
