@@ -227,6 +227,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                     viewHolder.tvServiceType.setText("Check-in");
                 }
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.checkin_theme));
+                viewHolder.ivService.setVisibility(View.GONE);
 
             } else if (servicesInfoList.get(position).getType() != null && servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.APPOINTMENT)) {
 
@@ -234,7 +235,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                 viewHolder.tvServiceType.setText("Appointment");
                 viewHolder.tvServiceType.setVisibility(View.VISIBLE);
                 viewHolder.tvServiceType.setTextColor(ContextCompat.getColor(context, R.color.appoint_theme));
-
+                viewHolder.ivService.setVisibility(View.GONE);
 
             } else if (servicesInfoList.get(position).getType() != null && servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.DONATION)) {
 
@@ -251,6 +252,8 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                 viewHolder.tvPeopleAhead.setVisibility(View.GONE);
                 viewHolder.llEstwaitTime.setVisibility(View.GONE);
                 viewHolder.llTime.setVisibility(View.GONE);
+                viewHolder.ivService.setVisibility(View.GONE);
+
 
             }
 
