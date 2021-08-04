@@ -875,6 +875,7 @@ public class BookingDetails extends AppCompatActivity {
                         iBill.putExtra("uniqueId", appointmentInfo.getProviderAccount().getUniqueId());
                         iBill.putExtra("encId", appointmentInfo.getAppointmentEncId());
                         iBill.putExtra("bookingStatus", appointmentInfo.getApptStatus());
+                        iBill.putExtra("location", appointmentInfo.getLocation().getPlace());
                         startActivity(iBill);
 
                     }

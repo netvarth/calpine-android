@@ -2003,6 +2003,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     }
 
     @Override
+    public void mailUpdated(String emailId) {
+
+    }
+
+    @Override
     public void mobileUpdated() {
         String phone = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
         tvNumber.setText(phone);

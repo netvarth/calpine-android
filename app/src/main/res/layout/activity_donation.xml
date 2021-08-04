@@ -12,9 +12,10 @@
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_45dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:backgroundTint="#F1B51C"
+        android:minHeight="?attr/actionBarSize"
         android:orientation="horizontal"
         android:paddingEnd="@dimen/dimen_10dp">
 
@@ -182,9 +183,9 @@
                     android:layout_below="@+id/ll_donation"
                     android:layout_marginStart="@dimen/dimen_25dp"
                     android:layout_marginEnd="@dimen/dimen_25dp"
-                    android:gravity="center_horizontal"
                     android:background="@drawable/donate_edittext"
                     android:backgroundTint="@color/special_background"
+                    android:gravity="center_horizontal"
                     android:padding="@dimen/dimen_10dp">
 
                     <LinearLayout
@@ -197,6 +198,7 @@
                         android:layout_marginBottom="@dimen/dimen_5dp"
                         android:gravity="center_horizontal"
                         android:visibility="visible">
+
                         <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                             android:id="@+id/tv_entr_amount"
                             android:layout_width="wrap_content"
@@ -204,11 +206,12 @@
                             android:layout_gravity="center"
                             android:letterSpacing="0.04"
                             android:text="Enter Amount"
-                            android:textSize="@dimen/txtsize_12"
-                            android:textColor="@color/dark_blue">
+                            android:textColor="@color/dark_blue"
+                            android:textSize="@dimen/txtsize_12">
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
                     </LinearLayout>
+
                     <LinearLayout
                         android:id="@+id/ll_amount"
                         android:layout_width="wrap_content"
@@ -290,6 +293,7 @@
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
                     </LinearLayout>
+
                     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                         android:id="@+id/tv_errorAmount"
                         android:layout_width="wrap_content"

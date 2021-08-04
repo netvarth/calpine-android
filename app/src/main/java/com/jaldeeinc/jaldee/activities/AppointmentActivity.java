@@ -1677,8 +1677,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     public void mailUpdated() {
         emailId = SharedPreference.getInstance(mContext).getStringValue("email", "");
         tvEmail.setText(emailId);
-
         //  ApiGetProfileDetail();
+    }
+
+    @Override
+    public void mailUpdated(String emailId) {
 
     }
 

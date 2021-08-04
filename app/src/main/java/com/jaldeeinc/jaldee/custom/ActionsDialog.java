@@ -270,6 +270,7 @@ public class ActionsDialog extends Dialog {
                             iBill.putExtra("uniqueId", bookings.getAppointmentInfo().getProviderAccount().getUniqueId());
                             iBill.putExtra("encId", bookings.getAppointmentInfo().getAppointmentEncId());
                             iBill.putExtra("bookingStatus", bookings.getAppointmentInfo().getApptStatus());
+                            iBill.putExtra("location", bookings.getAppointmentInfo().getLocation().getPlace());
 
                             v.getContext().startActivity(iBill);
                         }
@@ -452,6 +453,7 @@ public class ActionsDialog extends Dialog {
                         iBill.putExtra("uniqueId", bookings.getCheckInInfo().getProviderAccount().getUniqueId());
                         iBill.putExtra("encId", bookings.getCheckInInfo().getCheckinEncId());
                         iBill.putExtra("bookingStatus", bookings.getCheckInInfo().getWaitlistStatus());
+                        iBill.putExtra("location", bookings.getCheckInInfo().getQueue().getLocation().getPlace());
 
                         v.getContext().startActivity(iBill);
 
@@ -605,6 +607,7 @@ public class ActionsDialog extends Dialog {
                         iBill.putExtra("uniqueId", bookings.getAppointmentInfo().getProviderAccount().getUniqueId());
                         iBill.putExtra("encId", bookings.getAppointmentInfo().getAppointmentEncId());
                         iBill.putExtra("bookingStatus", bookings.getAppointmentInfo().getApptStatus());
+                        iBill.putExtra("location", bookings.getAppointmentInfo().getLocation().getPlace());
 
                         v.getContext().startActivity(iBill);
                     }
@@ -656,6 +659,7 @@ public class ActionsDialog extends Dialog {
                         iBill.putExtra("uniqueId", bookings.getCheckInInfo().getProviderAccount().getUniqueId());
                         iBill.putExtra("encId", bookings.getCheckInInfo().getCheckinEncId());
                         iBill.putExtra("bookingStatus", bookings.getCheckInInfo().getWaitlistStatus());
+                        iBill.putExtra("location", bookings.getCheckInInfo().getQueue().getLocation().getPlace());
 
                         v.getContext().startActivity(iBill);
 
