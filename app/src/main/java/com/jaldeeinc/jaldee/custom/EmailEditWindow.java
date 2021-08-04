@@ -59,15 +59,12 @@ public class EmailEditWindow extends Dialog {
         email.setTypeface(tyface);
         btnsave.setTypeface(tyface);
         if (currentMailId != null) {
-
             email.setText(currentMailId);
-
         }
 
         btnsave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 checkMail();
             }
         });
@@ -79,113 +76,18 @@ public class EmailEditWindow extends Dialog {
     }
 
     private void checkMail() {
-
         String mailid = email.getText().toString();
-
         if (mailid.trim().length() > 0) {
-
             if (isEmailValid(mailid)) {
-
-                ApiEditProfileDetail();
+                iMailSubmit.mailUpdated(mailid);
+                dismiss();
             } else {
-
                 tvErrorMessage.setVisibility(View.VISIBLE);
                 tvErrorMessage.setText("Enter valid mail Id");
             }
-
         } else {
-
             tvErrorMessage.setVisibility(View.VISIBLE);
             tvErrorMessage.setText("This field is required");
         }
-
     }
-
-
-    private void ApiEditProfileDetail() {
-
-
-        ApiInterface apiService =
-                ApiClient.getClient(context).create(ApiInterface.class);
-
-        final int consumerId = SharedPreference.getInstance(context).getIntValue("consumerId", 0);
-        JSONObject jsonObj = new JSONObject();
-        try {
-            String gender = null;
-            if (profileDetails.getUserprofile().getGender() != null) {
-                if (!profileDetails.getUserprofile().getGender().equalsIgnoreCase("")) {
-                    if (profileDetails.getUserprofile().getGender().equalsIgnoreCase("Male")) {
-                        gender = "male";
-                    } else if (profileDetails.getUserprofile().getGender().equalsIgnoreCase("Female")) {
-                        gender = "female";
-                    } else if (profileDetails.getUserprofile().getGender().equalsIgnoreCase("Other")) {
-                        gender = "other";
-                    }
-                }
-            }
-            jsonObj.put("id", consumerId);
-            jsonObj.put("firstName", profileDetails.getUserprofile().getFirstName());
-            jsonObj.put("lastName", profileDetails.getUserprofile().getLastName());
-            jsonObj.put("email", email.getText().toString());
-            if (gender != null) {
-                jsonObj.put("gender", gender);
-            }
-            jsonObj.put("dob", profileDetails.getUserprofile().getDob());
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<ResponseBody> call = apiService.getEditProfileDetail(body);
-//        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                try {
-
-//                    if (mDialog.isShowing())
-//                        Config.closeDialog(getActivity(), mDialog);
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-                    if (response.code() == 200) {
-                        if (response.body().string().equalsIgnoreCase("true")) {
-                            SharedPreference.getInstance(context).setValue("email", email.getText().toString());
-
-                            Toast.makeText(context, "Email has been updated successfully ", Toast.LENGTH_LONG).show();
-                            iMailSubmit.mailUpdated();
-                            dismiss();
-
-
-                        }
-
-                    } else {
-
-                        Toast.makeText(context, response.errorBody().string(), Toast.LENGTH_LONG).show();
-
-                        Config.logV("Error" + response.errorBody().string());
-
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-//                if (mDialog.isShowing())
-//                    Config.closeDialog(getActivity(), mDialog);
-
-            }
-        });
-
-
-    }
-
 }

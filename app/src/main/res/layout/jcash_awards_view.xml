@@ -26,7 +26,7 @@
             android:layout_marginBottom="@dimen/padding5"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -101,10 +101,11 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:gravity="right">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -127,8 +128,8 @@
                                 android:textSize="@dimen/txtsize_small" />
                         </LinearLayout>
 
-                        <RelativeLayout
-                            android:layout_width="match_parent"
+                        <LinearLayout
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="right">
@@ -149,11 +150,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
-                                android:text="10000096900.0"
+                                android:text=""
                                 android:textColor="@color/green"
                                 android:textSize="@dimen/txtsize_title" />
 
-                        </RelativeLayout>
+                        </LinearLayout>
 
 
                     </LinearLayout>
@@ -187,8 +188,8 @@
                                 android:textSize="@dimen/txtsize_small" />
                         </LinearLayout>
 
-                        <RelativeLayout
-                            android:layout_width="match_parent"
+                        <LinearLayout
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="left">
@@ -209,16 +210,16 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
-                                android:text="50"
+                                android:text=""
                                 android:textColor="@color/metalic_gold"
                                 android:textSize="@dimen/txtsize_title" />
 
-                        </RelativeLayout>
+                        </LinearLayout>
 
 
                     </LinearLayout>
                 </LinearLayout>
-            </RelativeLayout>
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"

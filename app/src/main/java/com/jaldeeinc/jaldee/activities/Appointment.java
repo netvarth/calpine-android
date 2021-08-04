@@ -5554,8 +5554,12 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
     @Override
     public void mailUpdated() {
-
         ApiGetProfileDetail();
+    }
+
+    @Override
+    public void mailUpdated(String emailId) {
+
     }
 
     @Override

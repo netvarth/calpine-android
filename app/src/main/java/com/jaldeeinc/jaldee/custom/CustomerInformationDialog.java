@@ -1,5 +1,6 @@
 package com.jaldeeinc.jaldee.custom;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -104,6 +106,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
     FamilyArrayModel familylist;
     ScrollView scrollView;
     String domain;
+    CheckBox cb_email_update_to_myaccount;
 
     public CustomerInformationDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode, String domain) {
         super(appointmentActivity);
@@ -201,8 +204,8 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         et_residing_state = findViewById(R.id.et_residing_state);
         tv_residing_location_errmsg = findViewById(R.id.tv_residing_location_errmsg);
         tv_residing_state_errmsg = findViewById(R.id.tv_residing_state_errmsg);
-
-
+        cb_email_update_to_myaccount = findViewById(R.id.cb_email_update_to_myaccount);
+        cb_email_update_to_myaccount.setChecked(false);
         if (domain != null) {
             if (domain.equalsIgnoreCase("healthCare")) {
                 tv_cstmr_infrmn.setText("Patient Information");
@@ -890,7 +893,9 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 }
                 jsonObj1.putOpt("preferredLanguages", jsonObj4);
             }
-            jsonObj1.put("email", et_email.getText().toString());
+            if(cb_email_update_to_myaccount.isChecked()) {
+                jsonObj1.put("email", et_email.getText().toString());
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -915,7 +920,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
 
                             Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
                             //iFamilyMemberDetails.sendFamilyMemberDetails(memId, profileDetails.getUserprofile().getFirstName(), profileDetails.getUserprofile().getLastName(), phone, et_email.getText().toString(), countryCode);
-                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, profileDetails.getUserprofile().getFirstName(), profileDetails.getUserprofile().getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getSelectedCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode);
+                            iFamilyMemberDetails.sendFamilyMemberDetails(memId, profileDetails.getUserprofile().getFirstName(), profileDetails.getUserprofile().getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getSelectedCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode, jsonObj1.getString("gender"));
 
                             //iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
                             dismiss();
@@ -1011,7 +1016,9 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 }
                 userProfile.putOpt("preferredLanguages", jsonObj4);
             }
-            userProfile.put("email", et_email.getText().toString());
+            if(cb_email_update_to_myaccount.isChecked()) {
+                userProfile.put("email", et_email.getText().toString());
+            }
             userProfile.putOpt("userProfile", jsonObj1);
 
             // userProfile.put("id", mUser);
@@ -1020,11 +1027,11 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         }
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), userProfile.toString());
-        Call<ResponseBody> call = apiService.AddFamilyMEmber(body);
+        Call<Integer> call = apiService.AddFamilyMEmber(body);
         Config.logV("Request--BODY-------------------------" + new Gson().toJson(userProfile.toString()));
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new Callback<Integer>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
 
                 try {
 
@@ -1035,8 +1042,11 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                     Config.logV("Response--code-------------------------" + response.code());
                     Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
+                        Integer newMemId = response.body();
                         Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
-                        iFamilyMemberDetails.sendFamilyMemberDetails(memId, et_firstname.getText().toString(), et_lastName.getText().toString(), phone, et_email.getText().toString(), countryCode);
+                        iFamilyMemberDetails.sendFamilyMemberDetails(newMemId, familylist.getFirstName(), familylist.getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getSelectedCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode, jsonObj1.getString("gender"));
+
+                        //iFamilyMemberDetails.sendFamilyMemberDetails(memId, et_firstname.getText().toString(), et_lastName.getText().toString(), phone, et_email.getText().toString(), countryCode);
                         dismiss();
 
                     } else {
@@ -1053,7 +1063,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<Integer> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
@@ -1339,7 +1349,9 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 }
                 userProfile.putOpt("preferredLanguages", jsonObj4);
             }
-            jsonObj1.put("email", et_email.getText().toString());
+            if(cb_email_update_to_myaccount.isChecked()) {
+                jsonObj1.put("email", et_email.getText().toString());
+            }
             userProfile.putOpt("userProfile", jsonObj1);
 
             // userProfile.put("id", mUser);
@@ -1365,7 +1377,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                     //   Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
                         Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
-                        iFamilyMemberDetails.sendFamilyMemberDetails(memId, familylist.getFirstName(), familylist.getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getSelectedCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode);
+                        iFamilyMemberDetails.sendFamilyMemberDetails(memId, familylist.getFirstName(), familylist.getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getSelectedCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode, jsonObj1.getString("gender"));
                         dismiss();
                         //Toast.makeText(context, "Member updated successfully ", Toast.LENGTH_LONG).show();
 

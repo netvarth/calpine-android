@@ -35,7 +35,7 @@ public class JaldeeWalletActivity extends AppCompatActivity {
     static Context mContext;
     JCashInfo jCashInfo = new JCashInfo();
     CustomTextViewBold jCashBalance;
-    //LinearLayout llJCashCard;
+    LinearLayout ll_img_right_arrow;
     CardView card;
 
     @Override
@@ -44,7 +44,7 @@ public class JaldeeWalletActivity extends AppCompatActivity {
         setContentView(R.layout.activity_jaldee_wallet);
         ButterKnife.bind(JaldeeWalletActivity.this);
         jCashBalance = findViewById(R.id.tv_jcash);
-        //llJCashCard = findViewById(R.id.ll_jCash_card);
+        ll_img_right_arrow = findViewById(R.id.ll_img_right_arrow);
         card = findViewById(R.id.card);
         Typeface tyface1 = Typeface.createFromAsset(JaldeeWalletActivity.this.getAssets(),
                 "fonts/Montserrat_Bold.otf");
@@ -77,6 +77,14 @@ public class JaldeeWalletActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onRestart() {
+
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
+
     private void ApiGetJCashInfo() {
 
         ApiInterface apiService =
@@ -92,8 +100,14 @@ public class JaldeeWalletActivity extends AppCompatActivity {
                         Config.closeDialog(JaldeeWalletActivity.this, mDialog);
                     if (response.code() == 200) {
                         jCashInfo = response.body();
-                        if (jCashInfo != null && jCashInfo.totCashAvailable != null) {
-                            jCashBalance.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(jCashInfo.totCashAvailable)));
+                        if (jCashInfo != null) {
+                            if (jCashInfo.getTotCashAvailable() != null) {
+                                jCashBalance.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(jCashInfo.totCashAvailable)));
+                            }
+                            if (jCashInfo.getTotCashAwarded() != null && Double.parseDouble(jCashInfo.getTotCashAwarded()) == 0) {
+                                ll_img_right_arrow.setVisibility(View.GONE);
+                                card.setOnClickListener(null);
+                            }
                         }
                     }
                 } catch (Exception e) {

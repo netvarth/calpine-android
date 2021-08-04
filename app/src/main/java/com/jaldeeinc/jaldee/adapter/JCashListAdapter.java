@@ -26,9 +26,12 @@ import com.jaldeeinc.jaldee.custom.JCashSpentLogDialog;
 import com.jaldeeinc.jaldee.response.JCashAvailable;
 import com.jaldeeinc.jaldee.response.JCashSpentDetails;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -87,10 +90,13 @@ public class JCashListAdapter extends RecyclerView.Adapter<JCashListAdapter.MyVi
             myViewHolder.tvJCashIssueDate.setText(issuedlocalDate.format(issuedDtf));
         }
         if (jCashSpendRulesInfo != null) {
-            String expiryDtStr = jCashSpendRulesInfo.get("expiryDt").getAsString();
-            DateTimeFormatter expiryDtf = DateTimeFormatter.ofPattern("MMM dd");
-            LocalDate expirylocalDate = LocalDate.parse(expiryDtStr);
-            myViewHolder.tvRwrdExpiry.setText("Expires on " + expirylocalDate.format(expiryDtf) + "th");
+            try {
+                String date = getCustomDateString(jCashSpendRulesInfo.get("expiryDt").getAsString());
+                myViewHolder.tvRwrdExpiry.setText("Expires on " + date);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         //myViewHolder.rlLayout.animate().alpha(0.5f);
         myViewHolder.tvRewardName.setText(jCashReward.getjCashOffer().get("name").getAsString());
@@ -176,6 +182,26 @@ public class JCashListAdapter extends RecyclerView.Adapter<JCashListAdapter.MyVi
 
             }
         });
+    }
+    public static String getCustomDateString(String d) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date1 = format.parse(d);
+        String date = format.format(date1);
 
+        if (date.endsWith("1") && !date.endsWith("11"))
+            format = new SimpleDateFormat("MMM d'st', yyyy");
+
+        else if (date.endsWith("2") && !date.endsWith("12"))
+            format = new SimpleDateFormat("MMM d'nd', yyyy");
+
+        else if (date.endsWith("3") && !date.endsWith("13"))
+            format = new SimpleDateFormat("MMM d'rd', yyyy");
+
+        else
+            format = new SimpleDateFormat("MMM d'th', yyyy");
+
+        String yourDate = format.format(date1);
+
+        return yourDate;
     }
 }

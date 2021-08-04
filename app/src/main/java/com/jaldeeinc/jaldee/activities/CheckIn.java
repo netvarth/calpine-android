@@ -1540,8 +1540,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
     @Override
     public void mailUpdated() {
-
         ApiGetProfileDetail();
+    }
+
+    @Override
+    public void mailUpdated(String emailId) {
+
     }
 
 

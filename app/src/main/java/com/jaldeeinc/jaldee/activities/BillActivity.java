@@ -114,21 +114,21 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     String payStatus, consumer;
     String coupon_entered;
     String purpose;
-    String displayNotes;
+    String location;
     String payRemainingAmount = "";
     TextView tv_billnotes, tv_notes, tvProviderName;
     int customerId;
     String uniqueId;
     double total, totalRefund = 0.0;
-    ;
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     ArrayList<ProviderCouponResponse> providerCouponList = new ArrayList<>();
     WalletEligibleJCash walletEligibleJCash = new WalletEligibleJCash();
     private IPaymentResponse paymentResponse;
     String encId;
     String bookingStatus;
-    String location;
     TextView tv_title;
+    TextView txtlocn;
+    LinearLayout ll_txtlocn;
     private boolean fromPushNotification = false;
     private Provider providerResponse = new Provider();
 
@@ -194,6 +194,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         tvProviderName = findViewById(R.id.tv_providerName);
         ll_amount_Saved = findViewById(R.id.ll_amount_Saved);
         tv_amount_Saved = findViewById(R.id.tv_amount_Saved);
+        txtlocn = findViewById(R.id.txtlocn);
+        ll_txtlocn = findViewById(R.id.ll_txtlocn);
 
         tv_amount_Saved.setTypeface(tyface);
         tv_totalamt.setTypeface(tyface);
@@ -223,6 +225,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             uniqueId = extras.getString("uniqueId");
             encId = extras.getString("encId");
             bookingStatus = extras.getString("bookingStatus");
+            location = extras.getString("location");
             fromPushNotification = extras.getBoolean(Constants.PUSH_NOTIFICATION, false);
         }
 
@@ -388,6 +391,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             }
         }
     }
+
     public void isGateWayPaymentNeeded(String ynwUUID, final String amount, String accountID, String purpose, boolean isJcashUsed, boolean isreditUsed, boolean isRazorPayPayment, boolean isPayTmPayment, String paymentMode) {
 
         ApiInterface apiService =
@@ -463,11 +467,11 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             }
         });
     }
+
     private void UpdateUI() {
         ApiBill(ynwUUID);
 
         if (payStatus != null) {
-
             if (payStatus.equalsIgnoreCase("FullyPaid") || payStatus.equalsIgnoreCase("FullyRefunded")) {
                 tv_title.setText("Receipt");
                 btn_pay.setVisibility(View.GONE);
@@ -482,11 +486,14 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                 cbJCash.setChecked(true);
                 ApiJaldeeCoupan(uniqueId);
                 APIGetWalletEligibleJCash();
-
             }
         }
-
-
+        if (location != null && !location.isEmpty()) {
+            ll_txtlocn.setVisibility(View.VISIBLE);
+            txtlocn.setText(location);
+        } else {
+            ll_txtlocn.setVisibility(View.GONE);
+        }
         Typeface tyface1 = Typeface.createFromAsset(this.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_provider.setTypeface(tyface1);
@@ -522,6 +529,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                                 uniqueId = apptInfo.getProviderAccount().getUniqueId();
                                 encId = apptInfo.getAppointmentEncId();
                                 bookingStatus = apptInfo.getApptStatus();
+                                location = apptInfo.getLocation().getPlace();
                                 //location = apptInfo.getLocation();
                                 // update UI with the data from notification
                                 UpdateUI();
@@ -571,6 +579,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             uniqueId = activeCheckIn.getProviderAccount().getUniqueId();
                             encId = activeCheckIn.getCheckinEncId();
                             bookingStatus = activeCheckIn.getWaitlistStatus();
+                            location = activeCheckIn.getQueue().getLocation().getPlace();
                             // update UI with the data from notification
                             UpdateUI();
                         }
@@ -1478,8 +1487,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             if (walletEligibleJCash.getjCashAmt() > 0) {
                                 llJCash.setVisibility(View.VISIBLE);
                                 cbJCash.setChecked(true);
-                                cbJCash.setText("Use Jaldee cash balance : Rs "+Config.getAmountNoOrTwoDecimalPoints(walletEligibleJCash.getjCashAmt()));
-                                if(sAmountPay != null && walletEligibleJCash.getjCashAmt() >= Double.parseDouble(sAmountPay)){
+                                cbJCash.setText("Use Jaldee cash balance : Rs " + Config.getAmountNoOrTwoDecimalPoints(walletEligibleJCash.getjCashAmt()));
+                                if (sAmountPay != null && walletEligibleJCash.getjCashAmt() >= Double.parseDouble(sAmountPay)) {
                                     tvJCashHint.setVisibility(View.GONE);
                                 } else {
                                     tvJCashHint.setVisibility(View.VISIBLE);

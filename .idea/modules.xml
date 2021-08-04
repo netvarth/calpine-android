@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="calpine-android/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="order_enhancement/app" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/calpine-android.iml" filepath="$PROJECT_DIR$/.idea/modules/calpine-android.iml" group="calpine-android" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/order_enhancement.iml" filepath="$PROJECT_DIR$/.idea/modules/order_enhancement.iml" group="order_enhancement" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/order_enhancement_(original)_(backup).iml" filepath="$PROJECT_DIR$/.idea/modules/order_enhancement_(original)_(backup).iml" group="order_enhancement_(original)_(backup)" />
     </modules>
   </component>

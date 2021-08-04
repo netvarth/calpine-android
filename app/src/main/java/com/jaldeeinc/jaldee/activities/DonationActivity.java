@@ -172,10 +172,8 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     static Activity mActivity;
     static Context mContext;
     int familyMEmID;
-    String value = null;
     private String phoneNumber;
     private SearchDonation serviceInfo = new SearchDonation();
-    ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
     private EmailEditWindow emailEditWindow;
     private MobileNumberDialog mobileNumberDialog;
     private ConsumerNameDialog consumerNameDialog;
@@ -184,10 +182,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     private IConsumerNameSubmit iConsumerNameSubmit;
     ProfileModel profileDetails;
     private ActiveDonation activeDonation;
-    private String dntEncId;
     private String countryCode;
-    private boolean payTm = false;
-    private boolean razorPay = false;
     String mFirstName;
     String mLastName;
     private String locationName;
@@ -209,9 +204,6 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         tvConsumerName.setTypeface(tyface);
         tvEmail.setTypeface(tyface);
         etNumber.setTypeface(tyface);
-        //tvAmountHint.setTypeface(tyface);
-        //tvDescription.setTypeface(tyface);
-        //tvPreInfoTitle.setTypeface(tyface);
         tvAmountHint.setTextColor(Color.parseColor("#484848"));
 
         SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, "");
@@ -229,16 +221,11 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         Spanned s3 = null;
         GradientDrawable payMthdBtnEnabled = new GradientDrawable();
         payMthdBtnEnabled.setColor(Color.parseColor("#F1B51C"));
-        //payMthdBtnEnabled.setStroke(2, Color.parseColor("#F1B51C"));
         payMthdBtnEnabled.setCornerRadius(15);
         GradientDrawable payMthdBtnDisabled = new GradientDrawable();
-        // payMthdBtnDisabled.setColor(Color.parseColor("#f1f0f0"));
         payMthdBtnDisabled.setColor(Color.parseColor("#FFFFFF"));
-
         payMthdBtnDisabled.setStroke(2, Color.parseColor("#d5d5d5"));
-
         payMthdBtnDisabled.setCornerRadius(15);
-        //cvPayTm.setBackground(payMthdBtnDisabled);
         cvRazorpay.setBackground(payMthdBtnDisabled);
 
         try {
@@ -265,7 +252,6 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                     s3 = Html.fromHtml("<br><font color='#484848'>" + serviceInfo.getPreInfoText() + "</font>");
                     builder.append(s3);
                 }
-
                 tvDescription.setText(builder);
                 tvDescription.post(new Runnable() {                    //for find the description is elipsized or not
                     @Override
@@ -376,54 +362,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 etAmount.addTextChangedListener(this);
             }
         });
-        /*cvPayTm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                cvPayTm.setBackground(payMthdBtnEnabled);
-                cvRazorpay.setBackground(payMthdBtnDisabled);
-                tvErrorPayment.setVisibility(View.GONE);
-                payTm = true;
-                razorPay = false;
-                double amount = 0;
-                if (etAmount.isFocused()) {
-                    etAmount.clearFocus();
-                }
-                if (!etAmount.getText().toString().isEmpty()) {
-                    amount = Double.parseDouble(etAmount.getText().toString());
-                }
-                if (amount > 0) {
-                    //tvSubmit.setText("Donate ₹ " + etAmount.getText() + " now");
-                    tvSubmit.setText("Donate now");
-                    cvSubmit.setCardBackgroundColor(Color.parseColor("#F1B51C"));
-
-                }
-
-            }
-        });
-        cvRazorpay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cvRazorpay.setBackground(payMthdBtnEnabled);
-                cvPayTm.setBackground(payMthdBtnDisabled);
-                tvErrorPayment.setVisibility(View.GONE);
-                razorPay = true;
-                payTm = false;
-                double amount = 0;
-                if (etAmount.isFocused()) {
-                    etAmount.clearFocus();
-                }
-                if (!etAmount.getText().toString().isEmpty()) {
-                    amount = Double.parseDouble(etAmount.getText().toString());
-                }
-                if (amount > 0) {
-                    //tvSubmit.setText("Donate ₹ " + etAmount.getText() + " now");
-                    tvSubmit.setText("Donate now");
-                    cvSubmit.setCardBackgroundColor(Color.parseColor("#F1B51C"));
-
-                }
-            }
-        });*/
         tvEmail.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -489,23 +428,6 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 }
                 return false;
             }
-
-            /*@Override
-            public void onClick(View v) {
-                if (etAmount.isFocused()) {
-                    etAmount.clearFocus();
-                }
-                if (tvConsumerName.getText().toString() != null) {
-                    consumerNameDialog = new ConsumerNameDialog(DonationActivity.this, profileDetails, iConsumerNameSubmit, tvConsumerName.getText().toString());
-                    consumerNameDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
-                    consumerNameDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    consumerNameDialog.show();
-                    DisplayMetrics metrics = DonationActivity.this.getResources().getDisplayMetrics();
-                    int width = (int) (metrics.widthPixels * 1);
-                    consumerNameDialog.getWindow().setGravity(Gravity.BOTTOM);
-                    consumerNameDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-                }
-            }*/
         });
 
 
@@ -538,13 +460,8 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 } else if (serviceInfo.isConsumerNoteMandatory() && (et_note.getText().toString().isEmpty() || et_note.getText().toString() == null)) {
                     et_note.setBackground(getResources().getDrawable(R.drawable.donate_error_edittext));
                     Toast.makeText(DonationActivity.this, "Please provide add notes", Toast.LENGTH_SHORT).show();
-                } /*else if (!payTm && !razorPay) {   //if no select any payment method
-                    tvErrorPayment.setVisibility(View.VISIBLE);
-                    Toast.makeText(DonationActivity.this, "Please select payment method", Toast.LENGTH_SHORT).show();
-                }*/ else {
-
+                } else {
                     if (etNumber.getText().length() > 9) {
-
                         ApiDonation("");
                     } else {
                         Toast.makeText(DonationActivity.this, "Mobile number should have 10 digits", Toast.LENGTH_SHORT).show();
@@ -564,40 +481,17 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         etAmount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 tvErrorAmount.setVisibility(View.GONE);
                 llAmountHint.setVisibility(View.VISIBLE);
                 tvAmountHint.setTextColor(Color.parseColor("#484848"));
-
             }
         });
 
         tvMoreInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (tvMoreInfo.getText().toString().equalsIgnoreCase("Showmore...")) {
                     tvDescription.setMaxLines(Integer.MAX_VALUE);//your TextView
-                    /*if (serviceInfo.isPreInfoEnabled()) {  //  check if pre-info is available for the service
-
-                        llPreInfo.setVisibility(View.VISIBLE);
-                        if (serviceInfo.getPreInfoTitle() != null) {
-                            tvPreInfoTitle.setText(serviceInfo.getPreInfoTitle());
-                        } else {
-                            llPreInfo.setVisibility(View.GONE);
-                        }
-                        if (serviceInfo.getPreInfoText() != null) {
-                            if (!serviceInfo.getPreInfoText().isEmpty()) {
-                                tvPreInfo.setText((Html.fromHtml(serviceInfo.getPreInfoText())));
-                            } else {
-                                tvPreInfo.setVisibility(View.GONE);
-                            }
-                        } else {
-                            llPreInfo.setVisibility(View.GONE);
-                        }
-                    } else {
-                        llPreInfo.setVisibility(View.GONE);
-                    }*/
                     tvMoreInfo.setText("Showless");
                 } else {
                     tvDescription.setMaxLines(3);//your TextView
@@ -606,29 +500,21 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 }
             }
         });
-
         ApiGetProfileDetail();
         ApiSearchViewTerminology(uniqueId);
-        //APIPayment(providerId);/////////////////////
     }
 
     private void ApiGetProfileDetail() {
-
         ApiInterface apiService =
                 ApiClient.getClient(DonationActivity.this).create(ApiInterface.class);
-
         final int consumerId = SharedPreference.getInstance(DonationActivity.this).getIntValue("consumerId", 0);
-
         final Dialog mDialog = Config.getProgressDialog(DonationActivity.this, DonationActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<ProfileModel> call = apiService.getProfileDetail(consumerId);
-
         call.enqueue(new Callback<ProfileModel>() {
             @Override
             public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getParent(), mDialog);
 
@@ -643,20 +529,15 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                             countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
                             phoneNumber = profileDetails.getUserprofile().getPrimaryMobileNo();
                             etNumber.setText(countryCode + " " + phoneNumber);
-
                             if (profileDetails.getUserprofile().getEmail() != null) {
                                 tvEmail.setText(profileDetails.getUserprofile().getEmail());
-                            } /*else {
-                                tvEmail.setHint("Enter your Mail Id");
-                            }*/
+                            }
                         }
-                    } else {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
 
             @Override
             public void onFailure(Call<ProfileModel> call, Throwable t) {
@@ -666,145 +547,36 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                     Config.closeDialog(getParent(), mDialog);
             }
         });
-
-
     }
-
-
-    boolean showPaytmWallet = false;
-    boolean showPayU = false;
-
-  /*  private void APIPayment(int accountID) {
-
-        GradientDrawable payMthdBtnEnabled = new GradientDrawable();
-        payMthdBtnEnabled.setColor(Color.parseColor("#F1B51C"));
-        payMthdBtnEnabled.setCornerRadius(15);
-        GradientDrawable payMthdBtnDisabled = new GradientDrawable();
-        payMthdBtnDisabled.setColor(Color.parseColor("#FFFFFF"));
-        payMthdBtnDisabled.setStroke(2, Color.parseColor("#d5d5d5"));
-        payMthdBtnDisabled.setCornerRadius(15);
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(String.valueOf(accountID));
-        call.enqueue(new Callback<ArrayList<PaymentModel>>() {
-            @Override
-            public void onResponse(Call<ArrayList<PaymentModel>> call, Response<ArrayList<PaymentModel>> response) {
-                try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
-                    Config.logV("URL----%%%%%-----------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
-                    if (response.code() == 200) {
-
-                        mPaymentData = response.body();
-
-                        for (int i = 0; i < mPaymentData.size(); i++) {
-                            if (mPaymentData.get(i).getName().equalsIgnoreCase("PPI")) {
-                                showPaytmWallet = true;
-                            }
-
-                            if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB") || mPaymentData.get(i).getName().equalsIgnoreCase("UPI")) {
-                                showPayU = true;
-                            }
-                        }
-
-                        if ((showPayU) || showPaytmWallet) {
-                            Config.logV("URL----%%%%%---@@--");
-
-                        }
-                        if ((showPayU && showPaytmWallet) || (!showPayU && showPaytmWallet)) {
-
-                            cvRazorpay.setBackground(payMthdBtnDisabled);
-                            cvPayTm.setBackground(payMthdBtnEnabled);
-                            razorPay = false;
-                            payTm = true;
-
-                        } else if (showPayU && !showPaytmWallet) {
-
-                            cvRazorpay.setBackground(payMthdBtnEnabled);
-                            cvPayTm.setBackground(payMthdBtnDisabled);
-                            razorPay = true;
-                            payTm = false;
-                        }
-                        if (showPayU)
-                            cvRazorpay.setVisibility(View.VISIBLE);
-                        else
-                            cvRazorpay.setVisibility(View.GONE);
-
-                        if (showPaytmWallet)
-                            cvPayTm.setVisibility(View.VISIBLE);
-                        else
-                            cvPayTm.setVisibility(View.GONE);
-                    } else {
-                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<PaymentModel>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
-
-            }
-        });
-
-
-    }*/
 
     SearchTerminology mSearchTerminology;
 
     private void ApiSearchViewTerminology(int muniqueID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-
-
         Call<SearchTerminology> call = apiService.getSearchViewTerminology(muniqueID, sdf.format(currentTime));
-
         call.enqueue(new Callback<SearchTerminology>() {
             @Override
             public void onResponse(Call<SearchTerminology> call, Response<SearchTerminology> response) {
 
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getParent(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         mSearchTerminology = response.body();
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -813,11 +585,8 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getParent(), mDialog);
-
             }
         });
-
-
     }
 
     private void ApiDonation(String txt_addnote) {
@@ -853,17 +622,14 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         formattedDate = df.format(c);
 
         try {
-
-            queueobj.put("date", formattedDate);
-            queueobj.put("donationAmount", etAmount.getText().toString());
             service.put("id", serviceInfo.getId());
             location.put("id", locationId);
-
             consumer.put("id", familyMEmID);
             providerConsumer.put("id", familyMEmID);
+            queueobj.put("date", formattedDate);
+            queueobj.put("donationAmount", etAmount.getText().toString());
             donor.put("firstName", mFirstName);
             donor.put("lastName", mLastName);
-
             queueobj.putOpt("service", service);
             queueobj.putOpt("consumer", consumer);
             queueobj.putOpt("donor", donor);
@@ -874,101 +640,10 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
             queueobj.putOpt("donorEmail", tvEmail.getText().toString());
             queueobj.putOpt("note", et_note.getText().toString());
 
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
         getQuestionnaire(serviceInfo.getId(), providerId, queueobj);
-
-        /*Log.i("QueueObj Checkin", queueobj.toString());
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), queueobj.toString());
-        Call<ResponseBody> call = apiService.Donation(String.valueOf(providerId), body);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                try {
-
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-                    Config.logV("Response--code-------------------------" + response.body());
-                    if (response.code() == 200) {
-                        SharedPreference.getInstance(mContext).setValue("refreshcheckin", "true");
-                        JSONObject reader = new JSONObject(response.body().string());
-                        Iterator iteratorObj = reader.keys();
-
-                        while (iteratorObj.hasNext()) {
-                            String getJsonObj = (String) iteratorObj.next();
-                            System.out.println("KEY: " + "------>" + getJsonObj);
-                            value = reader.getString(getJsonObj);
-
-
-                        }
-                        getConfirmationId(providerId);
-                    } else {
-                        if (response.code() == 422) {
-                            float amount = Float.valueOf(etAmount.getText().toString());
-                            float minAmount = Float.valueOf(serviceInfo.getMinDonationAmount());
-                            float maxAmount = Float.valueOf(serviceInfo.getMaxDonationAmount());
-                            float multipls = Float.valueOf(serviceInfo.getMultiples());
-                            if (!(amount >= minAmount && amount <= maxAmount && amount % multipls == 0)) {
-                                tvAmountHint.setTextColor(Color.parseColor("#dc3545"));
-                                llAmountHint.setVisibility(View.VISIBLE);
-                                tvErrorAmount.setVisibility(View.GONE);
-                            }
-                            String errorString = response.errorBody().string();
-
-                            Config.logV("Error String-----------" + errorString);
-                            Map<String, String> tokens = new HashMap<String, String>();
-                            tokens.put("Customer", Config.toTitleCase(mSearchTerminology.getCustomer()));
-                            tokens.put("provider", mSearchTerminology.getProvider());
-                            tokens.put("arrived", mSearchTerminology.getArrived());
-                            tokens.put("waitlisted", mSearchTerminology.getWaitlist());
-
-                            tokens.put("start", mSearchTerminology.getStart());
-                            tokens.put("cancelled", mSearchTerminology.getCancelled());
-                            tokens.put("done", mSearchTerminology.getDone());
-
-
-                            StringBuffer sb = new StringBuffer();
-
-                            Pattern p3 = Pattern.compile("\\[(.*?)\\]");
-
-                            Matcher matcher = p3.matcher(errorString);
-                            while (matcher.find()) {
-                                System.out.println(matcher.group(1));
-                                matcher.appendReplacement(sb, tokens.get(matcher.group(1)));
-                            }
-                            matcher.appendTail(sb);
-
-                            Toast.makeText(mContext, sb.toString(), Toast.LENGTH_LONG).show();
-                        } else {
-                            String responseerror = response.errorBody().string();
-                            Config.logV("Response--error-------------------------" + responseerror);
-                            if (response.code() != 419)
-                                Toast.makeText(mContext, responseerror, Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
-
-            }
-        });*/
     }
 
     private void getQuestionnaire(int serviceId, int accountId, JSONObject queueobj) {
@@ -986,12 +661,11 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
+
                         Questionnaire questionnaire = response.body();
 
                         BookingModel model = new BookingModel();
                         model.setJsonObject(queueobj.toString());
-                        //model.setImagesList(imagePathList);
-                        //model.setMessage(txt_addnote);
                         model.setAccountId(accountId);
                         model.setDonationServiceInfo(serviceInfo);
                         model.setmSearchTerminology(mSearchTerminology);
@@ -1000,38 +674,23 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                         model.setQuestionnaire(questionnaire);
                         model.setFrom(Constants.DONATION);
                         model.setProviderName(providerName);
-
-                        //model.setAccountBusinessName(accountBusinessName);
                         model.setLocationName(locationName);
-                        //model.setDate(tvCheckInDate.getText().toString());
-                        //model.setHint(tvHint.getText().toString());
-                        //model.setPeopleWaiting(tvPeopleInLine.getText().toString());
-                        //model.setCheckInOrToken(tvTerm.getText().toString());
                         model.setCustomerName(tvConsumerName.getText().toString());
                         model.setEmailId(tvEmail.getText().toString());
                         model.setCountryCode(countryCode);
-                        //model.setMultipleFamilyMembers(MultiplefamilyList);
-                        //model.setTotalAmount(totalAmountPay);
-                        //model.setTotalServicePay(totalServicePay);
                         model.setDonationAmount(etAmount.getText().toString());
-
                         if (questionnaire != null) {
-
                             if (questionnaire.getQuestionsList() != null) {
-
                                 Intent intent = new Intent(DonationActivity.this, CustomQuestionnaire.class);
                                 intent.putExtra("data", model);
                                 intent.putExtra("from", Constants.DONATION);
                                 startActivity(intent);
-
                             } else {
-
                                 Intent intent = new Intent(DonationActivity.this, DonationReconfirmation.class);
                                 intent.putExtra("data", model);
                                 startActivity(intent);
                             }
                         } else {
-
                             Intent intent = new Intent(DonationActivity.this, DonationReconfirmation.class);
                             intent.putExtra("data", model);
                             startActivity(intent);
@@ -1049,71 +708,6 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
             }
         });
     }
-
-    /*private void getConfirmationId(int userId) {
-
-        final ApiInterface apiService =
-                ApiClient.getClient(DonationActivity.this).create(ApiInterface.class);
-        Call<ActiveDonation> call = apiService.getActiveDonationUUID(value, String.valueOf(userId));
-        call.enqueue(new Callback<ActiveDonation>() {
-            @Override
-            public void onResponse(Call<ActiveDonation> call, Response<ActiveDonation> response) {
-                try {
-                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-                    if (response.code() == 200) {
-                        activeDonation = response.body();
-                        if (activeDonation != null) {
-                            dntEncId = activeDonation.getDonationEncId();
-                            if (!showPaytmWallet && !showPayU) {
-
-                            } else {
-                                try {
-                                    if (showPaytmWallet) {
-                                        cvPayTm.setVisibility(View.VISIBLE);
-                                    } else {
-                                        cvPayTm.setVisibility(View.GONE);
-                                    }
-                                    if (showPayU) {
-                                        cvRazorpay.setVisibility(View.VISIBLE);
-                                    } else {
-                                        cvRazorpay.setVisibility(View.GONE);
-                                    }
-                                    if (razorPay && !payTm) {
-                                        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-                                        mDialog.show();
-                                        new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, etAmount.getText().toString(), String.valueOf(providerId), Constants.PURPOSE_DONATIONPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
-                                        mDialog.dismiss();
-                                    }
-                                    if (!razorPay && payTm) {
-                                        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-                                        mDialog.show();
-                                        PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
-                                        payment.ApiGenerateHashPaytm(value, etAmount.getText().toString(), String.valueOf(providerId), Constants.PURPOSE_DONATIONPAYMENT, mContext, mActivity, "", familyMEmID, dntEncId);
-                                        mDialog.dismiss();
-
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                        }
-
-                    }
-                } catch (Exception e) {
-                    Log.i("mnbbnmmnbbnm", e.toString());
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ActiveDonation> call, Throwable t) {
-            }
-        });
-
-    }*/
-
 
     @Override
     public void sendPaymentResponse() {
@@ -1180,19 +774,6 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 }
             }
         }
-        //View view = inflater.inflate(R.layout.fragment_my_bookings, container, false);
-        //tvServiceName = findViewById(R.id.tv_serviceName);
-        /*AlertDialog alertDialog = new AlertDialog.Builder(this)
-                .setCancelable(false)
-                .setView(R.layout.successful_donation)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //set what would happen when positive button is clicked
-                        finish();
-                    }
-                })
-                .show();*/
     }
 
     public void paymentFinished() {
@@ -1257,19 +838,6 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 }
             }
         }
-
-        /*AlertDialog alertDialog = new AlertDialog.Builder(this)
-                .setCancelable(false)
-                .setView(R.layout.successful_donation)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //set what would happen when positive button is clicked
-                        finish();
-                    }
-                })
-                .show();*/
-
     }
 
     @Override
@@ -1298,8 +866,11 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     @Override
     public void mailUpdated() {
 
-        String mail = SharedPreference.getInstance(mContext).getStringValue("email", "");
-        tvEmail.setText(mail);
+    }
+
+    @Override
+    public void mailUpdated(String emailId) {
+        tvEmail.setText(emailId);
     }
 
     @Override
@@ -1324,7 +895,6 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     public void consumerNameUpdated(String firstName, String lastName) {
         this.mFirstName = firstName;
         this.mLastName = lastName;
-        //String consumerName = SharedPreference.getInstance(mContext).getStringValue("consumerName", "");
         tvConsumerName.setText(mFirstName + " " + mLastName);
     }
 }

@@ -938,6 +938,7 @@ public class CheckInDetails extends AppCompatActivity {
                         iBill.putExtra("uniqueId", checkInInfo.getProviderAccount().getUniqueId());
                         iBill.putExtra("encId", checkInInfo.getCheckinEncId());
                         iBill.putExtra("bookingStatus", checkInInfo.getWaitlistStatus());
+                        iBill.putExtra("location", checkInInfo.getQueue().getLocation().getPlace());
 
                         startActivity(iBill);
 
