@@ -478,6 +478,25 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             }
         });
 
+        tvContactEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                editContactDialog = new EditContactDialog(mContext, iEditContact, phoneNumber, email, countryCode);
+                editContactDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+                editContactDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                editContactDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                editContactDialog.show();
+                editContactDialog.setCancelable(true);
+                DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                int width = (int) (metrics.widthPixels * 1);
+                editContactDialog.getWindow().setGravity(Gravity.BOTTOM);
+                editContactDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+
+            }
+        });
+
         cvPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

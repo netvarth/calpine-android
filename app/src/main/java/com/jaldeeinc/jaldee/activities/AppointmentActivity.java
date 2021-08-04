@@ -1215,6 +1215,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 pjsonobj.put("id", 0);
             }
 
+
             if (etVirtualNumber.getText().toString().trim().length() > 7) {
                 if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("whatsApp")) {
                     virtualService.put("WhatsApp", countryVirtualCode + etVirtualNumber.getText());
@@ -1234,7 +1235,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                 String modeOfCalling = "";
                 if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("whatsApp")) {
-                    modeOfCalling = "Invalid WhatsApp number";
+                    if (etVirtualNumber.getText().toString().trim().equalsIgnoreCase("")){
+                        modeOfCalling = "Enter WhatsApp number";
+                    } else {
+                        modeOfCalling = "Invalid WhatsApp number";
+                    }
                 } else {
                     modeOfCalling = "Invalid Contact number";
                 }

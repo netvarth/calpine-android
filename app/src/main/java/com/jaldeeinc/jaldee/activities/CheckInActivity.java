@@ -1413,7 +1413,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                 String modeOfCalling = "";
                 if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("whatsApp")) {
-                    modeOfCalling = "Invalid WhatsApp number";
+                    if (etVirtualNumber.getText().toString().trim().equalsIgnoreCase("")){
+                        modeOfCalling = "Enter WhatsApp number";
+                    } else {
+                        modeOfCalling = "Invalid WhatsApp number";
+                    }
                 } else {
                     modeOfCalling = "Invalid Contact number";
                 }
