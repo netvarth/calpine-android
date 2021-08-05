@@ -271,6 +271,11 @@ public class ActionsDialog extends Dialog {
                             iBill.putExtra("encId", bookings.getAppointmentInfo().getAppointmentEncId());
                             iBill.putExtra("bookingStatus", bookings.getAppointmentInfo().getApptStatus());
                             iBill.putExtra("location", bookings.getAppointmentInfo().getLocation().getPlace());
+                            if(bookings.getAppointmentInfo().getProviderAccount() != null && bookings.getAppointmentInfo().getProviderAccount().getServiceSector() != null && bookings.getAppointmentInfo().getProviderAccount().getServiceSector().getDomain() != null) {
+                                if(!bookings.getAppointmentInfo().getProviderAccount().getServiceSector().getDomain().isEmpty()) {
+                                    iBill.putExtra("domain", bookings.getAppointmentInfo().getProviderAccount().getServiceSector().getDomain());
+                                }
+                            }
 
                             v.getContext().startActivity(iBill);
                         }
@@ -454,7 +459,11 @@ public class ActionsDialog extends Dialog {
                         iBill.putExtra("encId", bookings.getCheckInInfo().getCheckinEncId());
                         iBill.putExtra("bookingStatus", bookings.getCheckInInfo().getWaitlistStatus());
                         iBill.putExtra("location", bookings.getCheckInInfo().getQueue().getLocation().getPlace());
-
+                        if(bookings.getCheckInInfo().getProviderAccount() != null && bookings.getCheckInInfo().getProviderAccount().getServiceSector() != null && bookings.getCheckInInfo().getProviderAccount().getServiceSector().getDomain() != null) {
+                            if(!bookings.getCheckInInfo().getProviderAccount().getServiceSector().getDomain().isEmpty()) {
+                                iBill.putExtra("domain", bookings.getCheckInInfo().getProviderAccount().getServiceSector().getDomain());
+                            }
+                        }
                         v.getContext().startActivity(iBill);
 
                     }
@@ -608,7 +617,11 @@ public class ActionsDialog extends Dialog {
                         iBill.putExtra("encId", bookings.getAppointmentInfo().getAppointmentEncId());
                         iBill.putExtra("bookingStatus", bookings.getAppointmentInfo().getApptStatus());
                         iBill.putExtra("location", bookings.getAppointmentInfo().getLocation().getPlace());
-
+                        if(bookings.getAppointmentInfo().getProviderAccount() != null && bookings.getAppointmentInfo().getProviderAccount().getServiceSector() != null && bookings.getAppointmentInfo().getProviderAccount().getServiceSector().getDomain() != null) {
+                            if(!bookings.getAppointmentInfo().getProviderAccount().getServiceSector().getDomain().isEmpty()) {
+                                iBill.putExtra("domain", bookings.getAppointmentInfo().getProviderAccount().getServiceSector().getDomain());
+                            }
+                        }
                         v.getContext().startActivity(iBill);
                     }
                 });
@@ -660,7 +673,11 @@ public class ActionsDialog extends Dialog {
                         iBill.putExtra("encId", bookings.getCheckInInfo().getCheckinEncId());
                         iBill.putExtra("bookingStatus", bookings.getCheckInInfo().getWaitlistStatus());
                         iBill.putExtra("location", bookings.getCheckInInfo().getQueue().getLocation().getPlace());
-
+                        if(bookings.getCheckInInfo().getProviderAccount() != null && bookings.getCheckInInfo().getProviderAccount().getServiceSector() != null && bookings.getCheckInInfo().getProviderAccount().getServiceSector().getDomain() != null) {
+                            if(!bookings.getCheckInInfo().getProviderAccount().getServiceSector().getDomain().isEmpty()) {
+                                iBill.putExtra("domain", bookings.getCheckInInfo().getProviderAccount().getServiceSector().getDomain());
+                            }
+                        }
                         v.getContext().startActivity(iBill);
 
                     }

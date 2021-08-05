@@ -115,8 +115,9 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     String coupon_entered;
     String purpose;
     String location;
+    String domain;
     String payRemainingAmount = "";
-    TextView tv_billnotes, tv_notes, tvProviderName;
+    TextView tv_billnotes, tv_notes, tvProviderName, tv_providerName_hint;
     int customerId;
     String uniqueId;
     double total, totalRefund = 0.0;
@@ -192,6 +193,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         recycle_display_notes = findViewById(R.id.recycle_display_notes_demand);
         llproviderlayout = findViewById(R.id.ll_providerLayout);
         tvProviderName = findViewById(R.id.tv_providerName);
+        tv_providerName_hint = findViewById(R.id.tv_providerName_hint);
         ll_amount_Saved = findViewById(R.id.ll_amount_Saved);
         tv_amount_Saved = findViewById(R.id.tv_amount_Saved);
         txtlocn = findViewById(R.id.txtlocn);
@@ -226,6 +228,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             encId = extras.getString("encId");
             bookingStatus = extras.getString("bookingStatus");
             location = extras.getString("location");
+            domain = extras.getString("domain");
+
             fromPushNotification = extras.getBoolean(Constants.PUSH_NOTIFICATION, false);
         }
 
@@ -530,7 +534,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                                 encId = apptInfo.getAppointmentEncId();
                                 bookingStatus = apptInfo.getApptStatus();
                                 location = apptInfo.getLocation().getPlace();
-                                //location = apptInfo.getLocation();
+                                domain = apptInfo.getProviderAccount().getServiceSector().getDomain();
                                 // update UI with the data from notification
                                 UpdateUI();
                             } catch (Exception e) {
@@ -580,6 +584,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             encId = activeCheckIn.getCheckinEncId();
                             bookingStatus = activeCheckIn.getWaitlistStatus();
                             location = activeCheckIn.getQueue().getLocation().getPlace();
+                            domain = activeCheckIn.getProviderAccount().getServiceSector().getDomain();
                             // update UI with the data from notification
                             UpdateUI();
                         }
@@ -928,6 +933,11 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                                 llproviderlayout.setVisibility(View.VISIBLE);
                                 tvProviderName.setText(mBillData.getAccountProfile().getProviderBusinessName());
+                                if(domain != null && domain.equalsIgnoreCase("healthCare")) {
+                                    tv_providerName_hint.setText("Doctor :  ");
+                                } else {
+                                    tv_providerName_hint.setText("Provider :  ");
+                                }
                             } else {
 
                                 llproviderlayout.setVisibility(View.GONE);
