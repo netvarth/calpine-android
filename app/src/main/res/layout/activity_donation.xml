@@ -105,22 +105,6 @@
 
                         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                            android:id="@+id/tv_moreInfo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_marginStart="@dimen/padding2"
-                            android:layout_marginTop="@dimen/padding5"
-                            android:layout_marginEnd="@dimen/dimen_25dp"
-                            android:text="Showmore..."
-                            android:textAllCaps="true"
-                            android:textColor="@color/dark_black"
-                            android:textSize="@dimen/txtsize_10"
-                            android:visibility="gone">
-
-                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
-
                     </RelativeLayout>
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
@@ -131,48 +115,13 @@
                         android:layout_marginTop="@dimen/dimen_5dp"
                         android:layout_marginEnd="@dimen/dimen_20dp"
                         android:layout_marginBottom="@dimen/dimen_5dp"
-                        android:ellipsize="end"
                         android:gravity="left"
-                        android:maxLines="3"
                         android:text=""
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
 
                     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
-
-                    <LinearLayout
-                        android:id="@+id/ll_preinfo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/dimen_15dp"
-                        android:layout_marginEnd="@dimen/dimen_25dp"
-                        android:layout_marginBottom="@dimen/dimen_10dp"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                            android:id="@+id/tv_preInfoTitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=""
-                            android:textColor="@color/title_color"
-                            android:textSize="@dimen/txtsize_14">
-
-                        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
-
-                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                            android:id="@+id/tv_preInfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="left"
-                            android:scrollbars="vertical"
-                            android:textColor="@color/title_color"
-                            android:textSize="@dimen/txtsize_12">
-
-                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
-
-                    </LinearLayout>
 
                 </LinearLayout>
 
