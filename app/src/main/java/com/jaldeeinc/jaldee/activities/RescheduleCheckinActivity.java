@@ -1258,7 +1258,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                             b.putString("from", "Reschedule");
                             b.putBoolean("livetrack", Boolean.parseBoolean(activeCheckIn.getLivetrack()));
                             if (activeCheckIn.getYnwUuid() != null) {
-                                b.putString("confId", activeCheckIn.getYnwUuid());
+                                b.putString("uid", activeCheckIn.getYnwUuid());
                             }
                             b.putString("accountID", String.valueOf(activeCheckIn.getProviderAccount().getId()));
                             Intent checkin = new Intent(RescheduleCheckinActivity.this, CheckInConfirmation.class);
@@ -1491,7 +1491,7 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                             }
                             if (checkInInfo.getAttchment() != null && checkInInfo.getAttchment().size() > 0) {
                                 for (FileAttachment attachment : checkInInfo.getAttchment()) {
-                                    if (attachment != null ) {
+                                    if (attachment != null) {
                                         if (attachment.getThumbPath() != null && !attachment.getThumbPath().isEmpty()) {
                                             imagePathList.add(attachment.getThumbPath());
                                             s3ImgPathList.add(attachment.getThumbPath());
@@ -1499,12 +1499,11 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                                     }
                                 }
                             }
-                            if(imagePathList != null && !imagePathList.isEmpty()){
+                            if (imagePathList != null && !imagePathList.isEmpty()) {
                                 tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
                             } else {
                                 tvAttachFileSize.setText("Attach File");
                             }
-
 
 
 //                            if(checkInInfo.getProvider()!=null){
