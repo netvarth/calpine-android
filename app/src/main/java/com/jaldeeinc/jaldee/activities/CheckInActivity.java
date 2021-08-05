@@ -202,6 +202,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     @BindView(R.id.ll_virtualNumber)
     LinearLayout llVirtualNumber;
 
+    @BindView(R.id.lImage)
+    ImageView lImage;
+
     @BindView(R.id.et_virtualNumber)
     EditText etVirtualNumber;
 
@@ -443,6 +446,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp") || checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Phone")) {
 
                         llVirtualNumber.setVisibility(View.VISIBLE);
+                        lImage.setVisibility(View.VISIBLE);
 
                         if (checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
                             tvVsHint.setText("WhatsApp number");
@@ -453,6 +457,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                     } else {
                         llVirtualNumber.setVisibility(View.GONE);
+                        lImage.setVisibility(View.GONE);
                     }
 
                     ivteleService.setVisibility(View.VISIBLE);
@@ -486,10 +491,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 } else {
                     ivteleService.setVisibility(View.GONE);
                     llVirtualNumber.setVisibility(View.GONE);
+                    lImage.setVisibility(View.GONE);
                 }
             } else {
                 ivteleService.setVisibility(View.GONE);
                 llVirtualNumber.setVisibility(View.GONE);
+                lImage.setVisibility(View.GONE);
             }
 
             if (checkInInfo.isPrePayment()) {

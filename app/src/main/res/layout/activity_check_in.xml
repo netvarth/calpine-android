@@ -64,7 +64,7 @@
         <LinearLayout
             android:id="@+id/main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <soup.neumorphism.NeumorphCardView
@@ -83,7 +83,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
@@ -296,18 +296,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:layout_below="@id/relative"
-                        android:layout_marginBottom="@dimen/dimen_50dp"
-                        android:src="@drawable/dash_gap">
-
-                    </ImageView>
+                        android:src="@drawable/dash_gap"
+                        android:visibility="gone"/>
 
                     <LinearLayout
                         android:id="@+id/ll_virtualNumber"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/padding40"
+                        android:layout_below="@+id/lImage"
                         android:layout_alignParentBottom="true"
                         android:layout_marginStart="@dimen/dimen_10dp"
-                        android:layout_marginTop="@dimen/padding5"
                         android:layout_marginBottom="@dimen/padding5"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
