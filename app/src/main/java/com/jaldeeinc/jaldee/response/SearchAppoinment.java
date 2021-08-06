@@ -7,36 +7,36 @@ import java.util.ArrayList;
 
 public class SearchAppoinment implements Serializable {
 
-    int id;
+    ArrayList<SearchService> servicegallery;
+    ArrayList<SearchAppoinment> virtualCallingModes;
     String name;
     String description;
-    int serviceDuration;
-    String notificationType;
     String notification;
     String isPrePayment;
     String totalAmount;
-    String bType;
     String status;
     String taxable;
-    int department;
     String serviceType;
-    int multiples;
     String livetrack;
-    ArrayList<SearchService> servicegallery;
     String virtualServiceType;
     String minPrePaymentAmount;
-    ArrayList<SearchAppoinment> virtualCallingModes;
     String instructions;
     String callingMode;
     String value;
-    boolean preInfoEnabled;
     String preInfoTitle;
     String preInfoText;
-    boolean postInfoEnabled;
     String postInfoTitle;
     String postInfoText;
     String consumerNoteTitle;
+    String paymentDescription;
     boolean consumerNoteMandatory;
+    boolean postInfoEnabled;
+    boolean preInfoEnabled;
+    int serviceDuration;
+    int id;
+    int multiples;
+    int department;
+
     @SerializedName("provider")
     private SearchAppoinment provider;
 
@@ -75,14 +75,6 @@ public class SearchAppoinment implements Serializable {
         this.serviceDuration = serviceDuration;
     }
 
-    public String getNotificationType() {
-        return notificationType;
-    }
-
-    public void setNotificationType(String notificationType) {
-        this.notificationType = notificationType;
-    }
-
     public String getNotification() {
         return notification;
     }
@@ -105,14 +97,6 @@ public class SearchAppoinment implements Serializable {
 
     public void setTotalAmount(String totalAmount) {
         this.totalAmount = totalAmount;
-    }
-
-    public String getbType() {
-        return bType;
-    }
-
-    public void setbType(String bType) {
-        this.bType = bType;
     }
 
     public String getStatus() {
@@ -162,27 +146,25 @@ public class SearchAppoinment implements Serializable {
     public void setLivetrack(String livetrack) {
         this.livetrack = livetrack;
     }
+
     public String getMinPrePaymentAmount() {
         return minPrePaymentAmount;
     }
 
-    public void setMinPrePaymentAmount(String minPrePaymentAmount) {
-        this.minPrePaymentAmount = minPrePaymentAmount;
-    }
+    public void setMinPrePaymentAmount(String minPrePaymentAmount) { this.minPrePaymentAmount = minPrePaymentAmount; }
+
     public String getVirtualServiceType() {
         return virtualServiceType;
     }
 
-    public void setVirtualServiceType(String virtualServiceType) {
-        this.virtualServiceType = virtualServiceType;
-    }
+    public void setVirtualServiceType(String virtualServiceType) { this.virtualServiceType = virtualServiceType; }
+
     public ArrayList<SearchAppoinment> getVirtualCallingModes() {
         return virtualCallingModes;
     }
 
-    public void setVirtualCallingModes(ArrayList<SearchAppoinment> virtualCallingModes) {
-        this.virtualCallingModes = virtualCallingModes;
-    }
+    public void setVirtualCallingModes(ArrayList<SearchAppoinment> virtualCallingModes) { this.virtualCallingModes = virtualCallingModes; }
+
     public String getInstructions() {
         return instructions;
     }
@@ -190,6 +172,7 @@ public class SearchAppoinment implements Serializable {
     public void setInstructions(String instructions) {
         this.instructions = instructions;
     }
+
     public String getCallingMode() {
         return callingMode;
     }
@@ -197,6 +180,7 @@ public class SearchAppoinment implements Serializable {
     public void setCallingMode(String callingMode) {
         this.callingMode = callingMode;
     }
+
     public String getValue() {
         return value;
     }
@@ -204,10 +188,12 @@ public class SearchAppoinment implements Serializable {
     public void setValue(String value) {
         this.value = value;
     }
+
     @Override
     public String toString() {
         return this.name; // Value to be displayed in the Spinner
     }
+
     public SearchAppoinment getProvider() {
         return provider;
     }
@@ -244,55 +230,31 @@ public class SearchAppoinment implements Serializable {
         return postInfoEnabled;
     }
 
-    public void setPostInfoEnabled(boolean postInfoEnabled) {
-        this.postInfoEnabled = postInfoEnabled;
-    }
-
     public String getPostInfoTitle() {
         return postInfoTitle;
-    }
-
-    public void setPostInfoTitle(String postInfoTitle) {
-        this.postInfoTitle = postInfoTitle;
     }
 
     public String getPostInfoText() {
         return postInfoText;
     }
 
-    public void setPostInfoText(String postInfoText) {
-        this.postInfoText = postInfoText;
-    }
-
     public String getConsumerNoteTitle() {
         return consumerNoteTitle;
     }
 
-    public void setConsumerNoteTitle(String consumerNoteTitle) {
-        this.consumerNoteTitle = consumerNoteTitle;
-    }
+    public void setConsumerNoteTitle(String consumerNoteTitle) { this.consumerNoteTitle = consumerNoteTitle; }
 
-    public AppointServiceAvailability getAppointServiceAvailability() {
-        return appointServiceAvailability;
-    }
-
-    public void setAppointServiceAvailability(AppointServiceAvailability appointServiceAvailability) {
-        this.appointServiceAvailability = appointServiceAvailability;
-    }
+    public AppointServiceAvailability getAppointServiceAvailability() { return appointServiceAvailability; }
 
     public ArrayList<SearchService> getServicegallery() {
         return servicegallery;
     }
 
-    public void setServicegallery(ArrayList<SearchService> servicegallery) {
-        this.servicegallery = servicegallery;
-    }
+    public void setServicegallery(ArrayList<SearchService> servicegallery) { this.servicegallery = servicegallery; }
 
     public boolean isConsumerNoteMandatory() {
         return consumerNoteMandatory;
     }
 
-    public void setConsumerNoteMandatory(boolean consumerNoteMandatory) {
-        this.consumerNoteMandatory = consumerNoteMandatory;
-    }
+    public String getPaymentDescription() { return paymentDescription; }
 }

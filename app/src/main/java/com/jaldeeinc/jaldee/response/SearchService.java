@@ -11,37 +11,38 @@ import java.util.ArrayList;
 
 public class SearchService implements Serializable {
 
-
+    ArrayList<SearchService> servicegallery;
+    ArrayList<SearchService> mAllService;
+    ArrayList<SearchService> virtualCallingModes;
     String serviceDuration;
-    String notificationType;
     String notification;
-    boolean isPrePayment;
     String minPrePaymentAmount;
     String totalAmount;
-    String bType;
     String status;
-    ArrayList<SearchService> servicegallery;
     String name;
-    int locid;
     String description;
-    ArrayList<SearchService> mAllService;
     String url;
-    String thumbUrl;
-    int department;
     String serviceType;
     String virtualServiceType;
-    ArrayList<SearchService> virtualCallingModes;
     String instructions;
     String callingMode;
     String value;
-    boolean preInfoEnabled;
     String preInfoTitle;
     String preInfoText;
-    boolean postInfoEnabled;
     String postInfoTitle;
     String postInfoText;
     String consumerNoteTitle;
+    String paymentDescription;
+    boolean preInfoEnabled;
+    boolean postInfoEnabled;
     boolean consumerNoteMandatory;
+    boolean livetrack;
+    boolean taxable;
+    boolean isPrePayment;
+    int id;
+    int department;
+    int locid;
+
     @SerializedName("provider")
     private SearchService provider;
 
@@ -56,8 +57,6 @@ public class SearchService implements Serializable {
         this.livetrack = livetrack;
     }
 
-    boolean livetrack;
-
     public int getDepartment() {
         return department;
     }
@@ -70,12 +69,7 @@ public class SearchService implements Serializable {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    int id;
-
+    public void setId(int id) { this.id = id; }
 
     public String getUrl() {
         return url;
@@ -83,14 +77,6 @@ public class SearchService implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public String getThumbUrl() {
-        return thumbUrl;
-    }
-
-    public void setThumbUrl(String thumbUrl) {
-        this.thumbUrl = thumbUrl;
     }
 
     public String getName() {
@@ -121,17 +107,7 @@ public class SearchService implements Serializable {
         return serviceDuration;
     }
 
-    public void setServiceDuration(String serviceDuration) {
-        this.serviceDuration = serviceDuration;
-    }
-
-    public String getNotificationType() {
-        return notificationType;
-    }
-
-    public void setNotificationType(String notificationType) {
-        this.notificationType = notificationType;
-    }
+    public void setServiceDuration(String serviceDuration) { this.serviceDuration = serviceDuration; }
 
     public String getNotification() {
         return notification;
@@ -153,9 +129,7 @@ public class SearchService implements Serializable {
         return minPrePaymentAmount;
     }
 
-    public void setMinPrePaymentAmount(String minPrePaymentAmount) {
-        this.minPrePaymentAmount = minPrePaymentAmount;
-    }
+    public void setMinPrePaymentAmount(String minPrePaymentAmount) { this.minPrePaymentAmount = minPrePaymentAmount; }
 
     public String getTotalAmount() {
         return totalAmount;
@@ -163,14 +137,6 @@ public class SearchService implements Serializable {
 
     public void setTotalAmount(String totalAmount) {
         this.totalAmount = totalAmount;
-    }
-
-    public String getbType() {
-        return bType;
-    }
-
-    public void setbType(String bType) {
-        this.bType = bType;
     }
 
     public String getStatus() {
@@ -185,17 +151,14 @@ public class SearchService implements Serializable {
         return servicegallery;
     }
 
-    public void setServicegallery(ArrayList<SearchService> servicegallery) {
-        this.servicegallery = servicegallery;
-    }
+    public void setServicegallery(ArrayList<SearchService> servicegallery) { this.servicegallery = servicegallery; }
 
     public ArrayList<SearchService> getmAllService() {
         return mAllService;
     }
 
-    public void setmAllService(ArrayList<SearchService> mAllService) {
-        this.mAllService = mAllService;
-    }
+    public void setmAllService(ArrayList<SearchService> mAllService) { this.mAllService = mAllService; }
+
     @Override
     public String toString() {
         return this.name; // Value to be displayed in the Spinner
@@ -205,8 +168,6 @@ public class SearchService implements Serializable {
         return taxable;
     }
 
-    boolean taxable;
-
     public String getServiceType() {
         return serviceType;
     }
@@ -215,21 +176,17 @@ public class SearchService implements Serializable {
         this.serviceType = serviceType;
     }
 
-
     public String getVirtualServiceType() {
         return virtualServiceType;
     }
 
-    public void setVirtualServiceType(String virtualServiceType) {
-        this.virtualServiceType = virtualServiceType;
-    }
+    public void setVirtualServiceType(String virtualServiceType) { this.virtualServiceType = virtualServiceType; }
+
     public ArrayList<SearchService> getVirtualCallingModes() {
         return virtualCallingModes;
     }
 
-    public void setVirtualCallingModes(ArrayList<SearchService> virtualCallingModes) {
-        this.virtualCallingModes = virtualCallingModes;
-    }
+    public void setVirtualCallingModes(ArrayList<SearchService> virtualCallingModes) { this.virtualCallingModes = virtualCallingModes; }
 
     public String getInstructions() {
         return instructions;
@@ -238,6 +195,7 @@ public class SearchService implements Serializable {
     public void setInstructions(String instructions) {
         this.instructions = instructions;
     }
+
     public String getCallingMode() {
         return callingMode;
     }
@@ -253,6 +211,7 @@ public class SearchService implements Serializable {
     public void setValue(String value) {
         this.value = value;
     }
+
     public SearchService getProvider() {
         return provider;
     }
@@ -289,51 +248,29 @@ public class SearchService implements Serializable {
         return postInfoEnabled;
     }
 
-    public void setPostInfoEnabled(boolean postInfoEnabled) {
-        this.postInfoEnabled = postInfoEnabled;
-    }
-
     public String getPostInfoTitle() {
         return postInfoTitle;
-    }
-
-    public void setPostInfoTitle(String postInfoTitle) {
-        this.postInfoTitle = postInfoTitle;
     }
 
     public String getPostInfoText() {
         return postInfoText;
     }
 
-    public void setPostInfoText(String postInfoText) {
-        this.postInfoText = postInfoText;
-    }
-
     public String getConsumerNoteTitle() {
         return consumerNoteTitle;
     }
 
-    public void setConsumerNoteTitle(String consumerNoteTitle) {
-        this.consumerNoteTitle = consumerNoteTitle;
-    }
+    public void setConsumerNoteTitle(String consumerNoteTitle) { this.consumerNoteTitle = consumerNoteTitle; }
 
-    public CheckInServiceAvailability getCheckInServiceAvailability() {
-        return checkInServiceAvailability;
-    }
-
-    public void setCheckInServiceAvailability(CheckInServiceAvailability checkInServiceAvailability) {
-        this.checkInServiceAvailability = checkInServiceAvailability;
-    }
+    public CheckInServiceAvailability getCheckInServiceAvailability() { return checkInServiceAvailability; }
 
     public boolean isConsumerNoteMandatory() {
         return consumerNoteMandatory;
     }
 
-    public void setConsumerNoteMandatory(boolean consumerNoteMandatory) {
-        this.consumerNoteMandatory = consumerNoteMandatory;
-    }
-
     public void setTaxable(boolean taxable) {
         this.taxable = taxable;
     }
+
+    public String getPaymentDescription() { return paymentDescription; }
 }
