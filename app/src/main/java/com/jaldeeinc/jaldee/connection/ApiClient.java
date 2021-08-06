@@ -16,9 +16,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by sharmila on 2/7/18.
- */
 
 public class ApiClient {
     //public static final String BASE_URL = "https://www.jaldee.com/v1/rest/";
