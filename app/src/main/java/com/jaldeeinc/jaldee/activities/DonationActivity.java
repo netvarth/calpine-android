@@ -1,5 +1,6 @@
 package com.jaldeeinc.jaldee.activities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -12,6 +13,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -20,9 +22,14 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -31,6 +38,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.Interface.IConsumerNameSubmit;
@@ -48,6 +56,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
+import com.jaldeeinc.jaldee.custom.ResizableCustomView;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
@@ -135,15 +144,6 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     @BindView(R.id.tv_note)
     EditText et_note;
 
-    @BindView(R.id.ll_preinfo)
-    LinearLayout llPreInfo;
-
-    @BindView(R.id.tv_preInfoTitle)
-    CustomTextViewSemiBold tvPreInfoTitle;
-
-    @BindView(R.id.tv_preInfo)
-    CustomTextViewMedium tvPreInfo;
-
     @BindView(R.id.tv_submit)
     CustomTextViewBold tvSubmit;
 
@@ -158,8 +158,6 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
 
     @BindView(R.id.tv_donationName)
     CustomTextViewMedium tvDonationName;
-    @BindView(R.id.tv_moreInfo)
-    CustomTextViewMedium tvMoreInfo;
 
     @BindView(R.id.ll_donation)
     LinearLayout llDonation;
@@ -252,17 +250,9 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                     s3 = Html.fromHtml("<br><font color='#484848'>" + serviceInfo.getPreInfoText() + "</font>");
                     builder.append(s3);
                 }
+
                 tvDescription.setText(builder);
-                tvDescription.post(new Runnable() {                    //for find the description is elipsized or not
-                    @Override
-                    public void run() {
-                        int lineCount = tvDescription.getLineCount();
-                        Layout l = tvDescription.getLayout();
-                        if (l.getEllipsisCount(lineCount - 1) > 0) {
-                            tvMoreInfo.setVisibility(View.VISIBLE);      //if elipsized tvMoreinfo set to "visible" otherwise set to "gone"
-                        }
-                    }
-                });
+                addReadMore(builder.toString(), tvDescription);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -484,20 +474,6 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 tvErrorAmount.setVisibility(View.GONE);
                 llAmountHint.setVisibility(View.VISIBLE);
                 tvAmountHint.setTextColor(Color.parseColor("#484848"));
-            }
-        });
-
-        tvMoreInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (tvMoreInfo.getText().toString().equalsIgnoreCase("Showmore...")) {
-                    tvDescription.setMaxLines(Integer.MAX_VALUE);//your TextView
-                    tvMoreInfo.setText("Showless");
-                } else {
-                    tvDescription.setMaxLines(3);//your TextView
-                    llPreInfo.setVisibility(View.GONE);
-                    tvMoreInfo.setText("Showmore...");
-                }
             }
         });
         ApiGetProfileDetail();
@@ -896,5 +872,50 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         this.mFirstName = firstName;
         this.mLastName = lastName;
         tvConsumerName.setText(mFirstName + " " + mLastName);
+    }
+    private void addReadMore(final String text, final TextView textView) {
+        SpannableString ss = new SpannableString(text.substring(0, 260) + "... read more");
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View view) {
+                addReadLess(text, textView);
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    ds.setColor(getResources().getColor(R.color.design_default_color_primary_dark, getTheme()));
+                } else {
+                    ds.setColor(getResources().getColor(R.color.design_default_color_primary_dark));
+                }
+            }
+        };
+        ss.setSpan(clickableSpan, ss.length() - 10, ss.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textView.setText(ss);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    private void addReadLess(final String text, final TextView textView) {
+        SpannableString ss = new SpannableString(text + " read less");
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View view) {
+                addReadMore(text, textView);
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    ds.setColor(getResources().getColor(R.color.design_default_color_primary_dark, getTheme()));
+                } else {
+                    ds.setColor(getResources().getColor(R.color.design_default_color_primary_dark));
+                }
+            }
+        };
+        ss.setSpan(clickableSpan, ss.length() - 10, ss.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textView.setText(ss);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }

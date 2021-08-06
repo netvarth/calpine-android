@@ -403,8 +403,6 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 }
             }
         });
-        //bt_save.setEnabled(false);
-        //bt_save.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
         bt_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -478,54 +476,6 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 } else {
                     scrollView.smoothScrollTo(0, scrollView.getTop());
                 }
-                /*email = et_email.getText().toString();
-                phone = tv_phoneNumber.getText().toString();
-                if (!phone.equalsIgnoreCase("")) {
-                    if (phone.trim().length() > 9) {
-                        if (prepayment != null) {
-                            appointment();
-                        } else {
-                            checkin();
-                            if (multiple) {
-                                familyList.clear();
-
-                                data = mFamilyAdpater.onItemSelected();
-
-                                Config.logV("Family------------" + data.size());
-                                for (int i = 0; i < data.size(); i++) {
-
-                                    if (data.get(i).isCheck()) {
-                                        FamilyArrayModel family = new FamilyArrayModel();
-                                        family.setId(data.get(i).getId());
-                                        family.setFirstName(data.get(i).getFirstName());
-                                        family.setLastName(data.get(i).getLastName());
-                                        family.setCheck(true);
-                                        familyList.add(family);
-                                    }
-
-                                    if (i == data.size() - 1) {
-                                        Config.logV("family refresh-------@@@@---------" + familyList.size());
-                                        if (familyList.size() > 0) {
-                                            iFamilyMemberDetails.refreshMultipleMEmList(familyList);
-                                            dismiss();
-                                        }
-                                    }
-
-                                }
-                            } else {
-                                CheckInActivity.refreshName(s_changename, memberid);
-                                dismiss();
-                            }
-                        }
-                    } else {
-                        tv_errorphone.setText("Enter valid mobile number");
-                        tv_errorphone.setVisibility(View.VISIBLE);
-                    }
-
-                } else {
-                    tv_errorphone.setText("This field is required");
-                    tv_errorphone.setVisibility(View.VISIBLE);
-                }*/
             }
         });
 
@@ -536,40 +486,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 iFamilyMemberDetails.closeActivity();
             }
         });
-
-       /* ivAddMember.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                ll_changeMember.setVisibility(View.GONE);
-                ll_changeMember.startAnimation(slideRight);
-                ll_addmember.setVisibility(View.VISIBLE);
-                ll_addmember.startAnimation(slideUp);
-
-            }
-        });*/
-
-        /*btn_language_ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!et_firstname.getText().toString().isEmpty() && !et_lastName.getText().toString().isEmpty()) {
-                    ApiAddFamilyMember();
-                } else {
-                    if (et_firstname.getText().toString().isEmpty()) {
-                        tv_errorfirstname.setText("This field is required");
-                        tv_errorfirstname.setVisibility(View.VISIBLE);
-                    } else {
-                        if (et_lastName.getText().toString().isEmpty()) {
-                            tv_errorlastname.setText("This field is required");
-                            tv_errorlastname.setVisibility(View.VISIBLE);
-                        }
-                    }
-                }
-            }
-        });*/
-
         ApiListFamilyMember();
-
     }
 
     boolean isEmailValid(CharSequence email) {
@@ -1044,7 +961,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                     if (response.code() == 200) {
                         Integer newMemId = response.body();
                         Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
-                        iFamilyMemberDetails.sendFamilyMemberDetails(newMemId, familylist.getFirstName(), familylist.getLastName(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getSelectedCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode, jsonObj1.getString("gender"));
+                        iFamilyMemberDetails.sendFamilyMemberDetails(newMemId, et_firstname.getText().toString(), et_lastName.getText().toString(), phone, et_email.getText().toString(), countryCode, WhtsappCCodePicker.getSelectedCountryCodeWithPlus(), edtWhtsAppNumber.getText().toString(), TelegramCCodePicker.getSelectedCountryCodeWithPlus(), edtTelegram.getText().toString(), et_age.getText().toString(), jsonObj4, selectedPincode, jsonObj1.getString("gender"));
 
                         //iFamilyMemberDetails.sendFamilyMemberDetails(memId, et_firstname.getText().toString(), et_lastName.getText().toString(), phone, et_email.getText().toString(), countryCode);
                         dismiss();

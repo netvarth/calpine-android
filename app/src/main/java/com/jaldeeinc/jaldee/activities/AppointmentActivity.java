@@ -208,6 +208,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     @BindView(R.id.ll_virtualNumber)
     LinearLayout llVirtualNumber;
 
+    @BindView(R.id.lImage)
+    ImageView lImage;
+
     @BindView(R.id.et_virtualNumber)
     EditText etVirtualNumber;
 
@@ -445,6 +448,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     if (serviceInfo.getCallingMode().equalsIgnoreCase("WhatsApp") || serviceInfo.getCallingMode().equalsIgnoreCase("Phone")) {
 
                         llVirtualNumber.setVisibility(View.VISIBLE);
+                        lImage.setVisibility(View.VISIBLE);
 
                         if (serviceInfo.getCallingMode().equalsIgnoreCase("WhatsApp")) {
                             tvVsHint.setText("WhatsApp number");
@@ -454,6 +458,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         }
                     } else {
                         llVirtualNumber.setVisibility(View.GONE);
+                        lImage.setVisibility(View.GONE);
                     }
 
                     ivteleService.setVisibility(View.VISIBLE);
@@ -482,10 +487,12 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 } else {
                     ivteleService.setVisibility(View.GONE);
                     llVirtualNumber.setVisibility(View.GONE);
+                    lImage.setVisibility(View.GONE);
                 }
             } else {
                 ivteleService.setVisibility(View.GONE);
                 llVirtualNumber.setVisibility(View.GONE);
+                lImage.setVisibility(View.GONE);
             }
 
             if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {

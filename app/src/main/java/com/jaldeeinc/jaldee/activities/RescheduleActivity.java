@@ -599,15 +599,15 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                             }
                             if (appointmentInfo.getAttchment() != null && appointmentInfo.getAttchment().size() > 0) {
                                 for (FileAttachment attachment : appointmentInfo.getAttchment()) {
-                                    if (attachment != null ) {
-                                        if(attachment.getThumbPath() != null && !attachment.getThumbPath().isEmpty()) {
+                                    if (attachment != null) {
+                                        if (attachment.getThumbPath() != null && !attachment.getThumbPath().isEmpty()) {
                                             imagePathList.add(attachment.getThumbPath());
                                             s3ImgPathList.add(attachment.getThumbPath());
                                         }
                                     }
                                 }
                             }
-                            if(imagePathList != null && !imagePathList.isEmpty()){
+                            if (imagePathList != null && !imagePathList.isEmpty()) {
                                 tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
                             } else {
                                 tvAttachFileSize.setText("Attach File");
@@ -1631,8 +1631,10 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                             b.putString("terminology", mSearchTerminology.getProvider());
                             b.putString("from", "Reschedule");
                             b.putString("livetrack", activeAppointment.getLivetrack());
-                            b.putString("confId", activeAppointment.getUid());
                             b.putString("accountID", String.valueOf(activeAppointment.getProviderAccount().getId()));
+                            if (activeAppointment.getUid() != null) {
+                                b.putString("uid", String.valueOf(activeAppointment.getUid()));
+                            }
                             Intent checkin = new Intent(RescheduleActivity.this, AppointmentConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);

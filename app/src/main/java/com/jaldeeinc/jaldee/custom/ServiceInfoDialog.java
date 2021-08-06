@@ -14,8 +14,6 @@ import androidx.appcompat.widget.Toolbar;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
 import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
-import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
@@ -24,25 +22,16 @@ import java.util.ArrayList;
 public class ServiceInfoDialog extends Dialog {
 
     private SearchService searchService;
-    Context context;
-    String name, duration, price, desc = "", multiples;
-    Toolbar toolbar;
-    ArrayList<SearchService> mGallery;
-    ArrayList<SearchDonation> dGallery;
-    ArrayList<SearchAppointmentDepartmentServices> aGallery;
-    ImageView i_servicegallery, ivClose;
-    String title, from;
-    CustomTextViewBold tv_toolbartitle, tv_price, tv_duration,txtpreVal;
-    CustomTextViewSemiBold tv_service, tv_maxvalue, tv_minvalue, tv_multiples;
-    CustomTextViewMedium tv_descVal, tvisTax;
-    ImageView i_backpress;
-    boolean isTaxable, isPrepayment;
-    LinearLayout Lprepayment, LserviceLayout, LminAmountlayout, LmaxAmountlayout, Lmultilayout, Ldurationlayout;
-    String MinPrePaymentAmount, maxDonationAmount, minDonationAmount;
-    SearchAppointmentDepartmentServices appointmentServices;
-    String Name;
     private SearchViewDetail providerInfo;
     private CustomTextViewMedium tvCostHint,tvPrepaymentHint,tvDurationHint;
+    Context context;
+    String multiples, maxDonationAmount, minDonationAmount;
+    Toolbar toolbar;
+    ImageView i_servicegallery, ivClose, i_backpress;
+    CustomTextViewBold tv_toolbartitle, tv_price, tv_duration,txtpreVal;
+    CustomTextViewSemiBold tv_service, tv_maxvalue, tv_minvalue, tv_multiples;
+    CustomTextViewMedium tv_descVal, tvisTax, txt_payment_desc;
+    LinearLayout Lprepayment, LserviceLayout, LminAmountlayout, LmaxAmountlayout, Lmultilayout, Ldurationlayout;
 
     public ServiceInfoDialog(@NonNull Context context, SearchService searchService, SearchViewDetail providerInfo) {
         super(context);
@@ -61,13 +50,11 @@ public class ServiceInfoDialog extends Dialog {
         ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 dismiss();
             }
         });
 
         try {
-
             if (searchService.getName() != null) {
                 tv_toolbartitle.setVisibility(View.VISIBLE);
                 String name = searchService.getName();
@@ -101,20 +88,15 @@ public class ServiceInfoDialog extends Dialog {
             } else {
                 tv_toolbartitle.setVisibility(View.GONE);
             }
-
             if (providerInfo != null &&  providerInfo.getServiceSector() != null){
-
                 if (providerInfo.getServiceSector().getDisplayName().equalsIgnoreCase("Healthcare")){
-
                     tvCostHint.setText("Consultation Fee");
                     tvDurationHint.setText("Consultation Duration");
                 }  else {
-
                     tvCostHint.setText("Service Fee");
                     tvDurationHint.setText("Service Duration");
                 }
             }
-
             if (searchService.getTotalAmount() != null) {
                 if (!searchService.getTotalAmount().equals("0.0")) {
                     tv_price.setVisibility(View.VISIBLE);
@@ -144,9 +126,7 @@ public class ServiceInfoDialog extends Dialog {
             } else {
                 tv_duration.setVisibility(View.GONE);
                 Ldurationlayout.setVisibility(View.GONE);
-
             }
-
             if (minDonationAmount != null) {
                 tv_minvalue.setVisibility(View.VISIBLE);
                 tv_minvalue.setText("₹ " + minDonationAmount);
@@ -155,7 +135,6 @@ public class ServiceInfoDialog extends Dialog {
                 tv_minvalue.setVisibility(View.GONE);
                 LminAmountlayout.setVisibility(View.GONE);
             }
-
             if (maxDonationAmount != null) {
                 tv_maxvalue.setVisibility(View.VISIBLE);
                 tv_maxvalue.setText("₹ " + maxDonationAmount);
@@ -164,7 +143,6 @@ public class ServiceInfoDialog extends Dialog {
                 tv_maxvalue.setVisibility(View.GONE);
                 LmaxAmountlayout.setVisibility(View.GONE);
             }
-
             if (multiples != null) {
                 tv_multiples.setVisibility(View.VISIBLE);
                 tv_multiples.setText(multiples);
@@ -173,7 +151,6 @@ public class ServiceInfoDialog extends Dialog {
                 tv_multiples.setVisibility(View.GONE);
                 Lmultilayout.setVisibility(View.GONE);
             }
-
             if (searchService.isPrePayment()) {
                 if (searchService.getMinPrePaymentAmount() != null) {
                     Lprepayment.setVisibility(View.VISIBLE);
@@ -182,26 +159,25 @@ public class ServiceInfoDialog extends Dialog {
             } else {
                 Lprepayment.setVisibility(View.GONE);
             }
-
             if (searchService.getDescription() != null && searchService.getDescription().length() > 0 && !searchService.getDescription().equalsIgnoreCase("")) {
                 tv_descVal.setVisibility(View.VISIBLE);
-//            Typeface tyfacedesc = Typeface.createFromAsset(getAssets(),
-//                    "fonts/Montserrat_Bold.otf");
-//            tv_descVal.setTypeface(tyfacedesc);
                 tv_descVal.setText(searchService.getDescription());
             } else {
                 tv_descVal.setVisibility(View.GONE);
             }
-
+            if (searchService.getPaymentDescription() != null && searchService.getPaymentDescription().length() > 0 && !searchService.getPaymentDescription().equalsIgnoreCase("")) {
+                txt_payment_desc.setVisibility(View.VISIBLE);
+                txt_payment_desc.setText(searchService.getPaymentDescription());
+            } else {
+                txt_payment_desc.setVisibility(View.GONE);
+            }
             if (txtpreVal.getText().toString().equalsIgnoreCase(tv_price.getText().toString())){
-
                 tvPrepaymentHint.setText("Full fees should be paid in advance");
                 txtpreVal.setVisibility(View.GONE);
             } else {
                 tvPrepaymentHint.setText("Advance payment");
                 txtpreVal.setVisibility(View.VISIBLE);
             }
-
             if (searchService.getServicegallery() != null) {
                 if (searchService.getServicegallery().size() > 0) {
                     i_servicegallery.setVisibility(View.VISIBLE);
@@ -218,7 +194,6 @@ public class ServiceInfoDialog extends Dialog {
                 i_servicegallery.setVisibility(View.GONE);
             }
 
-
             i_servicegallery.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -228,11 +203,8 @@ public class ServiceInfoDialog extends Dialog {
                             for (int i = 0; i < searchService.getServicegallery().size(); i++) {
                                 mGalleryList.add(searchService.getServicegallery().get(i).getUrl());
                             }
-
-
                             boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
                             if (mValue) {
-
                                 Intent intent = new Intent(v.getContext(), SwipeGalleryImage.class);
                                 context.startActivity(intent);
                             }
@@ -245,9 +217,7 @@ public class ServiceInfoDialog extends Dialog {
         }
     }
 
-
     private void initializations() {
-
         tv_toolbartitle = findViewById(R.id.txt_toolbartitle);
         tv_duration = findViewById(R.id.txtduration);
         tv_price = findViewById(R.id.txtprice);
@@ -271,5 +241,6 @@ public class ServiceInfoDialog extends Dialog {
         tvCostHint = findViewById(R.id.tv_costHint);
         tvPrepaymentHint = findViewById(R.id.tv_prepaymentHint);
         tvDurationHint = findViewById(R.id.tv_durationHint);
+        txt_payment_desc = findViewById(R.id.txt_payment_desc);
     }
 }

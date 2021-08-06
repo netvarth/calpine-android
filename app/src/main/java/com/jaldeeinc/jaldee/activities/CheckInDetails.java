@@ -939,6 +939,12 @@ public class CheckInDetails extends AppCompatActivity {
                         iBill.putExtra("encId", checkInInfo.getCheckinEncId());
                         iBill.putExtra("bookingStatus", checkInInfo.getWaitlistStatus());
                         iBill.putExtra("location", checkInInfo.getQueue().getLocation().getPlace());
+                        if(checkInInfo.getProviderAccount() != null && checkInInfo.getProviderAccount().getServiceSector() != null && checkInInfo.getProviderAccount().getServiceSector().getDomain() != null) {
+                            if(!checkInInfo.getProviderAccount().getServiceSector().getDomain().isEmpty()) {
+                                iBill.putExtra("domain", checkInInfo.getProviderAccount().getServiceSector().getDomain());
+                            }
+                        }
+
 
                         startActivity(iBill);
 

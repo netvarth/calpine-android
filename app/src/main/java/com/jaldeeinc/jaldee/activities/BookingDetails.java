@@ -876,6 +876,11 @@ public class BookingDetails extends AppCompatActivity {
                         iBill.putExtra("encId", appointmentInfo.getAppointmentEncId());
                         iBill.putExtra("bookingStatus", appointmentInfo.getApptStatus());
                         iBill.putExtra("location", appointmentInfo.getLocation().getPlace());
+                        if(appointmentInfo.getProviderAccount() != null && appointmentInfo.getProviderAccount().getServiceSector() != null && appointmentInfo.getProviderAccount().getServiceSector().getDomain() != null) {
+                            if(!appointmentInfo.getProviderAccount().getServiceSector().getDomain().isEmpty()) {
+                                iBill.putExtra("domain", appointmentInfo.getProviderAccount().getServiceSector().getDomain());
+                            }
+                        }
                         startActivity(iBill);
 
                     }
