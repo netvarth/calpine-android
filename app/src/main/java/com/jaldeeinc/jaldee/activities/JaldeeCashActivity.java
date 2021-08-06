@@ -17,21 +17,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
-import com.jaldeeinc.jaldee.adapter.JCashListAdapter;
-import com.jaldeeinc.jaldee.adapter.JCashSpentLogAdapter;
+import com.jaldeeinc.jaldee.adapter.JCashAvailableListAdapter;
+import com.jaldeeinc.jaldee.adapter.JCashExpiredListAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.JCashSpentLogDialog;
-import com.jaldeeinc.jaldee.response.ActiveOrders;
-import com.jaldeeinc.jaldee.response.JCashAvailable;
-import com.jaldeeinc.jaldee.response.JCashInfo;
+import com.jaldeeinc.jaldee.response.JCash;
+import com.jaldeeinc.jaldee.response.JCashExpired;
 import com.jaldeeinc.jaldee.response.JCashSpentDetails;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -41,33 +38,42 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class JaldeeCashActivity extends AppCompatActivity {
+
     @BindView(R.id.cv_back)
     CardView cvBack;
+
     @BindView(R.id.tv_jcash)
     CustomTextViewBold tvJcash;
+
     @BindView(R.id.tv_totCashAwarded)
     CustomTextViewSemiBold tvTotCashAwarded;
+
     @BindView(R.id.tv_totCashSpent)
     CustomTextViewSemiBold tvTotCashSpent;
+
     @BindView(R.id.ll_totCashSpentLog)
     LinearLayout ll_totCashSpentLog;
+
     @BindView(R.id.list)
     RecyclerView list;
+
     @BindView(R.id.ll_jCash_expired_list_hint)
-    LinearLayout llJCashExpiredListHint;
+    LinearLayout ll_jCash_expired_list_hint;
+
     @BindView(R.id.iv_expired_jCash_list_hint)
-    ImageView ivExpiredJCashListHint;
+    ImageView iv_expired_jCash_list_hint;
+
     @BindView(R.id.rv_expired_jCash_list)
-    RecyclerView rvExpiredJCashList;
+    RecyclerView rv_expired_jCash_list;
 
-    private JCashListAdapter mAdapter;
-    ArrayList<JCashAvailable> listJCashAvailable = new ArrayList<JCashAvailable>();
+    private JCashAvailableListAdapter jCashAvailableListAdapter;
+    private JCashExpiredListAdapter jCashExpiredListAdapter;
+    ArrayList<JCash> jCashAvailable = new ArrayList<JCash>();
+    ArrayList<JCashExpired> jCashExpired = new ArrayList<JCashExpired>();
     ArrayList<JCashSpentDetails> listJCashSpentDetails = new ArrayList<JCashSpentDetails>();
-
     static Activity mActivity;
     static Context mContext;
     private JCashSpentLogDialog jCashSpentLogDialog;
-
     public String totCashAwarded;
     public String totCashSpent;
     public String totCashAvailable;
@@ -91,11 +97,24 @@ public class JaldeeCashActivity extends AppCompatActivity {
         tvTotCashSpent.setText(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(totCashSpent)));
 
         ApiGetJCashAvailable();
+        ApiGetExpiredJCash();
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 finish();
+            }
+        });
+        ll_jCash_expired_list_hint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(rv_expired_jCash_list.getVisibility() == View.VISIBLE) {
+                    rv_expired_jCash_list.setVisibility(View.GONE);
+                    iv_expired_jCash_list_hint.setImageResource(R.drawable.icon_down_arrow_blue);
+                } else if (rv_expired_jCash_list.getVisibility() == View.GONE) {
+                    rv_expired_jCash_list.setVisibility(View.VISIBLE);
+                    iv_expired_jCash_list_hint.setImageResource(R.drawable.icon_up_arrow_blue);
+                }
             }
         });
     }
@@ -105,29 +124,31 @@ public class JaldeeCashActivity extends AppCompatActivity {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ArrayList<JCashAvailable>> call = apiService.getJCashAvailable();
-        call.enqueue(new Callback<ArrayList<JCashAvailable>>() {
+        Call<ArrayList<JCash>> call = apiService.getJCashAvailable();
+        call.enqueue(new Callback<ArrayList<JCash>>() {
             @Override
-            public void onResponse(Call<ArrayList<JCashAvailable>> call, Response<ArrayList<JCashAvailable>> response) {
+            public void onResponse(Call<ArrayList<JCash>> call, Response<ArrayList<JCash>> response) {
                 try {
                     if (mDialog.isShowing())
                         Config.closeDialog(JaldeeCashActivity.this, mDialog);
                     if (response.code() == 200) {
-                        listJCashAvailable = response.body();
-                        Config.logV("Jaldee Cash list--code-------------------------" + listJCashAvailable);
-                        list.setVisibility(View.VISIBLE);
-                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(JaldeeCashActivity.this);
-                        list.setLayoutManager(mLayoutManager);
-                        mAdapter = new JCashListAdapter(JaldeeCashActivity.this, listJCashAvailable);
-                        list.setAdapter(mAdapter);
-                        mAdapter.notifyDataSetChanged();
+                        jCashAvailable = response.body();
+                        if(jCashAvailable != null && !jCashAvailable.isEmpty() && jCashAvailable.size() > 0) {
+                            Config.logV("Jaldee Cash list--code-------------------------" + jCashAvailable);
+                            list.setVisibility(View.VISIBLE);
+                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(JaldeeCashActivity.this);
+                            list.setLayoutManager(mLayoutManager);
+                            jCashAvailableListAdapter = new JCashAvailableListAdapter(JaldeeCashActivity.this, jCashAvailable);
+                            list.setAdapter(jCashAvailableListAdapter);
+                            jCashAvailableListAdapter.notifyDataSetChanged();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             @Override
-            public void onFailure(Call<ArrayList<JCashAvailable>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<JCash>> call, Throwable t) {
             }
         });
     }
@@ -137,29 +158,34 @@ public class JaldeeCashActivity extends AppCompatActivity {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ArrayList<JCashAvailable>> call = apiService.getJCashAvailable();
-        call.enqueue(new Callback<ArrayList<JCashAvailable>>() {
+        Call<ArrayList<JCashExpired>> call = apiService.getJCashExpired();
+        call.enqueue(new Callback<ArrayList<JCashExpired>>() {
             @Override
-            public void onResponse(Call<ArrayList<JCashAvailable>> call, Response<ArrayList<JCashAvailable>> response) {
+            public void onResponse(Call<ArrayList<JCashExpired>> call, Response<ArrayList<JCashExpired>> response) {
                 try {
                     if (mDialog.isShowing())
                         Config.closeDialog(JaldeeCashActivity.this, mDialog);
                     if (response.code() == 200) {
-                        listJCashAvailable = response.body();
-                        Config.logV("Jaldee Cash list--code-------------------------" + listJCashAvailable);
-                        list.setVisibility(View.VISIBLE);
-                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(JaldeeCashActivity.this);
-                        list.setLayoutManager(mLayoutManager);
-                        mAdapter = new JCashListAdapter(JaldeeCashActivity.this, listJCashAvailable);
-                        list.setAdapter(mAdapter);
-                        mAdapter.notifyDataSetChanged();
+                        jCashExpired = response.body();
+                        if(jCashExpired != null && !jCashExpired.isEmpty() && jCashExpired.size() > 0){
+                            ll_jCash_expired_list_hint.setVisibility(View.VISIBLE);
+                            iv_expired_jCash_list_hint.setImageResource(R.drawable.icon_down_arrow_blue);
+                            Config.logV("Jaldee Cash Expired list--code-------------------------" + jCashExpired);
+                            rv_expired_jCash_list.setVisibility(View.VISIBLE);
+                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(JaldeeCashActivity.this);
+                            rv_expired_jCash_list.setLayoutManager(mLayoutManager);
+                            jCashExpiredListAdapter = new JCashExpiredListAdapter(JaldeeCashActivity.this, jCashExpired);
+                            rv_expired_jCash_list.setAdapter(jCashExpiredListAdapter);
+                            rv_expired_jCash_list.setVisibility(View.GONE);
+                            jCashExpiredListAdapter.notifyDataSetChanged();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             @Override
-            public void onFailure(Call<ArrayList<JCashAvailable>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<JCashExpired>> call, Throwable t) {
             }
         });
     }
@@ -182,7 +208,6 @@ public class JaldeeCashActivity extends AppCompatActivity {
                     if (response.code() == 200) {
                         listJCashSpentDetails = response.body();
                         Config.logV("Jaldee Cash Spent details--code-------------------------" + listJCashSpentDetails);
-
                         jCashSpentLogDialog = new JCashSpentLogDialog(mContext, listJCashSpentDetails);
                         jCashSpentLogDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogStyle_Default;
                         jCashSpentLogDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

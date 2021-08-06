@@ -2,7 +2,7 @@ package com.jaldeeinc.jaldee.response;
 
 import com.google.gson.JsonObject;
 
-public class JCashAvailable {
+public class JCash {
     private String id;
     private JsonObject consumer;
     private String type;

@@ -23,7 +23,8 @@ import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.InboxList;
 import com.jaldeeinc.jaldee.response.InboxModel;
-import com.jaldeeinc.jaldee.response.JCashAvailable;
+import com.jaldeeinc.jaldee.response.JCash;
+import com.jaldeeinc.jaldee.response.JCashExpired;
 import com.jaldeeinc.jaldee.response.JCashInfo;
 import com.jaldeeinc.jaldee.response.JCashSpentDetails;
 import com.jaldeeinc.jaldee.response.JdnResponse;
@@ -246,13 +247,11 @@ public interface ApiInterface {
     @GET("consumer/payment/details/{uuid}")
     Call<ArrayList<RefundDetails>> getRefundDetails(@Path("uuid") String uuid);
 
-
     @GET("consumer/waitlist/{uuid}")
     Call<ActiveCheckIn> getActiveCheckInUUID(@Path("uuid") String uuid, @Query("account") String account);
 
     @GET("consumer/appointment/{uuid}")
     Call<ActiveAppointment> getActiveAppointmentUUID(@Path("uuid") String uuid, @Query("account") String account);
-
 
     @GET("consumer/donation/{uuid}")
     Call<ActiveDonation> getActiveDonationUUID(@Path("uuid") String uuid, @Query("account") String account);
@@ -266,10 +265,8 @@ public interface ApiInterface {
     @GET("ynwConf/searchDomain")
     Call<ResponseBody> getSearchDomain();
 
-
     @GET("search")
     Call<SearchAWsResponse> getSearchAWS(@QueryMap(encoded = true) Map<String, String> query, @QueryMap(encoded = true) Map<String, String> params);
-
 
     @GET("{consumerID}/businessProfile.json")
     Call<SearchViewDetail> getSearchViewDetail(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
@@ -288,7 +285,6 @@ public interface ApiInterface {
 
     @GET("{uniqueId}/{userId}/providerApptServices.json")
     Call<ArrayList<SearchService>> getUserAppointmentServices(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
-
 
     @GET("{uniqueId}/{userId}/providerBusinessProfile.json")
     Observable<SearchViewDetail> getUserBusinessProfiles(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
@@ -312,13 +308,11 @@ public interface ApiInterface {
     @GET("{uniqueId}/departmentProviders.json")
     Call<ArrayList<ProviderUserModel>> getUsers(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
 
-
     @GET("{uniqueId}/services.json")
     Call<ArrayList<SearchService>> getService(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
 
     @GET("{uniqueId}/services.json")
     Call<ArrayList<SearchDepartmentServices>> getDepartmentServices(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
-
 
     @GET("consumer/waitlist/services/{id}")
     Call<ArrayList<SearchService>> getSearchService(@Path("id") int id);
@@ -329,7 +323,6 @@ public interface ApiInterface {
     @GET("{consumerID}/apptServices.json")
     Call<ArrayList<SearchAppointmentDepartmentServices>> getAppointmentServices(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
-
     @GET("consumer/donation/services")
     Call<ArrayList<SearchDonation>> getSearchDonation(@Query("account") int id);
 
@@ -338,7 +331,6 @@ public interface ApiInterface {
 
     @GET("consumer/appointment/schedule/location/{locid}/service/{servid}/date/{dd}")
     Call<ArrayList<AppointmentSchedule>> getAppointmentSchedule(@Path("locid") String locid, @Path("servid") String servid, @Path("dd") String dd, @Query("account") String account);
-
 
     @GET("consumer/appointment/schedule/{id}/{dd}")
     Call<ScheduleId> getAppointmentScheduleId(@Path("id") String id, @Path("dd") String dd, @Query("account") String account);
@@ -349,7 +341,6 @@ public interface ApiInterface {
     @GET("consumer/waitlist")
     Call<ArrayList<SearchCheckInMessage>> getSearchCheckInMessage(@QueryMap(encoded = true) Map<String, String> query);
 
-
     @GET("provider/waitlist/queues/waitingTime/{id}")
     Call<ArrayList<QueueList>> getSearchID(@Path("id") String id);
 
@@ -359,10 +350,8 @@ public interface ApiInterface {
     @GET("provider/appointment/schedule/nextAvailableSchedule/{id}")
     Call<ArrayList<ScheduleList>> getSchedule(@Path("id") String id);
 
-
     @GET("provider/business/{id}")
     Call<String> getUniqueID(@Path("id") String id);
-
 
     @GET(" provider/waitlist/queues/waitingTime/{queueId}")
     Call<List<QueueList>> getQueueCheckReponse(@Path("queueId") String id);
@@ -370,17 +359,14 @@ public interface ApiInterface {
     @GET(" provider/appointment/schedule/nextAvailableSchedule/{queueId}")
     Call<ArrayList<ScheduleList>> getScheduleCheckReponse(@Path("queueId") String id);
 
-
     @GET("provider/search/suggester/location")
     Call<ArrayList<LocationResponse>> getSearchLocation(@Query("criteria") String criteria);
 
     @GET("consumer/waitlist/queues/{serviceID}/{sub_serviceid}/{modifiedDate}")
     Call<ArrayList<QueueTimeSlotModel>> getQueueTimeSlot(@Path("serviceID") String serviceID, @Path("sub_serviceid") String sub_serviceid, @Path("modifiedDate") String modifiedDate, @Query("account") String acountid);
 
-
     @GET(" consumer/payment/modes/{accountid}")
     Call<ArrayList<PaymentModel>> getPaymentModes(@Path("accountid") String accountid);
-
 
     @GET("consumer/waitlist/history")
     Call<ArrayList<ActiveCheckIn>> getCheckInList(@QueryMap(encoded = true) Map<String, String> query);
@@ -393,7 +379,6 @@ public interface ApiInterface {
 
     @GET("consumer/appointment/future")
     Call<ArrayList<ActiveAppointment>> getFutureAppointmentList(@QueryMap(encoded = true) Map<String, String> query);
-
 
     @POST("consumer/communications")
     Call<ResponseBody> PostMessage(@Query("account") String account, @Body RequestBody jsonObj);
@@ -409,7 +394,6 @@ public interface ApiInterface {
 
     @GET("consumer/providers")
     Call<ArrayList<FavouriteModel>> getFavourites();
-
 
     @POST("consumer/waitlist/communicate/{waitlistid}")
     Call<ResponseBody> WaitListMessage(@Path("waitlistid") String otp, @Query("account") String account, @Body RequestBody jsonObj);
@@ -464,18 +448,14 @@ public interface ApiInterface {
     @POST("consumer/appointment")
     Call<ResponseBody> Appointment(@Query("account") String account, @Body RequestBody jsonObj);
 
-
     @GET("consumer/bill/{ynwuuid}")
     Call<BillModel> getBill(@Path("ynwuuid") String uuid, @Query("account") String account);
-
 
     @POST("consumer/jaldee/coupons/{coupon}/{ynwuuid}")
     Call<BillModel> getBillCoupon(@Path("coupon") String coupon, @Path("ynwuuid") String uuid, @Query("account") String account);
 
-
     @DELETE("consumer/waitlist/{ynwuuid}")
     Call<ResponseBody> deleteActiveCheckIn(@Path("ynwuuid") String uuid, @Query("account") String account);
-
 
     @PUT("consumer/appointment/cancel/{ynwuuid}")
     Call<ResponseBody> deleteAppointment(@Path("ynwuuid") String uuid, @Query("account") String account);
@@ -488,14 +468,11 @@ public interface ApiInterface {
     @POST("hashgenerator")
     Call<TestModel> generateHashTest();
 
-
     @GET(" ynwConf/settings/{sector}/{subsector}")
     Call<SectorCheckin> getSector(@Path("sector") String sector, @Path("subsector") String subsector);
 
-
     @PUT("consumer/providers/revealPhoneNo/{providerID}/{revelphone}")
     Call<ResponseBody> RevealPhoneNo(@Path("providerID") int providerID, @Path("revelphone") boolean revealphone);
-
 
     @DELETE("consumer/providers/{providerID}")
     Call<ResponseBody> DeleteFavourite(@Path("providerID") int id);
@@ -537,26 +514,21 @@ public interface ApiInterface {
     @POST("checksum")
     Call<ArrayList<PaytmChecksum>> getPaytmCheckSum(@Field("TXN_AMOUNT") String txnAmount);
 
-
     @FormUrlEncoded
     @POST("hashgenerator")
     Call<CheckSumModelTest> getPayUCheckSum(@Field("TXN_AMOUNT") String txnAmount);
 
-
     @GET("{consumerID}/virtualFields.json")
     Call<SearchVirtualFields> getVirtualFields(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
-
     @GET("{consumerID}/{userId}/providerVirtualFields.json")
     Call<SearchVirtualFields> getProviderVirtualFields(@Path("consumerID") int consumerid, @Path("userId") int userId, @Query("modifiedDate") String mDate);
-
 
     @GET("{consumerID}/coupon.json")
     Call<ArrayList<CoupnResponse>> getCoupanList(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
     @GET("{consumerID}/providerCoupon.json")
     Call<ArrayList<ProviderCouponResponse>> getProviderCoupanList(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
-
 
     @GET("{consumerID}/jaldeediscount.json")
     Call<JdnResponse> getJdnList(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
@@ -751,15 +723,15 @@ public interface ApiInterface {
     Call<JCashInfo> getJCashInfo();
 
     @GET("consumer/wallet/cash/available")
-    Call<ArrayList<JCashAvailable>> getJCashAvailable();
+    Call<ArrayList<JCash>> getJCashAvailable();
+
+    @GET("consumer/wallet/cash/expired")
+    Call<ArrayList<JCashExpired>> getJCashExpired();
 
     @GET("consumer/wallet/cash/spent")
     Call<ArrayList<JCashSpentDetails>> getAllJCashSpentDetails();
 
     @GET("consumer/wallet/cash/{cashId}/txn/log")
     Call<ArrayList<JCashSpentDetails>> getJCashSpentDetails(@Path("cashId") int cashId);
-
-    @GET("consumer/wallet/cash/expired")
-    Call<ArrayList<JCashAvailable>> getExpiredJCashAvailable();
 
 }
