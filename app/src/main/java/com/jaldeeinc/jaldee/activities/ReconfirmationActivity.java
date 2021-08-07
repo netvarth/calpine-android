@@ -177,6 +177,9 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
     @BindView(R.id.tv_phoneNumber)
     CustomTextViewBold tvPhoneNumber;
 
+    @BindView(R.id.tv_vitual_service_number)
+    CustomTextViewBold tv_vitual_service_number;
+
     @BindView(R.id.cb_jCash)
     CheckBox cbJCash;
 
@@ -270,9 +273,24 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                             } else if (bookingModel.getServiceInfo().getCallingMode().equalsIgnoreCase("WhatsApp")) {
                                 if (bookingModel.getServiceInfo().getVirtualServiceType() != null && bookingModel.getServiceInfo().getVirtualServiceType().equalsIgnoreCase("videoService")) {
                                     ivServiceIcon.setImageResource(R.drawable.whatsapp_videoicon);
+                                    if (bookingModel.getWhtsappCountryCode() != null && bookingModel.getWhtsappPhoneNumber() != null) {
+                                        tv_vitual_service_number.setVisibility(View.VISIBLE);
+                                        tv_vitual_service_number.setText("+" + bookingModel.getWhtsappCountryCode() + " " + bookingModel.getWhtsappPhoneNumber());
+                                        tv_vitual_service_number.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon_sized    , 0, 0, 0);
+                                    }
                                 } else {
                                     ivServiceIcon.setImageResource(R.drawable.whatsapp_icon);
+                                    if (bookingModel.getWhtsappCountryCode() != null && bookingModel.getWhtsappPhoneNumber() != null) {
+                                        tv_vitual_service_number.setVisibility(View.VISIBLE);
+                                        tv_vitual_service_number.setText("+" + bookingModel.getWhtsappCountryCode() + " " + bookingModel.getWhtsappPhoneNumber());
+                                        tv_vitual_service_number.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    }
                                 }
+
+                            } else if (bookingModel.getServiceInfo().getCallingMode().equalsIgnoreCase("phone")) {
+
+                                ivServiceIcon.setImageResource(R.drawable.phoneaudioicon);
+                                tvPhoneNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneaudioicon_sized, 0, 0, 0);
 
                             } else if (bookingModel.getServiceInfo().getCallingMode().equalsIgnoreCase("VideoCall")) {
 

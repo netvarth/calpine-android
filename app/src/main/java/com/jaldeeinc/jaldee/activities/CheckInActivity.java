@@ -1574,6 +1574,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         model.setMultipleFamilyMembers(MultiplefamilyList);
                         model.setTotalAmount(totalAmountPay);
                         model.setTotalServicePay(totalServicePay);
+                        model.setWhtsappCountryCode(mWhtsappCountryCode);
+                        model.setWhtsappPhoneNumber(mWhatsappNumber);
                         // model.setJacshSelected(cbJCash.isChecked());
                         if (advancePaymentDetails != null) {
                             model.setAmountRequiredNow(advancePaymentDetails.getAmountRequiredNow());

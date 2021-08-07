@@ -165,6 +165,9 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
     @BindView(R.id.tv_phoneNumber)
     CustomTextViewBold tvPhoneNumber;
 
+    @BindView(R.id.tv_vitual_service_number)
+    CustomTextViewBold tv_vitual_service_number;
+
     @BindView(R.id.tvBookingForHint)
     CustomTextViewSemiBold tvBookingForHint;
 
@@ -280,9 +283,24 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                             } else if (bookingModel.getCheckInInfo().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
                                 if (bookingModel.getCheckInInfo().getVirtualServiceType() != null && bookingModel.getCheckInInfo().getVirtualServiceType().equalsIgnoreCase("videoService")) {
                                     ivServiceIcon.setImageResource(R.drawable.whatsapp_videoicon);
+                                    if (bookingModel.getWhtsappCountryCode() != null && bookingModel.getWhtsappPhoneNumber() != null) {
+                                        tv_vitual_service_number.setVisibility(View.VISIBLE);
+                                        tv_vitual_service_number.setText("+" + bookingModel.getWhtsappCountryCode() + " " + bookingModel.getWhtsappPhoneNumber());
+                                        tv_vitual_service_number.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon_sized    , 0, 0, 0);
+                                    }
                                 } else {
                                     ivServiceIcon.setImageResource(R.drawable.whatsapp_icon);
+                                    if (bookingModel.getWhtsappCountryCode() != null && bookingModel.getWhtsappPhoneNumber() != null) {
+                                        tv_vitual_service_number.setVisibility(View.VISIBLE);
+                                        tv_vitual_service_number.setText("+" + bookingModel.getWhtsappCountryCode() + " " + bookingModel.getWhtsappPhoneNumber());
+                                        tv_vitual_service_number.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon_sized, 0, 0, 0);
+                                    }
                                 }
+
+                            } else if (bookingModel.getCheckInInfo().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
+
+                                ivServiceIcon.setImageResource(R.drawable.phoneaudioicon);
+                                tvPhoneNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phoneaudioicon_sized, 0, 0, 0);
 
                             } else if (bookingModel.getCheckInInfo().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("VideoCall")) {
 
@@ -1172,7 +1190,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                             String thirdWord;
                             if (MultipleFamilyList.size() > 1) {
 
-                                totalAmountPay =  String.valueOf(getFloatAsDouble(bookingModel.getAmountRequiredNow()) * MultipleFamilyList.size());
+                                totalAmountPay = String.valueOf(getFloatAsDouble(bookingModel.getAmountRequiredNow()) * MultipleFamilyList.size());
                                 totalServicePay = String.valueOf(getFloatAsDouble(bookingModel.getNetTotal()) * MultipleFamilyList.size());
                                 secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
                                 thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalServicePay));

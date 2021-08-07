@@ -1396,6 +1396,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         model.setCustomerName(tvConsumerName.getText().toString());
                         model.setEmailId(tvEmail.getText().toString());
                         model.setCountryCode(countryCode);
+                        model.setWhtsappCountryCode(mWhtsappCountryCode);
+                        model.setWhtsappPhoneNumber(mWhatsappNumber);
                         //model.setJacshSelected(cbJCash.isChecked());
                         if (advancePaymentDetails != null) {
                             model.setAmountRequiredNow(advancePaymentDetails.getAmountRequiredNow());

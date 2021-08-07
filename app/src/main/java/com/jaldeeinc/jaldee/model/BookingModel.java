@@ -45,9 +45,27 @@ public class BookingModel implements Serializable {
     public String totalAmount;
     public String totalServicePay;
     public String donationAmount;
+    public String whtsappCountryCode;
+    public String whtsappPhoneNumber;
     public double eligibleJcashAmt;
     public float amountRequiredNow;
     public float netTotal;
+
+    public void setWhtsappCountryCode(String whtsappCountryCode) {
+        this.whtsappCountryCode = whtsappCountryCode;
+    }
+
+    public void setWhtsappPhoneNumber(String whtsappPhoneNumber) {
+        this.whtsappPhoneNumber = whtsappPhoneNumber;
+    }
+
+    public String getWhtsappCountryCode() {
+        return whtsappCountryCode;
+    }
+
+    public String getWhtsappPhoneNumber() {
+        return whtsappPhoneNumber;
+    }
 
     public void setEligibleJcashAmt(double eligibleJcashAmt) {
         this.eligibleJcashAmt = eligibleJcashAmt;

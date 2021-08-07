@@ -230,6 +230,20 @@
 
                                 </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
+                                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                                    android:id="@+id/tv_vitual_service_number"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:layout_marginTop="@dimen/dimen_5dp"
+                                    android:textSize="@dimen/dimen_12dp"
+                                    android:textColor="@color/location_theme"
+                                    android:visibility="gone">
+
+                                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
                             </LinearLayout>
 
                         </androidx.cardview.widget.CardView>
