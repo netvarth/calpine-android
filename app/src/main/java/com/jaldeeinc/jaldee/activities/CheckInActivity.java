@@ -645,8 +645,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                         ApiCheckin(userMessage, providerId);
                                     }
                                 } else {
-
-                                    DynamicToast.make(CheckInActivity.this, checkInInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
+                                    DynamicToast.make(CheckInActivity.this, "Please provide " + checkInInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
                                             CheckInActivity.this, R.drawable.ic_info_black),
                                             ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                                 }
@@ -1420,7 +1419,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                 String modeOfCalling = "";
                 if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("whatsApp")) {
-                    if (etVirtualNumber.getText().toString().trim().equalsIgnoreCase("")){
+                    if (etVirtualNumber.getText().toString().trim().equalsIgnoreCase("")) {
                         modeOfCalling = "Enter WhatsApp number";
                     } else {
                         modeOfCalling = "Invalid WhatsApp number";
@@ -1496,7 +1495,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 if (emailId != null && !emailId.equalsIgnoreCase("")) {
                     waitobj.put("email", emailId);
                 }
-                if(mGender != null && !mGender.isEmpty()) {
+                if (mGender != null && !mGender.isEmpty()) {
                     waitobj.put("gender", mGender);
                 }
                 waitlistArray.put(waitobj);
@@ -1783,8 +1782,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         if (checkInInfo.getTotalAmount() != null && !checkInInfo.getTotalAmount().equalsIgnoreCase("0.0")) {
             totalServicePay = String.valueOf(Double.parseDouble(checkInInfo.getTotalAmount()) * MultiplefamilyList.size());
         }
-        if (checkInInfo.getMinPrePaymentAmount() != null && !checkInInfo.getMinPrePaymentAmount().equalsIgnoreCase("0.0")){
-            totalAmountPay =  String.valueOf(Double.parseDouble(checkInInfo.getMinPrePaymentAmount()) * MultiplefamilyList.size());
+        if (checkInInfo.getMinPrePaymentAmount() != null && !checkInInfo.getMinPrePaymentAmount().equalsIgnoreCase("0.0")) {
+            totalAmountPay = String.valueOf(Double.parseDouble(checkInInfo.getMinPrePaymentAmount()) * MultiplefamilyList.size());
         }
         if (userMessage != null) {
 

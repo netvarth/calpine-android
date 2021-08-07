@@ -692,7 +692,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                         ApiAppointment(userMessage, providerId);
                                     }
                                 } else {
-                                    DynamicToast.make(AppointmentActivity.this, serviceInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
+                                    DynamicToast.make(AppointmentActivity.this, "Please provide " + serviceInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
                                             AppointmentActivity.this, R.drawable.ic_info_black),
                                             ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                                 }
