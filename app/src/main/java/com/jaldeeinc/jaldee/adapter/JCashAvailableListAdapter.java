@@ -23,7 +23,7 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.JCashSpentLogDialog;
-import com.jaldeeinc.jaldee.response.JCashAvailable;
+import com.jaldeeinc.jaldee.response.JCash;
 import com.jaldeeinc.jaldee.response.JCashSpentDetails;
 
 import java.text.ParseException;
@@ -37,16 +37,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class JCashListAdapter extends RecyclerView.Adapter<JCashListAdapter.MyViewHolder> {
+public class JCashAvailableListAdapter extends RecyclerView.Adapter<JCashAvailableListAdapter.MyViewHolder> {
     Context mContext;
-    ArrayList<JCashAvailable> listJCashAvailable;
+    ArrayList<JCash> JCash;
     JsonObject jCashIssueInfo, jCashSpendRulesInfo;
     JCashSpentLogDialog jCashSpentLogDialog;
     ArrayList<JCashSpentDetails> listJCashSpentDetails = new ArrayList<JCashSpentDetails>();
 
-    public JCashListAdapter(Context context, ArrayList<JCashAvailable> listJCashAvailable) {
+    public JCashAvailableListAdapter(Context context, ArrayList<JCash> JCash) {
         this.mContext = context;
-        this.listJCashAvailable = listJCashAvailable;
+        this.JCash = JCash;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -70,16 +70,16 @@ public class JCashListAdapter extends RecyclerView.Adapter<JCashListAdapter.MyVi
     }
 
     @Override
-    public JCashListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public JCashAvailableListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.jcash_awards_view, parent, false);
 
-        return new JCashListAdapter.MyViewHolder(itemView);
+        return new JCashAvailableListAdapter.MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final JCashListAdapter.MyViewHolder myViewHolder, final int position) {
-        final JCashAvailable jCashReward = listJCashAvailable.get(position);
+    public void onBindViewHolder(final JCashAvailableListAdapter.MyViewHolder myViewHolder, final int position) {
+        final JCash jCashReward = JCash.get(position);
         jCashIssueInfo = jCashReward.getjCashIssueInfo().getAsJsonObject();
         jCashSpendRulesInfo = jCashReward.getjCashSpendRulesInfo().getAsJsonObject();
 
@@ -142,7 +142,7 @@ public class JCashListAdapter extends RecyclerView.Adapter<JCashListAdapter.MyVi
 
     @Override
     public int getItemCount() {
-        return listJCashAvailable.size();
+        return JCash.size();
     }
 
     private void ApiGetJcashSpentDetails(int jCashId) {
