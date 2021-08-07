@@ -820,8 +820,16 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                             LPrepay.setVisibility(View.VISIBLE);
 
                             String firstWord = "";
-                            String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getServiceInfo().getMinPrePaymentAmount()));
-                            String thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getServiceInfo().getTotalAmount()));
+                            String secondWord = "";
+                            String thirdWord = "";
+                            if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true")) {
+                                secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(getFloatAsDouble(bookingModel.getAmountRequiredNow()));
+                                thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(getFloatAsDouble(bookingModel.getNetTotal()));
+
+                            } else {
+                                secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getServiceInfo().getMinPrePaymentAmount()));
+                                thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getServiceInfo().getTotalAmount()));
+                            }
 
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new ForegroundColorSpan(ReconfirmationActivity.this.getResources().getColor(R.color.colorAccent)),
@@ -867,6 +875,10 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
         });
 
 
+    }
+
+    public static Double getFloatAsDouble(Float fValue) {
+        return Double.valueOf(fValue.toString());
     }
 
 

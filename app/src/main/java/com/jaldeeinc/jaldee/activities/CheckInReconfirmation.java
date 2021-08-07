@@ -1171,11 +1171,20 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                             String secondWord;
                             String thirdWord;
                             if (MultipleFamilyList.size() > 1) {
+
+                                totalAmountPay =  String.valueOf(getFloatAsDouble(bookingModel.getAmountRequiredNow()) * MultipleFamilyList.size());
+                                totalServicePay = String.valueOf(getFloatAsDouble(bookingModel.getNetTotal()) * MultipleFamilyList.size());
                                 secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
                                 thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalServicePay));
                             } else {
-                                secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getCheckInInfo().getMinPrePaymentAmount()));
-                                thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getCheckInInfo().getTotalAmount()));
+                                if (bookingModel.getCheckInInfo().isPrePayment()) {
+                                    secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(getFloatAsDouble(bookingModel.getAmountRequiredNow()));
+                                    thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(getFloatAsDouble(bookingModel.getNetTotal()));
+
+                                } else {
+                                    secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getCheckInInfo().getMinPrePaymentAmount()));
+                                    thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getCheckInInfo().getTotalAmount()));
+                                }
                             }
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
@@ -1221,6 +1230,10 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
         });
 
 
+    }
+
+    public static Double getFloatAsDouble(Float fValue) {
+        return Double.valueOf(fValue.toString());
     }
 
 
@@ -1320,7 +1333,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                 if (eligibleJcashAmt > 0) {
                     cbJCash.setChecked(true);
                     llJCash.setVisibility(View.VISIBLE);
-                    cbJCash.setText("Use Jaldee cash balance : Rs "+Config.getAmountNoOrTwoDecimalPoints(eligibleJcashAmt));
+                    cbJCash.setText("Use Jaldee cash balance : Rs " + Config.getAmountNoOrTwoDecimalPoints(eligibleJcashAmt));
                     if (eligibleJcashAmt >= Double.parseDouble(checkInInfo.getMinPrePaymentAmount())) {
                         tvJCashHint.setVisibility(View.GONE);
                         llPaymentOptions.setVisibility(View.GONE);

@@ -47,6 +47,7 @@ public class BookingModel implements Serializable {
     public String donationAmount;
     public double eligibleJcashAmt;
     public float amountRequiredNow;
+    public float netTotal;
 
     public void setEligibleJcashAmt(double eligibleJcashAmt) {
         this.eligibleJcashAmt = eligibleJcashAmt;
@@ -286,5 +287,13 @@ public class BookingModel implements Serializable {
 
     public void setTotalServicePay(String totalServicePay) {
         this.totalServicePay = totalServicePay;
+    }
+
+    public float getNetTotal() {
+        return netTotal;
+    }
+
+    public void setNetTotal(float netTotal) {
+        this.netTotal = netTotal;
     }
 }

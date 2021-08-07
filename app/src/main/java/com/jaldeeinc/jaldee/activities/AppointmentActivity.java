@@ -1242,7 +1242,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                 String modeOfCalling = "";
                 if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("whatsApp")) {
-                    if (etVirtualNumber.getText().toString().trim().equalsIgnoreCase("")){
+                    if (etVirtualNumber.getText().toString().trim().equalsIgnoreCase("")) {
                         modeOfCalling = "Enter WhatsApp number";
                     } else {
                         modeOfCalling = "Invalid WhatsApp number";
@@ -1310,19 +1310,19 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     jsonObj3.put("number", mTelegramNumber);
                     waitobj.putOpt("telegramNum", jsonObj3);
                 }
-                if(mAge != null && !mAge.isEmpty()) {
+                if (mAge != null && !mAge.isEmpty()) {
                     waitobj.put("age", mAge);
                 }
-                if(mPreferredLanguages != null) {
+                if (mPreferredLanguages != null) {
                     waitobj.putOpt("preferredLanguage", mPreferredLanguages);
                 }
-                if(mBookingLocation != null) {
+                if (mBookingLocation != null) {
                     waitobj.putOpt("bookingLocation", mBookingLocation);
                 }
                 if (emailId != null && !emailId.equalsIgnoreCase("")) {
                     waitobj.put("email", emailId);
                 }
-                if(mGender != null && !mGender.isEmpty()) {
+                if (mGender != null && !mGender.isEmpty()) {
                     waitobj.put("gender", mGender);
                 }
             }
@@ -1397,8 +1397,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         model.setEmailId(tvEmail.getText().toString());
                         model.setCountryCode(countryCode);
                         //model.setJacshSelected(cbJCash.isChecked());
-                        model.setAmountRequiredNow(advancePaymentDetails.getAmountRequiredNow());
-                        if (advancePaymentDetails.getEligibleJcashAmt() != null) {
+                        if (advancePaymentDetails != null) {
+                            model.setAmountRequiredNow(advancePaymentDetails.getAmountRequiredNow());
+                            model.setNetTotal(advancePaymentDetails.getNetTotal());
+                        }
+                        if (advancePaymentDetails != null && advancePaymentDetails.getEligibleJcashAmt() != null) {
                             model.setEligibleJcashAmt(advancePaymentDetails.getEligibleJcashAmt().get("jCashAmt").getAsDouble());
                         }
                         if (questionnaire != null) {
@@ -1407,7 +1410,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                                 Intent intent = new Intent(AppointmentActivity.this, CustomQuestionnaire.class);
                                 intent.putExtra("data", model);
-                                intent.putExtra("from",Constants.APPOINTMENT);
+                                intent.putExtra("from", Constants.APPOINTMENT);
                                 startActivity(intent);
 
                             } else {
@@ -1667,6 +1670,12 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+
+            if (serviceInfo.isUser()) {
+                getAdvancePaymentDetails(userMessage, userId);
+            } else {
+                getAdvancePaymentDetails(userMessage, providerId);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1732,7 +1741,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     }
 
     @Override
-    public void closeActivity() { finish(); }
+    public void closeActivity() {
+        finish();
+    }
 
     public void paymentFinished(RazorpayModel razorpayModel) {
 
@@ -2218,8 +2229,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         } else {
             tvEmail.setText("");
         }
-        tvConsumerName.setText(mFirstName+" "+mLastName);
+        tvConsumerName.setText(mFirstName + " " + mLastName);
     }
+
     @Override
     public void sendFamilyMemberDetails(int consumerId, String firstName, String lastName, String phone, String email, String conCode) {
         mFirstName = firstName;
@@ -2238,7 +2250,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         } else {
             tvEmail.setText("");
         }
-        tvConsumerName.setText(mFirstName+" "+mLastName);
+        tvConsumerName.setText(mFirstName + " " + mLastName);
 
 
     }

@@ -1576,8 +1576,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         model.setTotalAmount(totalAmountPay);
                         model.setTotalServicePay(totalServicePay);
                         // model.setJacshSelected(cbJCash.isChecked());
-                        model.setAmountRequiredNow(advancePaymentDetails.getAmountRequiredNow());
-                        if (advancePaymentDetails.getEligibleJcashAmt() != null) {
+                        if (advancePaymentDetails != null) {
+                            model.setAmountRequiredNow(advancePaymentDetails.getAmountRequiredNow());
+                            model.setNetTotal(advancePaymentDetails.getNetTotal());
+                        }
+                        if (advancePaymentDetails != null && advancePaymentDetails.getEligibleJcashAmt() != null) {
                             model.setEligibleJcashAmt(advancePaymentDetails.getEligibleJcashAmt().get("jCashAmt").getAsDouble());
                         }
                         if (questionnaire != null) {
@@ -1779,7 +1782,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         recycle_family.setVisibility(View.VISIBLE);
         if (checkInInfo.getTotalAmount() != null && !checkInInfo.getTotalAmount().equalsIgnoreCase("0.0")) {
             totalServicePay = String.valueOf(Double.parseDouble(checkInInfo.getTotalAmount()) * MultiplefamilyList.size());
-
+        }
+        if (checkInInfo.getMinPrePaymentAmount() != null && !checkInInfo.getMinPrePaymentAmount().equalsIgnoreCase("0.0")){
+            totalAmountPay =  String.valueOf(Double.parseDouble(checkInInfo.getMinPrePaymentAmount()) * MultiplefamilyList.size());
         }
         if (userMessage != null) {
 
@@ -1911,6 +1916,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 String changedtext = "People waiting in line : " + "<b>" + queueDetails.getQueueSize() + "</b> ";
                 tvPeopleInLine.setText(Html.fromHtml(changedtext));
 
+            }
+
+            if (isUser) {
+                getAdvancePaymentDetails(userMessage, userId);
+            } else {
+                getAdvancePaymentDetails(userMessage, providerId);
             }
 
         } catch (Exception e) {
