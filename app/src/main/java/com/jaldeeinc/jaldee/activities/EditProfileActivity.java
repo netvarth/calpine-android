@@ -2,6 +2,8 @@ package com.jaldeeinc.jaldee.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -20,7 +22,7 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.hbb20.CountryCodePicker;
-import com.jaldeeinc.jaldee.Fragment.EditProfileFragment;
+import com.jaldeeinc.jaldee.Fragment.ChangePhoneFragment;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -57,7 +59,7 @@ public class EditProfileActivity extends AppCompatActivity {
     String radiogender = "";
     Button btn_edtSubmit;
     RadioButton rMale, rFemale, rOther;
-    TextView tv_phone;
+    TextView tv_phone, txtphoneChange;
     TextInputEditText tv_email;
     DatabaseHandler db;
     Context mContext;
@@ -106,6 +108,8 @@ public class EditProfileActivity extends AppCompatActivity {
         TelegramCCodePicker = (CountryCodePicker) findViewById(R.id.Tccp);
         edtWhtsAppNumber = findViewById(R.id.edtWhtsAppNumber);
         edtTelegramNumber = findViewById(R.id.edtTelegram);
+        txtphoneChange = (TextView) findViewById(R.id.txtphoneChange);
+
 
 //        txtfirstname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 //        txtlastname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
@@ -114,7 +118,29 @@ public class EditProfileActivity extends AppCompatActivity {
 
         countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
 
-
+        txtphoneChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChangePhoneFragment changeFragment = new ChangePhoneFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+                // Store the Fragment in stack
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.mainlayout, changeFragment).commit();
+                getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+                    public void onBackStackChanged() {
+                        FragmentManager fm = getSupportFragmentManager();
+                        if (fm != null) {
+                            int backStackCount = fm.getBackStackEntryCount();
+                            if (backStackCount == 0) {
+                                finish();
+                                startActivity(getIntent());
+                            }
+                        }
+                    }
+                });
+            }
+        });
         btn_edtSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,7 +212,6 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         }
     }
-
 
     public static boolean isNumeric(String str) {
         return str.matches("-?\\d+(.\\d+)?");
@@ -261,13 +286,13 @@ public class EditProfileActivity extends AppCompatActivity {
         tv_email.setText(getProfile.getEmail());
 
         if (getProfile.getWhtsAppCountryCode() != null && !getProfile.getWhtsAppCountryCode().equalsIgnoreCase("")) {
-            if(!getProfile.getWhtsAppCountryCode().equalsIgnoreCase("")) {
+            if (!getProfile.getWhtsAppCountryCode().equalsIgnoreCase("")) {
                 WhtsappCCodePicker.setCountryForPhoneCode(Integer.parseInt(getProfile.getWhtsAppCountryCode().replace("+", "")));
             }
             edtWhtsAppNumber.setText(getProfile.getWhtsAppNumber());
         }
         if (getProfile.getTelgrmCountryCode() != null && !getProfile.getTelgrmCountryCode().equalsIgnoreCase("")) {
-            if(!getProfile.getTelgrmCountryCode().equalsIgnoreCase("")) {
+            if (!getProfile.getTelgrmCountryCode().equalsIgnoreCase("")) {
                 TelegramCCodePicker.setCountryForPhoneCode(Integer.parseInt(getProfile.getTelgrmCountryCode().replace("+", "")));
             }
             edtTelegramNumber.setText(getProfile.getTelgrmNumber());
