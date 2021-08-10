@@ -1132,9 +1132,12 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                             ivSpImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
                                         }
                                     });
+                                } else {
+                                    shimmer.setVisibility(View.GONE);
+                                    ivSpImage.setVisibility(View.VISIBLE);
+                                    ivSpImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
                                 }
                             }
-
                         }
 
                     } else {
