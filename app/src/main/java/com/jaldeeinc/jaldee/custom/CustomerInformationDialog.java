@@ -1102,7 +1102,11 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
             }
             edtWhtsAppNumber.setText(familylist.getWhtsAppNumber());
         } else {
-            edtWhtsAppNumber.setText("");
+            if (!countryCode.equalsIgnoreCase("")) {
+                String cCode = countryCode.replace("+", "");
+                WhtsappCCodePicker.setCountryForPhoneCode(Integer.parseInt(cCode));
+            }
+            edtWhtsAppNumber.setText(phone);
         }
         if (familylist.getTelgrmCountryCode() != null && familylist.getTelgrmNumber() != null) {
             if (!familylist.getTelgrmCountryCode().equalsIgnoreCase("")) {
@@ -1111,7 +1115,11 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
             }
             edtTelegram.setText(familylist.getTelgrmNumber());
         } else {
-            edtTelegram.setText("");
+            if (!countryCode.equalsIgnoreCase("")) {
+                String cCode = countryCode.replace("+", "");
+                TelegramCCodePicker.setCountryForPhoneCode(Integer.parseInt(cCode));
+            }
+            edtTelegram.setText(phone);
         }
         /*if (familylist.getPreferredLanguages() != null) {*/
         if (familylist.getPreferredLanguages() == null || familylist.getPreferredLanguages().isEmpty() || familylist.getPreferredLanguages().stream().anyMatch("english"::equalsIgnoreCase)) {
