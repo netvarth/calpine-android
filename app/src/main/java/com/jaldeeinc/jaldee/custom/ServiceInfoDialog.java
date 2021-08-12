@@ -30,7 +30,7 @@ public class ServiceInfoDialog extends Dialog {
     ImageView i_servicegallery, ivClose, i_backpress;
     CustomTextViewBold tv_toolbartitle, tv_price, tv_duration,txtpreVal;
     CustomTextViewSemiBold tv_service, tv_maxvalue, tv_minvalue, tv_multiples;
-    CustomTextViewMedium tv_descVal, tvisTax, txt_payment_desc;
+    CustomTextViewMedium tv_descVal, tvisTax, txt_payment_desc, more_Imag_text;
     LinearLayout Lprepayment, LserviceLayout, LminAmountlayout, LmaxAmountlayout, Lmultilayout, Ldurationlayout;
 
     public ServiceInfoDialog(@NonNull Context context, SearchService searchService, SearchViewDetail providerInfo) {
@@ -87,6 +87,14 @@ public class ServiceInfoDialog extends Dialog {
                 }
             } else {
                 tv_toolbartitle.setVisibility(View.GONE);
+            }
+            if(searchService.getServicegallery() != null && searchService.getServicegallery().size() > 1){
+                int gallerySize = searchService.getServicegallery().size() - 1;
+                more_Imag_text.setText("+" + gallerySize);
+                more_Imag_text.setVisibility(View.VISIBLE);
+                i_servicegallery.animate().alpha(0.4f);
+            } else {
+                more_Imag_text.setVisibility(View.GONE);
             }
             if (providerInfo != null &&  providerInfo.getServiceSector() != null){
                 if (providerInfo.getServiceSector().getDisplayName().equalsIgnoreCase("Healthcare")){
@@ -242,5 +250,6 @@ public class ServiceInfoDialog extends Dialog {
         tvPrepaymentHint = findViewById(R.id.tv_prepaymentHint);
         tvDurationHint = findViewById(R.id.tv_durationHint);
         txt_payment_desc = findViewById(R.id.txt_payment_desc);
+        more_Imag_text =  findViewById(R.id.more_Imag_text);
     }
 }
