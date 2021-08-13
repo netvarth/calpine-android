@@ -351,13 +351,13 @@ public class PaytmPayment {
                     } else {
                         Toast.makeText(context, "Payment Successful", Toast.LENGTH_LONG).show();
                     }
+                    ((Activity) context).finish();
                 } else {
                     Toast.makeText(context, "Payment Failed ", Toast.LENGTH_LONG).show();
                 }
 
 
                 //Toast.makeText(context, "Payment Success", Toast.LENGTH_LONG).show();
-                ((Activity) context).finish();
                 /*if(!from.equalsIgnoreCase("home")) {
                     ((Activity) context).finish();
                 }*/

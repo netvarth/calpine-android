@@ -1607,6 +1607,13 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     }
 
     @Override
+    public void onRestart() {
+
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
+    @Override
     public void onPaymentError(int code, String response, PaymentData paymentData) {
         try {
             Toast.makeText(mCOntext, "Payment failed ", Toast.LENGTH_SHORT).show();
