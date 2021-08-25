@@ -3,10 +3,17 @@ package com.jaldeeinc.jaldee.payment;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
@@ -18,6 +25,7 @@ import com.jaldeeinc.jaldee.response.WalletPaytmChecksum;
 import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPGService;
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
+import com.paytm.pgsdk.TransactionManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import okio.Buffer;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,10 +46,12 @@ import retrofit2.Response;
  * Created by sharmila on 16/11/18.
  */
 
-public class PaytmPayment {
+public class PaytmPayment extends AppCompatActivity {
 
+    private static final String TAG = "PaytmPayment";
     Context context;
     private IPaymentResponse iPaymentResponse;
+    Integer ActivityRequestCode = 01;
 
     public PaytmPayment(Context mContext, IPaymentResponse paymentResponse) {
         context = mContext;
@@ -174,8 +185,6 @@ public class PaytmPayment {
 
 
                     if (response.code() == 200) {
-
-
                         PaytmChecksum response_data = response.body();
 //                        Config.logV("Response--Sucess----PAytm---------------------" + new Gson().toJson(response.body()));
 
@@ -195,6 +204,7 @@ public class PaytmPayment {
                             map.put("CALLBACK_URL", response_data.getCALLBACK_URL());
                             map.put("CHECKSUMHASH", response_data.getChecksum());
                             map.put("MERC_UNQ_REF", accountID + "_" + encId);
+                            map.put("txnToken", response_data.getTxnToken());
                             PaytmPay(map, from, response_data.getPaymentEnv(), purpose);
 
                         } catch (Exception e) {
@@ -298,6 +308,7 @@ public class PaytmPayment {
                                 map.put("CALLBACK_URL", response_data.getCALLBACK_URL());
                                 map.put("CHECKSUMHASH", response_data.getChecksum());
                                 map.put("MERC_UNQ_REF", accountID + "_" + encId);
+                                map.put("txnToken", response_data.getTxnToken());
                                 PaytmPay(map, from, response_data.getPaymentEnv(), purpose);
 
                             } catch (Exception e) {
@@ -324,76 +335,83 @@ public class PaytmPayment {
     }
 
     public void PaytmPay(Map<String, String> paramMap, final String from, String paymentEnv, String purpose) {
-        PaytmPGService Service = null;
-        // Service = PaytmPGService.getStagingService();
+        String host = "";
         if (paymentEnv.equalsIgnoreCase("production")) {
-            Service = PaytmPGService.getProductionService();
+            // for test mode use it
+            host = "https://securegw.paytm.in/";
         } else {
-            Service = PaytmPGService.getStagingService();
+            // for production mode use it
+            host = "https://securegw-stage.paytm.in/";
         }
-        PaytmOrder Order = new PaytmOrder((HashMap<String, String>) paramMap);
-        Service.initialize(Order, null);
-        Service.startPaymentTransaction(context, true, true, new PaytmPaymentTransactionCallback() {
 
-            @Override
-            public void someUIErrorOccurred(String inErrorMessage) {
-                Log.d("LOG", "UI Error Occur.");
-                Toast.makeText(context, " UI Error Occur. ", Toast.LENGTH_LONG).show();
-            }
+        PaytmOrder Order = new PaytmOrder(paramMap.get("ORDER_ID"), paramMap.get("MID"), paramMap.get("txnToken"), paramMap.get("TXN_AMOUNT"), paramMap.get("CALLBACK_URL"));
 
-            @Override
-            public void onTransactionResponse(Bundle inResponse) {
-                Log.d("LOG", "Payment Transaction : " + inResponse);
-                if (inResponse.toString().contains("TXN_SUCCESS")) {
+        try {
+            TransactionManager transactionManager = new TransactionManager(Order, new PaytmPaymentTransactionCallback() {
+                @Override
+                public void onTransactionResponse(Bundle inResponse) {
+                    Log.d("LOG", "Payment Transaction : " + inResponse);
+                    if (inResponse.toString().contains("TXN_SUCCESS")) {
 
-                    if (purpose.equalsIgnoreCase(Constants.PURPOSE_PREPAYMENT)) {
-                        iPaymentResponse.sendPaymentResponse();
+                        if (purpose.equalsIgnoreCase(Constants.PURPOSE_PREPAYMENT) || purpose.equalsIgnoreCase(Constants.DONATION) || purpose.equalsIgnoreCase(Constants.PURPOSE_BILLPAYMENT)) {
+                            iPaymentResponse.sendPaymentResponse("TXN_SUCCESS");
+                        } else {
+                            Toast.makeText(context, "Payment Successful", Toast.LENGTH_LONG).show();
+                        }
+                        //((Activity) context).finish();
                     } else {
-                        Toast.makeText(context, "Payment Successful", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Payment Failed ", Toast.LENGTH_LONG).show();
+                        iPaymentResponse.sendPaymentResponse("TXN_FAILED");
                     }
-                    ((Activity) context).finish();
-                } else {
-                    Toast.makeText(context, "Payment Failed ", Toast.LENGTH_LONG).show();
                 }
 
+                @Override
+                public void networkNotAvailable() {
+                    Log.d("LOG", "UI Error Occur.");
+                    Toast.makeText(context, " UI Error Occur. ", Toast.LENGTH_LONG).show();
+                }
 
-                //Toast.makeText(context, "Payment Success", Toast.LENGTH_LONG).show();
-                /*if(!from.equalsIgnoreCase("home")) {
-                    ((Activity) context).finish();
-                }*/
-            }
+                @Override
+                public void onErrorProceed(String s) {
+                    Log.d("LOG", "Error Occur.");
+                    Toast.makeText(context, " Error Occur. ", Toast.LENGTH_LONG).show();
+                }
 
-            @Override
-            public void networkNotAvailable() {
-                Log.d("LOG", "UI Error Occur.");
-                Toast.makeText(context, " UI Error Occur. ", Toast.LENGTH_LONG).show();
-            }
+                @Override
+                public void clientAuthenticationFailed(String inErrorMessage) {
+                    Log.d("LOG", "UI Error Occur.");
+                    Toast.makeText(context, " Severside Error " + inErrorMessage, Toast.LENGTH_LONG).show();
+                }
 
-            @Override
-            public void clientAuthenticationFailed(String inErrorMessage) {
-                Log.d("LOG", "UI Error Occur.");
-                Toast.makeText(context, " Severside Error " + inErrorMessage, Toast.LENGTH_LONG).show();
-            }
+                @Override
+                public void someUIErrorOccurred(String s) {
+                    Log.d("LOG", "UI Error Occur.");
+                    Toast.makeText(context, " UI Error Occur. ", Toast.LENGTH_LONG).show();
+                }
 
-            @Override
-            public void onErrorLoadingWebPage(int iniErrorCode,
-                                              String inErrorMessage, String inFailingUrl) {
-                Log.d("LOG", inErrorMessage);
-            }
+                @Override
+                public void onErrorLoadingWebPage(int iniErrorCode, String inErrorMessage, String inFailingUrl) {
+                    Log.d("LOG", inErrorMessage);
+                }
 
-            @Override
-            public void onBackPressedCancelTransaction() {
-                Log.d("LOG", "Back");
-// TODO Auto-generated method stub
-            }
+                @Override
+                public void onBackPressedCancelTransaction() {
+                    Log.d("LOG", "Back");
+                }
 
-            @Override
-            public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
-                Log.d("LOG", "Payment Transaction Failed " + inErrorMessage);
-                Toast.makeText(context, "Payment Transaction Failed ", Toast.LENGTH_LONG).show();
-            }
+                @Override
+                public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
+                    Log.d("LOG", "Payment Transaction Failed " + inErrorMessage);
+                    Toast.makeText(context, "Payment Transaction Failed ", Toast.LENGTH_LONG).show();
+                }
+            });
 
-        });
+            transactionManager.setShowPaymentUrl(host + "theia/api/v1/showPaymentPage");
+            transactionManager.setAppInvokeEnabled(true);
+            transactionManager.startTransaction((Activity) context, ActivityRequestCode);
 
+        } catch (Exception ews) {
+            ews.printStackTrace();
+        }
     }
 }

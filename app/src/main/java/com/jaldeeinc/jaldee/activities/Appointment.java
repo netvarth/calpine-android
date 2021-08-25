@@ -5563,7 +5563,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     }
 
     @Override
-    public void sendPaymentResponse() {
+    public void sendPaymentResponse(String paymentStatus) {
 
         getConfirmationDetails();
     }

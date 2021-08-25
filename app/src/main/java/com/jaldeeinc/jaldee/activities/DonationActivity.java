@@ -686,7 +686,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     }
 
     @Override
-    public void sendPaymentResponse() {
+    public void sendPaymentResponse(String paymentStatus) {
 
         AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setCancelable(false)

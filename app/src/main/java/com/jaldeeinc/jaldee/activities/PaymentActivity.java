@@ -308,7 +308,7 @@ public class PaymentActivity extends AppCompatActivity implements IPaymentRespon
     }
 
     @Override
-    public void sendPaymentResponse() {
+    public void sendPaymentResponse(String paymentStatus) {
 
         Toast.makeText(PaymentActivity.this, "Payment Successful", Toast.LENGTH_LONG).show();
 
