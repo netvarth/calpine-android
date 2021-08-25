@@ -49,7 +49,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
 
 
     Context mContext;
-    LinearLayout mLprofile, mLchangepwd, mLchangeEmail, mLchangePhone, mLmember, mLogout, mLTerm, mLcontactus, mLshare, mLappfeed, mLEmailId, mLJCash;
+    LinearLayout mLprofile, mLchangepwd, mLchangeEmail, mLchangePhone, mLmember, mLogout, mLTerm, mLcontactus, mLshare, mLappfeed, mLEmailId, mLJCash, mLnotification;
     ImageView ivEdit;
     CustomTextViewBold tvUserName;
     CustomTextViewMedium tvMobileNumber, tvEmailId;
@@ -95,6 +95,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
         mLogout = (LinearLayout) row.findViewById(R.id.llogout);
         mLTerm = (LinearLayout) row.findViewById(R.id.lterm);
         mLcontactus = (LinearLayout) row.findViewById(R.id.lcontactus);
+        mLnotification = (LinearLayout) row.findViewById(R.id.lnotification);
         mLshare = (LinearLayout) row.findViewById(R.id.lshare);
         mLJCash = (LinearLayout) row.findViewById(R.id.ljcash);
 
@@ -145,6 +146,18 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
             }
         });
 
+
+        mLnotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NotificationFragment notificationFragment = new NotificationFragment();
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+                // Store the Fragment in stack
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.mainlayout, notificationFragment).commit();
+            }
+        });
 
         mLchangeEmail.setOnClickListener(new View.OnClickListener() {
             @Override
