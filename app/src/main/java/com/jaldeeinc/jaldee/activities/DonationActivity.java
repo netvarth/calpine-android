@@ -449,7 +449,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                     tvErrorAmount.setVisibility(View.GONE);
                 } else if (serviceInfo.isConsumerNoteMandatory() && (et_note.getText().toString().isEmpty() || et_note.getText().toString() == null)) {
                     et_note.setBackground(getResources().getDrawable(R.drawable.donate_error_edittext));
-                    Toast.makeText(DonationActivity.this, "Please provide add notes", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DonationActivity.this, "Please provide " + serviceInfo.getConsumerNoteTitle(), Toast.LENGTH_SHORT).show();
                 } else {
                     if (etNumber.getText().length() > 9) {
                         ApiDonation("");
