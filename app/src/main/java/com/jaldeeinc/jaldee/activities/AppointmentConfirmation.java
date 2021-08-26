@@ -157,7 +157,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         activeCheckInInfo = response.body();
-                        UpdateMainUI();
+                        UpdateMainUI(activeCheckInInfo);
 
                     }
                 } catch (Exception e) {
@@ -175,7 +175,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
 
     }
 
-    public void UpdateMainUI() {
+    public void UpdateMainUI(ActiveAppointment activeCheckInInfo) {
 
         if (from != null && activeCheckInInfo != null) {
             if (from.equalsIgnoreCase("Reschedule")) {
