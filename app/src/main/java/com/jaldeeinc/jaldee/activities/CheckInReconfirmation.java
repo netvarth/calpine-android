@@ -10,7 +10,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -182,6 +185,10 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
     @BindView(R.id.tv_jCashHint)
     CustomTextViewMedium tvJCashHint;
+
+    @BindView(R.id.ll_cancellation_policy)
+    LinearLayout ll_cancellation_policy;
+
 
     String value = null;
     int familyMEmID;
@@ -400,6 +407,29 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
             }
             updateUI(bookingModel.getCheckInInfo(), bookingModel.getEligibleJcashAmt());
         }
+        ll_cancellation_policy.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Dialog cancellationPolicyDialog = new Dialog(mContext);
+                cancellationPolicyDialog.setContentView(R.layout.cancellation_policy_dialog);
+                cancellationPolicyDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                cancellationPolicyDialog.setCancelable(false);
+                DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                int width = (int) (metrics.widthPixels * 1);
+                cancellationPolicyDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                cancellationPolicyDialog.show();
+
+                LinearLayout close = cancellationPolicyDialog.findViewById(R.id.ll_close);
+
+                close.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        cancellationPolicyDialog.cancel();
+                    }
+                });
+            }
+        });
         cbJCash.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -1183,6 +1213,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                             Config.logV("URL----%%%%%---@@--");
                             LservicePrepay.setVisibility(View.VISIBLE);
                             LPrepay.setVisibility(View.VISIBLE);
+                            ll_cancellation_policy.setVisibility(View.VISIBLE);
                             Typeface tyface = Typeface.createFromAsset(getAssets(),
                                     "fonts/Montserrat_Bold.otf");
                             String firstWord = "";

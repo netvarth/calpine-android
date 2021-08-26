@@ -52,9 +52,7 @@ public class RazorpayPayment{
 //            options.put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.png");
             options.put("currency", "INR");
             options.put("amount", order.getAmount());
-            options.put("retry",order.isRetry());
             options.put("order_id", order.getOrderId());
-            options.put("retry",order.isRetry());
             if (order.isRetry()){
 
             }else {
@@ -66,6 +64,11 @@ public class RazorpayPayment{
             preFill.put("contact", order.getConsumerPhoneumber());
             preFill.put("name", order.getConsumerName());
             options.put("prefill", preFill);
+
+            JSONObject retryObj = new JSONObject();
+            retryObj.put("enabled", false);
+            options.put("retry", retryObj);
+
             Log.i("RazorPay", new Gson().toJson(options));
             co.setKeyID(order.getRazorpayId());
             co.open(this.mActivity, options);

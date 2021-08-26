@@ -369,40 +369,48 @@ public class PaytmPayment extends AppCompatActivity {
                 public void networkNotAvailable() {
                     Log.d("LOG", "UI Error Occur.");
                     Toast.makeText(context, " UI Error Occur. ", Toast.LENGTH_LONG).show();
+                    iPaymentResponse.sendPaymentResponse("TXN_FAILED");
                 }
 
                 @Override
                 public void onErrorProceed(String s) {
                     Log.d("LOG", "Error Occur.");
                     Toast.makeText(context, " Error Occur. ", Toast.LENGTH_LONG).show();
+                    iPaymentResponse.sendPaymentResponse("TXN_FAILED");
                 }
 
                 @Override
                 public void clientAuthenticationFailed(String inErrorMessage) {
                     Log.d("LOG", "UI Error Occur.");
                     Toast.makeText(context, " Severside Error " + inErrorMessage, Toast.LENGTH_LONG).show();
+                    iPaymentResponse.sendPaymentResponse("TXN_FAILED");
                 }
 
                 @Override
                 public void someUIErrorOccurred(String s) {
                     Log.d("LOG", "UI Error Occur.");
                     Toast.makeText(context, " UI Error Occur. ", Toast.LENGTH_LONG).show();
+                    iPaymentResponse.sendPaymentResponse("TXN_FAILED");
                 }
 
                 @Override
                 public void onErrorLoadingWebPage(int iniErrorCode, String inErrorMessage, String inFailingUrl) {
                     Log.d("LOG", inErrorMessage);
+                    iPaymentResponse.sendPaymentResponse("TXN_FAILED");
                 }
 
                 @Override
                 public void onBackPressedCancelTransaction() {
                     Log.d("LOG", "Back");
+                    Toast.makeText(context, "Payment Cancelled ", Toast.LENGTH_LONG).show();
+                    iPaymentResponse.sendPaymentResponse("TXN_FAILED");
                 }
 
                 @Override
                 public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
                     Log.d("LOG", "Payment Transaction Failed " + inErrorMessage);
                     Toast.makeText(context, "Payment Transaction Failed ", Toast.LENGTH_LONG).show();
+                    iPaymentResponse.sendPaymentResponse("TXN_FAILED");
                 }
             });
 
