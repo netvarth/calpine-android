@@ -17,6 +17,7 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -1092,46 +1093,54 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(value, String.valueOf(id));
-        call.enqueue(new Callback<ActiveCheckIn>() {
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
-            public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
+            public void run() {
+                Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(value, String.valueOf(id));
+                call.enqueue(new Callback<ActiveCheckIn>() {
+                    @Override
+                    public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
 
-                if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
-                try {
+                        if (mDialog.isShowing())
+                            Config.closeDialog(getParent(), mDialog);
+                        try {
 
-                    if (response.code() == 200) {
-                        ActiveCheckIn activeAppointment = response.body();
-                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, "");
-                        SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, "");
-                        imagePathList.clear();
-                        if (activeAppointment != null) {
-                            checkEncId = activeAppointment.getCheckinEncId();
+                            if (response.code() == 200) {
+                                ActiveCheckIn activeAppointment = response.body();
+                                SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, "");
+                                SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, "");
+                                imagePathList.clear();
+                                if (activeAppointment != null) {
+                                    checkEncId = activeAppointment.getCheckinEncId();
 
-                            Intent checkin = new Intent(CheckInReconfirmation.this, CheckInConfirmation.class);
-                            checkin.putExtra("terminology", mSearchTerminology.getProvider());
-                            checkin.putExtra("waitlistPhonenumber", bookingModel.getPhoneNumber());
-                            checkin.putExtra("livetrack", bookingModel.getCheckInInfo().isLivetrack());
-                            checkin.putExtra("accountID", String.valueOf(id));
-                            checkin.putExtra("uid", activeAppointment.getYnwUuid());
-                            startActivity(checkin);
+                                    Intent checkin = new Intent(CheckInReconfirmation.this, CheckInConfirmation.class);
+                                    checkin.putExtra("terminology", mSearchTerminology.getProvider());
+                                    checkin.putExtra("waitlistPhonenumber", bookingModel.getPhoneNumber());
+                                    checkin.putExtra("livetrack", bookingModel.getCheckInInfo().isLivetrack());
+                                    checkin.putExtra("accountID", String.valueOf(id));
+                                    checkin.putExtra("uid", activeAppointment.getYnwUuid());
+                                    startActivity(checkin);
+                                }
+
+                            }
+                        } catch (Exception e) {
+                            Log.i("mnbbnmmnbbnm", e.toString());
+                            e.printStackTrace();
                         }
-
                     }
-                } catch (Exception e) {
-                    Log.i("mnbbnmmnbbnm", e.toString());
-                    e.printStackTrace();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
+                    @Override
+                    public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
 
-                if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
+                        if (mDialog.isShowing())
+                            Config.closeDialog(getParent(), mDialog);
+                    }
+                });
+
             }
-        });
+        }, 1000);
 
     }
 
