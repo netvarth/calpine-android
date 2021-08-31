@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -62,6 +63,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.BuildConfig;
+import com.jaldeeinc.jaldee.Fragment.DataGridFragment;
+import com.jaldeeinc.jaldee.Fragment.HomeTabFragment;
+import com.jaldeeinc.jaldee.Interface.IDataGrid;
 import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CheckBoxAdapter;
@@ -77,6 +81,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
 import com.jaldeeinc.jaldee.custom.MultiSpinnerListener;
 import com.jaldeeinc.jaldee.custom.MultiSpinnerSearch;
+import com.jaldeeinc.jaldee.custom.QuestionnaireGridView;
 import com.jaldeeinc.jaldee.model.AnswerLine;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.LabelPath;
@@ -137,7 +142,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CustomQuestionnaire extends AppCompatActivity implements IFilesInterface, DatePickerDialog.OnDateSetListener {
+public class CustomQuestionnaire extends AppCompatActivity implements IFilesInterface, DatePickerDialog.OnDateSetListener, IDataGrid {
 
 
     @BindView(R.id.ll_mainLayout)
@@ -170,6 +175,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
     File file;
     String singleFilePath = "";
     Bitmap bitmap;
+    IDataGrid iDataGrid;
 
     ArrayList<LabelPath> labelPaths = new ArrayList<>();
     ArrayList<String> bookingImagesList = new ArrayList<>();
@@ -198,6 +204,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
         ButterKnife.bind(this);
         mContext = CustomQuestionnaire.this;
         iFilesInterface = this;
+        iDataGrid = this;
 
         requestMultiplePermissions();
 
@@ -997,7 +1004,8 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                     addSingleFileUploadView(singleFile);
                 }
 
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("plainText")) {
+            }
+            else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("plainText")) {
 
                 QuestionnaireTextField textField = new QuestionnaireTextField();
                 textField.setQuestionName(question.getGetQuestion().getLabel());
@@ -1018,7 +1026,8 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                 }
                 addTextFieldView(textField);
 
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("date")) {
+            }
+            else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("date")) {
 
                 QuestionnaireDateField dateField = new QuestionnaireDateField();
                 dateField.setQuestionName(question.getGetQuestion().getLabel());
@@ -1039,7 +1048,8 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                 }
 
                 addDateFieldView(dateField);
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("number")) {
+            }
+            else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("number")) {
 
                 QuestionnaireNumberModel numberField = new QuestionnaireNumberModel();
                 numberField.setQuestionName(question.getGetQuestion().getLabel());
@@ -1057,7 +1067,8 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 addNumberFieldView(numberField);
 
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("bool")) {
+            }
+            else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("bool")) {
 
                 QuestionnaireBoolean boolField = new QuestionnaireBoolean();
                 boolField.setQuestionName(question.getGetQuestion().getLabel());
@@ -1078,7 +1089,8 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 addBooleanField(boolField);
 
-            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("list")) {
+            }
+            else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("list")) {
 
                 QuestionnaireListModel listModel = new QuestionnaireListModel();
                 listModel.setQuestionName(question.getGetQuestion().getLabel());
@@ -1092,12 +1104,8 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                     if (answerLine.getLabelName().equalsIgnoreCase(question.getGetQuestion().getLabelName())) {
 
                         JSONObject txtObj = new JSONObject(answerLine.getAnswer().toString());
-//                        LinkedTreeMap list = (LinkedTreeMap) txtObj.get("list");
                         JSONArray list = (JSONArray) txtObj.get("list");
                         ArrayList<String> selectedItems = new ArrayList<>();
-//                        for (Object obj : list.values()) {
-//                            selectedItems.add(obj.toString().replace("[", "").replace("]", ""));
-//                        }
                         for (int i = 0; i < list.length(); i++) {
                             selectedItems.add(list.optString(i));
                         }
@@ -1109,6 +1117,23 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                 addListField(listModel);
 
             }
+//            else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("dataGrid")){
+//
+//                QuestionnaireGridView gridView = new QuestionnaireGridView(this);
+//                gridView.setQuestionData(question.getGetQuestion());
+//                gridView.getLlAdd().setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//
+//                        DataGridFragment dataGridFragment = DataGridFragment.newInstance(question.getGetQuestion());
+//                        final FragmentManager fragmentManager = getSupportFragmentManager();
+//                        fragmentManager.beginTransaction()
+//                                .replace(R.id.container, dataGridFragment)
+//                                .commit();
+//                    }
+//                });
+//                llParentLayout.addView(gridView);
+//            }
         }
     }
 
