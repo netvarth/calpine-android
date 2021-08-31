@@ -689,7 +689,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
     }
 
-
     private void ApiSearchViewLocation(String loc, SearchViewDetail businessProfile, Provider providerResponse) {
 
         try {
@@ -735,7 +734,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
 
     }
-
 
     private void apiSearchViewDetail(SearchViewDetail businessProf, Provider providerResponse) {
 

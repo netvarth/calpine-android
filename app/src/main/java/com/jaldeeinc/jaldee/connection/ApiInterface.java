@@ -665,7 +665,7 @@ public interface ApiInterface {
     @POST("provider/claim/{accId}")
     Call<ProfileModel> usrProfile(@Path("accId")  int account);
 
-    @GET("provider/account/settings/config/{uniqueId}/settings,terminologies,coupon,providerCoupon,location,businessProfile,virtualFields,services,apptServices,donationServices,departmentProviders")
+    @GET("provider/account/settings/config/{uniqueId}/settings,terminologies,coupon,providerCoupon,location,businessProfile,virtualFields,services,apptServices,donationServices,departmentProviders,gallery")
     Call<Provider> getProviderDetails(@Path("uniqueId") int uniqueId);
 
     @GET("provider/account/settings/config/{uniqueId}/{userId}/providerBusinessProfile,providerVirtualFields")

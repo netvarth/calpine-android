@@ -62,6 +62,10 @@ public class GetQuestion implements Serializable {
     @Expose
     private NumberProperties numberProperties;
 
+    @SerializedName("dataGridProperties")
+    @Expose
+    private DataGridProperties dataGridProperties;
+
     @SerializedName("billable")
     @Expose
     private boolean billable;
@@ -189,5 +193,13 @@ public class GetQuestion implements Serializable {
 
     public void setMandatory(boolean mandatory) {
         this.mandatory = mandatory;
+    }
+
+    public DataGridProperties getDataGridProperties() {
+        return dataGridProperties;
+    }
+
+    public void setDataGridProperties(DataGridProperties dataGridProperties) {
+        this.dataGridProperties = dataGridProperties;
     }
 }

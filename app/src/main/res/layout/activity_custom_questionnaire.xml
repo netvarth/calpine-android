@@ -1,151 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.jaldeeinc.jaldee.activities.CustomQuestionnaire">
 
-    <LinearLayout
-        android:id="@+id/toolbar"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_60dp"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:paddingEnd="@dimen/dimen_10dp">
+        android:layout_height="match_parent">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv_back"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dimen_16dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardElevation="@dimen/padding3">
+        <LinearLayout
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_60dp"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/dimen_10dp">
 
-            <ImageView
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_back"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/dimen_16dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardElevation="@dimen/padding3">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding5"
+                    android:src="@mipmap/img_back_arrow"
+                    app:tint="@color/dark_blue">
+
+                </ImageView>
+
+            </androidx.cardview.widget.CardView>
+
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                android:id="@+id/tv_providerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/padding5"
-                android:src="@mipmap/img_back_arrow"
-                app:tint="@color/dark_blue">
+                android:layout_alignRight="@id/cv_back"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/dimen_15dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text=""
+                android:textColor="@color/title_color"
+                android:textSize="@dimen/dimen_18dp">
 
-            </ImageView>
+            </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
-        </androidx.cardview.widget.CardView>
+        </LinearLayout>
 
-
-        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-            android:id="@+id/tv_providerName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@id/cv_back"
-            android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dimen_15dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text=""
-            android:textColor="@color/title_color"
-            android:textSize="@dimen/dimen_18dp">
-
-        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
-    </LinearLayout>
-
-
-    <soup.neumorphism.NeumorphCardView
-        android:id="@+id/pressed_card"
-        style="@style/Widget.Neumorph.CardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:neumorph_backgroundColor="@color/white"
-        app:neumorph_insetBottom="@dimen/dimen_0dp"
-        app:neumorph_insetEnd="@dimen/dimen_1dp"
-        app:neumorph_insetStart="@dimen/dimen_1dp"
-        app:neumorph_insetTop="@dimen/dimen_1dp"
-        android:layout_below="@id/toolbar"
-        android:layout_above="@id/cv_submit"
-        app:neumorph_shadowColorDark="#BEF2F2F2"
-        app:neumorph_shadowColorLight="#BEF2F2F2"
-        app:neumorph_shapeType="pressed">
-
-        <ScrollView
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:layout_above="@id/cv_submit"
+            android:layout_below="@id/toolbar">
+
+            <soup.neumorphism.NeumorphCardView
+                android:id="@+id/pressed_card"
+                style="@style/Widget.Neumorph.CardView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:neumorph_backgroundColor="@color/white"
+                app:neumorph_insetBottom="@dimen/dimen_0dp"
+                app:neumorph_insetEnd="@dimen/dimen_1dp"
+                app:neumorph_insetStart="@dimen/dimen_1dp"
+                app:neumorph_insetTop="@dimen/dimen_1dp"
+                app:neumorph_shadowColorDark="#BEF2F2F2"
+                app:neumorph_shadowColorLight="#BEF2F2F2"
+                app:neumorph_shapeType="pressed">
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/ll_mainLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimen_8dp"
+                            android:layout_marginTop="@dimen/dimen_8dp"
+                            android:layout_marginEnd="@dimen/dimen_8dp"
+                            android:gravity="center_horizontal"
+                            android:text="Please provide us with little more information to complete your booking"
+                            android:textColor="@color/dark_black"
+                            android:textSize="@dimen/dimen_15dp"
+                            android:visibility="visible">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+
+                    </LinearLayout>
+
+                </ScrollView>
+
+            </soup.neumorphism.NeumorphCardView>
+
+        </FrameLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_submit"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/padding45"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/padding5"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            app:cardBackgroundColor="@color/location_theme"
+            app:cardCornerRadius="@dimen/padding3">
 
             <LinearLayout
-                android:id="@+id/ll_mainLayout"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_gravity="center">
 
-
-                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                    android:layout_width="match_parent"
+                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                    android:id="@+id/tv_buttonName"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_8dp"
-                    android:layout_marginTop="@dimen/dimen_8dp"
-                    android:layout_marginEnd="@dimen/dimen_8dp"
-                    android:gravity="center_horizontal"
-                    android:text="Please provide us with little more information to complete your booking"
-                    android:textColor="@color/dark_black"
-                    android:textSize="@dimen/dimen_15dp"
-                    android:visibility="visible">
+                    android:layout_gravity="center"
+                    android:text="Next"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/dimen_18sp">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+                <ImageView
+                    android:id="@+id/iv_next"
+                    android:layout_width="@dimen/dimen_20dp"
+                    android:layout_height="@dimen/dimen_16sp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/txtsize_10"
+                    android:src="@drawable/rightarrow"
+                    app:tint="@color/white">
+
+                </ImageView>
 
 
             </LinearLayout>
 
-        </ScrollView>
+        </androidx.cardview.widget.CardView>
 
-    </soup.neumorphism.NeumorphCardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv_submit"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/padding45"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/padding5"
-        android:layout_marginEnd="@dimen/dimen_10dp"
-        android:layout_marginBottom="@dimen/dimen_10dp"
-        app:cardBackgroundColor="@color/location_theme"
-        app:cardCornerRadius="@dimen/padding3">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
-
-            <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-                android:id="@+id/tv_buttonName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Next"
-                android:textColor="@color/white"
-                android:textSize="@dimen/dimen_18sp">
-
-            </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
-
-            <ImageView
-                android:id="@+id/iv_next"
-                android:layout_width="@dimen/dimen_20dp"
-                android:layout_height="@dimen/dimen_16sp"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/txtsize_10"
-                android:src="@drawable/rightarrow"
-                app:tint="@color/white">
-
-            </ImageView>
+    </RelativeLayout>
 
 
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-
-
-</RelativeLayout>
+</FrameLayout>
