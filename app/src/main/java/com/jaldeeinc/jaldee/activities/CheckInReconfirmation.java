@@ -10,7 +10,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -183,6 +186,10 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
     @BindView(R.id.tv_jCashHint)
     CustomTextViewMedium tvJCashHint;
 
+    @BindView(R.id.ll_cancellation_policy)
+    LinearLayout ll_cancellation_policy;
+
+
     String value = null;
     int familyMEmID;
     String totalAmountPay;
@@ -286,7 +293,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                                     if (bookingModel.getWhtsappCountryCode() != null && bookingModel.getWhtsappPhoneNumber() != null) {
                                         tv_vitual_service_number.setVisibility(View.VISIBLE);
                                         tv_vitual_service_number.setText("+" + bookingModel.getWhtsappCountryCode() + " " + bookingModel.getWhtsappPhoneNumber());
-                                        tv_vitual_service_number.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon_sized    , 0, 0, 0);
+                                        tv_vitual_service_number.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp_videoicon_sized, 0, 0, 0);
                                     }
                                 } else {
                                     ivServiceIcon.setImageResource(R.drawable.whatsapp_icon);
@@ -400,6 +407,29 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
             }
             updateUI(bookingModel.getCheckInInfo(), bookingModel.getEligibleJcashAmt());
         }
+        ll_cancellation_policy.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Dialog cancellationPolicyDialog = new Dialog(mContext);
+                cancellationPolicyDialog.setContentView(R.layout.cancellation_policy_dialog);
+                cancellationPolicyDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                cancellationPolicyDialog.setCancelable(false);
+                DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                int width = (int) (metrics.widthPixels * 1);
+                cancellationPolicyDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                cancellationPolicyDialog.show();
+
+                LinearLayout close = cancellationPolicyDialog.findViewById(R.id.ll_close);
+
+                close.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        cancellationPolicyDialog.cancel();
+                    }
+                });
+            }
+        });
         cbJCash.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -1183,6 +1213,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                             Config.logV("URL----%%%%%---@@--");
                             LservicePrepay.setVisibility(View.VISIBLE);
                             LPrepay.setVisibility(View.VISIBLE);
+                            ll_cancellation_policy.setVisibility(View.VISIBLE);
                             Typeface tyface = Typeface.createFromAsset(getAssets(),
                                     "fonts/Montserrat_Bold.otf");
                             String firstWord = "";
@@ -1256,64 +1287,47 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
 
     @Override
-    public void sendPaymentResponse() {
-
-        if (bookingImagesList != null && bookingImagesList.size() > 0) {
-            ApiCommunicateCheckin(value, String.valueOf(bookingModel.getAccountId()), bookingModel.getMessage(), dialog);
-        }
-
-        String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
-
-        if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
-
-            QuestionnaireInput input = new QuestionnaireInput();
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            input = gson.fromJson(inputString, QuestionnaireInput.class);
-            ApiSubmitQuestionnnaire(input, activeAppointment.getYnwUuid());
+    public void sendPaymentResponse(String paymentStatus) {
+        if (paymentStatus.equalsIgnoreCase("TXN_SUCCESS")) {
+            paymentFinished();
         } else {
-
-            getConfirmationDetails(bookingModel.getAccountId());
+            paymentError();
         }
-
     }
 
     @Override
     public void onPaymentSuccess(String s, PaymentData paymentData) {
-
         try {
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
             new PaymentGateway(this.mContext, CheckInReconfirmation.this).sendPaymentStatus(razorpayModel, "SUCCESS");
             Toast.makeText(this.mContext, "Payment Successful", Toast.LENGTH_LONG).show();
-            paymentFinished(razorpayModel);
+            paymentFinished();
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentSuccess", e);
         }
     }
 
-    private void paymentFinished(RazorpayModel razorpayModel) {
+    @Override
+    public void onPaymentError(int i, String s, PaymentData paymentData) {
+        paymentError();
+    }
 
+    private void paymentFinished() {
         if (bookingImagesList != null && bookingImagesList.size() > 0) {
             ApiCommunicateCheckin(value, String.valueOf(bookingModel.getAccountId()), bookingModel.getMessage(), dialog);
         }
-
         String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
-
         if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
-
             QuestionnaireInput input = new QuestionnaireInput();
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             input = gson.fromJson(inputString, QuestionnaireInput.class);
             ApiSubmitQuestionnnaire(input, activeAppointment.getYnwUuid());
         } else {
-
             getConfirmationDetails(bookingModel.getAccountId());
         }
-
     }
 
-    @Override
-    public void onPaymentError(int i, String s, PaymentData paymentData) {
-
+    private void paymentError() {
         try {
             AlertDialog alertDialog = new AlertDialog.Builder(CheckInReconfirmation.this).create();
             alertDialog.setTitle("Payment Failed");
@@ -1378,6 +1392,35 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
         } else {
             llPaymentOptions.setVisibility(View.GONE);
             llJCash.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String TAG = "PaytmPayment";
+        Log.e(TAG, " result code " + resultCode);
+        // -1 means successful  // 0 means failed
+        // one error is - nativeSdkForMerchantMessage : networkError
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 01 && data != null) {
+            if (data.getStringExtra("response").contains("TXN_SUCCESS")) {
+                sendPaymentResponse("TXN_SUCCESS");
+                Toast.makeText(this, "Payment Successful", Toast.LENGTH_LONG).show();
+            } else {
+                sendPaymentResponse("TXN_FAILED");
+            }
+            Log.e(TAG, " data " + data.getStringExtra("nativeSdkForMerchantMessage"));
+            Log.e(TAG, " data response - " + data.getStringExtra("response"));
+            /*
+            data response - {"BANKNAME":"WALLET","BANKTXNID":"1394221115",
+            "CHECKSUMHASH":"7jRCFIk6eRmrep+IhnmQrlrL43KSCSXrmM+VHP5pH0ekXaaxjt3MEgd1N9mLtWyu4VwpWexHOILCTAhybOo5EVDmAEV33rg2VAS/p0PXdk\u003d",
+            "CURRENCY":"INR","GATEWAYNAME":"WALLET","MID":"EAcP3138556","ORDERID":"100620202152",
+            "PAYMENTMODE":"PPI","RESPCODE":"01","RESPMSG":"Txn Success","STATUS":"TXN_SUCCESS/TXN_FAILURE",
+            "TXNAMOUNT":"2.00","TXNDATE":"2020-06-10 16:57:45.0","TXNID":"2020061011121280011018328631290118"}
+             */
+        } else {
+            Log.e(TAG, " payment failed");
+            Toast.makeText(this, "Payment Failed ", Toast.LENGTH_LONG).show();
         }
     }
 }

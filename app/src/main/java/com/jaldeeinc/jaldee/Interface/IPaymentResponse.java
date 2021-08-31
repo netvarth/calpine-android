@@ -1,5 +1,5 @@
 package com.jaldeeinc.jaldee.Interface;
 
 public interface IPaymentResponse {
-    void sendPaymentResponse();
+    void sendPaymentResponse(String paymentStatus);
 }

@@ -3923,7 +3923,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     }
 
     @Override
-    public void sendPaymentResponse() {
+    public void sendPaymentResponse(String paymentStatus) {
 
         // Paytm
         getConfirmationDetails();

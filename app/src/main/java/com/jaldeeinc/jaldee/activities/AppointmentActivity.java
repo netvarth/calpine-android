@@ -1805,7 +1805,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     }
 
     @Override
-    public void sendPaymentResponse() {
+    public void sendPaymentResponse(String paymentStatus) {
 
         // Paytm
         if (serviceInfo.isUser()) {

@@ -1357,6 +1357,10 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                                             ivSpImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
                                         }
                                     });
+                                } else {
+                                    shimmer.setVisibility(View.GONE);
+                                    ivSpImage.setVisibility(View.VISIBLE);
+                                    ivSpImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
                                 }
                             }
                         }
@@ -1727,13 +1731,15 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     }
 
     @Override
-    public void sendPaymentResponse() {
-
-        onOrderSuccess(accountId);
+    public void sendPaymentResponse(String paymentStatus) {
+        if (paymentStatus.equalsIgnoreCase("TXN_SUCCESS")) {
+            paymentFinished();
+        } else {
+            paymentError();
+        }
     }
 
     private void onOrderSuccess(int acctId) {
-
         final ApiInterface apiService =
                 ApiClient.getClient(CheckoutListActivity.this).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(CheckoutListActivity.this, CheckoutListActivity.this.getResources().getString(R.string.dialog_log_in));
@@ -1750,7 +1756,6 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                     if (response.code() == 200) {
                         activeOrders = response.body();
                         if (activeOrders != null) {
-
                             successDialog = new SuccessDialog(mContext, activeOrders.getOrderNumber());
                             successDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
                             successDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1761,21 +1766,16 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                             int width = (int) (metrics.widthPixels * 1);
                             successDialog.getWindow().setGravity(Gravity.BOTTOM);
                             successDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-
                                     successDialog.dismiss();
                                     Intent checkIn = new Intent(CheckoutListActivity.this, OrderConfirmation.class);
                                     checkIn.putExtra("orderInfo", activeOrders);
                                     startActivity(checkIn);
                                 }
                             }, 8000);
-
-
                         }
-
                     }
                 } catch (Exception e) {
                     Log.i("mnbbnmmnbbnm", e.toString());
@@ -1791,42 +1791,28 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
         });
     }
 
-
-    @Override
-    public void sendTime(String newTime, String date, String displayDate) {
-        try {
-
-            selectedDate = date;
-            String convertedDate = getCustomDateString(date);
-            tvTimeSlot.setText(convertedDate + " " + newTime);
-            selectedTime = newTime;
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public void onPaymentSuccess(String s, PaymentData paymentData) {
-
         try {
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
             new PaymentGateway(mContext, CheckoutListActivity.this).sendPaymentStatus(razorpayModel, "SUCCESS");
             Toast.makeText(mContext, "Payment Successful", Toast.LENGTH_LONG).show();
-            paymentFinished(razorpayModel);
+            paymentFinished();
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentSuccess", e);
         }
     }
 
-    public void paymentFinished(RazorpayModel razorpayModel) {
+    @Override
+    public void onPaymentError(int i, String s, PaymentData paymentData) {
+        paymentError();
+    }
 
+    public void paymentFinished() {
         onOrderSuccess(accountId);
     }
 
-    @Override
-    public void onPaymentError(int i, String s, PaymentData paymentData) {
-
+    private void paymentError() {
         try {
             AlertDialog alertDialog = new AlertDialog.Builder(CheckoutListActivity.this).create();
             alertDialog.setTitle("Payment Failed");
@@ -1840,12 +1826,54 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                             Intent homeIntent = new Intent(CheckoutListActivity.this, Home.class);
                             startActivity(homeIntent);
                             finish();
-
                         }
                     });
             alertDialog.show();
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String TAG = "PaytmPayment";
+        Log.e(TAG, " result code " + resultCode);
+        // -1 means successful  // 0 means failed
+        // one error is - nativeSdkForMerchantMessage : networkError
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 01 && data != null) {
+            if (data.getStringExtra("response").contains("TXN_SUCCESS")) {
+                sendPaymentResponse("TXN_SUCCESS");
+                Toast.makeText(this, "Payment Successful", Toast.LENGTH_LONG).show();
+            } else {
+                sendPaymentResponse("TXN_FAILED");
+            }
+            Log.e(TAG, " data " + data.getStringExtra("nativeSdkForMerchantMessage"));
+            Log.e(TAG, " data response - " + data.getStringExtra("response"));
+            /*
+            data response - {"BANKNAME":"WALLET","BANKTXNID":"1394221115",
+            "CHECKSUMHASH":"7jRCFIk6eRmrep+IhnmQrlrL43KSCSXrmM+VHP5pH0ekXaaxjt3MEgd1N9mLtWyu4VwpWexHOILCTAhybOo5EVDmAEV33rg2VAS/p0PXdk\u003d",
+            "CURRENCY":"INR","GATEWAYNAME":"WALLET","MID":"EAcP3138556","ORDERID":"100620202152",
+            "PAYMENTMODE":"PPI","RESPCODE":"01","RESPMSG":"Txn Success","STATUS":"TXN_SUCCESS/TXN_FAILURE",
+            "TXNAMOUNT":"2.00","TXNDATE":"2020-06-10 16:57:45.0","TXNID":"2020061011121280011018328631290118"}
+             */
+        } else {
+            Log.e(TAG, " payment failed");
+            Toast.makeText(this, "Payment Failed ", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void sendTime(String newTime, String date, String displayDate) {
+        try {
+
+            selectedDate = date;
+            String convertedDate = getCustomDateString(date);
+            tvTimeSlot.setText(convertedDate + " " + newTime);
+            selectedTime = newTime;
+
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 
@@ -2050,7 +2078,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                                 if (walletEligibleJCash.getjCashAmt() > 0) {
                                     cbJCash.setChecked(true);
                                     llJCash.setVisibility(View.VISIBLE);
-                                    cbJCash.setText("Use Jaldee cash balance : Rs "+Config.getAmountNoOrTwoDecimalPoints(walletEligibleJCash.getjCashAmt()));
+                                    cbJCash.setText("Use Jaldee cash balance : Rs " + Config.getAmountNoOrTwoDecimalPoints(walletEligibleJCash.getjCashAmt()));
                                     if (walletEligibleJCash.getjCashAmt() >= Float.parseFloat(catalogs.get(0).getAdvanceAmount())) {
                                         tvJCashHint.setVisibility(View.GONE);
                                         llAdvanceAmount.setVisibility(View.GONE);

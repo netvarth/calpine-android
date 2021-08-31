@@ -68,6 +68,7 @@ import com.jaldeeinc.jaldee.response.SlotsData;
 import com.jaldeeinc.jaldee.response.StoreDetails;
 import com.jaldeeinc.jaldee.response.SubmitQuestionnaire;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
+import com.jaldeeinc.jaldee.response.TelegramNotificationSettingsResponse;
 import com.jaldeeinc.jaldee.response.UserResponse;
 import com.jaldeeinc.jaldee.response.WalletCheckSumModel;
 import com.jaldeeinc.jaldee.response.WalletEligibleJCash;
@@ -734,4 +735,12 @@ public interface ApiInterface {
     @GET("consumer/wallet/cash/{cashId}/txn/log")
     Call<ArrayList<JCashSpentDetails>> getJCashSpentDetails(@Path("cashId") int cashId);
 
+    @GET("chatbot/telegram/consumer/chatId/{countryCode}/{phoneNumber}")
+    Call<ResponseBody> getTelegramChatId(@Path("countryCode") String countryCode,@Path("phoneNumber") String mobile);
+
+    @GET("consumer/telegram/settings")
+    Call<TelegramNotificationSettingsResponse> getTelegramSettings();
+
+    @PUT("consumer/telegram/settings/{enableOrdisable}")
+    Call<ResponseBody> putTelegramNotificationsettings(@Path("enableOrdisable") String enableOrdisable);
 }

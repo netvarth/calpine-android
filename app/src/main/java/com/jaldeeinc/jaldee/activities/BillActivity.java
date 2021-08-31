@@ -841,36 +841,6 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         }
     }
 
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //   mTxvBuy.setEnabled(true);
-
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
-
-            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
-            ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
-
-            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
-
-                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
-                    showAlert("Payment Successful");
-                    finish();
-                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.CANCELLED)) {
-                    showAlert("Payment Cancelled");
-                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.FAILED)) {
-                    showAlert("Payment Failed");
-                }
-
-            } else if (resultModel != null && resultModel.getError() != null) {
-                Toast.makeText(this, "Error check log", Toast.LENGTH_SHORT).show();
-            } else {
-            }
-        } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
-            showAlert("Payment Cancelled");
-        }
-    }
-
     private static Double convertStringToDouble(String str) {
         return Double.parseDouble(str);
     }
@@ -933,7 +903,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                                 llproviderlayout.setVisibility(View.VISIBLE);
                                 tvProviderName.setText(mBillData.getAccountProfile().getProviderBusinessName());
-                                if(domain != null && domain.equalsIgnoreCase("healthCare")) {
+                                if (domain != null && domain.equalsIgnoreCase("healthCare")) {
                                     tv_providerName_hint.setText("Doctor :  ");
                                 } else {
                                     tv_providerName_hint.setText("Provider :  ");
@@ -1146,7 +1116,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         } else {
                             jcLayout.setVisibility(View.GONE);
                         }
-                        
+
                         if (mBillData.getProviderCoupon() != null) {
                             if (mBillData.getProviderCoupon().size() > 0 && mBillData.getProviderCoupon().size() == 1) {
                                 pcLayout.setVisibility(View.VISIBLE);
@@ -1581,7 +1551,36 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
     }
 
-    public void paymentFinished(RazorpayModel razorpayModel) {
+    @Override
+    public void sendPaymentResponse(String paymentStatus) {
+        //Paytm
+        if (paymentStatus.equalsIgnoreCase("TXN_SUCCESS")) {
+            paymentFinished();
+            Toast.makeText(mCOntext, "Payment Successful", Toast.LENGTH_LONG).show();
+        } else {
+            paymentError();
+        }
+    }
+
+    @Override
+    public void onPaymentSuccess(String razorpayPaymentID, PaymentData paymentData) {
+        Log.i("mani", "here");
+        try {
+            RazorpayModel razorpayModel = new RazorpayModel(paymentData);
+            new PaymentGateway(mCOntext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
+            Toast.makeText(mCOntext, "Payment Successful", Toast.LENGTH_LONG).show();
+            paymentFinished();
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentSuccess", e);
+        }
+    }
+
+    @Override
+    public void onPaymentError(int code, String response, PaymentData paymentData) {
+        paymentError();
+    }
+
+    public void paymentFinished() {
         if (ynwUUID.endsWith("_odr")) {
             redirectToOrderTab();  // for in order payment -- after payment redirect to myorder.java tablayout
         } else {
@@ -1592,35 +1591,80 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         finish();
     }
 
-    @Override
-    public void onPaymentSuccess(String razorpayPaymentID, PaymentData paymentData) {
-        Log.i("mani", "here");
+    private void paymentError() {
         try {
-            RazorpayModel razorpayModel = new RazorpayModel(paymentData);
-            new PaymentGateway(mCOntext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
-            Toast.makeText(mCOntext, "Payment Successful", Toast.LENGTH_LONG).show();
-            paymentFinished(razorpayModel);
-
-        } catch (Exception e) {
-            Log.e("TAG", "Exception in onPaymentSuccess", e);
-        }
-    }
-
-    @Override
-    public void onPaymentError(int code, String response, PaymentData paymentData) {
-        try {
-            Toast.makeText(mCOntext, "Payment failed ", Toast.LENGTH_SHORT).show();
+            AlertDialog alertDialog = new AlertDialog.Builder(BillActivity.this).create();
+            alertDialog.setTitle("Payment Failed");
+            alertDialog.setMessage("Unable to process your request.Please try again after some time");
+            alertDialog.setCancelable(false);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            finish();
+                            startActivity(getIntent());
+                            //Intent homeIntent = new Intent(CheckInReconfirmation.this, Home.class);
+                            //startActivity(homeIntent);
+                            //finish();
+                        }
+                    });
+            alertDialog.show();
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
         }
     }
 
-    @Override
-    public void sendPaymentResponse() {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String TAG = "PaytmPayment";
+        Log.e(TAG, " result code " + resultCode);
+        // -1 means successful  // 0 means failed
+        // one error is - nativeSdkForMerchantMessage : networkError
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 01 && data != null) {
+            if (data.getStringExtra("response").contains("TXN_SUCCESS")) {
+                sendPaymentResponse("TXN_SUCCESS");
+                Toast.makeText(this, "Payment Successful", Toast.LENGTH_LONG).show();
+            } else {
+                sendPaymentResponse("TXN_FAILED");
+            }
+            Log.e(TAG, " data " + data.getStringExtra("nativeSdkForMerchantMessage"));
+            Log.e(TAG, " data response - " + data.getStringExtra("response"));
+            /*
+            data response - {"BANKNAME":"WALLET","BANKTXNID":"1394221115",
+            "CHECKSUMHASH":"7jRCFIk6eRmrep+IhnmQrlrL43KSCSXrmM+VHP5pH0ekXaaxjt3MEgd1N9mLtWyu4VwpWexHOILCTAhybOo5EVDmAEV33rg2VAS/p0PXdk\u003d",
+            "CURRENCY":"INR","GATEWAYNAME":"WALLET","MID":"EAcP3138556","ORDERID":"100620202152",
+            "PAYMENTMODE":"PPI","RESPCODE":"01","RESPMSG":"Txn Success","STATUS":"TXN_SUCCESS/TXN_FAILURE",
+            "TXNAMOUNT":"2.00","TXNDATE":"2020-06-10 16:57:45.0","TXNID":"2020061011121280011018328631290118"}
+             */
+        } else {
+            Log.e(TAG, " payment failed");
+            Toast.makeText(this, "Payment Failed ", Toast.LENGTH_LONG).show();
+        }
+        /* payu----------------------------
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
 
-        //Paytm
-        Toast.makeText(BillActivity.this, "Payment Successful", Toast.LENGTH_LONG).show();
+            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
+            ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
 
+            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
+
+                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
+                    showAlert("Payment Successful");
+                    finish();
+                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.CANCELLED)) {
+                    showAlert("Payment Cancelled");
+                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.FAILED)) {
+                    showAlert("Payment Failed");
+                }
+
+            } else if (resultModel != null && resultModel.getError() != null) {
+                Toast.makeText(this, "Error check log", Toast.LENGTH_SHORT).show();
+            } else {
+            }
+        } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
+            showAlert("Payment Cancelled");
+        }*/
     }
 
     @Override

@@ -144,7 +144,7 @@ public class CheckInConfirmation extends AppCompatActivity {
     }
 
 
-    public void UpdateMainUI() throws ParseException {
+    public void UpdateMainUI(ActiveCheckIn activeCheckInInfo) throws ParseException {
         if (from != null && activeCheckInInfo != null) {
             if (from.equalsIgnoreCase("Reschedule")) {
                 if (activeCheckInInfo.getShowToken() != null && activeCheckInInfo.getShowToken().equalsIgnoreCase("true")) {
@@ -578,7 +578,7 @@ public class CheckInConfirmation extends AppCompatActivity {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         activeCheckInInfo = response.body();
-                        UpdateMainUI();
+                        UpdateMainUI(activeCheckInInfo);
                     }
                 } catch (Exception e) {
                     Log.i("mnbbnmmnbbnm", e.toString());

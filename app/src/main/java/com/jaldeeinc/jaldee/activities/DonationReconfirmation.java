@@ -144,7 +144,7 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
     Bitmap bitmap;
     File file;
     //files related
-    private static final String IMAGE_DIRECTORY = "/Jaldee" +"";
+    private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -363,6 +363,7 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
             }
         });
     }
+
     private void getConfirmationId(int userId) {
 
         final ApiInterface apiService =
@@ -553,7 +554,7 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ResponseBody> call = apiService.submitDonationQuestionnaire(uid, requestBody,bookingModel.getAccountId());
+        Call<ResponseBody> call = apiService.submitDonationQuestionnaire(uid, requestBody, bookingModel.getAccountId());
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -622,88 +623,33 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
         }
         return "";
     }
-     @Override
-     public void sendPaymentResponse() {
 
-         AlertDialog alertDialog = new AlertDialog.Builder(this)
-                 .setCancelable(false)
-                 .setView(R.layout.successful_donation)
-                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                     @Override
-                     public void onClick(DialogInterface dialogInterface, int i) {
-                         //set what would happen when positive button is clicked
+    @Override
+    public void sendPaymentResponse(String paymentStatus) {
+        if (paymentStatus.equalsIgnoreCase("TXN_SUCCESS")) {
+            paymentFinished();
+        } else {
+            paymentError();
+        }
+    }
 
-                         finish();
+    @Override
+    public void onPaymentSuccess(String s, PaymentData paymentData) {
+        try {
+            RazorpayModel razorpayModel = new RazorpayModel(paymentData);
+            new PaymentGateway(mContext, DonationReconfirmation.this).sendPaymentStatus(razorpayModel, "SUCCESS");
+            paymentFinished();
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentSuccess", e);
+        }
+    }
 
-                         Intent homeIntent = new Intent(DonationReconfirmation.this, Home.class);
-                         homeIntent.putExtra("isDonation", "DONATION");
-                         startActivity(homeIntent);
-
-                     }
-                 })
-                 .show();
-         CustomTextViewMedium tvProviderName = alertDialog.findViewById(R.id.tv_providerName);
-         CustomTextViewMedium tvLocationName = alertDialog.findViewById(R.id.tv_locationName);
-         CustomTextViewMedium tvDonorName = alertDialog.findViewById(R.id.tv_donorName);
-         CustomTextViewMedium tvCause = alertDialog.findViewById(R.id.tv_cause);
-         CustomTextViewMedium tvAmountPaid = alertDialog.findViewById(R.id.tv_amountPaid);
-         CustomTextViewMedium tvPostInfoTitle = alertDialog.findViewById(R.id.tv_postInfoTitle);
-         CustomTextViewLight tvPostInfoText = alertDialog.findViewById(R.id.tv_postInfoText);
-         LinearLayout llPostInfo = alertDialog.findViewById(R.id.ll_postInfo);
-         if (activeDonation != null) {
-             Locale indian = new Locale("en", "IN");
-             NumberFormat formatter = NumberFormat.getCurrencyInstance(indian);
-             String currency = formatter.format(Double.parseDouble(activeDonation.getDonationAmount()));
-             if (activeDonation.getProviderAccount() != null) {
-                 tvProviderName.setText(activeDonation.getProviderAccount().getAsJsonObject().get("businessName").getAsString());
-             }
-             if (activeDonation.getLocation() != null) {
-                 tvLocationName.setText(activeDonation.getLocation().getAsJsonObject().get("place").getAsString());
-             }
-             if (activeDonation.getDonor() != null) {
-                 String firstName = "", lastName = "";
-                 if (activeDonation.getDonor().getAsJsonObject().get("firstName") != null) {
-                     firstName = activeDonation.getDonor().getAsJsonObject().get("firstName").getAsString();
-                 }
-                 if (activeDonation.getDonor().getAsJsonObject().get("lastName") != null) {
-                     lastName = activeDonation.getDonor().getAsJsonObject().get("lastName").getAsString();
-                 }
-                 tvDonorName.setText(firstName + " " + lastName);
-             }
-             if (activeDonation.getService() != null) {
-                 tvCause.setText(activeDonation.getService().getAsJsonObject().get("name").getAsString());
-             }
-             tvAmountPaid.setText(currency);
-             if (activeDonation.getService().getAsJsonObject().get("postInfoEnabled") != null && activeDonation.getService().getAsJsonObject().get("postInfoEnabled").getAsBoolean()) {
-                 if (activeDonation.getService().getAsJsonObject().get("postInfoTitle") != null && !activeDonation.getService().getAsJsonObject().get("postInfoTitle").getAsString().isEmpty()) {
-                     tvPostInfoTitle.setText(activeDonation.getService().getAsJsonObject().get("postInfoTitle").getAsString());
-                     tvPostInfoTitle.setVisibility(View.VISIBLE);
-                     llPostInfo.setVisibility(View.VISIBLE);
-                 }
-                 if (activeDonation.getService().getAsJsonObject().get("postInfoText") != null && !activeDonation.getService().getAsJsonObject().get("postInfoText").getAsString().isEmpty()) {
-                     tvPostInfoText.setText(activeDonation.getService().getAsJsonObject().get("postInfoText").getAsString());
-                     tvPostInfoText.setVisibility(View.VISIBLE);
-                     llPostInfo.setVisibility(View.VISIBLE);
-                 }
-             }
-         }
-         //View view = inflater.inflate(R.layout.fragment_my_bookings, container, false);
-         //tvServiceName = findViewById(R.id.tv_serviceName);
-        /*AlertDialog alertDialog = new AlertDialog.Builder(this)
-                .setCancelable(false)
-                .setView(R.layout.successful_donation)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //set what would happen when positive button is clicked
-                        finish();
-                    }
-                })
-                .show();*/
-     }
+    @Override
+    public void onPaymentError(int i, String s, PaymentData paymentData) {
+        paymentError();
+    }
 
     public void paymentFinished() {
-
         AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setCancelable(false)
                 .setView(R.layout.successful_donation)
@@ -712,7 +658,6 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //set what would happen when positive button is clicked
                         finish();
-
                         Intent homeIntent = new Intent(DonationReconfirmation.this, Home.class);
                         homeIntent.putExtra("isDonation", "DONATION");
                         startActivity(homeIntent);
@@ -776,30 +721,55 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
                     }
                 })
                 .show();*/
-
     }
 
-    @Override
-    public void onPaymentSuccess(String s, PaymentData paymentData) {
-
+    private void paymentError() {
         try {
-            RazorpayModel razorpayModel = new RazorpayModel(paymentData);
-            new PaymentGateway(mContext, DonationReconfirmation.this).sendPaymentStatus(razorpayModel, "SUCCESS");
-            paymentFinished();
-
-        } catch (Exception e) {
-            Log.e("TAG", "Exception in onPaymentSuccess", e);
-        }
-    }
-
-    @Override
-    public void onPaymentError(int i, String s, PaymentData paymentData) {
-
-        try {
-            Toast.makeText(mContext, "Payment failed", Toast.LENGTH_SHORT).show();
+            AlertDialog alertDialog = new AlertDialog.Builder(DonationReconfirmation.this).create();
+            alertDialog.setTitle("Payment Failed");
+            alertDialog.setMessage("Unable to process your request.Please try again after some time");
+            alertDialog.setCancelable(false);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            //Intent homeIntent = new Intent(ReconfirmationActivity.this, Home.class);
+                            //startActivity(homeIntent);
+                            finish();
+                        }
+                    });
+            alertDialog.show();
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String TAG = "PaytmPayment";
+        Log.e(TAG, " result code " + resultCode);
+        // -1 means successful  // 0 means failed
+        // one error is - nativeSdkForMerchantMessage : networkError
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 01 && data != null) {
+            if (data.getStringExtra("response").contains("TXN_SUCCESS")) {
+                sendPaymentResponse("TXN_SUCCESS");
+                Toast.makeText(this, "Payment Successful", Toast.LENGTH_LONG).show();
+            } else {
+                sendPaymentResponse("TXN_FAILED");
+            }
+            Log.e(TAG, " data " + data.getStringExtra("nativeSdkForMerchantMessage"));
+            Log.e(TAG, " data response - " + data.getStringExtra("response"));
+            /*
+            data response - {"BANKNAME":"WALLET","BANKTXNID":"1394221115",
+            "CHECKSUMHASH":"7jRCFIk6eRmrep+IhnmQrlrL43KSCSXrmM+VHP5pH0ekXaaxjt3MEgd1N9mLtWyu4VwpWexHOILCTAhybOo5EVDmAEV33rg2VAS/p0PXdk\u003d",
+            "CURRENCY":"INR","GATEWAYNAME":"WALLET","MID":"EAcP3138556","ORDERID":"100620202152",
+            "PAYMENTMODE":"PPI","RESPCODE":"01","RESPMSG":"Txn Success","STATUS":"TXN_SUCCESS/TXN_FAILURE",
+            "TXNAMOUNT":"2.00","TXNDATE":"2020-06-10 16:57:45.0","TXNID":"2020061011121280011018328631290118"}
+             */
+        } else {
+            Log.e(TAG, " payment failed");
+            Toast.makeText(this, "Payment Failed ", Toast.LENGTH_LONG).show();
+        }
+    }
 }

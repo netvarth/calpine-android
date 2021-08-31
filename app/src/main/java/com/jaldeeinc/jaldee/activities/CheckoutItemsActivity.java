@@ -1132,9 +1132,12 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                             ivSpImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
                                         }
                                     });
+                                } else {
+                                    shimmer.setVisibility(View.GONE);
+                                    ivSpImage.setVisibility(View.VISIBLE);
+                                    ivSpImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
                                 }
                             }
-
                         }
 
                     } else {
@@ -1745,19 +1748,21 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     }
 
     @Override
-    public void sendPaymentResponse() {
-
-        onOrderSuccess(accountId);
+    public void sendPaymentResponse(String paymentStatus) {
+        if (paymentStatus.equalsIgnoreCase("TXN_SUCCESS")) {
+            paymentFinished();
+        } else {
+            paymentError();
+        }
     }
 
     @Override
     public void onPaymentSuccess(String s, PaymentData paymentData) {
-
         try {
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
             new PaymentGateway(mContext, CheckoutItemsActivity.this).sendPaymentStatus(razorpayModel, "SUCCESS");
             Toast.makeText(mContext, "Payment Successful", Toast.LENGTH_LONG).show();
-            paymentFinished(razorpayModel);
+            paymentFinished();
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentSuccess", e);
         }
@@ -1765,7 +1770,14 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
     @Override
     public void onPaymentError(int i, String s, PaymentData paymentData) {
+        paymentError();
+    }
 
+    public void paymentFinished() {
+        onOrderSuccess(accountId);
+    }
+
+    private void paymentError() {
         try {
             AlertDialog alertDialog = new AlertDialog.Builder(CheckoutItemsActivity.this).create();
             alertDialog.setTitle("Payment Failed");
@@ -1779,7 +1791,6 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                             Intent homeIntent = new Intent(CheckoutItemsActivity.this, Home.class);
                             startActivity(homeIntent);
                             finish();
-
                         }
                     });
             alertDialog.show();
@@ -1788,9 +1799,33 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         }
     }
 
-    public void paymentFinished(RazorpayModel razorpayModel) {
-
-        onOrderSuccess(accountId);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String TAG = "PaytmPayment";
+        Log.e(TAG, " result code " + resultCode);
+        // -1 means successful  // 0 means failed
+        // one error is - nativeSdkForMerchantMessage : networkError
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 01 && data != null) {
+            if (data.getStringExtra("response").contains("TXN_SUCCESS")) {
+                sendPaymentResponse("TXN_SUCCESS");
+                Toast.makeText(this, "Payment Successful", Toast.LENGTH_LONG).show();
+            } else {
+                sendPaymentResponse("TXN_FAILED");
+            }
+            Log.e(TAG, " data " + data.getStringExtra("nativeSdkForMerchantMessage"));
+            Log.e(TAG, " data response - " + data.getStringExtra("response"));
+            /*
+            data response - {"BANKNAME":"WALLET","BANKTXNID":"1394221115",
+            "CHECKSUMHASH":"7jRCFIk6eRmrep+IhnmQrlrL43KSCSXrmM+VHP5pH0ekXaaxjt3MEgd1N9mLtWyu4VwpWexHOILCTAhybOo5EVDmAEV33rg2VAS/p0PXdk\u003d",
+            "CURRENCY":"INR","GATEWAYNAME":"WALLET","MID":"EAcP3138556","ORDERID":"100620202152",
+            "PAYMENTMODE":"PPI","RESPCODE":"01","RESPMSG":"Txn Success","STATUS":"TXN_SUCCESS/TXN_FAILURE",
+            "TXNAMOUNT":"2.00","TXNDATE":"2020-06-10 16:57:45.0","TXNID":"2020061011121280011018328631290118"}
+             */
+        } else {
+            Log.e(TAG, " payment failed");
+            Toast.makeText(this, "Payment Failed ", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void APIPayment(String accountID) {
@@ -2074,7 +2109,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                 if (advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt") != null && advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt").getAsDouble() > 0) {
                                     cbJCash.setChecked(true);
                                     llJCash.setVisibility(View.VISIBLE);
-                                    cbJCash.setText("Use Jaldee cash balance : Rs "+Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt").getAsString())));
+                                    cbJCash.setText("Use Jaldee cash balance : Rs " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt").getAsString())));
                                     if (advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt").getAsDouble() >= advancePaymentDetailsOrder.getAdvanceAmount()) {
                                         tvJCashHint.setVisibility(View.GONE);
                                         llAdvanceAmount.setVisibility(View.GONE);
