@@ -22,9 +22,7 @@ buildscript {
 allprojects {
     repositories {
         maven { url "https://jitpack.io" }
-        maven {
-            url "https://artifactory.paytm.in/libs-release-local"
-        }
+        maven { url "https://artifactory.paytm.in/libs-release-local" }
         google()
         jcenter()
     }
