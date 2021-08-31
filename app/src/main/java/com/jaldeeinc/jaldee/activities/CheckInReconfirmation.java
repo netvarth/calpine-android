@@ -859,6 +859,8 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
             }
 
+            
+
             @Override
             public void onFailure(Call<SubmitQuestionnaire> call, Throwable t) {
                 // Log error here since request failed
