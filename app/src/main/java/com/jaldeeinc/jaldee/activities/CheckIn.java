@@ -1793,7 +1793,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID, Constants.PURPOSE_PREPAYMENT);
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
             public void onResponse(Call<ArrayList<PaymentModel>> call, Response<ArrayList<PaymentModel>> response) {
@@ -1804,13 +1804,21 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         mPaymentData = response.body();
-                        for (int i = 0; i < mPaymentData.size(); i++) {
+                        /*for (int i = 0; i < mPaymentData.size(); i++) {
                             if (mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")) {
                                 showPaytmWallet = true;
                             }
                             if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
                                 showPayU = true;
                             }
+                        }*/
+
+                        if (mPaymentData.get(0).getPayGateways().contains("PAYTM")) {
+                            showPaytmWallet = true;
+                        }
+
+                        if (mPaymentData.get(0).getPayGateways().contains("RAZORPAY")) {
+                            showPayU = true;
                         }
                         if ((showPayU) || showPaytmWallet) {
                             Config.logV("URL----%%%%%---@@--");

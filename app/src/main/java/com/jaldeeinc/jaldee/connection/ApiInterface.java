@@ -124,8 +124,7 @@ public interface ApiInterface {
     Call<ResponseBody> SetPassword(@Path("otp") String otp, @Body RequestBody jsonObj);
 
 
-
-    @Headers({"Accept: application/json","User-Agent: android"})
+    @Headers({"Accept: application/json", "User-Agent: android"})
     @POST("consumer/login")
     Call<LoginResponse> LoginResponse(@Header("device-name") String name, @Body RequestBody jsonObj);
 
@@ -366,8 +365,8 @@ public interface ApiInterface {
     @GET("consumer/waitlist/queues/{serviceID}/{sub_serviceid}/{modifiedDate}")
     Call<ArrayList<QueueTimeSlotModel>> getQueueTimeSlot(@Path("serviceID") String serviceID, @Path("sub_serviceid") String sub_serviceid, @Path("modifiedDate") String modifiedDate, @Query("account") String acountid);
 
-    @GET(" consumer/payment/modes/{accountid}")
-    Call<ArrayList<PaymentModel>> getPaymentModes(@Path("accountid") String accountid);
+    @GET(" consumer/payment/modes/{accountid}/{paymentPurpose}")
+    Call<ArrayList<PaymentModel>> getPaymentModes(@Path("accountid") String accountid, @Path("paymentPurpose") String paymentPurpose);
 
     @GET("consumer/waitlist/history")
     Call<ArrayList<ActiveCheckIn>> getCheckInList(@QueryMap(encoded = true) Map<String, String> query);
@@ -413,7 +412,7 @@ public interface ApiInterface {
 
     @Headers({"User-Agent: android"})
     @POST("consumer/payment")
-    Call<CheckSumModel> generateHash(@Header("device-name") String deviceName,@Body RequestBody jsonObj);
+    Call<CheckSumModel> generateHash(@Header("device-name") String deviceName, @Body RequestBody jsonObj);
 
     @Headers("User-Agent: android")
     @POST("consumer/payment/wallet")
@@ -628,7 +627,7 @@ public interface ApiInterface {
     Call<ArrayList<Schedule>> getHomeDeliverySchedule(@Path("catalogId") int catalogId, @Query("account") int accountId);
 
     @POST("consumer/orders")
-    Call<ResponseBody> order(@Query("account") int account,  @Body RequestBody jsonObj);
+    Call<ResponseBody> order(@Query("account") int account, @Body RequestBody jsonObj);
 
     @GET("consumer/orders")
     Call<ArrayList<ActiveOrders>> getOrders(@QueryMap(encoded = true) Map<String, String> query);
@@ -646,16 +645,16 @@ public interface ApiInterface {
     Call<StoreDetails> getStoreDetails(@Path("id") int id);
 
     @PUT("consumer/orders/{ynwuuid}")
-    Call<ResponseBody> cancelOrder(@Path("ynwuuid") String uid,  @Query("account") int accountId);
+    Call<ResponseBody> cancelOrder(@Path("ynwuuid") String uid, @Query("account") int accountId);
 
     @POST("consumer/orders")
-    Call<ResponseBody> orderList(@Query("account") int account,  @Body RequestBody jsonObj);
+    Call<ResponseBody> orderList(@Query("account") int account, @Body RequestBody jsonObj);
 
     @POST("consumer/waitlist/{uuid}/attachment")
-    Call<ResponseBody> waitlistSendAttachments(@Path("uuid") String uid,@Query("account") int account,  @Body RequestBody jsonObj);
+    Call<ResponseBody> waitlistSendAttachments(@Path("uuid") String uid, @Query("account") int account, @Body RequestBody jsonObj);
 
     @POST("consumer/appointment/{uuid}/attachment")
-    Call<ResponseBody> appointmentSendAttachments(@Path("uuid") String uid,@Query("account") int account,  @Body RequestBody jsonObj);
+    Call<ResponseBody> appointmentSendAttachments(@Path("uuid") String uid, @Query("account") int account, @Body RequestBody jsonObj);
 
     @GET("consumer/waitlist/attachment/{uuid}")
     Call<ArrayList<ShoppingList>> getWaitlistAttachments(@Path("uuid") String uid, @Query("account") int account);
@@ -664,13 +663,13 @@ public interface ApiInterface {
     Call<ArrayList<ShoppingList>> getAppointmentAttachments(@Path("uuid") String uid, @Query("account") int account);
 
     @POST("provider/claim/{accId}")
-    Call<ProfileModel> usrProfile(@Path("accId")  int account);
+    Call<ProfileModel> usrProfile(@Path("accId") int account);
 
     @GET("provider/account/settings/config/{uniqueId}/settings,terminologies,coupon,providerCoupon,location,businessProfile,virtualFields,services,apptServices,donationServices,departmentProviders,gallery")
     Call<Provider> getProviderDetails(@Path("uniqueId") int uniqueId);
 
     @GET("provider/account/settings/config/{uniqueId}/{userId}/providerBusinessProfile,providerVirtualFields")
-    Call<UserResponse> getUserDetails(@Path("uniqueId") int uniqueId,@Path("userId") int userId);
+    Call<UserResponse> getUserDetails(@Path("uniqueId") int uniqueId, @Path("userId") int userId);
 
     @GET("provider/account/settings/config/{uniqueId}/coupon,providerCoupon")
     Call<Provider> getCoupons(@Path("uniqueId") int uniqueId);
@@ -697,25 +696,25 @@ public interface ApiInterface {
     Call<SubmitQuestionnaire> submitAppointmentQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj, @Query("account") int accountId);
 
     @POST("consumer/waitlist/questionnaire/{uid}?")
-    Call<SubmitQuestionnaire> submitWaitListQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
+    Call<SubmitQuestionnaire> submitWaitListQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj, @Query("account") int accountId);
 
     @POST("consumer/donation/questionnaire/submit/{uid}?")
-    Call<ResponseBody> submitDonationQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
+    Call<ResponseBody> submitDonationQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj, @Query("account") int accountId);
 
     @POST("consumer/appointment/questionnaire/resubmit/{uid}?")
-    Call<SubmitQuestionnaire> reSubmitAppQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
+    Call<SubmitQuestionnaire> reSubmitAppQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj, @Query("account") int accountId);
 
     @POST("consumer/waitlist/questionnaire/resubmit/{uid}?")
-    Call<SubmitQuestionnaire> reSubmitWlQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj,@Query("account") int accountId);
+    Call<SubmitQuestionnaire> reSubmitWlQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj, @Query("account") int accountId);
 
     @PUT
     Observable<Response<Void>> uploadPreSignedS3File(@Url String url, @Body RequestBody image);
 
     @PUT("consumer/appointment/questionnaire/upload/status/{uid}?")
-    Call<ResponseBody> checkAppointmentUploadStatus(@Path("uid") String id,@Query("account") int accountId,@Body RequestBody jsonObj);
+    Call<ResponseBody> checkAppointmentUploadStatus(@Path("uid") String id, @Query("account") int accountId, @Body RequestBody jsonObj);
 
     @PUT("consumer/waitlist/questionnaire/upload/status/{uid}?")
-    Call<ResponseBody> checkWaitlistUploadStatus(@Path("uid") String id,@Query("account") int accountId,@Body RequestBody jsonObj);
+    Call<ResponseBody> checkWaitlistUploadStatus(@Path("uid") String id, @Query("account") int accountId, @Body RequestBody jsonObj);
 
     @GET("consumer/wallet/redeem/eligible/amt")
     Call<WalletEligibleJCash> getWalletEligibleJCash();
@@ -736,7 +735,7 @@ public interface ApiInterface {
     Call<ArrayList<JCashSpentDetails>> getJCashSpentDetails(@Path("cashId") int cashId);
 
     @GET("chatbot/telegram/consumer/chatId/{countryCode}/{phoneNumber}")
-    Call<ResponseBody> getTelegramChatId(@Path("countryCode") String countryCode,@Path("phoneNumber") String mobile);
+    Call<ResponseBody> getTelegramChatId(@Path("countryCode") String countryCode, @Path("phoneNumber") String mobile);
 
     @GET("consumer/telegram/settings")
     Call<TelegramNotificationSettingsResponse> getTelegramSettings();

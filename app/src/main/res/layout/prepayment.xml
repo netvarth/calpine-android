@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
 
             android:background="@drawable/roundedrect_blue"
-            android:text="PayTM"
+            android:text="Paytm"
             android:textAllCaps="false"
             android:textColor="@color/app_background"
             android:textSize="@dimen/txtsize_hint" />

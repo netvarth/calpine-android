@@ -111,6 +111,9 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
     @BindView(R.id.ll_paymentOptions)
     LinearLayout llPaymentOptions;
 
+    @BindView(R.id.tv_buttonName)
+    CustomTextViewBold tvButtonName;
+
     @BindView(R.id.cv_paytm)
     CardView cvPaytm;
 
@@ -393,7 +396,7 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
                                 //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
                             } else {
                                 try {
-                                    if (showPaytmWallet) {
+                                    /*if (showPaytmWallet) {
                                         cvPaytm.setVisibility(View.VISIBLE);
                                     } else {
                                         cvPaytm.setVisibility(View.GONE);
@@ -402,7 +405,7 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
                                         cvRazorpay.setVisibility(View.VISIBLE);
                                     } else {
                                         cvRazorpay.setVisibility(View.GONE);
-                                    }
+                                    }*/
                                     if (!isPaytm) {
                                         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
                                         mDialog.show();
@@ -451,7 +454,7 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(String.valueOf(accountID));
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(String.valueOf(accountID), Constants.PURPOSE_DONATIONPAYMENT);
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
             public void onResponse(Call<ArrayList<PaymentModel>> call, Response<ArrayList<PaymentModel>> response) {
@@ -465,7 +468,7 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
 
                         mPaymentData = response.body();
 
-                        for (int i = 0; i < mPaymentData.size(); i++) {
+                        /*for (int i = 0; i < mPaymentData.size(); i++) {
                             if (mPaymentData.get(i).getName().equalsIgnoreCase("PPI")) {
                                 showPaytmWallet = true;
                             }
@@ -473,27 +476,21 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
                             if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB") || mPaymentData.get(i).getName().equalsIgnoreCase("UPI")) {
                                 showPayU = true;
                             }
+                        }*/
+
+                        if (mPaymentData.get(0).getPayGateways().contains("PAYTM")) {
+                            showPaytmWallet = true;
+                        }
+
+                        if (mPaymentData.get(0).getPayGateways().contains("RAZORPAY")) {
+                            showPayU = true;
                         }
 
                         if ((showPayU) || showPaytmWallet) {
                             Config.logV("URL----%%%%%---@@--");
 
                         }
-                        /*if ((showPayU && showPaytmWallet) || (!showPayU && showPaytmWallet)) {
-
-                            cvRazorpay.setBackground(payMthdBtnDisabled);
-                            cvPaytm.setBackground(payMthdBtnEnabled);
-                            razorPay = false;
-                            payTm = true;
-
-                        } else if (showPayU && !showPaytmWallet) {
-
-                            cvRazorpay.setBackground(payMthdBtnEnabled);
-                            cvPaytm.setBackground(payMthdBtnDisabled);
-                            razorPay = true;
-                            payTm = false;
-                        }*/
-                        if (showPayU)
+                        /*if (showPayU)
                             cvRazorpay.setVisibility(View.VISIBLE);
                         else
                             cvRazorpay.setVisibility(View.GONE);
@@ -502,6 +499,19 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
                             cvPaytm.setVisibility(View.VISIBLE);
                         else
                             cvPaytm.setVisibility(View.GONE);
+                        */
+                        if (showPaytmWallet && showPayU) {
+                            llPaymentOptions.setVisibility(View.VISIBLE);
+                            tvButtonName.setText("Proceed to Payment");
+                        } else if (showPayU && !showPaytmWallet) {
+                            isPaytm = false;
+                            llPaymentOptions.setVisibility(View.GONE);
+                            tvButtonName.setText("CC/DC/UPI");
+                        } else if (!showPayU && showPaytmWallet) {
+                            isPaytm = true;
+                            llPaymentOptions.setVisibility(View.GONE);
+                            tvButtonName.setText("CC/DC/UPI");
+                        }
                     } else {
                         Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
                     }

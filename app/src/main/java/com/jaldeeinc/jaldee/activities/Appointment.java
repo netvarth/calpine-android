@@ -2163,7 +2163,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         mDialog.show();
 
 
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID, Constants.PURPOSE_PREPAYMENT);
 
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
@@ -2181,7 +2181,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                         mPaymentData = response.body();
 
-                        for (int i = 0; i < mPaymentData.size(); i++) {
+                        /*for (int i = 0; i < mPaymentData.size(); i++) {
                             if (mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")) {
                                 showPaytmWallet = true;
                             }
@@ -2189,8 +2189,15 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
                                 showPayU = true;
                             }
+                        }*/
+
+                        if (mPaymentData.get(0).getPayGateways().contains("PAYTM")) {
+                            showPaytmWallet = true;
                         }
 
+                        if (mPaymentData.get(0).getPayGateways().contains("RAZORPAY")) {
+                            showPayU = true;
+                        }
                         if ((showPayU) || showPaytmWallet) {
                             Config.logV("URL----%%%%%---@@--");
                             LservicePrepay.setVisibility(View.VISIBLE);

@@ -1150,7 +1150,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
         mDialog.show();
 
 
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID, Constants.PURPOSE_DONATIONPAYMENT);
 
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
@@ -1168,7 +1168,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
 
                         mPaymentData = response.body();
 
-                        for (int i = 0; i < mPaymentData.size(); i++) {
+                        /*for (int i = 0; i < mPaymentData.size(); i++) {
                             if (mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")) {
                                 showPaytmWallet = true;
                             }
@@ -1176,8 +1176,14 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                             if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
                                 showPayU = true;
                             }
+                        }*/
+                        if (mPaymentData.get(0).getPayGateways().contains("PAYTM")) {
+                            showPaytmWallet = true;
                         }
 
+                        if (mPaymentData.get(0).getPayGateways().contains("RAZORPAY")) {
+                            showPayU = true;
+                        }
                         if ((showPayU) || showPaytmWallet) {
                             Config.logV("URL----%%%%%---@@--");
                         //   LservicePrepay.setVisibility(View.VISIBLE);

@@ -1,26 +1,20 @@
 package com.jaldeeinc.jaldee.response;
 
+import java.util.ArrayList;
+
 /**
  * Created by sharmila on 8/8/18.
  */
 
 public class PaymentModel {
-    String Displayname;
-    String name;
+    ArrayList<PayModes> payModes;
+    ArrayList<String> payGateways;
 
-    public String getDisplayname() {
-        return Displayname;
+    public ArrayList<PayModes> getPayModes() {
+        return payModes;
     }
 
-    public void setDisplayname(String displayname) {
-        Displayname = displayname;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public ArrayList<String> getPayGateways() {
+        return payGateways;
     }
 }

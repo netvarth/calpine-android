@@ -158,7 +158,7 @@ public class PaymentActivity extends AppCompatActivity implements IPaymentRespon
         mDialog.show();
 
 
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID, Constants.PURPOSE_BILLPAYMENT);
 
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
@@ -176,7 +176,7 @@ public class PaymentActivity extends AppCompatActivity implements IPaymentRespon
                         ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
                         mPaymentData = response.body();
 
-                        for (int i = 0; i < mPaymentData.size(); i++) {
+                        /*for (int i = 0; i < mPaymentData.size(); i++) {
                             if (mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")) {
                                 showPaytmWallet = true;
                             }
@@ -185,8 +185,14 @@ public class PaymentActivity extends AppCompatActivity implements IPaymentRespon
                                 showPayU = true;
 
                             }
+                        }*/
+                        if (mPaymentData.get(0).getPayGateways().contains("PAYTM")) {
+                            showPaytmWallet = true;
                         }
 
+                        if (mPaymentData.get(0).getPayGateways().contains("RAZORPAY")) {
+                            showPayU = true;
+                        }
                         if (!showPaytmWallet && !showPayU) {
 
                         } else {

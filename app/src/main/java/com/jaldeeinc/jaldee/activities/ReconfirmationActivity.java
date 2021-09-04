@@ -363,8 +363,9 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
             familyMEmID = bookingModel.getFamilyEMIID();
             if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true")) {
                 APIPayment(String.valueOf(bookingModel.getAccountId()));
+            } else {
+                updateUI(bookingModel.getServiceInfo(), bookingModel.getEligibleJcashAmt());
             }
-            updateUI(bookingModel.getServiceInfo(), bookingModel.getEligibleJcashAmt());
         }
 
         ll_cancellation_policy.setOnClickListener(new View.OnClickListener() {
@@ -400,13 +401,37 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                         llPaymentOptions.setVisibility(View.GONE);
                     } else {
                         tvButtonName.setText("Proceed to Payment");
-                        llPaymentOptions.setVisibility(View.VISIBLE);
+                        //llPaymentOptions.setVisibility(View.VISIBLE);
                         tvJCashHint.setVisibility(View.VISIBLE);
+                        if (showPaytmWallet && showPayU) {
+                            llPaymentOptions.setVisibility(View.VISIBLE);
+                            tvButtonName.setText("Proceed to Payment");
+                        } else if (showPayU && !showPaytmWallet) {
+                            isPaytm = false;
+                            llPaymentOptions.setVisibility(View.GONE);
+                            tvButtonName.setText("CC/DC/UPI");
+                        } else if (!showPayU && showPaytmWallet) {
+                            isPaytm = true;
+                            llPaymentOptions.setVisibility(View.GONE);
+                            tvButtonName.setText("CC/DC/UPI");
+                        }
                     }
                 } else {
                     tvButtonName.setText("Proceed to Payment");
                     if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true")) {
-                        llPaymentOptions.setVisibility(View.VISIBLE);
+                        //llPaymentOptions.setVisibility(View.VISIBLE);
+                        if (showPaytmWallet && showPayU) {
+                            llPaymentOptions.setVisibility(View.VISIBLE);
+                            tvButtonName.setText("Proceed to Payment");
+                        } else if (showPayU && !showPaytmWallet) {
+                            isPaytm = false;
+                            llPaymentOptions.setVisibility(View.GONE);
+                            tvButtonName.setText("CC/DC/UPI");
+                        } else if (!showPayU && showPaytmWallet) {
+                            isPaytm = true;
+                            llPaymentOptions.setVisibility(View.GONE);
+                            tvButtonName.setText("CC/DC/UPI");
+                        }
                     }
                     tvJCashHint.setVisibility(View.GONE);
                 }
@@ -834,7 +859,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
         mDialog.show();
 
 
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID, Constants.PURPOSE_PREPAYMENT);
 
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
@@ -852,7 +877,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
 
                         mPaymentData = response.body();
 
-                        for (int i = 0; i < mPaymentData.size(); i++) {
+                        /*for (int i = 0; i < mPaymentData.size(); i++) {
                             if (mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")) {
                                 showPaytmWallet = true;
                             }
@@ -860,8 +885,14 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                             if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
                                 showPayU = true;
                             }
+                        }*/
+                        if (mPaymentData.get(0).getPayGateways().contains("PAYTM")) {
+                            showPaytmWallet = true;
                         }
 
+                        if (mPaymentData.get(0).getPayGateways().contains("RAZORPAY")) {
+                            showPayU = true;
+                        }
                         if ((showPayU) || showPaytmWallet) {
                             Config.logV("URL----%%%%%---@@--");
                             LservicePrepay.setVisibility(View.VISIBLE);
@@ -901,7 +932,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                         } else {
                             cvRazorpay.setVisibility(View.GONE);
                         }
-
+                        updateUI(bookingModel.getServiceInfo(), bookingModel.getEligibleJcashAmt());
                     } else {
                         Toast.makeText(ReconfirmationActivity.this, response.errorBody().string(), Toast.LENGTH_LONG).show();
                     }
@@ -1339,14 +1370,34 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                         tvButtonName.setText("Confirm");
                     } else {
                         tvJCashHint.setVisibility(View.VISIBLE);
-                        llPaymentOptions.setVisibility(View.VISIBLE);
-                        tvButtonName.setText("Proceed to Payment");
+                        if (showPaytmWallet && showPayU) {
+                            llPaymentOptions.setVisibility(View.VISIBLE);
+                            tvButtonName.setText("Proceed to Payment");
+                        } else if (showPayU && !showPaytmWallet) {
+                            isPaytm = false;
+                            llPaymentOptions.setVisibility(View.GONE);
+                            tvButtonName.setText("CC/DC/UPI");
+                        } else if (!showPayU && showPaytmWallet) {
+                            isPaytm = true;
+                            llPaymentOptions.setVisibility(View.GONE);
+                            tvButtonName.setText("CC/DC/UPI");
+                        }
                     }
                 } else if (eligibleJcashAmt == 0) {
                     cbJCash.setChecked(false);
                     llJCash.setVisibility(View.GONE);
-                    llPaymentOptions.setVisibility(View.VISIBLE);
-                    tvButtonName.setText("Proceed to Payment");
+                    if (showPaytmWallet && showPayU) {
+                        llPaymentOptions.setVisibility(View.VISIBLE);
+                        tvButtonName.setText("Proceed to Payment");
+                    } else if (showPayU && !showPaytmWallet) {
+                        isPaytm = false;
+                        llPaymentOptions.setVisibility(View.GONE);
+                        tvButtonName.setText("CC/DC/UPI");
+                    } else if (!showPayU && showPaytmWallet) {
+                        isPaytm = true;
+                        llPaymentOptions.setVisibility(View.GONE);
+                        tvButtonName.setText("CC/DC/UPI");
+                    }
                 } else {
                     cbJCash.setChecked(false);
                     llJCash.setVisibility(View.GONE);
