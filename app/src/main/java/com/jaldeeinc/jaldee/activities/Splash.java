@@ -19,17 +19,19 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.utils.AppPreferences;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
+import pl.droidsonroids.gif.GifImageView;
+
 /**
  * Created by sharmila on 3/7/18.
  */
 
 public class Splash extends AppCompatActivity {
 
-    private static final int SPLASH_DELAY = 3000;
+    private static final int SPLASH_DELAY = 5000;
 
     private final Handler mHandler = new Handler();
     private final Launcher mLauncher = new Launcher();
-    private ImageView ivLogo;
+    private GifImageView ivLogo;
     Animation animation;
 
     @Override
@@ -48,8 +50,8 @@ public class Splash extends AppCompatActivity {
                 "fonts/Montserrat_Bold.otf");
         txtlogo.setTypeface(tyface);
 
-        animation = AnimationUtils.loadAnimation(Splash.this, R.anim.sample);
-        ivLogo.startAnimation(animation);
+//        animation = AnimationUtils.loadAnimation(Splash.this, R.anim.sample);
+//        ivLogo.startAnimation(animation);
 
 
 

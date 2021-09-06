@@ -1,31 +1,38 @@
 package com.jaldeeinc.jaldee.Fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.custom.QuestionnaireBoolView;
 import com.jaldeeinc.jaldee.custom.QuestionnaireDateView;
 import com.jaldeeinc.jaldee.custom.QuestionnaireFileUploadView;
+import com.jaldeeinc.jaldee.custom.QuestionnaireGridView;
 import com.jaldeeinc.jaldee.custom.QuestionnaireListView;
 import com.jaldeeinc.jaldee.custom.QuestionnaireNumberView;
 import com.jaldeeinc.jaldee.custom.QuestionnaireTextView;
 
+import com.jaldeeinc.jaldee.model.DataGrid;
 import com.jaldeeinc.jaldee.model.DataGridAnswerLine;
 import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
 import com.jaldeeinc.jaldee.response.DataGridColumns;
-import com.jaldeeinc.jaldee.response.DataGridProperties;
 import com.jaldeeinc.jaldee.response.GetQuestion;
-import com.jaldeeinc.jaldee.response.Questions;
 
 import org.json.JSONException;
 
@@ -38,40 +45,40 @@ import java.util.ArrayList;
  */
 public class DataGridFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private static final String GRID_QUESTION = "gridQuestion";
-
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String GRID_ANSWERS = "gridAnswers";
+    private static final String POSITION = "position";
 
     private LinearLayout llParentLayout;
     private CardView cvBack, cvAdd;
+    QuestionnaireGridView gridView;
+    int position = -1;
 
     private GetQuestion mQuestion = new GetQuestion();
+    private DataGrid mAnswer = new DataGrid();
+
 
     public DataGridFragment() {
         // Required empty public constructor
     }
 
 
-    public static DataGridFragment newInstance(String param1, String param2) {
-        DataGridFragment fragment = new DataGridFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public static DataGridFragment newInstance(GetQuestion question) {
         DataGridFragment fragment = new DataGridFragment();
         Bundle args = new Bundle();
         args.putSerializable(GRID_QUESTION, question);
+        args.putSerializable(GRID_ANSWERS, null);
+        args.putInt(POSITION, -1);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static DataGridFragment newInstance(GetQuestion question, DataGrid answer, int position) {
+        DataGridFragment fragment = new DataGridFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(GRID_QUESTION, question);
+        args.putSerializable(GRID_ANSWERS, answer);
+        args.putInt(POSITION, position);
         fragment.setArguments(args);
         return fragment;
     }
@@ -81,10 +88,9 @@ public class DataGridFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
             mQuestion = (GetQuestion) getArguments().getSerializable(GRID_QUESTION);
-
+            mAnswer = (DataGrid) getArguments().getSerializable(GRID_ANSWERS);
+            position = getArguments().getInt(POSITION, -1);
         }
     }
 
@@ -100,17 +106,48 @@ public class DataGridFragment extends Fragment {
 
         if (mQuestion != null) {
 
-            try {
+            if (mAnswer == null) {
+
+                for (DataGridColumns question : mQuestion.getDataGridProperties().getGridList()) {
+
+                    question.setAnswer(null);
+                }
                 createQuestionnaire(mQuestion);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } else {
+
+                for (DataGridColumns question : mQuestion.getDataGridProperties().getGridList()) {
+
+                    for (GridColumnAnswerLine answer : mAnswer.getDataGridColumn()) {
+
+                        if (question.getColumnId().equalsIgnoreCase(answer.getColumnId())) {
+
+                            question.setAnswer(answer);
+                        }
+                    }
+
+                }
+                createQuestionnaire(mQuestion);
             }
         }
+
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    getFragmentManager().popBackStack("DataGrid", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                getFragmentManager().popBackStack("DataGrid", FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
             }
         });
@@ -127,65 +164,79 @@ public class DataGridFragment extends Fragment {
         return view;
     }
 
+    public void setGridView(QuestionnaireGridView gView) {
 
-    private void createQuestionnaire(GetQuestion objQuestion) throws JSONException {
+        gridView = gView;
 
-        ArrayList<DataGridColumns> questionsList = objQuestion.getDataGridProperties().getGridList();
+    }
 
-        for (DataGridColumns question : questionsList) {
+    private void createQuestionnaire(GetQuestion objQuestion) {
 
-            if (question.getDataType().equalsIgnoreCase("fileUpload")) {
+        try {
 
-                QuestionnaireFileUploadView fileUploadView = new QuestionnaireFileUploadView(getContext());
-                fileUploadView.setGridQuestionData(question);
+            ArrayList<DataGridColumns> questionsList = objQuestion.getDataGridProperties().getGridList();
 
-                llParentLayout.addView(fileUploadView);
+            for (DataGridColumns question : questionsList) {
 
-            } else if (question.getDataType().equalsIgnoreCase("plainText")) {
+                if (question.getDataType().equalsIgnoreCase("fileUpload")) {
 
-                QuestionnaireTextView textView = new QuestionnaireTextView(getContext());
-                textView.setGridQuestionData(question);
+                    QuestionnaireFileUploadView fileUploadView = new QuestionnaireFileUploadView(getContext());
+                    fileUploadView.setGridQuestionData(question);
 
-                llParentLayout.addView(textView);
+                    llParentLayout.addView(fileUploadView);
 
-            } else if (question.getDataType().equalsIgnoreCase("date")) {
+                } else if (question.getDataType().equalsIgnoreCase("plainText")) {
 
-                QuestionnaireDateView dateView = new QuestionnaireDateView(getContext());
-                dateView.setGridQuestionData(question);
+                    QuestionnaireTextView textView = new QuestionnaireTextView(getContext());
+                    textView.setGridQuestionData(question);
 
-                llParentLayout.addView(dateView);
-            } else if (question.getDataType().equalsIgnoreCase("number")) {
+                    llParentLayout.addView(textView);
 
-                QuestionnaireNumberView numberView = new QuestionnaireNumberView(getContext());
-                numberView.setGridQuestionData(question);
+                } else if (question.getDataType().equalsIgnoreCase("date")) {
 
-                llParentLayout.addView(numberView);
+                    QuestionnaireDateView dateView = new QuestionnaireDateView(getContext());
+                    dateView.setGridQuestionData(question);
 
-            } else if (question.getDataType().equalsIgnoreCase("bool")) {
+                    llParentLayout.addView(dateView);
 
-                QuestionnaireBoolView boolView = new QuestionnaireBoolView(getContext());
-                boolView.setGridQuestionData(question);
+                } else if (question.getDataType().equalsIgnoreCase("number")) {
 
-                llParentLayout.addView(boolView);
+                    QuestionnaireNumberView numberView = new QuestionnaireNumberView(getContext());
+                    numberView.setGridQuestionData(question);
 
-            } else if (question.getDataType().equalsIgnoreCase("list")) {
+                    llParentLayout.addView(numberView);
 
-                QuestionnaireListView listView = new QuestionnaireListView(getContext());
-                listView.setGridQuestionData(question);
+                } else if (question.getDataType().equalsIgnoreCase("bool")) {
 
-                llParentLayout.addView(listView);
+                    QuestionnaireBoolView boolView = new QuestionnaireBoolView(getContext());
+                    boolView.setGridQuestionData(question);
 
+                    llParentLayout.addView(boolView);
+
+                } else if (question.getDataType().equalsIgnoreCase("list")) {
+
+                    QuestionnaireListView listView = new QuestionnaireListView(getContext());
+                    listView.setGridQuestionData(question);
+
+                    llParentLayout.addView(listView);
+
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+
     }
 
     private void addDataToQuestionnaireGrid() {
 
-        boolean isValid = false;
+        ArrayList<Boolean> validList = new ArrayList<>();
 
-        DataGridAnswerLine answerLine = new DataGridAnswerLine();
+        cvAdd.setClickable(false);
 
-        ArrayList<GridColumnAnswerLine> columnAnswersList  =  new ArrayList<>();
+        DataGrid dataGridObj = new DataGrid();
+        ArrayList<GridColumnAnswerLine> columnAnswersList = new ArrayList<>();
 
         int count = llParentLayout.getChildCount();
         for (int i = 0; i < count; i++) {
@@ -194,46 +245,59 @@ public class DataGridFragment extends Fragment {
             if (view instanceof QuestionnaireTextView) {
                 QuestionnaireTextView textView = (QuestionnaireTextView) view;
 
-                isValid = textView.isValid();
+                validList.add(textView.isValid());
                 columnAnswersList.add(textView.getGridTextAnswerLine());
 
             } else if (view instanceof QuestionnaireBoolView) {
                 QuestionnaireBoolView boolView = (QuestionnaireBoolView) view;
 
-                isValid = boolView.isValid();
+                validList.add(boolView.isValid());
+
                 columnAnswersList.add(boolView.getGridBoolAnswerLine());
 
             } else if (view instanceof QuestionnaireDateView) {
                 QuestionnaireDateView dateView = (QuestionnaireDateView) view;
 
-                isValid = dateView.isValid();
+                validList.add(dateView.isValid());
+
                 columnAnswersList.add(dateView.getGridDateAnswerLine());
 
             } else if (view instanceof QuestionnaireNumberView) {
                 QuestionnaireNumberView numberView = (QuestionnaireNumberView) view;
 
-                isValid = numberView.isValid();
+                validList.add(numberView.isValid());
+
                 columnAnswersList.add(numberView.getGridNumberAnswerLine());
 
             } else if (view instanceof QuestionnaireFileUploadView) {
                 QuestionnaireFileUploadView fileUploadView = (QuestionnaireFileUploadView) view;
 
-                isValid = fileUploadView.isValid();
+                validList.add(fileUploadView.isValid());
+
+                columnAnswersList.add(fileUploadView.getGridFileUploadAnswerLine());
 
             } else if (view instanceof QuestionnaireListView) {
                 QuestionnaireListView listView = (QuestionnaireListView) view;
 
-                isValid = listView.isValid();
+                validList.add(listView.isValid());
+
+                columnAnswersList.add(listView.getGridListAnswerLine());
 
             }
         }
 
-        answerLine.setDataGrid(columnAnswersList);
+        dataGridObj.setDataGridColumn(columnAnswersList);
 
-        if (isValid){
+        if (validList.contains(false)) {
 
-            //sendDataToActivity
-            
+            cvAdd.setClickable(true);
+
+        } else {
+
+            gridView.updateDataGrid(dataGridObj, position);
+
+            getFragmentManager().popBackStack("DataGrid", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
         }
 
     }

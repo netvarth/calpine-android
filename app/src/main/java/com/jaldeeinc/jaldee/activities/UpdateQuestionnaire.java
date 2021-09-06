@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,10 +49,13 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.BuildConfig;
+import com.jaldeeinc.jaldee.Fragment.DataGridFragment;
+import com.jaldeeinc.jaldee.Interface.IDataGridListener;
 import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CheckBoxAdapter;
@@ -67,8 +71,10 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
 import com.jaldeeinc.jaldee.custom.MultiSpinnerListener;
 import com.jaldeeinc.jaldee.custom.MultiSpinnerSearch;
+import com.jaldeeinc.jaldee.custom.QuestionnaireGridView;
 import com.jaldeeinc.jaldee.model.AnswerLine;
 import com.jaldeeinc.jaldee.model.BookingModel;
+import com.jaldeeinc.jaldee.model.DataGrid;
 import com.jaldeeinc.jaldee.model.LabelPath;
 import com.jaldeeinc.jaldee.model.QuestionnaireBoolean;
 import com.jaldeeinc.jaldee.model.QuestionnaireCheckbox;
@@ -480,6 +486,27 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                     obj.setAnswer(answer);
                     answerLines.add(obj);
 
+                } else if (question.getFieldDataType().equalsIgnoreCase("dataGrid")) {
+
+                    QuestionnaireGridView gridFieldView = (QuestionnaireGridView) viewsList.get(question.getLabelName());
+
+                    ArrayList<DataGrid> dataGridList = new ArrayList<>();
+
+                    if (gridFieldView != null){
+
+                        dataGridList = gridFieldView.getGridDataList();
+                    }
+
+                    AnswerLine obj = new AnswerLine();
+                    obj.setLabelName(question.getLabelName());
+
+                    JsonObject answer = new JsonObject();
+                    Gson gson = new Gson();
+                    JsonElement element = gson.toJsonTree(dataGridList);
+                    answer.add("dataGrid", element);
+
+                    obj.setAnswer(answer);
+                    answerLines.add(obj);
                 }
             }
 
@@ -1234,8 +1261,50 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                     }
                 }
 
-
                 addListField(listModel);
+
+            } else if (question.getFieldDataType().equalsIgnoreCase("dataGrid")) {
+
+                QuestionnaireGridView gridView = new QuestionnaireGridView(this);
+                gridView.setQuestionData(question);
+
+                ArrayList<DataGrid> dataGridList = new ArrayList<>();
+
+                for (AnswerLine answerLine : qInput.getAnswerLines()) {
+                    if (answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
+
+                        dataGridList = answerLine.getDataGridList();
+                    }
+                }
+                gridView.setGridDataList(dataGridList);
+
+                gridView.getLlAdd().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        DataGridFragment dataGridFragment = DataGridFragment.newInstance(question);
+                        dataGridFragment.setGridView(gridView);
+                        final FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.container, dataGridFragment).addToBackStack("DataGrid")
+                                .commit();
+                    }
+                });
+
+                gridView.setiDataGridListener(new IDataGridListener() {
+                    @Override
+                    public void onEditClick(DataGrid gridObj, int position) {
+
+                        DataGridFragment dataGridFragment = DataGridFragment.newInstance(question, gridObj, position);
+                        dataGridFragment.setGridView(gridView);
+                        final FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.container, dataGridFragment).addToBackStack("DataGrid")
+                                .commit();
+                    }
+                });
+                llParentLayout.addView(gridView);
+                viewsList.put(question.getLabelName(), gridView);
 
             }
         }

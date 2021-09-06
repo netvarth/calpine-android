@@ -2,20 +2,17 @@ package com.jaldeeinc.jaldee.custom;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jaldeeinc.jaldee.Fragment.DataGridFragment;
-import com.jaldeeinc.jaldee.Fragment.HomeTabFragment;
 import com.jaldeeinc.jaldee.Interface.IDataGrid;
+import com.jaldeeinc.jaldee.Interface.IDataGridListener;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.CustomQuestionnaire;
 import com.jaldeeinc.jaldee.adapter.DataGridAdapter;
-import com.jaldeeinc.jaldee.model.DataGridModel;
+import com.jaldeeinc.jaldee.model.DataGrid;
 import com.jaldeeinc.jaldee.response.GetQuestion;
 
 import java.util.ArrayList;
@@ -24,7 +21,7 @@ import java.util.ArrayList;
  * Created by Sravan Velnati on 24/08/21.
  */
 
-public class QuestionnaireGridView extends LinearLayout {
+public class QuestionnaireGridView extends LinearLayout implements IDataGrid {
 
     private Context context;
     private AttributeSet attrs;
@@ -32,20 +29,21 @@ public class QuestionnaireGridView extends LinearLayout {
 
     private CustomTextViewSemiBold tvQuestionName;
     private CustomTextViewBold tvManditory;
-    private LinearLayout llAdd;
+    private LinearLayout llAdd, llDivider;
     private CustomTextViewMedium tvHint;
     private CustomItalicTextViewNormal tvError;
     private RecyclerView rvDataTable;
     private GetQuestion question;
     private DataGridAdapter dataGridAdapter;
-    private ArrayList<DataGridModel> dataList = new ArrayList<>();
+    public ArrayList<DataGrid> gridDataList = new ArrayList<>();
     FragmentManager fragmentManager;
     IDataGrid iDataGrid;
-
+    IDataGridListener iDataGridListener;
 
     public QuestionnaireGridView(Context context) {
         super(context);
         this.context = context;
+        iDataGrid = this;
         initView();
     }
 
@@ -74,10 +72,22 @@ public class QuestionnaireGridView extends LinearLayout {
         tvHint = findViewById(R.id.tv_hint);
         tvError = findViewById(R.id.tv_error);
         rvDataTable = findViewById(R.id.rv_dataTable);
+        llDivider = findViewById(R.id.ll_divider);
 
-        dataGridAdapter  = new DataGridAdapter(dataList,context);
         rvDataTable.setLayoutManager(new LinearLayoutManager(context));
+        dataGridAdapter = new DataGridAdapter(gridDataList, context, iDataGrid);
         rvDataTable.setAdapter(dataGridAdapter);
+
+        if (gridDataList != null && gridDataList.size() > 0) {
+
+            llDivider.setVisibility(VISIBLE);
+            rvDataTable.setVisibility(VISIBLE);
+
+        } else {
+
+            llDivider.setVisibility(GONE);
+            rvDataTable.setVisibility(GONE);
+        }
 
     }
 
@@ -87,6 +97,22 @@ public class QuestionnaireGridView extends LinearLayout {
 
         setQuestionName(q.getLabel());
 
+    }
+
+    public void updateDataGrid(DataGrid dataGridObj, int position) {
+
+        llDivider.setVisibility(VISIBLE);
+        rvDataTable.setVisibility(VISIBLE);
+
+        if (position >= 0) {
+            gridDataList.set(position, dataGridObj);
+        } else {
+            gridDataList.add(dataGridObj);
+        }
+
+        rvDataTable.setLayoutManager(new LinearLayoutManager(context));
+        dataGridAdapter = new DataGridAdapter(gridDataList, context, iDataGrid);
+        rvDataTable.setAdapter(dataGridAdapter);
     }
 
     public void setQuestionName(String questionName) {
@@ -109,6 +135,7 @@ public class QuestionnaireGridView extends LinearLayout {
         }
     }
 
+
     public void setError(String error) {
 
         if (tvError != null) {
@@ -119,6 +146,47 @@ public class QuestionnaireGridView extends LinearLayout {
 
     public LinearLayout getLlAdd() {
         return llAdd;
+    }
+
+
+    public void setGridDataList(ArrayList<DataGrid> gridDataList) {
+        this.gridDataList = (gridDataList == null) ? new ArrayList<>() : gridDataList;
+        if (gridDataList != null && gridDataList.size() > 0) {
+
+            llDivider.setVisibility(VISIBLE);
+            rvDataTable.setVisibility(VISIBLE);
+
+        } else {
+
+            llDivider.setVisibility(GONE);
+            rvDataTable.setVisibility(GONE);
+        }
+        dataGridAdapter.updateDataList(gridDataList);
+
+    }
+
+    public ArrayList<DataGrid> getGridDataList() {
+
+        return (gridDataList == null) ? new ArrayList<>() : gridDataList;
+    }
+
+    public void setiDataGridListener(IDataGridListener iDataGridListener) {
+        this.iDataGridListener = iDataGridListener;
+    }
+
+
+    @Override
+    public void onEditClick(DataGrid gridObj, int position) {
+
+        iDataGridListener.onEditClick(gridObj, position);
+
+    }
+
+    @Override
+    public void onDeleteClick(int position) {
+
+        gridDataList.remove(position);
+        dataGridAdapter.updateDataList(gridDataList);
     }
 }
 

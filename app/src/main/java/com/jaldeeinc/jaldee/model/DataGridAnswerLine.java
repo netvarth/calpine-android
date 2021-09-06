@@ -5,13 +5,13 @@ import java.util.ArrayList;
 
 public class DataGridAnswerLine implements Serializable {
 
-    public ArrayList<GridColumnAnswerLine> dataGrid;
+    public ArrayList<DataGrid> dataGrid;
 
-    public ArrayList<GridColumnAnswerLine> getDataGrid() {
+    public ArrayList<DataGrid> getDataGrid() {
         return dataGrid;
     }
 
-    public void setDataGrid(ArrayList<GridColumnAnswerLine> dataGrid) {
+    public void setDataGrid(ArrayList<DataGrid> dataGrid) {
         this.dataGrid = dataGrid;
     }
 }

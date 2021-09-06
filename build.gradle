@@ -25,6 +25,7 @@ allprojects {
         maven { url "https://artifactory.paytm.in/libs-release-local" }
         google()
         jcenter()
+        mavenCentral()
     }
 }
 

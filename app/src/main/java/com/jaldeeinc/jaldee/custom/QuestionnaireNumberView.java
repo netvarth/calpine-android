@@ -86,6 +86,14 @@ public class QuestionnaireNumberView extends LinearLayout {
         setQuestionName(gQuestion.getLabel());
         setMandatory(gQuestion.isMandatory() ? "*" : "");
 
+        if (gQuestion.getAnswer() != null){
+
+            GridColumnAnswerLine answerLine = gQuestion.getAnswer();
+            JsonObject column = answerLine.getColumn();
+
+            setTextBox(column.get("number").getAsString());
+        }
+
     }
 
     public void setAnswerData(GetQuestion q) {
@@ -95,6 +103,7 @@ public class QuestionnaireNumberView extends LinearLayout {
         setQuestionName(q.getLabelName());
         setHint(q.getHint());
         setMandatory(q.isMandatory() ? "*" : "");
+
 
     }
 
@@ -109,6 +118,7 @@ public class QuestionnaireNumberView extends LinearLayout {
     public void setTextBox(String text) {
 
         if (etTextBox != null){
+            text = text == null ? "" : text;
             etTextBox.setText(text);
         }
     }
@@ -174,8 +184,15 @@ public class QuestionnaireNumberView extends LinearLayout {
 
     public boolean isValid() {
 
+        if (gridQuestion.isMandatory() && etTextBox.getText().toString().trim().equalsIgnoreCase("")) {
 
-        return true;
+            tvError.setVisibility(View.VISIBLE);
+            tvError.setText("Enter " + gridQuestion.getColumnId());
+            return false;
+        } else {
+
+            return true;
+        }
     }
 }
 

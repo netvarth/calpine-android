@@ -85,6 +85,23 @@ public class QuestionnaireTextView extends LinearLayout {
 
         setQuestionName(gQuestion.getLabel());
         setMandatory(gQuestion.isMandatory() ? "*" : "");
+        if (gQuestion.getAnswer() != null) {
+
+            GridColumnAnswerLine answerLine = gQuestion.getAnswer();
+            JsonObject column = answerLine.getColumn();
+
+            if (column.get("plainText") != null) {
+
+                if (column.get("plainText").getAsString().equalsIgnoreCase("05:30 AM")) {
+                    setTextBox("");
+                } else {
+                    setTextBox(column.get("plainText").getAsString());
+                }
+            } else {
+
+                setTextBox("");
+            }
+        }
 
     }
 
@@ -108,6 +125,7 @@ public class QuestionnaireTextView extends LinearLayout {
     public void setTextBox(String text) {
 
         if (etTextBox != null) {
+            text = text == null ? "" : text;
             etTextBox.setText(text);
         }
     }
@@ -173,8 +191,28 @@ public class QuestionnaireTextView extends LinearLayout {
 
     public boolean isValid() {
 
+        if (gridQuestion.isMandatory()) {
 
-        return true;
+            if (etTextBox.getText().toString().trim().equalsIgnoreCase("")) {
+
+                tvError.setVisibility(View.VISIBLE);
+                tvError.setText("Enter " + gridQuestion.getColumnId());
+                return false;
+            }
+
+           else if (etTextBox.getText().toString().trim().length() < gridQuestion.getPlainTextProperties().getMinNoOfLetter()) {
+
+                tvError.setVisibility(View.VISIBLE);
+                tvError.setText("Enter minimum " + gridQuestion.getPlainTextProperties().getMinNoOfLetter() + " Characters");
+                return false;
+            } else {
+
+               return true;
+            }
+        } else {
+
+            return true;
+        }
     }
 }
 

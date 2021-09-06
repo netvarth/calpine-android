@@ -35,7 +35,7 @@ public class QuestionnaireBoolView extends LinearLayout {
     private CustomTextViewMedium tvHint;
     private CustomItalicTextViewNormal tvError;
     private RadioGroup radioGroup;
-    private RadioButton rbYes,rbNo;
+    private RadioButton rbYes, rbNo;
     private GetQuestion question;
     private DataGridColumns gridQuestions;
 
@@ -92,14 +92,6 @@ public class QuestionnaireBoolView extends LinearLayout {
             rbNo.setText(values.get(1).toString());
         }
 
-//        if (boolField.isSelected() != null && boolField.isSelected()) {
-//
-//            radioButtonYes.setChecked(true);
-//        } else if (boolField.isSelected() != null && !boolField.isSelected()) {
-//
-//            radioButtonNo.setChecked(true);
-//        }
-
     }
 
     public void setGridQuestionData(DataGridColumns gQuestion) {
@@ -109,21 +101,19 @@ public class QuestionnaireBoolView extends LinearLayout {
         setQuestionName(gQuestion.getLabel());
         setMandatory(gQuestion.isMandatory() ? "*" : "");
 
-        ArrayList values = (ArrayList) gQuestion.getLabelValues();
+        rbYes.setText("Yes");
+        rbNo.setText("No");
 
-        if (values != null && values.size() > 0) {
+        if (gQuestion.getAnswer() != null) {
 
-            rbYes.setText(values.get(0).toString());
-            rbNo.setText(values.get(1).toString());
+            GridColumnAnswerLine answerLine = gQuestion.getAnswer();
+            JsonObject column = answerLine.getColumn();
+
+            if (column.get("bool") != null) {
+                rbYes.setChecked(column.get("bool").getAsString().equalsIgnoreCase("yes"));
+                rbNo.setChecked(column.get("bool").getAsString().equalsIgnoreCase("no"));
+            }
         }
-
-//        if (boolField.isSelected() != null && boolField.isSelected()) {
-//
-//            radioButtonYes.setChecked(true);
-//        } else if (boolField.isSelected() != null && !boolField.isSelected()) {
-//
-//            radioButtonNo.setChecked(true);
-//        }
 
     }
 
@@ -195,7 +185,7 @@ public class QuestionnaireBoolView extends LinearLayout {
         obj.setColumnId(gridQuestions.getColumnId());
 
         JsonObject column = new JsonObject();
-        column.addProperty("bool", rbYes.isSelected());
+        column.addProperty("bool", rbYes.isChecked() ? "Yes" : (rbNo.isChecked() ? "No" : ""));
 
         obj.setColumn(column);
 
@@ -205,8 +195,14 @@ public class QuestionnaireBoolView extends LinearLayout {
 
     public boolean isValid() {
 
+        if (!rbYes.isChecked() && !rbNo.isChecked()) {
 
-        return true;
+            tvError.setVisibility(View.VISIBLE);
+            tvError.setText("Select atleast one option");
+            return false;
+        } else {
+            return true;
+        }
     }
 }
 

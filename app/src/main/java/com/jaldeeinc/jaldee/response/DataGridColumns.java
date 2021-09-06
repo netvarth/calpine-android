@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
 
 import org.json.JSONObject;
 
@@ -49,6 +50,7 @@ public class DataGridColumns implements Serializable {
     @Expose
     private NumberProperties numberProperties;
 
+    private GridColumnAnswerLine answer = null;
 
     public String getLabel() {
         return label;
@@ -128,5 +130,13 @@ public class DataGridColumns implements Serializable {
 
     public void setColumnId(String columnId) {
         this.columnId = columnId;
+    }
+
+    public GridColumnAnswerLine getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(GridColumnAnswerLine answer) {
+        this.answer = answer;
     }
 }

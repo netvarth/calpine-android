@@ -18,6 +18,8 @@ import com.jaldeeinc.jaldee.adapter.DataGridAdapter;
 import com.jaldeeinc.jaldee.adapter.FilesAdapter;
 import com.jaldeeinc.jaldee.model.AnswerLine;
 import com.jaldeeinc.jaldee.model.DataGridModel;
+import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
+import com.jaldeeinc.jaldee.model.QuestionnaireCheckbox;
 import com.jaldeeinc.jaldee.response.DataGridColumns;
 import com.jaldeeinc.jaldee.response.GetQuestion;
 
@@ -116,14 +118,25 @@ public class QuestionnaireFileUploadView extends LinearLayout implements IFilesI
         setQuestionName(gQuestion.getLabel());
         setMandatory(gQuestion.isMandatory() ? "*" : "");
 
+        ArrayList<KeyPairBoolData> filesList = new ArrayList<>();
+
+        for (int i = 0; i < gQuestion.getFileProperties().getAllowedDocuments().size(); i++) {
+
+            KeyPairBoolData obj = new KeyPairBoolData();
+            obj.setName(gQuestion.getFileProperties().getAllowedDocuments().get(i));
+            obj.setId(i);
+            filesList.add(obj);
+
+        }
+
         // get file names and get files need to be done.
 
         rvFiles.setLayoutManager(new LinearLayoutManager(getContext()));
-        FilesAdapter filesAdapter = new FilesAdapter(new ArrayList<>(), getContext(), false, iFilesInterface);
+        FilesAdapter filesAdapter = new FilesAdapter(filesList, getContext(), false, iFilesInterface);
         filesAdapter.setLabelName(gQuestion.getLabel());
         rvFiles.setAdapter(filesAdapter);
 
-        filesSpinner.setItems(new ArrayList<>(), new MultiSpinnerListener() {
+        filesSpinner.setItems(filesList, new MultiSpinnerListener() {
             @Override
             public void onItemsSelected(List<KeyPairBoolData> selectedItems) {
 
@@ -203,6 +216,21 @@ public class QuestionnaireFileUploadView extends LinearLayout implements IFilesI
 
     }
 
+    public GridColumnAnswerLine getGridFileUploadAnswerLine() {
+
+        GridColumnAnswerLine obj = new GridColumnAnswerLine();
+        obj.setColumnId(gridColumns.getColumnId());
+
+        JsonObject column = new JsonObject();
+        JsonArray list = new JsonArray();
+
+        column.add("fileUpload", list);
+
+        obj.setColumn(column);
+
+        return obj;
+    }
+
 
     @Override
     public void onFileUploadClick(KeyPairBoolData data, String labelName) {
@@ -217,8 +245,11 @@ public class QuestionnaireFileUploadView extends LinearLayout implements IFilesI
     public boolean isValid() {
 
 
+
         return true;
     }
+
+
 }
 
 

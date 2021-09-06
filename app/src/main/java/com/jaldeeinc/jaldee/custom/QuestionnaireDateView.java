@@ -1,34 +1,39 @@
 package com.jaldeeinc.jaldee.custom;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.widget.DatePicker;
+
 
 import com.google.gson.JsonObject;
-import com.jaldeeinc.jaldee.Interface.IDataGrid;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.DataGridAdapter;
 import com.jaldeeinc.jaldee.model.AnswerLine;
-import com.jaldeeinc.jaldee.model.DataGridModel;
 import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
 import com.jaldeeinc.jaldee.response.DataGridColumns;
 import com.jaldeeinc.jaldee.response.GetQuestion;
 
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
-public class QuestionnaireDateView extends LinearLayout {
+public class QuestionnaireDateView extends LinearLayout implements DatePickerDialog.OnDateSetListener {
 
     private Context context;
     private AttributeSet attrs;
     private int styleAttr;
 
-    private CustomTextViewSemiBold tvQuestionName,tvDate;
+    CustomDateTimePicker custom;
+
+    private CustomTextViewSemiBold tvQuestionName, tvDate;
     private CustomTextViewBold tvManditory;
     private CustomTextViewMedium tvHint;
     private CustomItalicTextViewNormal tvError;
@@ -58,7 +63,6 @@ public class QuestionnaireDateView extends LinearLayout {
         initView();
     }
 
-
     private void initView() {
         inflate(context, R.layout.date_item, this);
 
@@ -69,7 +73,45 @@ public class QuestionnaireDateView extends LinearLayout {
         tvError = findViewById(R.id.tv_error);
         ivCalender = findViewById(R.id.iv_calender);
 
+
+        custom = new CustomDateTimePicker(getContext(),
+                new CustomDateTimePicker.ICustomDateTimeListener() {
+
+                    @Override
+                    public void onSet(Dialog dialog, Calendar calendarSelected,
+                                      Date dateSelected, int year, String monthFullName,
+                                      String monthShortName, int monthNumber, int day,
+                                      String weekDayFullName, String weekDayShortName,
+                                      int hour24, int hour12, int min, int sec,
+                                      String AM_PM) {
+                        tvDate.setText("");
+                        tvDate.setText(year + "-" + (monthNumber + 1) + "-" + calendarSelected.get(Calendar.DAY_OF_MONTH));
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
+
+        custom.setDate(Calendar.getInstance());
+
+
+        ivCalender.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                custom.showDialog();
+            }
+        });
+
+
     }
+
+    public ImageView getIvCalender() {
+        return ivCalender;
+    }
+
 
     public void setQuestionData(GetQuestion q) {
 
@@ -87,6 +129,23 @@ public class QuestionnaireDateView extends LinearLayout {
 
         setQuestionName(gQuestion.getLabel());
         setMandatory(gQuestion.isMandatory() ? "*" : "");
+
+        if (gQuestion.getAnswer() != null) {
+
+            GridColumnAnswerLine answerLine = gQuestion.getAnswer();
+            JsonObject column = answerLine.getColumn();
+
+            if (column.get("date") != null) {
+
+                if (column.get("date").getAsString().equalsIgnoreCase("05:30 AM")) {
+                    setDate("");
+                } else {
+                    setDate(column.get("date").getAsString());
+                }
+            } else {
+                setDate("");
+            }
+        }
 
     }
 
@@ -110,6 +169,7 @@ public class QuestionnaireDateView extends LinearLayout {
 
     public void setDate(String date) {
         if (tvDate != null) {
+            date = date == null ? "" : date;
             tvDate.setText(date);
         }
     }
@@ -175,8 +235,29 @@ public class QuestionnaireDateView extends LinearLayout {
 
     public boolean isValid() {
 
+        if (gridQuestion.isMandatory() && tvDate.getText().toString().trim().equalsIgnoreCase("")) {
 
-        return true;
+            tvError.setVisibility(View.VISIBLE);
+            tvError.setText("Select " + gridQuestion.getColumnId());
+            return false;
+        } else {
+
+            return true;
+        }
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+
+        SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd",
+                Locale.ENGLISH);
+        Calendar mCalender = Calendar.getInstance();
+        mCalender.set(Calendar.YEAR, year);
+        mCalender.set(Calendar.MONTH, month);
+        mCalender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+        String selectedDate = dateParser.format(mCalender.getTime());
+        tvDate.setText(selectedDate);
     }
 }
 

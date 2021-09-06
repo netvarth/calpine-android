@@ -9,13 +9,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CheckBoxAdapter;
 import com.jaldeeinc.jaldee.model.AnswerLine;
+import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
 import com.jaldeeinc.jaldee.model.QuestionnaireCheckbox;
 import com.jaldeeinc.jaldee.response.DataGridColumns;
 import com.jaldeeinc.jaldee.response.GetQuestion;
+import com.jaldeeinc.jaldee.response.ListProperties;
 
 import java.util.ArrayList;
 
@@ -67,7 +70,6 @@ public class QuestionnaireListView extends LinearLayout {
         rvCheckBoxes = findViewById(R.id.rv_checkBoxes);
 
 
-
     }
 
     public void setQuestionData(GetQuestion q) {
@@ -78,11 +80,9 @@ public class QuestionnaireListView extends LinearLayout {
         setHint(q.getHint());
         setMandatory(q.isMandatory() ? "*" : "");
 
-        getCheckboxList();
-
 
         rvCheckBoxes.setLayoutManager(new LinearLayoutManager(getContext()));
-        CheckBoxAdapter checkBoxAdapter = new CheckBoxAdapter(new ArrayList<>(), getContext());
+        checkBoxAdapter = new CheckBoxAdapter(new ArrayList<>(), getContext());
         rvCheckBoxes.setAdapter(checkBoxAdapter);
 
 
@@ -95,11 +95,35 @@ public class QuestionnaireListView extends LinearLayout {
         setQuestionName(gQuestion.getLabel());
         setMandatory(gQuestion.isMandatory() ? "*" : "");
 
-//        getCheckboxList();
+        ArrayList<QuestionnaireCheckbox> checkBoxList = new ArrayList<>();
+        for (String text : gQuestion.getListProperties().getValues()) {
 
+            QuestionnaireCheckbox checkBoxObj = new QuestionnaireCheckbox(false, text);
+            checkBoxList.add(checkBoxObj);
+
+        }
+
+        if (gQuestion.getAnswer() != null) {
+
+            GridColumnAnswerLine answerLine = gQuestion.getAnswer();
+            JsonObject column = answerLine.getColumn();
+
+            JsonArray array = column.getAsJsonArray("list");
+
+            for (QuestionnaireCheckbox c : checkBoxList) {
+
+                for (JsonElement e : array) {
+
+                    if (c.getText().equalsIgnoreCase(e.getAsString())) {
+
+                        c.setChecked(true);
+                    }
+                }
+            }
+        }
 
         rvCheckBoxes.setLayoutManager(new LinearLayoutManager(getContext()));
-        CheckBoxAdapter checkBoxAdapter = new CheckBoxAdapter(new ArrayList<>(), getContext());
+        checkBoxAdapter = new CheckBoxAdapter(checkBoxList, getContext());
         rvCheckBoxes.setAdapter(checkBoxAdapter);
 
 
@@ -113,32 +137,6 @@ public class QuestionnaireListView extends LinearLayout {
         setHint(q.getHint());
         setMandatory(q.isMandatory() ? "*" : "");
 
-    }
-
-    private ArrayList<QuestionnaireCheckbox> getCheckboxList() {
-
-        ArrayList<String> list = (ArrayList) question.getLabelValues();
-
-        ArrayList<QuestionnaireCheckbox> checkBoxList = new ArrayList<>();
-        for (String text : list) {
-
-            QuestionnaireCheckbox checkBoxObj = new QuestionnaireCheckbox(false, text);
-            checkBoxList.add(checkBoxObj);
-
-        }
-
-        for (QuestionnaireCheckbox checkbox : checkBoxList) {
-
-//            for (String item : listModel.getSelectedItems()) {
-//
-//                if (item.equalsIgnoreCase(checkbox.getText())) {
-//
-//                    checkbox.setChecked(true);
-//                }
-//            }
-        }
-
-        return checkBoxList;
     }
 
     public void setQuestionName(String questionName) {
@@ -184,15 +182,16 @@ public class QuestionnaireListView extends LinearLayout {
         obj.setLabelName(question.getLabelName());
         JsonObject answer = new JsonObject();
         JsonArray list = new JsonArray();
+        ArrayList<QuestionnaireCheckbox> selectedCheckboxes = new ArrayList<>();
 
-//        if (checkBoxAdapter != null) {
-//
-//            selectedCheckboxes = checkBoxAdapter.getSelectedCheckboxes();
-//        }
-//        for (QuestionnaireCheckbox item : selectedCheckboxes) {
-//
-//            list.add(item.getText());
-//        }
+        if (checkBoxAdapter != null) {
+
+            selectedCheckboxes = checkBoxAdapter.getSelectedCheckboxes();
+        }
+        for (QuestionnaireCheckbox item : selectedCheckboxes) {
+
+            list.add(item.getText());
+        }
         answer.add("list", list);
 
         obj.setAnswer(answer);
@@ -202,10 +201,64 @@ public class QuestionnaireListView extends LinearLayout {
 
     }
 
+    public GridColumnAnswerLine getGridListAnswerLine() {
+
+        GridColumnAnswerLine obj = new GridColumnAnswerLine();
+        obj.setColumnId(gridQuestion.getColumnId());
+
+        JsonObject column = new JsonObject();
+        JsonArray list = new JsonArray();
+
+        ArrayList<QuestionnaireCheckbox> selectedCheckboxes = new ArrayList<>();
+
+        if (checkBoxAdapter != null) {
+
+            selectedCheckboxes = checkBoxAdapter.getSelectedCheckboxes();
+        }
+        for (QuestionnaireCheckbox item : selectedCheckboxes) {
+
+            list.add(item.getText());
+        }
+
+        column.add("list", list);
+
+        obj.setColumn(column);
+
+        return obj;
+
+    }
+
+
     public boolean isValid() {
 
+        if (gridQuestion.isMandatory()) {
+            ListProperties properties = new ListProperties();
+            properties = gridQuestion.getListProperties();
+            int minAnswers = properties.getMinAnswers();
+            int maxAnswers = properties.getMaxAnswers();
+            int checkedCount = 0;
+            if (checkBoxAdapter != null) {
+                checkedCount = checkBoxAdapter.getCheckedCount();
+            }
+            if (checkedCount < minAnswers) {
 
-        return true;
+                tvError.setVisibility(View.VISIBLE);
+                tvError.setText("Please select atleast " + minAnswers + " Checkbox");
+                return false;
+            } else if (checkedCount > maxAnswers) {
+
+                tvError.setVisibility(View.VISIBLE);
+                tvError.setText("You can only select upto " + maxAnswers + " Answers");
+                return false;
+
+            } else {
+
+                return true;
+            }
+        } else {
+
+            return true;
+        }
     }
 }
 
