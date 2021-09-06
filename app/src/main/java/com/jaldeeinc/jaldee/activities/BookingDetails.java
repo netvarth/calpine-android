@@ -259,7 +259,7 @@ public class BookingDetails extends AppCompatActivity {
                 Intent intent = new Intent(BookingDetails.this, RescheduleActivity.class);
                 intent.putExtra("providerId", apptInfo.getProviderAccount().getId());
                 intent.putExtra("ynwuuid", apptInfo.getUid());
-                intent.putExtra("uniqueId", apptInfo.getUniqueId());
+                intent.putExtra("uniqueId", apptInfo.getProviderAccount().getUniqueId());
                 startActivity(intent);
             }
         });
