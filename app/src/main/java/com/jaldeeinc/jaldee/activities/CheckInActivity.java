@@ -1400,7 +1400,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 pjsonobj.put("id", providerId);
             }
 
-            if (etVirtualNumber.getText().toString().trim().length() > 7) {
+            if (etVirtualNumber.getText().toString().trim().length() == 10) {
                 if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("whatsApp")) {
                     virtualService.put("WhatsApp", countryVirtualCode + etVirtualNumber.getText());
                     mWhtsappCountryCode = countryVirtualCode;

@@ -16,9 +16,26 @@ public class ProfileModel {
     private String telgrmCountryCode;
     private String whtsAppNumber;
     private String telgrmNumber;
-    private Integer pinCode;
     private String city;
     private String state;
+    boolean emailVerified;
+    boolean phoneVerified;
+    private Integer pinCode;
+    int id;
+    int age;
+    ArrayList<String> preferredLanguages;
+    String firstName;
+    String lastName;
+    String primaryMobileNo;
+    String email;
+    String userName;
+    String countryCode;
+    String gender;
+    String dob;
+    @SerializedName("userProfile")
+    ProfileModel userprofile;
+
+    public int getAge() { return age; }
 
     public String getCity() { return city; }
 
@@ -76,17 +93,9 @@ public class ProfileModel {
         this.telegramNum = telegramNum;
     }
 
-    public void setWhtsAppCountryCode(String whtsAppCountryCode) {
-        this.whtsAppCountryCode = whtsAppCountryCode;
-    }
+    public void setWhtsAppCountryCode(String whtsAppCountryCode) { this.whtsAppCountryCode = whtsAppCountryCode; }
 
-    public void setTelgrmCountryCode(String telgrmCountryCode) {
-        this.telgrmCountryCode = telgrmCountryCode;
-    }
-
-
-    @SerializedName("userProfile")
-    ProfileModel userprofile;
+    public void setTelgrmCountryCode(String telgrmCountryCode) { this.telgrmCountryCode = telgrmCountryCode; }
 
     public ProfileModel getUserprofile() {
         return userprofile;
@@ -107,8 +116,6 @@ public class ProfileModel {
     public void setDob(String dob) {
         this.dob = dob;
     }
-
-    String gender,dob;
 
     public String getFirstName() {
         return firstName;
@@ -142,8 +149,6 @@ public class ProfileModel {
         return id;
     }
 
-    int id;
-
     public void setUserprofile(ProfileModel userprofile) {
         this.userprofile = userprofile;
     }
@@ -160,9 +165,7 @@ public class ProfileModel {
         this.lastName = lastName;
     }
 
-    public void setPrimaryMobileNo(String primaryMobileNo) {
-        this.primaryMobileNo = primaryMobileNo;
-    }
+    public void setPrimaryMobileNo(String primaryMobileNo) { this.primaryMobileNo = primaryMobileNo; }
 
     public void setEmail(String email) {
         this.email = email;
@@ -188,20 +191,9 @@ public class ProfileModel {
         this.countryCode = countryCode;
     }
 
-    String firstName;
-    String lastName;
-    String primaryMobileNo;
-    String email;
-    String userName;
-    boolean emailVerified,phoneVerified;
-    String countryCode;
-    ArrayList<String> preferredLanguages;
-
     public ArrayList<String> getPreferredLanguages() {
         return preferredLanguages;
     }
 
-    public void setPreferredLanguages(ArrayList<String> preferredLanguages) {
-        this.preferredLanguages = preferredLanguages;
-    }
+    public void setPreferredLanguages(ArrayList<String> preferredLanguages) { this.preferredLanguages = preferredLanguages; }
 }

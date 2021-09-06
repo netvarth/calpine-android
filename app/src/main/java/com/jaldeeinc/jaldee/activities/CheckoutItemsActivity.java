@@ -863,7 +863,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                         Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
                                         ImageView ivClose = dialog.findViewById(R.id.iv_close);
                                         ivClose.setVisibility(View.VISIBLE);
-                                        if (showPaytmWallet) {
+                                        /*if (showPaytmWallet) {
                                             btn_paytm.setVisibility(View.VISIBLE);
                                         } else {
                                             btn_paytm.setVisibility(View.GONE);
@@ -872,7 +872,22 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                             btn_payu.setVisibility(View.VISIBLE);
                                         } else {
                                             btn_payu.setVisibility(View.GONE);
+                                        }*/
+                                        if (showPaytmWallet && showPayU) {
+                                            btn_paytm.setVisibility(View.VISIBLE);
+                                            btn_payu.setVisibility(View.VISIBLE);
+                                            btn_payu.setText("Credit Card/Debit Card/Net Banking");
+                                            btn_paytm.setText("Paytm");
+                                        } else if (showPayU && !showPaytmWallet) {
+                                            btn_payu.setVisibility(View.VISIBLE);
+                                            btn_paytm.setVisibility(View.GONE);
+                                            btn_payu.setText("CC/DC/UPI");
+                                        } else if (!showPayU && showPaytmWallet) {
+                                            btn_payu.setVisibility(View.GONE);
+                                            btn_paytm.setVisibility(View.VISIBLE);
+                                            btn_paytm.setText("CC/DC/UPI");
                                         }
+
                                         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                                         TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
 
@@ -1834,7 +1849,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID, Constants.PURPOSE_PREPAYMENT);
 
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
@@ -1852,7 +1867,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
                         mPaymentData = response.body();
 
-                        for (int i = 0; i < mPaymentData.size(); i++) {
+                        /*for (int i = 0; i < mPaymentData.size(); i++) {
                             if (mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")) {
                                 showPaytmWallet = true;
                             }
@@ -1860,8 +1875,15 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                             if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
                                 showPayU = true;
                             }
+                        }*/
+
+                        if (mPaymentData.get(0).getPayGateways().contains("PAYTM")) {
+                            showPaytmWallet = true;
                         }
 
+                        if (mPaymentData.get(0).getPayGateways().contains("RAZORPAY")) {
+                            showPayU = true;
+                        }
                         if ((showPayU) || showPaytmWallet) {
                             Config.logV("URL----%%%%%---@@--");
                             Log.e("XXXXXXXXXXX", "Executed Advance Amount");

@@ -210,10 +210,10 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
             if (domain.equalsIgnoreCase("healthCare")) {
                 tv_cstmr_infrmn.setText("Patient Information");
                 tv_cnsln_for_basic_infrmtn_hint.setText("Please provide basic information about the patient");
-            } else if(domain.equalsIgnoreCase("educationalInstitution")) {
+            } else if (domain.equalsIgnoreCase("educationalInstitution")) {
                 tv_cstmr_infrmn.setText("Student Information");
                 tv_cnsln_for_basic_infrmtn_hint.setText("Please provide basic information about the student");
-            }else {
+            } else {
                 tv_cstmr_infrmn.setText("Customer Information");
                 tv_cnsln_for_basic_infrmtn_hint.setText("Please provide basic information about the customer");
             }
@@ -624,6 +624,13 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                                     family.setState(profileDetails.getUserprofile().getState());
                                 }
                             }
+                            if (profileDetails.getUserprofile().getEmail() != null) {
+                                family.setEmail(profileDetails.getUserprofile().getEmail());
+                            }
+
+                            if (profileDetails.getUserprofile().getAge() != 0) {
+                                family.setAge(profileDetails.getUserprofile().getAge());
+                            }
                             family.setAddMember(false);
                             LuserProfileList.add(family);
                             if (LuserProfileList.size() > 0) {
@@ -635,6 +642,16 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                                         family1.setLastName(response.body().get(i).getUserProfile().getLastName());
                                         family1.setId(response.body().get(i).getUserProfile().getId());
                                         family1.setGender(response.body().get(i).getUserProfile().getGender());
+
+                                        if (response.body().get(i).getUserProfile().getEmail() != null) {
+                                            family1.setEmail(response.body().get(i).getUserProfile().getEmail());
+                                        } else {
+                                            family1.setEmail(email);
+                                        }
+
+                                        if (response.body().get(i).getUserProfile().getAge() != 0) {
+                                            family1.setAge(response.body().get(i).getUserProfile().getAge());
+                                        }
                                         if (countryCode.equalsIgnoreCase("+91")) {
                                             if (response.body().get(i).getBookingLocation() != null && response.body().get(i).getBookingLocation().getAsJsonObject().get("pincode") != null) {
                                                 family1.setPincode(response.body().get(i).getBookingLocation().getAsJsonObject().get("pincode").getAsInt());
@@ -669,6 +686,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                                     }
                                 }
                             }
+
                             FamilyArrayModel family2 = new FamilyArrayModel();  // model for "Someone else" field
                             family2.setFirstName("Someone");
                             family2.setLastName("else");
@@ -677,6 +695,8 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                             family2.setTelgrmNumber(profileDetails.getUserprofile().getPrimaryMobileNo());
                             family2.setTelgrmCountryCode(profileDetails.getUserprofile().getCountryCode());
                             family2.setWhtsAppNumber(profileDetails.getUserprofile().getPrimaryMobileNo());
+                            family2.setEmail(email);
+
                             LuserProfileList.add(family2);
 
                             LCheckList.clear();
@@ -810,7 +830,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 }
                 jsonObj1.putOpt("preferredLanguages", jsonObj4);
             }
-            if(cb_email_update_to_myaccount.isChecked()) {
+            if (cb_email_update_to_myaccount.isChecked()) {
                 jsonObj1.put("email", et_email.getText().toString());
             }
 
@@ -933,7 +953,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 }
                 userProfile.putOpt("preferredLanguages", jsonObj4);
             }
-            if(cb_email_update_to_myaccount.isChecked()) {
+            if (cb_email_update_to_myaccount.isChecked()) {
                 userProfile.put("email", et_email.getText().toString());
             }
             userProfile.putOpt("userProfile", jsonObj1);
@@ -1144,7 +1164,14 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
             chooseLanguagesAdapter = new ChooseLanguagesAdapter(context, (Activity) context, new ArrayList<String>());
             preferredLanguages = new ArrayList<String>();
         }*/
-        et_age.setText("");
+        if (familylist.getEmail() != null) {
+            et_email.setText(familylist.getEmail());
+        }
+        if (familylist.getAge() != 0) {
+            et_age.setText(String.valueOf(familylist.getAge()));
+        } else {
+            et_age.setText("");
+        }
         mRecycleChooseLanguages.setVisibility(View.VISIBLE);
         RecyclerView.LayoutManager mChooseLanguagesLayoutManager = new LinearLayoutManager(context);
         mRecycleChooseLanguages.setLayoutManager(mChooseLanguagesLayoutManager);
@@ -1274,7 +1301,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                 }
                 userProfile.putOpt("preferredLanguages", jsonObj4);
             }
-            if(cb_email_update_to_myaccount.isChecked()) {
+            if (cb_email_update_to_myaccount.isChecked()) {
                 jsonObj1.put("email", et_email.getText().toString());
             }
             userProfile.putOpt("userProfile", jsonObj1);

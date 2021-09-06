@@ -205,12 +205,12 @@ public class PaymentDetail extends AppCompatActivity {
                                 mode.setVisibility(View.GONE);
                             }*/
 
-                            /*if (response.body().getPaymentGateway() != null) {                                // Payment GateWay
+                            if (response.body().getPaymentGateway() != null) {                                // Payment GateWay
                                 paymentGateway.setText(response.body().getPaymentGateway());
                                 paymentGatewayLayout.setVisibility(View.VISIBLE);
                             } else {
                                 paymentGatewayLayout.setVisibility(View.GONE);
-                            }*/
+                            }
 
                             /*if (response.body().getStatus() != null && response.body().getStatus().equals("FAILED")) { // Refund amount
                                 refundableLayout.setVisibility(View.GONE);

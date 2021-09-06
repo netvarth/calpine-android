@@ -340,7 +340,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                 Button btn_paytm = dialog.findViewById(R.id.btn_paytm);
                 Button btn_payu = dialog.findViewById(R.id.btn_payu);
-                if (showPaytmWallet) {
+                /*if (showPaytmWallet) {
                     btn_paytm.setVisibility(View.VISIBLE);
                 } else {
                     btn_paytm.setVisibility(View.GONE);
@@ -349,8 +349,21 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                     btn_payu.setVisibility(View.VISIBLE);
                 } else {
                     btn_payu.setVisibility(View.GONE);
+                }*/
+                if (showPaytmWallet && showPayU) {
+                    btn_paytm.setVisibility(View.VISIBLE);
+                    btn_payu.setVisibility(View.VISIBLE);
+                    btn_payu.setText("Credit Card/Debit Card/Net Banking");
+                    btn_paytm.setText("Paytm");
+                } else if (showPayU && !showPaytmWallet) {
+                    btn_payu.setVisibility(View.VISIBLE);
+                    btn_paytm.setVisibility(View.GONE);
+                    btn_payu.setText("CC/DC/UPI");
+                } else if (!showPayU && showPaytmWallet) {
+                    btn_payu.setVisibility(View.GONE);
+                    btn_paytm.setVisibility(View.VISIBLE);
+                    btn_paytm.setText("CC/DC/UPI");
                 }
-
                 final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                 TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
 //                        DecimalFormat format = new DecimalFormat("0.00");
@@ -667,7 +680,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         mDialog.show();
 
 
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID, Constants.PURPOSE_BILLPAYMENT);
 
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
@@ -685,7 +698,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                         mPaymentData = response.body();
 
-                        for (int i = 0; i < mPaymentData.size(); i++) {
+                        /*for (int i = 0; i < mPaymentData.size(); i++) {
                             if (mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")) {
                                 showPaytmWallet = true;
                             }
@@ -693,8 +706,15 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
                                 showPayU = true;
                             }
+                        }*/
+
+                        if (mPaymentData.get(0).getPayGateways().contains("PAYTM")) {
+                            showPaytmWallet = true;
                         }
 
+                        if (mPaymentData.get(0).getPayGateways().contains("RAZORPAY")) {
+                            showPayU = true;
+                        }
                         if (!showPaytmWallet && !showPayU) {
                             btn_pay.setVisibility(View.INVISIBLE);
                         }

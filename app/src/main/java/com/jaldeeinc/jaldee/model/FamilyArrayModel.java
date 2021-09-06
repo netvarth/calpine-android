@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class FamilyArrayModel  implements Serializable{
 
     Integer pincode;
+    int age;
     private JsonObject whatsAppNum;
     private JsonObject telegramNum;
     private String whtsAppCountryCode;
@@ -24,6 +25,10 @@ public class FamilyArrayModel  implements Serializable{
     private String city;
     private String state;
     private String district;
+
+    public void setAge(int age) { this.age = age; }
+
+    public int getAge() { return age; }
 
     public String getDistrict() { return district; }
 

@@ -453,7 +453,8 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginStart="@dimen/dimen_10dp"
-            android:layout_marginEnd="@dimen/dimen_10dp">
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:visibility="gone">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_paytm"

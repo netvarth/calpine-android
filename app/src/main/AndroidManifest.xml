@@ -256,9 +256,6 @@
             android:name=".activities.CheckinShareLocationAppointment"
             android:screenOrientation="unspecified" />
         <activity
-            android:name=".activities.CheckInCopy"
-            android:screenOrientation="unspecified" />
-        <activity
             android:name=".activities.PaymentActivity"
             android:screenOrientation="unspecified" />
         <activity
