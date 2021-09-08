@@ -236,8 +236,10 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 llAmountHint.setVisibility(View.VISIBLE);
                 tvErrorAmount.setVisibility(View.GONE);
                 et_note.setHint(serviceInfo.getConsumerNoteTitle());
+                if(Double.parseDouble(serviceInfo.getMinDonationAmount()) == Double.parseDouble(serviceInfo.getMaxDonationAmount())) {
+                    etAmount.setText(Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())));
+                }
                 SpannableStringBuilder builder = new SpannableStringBuilder();
-
                 if (serviceInfo.getDescription() != null && !serviceInfo.getDescription().equals("")) {
                     s1 = Html.fromHtml(serviceInfo.getDescription() + "<br><br>");
                     builder.append(s1);

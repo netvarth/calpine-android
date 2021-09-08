@@ -629,6 +629,9 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                             }
 
                             if (profileDetails.getUserprofile().getAge() != 0) {
+                                /*JsonObject age = new JsonObject();
+                                age.addProperty("year", profileDetails.getUserprofile().getAge());
+                                family.setAge(age);*/
                                 family.setAge(profileDetails.getUserprofile().getAge());
                             }
                             family.setAddMember(false);
@@ -648,8 +651,8 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                                         } else {
                                             family1.setEmail(email);
                                         }
-
                                         if (response.body().get(i).getUserProfile().getAge() != 0) {
+                                        //if (response.body().get(i).getUserProfile().getAge() != null) {
                                             family1.setAge(response.body().get(i).getUserProfile().getAge());
                                         }
                                         if (countryCode.equalsIgnoreCase("+91")) {
@@ -1167,9 +1170,15 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
         if (familylist.getEmail() != null) {
             et_email.setText(familylist.getEmail());
         }
+
         if (familylist.getAge() != 0) {
             et_age.setText(String.valueOf(familylist.getAge()));
-        } else {
+        }
+        /*if (familylist.getAge() != null) {
+            if(familylist.getAge().get("year") != null) {
+                et_age.setText(familylist.getAge().get("year").toString());
+            }
+        } */else {
             et_age.setText("");
         }
         mRecycleChooseLanguages.setVisibility(View.VISIBLE);

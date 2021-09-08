@@ -50,6 +50,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.Interface.ICpn;
@@ -1400,7 +1401,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 pjsonobj.put("id", providerId);
             }
 
-            if (etVirtualNumber.getText().toString().trim().length() == 10) {
+            if (etVirtualNumber.getText().toString().trim().length() > 7) {
                 if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("whatsApp")) {
                     virtualService.put("WhatsApp", countryVirtualCode + etVirtualNumber.getText());
                     mWhtsappCountryCode = countryVirtualCode;
@@ -1421,7 +1422,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("whatsApp")) {
                     if (etVirtualNumber.getText().toString().trim().equalsIgnoreCase("")) {
                         modeOfCalling = "Enter WhatsApp number";
-                    } else {
+                    } else if(etVirtualNumber.getText().toString().trim().length() < 7 || (virtual_NmbrCCPicker.getSelectedCountryCode().equalsIgnoreCase("91") && etVirtualNumber.getText().toString().trim().length() != 10  )){
                         modeOfCalling = "Invalid WhatsApp number";
                     }
                 } else {
@@ -1484,7 +1485,12 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     waitobj.putOpt("telegramNum", jsonObj3);
                 }
                 if (mAge != null && !mAge.isEmpty()) {
+                    /*JsonObject jsonAge = new JsonObject();
+                    jsonAge.addProperty("year", mAge);
+                    jsonAge.addProperty("month", 0);
+                    waitobj.put("age", jsonAge);*/
                     waitobj.put("age", mAge);
+
                 }
                 if (mPreferredLanguages != null) {
                     waitobj.putOpt("preferredLanguage", mPreferredLanguages);

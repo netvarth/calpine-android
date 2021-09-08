@@ -477,13 +477,23 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
                                 showPayU = true;
                             }
                         }*/
-
-                        if (mPaymentData.get(0).getPayGateways().contains("PAYTM")) {
-                            showPaytmWallet = true;
-                        }
-
-                        if (mPaymentData.get(0).getPayGateways().contains("RAZORPAY")) {
-                            showPayU = true;
+                        String countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "").replace("+", "");
+                        if (mPaymentData.get(0).isJaldeeBank()) {
+                            if (!countryCode.equalsIgnoreCase("91"))  // for international number it shows Razorpay gateway only
+                            {
+                                showPaytmWallet = false;
+                                showPayU = true;
+                            } else {
+                                showPaytmWallet = true;
+                                showPayU = false;
+                            }
+                        } else {
+                            if (mPaymentData.get(0).getPayGateways().contains("PAYTM")) {
+                                showPaytmWallet = true;
+                            }
+                            if (mPaymentData.get(0).getPayGateways().contains("RAZORPAY")) {
+                                showPayU = true;
+                            }
                         }
 
                         if ((showPayU) || showPaytmWallet) {

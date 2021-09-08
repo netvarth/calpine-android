@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class PaymentModel {
     ArrayList<PayModes> payModes;
     ArrayList<String> payGateways;
+    boolean isJaldeeBank;
 
     public ArrayList<PayModes> getPayModes() {
         return payModes;
@@ -17,4 +18,7 @@ public class PaymentModel {
     public ArrayList<String> getPayGateways() {
         return payGateways;
     }
+
+    public boolean isJaldeeBank() { return isJaldeeBank; }
+
 }

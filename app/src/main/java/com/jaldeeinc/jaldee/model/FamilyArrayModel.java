@@ -14,6 +14,7 @@ public class FamilyArrayModel  implements Serializable{
 
     Integer pincode;
     int age;
+    //JsonObject age;
     private JsonObject whatsAppNum;
     private JsonObject telegramNum;
     private String whtsAppCountryCode;
@@ -29,6 +30,9 @@ public class FamilyArrayModel  implements Serializable{
     public void setAge(int age) { this.age = age; }
 
     public int getAge() { return age; }
+   // public void setAge(JsonObject age) { this.age = age; }
+
+    //public JsonObject getAge() { return age; }
 
     public String getDistrict() { return district; }
 

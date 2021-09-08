@@ -295,6 +295,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/relative"
                     android:layout_marginStart="@dimen/padding15"
+                    android:layout_marginTop="@dimen/dimen_5dp"
                     android:text="Donation by"
                     android:textAllCaps="true"
                     android:textColor="@color/dark_black"
@@ -309,7 +310,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_donation_text"
                     android:layout_marginStart="@dimen/dimen_25dp"
-                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
                     android:layout_marginEnd="@dimen/dimen_25dp"
                     android:background="@drawable/donate_edittext"
                     android:orientation="vertical"
@@ -419,8 +420,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:paddingStart="@dimen/dimen_5dp"
-                        android:paddingTop="@dimen/dimen_5dp"
-                        android:paddingBottom="@dimen/dimen_5dp">
+                        android:paddingTop="@dimen/dimen_5dp">
 
                         <ImageView
                             android:layout_width="@dimen/dimen_20dp"
@@ -457,6 +457,18 @@
                             </EditText>
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:letterSpacing="0.04"
+                        android:layout_marginLeft="@dimen/dimen_35dp"
+                        android:text="* donation receipts will be sent to email"
+                        android:textColor="@color/sec_title_grey"
+                        android:textSize="@dimen/txtsize_10">
+
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
                 </LinearLayout>
 
                 <EditText
