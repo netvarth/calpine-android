@@ -486,28 +486,29 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                     obj.setAnswer(answer);
                     answerLines.add(obj);
 
-                } else if (question.getFieldDataType().equalsIgnoreCase("dataGrid")) {
-
-                    QuestionnaireGridView gridFieldView = (QuestionnaireGridView) viewsList.get(question.getLabelName());
-
-                    ArrayList<DataGrid> dataGridList = new ArrayList<>();
-
-                    if (gridFieldView != null){
-
-                        dataGridList = gridFieldView.getGridDataList();
-                    }
-
-                    AnswerLine obj = new AnswerLine();
-                    obj.setLabelName(question.getLabelName());
-
-                    JsonObject answer = new JsonObject();
-                    Gson gson = new Gson();
-                    JsonElement element = gson.toJsonTree(dataGridList);
-                    answer.add("dataGrid", element);
-
-                    obj.setAnswer(answer);
-                    answerLines.add(obj);
                 }
+//                else if (question.getFieldDataType().equalsIgnoreCase("dataGrid")) {
+//
+//                    QuestionnaireGridView gridFieldView = (QuestionnaireGridView) viewsList.get(question.getLabelName());
+//
+//                    ArrayList<DataGrid> dataGridList = new ArrayList<>();
+//
+//                    if (gridFieldView != null){
+//
+//                        dataGridList = gridFieldView.getGridDataList();
+//                    }
+//
+//                    AnswerLine obj = new AnswerLine();
+//                    obj.setLabelName(question.getLabelName());
+//
+//                    JsonObject answer = new JsonObject();
+//                    Gson gson = new Gson();
+//                    JsonElement element = gson.toJsonTree(dataGridList);
+//                    answer.add("dataGrid", element);
+//
+//                    obj.setAnswer(answer);
+//                    answerLines.add(obj);
+//                }
             }
 
             input.setAnswerLines(answerLines);
@@ -1263,50 +1264,51 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 addListField(listModel);
 
-            } else if (question.getFieldDataType().equalsIgnoreCase("dataGrid")) {
-
-                QuestionnaireGridView gridView = new QuestionnaireGridView(this);
-                gridView.setQuestionData(question);
-
-                ArrayList<DataGrid> dataGridList = new ArrayList<>();
-
-                for (AnswerLine answerLine : qInput.getAnswerLines()) {
-                    if (answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
-
-                        dataGridList = answerLine.getDataGridList();
-                    }
-                }
-                gridView.setGridDataList(dataGridList);
-
-                gridView.getLlAdd().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        DataGridFragment dataGridFragment = DataGridFragment.newInstance(question);
-                        dataGridFragment.setGridView(gridView);
-                        final FragmentManager fragmentManager = getSupportFragmentManager();
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.container, dataGridFragment).addToBackStack("DataGrid")
-                                .commit();
-                    }
-                });
-
-                gridView.setiDataGridListener(new IDataGridListener() {
-                    @Override
-                    public void onEditClick(DataGrid gridObj, int position) {
-
-                        DataGridFragment dataGridFragment = DataGridFragment.newInstance(question, gridObj, position);
-                        dataGridFragment.setGridView(gridView);
-                        final FragmentManager fragmentManager = getSupportFragmentManager();
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.container, dataGridFragment).addToBackStack("DataGrid")
-                                .commit();
-                    }
-                });
-                llParentLayout.addView(gridView);
-                viewsList.put(question.getLabelName(), gridView);
-
             }
+//            else if (question.getFieldDataType().equalsIgnoreCase("dataGrid")) {
+//
+//                QuestionnaireGridView gridView = new QuestionnaireGridView(this);
+//                gridView.setQuestionData(question);
+//
+//                ArrayList<DataGrid> dataGridList = new ArrayList<>();
+//
+//                for (AnswerLine answerLine : qInput.getAnswerLines()) {
+//                    if (answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
+//
+//                        dataGridList = answerLine.getDataGridList();
+//                    }
+//                }
+//                gridView.setGridDataList(dataGridList);
+//
+//                gridView.getLlAdd().setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//
+//                        DataGridFragment dataGridFragment = DataGridFragment.newInstance(question);
+//                        dataGridFragment.setGridView(gridView);
+//                        final FragmentManager fragmentManager = getSupportFragmentManager();
+//                        fragmentManager.beginTransaction()
+//                                .replace(R.id.container, dataGridFragment).addToBackStack("DataGrid")
+//                                .commit();
+//                    }
+//                });
+//
+//                gridView.setiDataGridListener(new IDataGridListener() {
+//                    @Override
+//                    public void onEditClick(DataGrid gridObj, int position) {
+//
+//                        DataGridFragment dataGridFragment = DataGridFragment.newInstance(question, gridObj, position);
+//                        dataGridFragment.setGridView(gridView);
+//                        final FragmentManager fragmentManager = getSupportFragmentManager();
+//                        fragmentManager.beginTransaction()
+//                                .replace(R.id.container, dataGridFragment).addToBackStack("DataGrid")
+//                                .commit();
+//                    }
+//                });
+//                llParentLayout.addView(gridView);
+//                viewsList.put(question.getLabelName(), gridView);
+//
+//            }
         }
 
     }
