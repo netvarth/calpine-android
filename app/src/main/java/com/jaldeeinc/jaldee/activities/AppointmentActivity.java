@@ -1223,7 +1223,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             }
 
 
-            if (etVirtualNumber.getText().toString().trim().length() == 10) {
+            if (etVirtualNumber.getText().toString().trim().length() >= 7) {
                 if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("whatsApp")) {
                     virtualService.put("WhatsApp", countryVirtualCode + etVirtualNumber.getText());
                     mWhtsappCountryCode = countryVirtualCode;
@@ -1247,7 +1247,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     } else {
                         modeOfCalling = "Invalid WhatsApp number";
                     }
-                } else {
+                } else if(etVirtualNumber.getText().toString().trim().length() < 7 || (virtual_NmbrCCPicker.getSelectedCountryCode().equalsIgnoreCase("91") && etVirtualNumber.getText().toString().trim().length() != 10  )){
                     modeOfCalling = "Invalid Contact number";
                 }
                 DynamicToast.make(AppointmentActivity.this, modeOfCalling, AppCompatResources.getDrawable(

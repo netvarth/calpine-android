@@ -249,7 +249,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                 phone = et_phone.getText().toString();
 
                 if (!phone.equalsIgnoreCase("")) {
-                    if (phone.trim().length() > 9) {
+                    if ((!cCodePicker.getSelectedCountryCode().equalsIgnoreCase("91") &&phone.trim().length() >= 7) || (cCodePicker.getSelectedCountryCode().equalsIgnoreCase("91") && phone.trim().length() == 10)) {
                         if (isVirtualService) {
                             iFamilyMemberDetails.sendFamilyMbrPhoneAndEMail(phone, email, countryCode);
                             dismiss();
