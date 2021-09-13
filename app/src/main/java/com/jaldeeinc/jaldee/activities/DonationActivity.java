@@ -238,6 +238,8 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 et_note.setHint(serviceInfo.getConsumerNoteTitle());
                 if(Double.parseDouble(serviceInfo.getMinDonationAmount()) == Double.parseDouble(serviceInfo.getMaxDonationAmount())) {
                     etAmount.setText(Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())));
+                    tvSubmit.setText("Donate now");
+                    cvSubmit.setCardBackgroundColor(Color.parseColor("#F1B51C"));
                 }
                 SpannableStringBuilder builder = new SpannableStringBuilder();
                 if (serviceInfo.getDescription() != null && !serviceInfo.getDescription().equals("")) {
