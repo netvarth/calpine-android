@@ -38,11 +38,13 @@ import com.jaldeeinc.jaldee.utils.SharedPreference;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 
 import okhttp3.Headers;
@@ -218,6 +220,16 @@ public class Config {
             return String.format("%d", (long) d);
         else
             return String.format("%s", d);
+    }
+
+    public static String getMoneyFormat(String number) {
+
+        if (!number.isEmpty()) {
+            double val = Double.parseDouble(number);
+            return NumberFormat.getNumberInstance(Locale.US).format(val);
+        } else {
+            return "0";
+        }
     }
 
     public static String convert12(String str) {

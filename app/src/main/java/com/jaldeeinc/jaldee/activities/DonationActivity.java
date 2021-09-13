@@ -232,7 +232,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 String name = serviceInfo.getName();
                 tvServiceName.setText(name.substring(0, 1).toUpperCase() + name.substring(1));
                 tvDonationName.setText(name.substring(0, 1).toUpperCase() + name.substring(1));
-                tvAmountHint.setText("Minimum" + " ₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())) + " Maximum ₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMaxDonationAmount())));
+                tvAmountHint.setText("Minimum" + " ₹" + Config.getMoneyFormat(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount()))) + " Maximum ₹" + Config.getMoneyFormat(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(serviceInfo.getMaxDonationAmount()))));
                 llAmountHint.setVisibility(View.VISIBLE);
                 tvErrorAmount.setVisibility(View.GONE);
                 et_note.setHint(serviceInfo.getConsumerNoteTitle());

@@ -199,9 +199,9 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                         viewHolder.llTime.setVisibility(View.GONE);
                         viewHolder.llEstwaitTime.setVisibility(View.GONE);
                         if (Double.parseDouble(servicesInfoList.get(position).getMinDonationAmount()) == Double.parseDouble(servicesInfoList.get(position).getMaxDonationAmount())) {
-                            viewHolder.tvDontnAmount.setText("Donate ₹\u00A0" + getMoneyFormat(servicesInfoList.get(position).getMinDonationAmount()));
+                            viewHolder.tvDontnAmount.setText("Donate ₹\u00A0" + Config.getMoneyFormat(servicesInfoList.get(position).getMinDonationAmount()));
                         } else {
-                            viewHolder.tvDontnAmount.setText("Donate ₹\u00A0" + getMoneyFormat(servicesInfoList.get(position).getMinDonationAmount()) + " or more");
+                            viewHolder.tvDontnAmount.setText("Donate ₹\u00A0" + Config.getMoneyFormat(servicesInfoList.get(position).getMinDonationAmount()) + " or more");
                         }
                     } else {
                         viewHolder.llDonationRange.setVisibility(View.GONE);
@@ -578,16 +578,6 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
             Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
-        }
-    }
-
-    public static String getMoneyFormat(String number) {
-
-        if (!number.isEmpty()) {
-            double val = Double.parseDouble(number);
-            return NumberFormat.getNumberInstance(Locale.US).format(val);
-        } else {
-            return "0";
         }
     }
 }
