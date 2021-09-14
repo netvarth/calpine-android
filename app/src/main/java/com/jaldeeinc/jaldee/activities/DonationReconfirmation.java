@@ -200,7 +200,7 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
                 tvPhoneNumber.setText(bookingModel.getCountryCode() + " " + bookingModel.getPhoneNumber());
             }
             if (bookingModel.getDonationAmount() != null && !bookingModel.getDonationAmount().trim().equalsIgnoreCase("")) {
-                tvAmount.setText("₹ " + bookingModel.getDonationAmount());
+                tvAmount.setText("₹ " + Config.getMoneyFormat(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(bookingModel.getDonationAmount()))));
             }
             mSearchTerminology = bookingModel.getmSearchTerminology();
 
@@ -693,9 +693,10 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
         CustomTextViewLight tvPostInfoText = alertDialog.findViewById(R.id.tv_postInfoText);
         LinearLayout llPostInfo = alertDialog.findViewById(R.id.ll_postInfo);
         if (activeDonation != null) {
-            Locale indian = new Locale("en", "IN");
-            NumberFormat formatter = NumberFormat.getCurrencyInstance(indian);
-            String currency = formatter.format(Double.parseDouble(activeDonation.getDonationAmount()));
+            //Locale indian = new Locale("en", "IN");
+            //NumberFormat formatter = NumberFormat.getCurrencyInstance(indian);
+            //String currency = formatter.format(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(activeDonation.getDonationAmount())));
+            String currency = Config.getMoneyFormat(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(activeDonation.getDonationAmount())));
             if (activeDonation.getProviderAccount() != null) {
                 tvProviderName.setText(activeDonation.getProviderAccount().getAsJsonObject().get("businessName").getAsString());
             }
@@ -715,7 +716,7 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
             if (activeDonation.getService() != null) {
                 tvCause.setText(activeDonation.getService().getAsJsonObject().get("name").getAsString());
             }
-            tvAmountPaid.setText(currency);
+            tvAmountPaid.setText("₹ " + currency);
             if (activeDonation.getService().getAsJsonObject().get("postInfoEnabled") != null && activeDonation.getService().getAsJsonObject().get("postInfoEnabled").getAsBoolean()) {
                 if (activeDonation.getService().getAsJsonObject().get("postInfoTitle") != null && !activeDonation.getService().getAsJsonObject().get("postInfoTitle").getAsString().isEmpty()) {
                     tvPostInfoTitle.setText(activeDonation.getService().getAsJsonObject().get("postInfoTitle").getAsString());

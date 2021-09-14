@@ -1406,7 +1406,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
     }
 
     public void updateUI(SearchService checkInInfo, double eligibleJcashAmt) {
-        if (bookingModel.getCheckInInfo() != null && bookingModel.getCheckInInfo().getTotalAmount() != null && !bookingModel.getCheckInInfo().getTotalAmount().equalsIgnoreCase("0.0")) {
+        if (bookingModel.getNetTotal() != 0 ) {
             LservicePrepay.setVisibility(View.VISIBLE);
             LserviceAmount.setVisibility(View.VISIBLE);
             String firstWord = "";
@@ -1421,7 +1421,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                     cbJCash.setChecked(true);
                     llJCash.setVisibility(View.VISIBLE);
                     cbJCash.setText("Use Jaldee cash balance : Rs " + Config.getAmountNoOrTwoDecimalPoints(eligibleJcashAmt));
-                    if (eligibleJcashAmt >= Double.parseDouble(checkInInfo.getMinPrePaymentAmount())) {
+                    if (eligibleJcashAmt >= bookingModel.getAmountRequiredNow()) {
                         tvJCashHint.setVisibility(View.GONE);
                         llPaymentOptions.setVisibility(View.GONE);
                         tvButtonName.setText("Confirm");

@@ -92,11 +92,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_padding"
-
             android:background="@drawable/roundedrect_grey"
             android:text="@string/cc_dc"
             android:textAllCaps="false"
             android:textColor="@color/app_background"
             android:textSize="@dimen/txtsize_hint" />
     </LinearLayout>
+    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+        android:id="@+id/tv_international_payment_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="International Payment ? Click here"
+        android:textColor="@color/blue"
+        android:textSize="@dimen/txtsize_12"
+        android:visibility="gone"/>
 </LinearLayout>

@@ -540,6 +540,10 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_submit"
             android:layout_width="match_parent"
@@ -547,7 +551,7 @@
             android:layout_marginStart="@dimen/dimen_10dp"
             android:layout_marginTop="@dimen/padding5"
             android:layout_marginEnd="@dimen/dimen_10dp"
-            android:layout_marginBottom="@dimen/dimen_15dp"
+            android:layout_marginBottom="@dimen/dimen_10dp"
             app:cardBackgroundColor="@color/location_theme"
             app:cardCornerRadius="@dimen/padding3">
 
@@ -581,6 +585,17 @@
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+            android:id="@+id/tv_international_payment_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_15dp"
+            android:gravity="center"
+            android:text="International Payment ? Click here"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/txtsize_12"
+            android:visibility="gone"/>
+    </LinearLayout>
 
     </LinearLayout>
 

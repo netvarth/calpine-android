@@ -1363,12 +1363,12 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
     }
 
     public void updateUI(ServiceInfo serviceInfo, double eligibleJcashAmt) {
-        if (bookingModel.getServiceInfo() != null && bookingModel.getServiceInfo().getTotalAmount() != null && !bookingModel.getServiceInfo().getTotalAmount().equalsIgnoreCase("0.0")) {
+        if (bookingModel.getNetTotal() != 0 ) {
             LservicePrepay.setVisibility(View.VISIBLE);
             LserviceAmount.setVisibility(View.VISIBLE);
             String firstWord = "";
             String thirdWord;
-            thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getServiceInfo().getTotalAmount()));
+            thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(bookingModel.getNetTotal());
             Spannable spannable = new SpannableString(firstWord + thirdWord);
             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                     firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1378,7 +1378,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                     cbJCash.setChecked(true);
                     llJCash.setVisibility(View.VISIBLE);
                     cbJCash.setText("Use Jaldee cash balance : Rs " + Config.getAmountNoOrTwoDecimalPoints(eligibleJcashAmt));
-                    if (eligibleJcashAmt >= Double.parseDouble(serviceInfo.getMinPrePaymentAmount())) {
+                    if (eligibleJcashAmt >= bookingModel.getAmountRequiredNow()) {
                         tvJCashHint.setVisibility(View.GONE);
                         llPaymentOptions.setVisibility(View.GONE);
                         tvButtonName.setText("Confirm");
