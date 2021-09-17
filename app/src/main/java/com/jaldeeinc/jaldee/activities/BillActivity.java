@@ -38,6 +38,7 @@ import com.jaldeeinc.jaldee.adapter.CouponsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
@@ -340,6 +341,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                 Button btn_paytm = dialog.findViewById(R.id.btn_paytm);
                 Button btn_payu = dialog.findViewById(R.id.btn_payu);
+                CustomTextViewBold tv_international_payment_link = (CustomTextViewBold) dialog.findViewById(R.id.tv_international_payment_link);
+
                 /*if (showPaytmWallet) {
                     btn_paytm.setVisibility(View.VISIBLE);
                 } else {
@@ -363,6 +366,11 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                     btn_payu.setVisibility(View.GONE);
                     btn_paytm.setVisibility(View.VISIBLE);
                     btn_paytm.setText("CC/DC/UPI");
+                }
+                if (showForInternationalPayment) {
+                    tv_international_payment_link.setVisibility(View.VISIBLE);
+                } else {
+                    tv_international_payment_link.setVisibility(View.GONE);
                 }
                 final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                 TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
@@ -399,6 +407,19 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                         } else {
                             payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, purpose, mCOntext, mActivity, "", customerId, encId);
+                        }
+                        dialog.dismiss();
+                    }
+                });
+
+                tv_international_payment_link.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (cbJCash.isChecked()) {
+                            new PaymentGateway(mCOntext, mActivity).ApiGenerateHash2(ynwUUID, sAmountPay, accountID, purpose, "bill", true, false, true, false);
+
+                        } else {
+                            new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, purpose, "bill", customerId, Constants.SOURCE_PAYMENT);
                         }
                         dialog.dismiss();
                     }
@@ -666,6 +687,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
     boolean showPaytmWallet = false;
     boolean showPayU = false;
+    boolean showForInternationalPayment = false;
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
     ArrayList<RefundDetails> refundData = new ArrayList<>();
 
@@ -714,9 +736,11 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             {
                                 showPaytmWallet = false;
                                 showPayU = true;
+                                showForInternationalPayment = false;
                             } else {
                                 showPaytmWallet = true;
                                 showPayU = false;
+                                showForInternationalPayment = true;
                             }
                         } else {
                             if (mPaymentData.get(0).getPayGateways().contains("PAYTM")) {

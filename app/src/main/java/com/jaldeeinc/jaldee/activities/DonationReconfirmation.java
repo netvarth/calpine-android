@@ -129,6 +129,9 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
     @BindView(R.id.cv_submit)
     CardView cvSubmit;
 
+    @BindView(R.id.tv_international_payment_link)
+    CustomTextViewBold tv_international_payment_link;
+
     private String dntEncId;
     private ActiveDonation activeDonation;
     SearchTerminology mSearchTerminology;
@@ -137,6 +140,8 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
     String value = null;
     boolean showPaytmWallet = false;
     boolean showPayU = false;
+    boolean showForInternationalPayment = false;
+
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
     public JSONObject jsonObject;
     public IPaymentResponse iPaymentResponse;
@@ -266,6 +271,17 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
             public void onClick(View view) {
 
                 if (bookingModel != null) {
+                    ApiDonation(jsonObject, bookingModel.getAccountId());
+                }
+            }
+        });
+
+        tv_international_payment_link.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (bookingModel != null) {
+                    isPaytm = false;
                     ApiDonation(jsonObject, bookingModel.getAccountId());
                 }
             }
@@ -483,9 +499,11 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
                             {
                                 showPaytmWallet = false;
                                 showPayU = true;
+                                showForInternationalPayment = false;
                             } else {
                                 showPaytmWallet = true;
                                 showPayU = false;
+                                showForInternationalPayment = true;
                             }
                         } else {
                             if (mPaymentData.get(0).getPayGateways().contains("PAYTM")) {
@@ -521,6 +539,11 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
                             isPaytm = true;
                             llPaymentOptions.setVisibility(View.GONE);
                             tvButtonName.setText("CC/DC/UPI");
+                        }
+                        if (showForInternationalPayment) {
+                            tv_international_payment_link.setVisibility(View.VISIBLE);
+                        } else {
+                            tv_international_payment_link.setVisibility(View.GONE);
                         }
                     } else {
                         Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();

@@ -130,6 +130,9 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
     @BindView(R.id.cv_razorpay)
     CardView cvRazorpay;
 
+    @BindView(R.id.tv_international_payment_link)
+    CustomTextViewBold tv_international_payment_link;
+
     @BindView(R.id.ll_paymentOptions)
     LinearLayout llPaymentOptions;
 
@@ -440,6 +443,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                     if (bookingModel.getEligibleJcashAmt() >= bookingModel.getAmountRequiredNow()) {
                         tvButtonName.setText("Confirm ");
                         llPaymentOptions.setVisibility(View.GONE);
+                        tv_international_payment_link.setVisibility(View.GONE);
                     } else {
                         tvButtonName.setText("Proceed to Payment");
                         //llPaymentOptions.setVisibility(View.VISIBLE);
@@ -455,6 +459,11 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                             isPaytm = true;
                             llPaymentOptions.setVisibility(View.GONE);
                             tvButtonName.setText("CC/DC/UPI");
+                        }
+                        if (showForInternationalPayment) {
+                            tv_international_payment_link.setVisibility(View.VISIBLE);
+                        } else {
+                            tv_international_payment_link.setVisibility(View.GONE);
                         }
                     }
                 } else {
@@ -473,6 +482,11 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                             llPaymentOptions.setVisibility(View.GONE);
                             tvButtonName.setText("CC/DC/UPI");
                         }
+                    }
+                    if (showForInternationalPayment) {
+                        tv_international_payment_link.setVisibility(View.VISIBLE);
+                    } else {
+                        tv_international_payment_link.setVisibility(View.GONE);
                     }
                     tvJCashHint.setVisibility(View.GONE);
                 }
@@ -518,6 +532,17 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
             public void onClick(View view) {
 
                 if (bookingModel != null) {
+                    ApiCheckIn(jsonObject, bookingModel.getAccountId());
+                }
+            }
+        });
+
+        tv_international_payment_link.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (bookingModel != null) {
+                    isPaytm = false;
                     ApiCheckIn(jsonObject, bookingModel.getAccountId());
                 }
             }
@@ -1207,6 +1232,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
     boolean showPaytmWallet = false;
     boolean showPayU = false;
+    boolean showForInternationalPayment = false;
 
     private void APIPayment(String accountID) {
 
@@ -1252,9 +1278,11 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                             {
                                 showPaytmWallet = false;
                                 showPayU = true;
+                                showForInternationalPayment = false;
                             } else {
                                 showPaytmWallet = true;
                                 showPayU = false;
+                                showForInternationalPayment = true;
                             }
                         } else {
                             if (mPaymentData.get(0).getPayGateways().contains("PAYTM")) {
@@ -1310,6 +1338,11 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                             cvRazorpay.setVisibility(View.VISIBLE);
                         } else {
                             cvRazorpay.setVisibility(View.GONE);
+                        }
+                        if (showForInternationalPayment) {
+                            tv_international_payment_link.setVisibility(View.VISIBLE);
+                        } else {
+                            tv_international_payment_link.setVisibility(View.GONE);
                         }
                         updateUI(bookingModel.getCheckInInfo(), bookingModel.getEligibleJcashAmt());
                     } else {
@@ -1406,7 +1439,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
     }
 
     public void updateUI(SearchService checkInInfo, double eligibleJcashAmt) {
-        if (bookingModel.getNetTotal() != 0 ) {
+        if (bookingModel.getNetTotal() != 0) {
             LservicePrepay.setVisibility(View.VISIBLE);
             LserviceAmount.setVisibility(View.VISIBLE);
             String firstWord = "";
@@ -1425,6 +1458,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                         tvJCashHint.setVisibility(View.GONE);
                         llPaymentOptions.setVisibility(View.GONE);
                         tvButtonName.setText("Confirm");
+                        tv_international_payment_link.setVisibility(View.GONE);
                     } else {
                         tvJCashHint.setVisibility(View.VISIBLE);
                         if (showPaytmWallet && showPayU) {
@@ -1438,6 +1472,11 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                             isPaytm = true;
                             llPaymentOptions.setVisibility(View.GONE);
                             tvButtonName.setText("CC/DC/UPI");
+                        }
+                        if (showForInternationalPayment) {
+                            tv_international_payment_link.setVisibility(View.VISIBLE);
+                        } else {
+                            tv_international_payment_link.setVisibility(View.GONE);
                         }
                     }
                 } else if (eligibleJcashAmt == 0) {
@@ -1455,18 +1494,26 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                         llPaymentOptions.setVisibility(View.GONE);
                         tvButtonName.setText("CC/DC/UPI");
                     }
+                    if (showForInternationalPayment) {
+                        tv_international_payment_link.setVisibility(View.VISIBLE);
+                    } else {
+                        tv_international_payment_link.setVisibility(View.GONE);
+                    }
                 } else {
                     cbJCash.setChecked(false);
                     llJCash.setVisibility(View.GONE);
                     llPaymentOptions.setVisibility(View.GONE);
+                    tv_international_payment_link.setVisibility(View.GONE);
                 }
             } else {
                 llPaymentOptions.setVisibility(View.GONE);
                 llJCash.setVisibility(View.GONE);
+                tv_international_payment_link.setVisibility(View.GONE);
             }
         } else {
             llPaymentOptions.setVisibility(View.GONE);
             llJCash.setVisibility(View.GONE);
+            tv_international_payment_link.setVisibility(View.GONE);
         }
     }
 

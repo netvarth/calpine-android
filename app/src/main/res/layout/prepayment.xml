@@ -79,7 +79,6 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:background="@drawable/roundedrect_blue"
             android:text="Paytm"
             android:textAllCaps="false"
@@ -102,9 +101,10 @@
         android:id="@+id/tv_international_payment_link"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_5dp"
         android:gravity="center"
         android:text="International Payment ? Click here"
         android:textColor="@color/blue"
         android:textSize="@dimen/txtsize_12"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 </LinearLayout>

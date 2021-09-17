@@ -133,6 +133,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     ArrayList<Address> addressList = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
     private AddressAdapter addressAdapter;
+
     @BindView(R.id.cb_jCash)
     CheckBox cbJCash;
 
@@ -872,6 +873,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
 
                                         Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
                                         Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
+                                        CustomTextViewBold tv_international_payment_link = (CustomTextViewBold) dialog.findViewById(R.id.tv_international_payment_link);
                                         ImageView ivClose = dialog.findViewById(R.id.iv_close);
                                         ivClose.setVisibility(View.VISIBLE);
                                         /*if (showPaytmWallet) {
@@ -897,6 +899,11 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                                             btn_payu.setVisibility(View.GONE);
                                             btn_paytm.setVisibility(View.VISIBLE);
                                             btn_paytm.setText("CC/DC/UPI");
+                                        }
+                                        if (showForInternationalPayment) {
+                                            tv_international_payment_link.setVisibility(View.VISIBLE);
+                                        } else {
+                                            tv_international_payment_link.setVisibility(View.GONE);
                                         }
                                         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                                         TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
@@ -928,7 +935,6 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                                                     new PaymentGateway(CheckoutListActivity.this, CheckoutListActivity.this).ApiGenerateHash1(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, "checkin", 0, Constants.SOURCE_PAYMENT);
                                                 }
                                                 dialog.dismiss();
-
                                             }
                                         });
 
@@ -944,7 +950,18 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                                                 }
                                                 //payment.generateCheckSum(sAmountPay);
                                                 dialog.dismiss();
+                                            }
+                                        });
 
+                                        tv_international_payment_link.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                if (cbJCash.isChecked()) {
+                                                    new PaymentGateway(CheckoutListActivity.this, CheckoutListActivity.this).ApiGenerateHash2(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, "checkin", true, false, true, false);
+                                                } else {
+                                                    new PaymentGateway(CheckoutListActivity.this, CheckoutListActivity.this).ApiGenerateHash1(value, prepayAmount, String.valueOf(acctId), Constants.PURPOSE_PREPAYMENT, "checkin", 0, Constants.SOURCE_PAYMENT);
+                                                }
+                                                dialog.dismiss();
                                             }
                                         });
                                     } catch (Exception e) {
@@ -1546,6 +1563,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
 
     boolean showPaytmWallet = false;
     boolean showPayU = false;
+    boolean showForInternationalPayment = false;
 
     private void APIPayment(String accountID) {
 
@@ -1586,9 +1604,11 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                             {
                                 showPaytmWallet = false;
                                 showPayU = true;
+                                showForInternationalPayment = false;
                             } else {
                                 showPaytmWallet = true;
                                 showPayU = false;
+                                showForInternationalPayment = true;
                             }
                         } else {
                             if (mPaymentData.get(0).getPayGateways().contains("PAYTM")) {
@@ -1615,19 +1635,13 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                                     Log.e("HHHHHHHHHHHHH", "Hide Advance Amount");
                                 }
                             }
-
-
                         }
-
                     } else {
                         Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1636,7 +1650,6 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getParent(), mDialog);
-
             }
         });
 

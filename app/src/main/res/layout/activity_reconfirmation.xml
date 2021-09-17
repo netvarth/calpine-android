@@ -544,58 +544,60 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv_submit"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/padding45"
-            android:layout_marginStart="@dimen/dimen_10dp"
-            android:layout_marginTop="@dimen/padding5"
-            android:layout_marginEnd="@dimen/dimen_10dp"
-            android:layout_marginBottom="@dimen/dimen_10dp"
-            app:cardBackgroundColor="@color/location_theme"
-            app:cardCornerRadius="@dimen/padding3">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_submit"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/padding45"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/padding5"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                app:cardBackgroundColor="@color/location_theme"
+                app:cardCornerRadius="@dimen/padding3">
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-                    android:id="@+id/tv_buttonName"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Confirm "
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/dimen_18sp">
+                    android:layout_gravity="center">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                        android:id="@+id/tv_buttonName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Confirm "
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/dimen_18sp">
 
-                <ImageView
-                    android:layout_width="@dimen/dimen_20dp"
-                    android:layout_height="@dimen/dimen_16sp"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/txtsize_10"
-                    android:src="@drawable/rightarrow"
-                    app:tint="@color/white">
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
-                </ImageView>
+                    <ImageView
+                        android:layout_width="@dimen/dimen_20dp"
+                        android:layout_height="@dimen/dimen_16sp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="@dimen/txtsize_10"
+                        android:src="@drawable/rightarrow"
+                        app:tint="@color/white">
+
+                    </ImageView>
 
 
-            </LinearLayout>
+                </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
-        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-            android:id="@+id/tv_international_payment_link"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_15dp"
-            android:gravity="center"
-            android:text="International Payment ? Click here"
-            android:textColor="@color/blue"
-            android:textSize="@dimen/txtsize_12"
-            android:visibility="gone"/>
-    </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                android:id="@+id/tv_international_payment_link"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_15dp"
+                android:gravity="center"
+                android:text="International Payment ? Click here"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/txtsize_12"
+                android:visibility="gone" />
+        </LinearLayout>
 
     </LinearLayout>
 
