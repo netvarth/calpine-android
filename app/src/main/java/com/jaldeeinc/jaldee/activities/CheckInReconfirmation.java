@@ -1077,7 +1077,6 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
             if (bookingImagesList.get(i).contains(".")) {
                 extension = bookingImagesList.get(i).substring(bookingImagesList.get(i).lastIndexOf(".") + 1);
             }
-
             if (extension.equalsIgnoreCase("pdf")) {
                 type = MediaType.parse("application/pdf");
             } else if (extension.equalsIgnoreCase("png")) {

@@ -42,8 +42,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String bookingId = remoteMessage.getData().get("uuid");
             String accountId = remoteMessage.getData().get("account");
             String notificationType = "NOTIFICATION";
+            String meetingLink = remoteMessage.getData().get("link");
 
-            sendNotification(notificationType, title, body, type, bookingId,accountId);
+            sendNotification(notificationType, title, body, type, bookingId, accountId, meetingLink);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,14 +79,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
 
-    private void sendNotification(final String notificationType, final String title, final String text, final String type, final String id, String accountId) {
+    private void sendNotification(final String notificationType, final String title, final String text, final String type, final String id, String accountId, String meetingLink) {
 
         BasicNotification basicNotification = new BasicNotification();
 //        ActionNotification actionNotification = new ActionNotification();
         switch (notificationType) {
             case "NOTIFICATION":
                 basicNotification = new BasicNotification();
-                basicNotification.notify(getApplicationContext(), title, text, type, id,accountId);
+                basicNotification.notify(getApplicationContext(), title, text, type, id, accountId, meetingLink);
 
                 break;
 

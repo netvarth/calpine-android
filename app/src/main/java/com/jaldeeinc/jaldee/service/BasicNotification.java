@@ -64,7 +64,7 @@ public class BasicNotification {
      *
      * @see #cancel(Context)
      */
-    public static void notify(final Context context, final String titleString, final String textString, String activityString, final String bookingId, String accountId) {
+    public static void notify(final Context context, final String titleString, final String textString, String activityString, final String bookingId, String accountId, String meetingLink) {
         final Resources res = context.getResources();
 
         // This image is used as the notification's large icon (thumbnail).
@@ -81,7 +81,6 @@ public class BasicNotification {
         Log.e("###############", String.valueOf(number));
 
 
-
         switch (activityString) {
 
             case "Home":
@@ -96,7 +95,7 @@ public class BasicNotification {
                 intent = new Intent(context, CheckInDetails.class);
                 intent.putExtra("uuid", bookingId);
                 intent.putExtra("account", accountId);
-                intent.putExtra(Constants.PUSH_NOTIFICATION,true);
+                intent.putExtra(Constants.PUSH_NOTIFICATION, true);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 pendingIntent = PendingIntent.getActivity(context, number, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 break;
@@ -106,7 +105,7 @@ public class BasicNotification {
                 intent = new Intent(context, BookingDetails.class);
                 intent.putExtra("uuid", bookingId);
                 intent.putExtra("account", accountId);
-                intent.putExtra(Constants.PUSH_NOTIFICATION,true);
+                intent.putExtra(Constants.PUSH_NOTIFICATION, true);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 pendingIntent = PendingIntent.getActivity(context, number, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 break;
@@ -117,7 +116,7 @@ public class BasicNotification {
                 intent = new Intent(context, OrderDetailActivity.class);
                 intent.putExtra("uuid", bookingId);
                 intent.putExtra("account", accountId);
-                intent.putExtra(Constants.PUSH_NOTIFICATION,true);
+                intent.putExtra(Constants.PUSH_NOTIFICATION, true);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 pendingIntent = PendingIntent.getActivity(context, number, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 break;
@@ -128,8 +127,8 @@ public class BasicNotification {
                 intent = new Intent(context, Home.class);
                 intent.putExtra("uuid", bookingId);
                 intent.putExtra("account", accountId);
-                intent.putExtra("message",textString);
-                intent.putExtra(Constants.PUSH_NOTIFICATION,true);
+                intent.putExtra("message", textString);
+                intent.putExtra(Constants.PUSH_NOTIFICATION, true);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 pendingIntent = PendingIntent.getActivity(context, number, intent, PendingIntent.FLAG_ONE_SHOT);
                 break;
@@ -139,7 +138,7 @@ public class BasicNotification {
                 intent = new Intent(context, BillActivity.class);
                 intent.putExtra("ynwUUID", bookingId);
                 intent.putExtra("accountID", accountId);
-                intent.putExtra(Constants.PUSH_NOTIFICATION,true);
+                intent.putExtra(Constants.PUSH_NOTIFICATION, true);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 pendingIntent = PendingIntent.getActivity(context, number, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 break;
@@ -149,21 +148,21 @@ public class BasicNotification {
             case "CONSUMER_SHARE_MEDICAL_RECODE":
             case "PRE_PAYMENT_SUCCESS":
 
-                if (bookingId != null){
+                if (bookingId != null) {
 
-                    if (bookingId.contains("_wl")){
+                    if (bookingId.contains("_wl")) {
                         intent = new Intent(context, CheckInDetails.class);
-                    } else if (bookingId.contains("_appt")){
+                    } else if (bookingId.contains("_appt")) {
                         intent = new Intent(context, BookingDetails.class);
                     } else {
-                        intent = new Intent(context,OrderDetailActivity.class);
+                        intent = new Intent(context, OrderDetailActivity.class);
                     }
                 } else {
                     intent = new Intent(context, Home.class);
                 }
                 intent.putExtra("uuid", bookingId);
                 intent.putExtra("account", accountId);
-                intent.putExtra(Constants.PUSH_NOTIFICATION,true);
+                intent.putExtra(Constants.PUSH_NOTIFICATION, true);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 pendingIntent = PendingIntent.getActivity(context, number, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 break;
@@ -172,7 +171,7 @@ public class BasicNotification {
 
                 intent = new Intent(context, ChatActivity.class);
                 intent.putExtra("uuid", bookingId);
-                intent.putExtra(Constants.PUSH_NOTIFICATION,true);
+                intent.putExtra(Constants.PUSH_NOTIFICATION, true);
                 if (accountId != null) {
                     intent.putExtra("accountId", Integer.parseInt(accountId));
                 }
@@ -193,8 +192,17 @@ public class BasicNotification {
                     intent.putExtra("from", Constants.PROVIDER);
                 }
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                pendingIntent = PendingIntent.getActivity(context, number, intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                pendingIntent = PendingIntent.getActivity(context, number, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+                break;
+            case "INSTANT_VIDEO":
+
+                intent = new Intent(context, Home.class);
+                intent.putExtra("click_action", activityString);
+                intent.putExtra("meetingLink", meetingLink);
+                intent.putExtra(Constants.PUSH_NOTIFICATION, true);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                pendingIntent = PendingIntent.getActivity(context, number, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 break;
 
 
@@ -255,18 +263,17 @@ public class BasicNotification {
                 // Automatically dismiss the notification when it is touched.
                 .setAutoCancel(true);
 
-        notify(context, builder.build(),number);
+        notify(context, builder.build(), number);
     }
 
-    public static int generateRandom(){
+    public static int generateRandom() {
         Random random = new Random();
         return random.nextInt(9999 - 1000) + 1000;
     }
 
 
-
     @TargetApi(Build.VERSION_CODES.ECLAIR)
-    private static void notify(final Context context, final Notification notification,int number) {
+    private static void notify(final Context context, final Notification notification, int number) {
         final NotificationManager nm = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         //NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
@@ -281,7 +288,7 @@ public class BasicNotification {
                 channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
                 nm.createNotificationChannel(channel);
             }
-            nm.notify(NOTIFICATION_TAG,number , notification);
+            nm.notify(NOTIFICATION_TAG, number, notification);
             Log.e("###############", String.valueOf(number));
         } else {
             nm.notify(NOTIFICATION_TAG.hashCode(), notification);
@@ -310,8 +317,6 @@ public class BasicNotification {
             nm.cancel(NOTIFICATION_TAG.hashCode());
         }
     }
-
-
 
 
 }

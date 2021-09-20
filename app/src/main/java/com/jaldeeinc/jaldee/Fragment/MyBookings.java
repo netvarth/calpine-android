@@ -1104,10 +1104,12 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
 
             if (extension.equalsIgnoreCase("pdf")){
                 type = MediaType.parse("application/pdf");
-
+            } else if (extension.equalsIgnoreCase("png")) {
+                type = MediaType.parse("image/png");
+            } else if (extension.equalsIgnoreCase("jpeg")) {
+                type = MediaType.parse("image/jpeg");
             } else {
                 type = MediaType.parse("image/*");
-
             }
 
             try {
@@ -1195,10 +1197,12 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
 
             if (extension.equalsIgnoreCase("pdf")){
                 type = MediaType.parse("application/pdf");
-
+            } else if (extension.equalsIgnoreCase("png")) {
+                type = MediaType.parse("image/png");
+            } else if (extension.equalsIgnoreCase("jpeg")) {
+                type = MediaType.parse("image/jpeg");
             } else {
                 type = MediaType.parse("image/*");
-
             }
 
             try {

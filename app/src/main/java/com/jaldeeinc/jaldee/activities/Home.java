@@ -25,7 +25,10 @@ import com.jaldeeinc.jaldee.Fragment.HomeTabFragment;
 import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
 import com.jaldeeinc.jaldee.custom.NotificationDialog;
+import com.jaldeeinc.jaldee.response.ActiveCheckIn;
+import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 import com.jaldeeinc.jaldee.service.LiveTrackService;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
@@ -45,8 +48,8 @@ public class Home extends AppCompatActivity {
     String from = null;
     String fromDonation = null;
 
-
     Intent mLiveTrackClient;
+    private MeetingDetailsWindow meetingDetailsWindow;
     private LiveTrackService liveTrackService = new LiveTrackService();
     private boolean fromPushNotification = false;
     NotificationDialog notificationDialog;
@@ -130,11 +133,19 @@ public class Home extends AppCompatActivity {
                     finish();
                 }
             }
-
         }
-
     }
 
+    public void showMeetingDetailsWindow(String meetingUrl, String click_action) {
+
+        meetingDetailsWindow = new MeetingDetailsWindow(mContext, meetingUrl, click_action);
+        meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        meetingDetailsWindow.show();
+        meetingDetailsWindow.setCancelable(false);
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels * 1);
+        meetingDetailsWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
 
     private void initScreen() {
         // Creating the ViewPager container fragment once
@@ -180,14 +191,18 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
+        String meetingLink = "";
         String account = intent.getStringExtra("account");
-        if (account != null) {
+        String action = intent.getStringExtra("click_action");
+        if (account != null || (action != null && action.equals("INSTANT_VIDEO"))) {
 
-            String action = intent.getStringExtra("click_action");
             String bookingId = intent.getStringExtra("uuid");
             String bodyMessage = intent.getStringExtra("body");
             String titleString = intent.getStringExtra("title");
+            if (action.equals("INSTANT_VIDEO")) {         // instantVideocall
+                meetingLink = intent.getStringExtra("meetingLink");
+            }
+
 
             if (action != null) {
                 switch (action) {
@@ -293,6 +308,9 @@ public class Home extends AppCompatActivity {
                         }
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
+                        break;
+                    case "INSTANT_VIDEO":     // instantVideocall
+                        showMeetingDetailsWindow(meetingLink, action);
                         break;
 
                     default:

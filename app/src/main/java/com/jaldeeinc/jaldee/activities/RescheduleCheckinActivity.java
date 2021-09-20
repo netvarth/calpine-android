@@ -1161,16 +1161,28 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         }
     }
 
-    private void ApiCommunicateCheckin(String waitListId, String accountID, String message,
-                                       final BottomSheetDialog dialog) {
-
-
+    private void ApiCommunicateCheckin(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type = MediaType.parse("*/*");
+        MediaType type;
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
         for (int i = 0; i < imagePathList.size(); i++) {
+
+            String extension = "";
+
+            if (imagePathList.get(i).contains(".")) {
+                extension = imagePathList.get(i).substring(imagePathList.get(i).lastIndexOf(".") + 1);
+            }
+            if (extension.equalsIgnoreCase("pdf")) {
+                type = MediaType.parse("application/pdf");
+            } else if (extension.equalsIgnoreCase("png")) {
+                type = MediaType.parse("image/png");
+            } else if (extension.equalsIgnoreCase("jpeg")) {
+                type = MediaType.parse("image/jpeg");
+            } else {
+                type = MediaType.parse("image/*");
+            }
 
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
@@ -1186,8 +1198,6 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
         RequestBody requestBody = mBuilder.build();
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject jsonObj = new JSONObject();
@@ -1197,37 +1207,25 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-
         Call<ResponseBody> call = apiService.waitlistSendAttachments(waitListId, Integer.parseInt(accountID.split("-")[0]), requestBody);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
                         imagePathList.clear();
                         //  dialog.dismiss();
                         getConfirmationDetails(Integer.parseInt(accountID));
-
-
                     } else {
-
                         if (response.code() == 422) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override

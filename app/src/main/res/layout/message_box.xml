@@ -14,13 +14,9 @@
         android:padding="@dimen/padding5"
         android:layout_gravity="end"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/padding5"
         app:tint="@color/gray">
 
     </ImageView>
-
-
-
 
     <com.jaldeeinc.jaldee.custom.CustomTextViewBold
         android:id="@+id/info"

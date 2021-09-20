@@ -18,10 +18,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class ApiClient {
-//    public static final String BASE_URL = "https://www.jaldee.com/v1/rest/";
+    //public static final String BASE_URL = "https://www.jaldee.com/v1/rest/";
     public static final String BASE_URL = "https://scale.jaldee.com/v1/rest/";
     //public static final String BASE_URL = "https://test.jaldee.com/v1/rest/";
-    //public static final String BASE_URL = "http://192.168.1.8:8080/v1/rest/";
+    //public static final String BASE_URL = "http://192.168.1.4:8080/v1/rest/";
 
 
     private static Retrofit retrofit = null;

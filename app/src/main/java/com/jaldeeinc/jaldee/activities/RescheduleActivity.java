@@ -1539,11 +1539,26 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
 
 
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type = MediaType.parse("*/*");
+        MediaType type;
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
         for (int i = 0; i < imagePathList.size(); i++) {
+
+            String extension = "";
+
+            if (imagePathList.get(i).contains(".")) {
+                extension = imagePathList.get(i).substring(imagePathList.get(i).lastIndexOf(".") + 1);
+            }
+            if (extension.equalsIgnoreCase("pdf")) {
+                type = MediaType.parse("application/pdf");
+            } else if (extension.equalsIgnoreCase("png")) {
+                type = MediaType.parse("image/png");
+            } else if (extension.equalsIgnoreCase("jpeg")) {
+                type = MediaType.parse("image/jpeg");
+            } else {
+                type = MediaType.parse("image/*");
+            }
 
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
