@@ -292,6 +292,10 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                     ll_chooselanguages.setVisibility(View.GONE);
                     ll_chooselanguages.startAnimation(slideRight);
                     ivClose.setVisibility(View.VISIBLE);
+                    if (preferredLanguages.size() == 0) {
+                        radioEnglishlng.setChecked(true);
+                        radioOtherlng.setChecked(false);
+                    }
                 }
             }
         });
@@ -652,7 +656,7 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
                                             family1.setEmail(email);
                                         }
                                         if (response.body().get(i).getUserProfile().getAge() != 0) {
-                                        //if (response.body().get(i).getUserProfile().getAge() != null) {
+                                            //if (response.body().get(i).getUserProfile().getAge() != null) {
                                             family1.setAge(response.body().get(i).getUserProfile().getAge());
                                         }
                                         if (countryCode.equalsIgnoreCase("+91")) {
@@ -1178,7 +1182,8 @@ public class CustomerInformationDialog extends Dialog implements IFamillyListSel
             if(familylist.getAge().get("year") != null) {
                 et_age.setText(familylist.getAge().get("year").toString());
             }
-        } */else {
+        } */
+        else {
             et_age.setText("");
         }
         mRecycleChooseLanguages.setVisibility(View.VISIBLE);
