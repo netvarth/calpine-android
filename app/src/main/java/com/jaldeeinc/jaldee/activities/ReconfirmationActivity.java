@@ -403,6 +403,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                         tvButtonName.setText("Confirm");
                         llPaymentOptions.setVisibility(View.GONE);
                         tv_international_payment_link.setVisibility(View.GONE);
+                        txtprepayamount.setText("₹ 0");
                     } else {
                         tvButtonName.setText("Proceed to Payment");
                         //llPaymentOptions.setVisibility(View.VISIBLE);
@@ -424,6 +425,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                         } else {
                             tv_international_payment_link.setVisibility(View.GONE);
                         }
+                        txtprepayamount.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(bookingModel.getAmountRequiredNow() - bookingModel.getEligibleJcashAmt()));
                     }
                 } else {
                     tvButtonName.setText("Proceed to Payment");
@@ -448,6 +450,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                         tv_international_payment_link.setVisibility(View.GONE);
                     }
                     tvJCashHint.setVisibility(View.GONE);
+                    txtprepayamount.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(bookingModel.getAmountRequiredNow()));
                 }
             }
         });
@@ -942,12 +945,12 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                             String secondWord = "";
                             String thirdWord = "";
                             if (bookingModel.getServiceInfo().getIsPrePayment().equalsIgnoreCase("true")) {
-                                secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(getFloatAsDouble(bookingModel.getAmountRequiredNow()));
-                                thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(getFloatAsDouble(bookingModel.getNetTotal()));
+                                secondWord = "₹ " + Config.getAmountNoOrTwoDecimalPoints(getFloatAsDouble(bookingModel.getAmountRequiredNow()));
+                                thirdWord = "₹ " + Config.getAmountNoOrTwoDecimalPoints(getFloatAsDouble(bookingModel.getNetTotal()));
 
                             } else {
-                                secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getServiceInfo().getMinPrePaymentAmount()));
-                                thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(bookingModel.getServiceInfo().getTotalAmount()));
+                                secondWord = "₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(bookingModel.getServiceInfo().getMinPrePaymentAmount()));
+                                thirdWord = "₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(bookingModel.getServiceInfo().getTotalAmount()));
                             }
 
                             Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -1394,12 +1397,12 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
     }
 
     public void updateUI(ServiceInfo serviceInfo, double eligibleJcashAmt) {
-        if (bookingModel.getNetTotal() != 0 ) {
+        if (bookingModel.getNetTotal() != 0) {
             LservicePrepay.setVisibility(View.VISIBLE);
             LserviceAmount.setVisibility(View.VISIBLE);
             String firstWord = "";
             String thirdWord;
-            thirdWord = "₹ " + Config.getAmountinTwoDecimalPoints(bookingModel.getNetTotal());
+            thirdWord = "₹ " + Config.getAmountNoOrTwoDecimalPoints(bookingModel.getNetTotal());
             Spannable spannable = new SpannableString(firstWord + thirdWord);
             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                     firstWord.length(), firstWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1409,6 +1412,11 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                     cbJCash.setChecked(true);
                     llJCash.setVisibility(View.VISIBLE);
                     cbJCash.setText("Use Jaldee cash balance : Rs " + Config.getAmountNoOrTwoDecimalPoints(eligibleJcashAmt));
+                    if (bookingModel.getEligibleJcashAmt() >= bookingModel.getAmountRequiredNow()) {
+                        txtprepayamount.setText("₹ 0");
+                    } else {
+                        txtprepayamount.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(bookingModel.getAmountRequiredNow() - bookingModel.getEligibleJcashAmt()));
+                    }
                     if (eligibleJcashAmt >= bookingModel.getAmountRequiredNow()) {
                         tvJCashHint.setVisibility(View.GONE);
                         llPaymentOptions.setVisibility(View.GONE);

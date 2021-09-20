@@ -1079,37 +1079,6 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             cbJCash.setChecked(false);
 
                         }
-                        /*total = mBillData.getNetRate() - mBillData.getTotalAmountPaid() + mBillData.getRefundedAmount();//1111111111111
-
-                        if (total >= 0) {
-                            txttotal.setVisibility(View.VISIBLE);
-                            tv_totalamt.setVisibility(View.VISIBLE);
-//                            DecimalFormat format = new DecimalFormat("0.00");
-//                            tv_totalamt.setText("₹ " + String.valueOf(total));
-                            tv_totalamt.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(total));
-                            txttotal.setText("Amount Due");
-                        } else if (total < 0) {
-                            tv_totalamt.setVisibility(View.VISIBLE);
-                            txttotal.setVisibility(View.VISIBLE);
-//                            DecimalFormat format = new DecimalFormat("0.00");
-                            tv_totalamt.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(Math.abs(total)));
-                            txttotal.setText("Refund Amount");
-                            btn_pay.setVisibility(View.INVISIBLE);
-                            couponCheckin.setVisibility(View.INVISIBLE);
-                        } else {
-                            tv_totalamt.setVisibility(View.INVISIBLE);
-                            txttotal.setVisibility(View.INVISIBLE);
-//                            DecimalFormat format = new DecimalFormat("0.00");
-                            //      tv_totalamt.setText("₹ " + Config.getAmountinTwoDecimalPoints(Math.abs(total)));
-                            //
-                            //
-                            //  txttotal.setText("Refund Amount");
-                            btn_pay.setVisibility(View.INVISIBLE);
-                            couponCheckin.setVisibility(View.INVISIBLE);
-                        }*/
-
-                        //sAmountPay = Config.getAmountinTwoDecimalPoints(total);
-//                        Config.logV("Amount PAy@@@@@@@@@@@@@@@@@@@@@@@@" + sAmountPay);
 
                         if (mBillData.getRefundedAmount() > 0) {
 
@@ -1119,26 +1088,6 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                             refundLayout.setVisibility(View.GONE);
                         }
-
-                       /* if (total != 0.0 && total > 0) {
-                            if (payStatus.equalsIgnoreCase("FullyPaid") || payStatus.equalsIgnoreCase("FullyRefunded")) {2222222222222
-
-
-                                if (mBillData.getAmountDue() > 0) {
-
-                                    btn_pay.setVisibility(View.VISIBLE);
-                                } else {
-                                    btn_pay.setVisibility(View.GONE);
-                                }
-//                                btn_pay.setVisibility(View.GONE);
-                            } else {
-                                btn_pay.setVisibility(View.VISIBLE);
-                            }
-
-                        } else {
-                            btn_pay.setVisibility(View.INVISIBLE);
-                        }*/
-
                         if (mBillData.getTaxableTotal() > 0) {
                             taxlayout.setVisibility(View.VISIBLE);
                             txttax.setText("Tax " + String.valueOf(mBillData.getTaxPercentage()) + "% of " + "₹\u00a0" + Config.getAmountinTwoDecimalPoints(mBillData.getTaxableTotal()) + "\n" + "(CGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %" + ", SGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %)");
