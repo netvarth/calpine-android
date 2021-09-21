@@ -214,12 +214,11 @@ public class Config {
     }
 
     public static String getAmountNoOrTwoDecimalPoints(double d) {
-        String s = String.format("%.2f", d);
-        d = Double.parseDouble(s);
-        if (d == (long) d)
-            return String.format("%d", (long) d);
-        else
-            return String.format("%s", d);
+        if(d % 1 == 0) {
+            return String.format("%s",(int) d);
+        } else {
+            return String.format("%.2f", d);
+        }
     }
 
     public static String getMoneyFormat(String number) {

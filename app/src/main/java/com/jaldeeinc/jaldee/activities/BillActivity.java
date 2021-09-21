@@ -58,9 +58,7 @@ import com.jaldeeinc.jaldee.response.WalletEligibleJCash;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneySdkInitializer;
-import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
-import com.payumoney.sdkui.ui.utils.ResultModel;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
 
@@ -72,9 +70,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
-import butterknife.BindView;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -376,10 +372,10 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                 TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
 //                        DecimalFormat format = new DecimalFormat("0.00");
                 if (cbJCash.isChecked()) {
-                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints(Double.parseDouble(payRemainingAmount)));
+                    txtamt.setText("Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(payRemainingAmount)));
 
                 } else {
-                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints(Double.parseDouble(sAmountPay)));
+                    txtamt.setText("Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(sAmountPay)));
                 }
                 Typeface tyface1 = Typeface.createFromAsset(mCOntext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
@@ -807,14 +803,14 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                                         for (int j = 0; j < refundData.get(i).getRefundDetails().size(); j++) {
                                             totalRefund = totalRefund + Double.parseDouble(refundData.get(i).getRefundDetails().get(j).getAmount());
                                         }
-                                        tv_refundamount.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(totalRefund));
+                                        tv_refundamount.setText("₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(totalRefund));
                                         if (total < 0) {
                                             double tRefund = Double.parseDouble(String.valueOf(totalRefund));
-                                            tv_totalamt.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(tRefund));
+                                            tv_totalamt.setText("₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(tRefund));
                                             btn_pay.setVisibility(View.GONE);
                                         } else if (total >= 0) {
                                             total = mBillData.getNetRate() - mBillData.getTotalAmountPaid() + Double.parseDouble(String.valueOf(totalRefund));
-                                            tv_totalamt.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(total));
+                                            tv_totalamt.setText("₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(total));
                                             btn_pay.setVisibility(View.VISIBLE);
                                         }
                                     } else {
@@ -990,7 +986,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                         if (mBillData.getNetTotal() != 0.0) {
                             tv_grosstotal.setVisibility(View.VISIBLE);
-                            tv_grosstotal.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(mBillData.getNetTotal()));
+                            tv_grosstotal.setText("₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(mBillData.getNetTotal()));
 
                         } else {
                             tv_gross.setVisibility(View.GONE);
@@ -1017,7 +1013,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                             amountlayout.setVisibility(View.VISIBLE);
 //                            DecimalFormat format = new DecimalFormat("0.00");
-                            tv_amount.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(mBillData.getNetRate()));
+                            tv_amount.setText("₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(mBillData.getNetRate()));
                         } else {
 
                             amountlayout.setVisibility(View.GONE);
@@ -1025,7 +1021,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                         if (mBillData.getDeliveryCharges() != 0) {
                             deliveryLayout.setVisibility(View.VISIBLE);
-                            tv_deliveryCharge.setText("(" + "+" + ")" + "₹\u00a0" + mBillData.getDeliveryCharges());
+                            tv_deliveryCharge.setText("(" + "+" + ")" + "₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(mBillData.getDeliveryCharges()));
                         } else {
                             deliveryLayout.setVisibility(View.GONE);
                         }
@@ -1034,7 +1030,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         if (mBillData.getTotalAmountPaid() != 0) {
                             paidlayout.setVisibility(View.VISIBLE);
 //                            DecimalFormat format = new DecimalFormat("0.00");
-                            tv_paid.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(mBillData.getTotalAmountPaid()));
+                            tv_paid.setText("₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(mBillData.getTotalAmountPaid()));
                         } else {
 
                             paidlayout.setVisibility(View.GONE);
@@ -1043,7 +1039,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         if (!bookingStatus.equals("Cancelled")) {
                             txttotal.setVisibility(View.VISIBLE);
                             tv_totalamt.setVisibility(View.VISIBLE);
-                            tv_totalamt.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(Math.abs(mBillData.getAmountDue())));
+                            tv_totalamt.setText("₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(Math.abs(mBillData.getAmountDue())));
                             if (mBillData.getAmountDue() == 0) {
                                 btn_pay.setVisibility(View.GONE);
                                 couponCheckin.setVisibility(View.GONE);
@@ -1060,13 +1056,13 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             } else if (mBillData.getAmountDue() > 0) {
                                 txttotal.setText("Amount Due");                         //negative amountDue is the refundamound ,there for use getAmountDue() as the refund amount
                                 btn_pay.setVisibility(View.VISIBLE);
-                                sAmountPay = Config.getAmountinTwoDecimalPoints(Math.abs(mBillData.getAmountDue())); //amount to pay
+                                sAmountPay = Config.getAmountNoDecimalPoints(Math.abs(mBillData.getAmountDue())); //amount to pay
                                 //couponCheckin.setVisibility(View.GONE);  // "couponCheckin" visibility VISIBLE setted at ApiJaldeegetProviderCoupons and ApiJaldeegetS3Coupons methods.
                             }
                         } else {
                             tv_totalamt.setVisibility(View.VISIBLE);
                             txttotal.setVisibility(View.VISIBLE);
-                            tv_totalamt.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(Math.abs(mBillData.getAmountDue())));  ////negative amountDue is the refundamound ,there for use getAmountDue() as the refund amount
+                            tv_totalamt.setText("₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(Math.abs(mBillData.getAmountDue())));  ////negative amountDue is the refundamound ,there for use getAmountDue() as the refund amount
                             if (mBillData.getAmountDue() < 0) {
                                 txttotal.setText("Refund Amount");
                             }
@@ -1083,19 +1079,19 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         if (mBillData.getRefundedAmount() > 0) {
 
                             refundLayout.setVisibility(View.VISIBLE);
-                            tv_refundamount.setText("₹\u00a0" + Config.getAmountinTwoDecimalPoints(mBillData.getRefundedAmount()));
+                            tv_refundamount.setText("₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(mBillData.getRefundedAmount()));
                         } else {
 
                             refundLayout.setVisibility(View.GONE);
                         }
                         if (mBillData.getTaxableTotal() > 0) {
                             taxlayout.setVisibility(View.VISIBLE);
-                            txttax.setText("Tax " + String.valueOf(mBillData.getTaxPercentage()) + "% of " + "₹\u00a0" + Config.getAmountinTwoDecimalPoints(mBillData.getTaxableTotal()) + "\n" + "(CGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %" + ", SGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %)");
+                            txttax.setText("Tax " + String.valueOf(mBillData.getTaxPercentage()) + "% of " + "₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(mBillData.getTaxableTotal()) + "\n" + "(CGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %" + ", SGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %)");
 //                        //    txttax.setText("Tax " + String.valueOf(mBillData.getTaxPercentage()) + "% of " + "₹ " + String.valueOf(mBillData.getTaxableTotal()) + "\n" + "(CGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %" + ", SGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %)");
 
 
 //                            txtaxval.setText("(+)₹ " + String.valueOf(mBillData.getTotalTaxAmount()));
-                            txtaxval.setText("(+)₹\u00a0" + Config.getAmountinTwoDecimalPoints(mBillData.getTotalTaxAmount()));
+                            txtaxval.setText("(+)₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(mBillData.getTotalTaxAmount()));
                         } else {
                             taxlayout.setVisibility(View.GONE);
                         }
@@ -1145,7 +1141,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                             jdnLayout.setVisibility(View.VISIBLE);
                             jdnLabel.setText("JDN");
                             jdnLabel.setVisibility(View.VISIBLE);
-                            jdnValue.setText(("(-)₹\u00a0" + Config.getAmountinTwoDecimalPoints(mBillData.getJdn().getDiscount())));
+                            jdnValue.setText(("(-)₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(mBillData.getJdn().getDiscount())));
                             jdnValue.setVisibility(View.VISIBLE);
                         } else {
                             jdnLayout.setVisibility(View.GONE);
@@ -1222,10 +1218,10 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         if (mBillData.getTotalAmountSaved() > 0 && !bookingStatus.equals("Cancelled")) {
                             if (payStatus.equals("FullyPaid") && mBillData.getAmountDue() == 0) {
                                 ll_amount_Saved.setVisibility(View.VISIBLE);
-                                tv_amount_Saved.setText("You have saved ₹\u00a0" + Config.getAmountinTwoDecimalPoints(mBillData.getTotalAmountSaved()));
+                                tv_amount_Saved.setText("You have saved ₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(mBillData.getTotalAmountSaved()));
                             } else {
                                 ll_amount_Saved.setVisibility(View.VISIBLE);
-                                tv_amount_Saved.setText("You will save ₹\u00a0" + Config.getAmountinTwoDecimalPoints(mBillData.getTotalAmountSaved()));
+                                tv_amount_Saved.setText("You will save ₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(mBillData.getTotalAmountSaved()));
                             }
                         }
 
