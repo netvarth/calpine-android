@@ -1,17 +1,21 @@
 package com.jaldeeinc.jaldee.response;
 
+import java.util.ArrayList;
+
 public class MyPayments {
 
     int id;
+    int custId;
+    int accountId;
+    boolean testTransaction;
+    boolean showTokenId;
     String requestJson;
     String customerName;
     String customerPhone;
     String customerEmail;
     String amount;
-    int custId;
     String paymentMode;
     String ynwUuid;
-    int accountId;
     String paymentRefId;
     String status;
     String paymentGateway;
@@ -24,10 +28,11 @@ public class MyPayments {
     String gatewayCommission;
     String jaldeeCommission;
     String settlementAmount;
-    boolean testTransaction;
     String paymentModeName;
     String accountEncodedId;
-    boolean showTokenId;
+    ArrayList<RefundInformation> refundDetails;
+
+    public ArrayList<RefundInformation> getRefundDetails() { return refundDetails; }
 
     public boolean isShowTokenId() {
         return showTokenId;

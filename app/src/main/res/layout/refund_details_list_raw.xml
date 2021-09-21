@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_refund_details_list_raw"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="3">
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        android:id="@+id/tv_refund_status"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_weight="1"
+        android:background="@drawable/jcash_spentlist_table_content_cell_bg"
+        android:gravity="center"
+        android:padding="@dimen/dimen_4dp"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="@dimen/dimen_14sp" />
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        android:id="@+id/tv_refund_mode"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_weight="1"
+        android:background="@drawable/jcash_spentlist_table_content_cell_bg"
+        android:gravity="center"
+        android:padding="@dimen/dimen_4dp"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="@dimen/dimen_14sp" />
+
+    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+        android:id="@+id/tv_refund_amount"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_weight="1"
+        android:background="@drawable/jcash_spentlist_table_content_cell_bg"
+        android:gravity="center"
+        android:padding="@dimen/dimen_4dp"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="@dimen/dimen_14sp" />
+
+</LinearLayout>

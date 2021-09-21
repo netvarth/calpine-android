@@ -46,8 +46,8 @@ public class JCashSpentLogDialog extends Dialog {
     }
     public void jcashSpentDetailsDialog(Context context, ArrayList<JCashSpentDetails> listJCashSpentDtls){
         jCashSpentLogAdapter = new JCashSpentLogAdapter(context, listJCashSpentDtls);
-        RecyclerView.LayoutManager mChooseLanguagesLayoutManager = new LinearLayoutManager(mContext);
-        recycle_spentlist.setLayoutManager(mChooseLanguagesLayoutManager);
+        RecyclerView.LayoutManager mJcashSpentDetailsLayoutManager = new LinearLayoutManager(mContext);
+        recycle_spentlist.setLayoutManager(mJcashSpentDetailsLayoutManager);
         recycle_spentlist.setAdapter(jCashSpentLogAdapter);
         jCashSpentLogAdapter.notifyDataSetChanged();
     }

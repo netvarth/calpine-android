@@ -1,12 +1,13 @@
 package com.jaldeeinc.jaldee.activities;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.adapter.RefundDetailsListAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -45,18 +47,19 @@ import retrofit2.Response;
 public class PaymentDetail extends AppCompatActivity {
 
     Context mActivity;
-    TextView provider, dateandtime, mode, paymentMode, paymentGateway, amount, status, refundable;
+    TextView provider, dateandtime, mode, paymentMode, paymentGateway, amount, status;
     LinearLayout providerLayout, dateandtimeLayout, modeLayout, paymentModeLayout, paymentGatewayLayout, amountLayout, statusLayout, refundableLayout;
     String id;
     TextView tv_title;
     Context mContext;
     String uniqueID;
+    ImageView iBackPress;
+    RefundDetailsListAdapter refundDetailsListAdapter;
+    RecyclerView recycle_refundlist;
     private ActiveCheckIn bookingDetail = new ActiveCheckIn();
     private ActiveAppointment apptDetail = new ActiveAppointment();
     private ActiveDonation donationDetail = new ActiveDonation();
     private ActiveOrders orderDetail = new ActiveOrders();
-
-
     private MyPayments myPayments = new MyPayments();
 
 
@@ -73,8 +76,7 @@ public class PaymentDetail extends AppCompatActivity {
         paymentGateway = findViewById(R.id.paymentGateway);
         amount = findViewById(R.id.amount);
         status = findViewById(R.id.status);
-        refundable = findViewById(R.id.refundable);
-
+        recycle_refundlist = findViewById(R.id.recycle_refundlist);
         providerLayout = findViewById(R.id.providerlayout);
         dateandtimeLayout = findViewById(R.id.dateandtimeLayout);
         modeLayout = findViewById(R.id.modeLayout);
@@ -83,9 +85,8 @@ public class PaymentDetail extends AppCompatActivity {
         amountLayout = findViewById(R.id.amoutLayout);
         statusLayout = findViewById(R.id.statusLayout);
         refundableLayout = findViewById(R.id.refundableLayout);
+        iBackPress = findViewById(R.id.backpress);
 
-
-        ImageView iBackPress = findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,19 +95,15 @@ public class PaymentDetail extends AppCompatActivity {
             }
         });
 
+        Typeface tyface = Typeface.createFromAsset(getAssets(), "fonts/Montserrat_Bold.otf");
         tv_title = findViewById(R.id.toolbartitle);
         tv_title.setText("Payment Details");
-
-        Typeface tyface = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
-
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             id = extras.getString("myPaymentID", "");
         }
-
 
         provider.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +117,6 @@ public class PaymentDetail extends AppCompatActivity {
         });
 
         ApiPayementDetail(id);
-
     }
 
     private void getUniqueId(String customID) {
@@ -181,7 +177,7 @@ public class PaymentDetail extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                                 String time = convertTime(response.body().getPaymentOn().split(" ")[1]);
-                                dateandtime.setText(date+" "+ time);
+                                dateandtime.setText(date + " " + time);
                                 dateandtime.setVisibility(View.VISIBLE);
                             } else {
                                 dateandtime.setVisibility(View.GONE);
@@ -224,8 +220,8 @@ public class PaymentDetail extends AppCompatActivity {
                                 }
                             }*/
                             if (response.body().getAmount() != null) {
-                              //  Locale indian = new Locale("en", "IN");
-                               // NumberFormat formatter=NumberFormat.getCurrencyInstance(indian);
+                                //  Locale indian = new Locale("en", "IN");
+                                // NumberFormat formatter=NumberFormat.getCurrencyInstance(indian);
                                 //String currency=formatter.format(Double.parseDouble(response.body().getAmount()));
                                 amount.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(response.body().getAmount())));
 
@@ -249,14 +245,22 @@ public class PaymentDetail extends AppCompatActivity {
                                     getAppointmentDetails(myPayments.getYnwUuid(), myPayments.getAccountId());
                                 }
                             }
+                            if (response.body().getRefundDetails() != null && response.body().getRefundDetails().size() != 0) {
+
+                                refundDetailsListAdapter = new RefundDetailsListAdapter(mContext, response.body().getRefundDetails());
+                                RecyclerView.LayoutManager mRefundDetailsLayoutManager = new LinearLayoutManager(mContext);
+                                recycle_refundlist.setLayoutManager(mRefundDetailsLayoutManager);
+                                recycle_refundlist.setAdapter(refundDetailsListAdapter);
+                                refundDetailsListAdapter.notifyDataSetChanged();
+                                refundableLayout.setVisibility(View.VISIBLE);
+                            }
                         }
                     } else {
                         if (response.code() != 419) {
+
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -412,6 +416,7 @@ public class PaymentDetail extends AppCompatActivity {
 
         return date2;
     }
+
     public static String convertTime(String time) {
 
         String formattedTime = "";
