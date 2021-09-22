@@ -158,7 +158,7 @@ public interface ApiInterface {
     Call<ResponseBody> ChangeEmail(@Path("email") String email);
 
     @POST("consumer/login/verifyLogin/{phone}")
-    Call<ResponseBody> ChangePhone(@Path("phone") String phone, @Body RequestBody jsonObj);
+    Call<ResponseBody> ChangePhone(@Path("phone") String phone, @Query("countryCode") String countryCode);
 
     @POST("consumer/waitlist/saveMyLoc/{uuid}")
     Call<ShareLocation> ShareLiveLocation(@Path("uuid") String uuid, @Query("account") String account, @Body RequestBody jsonObj);

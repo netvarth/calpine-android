@@ -113,14 +113,12 @@ public class ChangePhoneFragment extends RootFragment {
             public void onClick(View v) {
                 if (Config.isOnline(mContext)) {
                     if (validatePhone()) {
-
                         Toast.makeText(mContext, "Please recheck the country code and number", Toast.LENGTH_SHORT).show();
                     } // this code is temporary,need to change if country code check corrected by REST side
                     else {
                         ApiChangePhone(edtPhone.getText().toString(), countryCode);
                     }
                 }
-
             }
         });
 
@@ -135,8 +133,9 @@ public class ChangePhoneFragment extends RootFragment {
     }
 
     private boolean validatePhone() {
-        if (edtPhone.getText().toString().trim().isEmpty() ||  edtPhone.getText().toString().trim().length() < 7) {
-            text_input_phone.setError(getString(R.string.err_msg_phone));
+        if (edtPhone.getText().toString().trim().isEmpty() ||  edtPhone.getText().toString().trim().length() < 7 || (countryCode.equalsIgnoreCase("+91") && edtPhone.getText().toString().trim().length() != 10  )) {
+            //text_input_phone.setError(getString(R.string.err_msg_phone));
+            text_input_phone.setError("Invalid Phone number");
             requestFocus(edtPhone);
             return true;
         } else {
@@ -245,33 +244,19 @@ public class ChangePhoneFragment extends RootFragment {
 
     private void ApiChangePhone(final String mPhone, String countryCode) {
 
-
-        ApiInterface apiService =
-                ApiClient.getClient(getActivity()).create(ApiInterface.class);
+        ApiInterface apiService = ApiClient.getClient(getActivity()).create(ApiInterface.class);
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        JSONObject jsonObj = new JSONObject();
-        try {
-            jsonObj.put("countryCode", "+91");
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-
-        Call<ResponseBody> call = apiService.ChangePhone(mPhone, body);
-
-
+        Call<ResponseBody> call = apiService.ChangePhone(mPhone, countryCode);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
