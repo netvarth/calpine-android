@@ -2206,7 +2206,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             txtprepay.setTypeface(tyface);
                             txtprepayamount.setTypeface(tyface);
                             String firstWord = "Prepayment Amount: ";
-                            String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(sAmountPay));
+                            String secondWord = "₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(sAmountPay));
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -4893,7 +4893,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                     txtprepayment.setText(R.string.serve_prepay);
 
 //                                    DecimalFormat format = new DecimalFormat("0.00");
-                                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(sAmountPay))));
+                                    txtamt.setText("Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(sAmountPay)));
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     txtamt.setTypeface(tyface1);
@@ -5076,7 +5076,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
 
         // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
-        payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
+        payUmoneyConfig.setDoneButtonText("Pay Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(amount)));
 
         //  Config.logV("Response--PayU-------------------------" + checksumModel.getProductinfo().get(0).toString());
 

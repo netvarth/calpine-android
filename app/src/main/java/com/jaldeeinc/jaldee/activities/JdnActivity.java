@@ -107,7 +107,7 @@ public class JdnActivity extends AppCompatActivity {
                             if (jdnList.getDiscMax() != null && jdnList.getDiscPercentage() != null) {
 //                            discount.setText(jdnList.getDiscPercentage() + "%");
 //                            maxvalue.setText("₹" + jdnList.getDiscMax());
-                                discount.setText("You will get a discount of " + Config.getAmountNoDecimalPoints(Double.parseDouble(jdnList.getDiscPercentage())) + "%" + " " + "(" + "upto" + " " + "₹" + " " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(jdnList.getDiscMax())) + ")" + " " + " for every visit.");
+                                discount.setText("You will get a discount of " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(jdnList.getDiscPercentage())) + "%" + " " + "(" + "upto" + " " + "₹" + " " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(jdnList.getDiscMax())) + ")" + " " + " for every visit.");
                             }
                             if (jdnList.getDisplayNote() != null) {
                                 note.setText(jdnList.getDisplayNote());

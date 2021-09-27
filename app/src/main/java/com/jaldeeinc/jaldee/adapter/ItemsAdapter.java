@@ -34,6 +34,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.jaldeeinc.jaldee.Interface.IItemInterface;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.AutofitTextView;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
@@ -209,16 +210,16 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
                 viewHolder.tvPrice.setVisibility(View.VISIBLE);
                 viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
-                String amount = String.valueOf(catalogItem.getItems().getPrice());
-                viewHolder.tvPrice.setText("₹ " + convertAmountToDecimals(amount));
+                String amount = Config.getAmountNoOrTwoDecimalPoints(catalogItem.getItems().getPrice());
+                viewHolder.tvPrice.setText("₹ " + amount);
                 viewHolder.tvPrice.setPaintFlags(viewHolder.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                String price = String.valueOf(catalogItem.getItems().getPromotionalPrice());
-                viewHolder.tvDiscountedPrice.setText("₹ " + convertAmountToDecimals(price));
+                String price = Config.getAmountNoOrTwoDecimalPoints(catalogItem.getItems().getPromotionalPrice());
+                viewHolder.tvDiscountedPrice.setText("₹ " + price);
 
             } else {
                 viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
-                String amount = String.valueOf(catalogItem.getItems().getPrice());
-                viewHolder.tvDiscountedPrice.setText("₹ " + convertAmountToDecimals(amount));
+                String amount = Config.getAmountNoOrTwoDecimalPoints(catalogItem.getItems().getPrice());
+                viewHolder.tvDiscountedPrice.setText("₹ " + amount);
                 viewHolder.tvPrice.setVisibility(View.GONE);
 
             }
@@ -472,15 +473,5 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         } else {
             return "0";
         }
-    }
-
-    public static String convertAmountToDecimals(String price) {
-
-        double a = Double.parseDouble(price);
-        DecimalFormat decim = new DecimalFormat("0.00");
-        Double price2 = Double.parseDouble(decim.format(a));
-        String amount = decim.format(price2);
-        return amount;
-
     }
 }

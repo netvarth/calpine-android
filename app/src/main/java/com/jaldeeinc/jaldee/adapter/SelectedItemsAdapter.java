@@ -1,17 +1,12 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
@@ -22,25 +17,16 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.Interface.ICartInterface;
-import com.jaldeeinc.jaldee.Interface.IImageInterface;
 import com.jaldeeinc.jaldee.Interface.ISaveNotes;
-import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.custom.AddressDialog;
-import com.jaldeeinc.jaldee.custom.BorderImageView;
-import com.jaldeeinc.jaldee.custom.CustomNotes;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.CartItemModel;
-import com.jaldeeinc.jaldee.response.ItemImages;
-import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
-import com.squareup.picasso.Callback;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdapter.ViewHolder> {
@@ -110,15 +96,15 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
                 viewHolder.tvPrice.setVisibility(View.VISIBLE);
                 viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
                 double amount = cartItem.getItemPrice() * cartItem.getQuantity();
-                viewHolder.tvPrice.setText("₹ " + convertAmountToDecimals(String.valueOf(amount)));
+                viewHolder.tvPrice.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(amount));
                 viewHolder.tvPrice.setPaintFlags(viewHolder.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 double discountAmount = cartItem.getDiscountedPrice() * cartItem.getQuantity();
-                viewHolder.tvDiscountedPrice.setText("₹ "+ convertAmountToDecimals(String.valueOf(discountAmount)));
+                viewHolder.tvDiscountedPrice.setText("₹ "+ Config.getAmountNoOrTwoDecimalPoints(discountAmount));
 
             } else {
                 viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
                 double amount = cartItem.getItemPrice() * cartItem.getQuantity();
-                viewHolder.tvDiscountedPrice.setText("₹ " +convertAmountToDecimals(String.valueOf(amount)) );
+                viewHolder.tvDiscountedPrice.setText("₹ " +Config.getAmountNoOrTwoDecimalPoints(amount));
                 viewHolder.tvPrice.setVisibility(View.GONE);
 
             }
@@ -165,15 +151,15 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
                                     viewHolder.tvPrice.setVisibility(View.VISIBLE);
                                     viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
                                     double amount = cartItem.getItemPrice() * newValue;
-                                    viewHolder.tvPrice.setText("₹ " + convertAmountToDecimals(String.valueOf(amount)));
+                                    viewHolder.tvPrice.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(amount));
                                     viewHolder.tvPrice.setPaintFlags(viewHolder.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                                     double discountPrice = cartItem.getDiscountedPrice() * newValue;
-                                    viewHolder.tvDiscountedPrice.setText("₹ "+ convertAmountToDecimals(String.valueOf(discountPrice)));
+                                    viewHolder.tvDiscountedPrice.setText("₹ "+ Config.getAmountNoOrTwoDecimalPoints(discountPrice));
 
                                 } else {
                                     viewHolder.tvPrice.setVisibility(View.VISIBLE);
                                     double amount = cartItem.getItemPrice() * newValue;
-                                    viewHolder.tvPrice.setText("₹ " + convertAmountToDecimals(String.valueOf(amount)));
+                                    viewHolder.tvPrice.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(amount));
                                     viewHolder.tvDiscountedPrice.setVisibility(View.GONE);
 
                                 }
@@ -261,15 +247,5 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }
-    }
-
-    public static String convertAmountToDecimals(String price) {
-
-        double a = Double.parseDouble(price);
-        DecimalFormat decim = new DecimalFormat("0.00");
-        Double price2 = Double.parseDouble(decim.format(a));
-        String amount = decim.format(price2);
-        return amount;
-
     }
 }

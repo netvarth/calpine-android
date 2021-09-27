@@ -89,7 +89,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
             viewHolder.tvItemQuantity.setText(String.valueOf(orderItem.getQuantity()));
 
-            viewHolder.tvItemPrice.setText("₹ " + convertAmountToDecimals(orderItem.getTotalPrice()));
+            viewHolder.tvItemPrice.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(orderItem.getTotalPrice())));
 
             if (orderItem.getConsumerNotes() != null && !orderItem.getConsumerNotes().trim().equalsIgnoreCase("")) {
 
@@ -194,16 +194,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             }
 
         }
-    }
-
-    public static String convertAmountToDecimals(String price) {
-
-        double a = Double.parseDouble(price);
-        DecimalFormat decim = new DecimalFormat("0.00");
-        Double price2 = Double.parseDouble(decim.format(a));
-        String amount = decim.format(price2);
-        return amount;
-
     }
 
     private void setAnimation(View viewToAnimate, int position) {

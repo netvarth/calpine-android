@@ -208,22 +208,11 @@ public class PaymentDetail extends AppCompatActivity {
                                 paymentGatewayLayout.setVisibility(View.GONE);
                             }
 
-                            /*if (response.body().getStatus() != null && response.body().getStatus().equals("FAILED")) { // Refund amount
-                                refundableLayout.setVisibility(View.GONE);
-                            } else {
-
-                                if (response.body().getRefundableAmount() != null) {
-                                    refundable.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(response.body().getRefundableAmount())));
-                                    refundable.setVisibility(View.VISIBLE);
-                                } else {
-                                    refundable.setVisibility(View.GONE);
-                                }
-                            }*/
                             if (response.body().getAmount() != null) {
                                 //  Locale indian = new Locale("en", "IN");
                                 // NumberFormat formatter=NumberFormat.getCurrencyInstance(indian);
                                 //String currency=formatter.format(Double.parseDouble(response.body().getAmount()));
-                                amount.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(response.body().getAmount())));
+                                amount.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(response.body().getAmount())));
 
                                 amount.setVisibility(View.VISIBLE);
                             } else {

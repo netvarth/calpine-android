@@ -1,31 +1,23 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-import android.graphics.Paint;
-import android.os.Handler;
-import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jaldeeinc.jaldee.Interface.ICartInterface;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
-import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.CartItemModel;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class CheckoutItemsAdapter extends RecyclerView.Adapter<CheckoutItemsAdapter.ViewHolder> {
@@ -71,7 +63,7 @@ public class CheckoutItemsAdapter extends RecyclerView.Adapter<CheckoutItemsAdap
             viewHolder.tvItemName.setText(cartItem.getItemName());
 
             double amount = cartItem.getDiscountedPrice() * cartItem.getQuantity();
-            viewHolder.tvPrice.setText("₹ "+ convertAmountToDecimals(String.valueOf(amount)));
+            viewHolder.tvPrice.setText("₹ "+ Config.getAmountNoOrTwoDecimalPoints(amount));
 
             viewHolder.tvQuantity.setText(String.valueOf(cartItem.getQuantity()));
 
@@ -116,15 +108,5 @@ public class CheckoutItemsAdapter extends RecyclerView.Adapter<CheckoutItemsAdap
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }
-    }
-
-    public static String convertAmountToDecimals(String price) {
-
-        double a = Double.parseDouble(price);
-        DecimalFormat decim = new DecimalFormat("0.00");
-        Double price2 = Double.parseDouble(decim.format(a));
-        String amount = decim.format(price2);
-        return amount;
-
     }
 }

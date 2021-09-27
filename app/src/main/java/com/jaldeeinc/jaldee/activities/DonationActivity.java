@@ -237,7 +237,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 tvErrorAmount.setVisibility(View.GONE);
                 et_note.setHint(serviceInfo.getConsumerNoteTitle());
                 if(Double.parseDouble(serviceInfo.getMinDonationAmount()) == Double.parseDouble(serviceInfo.getMaxDonationAmount())) {
-                    etAmount.setText(Config.getAmountinTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())));
+                    etAmount.setText(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())));
                     tvSubmit.setText("Donate now");
                     cvSubmit.setCardBackgroundColor(Color.parseColor("#F1B51C"));
                 }
@@ -293,9 +293,9 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     if (etAmount.getText().toString().endsWith(".")) {
-                        etAmount.setText(Config.getAmountinTwoDecimalPoints(Double.parseDouble(etAmount.getText().toString().replace(".", ""))));
+                        etAmount.setText(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(etAmount.getText().toString().replace(".", ""))));
                     } else if (!etAmount.getText().toString().isEmpty()) {
-                        etAmount.setText(Config.getAmountinTwoDecimalPoints(Double.parseDouble(etAmount.getText().toString())));
+                        etAmount.setText(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(etAmount.getText().toString())));
                     }
                 }
             }

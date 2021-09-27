@@ -154,10 +154,10 @@ public class SearchServiceActivity extends AppCompatActivity {
                 tv_price.setVisibility(View.VISIBLE);
                 LserviceLayout.setVisibility(View.VISIBLE);
                 if (isTaxable) {
-                    tv_price.setText("₹ " + price);
+                    tv_price.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(price)));
                     tvisTax.setVisibility(View.VISIBLE);
                 } else {
-                    tv_price.setText("₹ " + price);
+                    tv_price.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(price)));
                     tvisTax.setVisibility(View.GONE);
                 }
             } else {
@@ -184,7 +184,7 @@ public class SearchServiceActivity extends AppCompatActivity {
 
         if(minDonationAmount!=null){
             tv_minvalue.setVisibility(View.VISIBLE);
-            tv_minvalue.setText("₹ " + minDonationAmount);
+            tv_minvalue.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(minDonationAmount)));
             LminAmountlayout.setVisibility(View.VISIBLE);
         }else{
             tv_minvalue.setVisibility(View.GONE);
@@ -193,7 +193,7 @@ public class SearchServiceActivity extends AppCompatActivity {
 
         if(maxDonationAmount!=null){
             tv_maxvalue.setVisibility(View.VISIBLE);
-            tv_maxvalue.setText("₹ " + maxDonationAmount);
+            tv_maxvalue.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(maxDonationAmount)));
             LmaxAmountlayout.setVisibility(View.VISIBLE);
         }else{
             tv_maxvalue.setVisibility(View.GONE);
@@ -211,7 +211,7 @@ public class SearchServiceActivity extends AppCompatActivity {
 
         if (isPrepayment) {
             Lprepayment.setVisibility(View.VISIBLE);
-            txtpreVal.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(MinPrePaymentAmount)));
+            txtpreVal.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(MinPrePaymentAmount)));
         } else {
             Lprepayment.setVisibility(View.GONE);
         }

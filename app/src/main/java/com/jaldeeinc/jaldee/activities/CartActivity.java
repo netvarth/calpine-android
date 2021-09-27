@@ -21,6 +21,7 @@ import com.jaldeeinc.jaldee.Interface.ICartInterface;
 import com.jaldeeinc.jaldee.Interface.ISaveNotes;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.SelectedItemsAdapter;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
@@ -126,16 +127,16 @@ public class CartActivity extends AppCompatActivity implements ICartInterface,IS
             if (db.getCartPrice() == db.getCartDiscountedPrice()) {
                 tvSubTotal.setVisibility(View.GONE);
                 tvDiscountedPrice.setVisibility(View.VISIBLE);
-                String discountedPrice = convertAmountToDecimals(String.valueOf(db.getCartPrice()));
+                String discountedPrice = Config.getAmountNoOrTwoDecimalPoints(db.getCartPrice());
                 tvDiscountedPrice.setText("₹ " +discountedPrice);
             } else {
 
                 tvSubTotal.setVisibility(View.VISIBLE);
-                String amount = convertAmountToDecimals(String.valueOf(db.getCartPrice()));
+                String amount = Config.getAmountNoOrTwoDecimalPoints(db.getCartPrice());
                 tvSubTotal.setText("₹ " + amount);
                 tvSubTotal.setPaintFlags(tvSubTotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 tvDiscountedPrice.setVisibility(View.VISIBLE);
-                String discountedPrice = convertAmountToDecimals(String.valueOf(db.getCartDiscountedPrice()));
+                String discountedPrice = Config.getAmountNoOrTwoDecimalPoints(db.getCartDiscountedPrice());
                 tvDiscountedPrice.setText("₹ " + discountedPrice);
             }
 
@@ -169,16 +170,6 @@ public class CartActivity extends AppCompatActivity implements ICartInterface,IS
         int width = (int) (metrics.widthPixels * 1);
         customNotes.getWindow().setGravity(Gravity.BOTTOM);
         customNotes.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-    }
-
-    public static String convertAmountToDecimals(String price) {
-
-        double a = Double.parseDouble(price);
-        DecimalFormat decim = new DecimalFormat("0.00");
-        Double price2 = Double.parseDouble(decim.format(a));
-        String amount = decim.format(price2);
-        return amount;
 
     }
 

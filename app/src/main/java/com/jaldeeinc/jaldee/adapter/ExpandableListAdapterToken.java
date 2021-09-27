@@ -1603,7 +1603,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                     btn_pay.setText("PAY");
                     if (activelist.getAmountDue() > 0) {
                         tv_prepaid.setVisibility(View.VISIBLE);
-                        tv_prepaid.setText("Amount Due: ₹ " + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
+                        tv_prepaid.setText("Amount Due: ₹ " + Config.getAmountNoOrTwoDecimalPoints(activelist.getAmountDue()));
                         tv_makepay.setVisibility(View.VISIBLE);
                     } else {
                         tv_prepaid.setVisibility(View.GONE);
@@ -1680,7 +1680,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                     } else {
                         tv_prepaid.setVisibility(View.VISIBLE);
                         tv_makepay.setVisibility(View.VISIBLE);
-                        tv_prepaid.setText("Amount Due: ₹ " + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
+                        tv_prepaid.setText("Amount Due: ₹ " + Config.getAmountNoOrTwoDecimalPoints(activelist.getAmountDue()));
                         tv_makepay.setText("");
                     }
                 } else {

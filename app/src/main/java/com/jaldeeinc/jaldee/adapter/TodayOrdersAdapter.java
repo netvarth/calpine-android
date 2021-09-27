@@ -22,6 +22,7 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
@@ -171,14 +172,14 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                 if (orders.getBill() == null) {
                     if (orders.getAdvanceAmountPaid() != 0.0) {
                         viewHolder.tvpayment.setVisibility(View.VISIBLE);
-                        viewHolder.tvpayment.setText("PAID" + " " + "₹" + " " + convertAmountsToDecimals(orders.getAdvanceAmountPaid()));
+                        viewHolder.tvpayment.setText("PAID" + " " + "₹" + " " + Config.getAmountNoOrTwoDecimalPoints(orders.getAdvanceAmountPaid()));
                     } else {
                         viewHolder.tvpayment.setVisibility(View.GONE);
                     }
                 } else {
                     if (orders.getBill().getAmountPaid() != 0) {
                         viewHolder.tvpayment.setVisibility(View.VISIBLE);
-                        viewHolder.tvpayment.setText("PAID" + " " + "₹" + " " + convertAmountsToDecimals(orders.getBill().getAmountPaid()));
+                        viewHolder.tvpayment.setText("PAID" + " " + "₹" + " " + Config.getAmountNoOrTwoDecimalPoints(orders.getBill().getAmountPaid()));
                     }
                 }
 
@@ -216,16 +217,6 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
             skeletonViewHolder.itemView.setLayoutParams(params);
         }
     }
-
-    public static String convertAmountsToDecimals(double price) {
-
-        DecimalFormat decim = new DecimalFormat("0.00");
-        Double price2 = Double.parseDouble(decim.format(price));
-        String amount = decim.format(price2);
-        return amount;
-
-    }
-
 
     @Override
     public int getItemCount() {

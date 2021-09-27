@@ -3,7 +3,6 @@ package com.jaldeeinc.jaldee.activities;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,7 +10,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -34,7 +32,6 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView;
 import com.jaldeeinc.jaldee.CustomSwipe.transform.ScaleTransformer;
@@ -44,7 +41,7 @@ import com.jaldeeinc.jaldee.Interface.IItemInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.DetailPageItemsAdapter;
 import com.jaldeeinc.jaldee.adapter.ItemImagesAdapter;
-import com.jaldeeinc.jaldee.adapter.ItemsAdapter;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.AutofitTextView;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
@@ -52,19 +49,14 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.SelectedItemsDialog;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.CartItemModel;
-import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CatalogItem;
-import com.jaldeeinc.jaldee.response.Item;
 import com.jaldeeinc.jaldee.response.ItemImages;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
-import com.squareup.picasso.Callback;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -250,15 +242,15 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
                     tvPrice.setVisibility(View.VISIBLE);
                     tvDiscountedPrice.setVisibility(View.VISIBLE);
                     String amount = String.valueOf(itemDetails.getItems().getPrice());
-                    tvPrice.setText("₹ " + convertAmountToDecimals(amount));
+                    tvPrice.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(amount)));
                     tvPrice.setPaintFlags(tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     String price = String.valueOf(itemDetails.getItems().getPromotionalPrice());
-                    tvDiscountedPrice.setText("₹ " + convertAmountToDecimals(price));
+                    tvDiscountedPrice.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(price)));
 
                 } else {
                     tvDiscountedPrice.setVisibility(View.VISIBLE);
                     String amount = String.valueOf(itemDetails.getItems().getPrice());
-                    tvDiscountedPrice.setText("₹ " + convertAmountToDecimals(amount));
+                    tvDiscountedPrice.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(amount)));
                     tvPrice.setVisibility(View.GONE);
 
                 }
@@ -514,17 +506,17 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
                 tvSubTotal.setVisibility(View.GONE);
                 tvTotalDiscount.setVisibility(View.VISIBLE);
                 String amount = String.valueOf(db.getCartPrice());
-                tvTotalDiscount.setText("₹ " + convertAmountToDecimals(amount));
+                tvTotalDiscount.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(amount)));
 
             } else {
 
                 tvSubTotal.setVisibility(View.VISIBLE);
                 String amount = String.valueOf(db.getCartPrice());
-                tvSubTotal.setText("₹ " + convertAmountToDecimals(amount));
+                tvSubTotal.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(amount)));
                 tvSubTotal.setPaintFlags(tvSubTotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 tvTotalDiscount.setVisibility(View.VISIBLE);
                 String discountedPrice = String.valueOf(db.getCartDiscountedPrice());
-                tvTotalDiscount.setText("₹ " + convertAmountToDecimals(discountedPrice));
+                tvTotalDiscount.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(discountedPrice)));
             }
         } else {
 
@@ -593,17 +585,17 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
                     tvSubTotal.setVisibility(View.GONE);
                     tvTotalDiscount.setVisibility(View.VISIBLE);
                     String amount = String.valueOf(db.getCartPrice());
-                    tvTotalDiscount.setText("₹" + convertAmountToDecimals(amount));
+                    tvTotalDiscount.setText("₹" + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(amount)));
 
                 } else {
 
                     tvSubTotal.setVisibility(View.VISIBLE);
                     String amount = String.valueOf(db.getCartPrice());
-                    tvSubTotal.setText("₹" + convertAmountToDecimals(amount));
+                    tvSubTotal.setText("₹" + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(amount)));
                     tvSubTotal.setPaintFlags(tvSubTotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     tvTotalDiscount.setVisibility(View.VISIBLE);
                     String discountedPrice = String.valueOf(db.getCartPrice());
-                    tvTotalDiscount.setText("₹" + convertAmountToDecimals(discountedPrice));
+                    tvTotalDiscount.setText("₹" + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(discountedPrice)));
                 }
 
             } else {
@@ -639,17 +631,17 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
                     tvSubTotal.setVisibility(View.GONE);
                     tvTotalDiscount.setVisibility(View.VISIBLE);
                     String amount = String.valueOf(db.getCartPrice());
-                    tvTotalDiscount.setText("₹" + convertAmountToDecimals(amount));
+                    tvTotalDiscount.setText("₹" + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(amount)));
 
                 } else {
 
                     tvSubTotal.setVisibility(View.VISIBLE);
                     String amount = String.valueOf(db.getCartPrice());
-                    tvSubTotal.setText("₹" + convertAmountToDecimals(amount));
+                    tvSubTotal.setText("₹" + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(amount)));
                     tvSubTotal.setPaintFlags(tvSubTotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     tvTotalDiscount.setVisibility(View.VISIBLE);
                     String discountedPrice = String.valueOf(db.getCartDiscountedPrice());
-                    tvTotalDiscount.setText("₹" + convertAmountToDecimals(discountedPrice));
+                    tvTotalDiscount.setText("₹" + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(discountedPrice)));
                 }
             } else {
 
@@ -718,16 +710,6 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
 
         checkCart();
         removeQuantity();
-
-    }
-
-    public static String convertAmountToDecimals(String price) {
-
-        double a = Double.parseDouble(price);
-        DecimalFormat decim = new DecimalFormat("0.00");
-        Double price2 = Double.parseDouble(decim.format(a));
-        String amount = decim.format(price2);
-        return amount;
 
     }
 

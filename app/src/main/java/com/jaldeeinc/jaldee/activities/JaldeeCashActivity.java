@@ -92,7 +92,7 @@ public class JaldeeCashActivity extends AppCompatActivity {
         totCashSpent = intent.getStringExtra("totCashSpent");
         totCashAvailable = intent.getStringExtra("totCashAvailable");
 
-        tvJcash.setText("₹\u00a0"+Config.getAmountinTwoDecimalPoints(Double.parseDouble(totCashAvailable)));
+        tvJcash.setText("₹\u00a0"+Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(totCashAvailable)));
         tvTotCashAwarded.setText(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(totCashAwarded)));
         tvTotCashSpent.setText(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(totCashSpent)));
 

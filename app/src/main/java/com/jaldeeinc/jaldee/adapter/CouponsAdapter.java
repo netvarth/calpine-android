@@ -12,7 +12,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,7 +24,6 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
-import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import java.util.ArrayList;
@@ -91,7 +89,7 @@ public class CouponsAdapter extends RecyclerView.Adapter<CouponsAdapter.ViewHold
 
             if (couponResponse.getMinBillAmount() != null) {
 
-                viewHolder.tvMinBill.setText("₹" + " " + Config.getAmountinTwoDecimalPoints(Double.parseDouble((couponResponse.getMinBillAmount()))));
+                viewHolder.tvMinBill.setText("₹" + " " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble((couponResponse.getMinBillAmount()))));
             }
 
             viewHolder.ivCopy.setOnClickListener(new View.OnClickListener() {
@@ -125,7 +123,7 @@ public class CouponsAdapter extends RecyclerView.Adapter<CouponsAdapter.ViewHold
             }
 
             if (couponResponse.getDiscountType().equals("AMOUNT")) {
-                viewHolder.tvDiscount.setText("₹" + " " + Config.getAmountinTwoDecimalPoints(Double.parseDouble((couponResponse.getDiscountValue()))));
+                viewHolder.tvDiscount.setText("₹" + " " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble((couponResponse.getDiscountValue()))));
             } else {
                 viewHolder.tvDiscount.setText(couponResponse.getDiscountValue() + "%");
             }

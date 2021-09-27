@@ -46,7 +46,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.jaldeeinc.jaldee.activities.CheckInDetails.convertAmountToDecimals;
 import static com.jaldeeinc.jaldee.activities.CheckInDetails.convertToTitleForm;
 import static com.jaldeeinc.jaldee.activities.CheckInDetails.getCustomDateString;
 import static com.jaldeeinc.jaldee.connection.ApiClient.context;
@@ -297,7 +296,7 @@ public class CheckInConfirmation extends AppCompatActivity {
             // to set paid info
             if (activeCheckInInfo.getAmountPaid() != 0) {
                 llPayment.setVisibility(View.VISIBLE);
-                tvAmount.setText("₹" + " " + convertAmountToDecimals(activeCheckInInfo.getAmountPaid()) + " " + "PAID");
+                tvAmount.setText("₹" + " " + Config.getAmountNoOrTwoDecimalPoints(activeCheckInInfo.getAmountPaid()) + " " + "PAID");
             } else {
 
                 llPayment.setVisibility(View.GONE);

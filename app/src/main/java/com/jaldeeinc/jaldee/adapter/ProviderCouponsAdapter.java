@@ -107,7 +107,7 @@ public class ProviderCouponsAdapter extends RecyclerView.Adapter<ProviderCoupons
 
             if (couponResponse.getCouponRules() != null && couponResponse.getCouponRules().getMinBillAmount() != null) {
 
-                viewHolder.tvMinBill.setText("₹" + " " + Config.getAmountinTwoDecimalPoints(Double.parseDouble((couponResponse.getCouponRules().getMinBillAmount()))));
+                viewHolder.tvMinBill.setText("₹" + " " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble((couponResponse.getCouponRules().getMinBillAmount()))));
 
             }
 
@@ -144,10 +144,10 @@ public class ProviderCouponsAdapter extends RecyclerView.Adapter<ProviderCoupons
 
             if (couponResponse.getCouponRules() != null && couponResponse.getCalculationType().equals("Percentage")) {
                 int i = (int) couponResponse.getAmount();
-                String amount = Config.getAmountinTwoDecimalPoints(Double.parseDouble(couponResponse.getCouponRules().getMaxDiscountValue()));
+                String amount = Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(couponResponse.getCouponRules().getMaxDiscountValue()));
                 viewHolder.tvDiscount.setText(i + "%" + "(Upto " + "₹" + amount + " MAX)");
             } else {
-                viewHolder.tvDiscount.setText("₹" + " " + Config.getAmountinTwoDecimalPoints(couponResponse.getAmount()));
+                viewHolder.tvDiscount.setText("₹" + " " + Config.getAmountNoOrTwoDecimalPoints(couponResponse.getAmount()));
 
             }
 

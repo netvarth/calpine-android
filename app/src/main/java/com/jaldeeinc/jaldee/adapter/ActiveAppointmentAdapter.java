@@ -314,7 +314,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
                     myViewHolder.btn_pay.setText("PAY");
                     if(activelist.getAmountDue()>0) {
                         myViewHolder.tv_prepaid.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_prepaid.setText("Amount Due: ₹ " + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
+                        myViewHolder.tv_prepaid.setText("Amount Due: ₹ " + Config.getAmountNoOrTwoDecimalPoints(activelist.getAmountDue()));
                     }else{
                         myViewHolder.tv_prepaid.setVisibility(View.GONE);
                     }
@@ -399,7 +399,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
 
                 if(activelist.getAmountDue()>0) {
                     myViewHolder.tv_prepaid.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_prepaid.setText("Amount Due: ₹ " + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
+                    myViewHolder.tv_prepaid.setText("Amount Due: ₹ " + Config.getAmountNoOrTwoDecimalPoints(activelist.getAmountDue()));
                 }else{
                     myViewHolder.tv_prepaid.setVisibility(View.GONE);
                 }

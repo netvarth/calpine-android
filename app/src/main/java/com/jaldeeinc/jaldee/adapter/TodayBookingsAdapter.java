@@ -27,14 +27,11 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.Bookings;
 
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-
-import static com.jaldeeinc.jaldee.activities.CheckInDetails.convertAmountToDecimals;
 
 public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdapter.ViewHolder> {
 
@@ -545,15 +542,14 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                 if (bookings.getBookingType().equalsIgnoreCase(Constants.CHECKIN) || bookings.getBookingType().equalsIgnoreCase(Constants.TOKEN)) {
                     if (bookings.getCheckInInfo() != null && bookings.getCheckInInfo().getAmountPaid() != 0.0) {
                         viewHolder.tvpayment.setVisibility(View.VISIBLE);
-                        viewHolder.tvpayment.setText("PAID" + " " + "₹" + " " + convertAmountsToDecimals(bookings.getCheckInInfo().getAmountPaid()));
+                        viewHolder.tvpayment.setText("PAID" + " " + "₹" + " " + Config.getAmountNoOrTwoDecimalPoints(bookings.getCheckInInfo().getAmountPaid()));
                     }
                 } else if (bookings.getBookingType().equalsIgnoreCase(Constants.APPOINTMENT)) {
                     if (bookings.getAppointmentInfo() != null && bookings.getAppointmentInfo().getAmountPaid() != null && !bookings.getAppointmentInfo().getAmountPaid().equalsIgnoreCase("0.0")) {
                         viewHolder.tvpayment.setVisibility(View.VISIBLE);
-                        viewHolder.tvpayment.setText("PAID" + " " + "₹" + " " + convertAmountToDecimals(bookings.getAppointmentInfo().getAmountPaid()));
+                        viewHolder.tvpayment.setText("PAID" + " " + "₹" + " " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(bookings.getAppointmentInfo().getAmountPaid())));
                     }
                 }
-
 
                 viewHolder.cvBooking.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -582,25 +578,6 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             skeletonViewHolder.itemView.setLayoutParams(params);
         }
-    }
-
-    public static String convertAmountsToDecimals(double price) {
-
-        DecimalFormat decim = new DecimalFormat("0.00");
-        Double price2 = Double.parseDouble(decim.format(price));
-        String amount = decim.format(price2);
-        return amount;
-
-    }
-
-    public static String convertAmountToDecimals(String price) {
-
-        double a = Double.parseDouble(price);
-        DecimalFormat decim = new DecimalFormat("0.00");
-        Double price2 = Double.parseDouble(decim.format(a));
-        String amount = decim.format(price2);
-        return amount;
-
     }
 
     @Override

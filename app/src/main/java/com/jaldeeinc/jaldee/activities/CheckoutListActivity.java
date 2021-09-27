@@ -348,13 +348,13 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                         llAdvanceAmount.setVisibility(View.GONE);
                     } else {
                         double amnt = walletEligibleJCash.getjCashAmt() - Float.parseFloat(catalogs.get(0).getAdvanceAmount());
-                        tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Math.abs(amnt)) + " required");
+                        tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(Math.abs(amnt)) + " required");
                         llAdvanceAmount.setVisibility(View.VISIBLE);
                         tvJCashHint.setVisibility(View.VISIBLE);
                     }
                 } else {
                     if ((catalogs.get(0).getAdvanceAmount() != null && Double.parseDouble(catalogs.get(0).getAdvanceAmount()) > 0) || catalogs.get(0).getPaymentType().equalsIgnoreCase(Constants.FULLAMOUNT)) {
-                        tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(catalogs.get(0).getAdvanceAmount())) + " required");
+                        tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(catalogs.get(0).getAdvanceAmount())) + " required");
                         llAdvanceAmount.setVisibility(View.VISIBLE);
                     }
                     tvJCashHint.setVisibility(View.GONE);
@@ -912,9 +912,9 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
 
                                         txtprepayment.setText(R.string.serve_prepay);
                                         if (cbJCash.isChecked()) {
-                                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints(Double.parseDouble(prePayRemainingAmount)));
+                                            txtamt.setText("Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(prePayRemainingAmount)));
                                         } else {
-                                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(prepayAmount))));
+                                            txtamt.setText("Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(prepayAmount)));
                                         }
                                         Typeface tyface1 = Typeface.createFromAsset(CheckoutListActivity.this.getAssets(),
                                                 "fonts/JosefinSans-SemiBold.ttf");
@@ -1469,7 +1469,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
         tvCountryCode.setText(countryCode);
         tvContactEmail.setText(email);
         if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().isEmpty() && Float.parseFloat(catalogs.get(0).getAdvanceAmount()) > 0) {
-            tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(catalogs.get(0).getAdvanceAmount())) + " required");
+            tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(catalogs.get(0).getAdvanceAmount())) + " required");
             llAdvanceAmount.setVisibility(View.VISIBLE);
         }
         updateImages();
@@ -1489,7 +1489,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
 
                     rlDeliveryFee.setVisibility(View.VISIBLE);
 
-                    String deliveryCharge = convertAmountToDecimals(String.valueOf(catalog.getHomeDelivery().getDeliveryCharge()));
+                    String deliveryCharge = Config.getAmountNoOrTwoDecimalPoints(catalog.getHomeDelivery().getDeliveryCharge());
                     tvDeliveryBill.setText("₹ " + deliveryCharge);
 
 
@@ -1625,7 +1625,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
 
                                 if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().equalsIgnoreCase("0.0")) {
                                     rlPrepayment.setVisibility(View.VISIBLE);
-                                    String amount = "₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(catalogs.get(0).getAdvanceAmount()));
+                                    String amount = "₹" + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(catalogs.get(0).getAdvanceAmount()));
                                     tvAdvance.setText(amount);
                                     rlPrepayment.setVisibility(View.GONE);
                                     Log.e("XXXXXXXXXXX", "Executed Advance Amount");
@@ -1733,17 +1733,6 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
             tvDeliveryAddress.setText(fullAddress);
 
         }
-    }
-
-
-    public static String convertAmountToDecimals(String price) {
-
-        double a = Double.parseDouble(price);
-        DecimalFormat decim = new DecimalFormat("0.00");
-        Double price2 = Double.parseDouble(decim.format(a));
-        String amount = decim.format(price2);
-        return amount;
-
     }
 
     public static String getCustomDateString(String d) throws ParseException {
@@ -2129,13 +2118,13 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                                     } else {
                                         tvJCashHint.setVisibility(View.VISIBLE);
                                         double amnt = walletEligibleJCash.getjCashAmt() - Float.parseFloat(catalogs.get(0).getAdvanceAmount());
-                                        tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Math.abs(amnt)) + " required");
+                                        tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(Math.abs(amnt)) + " required");
                                         llAdvanceAmount.setVisibility(View.VISIBLE);
                                     }
                                 } else if (walletEligibleJCash.getjCashAmt() == 0) {
                                     cbJCash.setChecked(false);
                                     llJCash.setVisibility(View.GONE);
-                                    tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(catalogs.get(0).getAdvanceAmount())) + " required");
+                                    tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(catalogs.get(0).getAdvanceAmount())) + " required");
                                     llAdvanceAmount.setVisibility(View.VISIBLE);
                                 } else {
                                     cbJCash.setChecked(false);

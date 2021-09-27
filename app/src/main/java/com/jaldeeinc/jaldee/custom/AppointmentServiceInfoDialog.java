@@ -104,10 +104,10 @@ public class AppointmentServiceInfoDialog extends Dialog {
             tv_price.setVisibility(View.VISIBLE);
             LserviceLayout.setVisibility(View.VISIBLE);
             if (appointmentServices.isTaxable()) {
-                tv_price.setText("₹ " + appointmentServices.getTotalAmount());
+                tv_price.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(appointmentServices.getTotalAmount()));
                 tvisTax.setVisibility(View.VISIBLE);
             } else {
-                tv_price.setText("₹ " + appointmentServices.getTotalAmount());
+                tv_price.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(appointmentServices.getTotalAmount()));
                 tvisTax.setVisibility(View.GONE);
             }
 
@@ -129,7 +129,7 @@ public class AppointmentServiceInfoDialog extends Dialog {
 
         if (minDonationAmount != null) {
             tv_minvalue.setVisibility(View.VISIBLE);
-            tv_minvalue.setText("₹ " + minDonationAmount);
+            tv_minvalue.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(minDonationAmount)));
             LminAmountlayout.setVisibility(View.VISIBLE);
         } else {
             tv_minvalue.setVisibility(View.GONE);
@@ -138,7 +138,7 @@ public class AppointmentServiceInfoDialog extends Dialog {
 
         if (maxDonationAmount != null) {
             tv_maxvalue.setVisibility(View.VISIBLE);
-            tv_maxvalue.setText("₹ " + maxDonationAmount);
+            tv_maxvalue.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(maxDonationAmount)));
             LmaxAmountlayout.setVisibility(View.VISIBLE);
         } else {
             tv_maxvalue.setVisibility(View.GONE);
@@ -156,7 +156,7 @@ public class AppointmentServiceInfoDialog extends Dialog {
 
         if (appointmentServices.isPrePayment()) {
             Lprepayment.setVisibility(View.VISIBLE);
-            txtpreVal.setText("₹ " + Config.getAmountinTwoDecimalPoints(appointmentServices.getMinPrePaymentAmount()));
+            txtpreVal.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(appointmentServices.getMinPrePaymentAmount()));
         } else {
             Lprepayment.setVisibility(View.GONE);
         }

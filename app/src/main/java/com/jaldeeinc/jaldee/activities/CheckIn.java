@@ -1833,7 +1833,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 //                                 secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
 //                            }
 //                            else{
-                            secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(sAmountPay));
+                            secondWord = "₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(sAmountPay));
                             //}
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
@@ -3389,7 +3389,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 //                                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(totalAmountPay))));
 //                                    }
 //                                    else {
-                                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(sAmountPay))));
+                                    txtamt.setText("Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(sAmountPay)));
                                     //    }
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
@@ -3555,7 +3555,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     public static void launchPaymentFlow(String amount, CheckSumModel checksumModel) {
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
         // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
-        payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
+        payUmoneyConfig.setDoneButtonText("Pay Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(amount)));
         //  Config.logV("Response--PayU-------------------------" + checksumModel.getProductinfo().get(0).toString());
         String firstname = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
         String lastname = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
@@ -3621,20 +3621,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         MultiplefamilyList.clear();
         MultiplefamilyList.addAll(familyList);
         recycle_family.setVisibility(View.VISIBLE);
-//        if(isPrepayment) {
-//            totalAmountPay = String.valueOf(Double.parseDouble(sAmountPay) * MultiplefamilyList.size());
-//            LservicePrepay.setVisibility(View.VISIBLE);
-////        Typeface tyface = Typeface.createFromAsset(getAssets(),
-////                "fonts/Montserrat_Bold.otf");
-////        txtprepay.setTypeface(tyface);
-////        txtprepayamount.setTypeface(tyface);
-//            String firstWord = "Prepayment Amount: ";
-//            String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(totalAmountPay));
-//            Spannable spannable = new SpannableString(firstWord + secondWord);
-//            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
-//                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            txtprepayamount.setText(spannable);
-//        }
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         recycle_family.setLayoutManager(mLayoutManager);
         MultipleFamilyMemberAdapter mFamilyAdpater = new MultipleFamilyMemberAdapter(familyList, mContext, mActivity);

@@ -46,6 +46,7 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.adapter.ImagePreviewAdapter;
 import com.jaldeeinc.jaldee.adapter.ItemsAdapter;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.AutofitTextView;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomNotes;
@@ -212,7 +213,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
             cvItemsCart.setVisibility(View.VISIBLE);
             tvItemsCount.setText("Your Order " + "(" + db.getCartCount() + ")");
             String amount = String.valueOf(db.getCartPrice());
-            tvSubTotal.setText("₹" + convertAmountToDecimals(amount));
+            tvSubTotal.setText("₹" + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(amount)));
 
         } else {
 
@@ -561,17 +562,17 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                 tvSubTotal.setVisibility(View.GONE);
                 tvDisCountedPrice.setVisibility(View.VISIBLE);
                 String amount = String.valueOf(db.getCartPrice());
-                tvDisCountedPrice.setText("₹ " + convertAmountToDecimals(amount));
+                tvDisCountedPrice.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(amount)));
 
             } else {
 
                 tvSubTotal.setVisibility(View.VISIBLE);
                 String amount = String.valueOf(db.getCartPrice());
-                tvSubTotal.setText("₹ " + convertAmountToDecimals(amount));
+                tvSubTotal.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(amount)));
                 tvSubTotal.setPaintFlags(tvSubTotal.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 tvDisCountedPrice.setVisibility(View.VISIBLE);
                 String discountedPrice = String.valueOf(db.getCartDiscountedPrice());
-                tvDisCountedPrice.setText("₹ " + convertAmountToDecimals(discountedPrice));
+                tvDisCountedPrice.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(discountedPrice)));
             }
         } else {
 
@@ -587,16 +588,6 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
             catalogInfo.getCatalogItemsList().get(i).getItems().setItemQuantity(0);
         }
         refreshData();
-    }
-
-    public static String convertAmountToDecimals(String price) {
-
-        double a = Double.parseDouble(price);
-        DecimalFormat decim = new DecimalFormat("0.00");
-        Double price2 = Double.parseDouble(decim.format(a));
-        String amount = decim.format(price2);
-        return amount;
-
     }
 
     // files related

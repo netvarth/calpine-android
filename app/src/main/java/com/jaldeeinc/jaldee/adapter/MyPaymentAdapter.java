@@ -69,7 +69,7 @@ public class MyPaymentAdapter extends ArrayAdapter<MyPayments> {
         }
 
         if (paymentsList.get(position).getAmount() != null) {
-            amount.setText("₹\u00A0" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(paymentsList.get(position).getAmount())));
+            amount.setText("₹\u00A0" + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(paymentsList.get(position).getAmount())));
             amount.setVisibility(View.VISIBLE);
         } else {
             amount.setVisibility(View.INVISIBLE);

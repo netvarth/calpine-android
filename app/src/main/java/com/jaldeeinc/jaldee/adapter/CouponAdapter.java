@@ -26,7 +26,6 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -106,7 +105,7 @@ public class CouponAdapter extends ArrayAdapter<CoupnResponse> {
 
         if (coupnResponse.getDiscountType().equals("AMOUNT")) {
             TextView mcouponDisc = (TextView) listItem.findViewById(R.id.couponDisc);
-            mcouponDisc.setText("₹" + " " + Config.getAmountinTwoDecimalPoints(Double.parseDouble((coupnResponse.getDiscountValue()))));
+            mcouponDisc.setText("₹" + " " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble((coupnResponse.getDiscountValue()))));
         } else {
             TextView mcouponDisc = (TextView) listItem.findViewById(R.id.couponDisc);
             mcouponDisc.setText(coupnResponse.getDiscountValue() + "%");
@@ -141,7 +140,7 @@ public class CouponAdapter extends ArrayAdapter<CoupnResponse> {
 
         if (coupnResponse.getMinBillAmount() != null){
 
-            tvMinBill.setText("₹" + " " + Config.getAmountinTwoDecimalPoints(Double.parseDouble((coupnResponse.getMinBillAmount()))));
+            tvMinBill.setText("₹" + " " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble((coupnResponse.getMinBillAmount()))));
         }
 
 

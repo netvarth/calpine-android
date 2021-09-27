@@ -137,7 +137,7 @@ public class CouponlistAdapter extends RecyclerView.Adapter<CouponlistAdapter.My
                             myViewHolder.info.setVisibility(View.GONE);
                             myViewHolder.llCpnApplied.setVisibility(View.VISIBLE);
                         }
-                        myViewHolder.tvAmount.setText("You saved ₹" + Config.getAmountinTwoDecimalPoints(notes.getValue()));
+                        myViewHolder.tvAmount.setText("You saved ₹" + Config.getAmountNoOrTwoDecimalPoints(notes.getValue()));
                     }
                 }
                 if (couponApliedOrNotDetails.getProCouponList() != null) {
@@ -151,7 +151,7 @@ public class CouponlistAdapter extends RecyclerView.Adapter<CouponlistAdapter.My
                             myViewHolder.info.setVisibility(View.GONE);
                             myViewHolder.llCpnApplied.setVisibility(View.VISIBLE);
                         }
-                        myViewHolder.tvAmount.setText("You saved ₹" + Config.getAmountinTwoDecimalPoints(notes.getValue()));
+                        myViewHolder.tvAmount.setText("You saved ₹" + Config.getAmountNoOrTwoDecimalPoints(notes.getValue()));
                     }
                 }
             }

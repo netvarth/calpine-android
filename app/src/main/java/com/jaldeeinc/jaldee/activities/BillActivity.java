@@ -849,7 +849,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     public static void launchPaymentFlow(String amount, CheckSumModel checksumModel) {
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
 
-        payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
+        payUmoneyConfig.setDoneButtonText("Pay Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(amount)));
         String firstname = SharedPreference.getInstance(mCOntext).getStringValue("firstname", "");
         String lastname = SharedPreference.getInstance(mCOntext).getStringValue("lastname", "");
 

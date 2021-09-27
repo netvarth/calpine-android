@@ -214,8 +214,8 @@ public class Config {
     }
 
     public static String getAmountNoOrTwoDecimalPoints(double d) {
-        if(d % 1 == 0) {
-            return String.format("%s",(int) d);
+        if (d % 1 == 0) {
+            return String.format("%s", (int) d);
         } else {
             return String.format("%.2f", d);
         }
@@ -225,7 +225,17 @@ public class Config {
 
         if (!number.isEmpty()) {
             double val = Double.parseDouble(number);
-            return NumberFormat.getNumberInstance(Locale.US).format(val);
+            String s1 = NumberFormat.getNumberInstance(Locale.US).format(val);
+            String[] sArray = s1.split("(?=\\.)");
+            if (sArray.length == 1) {                                                                   //
+                return sArray[0];                                                                       //
+            } else if(sArray.length == 2){                                                                                    //
+                String s2 = getAmountNoOrTwoDecimalPoints(Double.parseDouble(sArray[1]));               //without this if input = 1000000.30 result is 1,000,000.3,,with this 3 line result is 1,000,000.30
+                String s3 = s2.split("(?=\\.)")[1];                                               //
+                return sArray[0].concat(s3);
+            } else {
+                return "0";
+            }
         } else {
             return "0";
         }

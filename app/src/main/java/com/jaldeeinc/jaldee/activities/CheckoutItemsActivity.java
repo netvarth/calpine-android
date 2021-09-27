@@ -341,13 +341,13 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         llAdvanceAmount.setVisibility(View.GONE);
                     } else {
                         double amnt = advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt").getAsDouble() - advancePaymentDetailsOrder.getAdvanceAmount();
-                        tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Math.abs(amnt)) + " required");
+                        tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(Math.abs(amnt)) + " required");
                         llAdvanceAmount.setVisibility(View.VISIBLE);
                         tvJCashHint.setVisibility(View.VISIBLE);
                     }
                 } else {
                     if ((catalogs.get(0).getAdvanceAmount() != null && Double.parseDouble(catalogs.get(0).getAdvanceAmount()) > 0) || catalogs.get(0).getPaymentType().equalsIgnoreCase(Constants.FULLAMOUNT)) {
-                        tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(advancePaymentDetailsOrder.getAdvanceAmount()) + " required");
+                        tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(advancePaymentDetailsOrder.getAdvanceAmount()) + " required");
                         llAdvanceAmount.setVisibility(View.VISIBLE);
                     }
                     tvJCashHint.setVisibility(View.GONE);
@@ -901,9 +901,9 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
                                         txtprepayment.setText(R.string.ordr_prepay);
                                         if (cbJCash.isChecked()) {
-                                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints(Double.parseDouble(prePayRemainingAmount)));
+                                            txtamt.setText("Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(prePayRemainingAmount)));
                                         } else {
-                                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(prepayAmount))));
+                                            txtamt.setText("Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(prepayAmount)));
                                         }
                                         Typeface tyface1 = Typeface.createFromAsset(CheckoutItemsActivity.this.getAssets(),
                                                 "fonts/JosefinSans-SemiBold.ttf");
@@ -1551,15 +1551,15 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         // to set items bill
         String amount = "";
         if (db.getCartPrice() == db.getCartDiscountedPrice()) {
-            amount = convertAmountToDecimals(String.valueOf(db.getCartPrice()));
+            amount = Config.getAmountNoOrTwoDecimalPoints(db.getCartPrice());
             tvItemsBill.setText("₹ " + amount);
         } else {
-            amount = convertAmountToDecimals(String.valueOf(db.getCartDiscountedPrice()));
+            amount = Config.getAmountNoOrTwoDecimalPoints(db.getCartDiscountedPrice());
             tvItemsBill.setText("₹ " + amount);
         }
         if (db.getTaxAmount() > 0.0) {
             rvTax.setVisibility(View.VISIBLE);
-            String tax = Config.getAmountinTwoDecimalPoints(db.getTaxAmount());
+            String tax = Config.getAmountNoOrTwoDecimalPoints(db.getTaxAmount());
             tvTotalTax.setText(tax);
         } else {
             rvTax.setVisibility(View.GONE);
@@ -1590,7 +1590,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                 if (catalog.getHomeDelivery() != null) {
                     if (catalog.getHomeDelivery().isHomeDelivery()) {
                         rlDeliveryFee.setVisibility(View.VISIBLE);
-                        String deliveryCharge = convertAmountToDecimals(String.valueOf(catalog.getHomeDelivery().getDeliveryCharge()));
+                        String deliveryCharge = Config.getAmountNoOrTwoDecimalPoints(catalog.getHomeDelivery().getDeliveryCharge());
                         tvDeliveryBill.setText("₹ " + deliveryCharge);
                     }
                 }
@@ -1598,27 +1598,27 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     if (catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
                         if (tax) {
                             totalBill = db.getCartDiscountedPrice() + catalogs.get(0).getHomeDelivery().getDeliveryCharge() + db.getTaxAmount();
-                            tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
+                            tvBill.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(totalBill));
                         } else {
                             totalBill = db.getCartDiscountedPrice() + catalogs.get(0).getHomeDelivery().getDeliveryCharge();
-                            tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
+                            tvBill.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(totalBill));
                         }
                     } else {
                         if (tax) {
                             totalBill = db.getCartDiscountedPrice() + db.getTaxAmount();
-                            tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
+                            tvBill.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(totalBill));
                         } else {
                             totalBill = db.getCartDiscountedPrice();
-                            tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
+                            tvBill.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(totalBill));
                         }
                     }
                 } else {
                     if (tax) {
                         totalBill = db.getCartDiscountedPrice() + db.getTaxAmount();
-                        tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
+                        tvBill.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(totalBill));
                     } else {
                         totalBill = db.getCartDiscountedPrice();
-                        tvBill.setText("₹ " + convertAmountToDecimals(String.valueOf(totalBill)));
+                        tvBill.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(totalBill));
                     }
                 }
                 getAdvancePaymentDetails();
@@ -1714,16 +1714,6 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
         // update selected Address
         updateUI(address);
-    }
-
-    public static String convertAmountToDecimals(String price) {
-
-        double a = Double.parseDouble(price);
-        DecimalFormat decim = new DecimalFormat("0.00");
-        Double price2 = Double.parseDouble(decim.format(a));
-        String amount = decim.format(price2);
-        return amount;
-
     }
 
     public static String convertDate(String date) {
@@ -1916,7 +1906,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                             if (catalogs != null && catalogs.size() > 0) {
                                 if (catalogs.get(0).getAdvanceAmount() != null && !catalogs.get(0).getAdvanceAmount().equalsIgnoreCase("0.0")) {
                                     rlPrepayment.setVisibility(View.VISIBLE);
-                                    String amount = "₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(catalogs.get(0).getAdvanceAmount()));
+                                    String amount = "₹" + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(catalogs.get(0).getAdvanceAmount()));
                                     tvAdvance.setText(amount);
                                     rlPrepayment.setVisibility(View.GONE);
                                     Log.e("XXXXXXXXXXX", "Executed Advance Amount");
@@ -2153,13 +2143,13 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                     } else {
                                         tvJCashHint.setVisibility(View.VISIBLE);
                                         double amnt = advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt").getAsDouble() - advancePaymentDetailsOrder.getAdvanceAmount();
-                                        tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(Math.abs(amnt)) + " required");
+                                        tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(Math.abs(amnt)) + " required");
                                         llAdvanceAmount.setVisibility(View.VISIBLE);
                                     }
                                 } else if (advancePaymentDetailsOrder.getEligibleJcashAmt().get("jCashAmt").getAsDouble() == 0) {
                                     cbJCash.setChecked(false);
                                     llJCash.setVisibility(View.GONE);
-                                    tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountinTwoDecimalPoints(advancePaymentDetailsOrder.getAdvanceAmount()) + " required");
+                                    tvAdvanceAmount.setText("An advance of ₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(advancePaymentDetailsOrder.getAdvanceAmount()) + " required");
                                     llAdvanceAmount.setVisibility(View.VISIBLE);
                                 } else {
                                     cbJCash.setChecked(false);

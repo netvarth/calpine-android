@@ -681,7 +681,7 @@ public class BookingDetails extends AppCompatActivity {
                 // to set paid info
                 if (appointmentInfo.getAmountPaid() != null && !appointmentInfo.getAmountPaid().equalsIgnoreCase("0.0")) {
                     llPayment.setVisibility(View.VISIBLE);
-                    tvAmount.setText("₹" + " " + convertAmountToDecimals(appointmentInfo.getAmountPaid()) + " " + "PAID");
+                    tvAmount.setText("₹" + " " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(appointmentInfo.getAmountPaid())) + " " + "PAID");
                 } else {
 
                     llPayment.setVisibility(View.GONE);
@@ -809,8 +809,6 @@ public class BookingDetails extends AppCompatActivity {
                 }
 
                 if (appointmentInfo.getPaymentStatus().equalsIgnoreCase("FullyPaid") || appointmentInfo.getPaymentStatus().equalsIgnoreCase("Refund")) {
-                    String amount = "₹" + " " + convertAmountToDecimals(String.valueOf(appointmentInfo.getAmountDue()));
-                    //tvAmountToPay.setText(amount);
                     tvAmountToPay.setVisibility(View.GONE);
                     cvBill.setVisibility(View.VISIBLE);
                     tvBillText.setVisibility(View.GONE);
@@ -820,7 +818,7 @@ public class BookingDetails extends AppCompatActivity {
                     lp.addRule(RelativeLayout.CENTER_IN_PARENT);
                     cvBill.setLayoutParams(lp);
                 } else {
-                    String amount = "₹" + " " + convertAmountToDecimals(String.valueOf(appointmentInfo.getAmountDue()));
+                    String amount = "₹" + " " + Config.getAmountNoOrTwoDecimalPoints(appointmentInfo.getAmountDue());
                     if (appointmentInfo.getApptStatus().equalsIgnoreCase("Cancelled")) {
                         tvAmountToPay.setVisibility(View.GONE);
                     } else {
@@ -1232,16 +1230,6 @@ public class BookingDetails extends AppCompatActivity {
         String convertName = name;
         convertName = convertName.substring(0, 1).toUpperCase() + convertName.substring(1).toLowerCase();
         return convertName;
-    }
-
-    public static String convertAmountToDecimals(String price) {
-
-        double a = Double.parseDouble(price);
-        DecimalFormat decim = new DecimalFormat("0.00");
-        Double price2 = Double.parseDouble(decim.format(a));
-        String amount = decim.format(price2);
-        return amount;
-
     }
 
     public static String getCustomDateString(String d) throws ParseException {

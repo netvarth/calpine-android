@@ -426,144 +426,11 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                         } else {
                             APIPayment(modifyAccountID);
                             ApiDonation(txt_message);
-
-                       //     if (!showPaytmWallet && !showPayU) {
-
-                                //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
-//                            } else {
-//                                try {
-//                                    final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
-//                                    dialog.setContentView(R.layout.prepayment);
-//                                    dialog.show();
-//
-//                                    Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
-//                                    Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
-//                                    if (showPaytmWallet) {
-//                                        btn_paytm.setVisibility(View.VISIBLE);
-//                                    } else {
-//                                        btn_paytm.setVisibility(View.GONE);
-//                                    }
-//                                    if (showPayU) {
-//                                        btn_payu.setVisibility(View.VISIBLE);
-//                                    } else {
-//                                        btn_payu.setVisibility(View.GONE);
-//                                    }
-//                                    final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-//                                    TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
-//
-//                                    TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
-//
-//                                    txtprepayment.setText("Donation Amount ");
-//
-////                                    DecimalFormat format = new DecimalFormat("0.00");
-//                                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(tv_don_amount.getText().toString()))));
-//                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-//                                            "fonts/Montserrat_Bold.otf");
-//                                    txtamt.setTypeface(tyface1);
-//                                    btn_payu.setOnClickListener(new View.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(View v) {
-//                                            //ApiGenerateHash(value, sAmountPay, accountID);
-//                                            // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
-//
-//                                            Config.logV("Account ID --------------" + modifyAccountID);
-//                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_PREPAYMENT, "checkin");
-//                                            dialog.dismiss();
-//                                        }
-//                                    });
-//
-//                                    btn_paytm.setOnClickListener(new View.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(View v) {
-//
-//
-//                                            Config.logV("Account ID --------Paytm------" + modifyAccountID);
-//                                            PaytmPayment payment = new PaytmPayment(mContext);
-//                                            payment.ApiGenerateHashPaytm(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "");
-//                                            //payment.generateCheckSum(sAmountPay);
-//                                            dialog.dismiss();
-//                                            //ApiGenerateHash(value, sAmountPay, accountID);
-//                                        }
-//                                    });
-//                                } catch (Exception e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-
                         }
                     } else {
                         APIPayment(modifyAccountID);
                         ApiDonation(txt_message);
-                      //  APIPayment(modifyAccountID);
-//                        try {
-//                            final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
-//                            dialog.setContentView(R.layout.prepayment);
-//                            dialog.show();
-//
-//                            Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
-//                            Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
-//                          //  if (showPaytmWallet) {
-//                                btn_paytm.setVisibility(View.VISIBLE);
-//                       //     } else {
-//                           //     btn_paytm.setVisibility(View.GONE);
-//                       //     }
-//                       //     if (showPayU) {
-//                                btn_payu.setVisibility(View.VISIBLE);
-//                       //     } else {
-//                            //    btn_payu.setVisibility(View.GONE);
-//                       //     }
-//                            final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-//                            TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
-//
-//                            TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
-//
-//                            txtprepayment.setText("Donation Amount ");
-//
-////                                    DecimalFormat format = new DecimalFormat("0.00");
-//                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(tv_don_amount.getText().toString()))));
-//                            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-//                                    "fonts/Montserrat_Bold.otf");
-//                            txtamt.setTypeface(tyface1);
-//                            JSONObject reader = new JSONObject(response.body().string());
-//                            Iterator iteratorObj = reader.keys();
-//
-//                            while (iteratorObj.hasNext()) {
-//                                String getJsonObj = (String) iteratorObj.next();
-//                                System.out.println("KEY: " + "------>" + getJsonObj);
-//                                value = reader.getString(getJsonObj);
-//
-//
-//                            }
-//                            btn_payu.setOnClickListener(new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View v) {
-//                                    //ApiGenerateHash(value, sAmountPay, accountID);
-//                                    // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
-//
-//                                    Config.logV("Account ID --------------" + modifyAccountID);
-//                                    new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_PREPAYMENT, "checkin");
-//                                    dialog.dismiss();
-//                                }
-//                            });
-//
-//                            btn_paytm.setOnClickListener(new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View v) {
-//
-//
-//                                    Config.logV("Account ID --------Paytm------" + modifyAccountID);
-//                                    PaytmPayment payment = new PaytmPayment(mContext);
-//                                    payment.ApiGenerateHashPaytm(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "");
-//                                    //payment.generateCheckSum(sAmountPay);
-//                                    dialog.dismiss();
-//                                    //ApiGenerateHash(value, sAmountPay, accountID);
-//                                }
-//                            });
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
                  }
-
                 }
             }
         });
@@ -577,45 +444,6 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
         consumerID = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
         tv_name.setText(mFirstName + " " + mLastName);
         tv_addmember = findViewById(R.id.txtaddmember);
-        //  tv_editphone = findViewById(R.id.txteditphone);
-
-
-//        earliestAvailable.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent appDate = new Intent(v.getContext(), AppointmentDate.class);
-//                appDate.putExtra("timeslots", timeslots);
-//                appDate.putExtra("serviceId", serviceId);
-//                appDate.putExtra("mSpinnertext", mSpinnertext);
-//                appDate.putExtra("accountId", modifyAccountID);
-//                appDate.putExtra("id", id);
-//                appDate.putExtra("selectDate",txtWaitTime.getText().toString());
-//                startActivity(appDate);
-//            }
-//        });
-
-
-//        Date currentTimes = new Date();
-//        final SimpleDateFormat sdfs = new SimpleDateFormat(
-//                "dd-MM-yyyy", Locale.US);
-//        sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
-//        System.out.println("UTC time: " + sdfs.format(currentTimes));
-//        txtWaitTime.setText("Today\n" + sdfs.format(currentTimes));
-//
-//        txtWaitTime.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent appDate = new Intent(v.getContext(), AppointmentDate.class);
-//                appDate.putExtra("timeslots", timeslots);
-//                appDate.putExtra("serviceId", serviceId);
-//                appDate.putExtra("mSpinnertext", mSpinnertext);
-//                appDate.putExtra("accountId", modifyAccountID);
-//                appDate.putExtra("id", id);
-//                appDate.putExtra("selectDate",txtWaitTime.getText().toString());
-//                startActivity(appDate);
-//            }
-//        });
-
         tv_addmember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -630,13 +458,6 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                 startActivity(iFamily);
             }
         });
-
-//        tv_editphone.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                phoneNumberValue.setEnabled(true);
-//            }
-//        });
 
         mSpinnerService.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
@@ -654,30 +475,6 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                 multiples = ((SearchDonation) mSpinnerService.getSelectedItem()).getMultiples();
                 tv_don_instr.setText("Amount must be in range between " + " ₹" + String.valueOf(minDonationAmount) +" and ₹" + String.valueOf(maxDonationAmount) + " (multiples of ₹" + String.valueOf(multiples) +")");
 
-
-
-//                if (selectedServiceType.equalsIgnoreCase("virtualService")) {
-//                    callingMode = ((SearchDonation) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getCallingMode();
-//                    valueNumber = ((SearchDonation) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
-//                    if (callingMode.equalsIgnoreCase("WhatsApp")) {
-//                        serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-////                        tv_enterInstructions.setVisibility(View.VISIBLE);
-////                        tv_enterInstructions.setText(serviceInstructions);
-////                        et_vitualId.setText(phoneNumber);
-////                        et_vitualId.setVisibility(View.VISIBLE);
-//                    } else {
-//                        serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-////                        tv_enterInstructions.setVisibility(View.VISIBLE);
-////                        tv_enterInstructions.setText(serviceInstructions);
-////                        et_vitualId.setVisibility(View.GONE);
-//                    }
-//                } else {
-////                    tv_enterInstructions.setVisibility(View.GONE);
-////                    et_vitualId.setVisibility(View.GONE);
-//                }
-                //  selectedServiceType =((SearchAppoinment)  mSpinnerService.getSelectedItem()).getServiceType();
-
-                // String firstWord = "Check-in for ";
                 String firstWord = Word_Change;
                 String secondWord = ((SearchDonation) mSpinnerService.getSelectedItem()).getName();
                 Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -717,7 +514,6 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
 
             }
 
-
         });
         mSpinnerDepartment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -737,7 +533,6 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                             break;
                         }
                     }
-
                 }
                 LServicesList.clear();
                 LServicesList.addAll(serviceList);
@@ -763,17 +558,13 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-
-
         });
-
 
         Bundle extrasnew = getIntent().getExtras();
         if (extrasnew != null) {
             uniqueID = extras.getString("uniqueID");
            // ApiJaldeegetS3Coupons(uniqueID);
         }
-
    }
 
     public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
@@ -1192,7 +983,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                          //   txtprepay.setTypeface(tyface);
                             txtprepayamount.setTypeface(tyface);
                             String firstWord = "Donation Amount: ";
-                            String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(tv_don_amount.getText().toString()));
+                            String secondWord = "₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(tv_don_amount.getText().toString()));
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -2744,7 +2535,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                                     txtprepayment.setText("Donation Amount ");
 
 //                                    DecimalFormat format = new DecimalFormat("0.00");
-                                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(tv_don_amount.getText().toString()))));
+                                    txtamt.setText("Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(tv_don_amount.getText().toString())));
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     txtamt.setTypeface(tyface1);
@@ -2864,7 +2655,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
 
         // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
-        payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
+        payUmoneyConfig.setDoneButtonText("Pay Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(amount)));
 
         //  Config.logV("Response--PayU-------------------------" + checksumModel.getProductinfo().get(0).toString());
 

@@ -70,9 +70,9 @@ public class DonationServiceDialog extends Dialog {
         try {
 
 
-            minAmount = String.valueOf(donationInfo.getMinDonationAmount());
-            maxAmount = String.valueOf(donationInfo.getMaxDonationAmount());
-            multiples = String.valueOf(donationInfo.getMultiples());
+            minAmount = Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(donationInfo.getMinDonationAmount()));
+            maxAmount = Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(donationInfo.getMaxDonationAmount()));
+            multiples = Config.getAmountNoOrTwoDecimalPoints(donationInfo.getMultiples());
 
 
             if (donationInfo.getName() != null) {
@@ -90,7 +90,7 @@ public class DonationServiceDialog extends Dialog {
 
             if (minAmount != null) {
                 tv_minvalue.setVisibility(View.VISIBLE);
-                tv_minvalue.setText("₹ " + getMoneyFormat(minAmount));
+                tv_minvalue.setText("₹ " + Config.getMoneyFormat(minAmount));
                 LminAmountlayout.setVisibility(View.VISIBLE);
             } else {
                 tv_minvalue.setVisibility(View.GONE);
@@ -99,7 +99,7 @@ public class DonationServiceDialog extends Dialog {
 
             if (maxAmount != null) {
                 tv_maxvalue.setVisibility(View.VISIBLE);
-                tv_maxvalue.setText("₹ " + getMoneyFormat(maxAmount));
+                tv_maxvalue.setText("₹ " + Config.getMoneyFormat(maxAmount));
                 LmaxAmountlayout.setVisibility(View.VISIBLE);
             } else {
                 tv_maxvalue.setVisibility(View.GONE);
@@ -117,7 +117,7 @@ public class DonationServiceDialog extends Dialog {
 
             if (donationInfo.isPrePayment()) {
                 Lprepayment.setVisibility(View.VISIBLE);
-                txtpreVal.setText("₹ " + getMoneyFormat(Config.getAmountinTwoDecimalPoints(Double.parseDouble(donationInfo.getMinPrePaymentAmount()))));
+                txtpreVal.setText("₹ " + Config.getMoneyFormat(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(donationInfo.getMinPrePaymentAmount()))));
             } else {
                 Lprepayment.setVisibility(View.GONE);
             }
@@ -205,15 +205,5 @@ public class DonationServiceDialog extends Dialog {
         tv_minvalue.setTypeface(tyface);
         tv_maxvalue.setTypeface(tyface);
 
-    }
-
-    public static String getMoneyFormat(String number) {
-
-        if (!number.isEmpty()) {
-            double val = Double.parseDouble(number);
-            return NumberFormat.getNumberInstance(Locale.US).format(val);
-        } else {
-            return "0";
-        }
     }
 }

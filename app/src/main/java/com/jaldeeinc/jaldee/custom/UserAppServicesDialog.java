@@ -18,7 +18,6 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -74,9 +73,9 @@ public class UserAppServicesDialog extends Dialog {
             tv_price.setVisibility(View.VISIBLE);
             LserviceLayout.setVisibility(View.VISIBLE);
             if (searchService.isTaxable()) {
-                tv_price.setText("₹ " + searchService.getTotalAmount() + " (Tax Applicable)");
+                tv_price.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(searchService.getTotalAmount())) + " (Tax Applicable)");
             } else {
-                tv_price.setText("₹ " + searchService.getTotalAmount());
+                tv_price.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(searchService.getTotalAmount())));
             }
 
         } else {
@@ -96,7 +95,7 @@ public class UserAppServicesDialog extends Dialog {
 
         if (minDonationAmount != null) {
             tv_minvalue.setVisibility(View.VISIBLE);
-            tv_minvalue.setText("₹ " + minDonationAmount);
+            tv_minvalue.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(minDonationAmount)));
             LminAmountlayout.setVisibility(View.VISIBLE);
         } else {
             tv_minvalue.setVisibility(View.GONE);
@@ -105,7 +104,7 @@ public class UserAppServicesDialog extends Dialog {
 
         if (maxDonationAmount != null) {
             tv_maxvalue.setVisibility(View.VISIBLE);
-            tv_maxvalue.setText("₹ " + maxDonationAmount);
+            tv_maxvalue.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(maxDonationAmount)));
             LmaxAmountlayout.setVisibility(View.VISIBLE);
         } else {
             tv_maxvalue.setVisibility(View.GONE);
@@ -123,7 +122,7 @@ public class UserAppServicesDialog extends Dialog {
 
         if (searchService.isPrePayment()) {
             Lprepayment.setVisibility(View.VISIBLE);
-            txtpreVal.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(searchService.getMinPrePaymentAmount())));
+            txtpreVal.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(searchService.getMinPrePaymentAmount())));
         } else {
             Lprepayment.setVisibility(View.GONE);
         }

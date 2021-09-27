@@ -90,7 +90,7 @@ public class BillCouponAdapter extends RecyclerView.Adapter<BillCouponAdapter.Bi
         Double jCouponValue = Double.parseDouble(couponValue);
         //Float f= Float.parseFloat(couponValue);
 //        DecimalFormat format = new DecimalFormat("0.00");
-        holder.txt_coupon_value.setText("(-)₹\u00a0"+(Config.getAmountinTwoDecimalPoints(jCouponValue)));
+        holder.txt_coupon_value.setText("(-)₹\u00a0"+(Config.getAmountNoOrTwoDecimalPoints(jCouponValue)));
 
         if(jCouponValue > 0){
             holder.txt_coupon_value.setOnClickListener(new View.OnClickListener() {

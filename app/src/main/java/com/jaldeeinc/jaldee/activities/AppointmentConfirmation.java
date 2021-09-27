@@ -35,7 +35,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.jaldeeinc.jaldee.activities.BookingDetails.convertAmountToDecimals;
 import static com.jaldeeinc.jaldee.activities.BookingDetails.convertTime;
 import static com.jaldeeinc.jaldee.activities.BookingDetails.convertToTitleForm;
 import static com.jaldeeinc.jaldee.activities.BookingDetails.getCustomDateString;
@@ -327,7 +326,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
             // to set paid info
             if (activeCheckInInfo.getAmountPaid() != null && !activeCheckInInfo.getAmountPaid().equalsIgnoreCase("0.0")) {
                 llPayment.setVisibility(View.VISIBLE);
-                tvAmount.setText("₹" + " " + convertAmountToDecimals(activeCheckInInfo.getAmountPaid()) + " " + "PAID");
+                tvAmount.setText("₹" + " " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(activeCheckInInfo.getAmountPaid())) + " " + "PAID");
             } else {
 
                 llPayment.setVisibility(View.GONE);
