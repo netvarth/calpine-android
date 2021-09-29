@@ -519,6 +519,7 @@ public class Password extends AppCompatActivity {
                         iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         if(detail!=null){
                             iReg.putExtra("detail_id", (detail));
+                            iReg.putExtra("from", (from));
                         }
                         startActivity(iReg);
                         finish();

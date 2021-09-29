@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/input_border_light_gray"
+        android:orientation="vertical">
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+            android:id="@+id/tv_yay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_50dp"
+            android:layout_marginTop="@dimen/dimen_40dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/montserrat_bold"
+            android:gravity="left"
+            android:text="Yay...!"
+            android:textColor="@color/dark_yellow"
+            android:textSize="45.0sp" />
+
+        <ImageView
+            android:id="@+id/logo_success_gift"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:enabled="false"
+            android:scaleType="fitCenter" />
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:id="@+id/tv_jcash_credited_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="20dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/montserrat_normal"
+            android:gravity="fill"
+            android:text=""
+            android:textColor="@color/cb_dark_blue_button"
+            android:textSize="12.0sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_70dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/dimen_30dp"
+            android:gravity="center"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:id="@+id/ll_submit"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimen_35dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:layout_weight="0.7"
+                android:background="@drawable/input_border_dark_blue"
+                android:clickable="true"
+                android:elevation="@dimen/dimen_0dp"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                        android:id="@+id/tv_submit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/montserrat_normal"
+                        android:gravity="center"
+                        android:text="Got it !"
+                        android:textColor="@color/dark_blue"
+                        android:textSize="@dimen/txtsize_14"
+                        android:textStyle="normal">
+
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_jCashLogo"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="30dp"
+        android:padding="3dp" />
+
+</RelativeLayout>
