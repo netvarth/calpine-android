@@ -40,6 +40,10 @@ public class ItemDetails implements Serializable {
     @Expose
     private ArrayList<ItemImages> itemImagesList;
 
+    @SerializedName("itemType")
+    @Expose
+    private String itemType;
+
     public ItemDetails(){
 
     }
@@ -54,6 +58,7 @@ public class ItemDetails implements Serializable {
         this.itemImagesList = itemImagesList;
     }
 
+    public String getItemType() { return itemType; }
 
     public int getItemId() {
         return itemId;

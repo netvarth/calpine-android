@@ -21,6 +21,7 @@ public class CartItemModel {
     private int isExpired = 0;
     private int isTaxable = 0;
     private double tax;
+    private String itemType;
 
 
     public CartItemModel(){
@@ -37,7 +38,7 @@ public class CartItemModel {
         this.isPromotional = 0;
     }
 
-    public CartItemModel(int id, int itemId, int accountId, int uniqueId, int catalogId, String itemName, String imageUrl, int quantity, double itemPrice, double price, String instruction, int maxQuantity, double discount, double discountedPrice, String promotionalType, int isPromotional, int isExpired, double tax) {
+    public CartItemModel(int id, int itemId, int accountId, int uniqueId, int catalogId, String itemName, String imageUrl, int quantity, double itemPrice, double price, String instruction, int maxQuantity, double discount, double discountedPrice, String promotionalType, int isPromotional, int isExpired, double tax, String itemType) {
         this.id = id;
         this.itemId = itemId;
         this.accountId = accountId;
@@ -56,8 +57,12 @@ public class CartItemModel {
         this.isPromotional = isPromotional;
         this.isExpired = isExpired;
         this.tax = tax;
+        this.itemType = itemType;
     }
 
+    public String getItemType() { return itemType; }
+
+    public void setItemType(String itemType) { this.itemType = itemType; }
 
     public int getId() {
         return id;

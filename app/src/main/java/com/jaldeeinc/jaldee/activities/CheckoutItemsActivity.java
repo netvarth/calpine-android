@@ -95,7 +95,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -103,7 +102,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -122,6 +120,11 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     ArrayList<Address> addressList = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
     private AddressAdapter addressAdapter;
+    boolean isVirtualItemsOnly = false;
+
+    @BindView(R.id.ll_group)
+    LinearLayout ll_group;
+
     @BindView(R.id.cb_jCash)
     CheckBox cbJCash;
 
@@ -592,9 +595,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
 
         try {
-            if (isStore) {
-                inputObj.put("storePickup", true);
-
+            if (isVirtualItemsOnly) {
                 if (phoneNumber != null && !phoneNumber.trim().equalsIgnoreCase("")) {
                     inputObj.put("phoneNumber", phoneNumber);
                 } else {
@@ -602,7 +603,6 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     mDialog.dismiss();
                     return;
                 }
-
                 if (email != null && !email.trim().equalsIgnoreCase("")) { // to check email address
                     inputObj.put("email", email);
                 } else {
@@ -610,33 +610,20 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     mDialog.dismiss();
                     return;
                 }
-
             } else {
-                if (!tvDeliveryAddress.getText().toString().trim().equalsIgnoreCase("")) {  // to check delivery address
-                    inputObj.put("homeDelivery", true);
-                    JSONObject address = new JSONObject();
-                    address.put("phoneNumber", selectedAddress.getPhoneNumber());
-                    address.put("firstName", selectedAddress.getFirstName());
-                    address.put("lastName", selectedAddress.getLastName());
-                    address.put("email", selectedAddress.getEmail());
-                    address.put("address", selectedAddress.getAddress());
-                    address.put("city", selectedAddress.getCity());
-                    address.put("postalCode", selectedAddress.getPostalCode());
-                    address.put("landMark", selectedAddress.getLandMark());
-                    address.put("countryCode", selectedAddress.getCountryCode());
+                if (isStore) {
+                    inputObj.put("storePickup", true);
 
-                    inputObj.put("homeDeliveryAddress", address);
-
-                    if (homeDeliveryNumber != null && !homeDeliveryNumber.trim().equalsIgnoreCase("")) {
-                        inputObj.put("phoneNumber", homeDeliveryNumber);
+                    if (phoneNumber != null && !phoneNumber.trim().equalsIgnoreCase("")) {
+                        inputObj.put("phoneNumber", phoneNumber);
                     } else {
                         showAlert("Please enter valid mobile number");
                         mDialog.dismiss();
                         return;
                     }
 
-                    if (homeDeliveryEmail != null && !homeDeliveryEmail.trim().equalsIgnoreCase("")) {
-                        inputObj.put("email", homeDeliveryEmail);
+                    if (email != null && !email.trim().equalsIgnoreCase("")) { // to check email address
+                        inputObj.put("email", email);
                     } else {
                         showAlert("Please enter valid Email address");
                         mDialog.dismiss();
@@ -644,15 +631,64 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     }
 
                 } else {
+                    if (!tvDeliveryAddress.getText().toString().trim().equalsIgnoreCase("")) {  // to check delivery address
+                        inputObj.put("homeDelivery", true);
+                        JSONObject address = new JSONObject();
+                        address.put("phoneNumber", selectedAddress.getPhoneNumber());
+                        address.put("firstName", selectedAddress.getFirstName());
+                        address.put("lastName", selectedAddress.getLastName());
+                        address.put("email", selectedAddress.getEmail());
+                        address.put("address", selectedAddress.getAddress());
+                        address.put("city", selectedAddress.getCity());
+                        address.put("postalCode", selectedAddress.getPostalCode());
+                        address.put("landMark", selectedAddress.getLandMark());
+                        address.put("countryCode", selectedAddress.getCountryCode());
 
-                    showAlert("Please add the delivery address to deliver");
+                        inputObj.put("homeDeliveryAddress", address);
+
+                        if (homeDeliveryNumber != null && !homeDeliveryNumber.trim().equalsIgnoreCase("")) {
+                            inputObj.put("phoneNumber", homeDeliveryNumber);
+                        } else {
+                            showAlert("Please enter valid mobile number");
+                            mDialog.dismiss();
+                            return;
+                        }
+
+                        if (homeDeliveryEmail != null && !homeDeliveryEmail.trim().equalsIgnoreCase("")) {
+                            inputObj.put("email", homeDeliveryEmail);
+                        } else {
+                            showAlert("Please enter valid Email address");
+                            mDialog.dismiss();
+                            return;
+                        }
+                    } else {
+                        showAlert("Please add the delivery address to deliver");
+                        mDialog.dismiss();
+                        return;
+                    }
+                }
+                if (selectedTime != null && !selectedTime.trim().equalsIgnoreCase("")) {
+                    if (isStore) {
+                        if (catalogs != null && catalogs.get(0).getNextAvailablePickUpDetails() != null && catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots() != null) {
+                            timeSlot.put("sTime", catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots().get(0).getStartTime());
+                            timeSlot.put("eTime", catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots().get(0).getEndTime());
+                            inputObj.put("timeSlot", timeSlot);
+                        }
+                    } else {
+                        if (catalogs != null && catalogs.get(0).getNextAvailableDeliveryDetails() != null && catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots() != null) {
+                            timeSlot.put("sTime", catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots().get(0).getStartTime());
+                            timeSlot.put("eTime", catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots().get(0).getEndTime());
+                            inputObj.put("timeSlot", timeSlot);
+                        }
+                    }
+                } else {
+
+                    showAlert("Please select a time slot");
                     mDialog.dismiss();
                     return;
                 }
-
-
+                inputObj.put("orderDate", selectedDate);
             }
-            inputObj.put("orderDate", selectedDate);
             inputObj.put("countryCode", countryCode);
             inputObj.put("orderNote", etSpecialNotes.getText().toString());
 
@@ -676,38 +712,16 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     } else {
                         obj.put("consumerNote", "");
                     }
+                    obj.put("itemType", itemsList.get(i).getItemType());
                     itemsArray.put(obj);
-
                 }
-
                 inputObj.put("orderItem", itemsArray);
-
             }
 
             catalog.put("id", catalogId);
             inputObj.put("catalog", catalog);
             orderFor.put("id", 0);
             inputObj.put("orderFor", orderFor);
-            if (selectedTime != null && !selectedTime.trim().equalsIgnoreCase("")) {
-                if (isStore) {
-                    if (catalogs != null && catalogs.get(0).getNextAvailablePickUpDetails() != null && catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots() != null) {
-                        timeSlot.put("sTime", catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots().get(0).getStartTime());
-                        timeSlot.put("eTime", catalogs.get(0).getNextAvailablePickUpDetails().getTimeSlots().get(0).getEndTime());
-                        inputObj.put("timeSlot", timeSlot);
-                    }
-                } else {
-                    if (catalogs != null && catalogs.get(0).getNextAvailableDeliveryDetails() != null && catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots() != null) {
-                        timeSlot.put("sTime", catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots().get(0).getStartTime());
-                        timeSlot.put("eTime", catalogs.get(0).getNextAvailableDeliveryDetails().getTimeSlots().get(0).getEndTime());
-                        inputObj.put("timeSlot", timeSlot);
-                    }
-                }
-            } else {
-
-                showAlert("Please select a time slot");
-                mDialog.dismiss();
-                return;
-            }
 
 
         } catch (JSONException e) {
@@ -1094,6 +1108,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                     db.DeleteCart();
                                     Intent checkIn = new Intent(CheckoutItemsActivity.this, OrderConfirmation.class);
                                     checkIn.putExtra("orderInfo", activeOrders);
+                                    checkIn.putExtra("isVirtualItemsOnly", isVirtualItemsOnly);
                                     startActivity(checkIn);
                                 }
                             }, 8000);
@@ -1260,28 +1275,10 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         catalogs.clear();
                         catalogs = response.body();
                         if (catalogs != null && catalogs.size() > 0) {
+
                             getProviderDetails(accountId, catalogs);
                             // to get payment modes
                             APIPayment(String.valueOf(accountId));
-                            if (catalogs.get(0).getPickUp() != null && catalogs.get(0).getPickUp().isOrderPickUp() && catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
-                                rbStore.setVisibility(View.VISIBLE);
-                                rbStore.setChecked(true);
-                                rbHome.setChecked(false);
-                                getStorePickupSchedules(catalogs.get(0).getCatLogId(), accountId);
-                                getHomeDeliverySchedules(catalogs.get(0).getCatLogId(), accountId);
-                            } else if (catalogs.get(0).getPickUp() != null && catalogs.get(0).getPickUp().isOrderPickUp() && catalogs.get(0).getHomeDelivery() == null) {
-                                rbHome.setVisibility(View.GONE);
-                                rbStore.setVisibility(View.VISIBLE);
-                                rbStore.setChecked(true);
-                                rbHome.setChecked(false);
-                                getStorePickupSchedules(catalogs.get(0).getCatLogId(), accountId);
-                            } else if (catalogs.get(0).getPickUp() == null && catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
-                                rbStore.setVisibility(View.GONE);
-                                rbHome.setVisibility(View.VISIBLE);
-                                rbHome.setChecked(true);
-                                rbStore.setChecked(false);
-                                getHomeDeliverySchedules(catalogs.get(0).getCatLogId(), accountId);
-                            }
                         }
                     }
                 } catch (Exception e) {
@@ -1570,13 +1567,54 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         cartItemsList.clear();
         cartItemsList = db.getCartItems();
         if (cartItemsList != null && cartItemsList.size() > 0) {
+            isVirtualItemsOnly = isVirtualItemsOnly(cartItemsList);
+
             linearLayoutManager = new LinearLayoutManager(mContext);
             rvItems.setLayoutManager(linearLayoutManager);
             checkoutItemsAdapter = new CheckoutItemsAdapter(cartItemsList, mContext, false);
             rvItems.setAdapter(checkoutItemsAdapter);
         }
+        if (isVirtualItemsOnly) {
+            ll_group.setVisibility(View.GONE);
+            llDelivery.setVisibility(View.GONE);
+            rlDeliveryFee.setVisibility(View.GONE);
+            llContactDetails.setVisibility(View.VISIBLE);
+        } else {
+            ll_group.setVisibility(View.VISIBLE);
+            if (catalogs.get(0).getPickUp() != null && catalogs.get(0).getPickUp().isOrderPickUp() && catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
+                rbStore.setVisibility(View.VISIBLE);
+                rbStore.setChecked(true);
+                rbHome.setChecked(false);
+                getStorePickupSchedules(catalogs.get(0).getCatLogId(), accountId);
+                getHomeDeliverySchedules(catalogs.get(0).getCatLogId(), accountId);
+            } else if (catalogs.get(0).getPickUp() != null && catalogs.get(0).getPickUp().isOrderPickUp() && catalogs.get(0).getHomeDelivery() == null) {
+                rbHome.setVisibility(View.GONE);
+                rbStore.setVisibility(View.VISIBLE);
+                rbStore.setChecked(true);
+                rbHome.setChecked(false);
+                getStorePickupSchedules(catalogs.get(0).getCatLogId(), accountId);
+            } else if (catalogs.get(0).getPickUp() == null && catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
+                rbStore.setVisibility(View.GONE);
+                rbHome.setVisibility(View.VISIBLE);
+                rbHome.setChecked(true);
+                rbStore.setChecked(false);
+                getHomeDeliverySchedules(catalogs.get(0).getCatLogId(), accountId);
+            }
+        }
     }
-
+    private boolean isVirtualItemsOnly(ArrayList<CartItemModel> cartItemsList){
+        boolean isContainsPhysicalItems = false;
+        for (CartItemModel cartItem : cartItemsList) {
+            if (cartItem.getItemType() == null || cartItem.getItemType().isEmpty() || cartItem.getItemType().equalsIgnoreCase("PHYSICAL")) {
+                isContainsPhysicalItems = true;
+            }
+        }
+        if (!isContainsPhysicalItems) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     private void updateBill() {
         try {
             double totalBill;
@@ -2083,31 +2121,40 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     } else {
                         obj.put("consumerNote", "");
                     }
+                    obj.put("itemType", itemsList.get(i).getItemType());
+
                     orderItemsArray.put(obj);
                 }
             }
             for (int i = 0; i < couponArraylist.size(); i++) {
                 couponList.put(couponArraylist.get(i));
             }
-            if (isStore) {
-                if (catalogs != null && catalogs.get(0).getNextAvailablePickUpDetails() != null) {
-                    selectedDate = catalogs.get(0).getNextAvailablePickUpDetails().getAvailableDate();
-                } else if (storePickupSchedulesList != null && storePickupSchedulesList.size() > 0) {
-                    selectedDate = storePickupSchedulesList.get(0).getDate();
-                }
+            if (isVirtualItemsOnly) {
+                String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                inputObj.put("homeDelivery", false);
+                inputObj.put("orderDate", date);
             } else {
-                if (catalogs != null && catalogs.get(0).getNextAvailableDeliveryDetails() != null) {
-                    selectedDate = catalogs.get(0).getNextAvailableDeliveryDetails().getAvailableDate();
+                if (isStore) {
+                    if (catalogs != null && catalogs.get(0).getNextAvailablePickUpDetails() != null) {
+                        selectedDate = catalogs.get(0).getNextAvailablePickUpDetails().getAvailableDate();
+                    } else if (storePickupSchedulesList != null && storePickupSchedulesList.size() > 0) {
+                        selectedDate = storePickupSchedulesList.get(0).getDate();
+                    }
+                } else {
+                    if (catalogs != null && catalogs.get(0).getNextAvailableDeliveryDetails() != null) {
+                        selectedDate = catalogs.get(0).getNextAvailableDeliveryDetails().getAvailableDate();
 
-                } else if (homeDeliverySchedulesList != null && homeDeliverySchedulesList.size() > 0) {
-                    selectedDate = homeDeliverySchedulesList.get(0).getDate();
+                    } else if (homeDeliverySchedulesList != null && homeDeliverySchedulesList.size() > 0) {
+                        selectedDate = homeDeliverySchedulesList.get(0).getDate();
+                    }
                 }
+                inputObj.put("homeDelivery", rbHome.isChecked());
+                inputObj.put("orderDate", selectedDate);
             }
-            inputObj.put("catalog", catalog);
-            inputObj.put("orderItem", orderItemsArray);
-            inputObj.put("homeDelivery", rbHome.isChecked());
             inputObj.put("coupons", couponList);
-            inputObj.put("orderDate", selectedDate);
+            inputObj.put("orderItem", orderItemsArray);
+            inputObj.put("catalog", catalog);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

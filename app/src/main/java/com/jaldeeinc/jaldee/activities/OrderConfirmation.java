@@ -103,6 +103,12 @@ public class OrderConfirmation extends AppCompatActivity {
     @BindView(R.id.cv_ok)
     Button btnOk;
 
+    @BindView(R.id.ll_delivery_type)
+    LinearLayout ll_delivery_type;
+
+    @BindView(R.id.ll_time)
+    LinearLayout ll_time;
+
     private Context mContext;
     private String orderUUid;
     private int accountId;
@@ -111,6 +117,7 @@ public class OrderConfirmation extends AppCompatActivity {
     private ActiveOrders orderInfo = new ActiveOrders();
     private StoreDetails storeInfo = new StoreDetails();
     private StoreDetailsDialog storeDetailsDialog;
+    private boolean isVirtualItemsOnly = false;
 
 
     @Override
@@ -120,10 +127,10 @@ public class OrderConfirmation extends AppCompatActivity {
         ButterKnife.bind(OrderConfirmation.this);
         mContext = OrderConfirmation.this;
 
-
-
         Intent intent = getIntent();
         orderInfo = (ActiveOrders) intent.getSerializableExtra("orderInfo");
+        isVirtualItemsOnly = (boolean) intent.getBooleanExtra("isVirtualItemsOnly", false);
+
 
         if (orderInfo != null) {
 
@@ -180,7 +187,6 @@ public class OrderConfirmation extends AppCompatActivity {
 
             return false;
         });
-
     }
 
     @Override
@@ -287,18 +293,32 @@ public class OrderConfirmation extends AppCompatActivity {
                 tvOrderNO.setText(orderInfo.getOrderNumber());
                 tvStatus.setText(orderInfo.getOrderStatus());
                 tvDate.setText(Config.getCustomDateString(orderInfo.getOrderDate()));
-                if (orderInfo.getTimeSlot() != null) {
-                    tvTime.setText(orderInfo.getTimeSlot().getsTime() + " - " + orderInfo.getTimeSlot().geteTime());
-                }
+                if (!isVirtualItemsOnly) {
+                    if (orderInfo.getTimeSlot() != null) {
+                        tvTime.setText(orderInfo.getTimeSlot().getsTime() + " - " + orderInfo.getTimeSlot().geteTime());
+                        ll_time.setVisibility(View.VISIBLE);
+                    } else {
+                        ll_time.setVisibility(View.GONE);
+                    }
 
-                if (orderInfo.isHomeDelivery()) {
+                    if (orderInfo.isHomeDelivery()) {
 
-                    tvDeliveryType.setText("Home Delivery");
+                        tvDeliveryType.setText("Home Delivery");
+                        ll_delivery_type.setVisibility(View.VISIBLE);
 
-                } else if (orderInfo.isStorePickup()) {
+                    } else if (orderInfo.isStorePickup()) {
 
-                    tvDeliveryType.setText("Store pickup");
+                        tvDeliveryType.setText("Store pickup");
+                        ll_delivery_type.setVisibility(View.VISIBLE);
 
+                    } else {
+
+                        ll_delivery_type.setVisibility(View.GONE);
+
+                    }
+                } else {
+                    ll_time.setVisibility(View.GONE);
+                    ll_delivery_type.setVisibility(View.GONE);
                 }
 
                 if (orderInfo.getOrderFor() != null) {
@@ -315,16 +335,14 @@ public class OrderConfirmation extends AppCompatActivity {
                     rvItems.setItemTransformer(new ScaleTransformer.Builder()
                             .setMinScale(0.8f)
                             .build());
-                } else if (orderInfo.getShoppingList() != null){
+                } else if (orderInfo.getShoppingList() != null) {
 
                     OrderListImagesAdapter imagePreviewAdapter = new OrderListImagesAdapter(orderInfo.getShoppingList(), mContext, false);
                     rvItems.setAdapter(imagePreviewAdapter);
                     rvItems.setItemTransformer(new ScaleTransformer.Builder()
                             .setMinScale(0.8f)
                             .build());
-
                 }
-
 
                 if (orderInfo.getOrderNumber() != null) {
                     //Encode with a QR Code image
@@ -367,7 +385,7 @@ public class OrderConfirmation extends AppCompatActivity {
                     }
                 }
 
-                if (orderInfo.getOrderNote() != null && !orderInfo.getOrderNote().trim().equalsIgnoreCase("")){
+                if (orderInfo.getOrderNote() != null && !orderInfo.getOrderNote().trim().equalsIgnoreCase("")) {
 
                     llNotes.setVisibility(View.VISIBLE);
                     tvNotes.setText(orderInfo.getOrderNote());
@@ -381,8 +399,6 @@ public class OrderConfirmation extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-
     }
 
     public static String getCalenderDateFormat(String d) throws ParseException {
@@ -395,9 +411,6 @@ public class OrderConfirmation extends AppCompatActivity {
         return yourDate;
 
     }
-
-
-
 
     @Override
     public void onBackPressed() {

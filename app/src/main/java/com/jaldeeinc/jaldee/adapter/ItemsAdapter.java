@@ -247,6 +247,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                         item.setPromotionalType(catalogItem.getItems().getPromotionalPriceType());
                         item.setDiscount(catalogItem.getItems().getPromotionalPrice());
                         item.setDiscountedPrice(catalogItem.getItems().getDiscountedPrice());
+                        item.setItemType(catalogItem.getItems().getItemType());
                         if (catalogItem.getItems().isTaxable()){
                             item.setIsTaxable(1);
                         } else {

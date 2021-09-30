@@ -199,7 +199,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     + "uniqueId INTEGER,"
                     + "tax REAL,"
                     + "isTaxable NUMERIC,"
-                    + "maxQuantity INTEGER )";
+                    + "maxQuantity INTEGER,"
+                    + "itemType TEXT )";
 
 
             //create table
@@ -238,6 +239,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("maxQuantity", cartItemModel.getMaxQuantity());
                 values.put("tax",cartItemModel.getTax());
                 values.put("isTaxable",cartItemModel.getIsTaxable());
+                values.put("itemType",cartItemModel.getItemType());
+
                 db.insert(mContext.getString(R.string.db_table_cart), null, values);
 
                 db.setTransactionSuccessful();
@@ -408,14 +411,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             ArrayList<OrderItem> orderItemsList = new ArrayList<>();
             SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
             db.beginTransaction();
-            Cursor cursor = db.rawQuery("SELECT itemId, sum(quantity), instruction FROM " + mContext.getString(R.string.db_table_cart) + " GROUP BY itemId ", null);
+            Cursor cursor = db.rawQuery("SELECT itemId, sum(quantity), instruction, itemType FROM " + mContext.getString(R.string.db_table_cart) + " GROUP BY itemId ", null);
 
             if (cursor.moveToFirst()) {
                 do {
                     int itemId = cursor.getInt(0);
                     int quantity = cursor.getInt(1);
                     String instruction = cursor.getString(2);
-                    orderItemsList.add(new OrderItem(itemId, quantity,instruction));
+                    String itemType = cursor.getString(3);
+                    orderItemsList.add(new OrderItem(itemId, quantity,instruction, itemType));
 
                 } while (cursor.moveToNext());
             }
@@ -605,7 +609,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
 
             String table = mContext.getString(R.string.db_table_cart);
-            String[] columns = {"itemId", "accountId", "catalogId", "itemName", "imageUrl", "quantity", "itemPrice", "price", "instruction", "discountedPrice", "discount", "promotionalType", "maxQuantity", "isPromotional","isExpired","uniqueId","tax","isTaxable"};
+            String[] columns = {"itemId", "accountId", "catalogId", "itemName", "imageUrl", "quantity", "itemPrice", "price", "instruction", "discountedPrice", "discount", "promotionalType", "maxQuantity", "isPromotional","isExpired","uniqueId","tax","isTaxable","itemType"};
             String selection = " quantity >?";
             String[] selectionArgs = new String[]{"0"};
             db.beginTransaction();
@@ -632,6 +636,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     cartItem.setUniqueId(cursor.getInt(15));
                     cartItem.setTax(cursor.getDouble(16));
                     cartItem.setIsTaxable(cursor.getInt(17));
+                    cartItem.setItemType(cursor.getString(18));
                     cartItemsList.add(cartItem);
                 } while (cursor.moveToNext());
             }

@@ -163,19 +163,14 @@ public class Home extends AppCompatActivity {
 
     private void ApiGetJCashInfo() {
 
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-        //final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        //mDialog.show();
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+
         Call<JCashInfo> call = apiService.getJCashInfo();
         call.enqueue(new Callback<JCashInfo>() {
             @Override
             public void onResponse(Call<JCashInfo> call, Response<JCashInfo> response) {
                 try {
                     JCashInfo jCashInfo = new JCashInfo();
-
-                    //if (mDialog.isShowing())
-                    //    Config.closeDialog(JaldeeWalletActivity.this, mDialog);
                     if (response.code() == 200) {
                         jCashInfo = response.body();
                         if (jCashInfo != null) {

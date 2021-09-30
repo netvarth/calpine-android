@@ -16,10 +16,8 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
 import com.jaldeeinc.jaldee.Interface.ISelectedOrder;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.BillActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
 import com.jaldeeinc.jaldee.common.Config;
@@ -27,6 +25,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
+import com.jaldeeinc.jaldee.response.ItemDetails;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -44,7 +43,7 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
     private int lastPosition = -1;
     private ISelectedOrder iSelectedOrder;
     private boolean hideMoreInfo = false;
-
+    private boolean isVirtualItemsOnly = false;
 
     public TodayOrdersAdapter(ArrayList<ActiveOrders> ordersList, Context context, boolean isLoading, ISelectedOrder iSelectedOrder, boolean hideMoreInfo) {
         this.context = context;
@@ -66,7 +65,6 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.orders_item, viewGroup, false);
             return new ViewHolder(v, false);
         }
-
     }
 
     @Override
@@ -105,7 +103,6 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                         }
                         orderIntent.putExtra("from", "order");
                         context.startActivity(orderIntent);
-
                     }
                 });
 
@@ -117,7 +114,6 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                     viewHolder.tvQuantity.setText(String.valueOf(orders.getTotalItemQuantity()));
                 }
 
-
                 if (orders.getOrderDate() != null) {
                     String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                     String time = "";
@@ -125,20 +121,29 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                         time = orders.getTimeSlot().getsTime() + " - " + orders.getTimeSlot().geteTime();
                     }
                     if (date.equalsIgnoreCase(orders.getOrderDate())) {
-                        viewHolder.tvDateAndTime.setText("Today," + " " + time);
+                        if(time != null && !time.equals("")) {
+                            viewHolder.tvDateAndTime.setText("Today," + " " + time);
+                        } else {
+                            viewHolder.tvDateAndTime.setText("Today");
+                        }
                     } else {
                         viewHolder.tvDateAndTime.setText(getCustomDateString(orders.getOrderDate()) + "," + " " + time);
                     }
                 }
 
-
-                // To set icon for delivery type
-                if (orders.isHomeDelivery()) {
-                    viewHolder.ivBookingType.setImageResource(R.drawable.home_delivery);
-                } else if (orders.isStorePickup()) {
-                    viewHolder.ivBookingType.setImageResource(R.drawable.instore_pickup);
+                if(orders.getItemsList() != null && orders.getItemsList().size() > 0 ) {   //to get the order contains virtual item only
+                    isVirtualItemsOnly = isVirtualItemsOnly(orders.getItemsList());
                 }
-
+                // To set icon for delivery type
+                if(!isVirtualItemsOnly) {
+                    if (orders.isHomeDelivery()) {
+                        viewHolder.ivBookingType.setImageResource(R.drawable.home_delivery);
+                    } else if (orders.isStorePickup()) {
+                        viewHolder.ivBookingType.setImageResource(R.drawable.instore_pickup);
+                    }
+                } else {
+                    viewHolder.ivBookingType.setImageResource(R.drawable.order_virtual_item);
+                }
 
                 // to set status
                 if (orders.getOrderStatus() != null && !orders.getUid().contains("h_")) {
@@ -167,7 +172,6 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                     viewHolder.tvStatus.setVisibility(View.GONE);
                     viewHolder.rlStatus.setVisibility(View.GONE);
                 }
-
 
                 if (orders.getBill() == null) {
                     if (orders.getAdvanceAmountPaid() != 0.0) {
@@ -257,7 +261,19 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
 
         }
     }
-
+    private boolean isVirtualItemsOnly(ArrayList<ItemDetails> itemsList){
+        boolean isContainsPhysicalItems = false;
+        for (ItemDetails item : itemsList) {
+            if (item.getItemType() == null || item.getItemType().isEmpty() ||item.getItemType().equalsIgnoreCase("PHYSICAL")) {
+                isContainsPhysicalItems = true;
+            }
+        }
+        if (!isContainsPhysicalItems) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     public static String convertToTitleForm(String name) {
 
         String convertName = name;

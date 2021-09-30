@@ -80,6 +80,10 @@ public class Item implements Serializable {
     @Expose
     private String itemCode;
 
+    @SerializedName("itemType")
+    @Expose
+    private String itemType;
+
     private String displayImage ="";
 
     private double discountedPrice = 0;
@@ -90,7 +94,7 @@ public class Item implements Serializable {
 
     }
 
-    public Item(int itemId, String displayName, String itemDescription, double price, boolean taxable, String status, boolean adhoc, String itemName, boolean isShowOnLandingPage, boolean isStockAvailable, String promotionalPriceType, ArrayList<ItemImages> itemImagesList, double promotionalPrcnt, boolean showPromotionalPrice, String itemCode) {
+    public Item(int itemId, String displayName, String itemDescription, double price, boolean taxable, String status, boolean adhoc, String itemName, boolean isShowOnLandingPage, boolean isStockAvailable, String promotionalPriceType, ArrayList<ItemImages> itemImagesList, double promotionalPrcnt, boolean showPromotionalPrice, String itemCode, String itemType) {
         this.itemId = itemId;
         this.displayName = displayName;
         this.itemDescription = itemDescription;
@@ -106,7 +110,10 @@ public class Item implements Serializable {
         this.promotionalPrice = promotionalPrcnt;
         this.showPromotionalPrice = showPromotionalPrice;
         this.itemCode = itemCode;
+        this.itemType = itemType;
     }
+
+    public String getItemType() { return itemType; }
 
     public int getItemId() {
         return itemId;
@@ -128,10 +135,7 @@ public class Item implements Serializable {
         return itemDescription;
     }
 
-    public void setItemDescription(String itemDescription) {
-        this.itemDescription = itemDescription;
-    }
-
+    public void setItemDescription(String itemDescription) { this.itemDescription = itemDescription; }
 
     public boolean isTaxable() {
         return taxable;

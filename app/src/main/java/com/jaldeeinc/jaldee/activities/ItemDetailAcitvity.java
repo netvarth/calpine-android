@@ -291,6 +291,7 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
                     item.setPromotionalType(itemDetails.getItems().getPromotionalPriceType());
                     item.setDiscount(itemDetails.getItems().getPromotionalPrice());
                     item.setDiscountedPrice(itemDetails.getItems().getDiscountedPrice());
+                    item.setItemType(itemDetails.getItems().getItemType());
                     if (itemDetails.getItems().isShowPromotionalPrice()) {
                         item.setIsPromotional(1);
                     } else {

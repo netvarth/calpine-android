@@ -3,7 +3,6 @@ package com.jaldeeinc.jaldee.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -27,7 +26,6 @@ import com.google.zxing.WriterException;
 import com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView;
 import com.jaldeeinc.jaldee.CustomSwipe.transform.ScaleTransformer;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.ImagePreviewAdapter;
 import com.jaldeeinc.jaldee.adapter.OrderListImagesAdapter;
 import com.jaldeeinc.jaldee.adapter.OrdersAdapter;
 import com.jaldeeinc.jaldee.common.Config;
@@ -38,14 +36,12 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.custom.StoreDetailsDialog;
-import com.jaldeeinc.jaldee.model.Address;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
+import com.jaldeeinc.jaldee.response.ItemDetails;
 import com.jaldeeinc.jaldee.response.StoreDetails;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -103,6 +99,12 @@ public class OrderDetailActivity extends AppCompatActivity {
     @BindView(R.id.nested)
     ScrollView scrollView;
 
+    @BindView(R.id.ll_delivery_type)
+    LinearLayout ll_delivery_type;
+
+    @BindView(R.id.ll_time)
+    LinearLayout ll_time;
+
     private Context mContext;
     private String orderUUid;
     private int accountId;
@@ -112,7 +114,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     private StoreDetails storeInfo = new StoreDetails();
     private StoreDetailsDialog storeDetailsDialog;
     private boolean fromPushNotification = false;
-
+    private boolean isVirtualItemsOnly = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,9 +128,9 @@ public class OrderDetailActivity extends AppCompatActivity {
         orderInfo = (ActiveOrders) intent.getSerializableExtra("orderInfo");
         orderUUid = intent.getStringExtra("uuid");
         String account = intent.getStringExtra("account");
-        fromPushNotification = intent.getBooleanExtra(Constants.PUSH_NOTIFICATION,false);
+        fromPushNotification = intent.getBooleanExtra(Constants.PUSH_NOTIFICATION, false);
 
-        if (account != null){
+        if (account != null) {
             accountId = Integer.parseInt(account);
         }
 
@@ -271,7 +273,9 @@ public class OrderDetailActivity extends AppCompatActivity {
         try {
 
             if (orderInfo != null) {
-
+                if (orderInfo.getItemsList() != null && orderInfo.getItemsList().size() > 0) {
+                    isVirtualItemsOnly = isVirtualItemsOnly(orderInfo.getItemsList());
+                }
                 if (orderInfo.getProviderAccount() != null && orderInfo.getProviderAccount().getBusinessName() != null) {
                     tvSpName.setText(orderInfo.getProviderAccount().getBusinessName());
                 }
@@ -290,33 +294,49 @@ public class OrderDetailActivity extends AppCompatActivity {
 
                 tvOrderNO.setText(orderInfo.getOrderNumber());
 
-                if (orderInfo.getOrderStatus() != null){
+                if (orderInfo.getOrderStatus() != null) {
 
                     tvStatus.setText(convertToTitleForm(orderInfo.getOrderStatus()));
 
-                    if (orderInfo.getOrderStatus().equalsIgnoreCase("Cancelled")){
+                    if (orderInfo.getOrderStatus().equalsIgnoreCase("Cancelled")) {
                         tvStatus.setTextColor(mContext.getResources().getColor(R.color.red));
                     } else {
                         tvStatus.setTextColor(mContext.getResources().getColor(R.color.location_theme));
                     }
                 }
                 tvDate.setText(Config.getCustomDateString(orderInfo.getOrderDate()));
-                if (orderInfo.getTimeSlot() != null) {
-                    String sTime = orderInfo.getTimeSlot().getsTime();
-                    String eTime = orderInfo.getTimeSlot().geteTime();
-                    sTime = sTime.replaceAll(" ","\u00A0");
-                    eTime = eTime.replaceAll(" ","\u00A0");
-                    tvTime.setText(sTime + " - " + eTime);
-                }
+                //if(!isVirtualItemsOnly) {
+                if (true) {
 
-                if (orderInfo.isHomeDelivery()) {
+                    if (orderInfo.getTimeSlot() != null) {
+                        String sTime = orderInfo.getTimeSlot().getsTime();
+                        String eTime = orderInfo.getTimeSlot().geteTime();
+                        sTime = sTime.replaceAll(" ", "\u00A0");
+                        eTime = eTime.replaceAll(" ", "\u00A0");
+                        tvTime.setText(sTime + " - " + eTime);
+                        ll_time.setVisibility(View.VISIBLE);
+                    } else {
+                        ll_time.setVisibility(View.GONE);
+                    }
 
-                    tvDeliveryType.setText("Home Delivery");
+                    if (orderInfo.isHomeDelivery()) {
 
-                } else if (orderInfo.isStorePickup()) {
+                        tvDeliveryType.setText("Home Delivery");
+                        ll_delivery_type.setVisibility(View.VISIBLE);
 
-                    tvDeliveryType.setText("Store pickup");
+                    } else if (orderInfo.isStorePickup()) {
 
+                        tvDeliveryType.setText("Store pickup");
+                        ll_delivery_type.setVisibility(View.VISIBLE);
+
+                    } else {
+
+                        ll_delivery_type.setVisibility(View.GONE);
+
+                    }
+                } else {
+                    ll_time.setVisibility(View.GONE);
+                    ll_delivery_type.setVisibility(View.GONE);
                 }
 
                 if (orderInfo.getOrderFor() != null) {
@@ -401,6 +421,19 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     }
 
+    private boolean isVirtualItemsOnly(ArrayList<ItemDetails> itemsList) {
+        boolean isContainsPhysicalItems = false;
+        for (ItemDetails item : itemsList) {
+            if (item.getItemType() == null || item.getItemType().isEmpty() || item.getItemType().equalsIgnoreCase("PHYSICAL")) {
+                isContainsPhysicalItems = true;
+            }
+        }
+        if (!isContainsPhysicalItems) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public static String convertToTitleForm(String name) {
         String convertName = name;
@@ -412,8 +445,8 @@ public class OrderDetailActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        if (fromPushNotification){
-            Intent intent = new Intent(OrderDetailActivity.this,Home.class);
+        if (fromPushNotification) {
+            Intent intent = new Intent(OrderDetailActivity.this, Home.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             super.onBackPressed();
             startActivity(intent);
