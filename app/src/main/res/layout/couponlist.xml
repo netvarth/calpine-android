@@ -83,11 +83,10 @@
             android:visibility="gone">
 
             <ImageView
-                android:id="@+id/iv_noCpns_available"
+                android:id="@+id/iv_cpns_not_available"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_cpns_not_available"
                 app:tint="@color/gray">
 
             </ImageView>

@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.R;
@@ -43,6 +44,7 @@ public class CouponActivity extends AppCompatActivity {
     private ProviderCouponsAdapter providerCouponsAdapter;
     ArrayList<ProviderCouponResponse> providerCouponList = new ArrayList<>();
     private Provider providerResponse = new Provider();
+    ImageView iv_cpns_not_available;
 
 
     @Override
@@ -52,6 +54,7 @@ public class CouponActivity extends AppCompatActivity {
         rvCoupons = findViewById(R.id.coupon_inner_list);
         rvProviderCoupons = findViewById(R.id.rv_providerCoupons);
         ll_error = findViewById(R.id.ll_error);
+        iv_cpns_not_available = findViewById(R.id.iv_cpns_not_available);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
 
@@ -119,6 +122,7 @@ public class CouponActivity extends AppCompatActivity {
                                 }
                             }
                             if (!isCouponsAvailable) {
+                                Glide.with(CouponActivity.this).load(R.drawable.ic_cpns_not_available).into(iv_cpns_not_available);
                                 ll_error.setVisibility(View.VISIBLE);
                                 rvCoupons.setVisibility(View.GONE);
                                 rvProviderCoupons.setVisibility(View.GONE);
