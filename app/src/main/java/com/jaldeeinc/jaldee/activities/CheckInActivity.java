@@ -960,9 +960,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 startActivity(iCoupons);
             }
         });
-
     }
-
 
     private void ApiGetProviderDetails(int uniqueId) {
 
@@ -1009,29 +1007,22 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     Config.closeDialog(CheckInActivity.this, mDialog);
             }
         });
-
     }
 
 
     private void ApiSearchViewTerminology(String termin) {
-
         try {
-
             if (termin != null) {
                 mSearchTerminology = new Gson().fromJson(termin, SearchTerminology.class);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void apiSearchViewDetail(SearchViewDetail profile) {
 
-
         try {
-
             mBusinessDataList = profile;
 
             if (mBusinessDataList != null) {
@@ -1422,7 +1413,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("whatsApp")) {
                     if (etVirtualNumber.getText().toString().trim().equalsIgnoreCase("")) {
                         modeOfCalling = "Enter WhatsApp number";
-                    } else if(etVirtualNumber.getText().toString().trim().length() < 7 || (virtual_NmbrCCPicker.getSelectedCountryCode().equalsIgnoreCase("91") && etVirtualNumber.getText().toString().trim().length() != 10  )){
+                    } else if (etVirtualNumber.getText().toString().trim().length() < 7 || (virtual_NmbrCCPicker.getSelectedCountryCode().equalsIgnoreCase("91") && etVirtualNumber.getText().toString().trim().length() != 10)) {
                         modeOfCalling = "Invalid WhatsApp number";
                     }
                 } else {

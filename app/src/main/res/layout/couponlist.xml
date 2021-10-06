@@ -27,21 +27,20 @@
         </LinearLayout>
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsv_coupon_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/layout_toolbar"
             android:fillViewport="true"
             android:fitsSystemWindows="false"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:scrollbars="none"
-            android:layout_below="@id/layout_toolbar">
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-
-
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/coupon_inner_list"
@@ -50,10 +49,10 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginRight="@dimen/dimen_8dp"
-                    android:visibility="visible"
-                    android:nestedScrollingEnabled="true"
                     android:layout_marginBottom="8dp"
-                    android:background="#ffffff">
+                    android:background="#ffffff"
+                    android:nestedScrollingEnabled="true"
+                    android:visibility="visible">
 
                 </androidx.recyclerview.widget.RecyclerView>
 
@@ -63,32 +62,48 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
-                    android:background="@color/white"
-                    android:visibility="visible"
-                    android:nestedScrollingEnabled="false"
                     android:layout_marginRight="@dimen/dimen_8dp"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/white"
+                    android:nestedScrollingEnabled="false"
+                    android:visibility="visible">
 
                 </androidx.recyclerview.widget.RecyclerView>
-
-                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                    android:id="@+id/tv_error"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No coupons available at the moment"
-                    android:textColor="@color/title_color"
-                    android:textSize="@dimen/dimen_15dp"
-                    android:layout_marginTop="@dimen/dimen_25dp"
-                    android:layout_gravity="center"
-                    android:visibility="gone">
-
-
-                </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
-
-
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
+
+        <LinearLayout
+            android:id="@+id/ll_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_noCpns_available"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_cpns_not_available"
+                app:tint="@color/gray">
+
+            </ImageView>
+
+            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/dimen_25dp"
+                android:text="No coupons available at the moment"
+                android:textColor="@color/title_color"
+                android:textSize="@dimen/dimen_15dp">
+
+            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+        </LinearLayout>
 
     </RelativeLayout>
 
