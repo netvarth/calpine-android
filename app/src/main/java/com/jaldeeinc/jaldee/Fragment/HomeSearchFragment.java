@@ -15,6 +15,7 @@ import android.location.Location;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.SearchView;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -55,6 +56,7 @@ import com.google.gson.JsonArray;
 import com.jaldeeinc.jaldee.Interface.ISelectedPopularSearch;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Home;
+import com.jaldeeinc.jaldee.activities.JaldeeWalletActivity;
 import com.jaldeeinc.jaldee.activities.JdnActivity;
 import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
 import com.jaldeeinc.jaldee.activities.SearchResultsActivity;
@@ -66,6 +68,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
+import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
@@ -75,6 +78,7 @@ import com.jaldeeinc.jaldee.model.ListCell;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
+import com.jaldeeinc.jaldee.response.JCashInfo;
 import com.jaldeeinc.jaldee.response.ProfilePicture;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.ScheduleList;
@@ -175,6 +179,9 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
+    JCashInfo jCashInfo = new JCashInfo();
+    CardView cv_jaldee_cash_available;
+    CustomTextViewSemiBold tv_jaldee_cash_available;
 
 
     // TODO: Rename and change types of parameters
@@ -226,7 +233,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         mInterface = (AdapterCallback) this;
         initializations(row);
         ApiAWSearchDomain();
-
+        ApiGetJCashInfo();
 
         String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
         Config.logV("UpdateLocation noooooooooooooooooo" + s_currentLoc);
@@ -581,7 +588,6 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
             });
         }
 
-
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/JosefinSans-MediumItalic.ttf");
         searchSrcTextView.setTypeface(tyface1);
@@ -796,6 +802,8 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         rvPopularSearch = view.findViewById(R.id.rv_popularSearch);
         llNoResults = view.findViewById(R.id.ll_noResults);
         tvNoResults = view.findViewById(R.id.txtnosearchresult);
+        cv_jaldee_cash_available = view.findViewById(R.id.cv_jaldee_cash_available);
+        tv_jaldee_cash_available = view.findViewById(R.id.tv_jaldee_cash_available);
     }
 
     @Override
@@ -1889,7 +1897,37 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         }
 
     }
+    private void ApiGetJCashInfo() {
 
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<JCashInfo> call = apiService.getJCashInfo();
+        call.enqueue(new Callback<JCashInfo>() {
+            @Override
+            public void onResponse(Call<JCashInfo> call, Response<JCashInfo> response) {
+                try {
+                    if (response.code() == 200) {
+                        jCashInfo = response.body();
+                        if (jCashInfo != null) {
+                            if (jCashInfo.getTotCashAwarded() != null && Double.parseDouble(jCashInfo.getTotCashAwarded()) > 0 && jCashInfo.getTotCashAvailable() != null) {
+                                cv_jaldee_cash_available.setVisibility(View.VISIBLE);
+                                tv_jaldee_cash_available.setText("Balane:Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(jCashInfo.getTotCashAvailable())));
+                            } else {
+                                cv_jaldee_cash_available.setVisibility(View.GONE);
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JCashInfo> call, Throwable t) {
+
+            }
+        });
+    }
 
     private void loadNextPage(String mQueryPass, String mPass, String sort) {
         Log.d("", "loadNextPage: " + currentPage);

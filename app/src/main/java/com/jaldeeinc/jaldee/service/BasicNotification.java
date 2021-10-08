@@ -64,7 +64,7 @@ public class BasicNotification {
      *
      * @see #cancel(Context)
      */
-    public static void notify(final Context context, final String titleString, final String textString, String activityString, final String bookingId, String accountId, String meetingLink) {
+    public static void notify(final Context context, final String titleString, final String textString, String activityString, final String bookingId, String accountId, String meetingLinkString) {
         final Resources res = context.getResources();
 
         // This image is used as the notification's large icon (thumbnail).
@@ -75,6 +75,7 @@ public class BasicNotification {
         final String ticker = titleString;
         final String title = titleString;
         final String text = textString;
+        final String meetingLink = meetingLinkString;
         final PendingIntent pendingIntent;
         final Intent intent;
         int number = generateRandom();
