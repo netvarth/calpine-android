@@ -491,9 +491,7 @@ public class ActionsDialog extends Dialog {
                         prescriptionDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                     }
                 });
-
             }
-
 
             llSendAttachments.setVisibility(View.VISIBLE);
             if (bookings.isHasAttachment()) {
@@ -502,7 +500,6 @@ public class ActionsDialog extends Dialog {
                 llViewAttachments.setVisibility(View.GONE);
                 hideView(llViewAttachments);
             }
-
 
         } else {
 

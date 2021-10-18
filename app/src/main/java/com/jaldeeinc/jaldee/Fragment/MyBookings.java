@@ -52,12 +52,9 @@ import com.jaldeeinc.jaldee.Interface.ISendData;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BookingDetails;
 import com.jaldeeinc.jaldee.activities.CheckInDetails;
-import com.jaldeeinc.jaldee.activities.CheckoutListActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.Home;
-import com.jaldeeinc.jaldee.activities.ItemsActivity;
 import com.jaldeeinc.jaldee.activities.ViewAttachmentActivity;
-import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.adapter.ImagePreviewAdapter;
 import com.jaldeeinc.jaldee.adapter.TodayBookingsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
@@ -73,8 +70,6 @@ import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.ShoppingList;
-import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
-import com.jaldeeinc.jaldee.response.ViewAttachments;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -88,9 +83,6 @@ import com.payumoney.sdkui.ui.utils.ResultModel;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import org.apache.commons.io.IOUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -104,7 +96,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -150,8 +141,6 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
     private ISendData iSendData;
 
     // files related
-    ArrayList<String> imagePathList = new ArrayList<>();
-    ArrayList<String> imagePathLists = new ArrayList<>();
     Bitmap bitmap;
     File f, file;
     String path, from, from1 = "";
@@ -167,7 +156,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
     private Uri mImageUri;
     ImagePreviewAdapter imagePreviewAdapter;
     private IDeleteImagesInterface iDeleteImagesInterface;
-    ArrayList<ShoppingListModel> itemList = new ArrayList<>();
+    ArrayList<ShoppingListModel> imagePathList = new ArrayList<>();
     private CustomNotes customNotes;
     private ISaveNotes iSaveNotes;
 
@@ -233,11 +222,8 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
         rvTodays.setLayoutManager(linearLayoutManager);
         todayBookingsAdapter = new TodayBookingsAdapter(bookingsList, getContext(), true, iSelectedBooking, hideMoreInfo);
         rvTodays.setAdapter(todayBookingsAdapter);
-
-
         return view;
     }
-
 
     private void initializations(View view) {
 
@@ -815,8 +801,6 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
         recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
 
         imagePathList.clear();
-        imagePathLists.clear();
-        itemList.clear();
 
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -830,7 +814,6 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                         sendAppointmentAttachments(bookings.getAppointmentInfo().getProviderAccount().getId(), bookings.getAppointmentInfo().getUid());
                     }
                     tvErrorMessage.setVisibility(View.GONE);
-                    imagePathLists = imagePathList;
                     dialog.dismiss();
                 } else {
                     tvErrorMessage.setVisibility(View.VISIBLE);
@@ -842,8 +825,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (imagePathList != null && imagePathLists != null) {
-                    imagePathLists.clear();
+                if (imagePathList != null && imagePathList != null) {
                     imagePathList.clear();
                 }
                 dialog.dismiss();
@@ -859,13 +841,13 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
         tv_attach.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (imagePathLists.size() > 0) {
+                /*if (imagePathLists.size() > 0) {
                     DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathLists, mContext);
                     RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(v.getContext(), 3);
                     recycle_image_attachment.setLayoutManager(mLayoutManager);
                     recycle_image_attachment.setAdapter(mDetailFileAdapter);
                     mDetailFileAdapter.notifyDataSetChanged();
-                }
+                }*/
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -908,7 +890,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
 
                             return;
                         } else {
-                            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);   
+                            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                             Intent cameraIntent = new Intent();
                             cameraIntent.setType("image/*");
                             cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
@@ -930,37 +912,6 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
             }
 
         });
-
-        btn_send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (imagePathList != null && imagePathList.size() > 0) {
-
-                    if (bookings.getCheckInInfo() != null) {
-
-                        sendAttachments(bookings.getCheckInInfo().getProviderAccount().getId(), bookings.getCheckInInfo().getYnwUuid());
-                    } else if (bookings.getAppointmentInfo() != null) {
-                        sendAppointmentAttachments(bookings.getAppointmentInfo().getProviderAccount().getId(), bookings.getAppointmentInfo().getUid());
-                    }
-                    tvErrorMessage.setVisibility(View.GONE);
-                    imagePathLists = imagePathList;
-                    dialog.dismiss();
-
-                } else {
-
-                    tvErrorMessage.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
     }
 
 
@@ -1076,9 +1027,9 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
 
     private void updateImages() {
 
-        if (itemList != null && itemList.size() > 0) {
+        if (imagePathList != null && imagePathList.size() > 0) {
 
-            imagePreviewAdapter = new ImagePreviewAdapter(itemList, mContext, true, iDeleteImagesInterface);
+            imagePreviewAdapter = new ImagePreviewAdapter(imagePathList, mContext, true, iDeleteImagesInterface);
             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 2);
             recycle_image_attachment.setLayoutManager(mLayoutManager);
             recycle_image_attachment.setAdapter(imagePreviewAdapter);
@@ -1094,15 +1045,15 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
         MediaType type;
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
-        for (int i = 0; i < itemList.size(); i++) {
+        for (int i = 0; i < imagePathList.size(); i++) {
 
             String extension = "";
 
-            if (itemList.get(i).getImagePath().contains(".")) {
-                extension = itemList.get(i).getImagePath().substring(itemList.get(i).getImagePath().lastIndexOf(".") + 1);
+            if (imagePathList.get(i).getImagePath().contains(".")) {
+                extension = imagePathList.get(i).getImagePath().substring(imagePathList.get(i).getImagePath().lastIndexOf(".") + 1);
             }
 
-            if (extension.equalsIgnoreCase("pdf")){
+            if (extension.equalsIgnoreCase("pdf")) {
                 type = MediaType.parse("application/pdf");
             } else if (extension.equalsIgnoreCase("png")) {
                 type = MediaType.parse("image/png");
@@ -1113,7 +1064,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
             }
 
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(itemList.get(i).getImagePath())));
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getImagePath())));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1121,7 +1072,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                 path = saveImage(bitmap);
                 file = new File(path);
             } else {
-                file = new File(itemList.get(i).getImagePath());
+                file = new File(imagePathList.get(i).getImagePath());
             }
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
@@ -1129,9 +1080,9 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
         Map<String, String> query = new HashMap<>();
         String json = "";
 
-        for (int i = 0; i < itemList.size(); i++) {
+        for (int i = 0; i < imagePathList.size(); i++) {
 
-            query.put(String.valueOf(i), itemList.get(i).getCaption());
+            query.put(String.valueOf(i), imagePathList.get(i).getCaption());
 
         }
         Gson gson = new GsonBuilder().create();
@@ -1184,18 +1135,18 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type ;
+        MediaType type;
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
-        for (int i = 0; i < itemList.size(); i++) {
+        for (int i = 0; i < imagePathList.size(); i++) {
 
             String extension = "";
 
-            if (itemList.get(i).getImagePath().contains(".")) {
-                extension = itemList.get(i).getImagePath().substring(itemList.get(i).getImagePath().lastIndexOf(".") + 1);
+            if (imagePathList.get(i).getImagePath().contains(".")) {
+                extension = imagePathList.get(i).getImagePath().substring(imagePathList.get(i).getImagePath().lastIndexOf(".") + 1);
             }
 
-            if (extension.equalsIgnoreCase("pdf")){
+            if (extension.equalsIgnoreCase("pdf")) {
                 type = MediaType.parse("application/pdf");
             } else if (extension.equalsIgnoreCase("png")) {
                 type = MediaType.parse("image/png");
@@ -1206,7 +1157,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
             }
 
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(itemList.get(i).getImagePath())));
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getImagePath())));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1214,7 +1165,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                 path = saveImage(bitmap);
                 file = new File(path);
             } else {
-                file = new File(itemList.get(i).getImagePath());
+                file = new File(imagePathList.get(i).getImagePath());
             }
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
@@ -1222,9 +1173,9 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
         Map<String, String> query = new HashMap<>();
         String json = "";
 
-        for (int i = 0; i < itemList.size(); i++) {
+        for (int i = 0; i < imagePathList.size(); i++) {
 
-            query.put(String.valueOf(i), itemList.get(i).getCaption());
+            query.put(String.valueOf(i), imagePathList.get(i).getCaption());
 
         }
         Gson gson = new GsonBuilder().create();
@@ -1367,9 +1318,8 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
 
                         ShoppingListModel model = new ShoppingListModel();
                         model.setImagePath(orgFilePath);
-                        itemList.add(model);
+                        imagePathList.add(model);
 
-                        imagePathList.add(orgFilePath);
 
                         if (imagePathList.size() > 0) {
                             tvErrorMessage.setVisibility(View.GONE);
@@ -1377,11 +1327,11 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                             tvErrorMessage.setVisibility(View.VISIBLE);
                         }
 
-                        DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
+                        /*DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 3);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
-                        mDetailFileAdapter.notifyDataSetChanged();
+                        mDetailFileAdapter.notifyDataSetChanged();*/
 
                     } else if (data.getClipData() != null) {
                         ClipData mClipData = data.getClipData();
@@ -1411,9 +1361,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                             }
                             ShoppingListModel model = new ShoppingListModel();
                             model.setImagePath(orgFilePath);
-                            itemList.add(model);
-
-                            imagePathList.add(orgFilePath);
+                            imagePathList.add(model);
 
                             if (imagePathList.size() > 0) {
                                 tvErrorMessage.setVisibility(View.GONE);
@@ -1421,11 +1369,11 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                                 tvErrorMessage.setVisibility(View.VISIBLE);
                             }
                         }
-                        DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
+                        /*DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 3);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
-                        mDetailFileAdapter.notifyDataSetChanged();
+                        mDetailFileAdapter.notifyDataSetChanged();*/
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1447,8 +1395,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                     mImageUri = Uri.parse(path);
                     ShoppingListModel model = new ShoppingListModel();
                     model.setImagePath(mImageUri.toString());
-                    itemList.add(model);
-                    imagePathList.add(mImageUri.toString());
+                    imagePathList.add(model);
                     if (imagePathList.size() > 0) {
                         tvErrorMessage.setVisibility(View.GONE);
                     } else {
@@ -1460,11 +1407,11 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
+                /*DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 3);
                 recycle_image_attachment.setLayoutManager(mLayoutManager);
                 recycle_image_attachment.setAdapter(mDetailFileAdapter);
-                mDetailFileAdapter.notifyDataSetChanged();
+                mDetailFileAdapter.notifyDataSetChanged();*/
             }
         }
     }
@@ -1583,16 +1530,16 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
     @Override
     public void delete(int position, String imagePath) {
 
-        itemList.remove(position);
+        imagePathList.remove(position);
         imagePreviewAdapter.notifyDataSetChanged();
 
-        if (itemList != null && itemList.size() > 0) {
+        if (imagePathList != null && imagePathList.size() > 0) {
 
-            for (int i = 0; i < itemList.size(); i++) {
+            for (int i = 0; i < imagePathList.size(); i++) {
 
-                if (itemList.get(i).getImagePath().equalsIgnoreCase(imagePath)) {
+                if (imagePathList.get(i).getImagePath().equalsIgnoreCase(imagePath)) {
 
-                    itemList.remove(i);
+                    imagePathList.remove(i);
                 }
             }
         }
@@ -1606,7 +1553,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
 
     private void showNotesDialog(int position) {
 
-        customNotes = new CustomNotes(mContext, position, iSaveNotes, itemList.get(position).getCaption());
+        customNotes = new CustomNotes(mContext, position, iSaveNotes, imagePathList.get(position).getCaption());
         customNotes.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
         customNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
         customNotes.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -1621,7 +1568,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
     @Override
     public void saveMessage(String caption, int position) {
 
-        itemList.get(position).setCaption(caption);
+        imagePathList.get(position).setCaption(caption);
         imagePreviewAdapter.notifyDataSetChanged();
     }
 }

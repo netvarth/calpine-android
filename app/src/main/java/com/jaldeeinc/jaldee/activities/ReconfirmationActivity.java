@@ -2,21 +2,15 @@ package com.jaldeeinc.jaldee.activities;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,12 +22,9 @@ import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -43,7 +34,6 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.ServicesAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -52,31 +42,19 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.LabelPath;
-import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.QuestionnaireInput;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
+import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
-import com.jaldeeinc.jaldee.response.Catalog;
-import com.jaldeeinc.jaldee.response.DepServiceInfo;
-import com.jaldeeinc.jaldee.response.DepartmentInfo;
 import com.jaldeeinc.jaldee.response.PaymentModel;
-import com.jaldeeinc.jaldee.response.SearchService;
-import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.QuestionnaireUrls;
-import com.jaldeeinc.jaldee.response.QueueList;
-import com.jaldeeinc.jaldee.response.ScheduleList;
-import com.jaldeeinc.jaldee.response.SearchAppoinment;
-import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
-import com.jaldeeinc.jaldee.response.SearchDonation;
-import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.ServiceInfo;
 import com.jaldeeinc.jaldee.response.WalletCheckSumModel;
 import com.jaldeeinc.jaldee.response.SubmitQuestionnaire;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
-import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
 
@@ -95,7 +73,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -209,7 +186,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
     BottomSheetDialog dialog;
     public IPaymentResponse iPaymentResponse;
     ArrayList<LabelPath> imagePathList = new ArrayList<>();
-    ArrayList<String> bookingImagesList = new ArrayList<>();
+    ArrayList<ShoppingListModel> attachedImagePathList = new ArrayList<>();
     public Context mContext;
 
     //files related
@@ -345,7 +322,12 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                 tvPhoneNumber.setText(bookingModel.getCountryCode() + " " + bookingModel.getPhoneNumber());
             }
 
-            bookingImagesList = bookingModel.getImagesList();
+            if (bookingModel.getImagePathList() != null && bookingModel.getImagePathList().size() > 0) {
+                attachedImagePathList = bookingModel.getImagePathList();
+            } else {
+                attachedImagePathList = new ArrayList<>();
+            }
+
             String imagesString = SharedPreference.getInstance(mContext).getStringValue(Constants.QIMAGES, "");
 
             if (imagesString != null && !imagesString.trim().equalsIgnoreCase("")) {
@@ -1047,7 +1029,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                                     }
                                 }
                             } else {
-                                if (bookingImagesList.size() > 0) {
+                                if (attachedImagePathList.size() > 0) {
                                     ApiCommunicateAppointment(value, String.valueOf(bookingModel.getAccountId()), txt_addnote, dialog);
                                 }
                                 String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
@@ -1131,7 +1113,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
 
                         if (respnseWCSumModel != null && !respnseWCSumModel.isGateWayPaymentNeeded()) {
 
-                            if (bookingImagesList.size() > 0) {
+                            if (attachedImagePathList.size() > 0) {
                                 ApiCommunicateAppointment(value, accountID, txt_addnote, dialog);
                             }
                             getConfirmationDetails(Integer.parseInt(accountID));
@@ -1153,20 +1135,19 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
         });
     }
 
-    private void ApiCommunicateAppointment(String waitListId, String accountID, String message,
-                                           final BottomSheetDialog dialog) {
-
+    private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
         ApiInterface apiService = ApiClient.getClient(ReconfirmationActivity.this).create(ApiInterface.class);
         MediaType type;
+        JSONObject captions = new JSONObject();
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
-        for (int i = 0; i < bookingImagesList.size(); i++) {
+        for (int i = 0; i < attachedImagePathList.size(); i++) {
 
             String extension = "";
 
-            if (bookingImagesList.get(i).contains(".")) {
-                extension = bookingImagesList.get(i).substring(bookingImagesList.get(i).lastIndexOf(".") + 1);
+            if (attachedImagePathList.get(i).getImagePath().contains(".")) {
+                extension = attachedImagePathList.get(i).getImagePath().substring(attachedImagePathList.get(i).getImagePath().lastIndexOf(".") + 1);
             }
 
             if (extension.equalsIgnoreCase("pdf")) {
@@ -1180,7 +1161,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
             }
 
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(ReconfirmationActivity.this.getApplicationContext().getContentResolver(), Uri.fromFile(new File(bookingImagesList.get(i))));
+                bitmap = MediaStore.Images.Media.getBitmap(ReconfirmationActivity.this.getApplicationContext().getContentResolver(), Uri.fromFile(new File(attachedImagePathList.get(i).getImagePath())));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1188,12 +1169,20 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                 path = saveImage(bitmap);
                 file = new File(path);
             } else {
-                file = new File(bookingImagesList.get(i));
+                file = new File(attachedImagePathList.get(i).getImagePath());
             }
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+            try {
+                captions.put(String.valueOf(i), attachedImagePathList.get(i).getCaption());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-        RequestBody requestBody = mBuilder.build();
 
+        RequestBody body1 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), String.valueOf(captions));
+        mBuilder.addFormDataPart("captions", "blob", body1);
+
+        RequestBody requestBody = mBuilder.build();
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject jsonObj = new JSONObject();
@@ -1218,10 +1207,8 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
-                        bookingImagesList.clear();
+                        attachedImagePathList.clear();
                         dialog.dismiss();
-
-
                     } else {
                         if (response.code() == 422) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
@@ -1360,7 +1347,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
     }
 
     private void paymentFinished() {
-        if (bookingImagesList != null && bookingImagesList.size() > 0) {
+        if (attachedImagePathList != null && attachedImagePathList.size() > 0) {
             ApiCommunicateAppointment(value, String.valueOf(bookingModel.getAccountId()), bookingModel.getMessage(), dialog);
         }
         String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
