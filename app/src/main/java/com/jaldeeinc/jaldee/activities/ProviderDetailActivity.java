@@ -1039,7 +1039,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 for (String value : mBusinessDataList.getLanguagesSpoken()) {
                     language.add(value.substring(0, 1).toUpperCase() + value.substring(1));
                 }
-                tvSpLanguagesKnown.setText(language.toString().replace("[","").replace("]",""));
+                tvSpLanguagesKnown.setText(language.toString().replace("[", "").replace("]", ""));
             } else {
                 tvSpLanguagesKnown.setVisibility(View.GONE);
                 tvLanguagesKnownHint.setVisibility(View.GONE);
@@ -2238,8 +2238,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
                         catalogs = (ArrayList<Catalog>) objects[4];
 
-                    }
-                    else {
+                    } else {
 
                         queueList = (ArrayList<QueueList>) objects[0];
                         schedulesList = (ArrayList<ScheduleList>) objects[1];
@@ -2821,7 +2820,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             Intent intent = new Intent(ProviderDetailActivity.this, CheckInActivity.class);
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
-            intent.putExtra("locationName",tvLocationName.getText().toString());
+            intent.putExtra("locationName", tvLocationName.getText().toString());
             intent.putExtra("providerId", providerId);
             intent.putExtra("locationId", locationId);
             intent.putExtra("checkInInfo", checkinServiceInfo);
@@ -2839,7 +2838,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             Intent intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
-            intent.putExtra("locationName",tvLocationName.getText().toString());
+            intent.putExtra("locationName", tvLocationName.getText().toString());
             intent.putExtra("locationId", locationId);
             intent.putExtra("providerId", providerId);
             intent.putExtra("fromUser", false);
@@ -2901,7 +2900,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         providerIntent.putExtra("locationName", tvLocationName.getText().toString());
         providerIntent.putExtra("isToken", isToken);
         providerIntent.putExtra("providerName", tvSpName.getText().toString());
-        providerIntent.putExtra("sector",  mBusinessDataList.getServiceSector());
+        providerIntent.putExtra("sector", mBusinessDataList.getServiceSector());
 
         startActivity(providerIntent);
 

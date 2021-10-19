@@ -243,19 +243,19 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
 
                 if (providerDetails != null && providerId != 0) {
 
-//                    Intent intent = new Intent(UserDetailActivity.this, ChatActivity.class);
-//                    intent.putExtra("from", Constants.PROVIDER);
-//                    intent.putExtra("accountId", providerDetails.getId());
-//                    intent.putExtra("name", providerDetails.getBusinessName());
-//                    startActivity(intent);
+                    Intent intent = new Intent(UserDetailActivity.this, ChatActivity.class);
+                    intent.putExtra("from", Constants.PROVIDER);
+                    intent.putExtra("accountId", providerDetails.getId());
+                    intent.putExtra("name", providerDetails.getBusinessName());
+                    startActivity(intent);
 
-                    enquiryDialog = new EnquiryDialog(mContext, providerDetails.getBusinessName(), iSendMessage, providerDetails.getId(),providerId);
+                    /*enquiryDialog = new EnquiryDialog(mContext, providerDetails.getBusinessName(), iSendMessage, providerDetails.getId(),providerId);
                     enquiryDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     enquiryDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     enquiryDialog.show();
                     DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
                     int width = (int) (metrics.widthPixels * 1);
-                    enquiryDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    enquiryDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);*/
                 } else {
                     Toast.makeText(UserDetailActivity.this, "Please try after some time", Toast.LENGTH_SHORT).show();
                 }
@@ -711,7 +711,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
             intent.putExtra("accountBusinessName", tvProviderName.getText().toString());
-            intent.putExtra("locationName",tvLocationName.getText().toString());
+            intent.putExtra("locationName", tvLocationName.getText().toString());
             intent.putExtra("providerId", providerId);
             intent.putExtra("locationId", locationId);
             intent.putExtra("checkInInfo", checkinServiceInfo);
@@ -731,7 +731,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
             intent.putExtra("accountBusinessName", tvProviderName.getText().toString());
-            intent.putExtra("locationName",tvLocationName.getText().toString());
+            intent.putExtra("locationName", tvLocationName.getText().toString());
             intent.putExtra("locationId", locationId);
             intent.putExtra("providerId", providerId);
             intent.putExtra("userId", userId);

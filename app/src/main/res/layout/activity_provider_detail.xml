@@ -84,6 +84,7 @@
                 </ImageView>
 
             </androidx.cardview.widget.CardView>
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_share"
                 android:layout_width="35dp"
