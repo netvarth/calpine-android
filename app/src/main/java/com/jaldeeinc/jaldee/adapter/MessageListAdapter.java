@@ -3,16 +3,14 @@ package com.jaldeeinc.jaldee.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
@@ -25,10 +23,8 @@ import com.jaldeeinc.jaldee.model.UserMessage;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class MessageListAdapter extends RecyclerView.Adapter {
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
@@ -100,7 +96,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         CustomTextViewMedium tvMessageType;
         CustomTextViewSemiBold attachText;
         LinearLayout ll_attachments;
-        ImageView iv_attach1,iv_attach2;
+        ImageView iv_attach1, iv_attach2;
         RecyclerView recyclerImageSent;
         ArrayList<String> mGalleryAttachments = new ArrayList<>();
 
@@ -129,7 +125,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             // Format the stored timestamp into a readable String using method.
             timeText.setText(formatTimeStamp(message.getTimeStamp()));
 
-            if (message.getMessageType() != null){
+            if (message.getMessageType() != null) {
                 tvMessageType.setVisibility(View.VISIBLE);
                 String upperString = message.getMessageType().substring(0, 1).toUpperCase() + message.getMessageType().substring(1).toLowerCase();
                 tvMessageType.setText(upperString);
@@ -137,13 +133,14 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                 tvMessageType.setVisibility(View.GONE);
             }
 
-            if(message.getAttachments()!=null && message.getAttachments().size()>0){
+            if (message.getAttachments() != null && message.getAttachments().size() > 0) {
                 mGalleryAttachments.clear();
-                for(int i=0;i<message.getAttachments().size();i++) {
+                for (int i = 0; i < message.getAttachments().size(); i++) {
                     mGalleryAttachments.add(message.getAttachments().get(i).getS3path());
                 }
                 ll_attachments.setVisibility(View.VISIBLE);
-                if(message.getAttachments().size()==1) {
+                String extension = MimeTypeMap.getFileExtensionFromUrl(message.getAttachments().get(0).getS3path());
+                if (message.getAttachments().size() == 1) {
                     Picasso.Builder builder = new Picasso.Builder(iv_attach1.getContext());
                     builder.listener(new Picasso.Listener() {
                         @Override
@@ -154,9 +151,12 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                     iv_attach1.setVisibility(View.VISIBLE);
                     attachText.setVisibility(View.GONE);
                     iv_attach2.setVisibility(View.GONE);
-                    builder.build().load(message.getAttachments().get(0).getS3path()).fit().into(iv_attach1);
-                }
-                else if(message.getAttachments().size()==2){
+                    if (extension.equalsIgnoreCase("pdf")) {
+                        builder.build().load(message.getAttachments().get(0).getThumbPath()).fit().into(iv_attach1);
+                    } else {
+                        builder.build().load(message.getAttachments().get(0).getS3path()).fit().into(iv_attach1);
+                    }
+                } else if (message.getAttachments().size() == 2) {
                     Picasso.Builder builder = new Picasso.Builder(iv_attach1.getContext());
                     builder.listener(new Picasso.Listener() {
                         @Override
@@ -172,12 +172,15 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                             exception.printStackTrace();
                         }
                     });
-                    builder1.build().load(message.getAttachments().get(1).getS3path()).fit().into(iv_attach2);
+                    if (extension.equalsIgnoreCase("pdf")) {
+                        builder.build().load(message.getAttachments().get(1).getThumbPath()).fit().into(iv_attach2);
+                    } else {
+                        builder1.build().load(message.getAttachments().get(1).getS3path()).fit().into(iv_attach2);
+                    }
                     iv_attach1.setVisibility(View.VISIBLE);
                     iv_attach2.setVisibility(View.VISIBLE);
                     attachText.setVisibility(View.GONE);
-                }
-                else if(message.getAttachments().size()>2){
+                } else if (message.getAttachments().size() > 2) {
                     Picasso.Builder builder = new Picasso.Builder(iv_attach1.getContext());
                     builder.listener(new Picasso.Listener() {
                         @Override
@@ -193,15 +196,18 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                             exception.printStackTrace();
                         }
                     });
-                    builder1.build().load(message.getAttachments().get(1).getS3path()).fit().into(iv_attach2);
+                    if (extension.equalsIgnoreCase("pdf")) {
+                        builder.build().load(message.getAttachments().get(1).getThumbPath()).fit().into(iv_attach2);
+                    } else {
+                        builder1.build().load(message.getAttachments().get(1).getS3path()).fit().into(iv_attach2);
+                    }
                     int size = message.getAttachments().size() - 2;
-                    attachText.setText( "+ " + size + " more");
+                    attachText.setText("+ " + size + " more");
                     attachText.setVisibility(View.VISIBLE);
                     iv_attach1.setVisibility(View.VISIBLE);
                     iv_attach2.setVisibility(View.VISIBLE);
                 }
-            }
-            else{
+            } else {
                 ll_attachments.setVisibility(View.GONE);
             }
 
@@ -259,7 +265,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         CustomTextViewMedium tvMessageType;
         CustomTextViewSemiBold attachmentsText;
         LinearLayout ll_attachReceiv;
-        ImageView iv_img1,iv_img2;
+        ImageView iv_img1, iv_img2;
         RecyclerView recyclerImage;
         ArrayList<String> mGalleryAttachments = new ArrayList<>();
 
@@ -290,20 +296,20 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             // Format the stored timestamp into a readable String using method.
             timeText.setText(formatTimeStamp(message.getTimeStamp()));
 
-            if (message.getMessageType() != null){
+            if (message.getMessageType() != null) {
                 tvMessageType.setVisibility(View.VISIBLE);
                 String upperString = message.getMessageType().substring(0, 1).toUpperCase() + message.getMessageType().substring(1).toLowerCase();
                 tvMessageType.setText(upperString);
             } else {
                 tvMessageType.setVisibility(View.GONE);
             }
-            if(message.getAttachments()!=null && message.getAttachments().size()>0){
+            if (message.getAttachments() != null && message.getAttachments().size() > 0) {
                 mGalleryAttachments.clear();
                 ll_attachReceiv.setVisibility(View.VISIBLE);
-                for(int i=0;i<message.getAttachments().size();i++) {
+                for (int i = 0; i < message.getAttachments().size(); i++) {
                     mGalleryAttachments.add(message.getAttachments().get(i).getS3path());
                 }
-                if(message.getAttachments().size()==1) {
+                if (message.getAttachments().size() == 1) {
                     Picasso.Builder builder = new Picasso.Builder(iv_img1.getContext());
                     builder.listener(new Picasso.Listener() {
                         @Override
@@ -315,8 +321,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                     attachmentsText.setVisibility(View.GONE);
                     iv_img2.setVisibility(View.GONE);
                     builder.build().load(message.getAttachments().get(0).getS3path()).fit().into(iv_img1);
-                }
-                else if(message.getAttachments().size()==2){
+                } else if (message.getAttachments().size() == 2) {
                     Picasso.Builder builder = new Picasso.Builder(iv_img1.getContext());
                     builder.listener(new Picasso.Listener() {
                         @Override
@@ -336,8 +341,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                     iv_img1.setVisibility(View.VISIBLE);
                     iv_img2.setVisibility(View.VISIBLE);
                     attachmentsText.setVisibility(View.GONE);
-                }
-                else if(message.getAttachments().size()>2){
+                } else if (message.getAttachments().size() > 2) {
                     Picasso.Builder builder = new Picasso.Builder(iv_img1.getContext());
                     builder.listener(new Picasso.Listener() {
                         @Override
@@ -355,13 +359,12 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                     });
                     builder1.build().load(message.getAttachments().get(1).getS3path()).fit().into(iv_img2);
                     int size = message.getAttachments().size() - 2;
-                    attachmentsText.setText( "+ " + size + " more");
+                    attachmentsText.setText("+ " + size + " more");
                     attachmentsText.setVisibility(View.VISIBLE);
                     iv_img1.setVisibility(View.VISIBLE);
                     iv_img2.setVisibility(View.VISIBLE);
                 }
-            }
-            else{
+            } else {
                 ll_attachReceiv.setVisibility(View.GONE);
             }
 
@@ -414,7 +417,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public static String formatTimeStamp(String tStamp){
+    public static String formatTimeStamp(String tStamp) {
 
         long time = Long.parseLong(tStamp);
 
