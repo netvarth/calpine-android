@@ -569,7 +569,9 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
                                             if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
                                                 serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
                                             }
-                                            serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
+                                            if(checkInService.getCheckInServiceAvailability().getPersonAhead() != null) {
+                                                serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
+                                            }
                                             serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
                                             serviceInfo.setNextAvailableDate(checkInService.getCheckInServiceAvailability().getAvailableDate());
                                             if (checkInService.getCheckInServiceAvailability().getServiceTime() != null) {

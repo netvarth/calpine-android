@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class CheckInServiceAvailability implements Serializable {
 
     private String availableDate;
-    private int personAhead;
+    private Integer personAhead;
     private String calculationMode;
     private boolean showToken;
     private int id;
@@ -46,11 +46,11 @@ public class CheckInServiceAvailability implements Serializable {
         this.availableDate = availableDate;
     }
 
-    public int getPersonAhead() {
+    public Integer getPersonAhead() {
         return personAhead;
     }
 
-    public void setPersonAhead(int personAhead) {
+    public void setPersonAhead(Integer personAhead) {
         this.personAhead = personAhead;
     }
 

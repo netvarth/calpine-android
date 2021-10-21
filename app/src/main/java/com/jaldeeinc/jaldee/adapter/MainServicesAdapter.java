@@ -146,7 +146,7 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
             // to set people waiting in line if available
             if (servicesInfoList.get(position).getType() != null && servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.CHECKIN)) {
 
-                if (servicesInfoList.get(position).isAvailability()) {
+                if (servicesInfoList.get(position).isAvailability() && servicesInfoList.get(position).getPeopleInLine() != null && servicesInfoList.get(position).getPeopleInLine() >= 0) {
                     viewHolder.tvPeopleAhead.setVisibility(View.VISIBLE);
                     viewHolder.llDonationRange.setVisibility(View.GONE);
                     int number = servicesInfoList.get(position).getPeopleInLine();

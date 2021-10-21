@@ -426,7 +426,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     }
                 }
 
-                if (checkInInfo.getCheckInServiceAvailability().getPersonAhead() >= 0) {
+                if (checkInInfo.getCheckInServiceAvailability().getPersonAhead() != null && checkInInfo.getCheckInServiceAvailability().getPersonAhead() >= 0) {
 
                     String changedtext = "People waiting in line : " + "<b>" + checkInInfo.getCheckInServiceAvailability().getPersonAhead() + "</b> ";
                     tvPeopleInLine.setText(Html.fromHtml(changedtext));
