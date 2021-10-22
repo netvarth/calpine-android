@@ -66,6 +66,9 @@ public class Constants {
 
     public static final String QUESTIONNAIRE = "questionnaire";
     public static final String QIMAGES = "qImages";
+    public static final String QUESTION = "question";
+    public static final String ANSWER = "answer";
+
 
     // notification purpose
     public static final String PUSH_NOTIFICATION = "pushNotification";

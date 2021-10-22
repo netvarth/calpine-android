@@ -77,6 +77,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -885,7 +887,9 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
                                 for (LabelPath p : imagePathList) {
 
-                                    if (url.getUrl().contains(p.getFileName())) {
+                                    String fileName = URLEncoder.encode(p.getFileName(), StandardCharsets.UTF_8.toString());
+
+                                    if (fileName != null && fileName.trim().length() > 0 && url.getUrl().contains(fileName)) {
 
                                         p.setUrl(url.getUrl());
                                     }
@@ -1017,6 +1021,12 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
             urlObj.put("uid", result.getUrls().get(i).getUid());
             urlObj.put("labelName", result.getUrls().get(i).getLabelName());
+            urlObj.put("url", result.getUrls().get(i).getUrl());
+            urlObj.put("document", result.getUrls().get(i).getDocument());
+            if (result.getUrls().get(i).getColumnId() != null && !result.getUrls().get(i).getColumnId().trim().equalsIgnoreCase("")) {
+                urlObj.put("columnId", result.getUrls().get(i).getColumnId());
+                urlObj.put("gridOrder", 1);
+            }
 
             uploadArray.put(urlObj);
 

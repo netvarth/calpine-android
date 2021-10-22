@@ -152,7 +152,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
                 public void onClick(View view) {
 
 
-                    if (data.getImagePath().contains("http://") || data.getImagePath().contains("https://")) {
+                    if (data.getImagePath() != null && (data.getImagePath().contains("http://") || data.getImagePath().contains("https://"))) {
 
                         String extension = "";
 
@@ -189,11 +189,11 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
 
                         String extension = "";
 
-                        if (data.getImagePath().contains(".")) {
+                        if (data.getImagePath() != null && data.getImagePath().contains(".")) {
                             extension = data.getImagePath().substring(data.getImagePath().lastIndexOf(".") + 1);
                         }
 
-                        if (data.getImagePath().substring(data.getImagePath().lastIndexOf(".") + 1).equals("pdf")) {
+                        if (data.getImagePath() != null && data.getImagePath().substring(data.getImagePath().lastIndexOf(".") + 1).equals("pdf")) {
 
                             openPdf(context, data.getImagePath());
 

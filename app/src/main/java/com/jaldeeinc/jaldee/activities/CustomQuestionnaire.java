@@ -79,6 +79,7 @@ import com.jaldeeinc.jaldee.model.AnswerLine;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.DataGrid;
 import com.jaldeeinc.jaldee.model.DataGridAnswerLine;
+import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
 import com.jaldeeinc.jaldee.model.LabelPath;
 import com.jaldeeinc.jaldee.model.QuestionnaireBoolean;
 import com.jaldeeinc.jaldee.model.QuestionnaireCheckbox;
@@ -408,7 +409,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                                 JsonObject answer = new JsonObject();
                                 JsonArray uploadList = new JsonArray();
                                 JsonObject fileInfo = new JsonObject();
-                                String filename = "";
+                                String filename = null;
                                 String mimeType = getMimeType(path);
 
                                 if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video"))) {
@@ -460,9 +461,10 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                                     String path = files.get(i).getImagePath();
                                     String mimeType = getMimeType(path);
 
+                                    String filename = path.substring(path.lastIndexOf("/") + 1);
+
                                     if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video"))) {
 
-                                        String filename = path.substring(path.lastIndexOf("/") + 1);
 
                                         fileInfo.addProperty("mimeType", mimeType);
                                         fileInfo.addProperty("url", filename);
@@ -479,7 +481,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                                     obj.setAnswer(answer);
                                     answerLines.add(obj);
 
-                                    LabelPath lPath = new LabelPath(labelPaths.size(), question.getGetQuestion().getLabelName(), files.get(i).getImagePath(), files.get(i).getName(), mimeType);
+                                    LabelPath lPath = new LabelPath(labelPaths.size(), question.getGetQuestion().getLabelName(), files.get(i).getImagePath(), filename, mimeType);
                                     labelPaths.add(lPath);
                                 }
                             }
@@ -568,29 +570,63 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                     obj.setAnswer(answer);
                     answerLines.add(obj);
 
+                } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("dataGrid")) {
+
+                    QuestionnaireGridView gridFieldView = (QuestionnaireGridView) viewsList.get(question.getGetQuestion().getLabelName());
+
+                    ArrayList<DataGrid> dataGridList = new ArrayList<>();
+
+                    if (gridFieldView != null) {
+
+                        dataGridList = gridFieldView.getGridDataList();
+                    }
+
+                    AnswerLine obj = new AnswerLine();
+                    obj.setLabelName(question.getGetQuestion().getLabelName());
+
+                    JsonObject answer = new JsonObject();
+                    Gson gson = new Gson();
+                    JsonElement element = gson.toJsonTree(dataGridList);
+                    answer.add("dataGrid", element);
+
+                    obj.setAnswer(answer);
+                    answerLines.add(obj);
+
+                    for (DataGrid d : dataGridList) {
+
+                        for (GridColumnAnswerLine a : d.getDataGridColumn()) {
+
+                            JsonObject column = a.getColumn();
+
+                            if (column.has("fileUpload")) {
+
+                                JsonArray fileUploadList = column.getAsJsonArray("fileUpload");
+
+                                for (JsonElement e : fileUploadList) {
+
+                                    JsonObject fileObj = e.getAsJsonObject();
+                                    String name = fileObj.get("caption").getAsString();
+                                    String fileName = null;
+                                    if (fileObj.get("url") != null) {
+                                        fileName = fileObj.get("url").getAsString();
+                                    }
+
+                                    String filePath = "";
+                                    if (fileObj.get("path") != null && !fileObj.get("path").getAsString().trim().equalsIgnoreCase("")) {
+                                        filePath = fileObj.get("path").getAsString();
+                                    }
+
+                                    String mimeType = getMimeType(filePath);
+
+                                    LabelPath lPath = new LabelPath(labelPaths.size(), question.getGetQuestion().getLabelName(), filePath, fileName, mimeType);
+                                    labelPaths.add(lPath);
+                                }
+
+                            }
+                        }
+                    }
+
                 }
-//                else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("dataGrid")) {
-//
-//                    QuestionnaireGridView gridFieldView = (QuestionnaireGridView) viewsList.get(question.getGetQuestion().getLabelName());
-//
-//                    ArrayList<DataGrid> dataGridList = new ArrayList<>();
-//
-//                    if (gridFieldView != null){
-//
-//                        dataGridList = gridFieldView.getGridDataList();
-//                    }
-//
-//                    AnswerLine obj = new AnswerLine();
-//                    obj.setLabelName(question.getGetQuestion().getLabelName());
-//
-//                    JsonObject answer = new JsonObject();
-//                    Gson gson = new Gson();
-//                    JsonElement element = gson.toJsonTree(dataGridList);
-//                    answer.add("dataGrid", element);
-//
-//                    obj.setAnswer(answer);
-//                    answerLines.add(obj);
-//                }
             }
 
             input.setAnswerLines(answerLines);
@@ -860,8 +896,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 }
 
-            }
-            else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("list") && question.getGetQuestion().isMandatory()) {
+            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("list") && question.getGetQuestion().isMandatory()) {
 
                 View listFieldView = viewsList.get(question.getGetQuestion().getLabelName());
                 RecyclerView rvCheckBoxes = (RecyclerView) listFieldView.findViewById(R.id.rv_checkBoxes);
@@ -889,8 +924,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 }
 
-            }
-            else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("bool")) {
+            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("bool")) {
 
                 View boolFieldView = viewsList.get(question.getGetQuestion().getLabelName());
                 RadioGroup radioGroup = (RadioGroup) boolFieldView.findViewById(R.id.rg_radioGroup);
@@ -1123,40 +1157,51 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 addListField(listModel);
 
+            } else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("dataGrid")) {
+
+                QuestionnaireGridView gridView = new QuestionnaireGridView(this);
+                gridView.setQuestionData(question.getGetQuestion());
+
+                gridView.getLlAdd().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        SharedPreference.getInstance(CustomQuestionnaire.this).setValue(Constants.QUESTION, "");
+                        SharedPreference.getInstance(mContext).setValue(Constants.ANSWER, "");
+
+                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTION, new Gson().toJson(question.getGetQuestion()));
+
+                        DataGridFragment dataGridFragment = DataGridFragment.newInstance("");
+                        dataGridFragment.setGridView(gridView);
+                        final FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.container, dataGridFragment).addToBackStack("DataGrid")
+                                .commit();
+                    }
+                });
+
+                gridView.setiDataGridListener(new IDataGridListener() {
+                    @Override
+                    public void onEditClick(DataGrid gridObj, int position) {
+
+                        SharedPreference.getInstance(CustomQuestionnaire.this).setValue(Constants.QUESTION, "");
+                        SharedPreference.getInstance(mContext).setValue(Constants.ANSWER, "");
+
+                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTION, new Gson().toJson(question.getGetQuestion()));
+                        SharedPreference.getInstance(mContext).setValue(Constants.ANSWER, new Gson().toJson(gridObj));
+
+                        DataGridFragment dataGridFragment = DataGridFragment.newInstance("", "", position);
+                        dataGridFragment.setGridView(gridView);
+                        final FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.container, dataGridFragment).addToBackStack("DataGrid")
+                                .commit();
+                    }
+                });
+                llParentLayout.addView(gridView);
+                viewsList.put(question.getGetQuestion().getLabelName(), gridView);
+
             }
-//            else if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("dataGrid")) {
-//
-//                QuestionnaireGridView gridView = new QuestionnaireGridView(this);
-//                gridView.setQuestionData(question.getGetQuestion());
-//                gridView.getLlAdd().setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//
-//                        DataGridFragment dataGridFragment = DataGridFragment.newInstance(question.getGetQuestion());
-//                        dataGridFragment.setGridView(gridView);
-//                        final FragmentManager fragmentManager = getSupportFragmentManager();
-//                        fragmentManager.beginTransaction()
-//                                .replace(R.id.container, dataGridFragment).addToBackStack("DataGrid")
-//                                .commit();
-//                    }
-//                });
-//
-//                gridView.setiDataGridListener(new IDataGridListener() {
-//                    @Override
-//                    public void onEditClick(DataGrid gridObj, int position) {
-//
-//                        DataGridFragment dataGridFragment = DataGridFragment.newInstance(question.getGetQuestion(), gridObj, position);
-//                        dataGridFragment.setGridView(gridView);
-//                        final FragmentManager fragmentManager = getSupportFragmentManager();
-//                        fragmentManager.beginTransaction()
-//                                .replace(R.id.container, dataGridFragment).addToBackStack("DataGrid")
-//                                .commit();
-//                    }
-//                });
-//                llParentLayout.addView(gridView);
-//                viewsList.put(question.getGetQuestion().getLabelName(), gridView);
-//
-//            }
         }
     }
 

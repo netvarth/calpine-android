@@ -35,11 +35,13 @@
 
         <com.jaldeeinc.jaldee.custom.CustomTextViewBold
             android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:ellipsize="end"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/cv_back"
             android:maxLines="1"
+            android:layout_marginStart="@dimen/dimen_15dp"
             android:text=""
             android:textColor="@color/dark_blue"
             android:textSize="@dimen/dimen_18dp">
@@ -77,6 +79,7 @@
                 android:layout_marginStart="@dimen/dimen_5dp"
                 android:layout_marginTop="@dimen/dimen_5dp"
                 android:layout_marginEnd="@dimen/dimen_5dp"
+                android:visibility="visible"
                 android:layout_marginBottom="@dimen/dimen_50dp">
 
             </androidx.recyclerview.widget.RecyclerView>
@@ -90,22 +93,25 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <ImageView
-                    android:id="@+id/no_slots"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/confused">
-
-                </ImageView>
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding5"
-                    android:text="No chat history to show   \nSend your message now"
+                    android:layout_marginTop="@dimen/dimen_25dp"
+                    android:text="No Messages here yet.\nSend your message now \nor Tap on the greeting below"
                     android:textColor="@color/title_color">
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                <pl.droidsonroids.gif.GifImageView
+                    android:id="@+id/no_slots"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="@dimen/dimen_20dp"
+                    android:visibility="visible"
+                    android:src="@drawable/hi">
+
+                </pl.droidsonroids.gif.GifImageView>
 
             </LinearLayout>
 
@@ -137,7 +143,7 @@
         <EditText
             android:id="@+id/et_message"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="0.9"
@@ -146,7 +152,7 @@
             android:layout_marginEnd="@dimen/dimen_10dp"
             android:hint="Your message"
             android:importantForAutofill="no"
-            android:inputType="text"
+            android:inputType="textMultiLine"
             android:paddingLeft="14dp"
             android:textSize="14sp"
             tools:ignore="HardcodedText" />

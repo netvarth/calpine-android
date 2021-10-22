@@ -23,6 +23,7 @@
         android:gravity="start"
         android:padding="@dimen/dimen_10dp"
         android:autoLink="web|phone"
+        android:textIsSelectable="true"
         android:layout_marginEnd="@dimen/dimen_8dp"
         android:textColor="@color/dark_black">
 

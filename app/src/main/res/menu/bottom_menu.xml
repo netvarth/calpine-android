@@ -1,0 +1,36 @@
+<!-- bottom_menu.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_home"
+        android:icon="@drawable/home"
+        android:title="Home"
+        app:cnb_iconTintMode="src_in"
+        app:cnb_iconColor="@color/dark_blue"/>
+    <item
+        android:id="@+id/action_checkin"
+        android:icon="@drawable/selected_checkin"
+        android:title="MyJaldee"
+        app:cnb_iconTintMode="src_in"
+        app:cnb_iconColor="@color/dark_blue"/>
+    <item
+        android:id="@+id/action_fav"
+        android:icon="@drawable/icon_favourite"
+        android:title="Favorites"
+        app:cnb_iconTintMode="src_in"
+        app:cnb_iconColor="@color/dark_blue" />
+
+    <item
+        android:id="@+id/action_inbox"
+        android:icon="@drawable/select_inbox"
+        android:title="Inbox"
+        app:cnb_iconTintMode="src_in"
+        app:cnb_iconColor="@color/dark_blue" />
+
+    <item
+        android:id="@+id/action_profile"
+        android:icon="@drawable/icon_profile"
+        android:title="Profile"
+        app:cnb_iconTintMode="src_in"
+        app:cnb_iconColor="@color/dark_blue" />
+</menu>

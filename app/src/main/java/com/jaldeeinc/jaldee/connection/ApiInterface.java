@@ -742,4 +742,11 @@ public interface ApiInterface {
 
     @PUT("consumer/telegram/settings/{enableOrdisable}")
     Call<ResponseBody> putTelegramNotificationsettings(@Path("enableOrdisable") String enableOrdisable);
+
+    @PUT("consumer/communications/readMessages/{providerId}/{messageIds}?")
+    Call<ResponseBody> readMessages(@Path("providerId") String providerId, @Path("messageIds") String messageIds, @Query("account") String accountId);
+
+    @GET("consumer/communications/unreadCount")
+    Call<ResponseBody> getUnreadMessagesCount();
+
 }

@@ -14,6 +14,7 @@ public class UserMessage {
     @SerializedName("attachements")
     public List<FileAttachment> attachments;
     private String messageType;
+    private String messageId;
 
     public UserMessage(){
 
@@ -81,5 +82,13 @@ public class UserMessage {
 
     public void setMessageType(String messageType) {
         this.messageType = messageType;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 }

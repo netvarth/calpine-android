@@ -7,7 +7,6 @@ public class DataGrid implements Serializable {
 
     public ArrayList<GridColumnAnswerLine> dataGridColumn;
 
-
     public ArrayList<GridColumnAnswerLine> getDataGridColumn() {
         return dataGridColumn;
     }

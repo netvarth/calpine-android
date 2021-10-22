@@ -1590,6 +1590,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "uniqueID TEXT,"
               /*  + "receiverID INT,"
                 + "receiverName TEXT,"*/
+                + "unread INT,"
                 + "messageStatus TEXT,"
                 + "waitlistId TEXT,"
                 + "attachements TEXT)";
@@ -1653,6 +1654,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put("message", inbox.getMsg());
             values.put("uniqueID", inbox.getUniqueID());
             values.put("waitlistId", inbox.getWaitlistId());
+            values.put("unread", inbox.isRead() ? 0 : 1);
 
 
                /* values.put("receiverID", inbox.getReceiver().getReceiverId());
@@ -1840,17 +1842,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public ArrayList<InboxModel> getAllInboxDetail() {
         ArrayList<InboxModel> inbox = new ArrayList<InboxModel>();
+        ArrayList<InboxModel> countsList = new ArrayList<InboxModel>();
 
         SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
 
         String table = mContext.getString(R.string.db_table_inbox);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
+
         String[] columns = {"provider", "service", "id", "timestamp", "uniqueID", "message", "messageStatus", "waitlistId", "attachements"};
         String groupBy = "uniqueID";
         db.beginTransaction();
 
         Cursor cursor = db.query(table, columns, null, null, groupBy, null, null);
+
+        String query = "SELECT uniqueID, sum(unread) as unreadCount FROM " + mContext.getString(R.string.db_table_inbox) + " GROUP BY uniqueID";
+        Cursor cursor1 = db.rawQuery(query, null);
+
         if (cursor.moveToFirst()) {
             do {
                 InboxModel inboxModel = new InboxModel();
@@ -1866,6 +1874,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 // inboxModel.setRecevierName(cursor.getString(7));
                 inboxModel.setMessageStatus(cursor.getString(6));
                 inboxModel.setWaitlistId(cursor.getString(7));
+                inboxModel.setUnReadCount(0);
                 Gson gson = new Gson();
                 Type type = new TypeToken<List<FileAttachment>>() {
                 }.getType();
@@ -1875,9 +1884,33 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
+
+        if (cursor1.moveToFirst()) {
+            do {
+                InboxModel inboxModel = new InboxModel();
+
+                inboxModel.setUniqueID(cursor1.getString(0));
+                inboxModel.setUnReadCount(cursor1.getInt(1));
+
+                countsList.add(inboxModel);
+            } while (cursor1.moveToNext());
+        }
+        cursor1.close();
+
         db.setTransactionSuccessful();
         db.endTransaction();
         db.close();
+
+        for (InboxModel im  : inbox) {
+
+            for (InboxModel i : countsList) {
+
+                if (im.getUniqueID().equalsIgnoreCase(i.getUniqueID())){
+
+                    im.setUnReadCount(i.getUnReadCount());
+                }
+            }
+        }
 
         return inbox;
     }

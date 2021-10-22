@@ -192,17 +192,18 @@
 
     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-    <androidx.recyclerview.widget.RecyclerView
+
+    <com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView
         android:id="@+id/rv_queues"
         android:layout_width="match_parent"
         android:layout_height="@dimen/padding60"
         android:layout_marginTop="@dimen/dimen_10dp"
         android:visibility="visible"
-        android:scrollbars="horizontal"
         android:layout_marginStart="@dimen/dimen_15dp"
         android:layout_marginEnd="@dimen/dimen_15dp">
 
-    </androidx.recyclerview.widget.RecyclerView>
+    </com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView>
+
 
     <LinearLayout
         android:id="@+id/ll_noSlots"
@@ -234,6 +235,7 @@
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/ll_waiting"
@@ -282,7 +284,7 @@
                 android:textColor="@color/title_color">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
-            
+
             <com.jaldeeinc.jaldee.custom.CustomTextViewThin
                 android:id="@+id/tv_slash"
                 android:layout_width="wrap_content"

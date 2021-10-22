@@ -69,14 +69,17 @@ public class QGridItemAdapter extends RecyclerView.Adapter<QGridItemAdapter.View
 
                 ArrayList<String> values = new ArrayList<>();
 
-                for (JsonElement e : list) { values.add(e.toString()); }
+                for (JsonElement e : list) {
+                    values.add(e.toString());
+                }
 
-                String s = TextUtils.join(",",values);
+                String s = TextUtils.join(",", values);
                 viewHolder.tvAnswer.setText(s);
+            } else if (column.has("fileUpload")) {
+
+                JsonArray fileUploadList = column.getAsJsonArray("fileUpload");
+                viewHolder.tvAnswer.setText(fileUploadList.size() + " Attachment(s)");
             }
-//        else if (column.has("fileUpload")) {
-//            viewHolder.tvAnswer.setText(column.get("list").toString());
-//        }
 
         }
     }

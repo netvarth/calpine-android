@@ -22,6 +22,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
+import com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView;
+import com.jaldeeinc.jaldee.CustomSwipe.transform.ScaleTransformer;
 import com.jaldeeinc.jaldee.Interface.ISelectQ;
 import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
 import com.jaldeeinc.jaldee.Interface.ISelectedQueue;
@@ -58,7 +60,7 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
     private CustomTextViewThin tvSlash;
     private ImageView ivMinus, ivPlus, ivClose;
     private static CustomTextViewSemiBold tvCalenderDate;
-    private RecyclerView rvQueues;
+    private DiscreteScrollView rvQueues;
     private CardView cvConfirm;
     private LinearLayout llNoSlots, llWaiting;
     private NeomorphFrameLayout cvCalender;
@@ -323,9 +325,11 @@ public class CheckInSlotsDialog extends Dialog implements ISelectedQueue {
                                 }else if(mQueueTimeSlotList.size() > 1){
                                     mLayoutManager = new GridLayoutManager(context, 2);
                                 }
-                                rvQueues.setLayoutManager(mLayoutManager);
                                 qAdapter = new QueuesAdapter(context, mQueueTimeSlotList, iSelectedQueue);
                                 rvQueues.setAdapter(qAdapter);
+                                rvQueues.setItemTransformer(new ScaleTransformer.Builder()
+                                        .setMinScale(0.8f)
+                                        .build());
 
                             } else {
                                 showNoSlots();

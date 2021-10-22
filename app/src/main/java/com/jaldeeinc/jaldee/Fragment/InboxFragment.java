@@ -68,69 +68,12 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
         mContext = getActivity();
         mActivity = getActivity();
         Home.doubleBackToExitPressedOnce = false;
-//        if (Config.isOnline(getActivity())) {  //doing this already in onResume..No need to do it two times.
-//            ApiInboxList();
-//        }
-//        else {
-//            mDBSORTInboxList.clear();
-//            db = new DatabaseHandler(mContext);
-//            mDBSORTInboxList = db.getAllInboxDetail();
-//            if (mDBSORTInboxList.size() > 0) {
-//                tv_noinbox.setVisibility(View.GONE);
-//                mrRecylce_inboxlist.setVisibility(View.VISIBLE);
-//
-//                Collections.sort(mDBSORTInboxList, new Comparator<InboxModel>() {
-//                    @Override
-//                    public int compare(InboxModel r1, InboxModel r2) {
-//                        return new Long(r2.getTimeStamp()).compareTo(new Long(r1.getTimeStamp()));
-//                    }
-//                });
-//
-//                //  Config.logV("INBOX LIST----------------" + mDBInboxList.size());
-//
-//                Config.logV("INBOX LIST------NEW----------" + mDBSORTInboxList.size());
-//
-//                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-//                mrRecylce_inboxlist.setLayoutManager(mLayoutManager);
-//                mInboxAdapter = new InboxAdapter(mDBSORTInboxList, mContext, mActivity, mDBInboxList);
-//                mrRecylce_inboxlist.setAdapter(mInboxAdapter);
-//                mInboxAdapter.notifyDataSetChanged();
-//            } else {
-//                tv_noinbox.setVisibility(View.VISIBLE);
-//                mrRecylce_inboxlist.setVisibility(View.GONE);
-//            }
-//        }
+
 
         linearLayoutManager = new LinearLayoutManager(mContext);
         mrRecylce_inboxlist.setLayoutManager(linearLayoutManager);
         mInboxAdapter = new InboxAdapter(mDBSORTInboxList, mContext, mActivity, true);
         mrRecylce_inboxlist.setAdapter(mInboxAdapter);
-
-        if (Config.isOnline(mContext)) {
-            ApiInboxList();
-        } else {
-            mDBSORTInboxList.clear();
-            db = new DatabaseHandler(mContext);
-            mDBSORTInboxList = db.getAllInboxDetail();
-            if (mDBSORTInboxList.size() > 0) {
-
-                tv_noinbox.setVisibility(View.GONE);
-                mrRecylce_inboxlist.setVisibility(View.VISIBLE);
-                Collections.sort(mDBSORTInboxList, new Comparator<InboxModel>() {
-                    @Override
-                    public int compare(InboxModel r1, InboxModel r2) {
-                        return new Long(r2.getTimeStamp()).compareTo(new Long(r1.getTimeStamp()));
-                    }
-                });
-                linearLayoutManager = new LinearLayoutManager(mContext);
-                mrRecylce_inboxlist.setLayoutManager(linearLayoutManager);
-                mInboxAdapter = new InboxAdapter(mDBSORTInboxList, mContext, mActivity, false);
-                mrRecylce_inboxlist.setAdapter(mInboxAdapter);
-            } else {
-                tv_noinbox.setVisibility(View.VISIBLE);
-                mrRecylce_inboxlist.setVisibility(View.GONE);
-            }
-        }
 
 
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
@@ -206,9 +149,11 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
                                 //Config.logV("AccountID--------------"+mInboxList.get(i).getAccountId());
                                 inbox.setUniqueID(mInboxList.get(i).getAccountId());
                                 inbox.setAccountName(mInboxList.get(i).getAccountName());
+                                inbox.setRead(mInboxList.get(i).isRead());
                                 // mDBInboxList.add(inbox);
 
                                 db.insertInboxModel(inbox);
+//                                mDBSORTInboxList.add(inbox);
                             }
                             mDBSORTInboxList = db.getAllInboxDetail();
 
@@ -219,7 +164,6 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
                                     return Long.compare(r2.getTimeStamp(), r1.getTimeStamp());
                                 }
                             });
-
 
                             Config.logV("INBOX LIST------NEW----------" + mDBSORTInboxList.size());
                             linearLayoutManager = new LinearLayoutManager(mContext);
@@ -259,6 +203,32 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
     @Override
     public void onResume() {
         super.onResume();
+
+        if (Config.isOnline(mContext)) {
+            ApiInboxList();
+        } else {
+            mDBSORTInboxList.clear();
+            db = new DatabaseHandler(mContext);
+            mDBSORTInboxList = db.getAllInboxDetail();
+            if (mDBSORTInboxList.size() > 0) {
+
+                tv_noinbox.setVisibility(View.GONE);
+                mrRecylce_inboxlist.setVisibility(View.VISIBLE);
+                Collections.sort(mDBSORTInboxList, new Comparator<InboxModel>() {
+                    @Override
+                    public int compare(InboxModel r1, InboxModel r2) {
+                        return new Long(r2.getTimeStamp()).compareTo(new Long(r1.getTimeStamp()));
+                    }
+                });
+                linearLayoutManager = new LinearLayoutManager(mContext);
+                mrRecylce_inboxlist.setLayoutManager(linearLayoutManager);
+                mInboxAdapter = new InboxAdapter(mDBSORTInboxList, mContext, mActivity, false);
+                mrRecylce_inboxlist.setAdapter(mInboxAdapter);
+            } else {
+                tv_noinbox.setVisibility(View.VISIBLE);
+                mrRecylce_inboxlist.setVisibility(View.GONE);
+            }
+        }
 
     }
 

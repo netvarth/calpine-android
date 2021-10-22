@@ -1,6 +1,8 @@
 package com.jaldeeinc.jaldee.custom;
 
-public class KeyPairBoolData {
+import java.io.Serializable;
+
+public class KeyPairBoolData implements Serializable {
 	private long id;
 	private String name;
 	private boolean isSelected;

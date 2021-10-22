@@ -76,6 +76,9 @@ public class InboxModel {
     @SerializedName("owner")
     private InboxModel owner;
 
+    @SerializedName("read")
+    private boolean isRead;
+
     public InboxModel getReceiver() {
         return receiver;
     }
@@ -202,5 +205,22 @@ public class InboxModel {
     }
 
     String messageType;
+    int unReadCount = 0;
 
+    public int getUnReadCount() {
+        return unReadCount;
+    }
+
+    public void setUnReadCount(int unReadCount) {
+        this.unReadCount = unReadCount;
+    }
+
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
+    }
 }

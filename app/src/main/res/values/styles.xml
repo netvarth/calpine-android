@@ -11,6 +11,12 @@
 
     </style>
 
+    <style name="BottomNavigationViewTextStyle">
+        ...
+        <item name="android:fontFamily">@font/josefinsans_semibold</item>
+        ...
+    </style>
+
 
 
     <style name="ProgressBar" parent="Theme.AppCompat.Light.Dialog.Alert">

@@ -52,16 +52,49 @@
                     android:textSize="@dimen/txtsize_title_term_small" />
             </LinearLayout>
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                android:id="@+id/txt_message"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding5"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="message"
-                android:textSize="@dimen/txtsize_12"
-                android:autoLink="web"/>
+                android:layout_marginTop="@dimen/dimen_5dp">
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:id="@+id/txt_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding5"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="message"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:layout_toLeftOf="@id/rl_count"
+                    android:textSize="@dimen/txtsize_12"
+                    android:autoLink="web"/>
+
+                <RelativeLayout
+                    android:id="@+id/rl_count"
+                    android:layout_width="@dimen/dimen_20dp"
+                    android:layout_height="@dimen/dimen_20dp"
+                    android:visibility="gone"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:backgroundTint="@color/dark_blue"
+                    android:background="@drawable/rounded_green_bg">
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                        android:id="@+id/tv_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/dimen_14dp">
+
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
 
 
         </LinearLayout>

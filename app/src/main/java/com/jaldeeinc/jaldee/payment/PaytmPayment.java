@@ -242,9 +242,7 @@ public class PaytmPayment extends AppCompatActivity {
 
     public void ApiGenerateHashPaytm2(String ynwUUID, final String amount, String accountID, String purpose, final String from, boolean isJcashUsed, boolean isreditUsed, boolean isRazorPayPayment, boolean isPayTmPayment, String encId, final Context mContext, final Activity mActivity) {
 
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
@@ -295,7 +293,6 @@ public class PaytmPayment extends AppCompatActivity {
                             try {
 
                                 Map<String, String> map = new HashMap<>();
-
 
                                 map.put("MID", response_data.getMID());
                                 map.put("ORDER_ID", response_data.getORDER_ID());

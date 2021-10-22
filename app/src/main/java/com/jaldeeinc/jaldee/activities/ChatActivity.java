@@ -79,6 +79,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import pl.droidsonroids.gif.GifImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -103,6 +104,7 @@ public class ChatActivity extends AppCompatActivity {
     String path, from, from1 = "";
     private LinearLayout llNoHistory;
     private ImageView iv_attach;
+    private GifImageView ivNoSlots;
     BottomSheetDialog dialog;
     CustomTextViewSemiBold tvErrorMessage;
     TextView tv_attach, tv_camera;
@@ -126,7 +128,7 @@ public class ChatActivity extends AppCompatActivity {
         providerName = i.getStringExtra("name");
         from = i.getStringExtra("from");
         from1 = i.getStringExtra("from1");
-        fromPushNotification = i.getBooleanExtra(Constants.PUSH_NOTIFICATION,false);
+        fromPushNotification = i.getBooleanExtra(Constants.PUSH_NOTIFICATION, false);
         rvChatMessages = findViewById(R.id.rv_chatMessages);
         etMessage = findViewById(R.id.et_message);
         ivSend = findViewById(R.id.iv_submit_message);
@@ -134,6 +136,7 @@ public class ChatActivity extends AppCompatActivity {
         cvBack = findViewById(R.id.cv_back);
         llNoHistory = findViewById(R.id.ll_noHistory);
         iv_attach = findViewById(R.id.iv_attachFile);
+        ivNoSlots = findViewById(R.id.no_slots);
 
         if (providerName != null) {
             tvTitle.setText(providerName);
@@ -298,12 +301,12 @@ public class ChatActivity extends AppCompatActivity {
                                 ApiCommunicateAppointment(uuId, String.valueOf(accountID), etMessage.getText().toString());
                             } else if (from != null && from.equalsIgnoreCase(Constants.CHECKIN)) {
                                 ApiCommunicateCheckin(uuId, String.valueOf(accountID), etMessage.getText().toString());
-                            } else if (from != null && from.equalsIgnoreCase(Constants.ORDERS)){
+                            } else if (from != null && from.equalsIgnoreCase(Constants.ORDERS)) {
                                 ApiCommunicateOrders(uuId, String.valueOf(accountID), etMessage.getText().toString());
-                            } else if (from != null && from.equalsIgnoreCase(Constants.PROVIDER) || from!= null && from.equalsIgnoreCase(Constants.INBOX)){
-                                ApiCommunicate(String.valueOf(accountID),etMessage.getText().toString());
-                            } else if (from != null && from.equalsIgnoreCase(Constants.DONATION)){
-                                ApiCommunicateDonation(uuId,String.valueOf(accountID),etMessage.getText().toString());
+                            } else if (from != null && from.equalsIgnoreCase(Constants.PROVIDER) || from != null && from.equalsIgnoreCase(Constants.INBOX)) {
+                                ApiCommunicate(String.valueOf(accountID), etMessage.getText().toString());
+                            } else if (from != null && from.equalsIgnoreCase(Constants.DONATION)) {
+                                ApiCommunicateDonation(uuId, String.valueOf(accountID), etMessage.getText().toString());
                             }
                             tvErrorMessage.setVisibility(View.GONE);
                             imagePathLists = imagePathList;
@@ -337,15 +340,24 @@ public class ChatActivity extends AppCompatActivity {
                         ApiCommunicateAppointment(uuId, String.valueOf(accountID), etMessage.getText().toString());
                     } else if (from != null && from.equalsIgnoreCase(Constants.CHECKIN)) {
                         ApiCommunicateCheckin(uuId, String.valueOf(accountID), etMessage.getText().toString());
-                    } else if (from != null && from.equalsIgnoreCase(Constants.ORDERS)){
+                    } else if (from != null && from.equalsIgnoreCase(Constants.ORDERS)) {
                         ApiCommunicateOrders(uuId, String.valueOf(accountID), etMessage.getText().toString());
-                    } else if (from != null && from.equalsIgnoreCase(Constants.PROVIDER) || from!= null && from.equalsIgnoreCase(Constants.INBOX)){
-                        ApiCommunicate(String.valueOf(accountID),etMessage.getText().toString());
-                    } else if (from != null && from.equalsIgnoreCase(Constants.DONATION)){
-                        ApiCommunicateDonation(uuId,String.valueOf(accountID),etMessage.getText().toString());
+                    } else if (from != null && from.equalsIgnoreCase(Constants.PROVIDER) || from != null && from.equalsIgnoreCase(Constants.INBOX)) {
+                        ApiCommunicate(String.valueOf(accountID), etMessage.getText().toString());
+                    } else if (from != null && from.equalsIgnoreCase(Constants.DONATION)) {
+                        ApiCommunicateDonation(uuId, String.valueOf(accountID), etMessage.getText().toString());
                     }
 
                 }
+            }
+        });
+
+        ivNoSlots.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                ApiCommunicate(String.valueOf(accountID), "Hello");
+
             }
         });
 
@@ -360,11 +372,16 @@ public class ChatActivity extends AppCompatActivity {
         ApiInboxList();
     }
 
+    public String getURLForResource(int resourceId) {
+        //use BuildConfig.APPLICATION_ID instead of R.class.getPackage().getName() if both are not same
+        return Uri.parse("android.resource://" + R.class.getPackage().getName() + "/" + resourceId).toString();
+    }
+
     @Override
     public void onBackPressed() {
 
-        if (fromPushNotification){
-            Intent intent = new Intent(ChatActivity.this,Home.class);
+        if (fromPushNotification) {
+            Intent intent = new Intent(ChatActivity.this, Home.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             super.onBackPressed();
             startActivity(intent);
@@ -684,15 +701,15 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         JsonObject obj = new JsonObject();
-        obj.addProperty("msg",message);
-        obj.addProperty("messageType","BOOKINGS");
+        obj.addProperty("msg", message);
+        obj.addProperty("messageType", "BOOKINGS");
 
 //        String object = obj.toString() +";type=application/json";
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj.toString());
 
 
-        mBuilder.addFormDataPart("message","blob",body);
+        mBuilder.addFormDataPart("message", "blob", body);
 
         for (int i = 0; i < imagePathList.size(); i++) {
             try {
@@ -763,15 +780,15 @@ public class ChatActivity extends AppCompatActivity {
             message = "";
         }
         JsonObject obj = new JsonObject();
-        obj.addProperty("msg",message);
-        obj.addProperty("messageType","BOOKINGS");
+        obj.addProperty("msg", message);
+        obj.addProperty("messageType", "BOOKINGS");
 
 //        String object = obj.toString() +";type=application/json";
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj.toString());
 
 
-        mBuilder.addFormDataPart("message","blob",body);
+        mBuilder.addFormDataPart("message", "blob", body);
         for (int i = 0; i < imagePathList.size(); i++) {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
@@ -840,15 +857,15 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         JsonObject obj = new JsonObject();
-        obj.addProperty("msg",message);
-        obj.addProperty("messageType","BOOKINGS");
+        obj.addProperty("msg", message);
+        obj.addProperty("messageType", "BOOKINGS");
 
 //        String object = obj.toString() +";type=application/json";
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj.toString());
 
 
-        mBuilder.addFormDataPart("message","blob",body);
+        mBuilder.addFormDataPart("message", "blob", body);
         for (int i = 0; i < imagePathList.size(); i++) {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
@@ -919,9 +936,9 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         JsonObject obj = new JsonObject();
-        obj.addProperty("msg",message);
-        if (from.equalsIgnoreCase(Constants.PROVIDER)){
-            obj.addProperty("messageType","ENQUIRY");
+        obj.addProperty("msg", message);
+        if (from.equalsIgnoreCase(Constants.PROVIDER)) {
+            obj.addProperty("messageType", "ENQUIRY");
         } else {
             obj.addProperty("messageType", "CHAT");
         }
@@ -929,7 +946,7 @@ public class ChatActivity extends AppCompatActivity {
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj.toString());
 
 
-        mBuilder.addFormDataPart("message","blob",body);
+        mBuilder.addFormDataPart("message", "blob", body);
         for (int i = 0; i < imagePathList.size(); i++) {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
@@ -998,15 +1015,15 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         JsonObject obj = new JsonObject();
-        obj.addProperty("msg",message);
-        obj.addProperty("messageType","BOOKINGS");
+        obj.addProperty("msg", message);
+        obj.addProperty("messageType", "BOOKINGS");
 
 //        String object = obj.toString() +";type=application/json";
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj.toString());
 
 
-        mBuilder.addFormDataPart("message","blob",body);
+        mBuilder.addFormDataPart("message", "blob", body);
         for (int i = 0; i < imagePathList.size(); i++) {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
@@ -1031,7 +1048,7 @@ public class ChatActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 //        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<ResponseBody> call = apiService.donationMessage(uuId,accountID, requestBody);
+        Call<ResponseBody> call = apiService.donationMessage(uuId, accountID, requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -1098,25 +1115,25 @@ public class ChatActivity extends AppCompatActivity {
 
                                 if (accountID == Integer.parseInt(mInboxList.get(i).getAccountId())) {
 
-//                                    if (mInboxList.get(i).getWaitlistId() != null) {
-//                                    if (from1 != null && from1.equalsIgnoreCase(Constants.INBOX)) {
-//                                        inboxModels.add(mInboxList.get(i));
-//                                    } else {
-//                                        if (mInboxList.get(i).getWaitlistId().equalsIgnoreCase(uuId)) {
+                                    inboxModels.add(mInboxList.get(i));
 
-                                        inboxModels.add(mInboxList.get(i));
-//                                        }
-//                                    }
-//                                    }
                                 }
                             }
 
                             if (inboxModels.size() > 0) {
 
+                                ArrayList<String> messageIds = new ArrayList<>();
+
                                 for (InboxList inbox : inboxModels) {
 
                                     UserMessage userMessage = new UserMessage();
                                     userMessage.setMessage(inbox.getMsg());
+
+                                    if (!inbox.isRead()) {
+
+                                        messageIds.add(inbox.getMessageId());
+                                    }
+
                                     if (inbox.getOwner() != null) {
                                         userMessage.setId(inbox.getOwner().getId());
                                     }
@@ -1131,7 +1148,7 @@ public class ChatActivity extends AppCompatActivity {
                                         userMessage.setSenderName("");
                                     }
                                     userMessage.setTimeStamp(inbox.getTimeStamp());
-                                    if (inbox.getMessageType() != null){
+                                    if (inbox.getMessageType() != null) {
                                         userMessage.setMessageType(inbox.getMessageType());
                                     }
                                     userMessagesList.add(userMessage);
@@ -1141,6 +1158,9 @@ public class ChatActivity extends AppCompatActivity {
                                     }
 
                                 }
+
+                                String ids = TextUtils.join("-", messageIds);
+                                ApiReadMessages(ids);
                                 llNoHistory.setVisibility(View.GONE);
                                 rvChatMessages.setVisibility(View.VISIBLE);
                                 messageListAdapter = new MessageListAdapter(mContext, userMessagesList);
@@ -1181,6 +1201,41 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void ApiReadMessages(String ids) {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        Call<ResponseBody> call = apiService.readMessages("0",ids,String.valueOf(accountID));
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (response.code() == 200) {
+
+                    } else {
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+
+            }
+        });
 
     }
 

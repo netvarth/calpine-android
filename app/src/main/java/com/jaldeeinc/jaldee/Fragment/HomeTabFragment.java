@@ -2,12 +2,16 @@ package com.jaldeeinc.jaldee.Fragment;
 
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.fragment.app.Fragment;
@@ -16,17 +20,30 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
+import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 import com.jaldeeinc.jaldee.R;
 
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.adapter.ViewPagerAdapter;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.connection.ApiClient;
+import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
+import com.jaldeeinc.jaldee.response.JCashInfo;
 import com.jaldeeinc.jaldee.utils.AppPreferences;
 import com.jaldeeinc.jaldee.utils.CustomViewPager;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by sharmila on 9/7/18.
@@ -34,7 +51,7 @@ import com.jaldeeinc.jaldee.utils.CustomViewPager;
 
 public class HomeTabFragment extends Fragment {
 
-    BottomNavigationView bottomNavigationView;
+    ChipNavigationBar bottomNavigationView;
 
     //This is our viewPager
     private CustomViewPager viewPager;
@@ -71,9 +88,10 @@ public class HomeTabFragment extends Fragment {
         Config.logV("Current @@@@@@@@@@@@@@@@11111");
 
         //Initializing the bottomNavigationView
-        bottomNavigationView = (BottomNavigationView) rootView.findViewById(R.id.bottom_navigation);
+        bottomNavigationView = (ChipNavigationBar) rootView.findViewById(R.id.bottom_navigation);
         //  BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
-        bottomNavigationView.setItemIconTintList(null);
+
+//  //      bottomNavigationView.setItemIconTintList(null);
 
 
         Bundle bundle = this.getArguments();
@@ -105,7 +123,43 @@ public class HomeTabFragment extends Fragment {
             }
         }
 
+        bottomNavigationView.setItemSelected(R.id.action_home, true);
+
+        ApiGetUnreadMessagesCount();
+
+
         return rootView;
+    }
+
+    private void ApiGetUnreadMessagesCount() {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        Call<ResponseBody> call = apiService.getUnreadMessagesCount();
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    if (response.code() == 200) {
+
+                        if (response.body() != null) {
+                            String count = response.body().string();
+
+                            bottomNavigationView.showBadge(R.id.action_inbox,Integer.parseInt(count));
+                        }
+
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 
 
@@ -115,79 +169,77 @@ public class HomeTabFragment extends Fragment {
         //Initializing viewPager
 
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
+        bottomNavigationView.setOnItemSelectedListener(
+                new ChipNavigationBar.OnItemSelectedListener() {
                     @Override
-                    public boolean onNavigationItemSelected(MenuItem item) {
-                        switch (item.getItemId()) {
+                    public void onItemSelected(int i) {
+
+                        switch (i) {
                             case R.id.action_home:
                                 viewPager.setCurrentItem(0);
-                                item.setIcon(getResources().getDrawable(R.drawable.selected_home));
+//                                item.setIcon(getResources().getDrawable(R.drawable.selected_home));
                                 Config.logV("Page SLECTED&&&&&&&&&&&&&&&&&&&&&&");
                                 break;
                             case R.id.action_checkin:
                                 viewPager.setCurrentItem(1);
-                                item.setIcon(getResources().getDrawable(R.drawable.selected_checkin));
+//                                item.setIcon(getResources().getDrawable(R.drawable.selected_checkin));
                                 break;
                             case R.id.action_fav:
                                 viewPager.setCurrentItem(2);
-                                item.setIcon(getResources().getDrawable(R.drawable.selected_fav));
+//                                item.setIcon(getResources().getDrawable(R.drawable.selected_fav));
                                 break;
                             case R.id.action_inbox:
                                 viewPager.setCurrentItem(3);
-                                item.setIcon(getResources().getDrawable(R.drawable.select_inbox));
+//                                item.setIcon(getResources().getDrawable(R.drawable.select_inbox));
                                 break;
                             case R.id.action_profile:
                                 viewPager.setCurrentItem(4);
-                                item.setIcon(getResources().getDrawable(R.drawable.select_profile));
+//                                item.setIcon(getResources().getDrawable(R.drawable.select_profile));
                                 break;
                         }
-                        return false;
                     }
+
                 });
 
-        viewPager.setOnPageChangeListener(new CustomViewPager.OnPageChangeListener() {
+
+//        viewPager.setOnPageChangeListener(new CustomViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                if (prevMenuItem != null) {
+//                    prevMenuItem.setChecked(false);
+//                } else {
+//                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
+//                }
+//                Log.d("page", "onPageSelected: " + position);
+//
+//
+//                bottomNavigationView.getMenu().getItem(position).setChecked(true);
+//                prevMenuItem = bottomNavigationView.getMenu().getItem(position);
+//
+//
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
+
+
+        //Disable ViewPager Swipe
+
+        viewPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (prevMenuItem != null) {
-                    prevMenuItem.setChecked(false);
-                } else {
-                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
-                }
-                Log.d("page", "onPageSelected: " + position);
-
-
-                bottomNavigationView.getMenu().getItem(position).setChecked(true);
-                prevMenuItem = bottomNavigationView.getMenu().getItem(position);
-
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-
-
-       /*  //Disable ViewPager Swipe
-
-       viewPager.setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
+            public boolean onTouch(View v, MotionEvent event) {
                 return true;
             }
         });
 
-        */
 
         setupViewPager(viewPager);
     }
@@ -204,7 +256,7 @@ public class HomeTabFragment extends Fragment {
         tab1Fragment = new Tab1Fragment();
         myJaldeeFragment = new MyJaldee();
         Bundle bundle = new Bundle();
-        if (myJaldeeTab == 2 || myJaldeeTab == 1){
+        if (myJaldeeTab == 2 || myJaldeeTab == 1) {
             bundle.putInt("myJaldeeTab", myJaldeeTab);
         }
         if (message != null && !message.equalsIgnoreCase("")) {
@@ -229,11 +281,11 @@ public class HomeTabFragment extends Fragment {
         viewPager.setOffscreenPageLimit(0);
         viewPager.setAdapter(adapter);
 
-
         if (tab != null) {
             Config.logV("Tab@@@@@@@@@@@@@@@@@@@@@@@@@@@" + tab);
             if (tab.equalsIgnoreCase("1")) {
                 viewPager.setCurrentItem(1);
+                bottomNavigationView.setItemSelected(R.id.action_checkin, true);
             }
         }
 

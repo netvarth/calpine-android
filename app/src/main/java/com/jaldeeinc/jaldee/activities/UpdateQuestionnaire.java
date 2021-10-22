@@ -37,6 +37,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -75,6 +76,7 @@ import com.jaldeeinc.jaldee.custom.QuestionnaireGridView;
 import com.jaldeeinc.jaldee.model.AnswerLine;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.DataGrid;
+import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
 import com.jaldeeinc.jaldee.model.LabelPath;
 import com.jaldeeinc.jaldee.model.QuestionnaireBoolean;
 import com.jaldeeinc.jaldee.model.QuestionnaireCheckbox;
@@ -111,6 +113,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -326,7 +330,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                                 JsonObject answer = new JsonObject();
                                 JsonArray uploadList = new JsonArray();
                                 JsonObject fileInfo = new JsonObject();
-                                String filename = "";
+                                String filename = null;
                                 String mimeType = mContext.getContentResolver().getType(Uri.fromFile(new File(path)));
 
 
@@ -378,9 +382,10 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                                     String path = files.get(i).getImagePath();
                                     String mimeType = mContext.getContentResolver().getType(Uri.fromFile(new File(path)));
 
+                                    String filename = path.substring(path.lastIndexOf("/") + 1);
+
                                     if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video"))) {
 
-                                        String filename = path.substring(path.lastIndexOf("/") + 1);
 
                                         fileInfo.addProperty("mimeType", mimeType);
                                         fileInfo.addProperty("url", filename);
@@ -397,7 +402,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                                     obj.setAnswer(answer);
                                     answerLines.add(obj);
 
-                                    LabelPath lPath = new LabelPath(labelPaths.size(), question.getLabelName(), files.get(i).getImagePath(), files.get(i).getName(), mimeType);
+                                    LabelPath lPath = new LabelPath(labelPaths.size(), question.getLabelName(), files.get(i).getImagePath(), filename, mimeType);
                                     labelPaths.add(lPath);
                                 }
                             }
@@ -486,29 +491,61 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                     obj.setAnswer(answer);
                     answerLines.add(obj);
 
+                } else if (question.getFieldDataType().equalsIgnoreCase("dataGrid")) {
+
+                    QuestionnaireGridView gridFieldView = (QuestionnaireGridView) viewsList.get(question.getLabelName());
+
+                    ArrayList<DataGrid> dataGridList = new ArrayList<>();
+
+                    if (gridFieldView != null) {
+
+                        dataGridList = gridFieldView.getGridDataList();
+                    }
+
+                    AnswerLine obj = new AnswerLine();
+                    obj.setLabelName(question.getLabelName());
+
+                    JsonObject answer = new JsonObject();
+                    Gson gson = new Gson();
+                    JsonElement element = gson.toJsonTree(dataGridList);
+                    answer.add("dataGrid", element);
+
+                    obj.setAnswer(answer);
+                    answerLines.add(obj);
+
+                    for (DataGrid d : dataGridList) {
+
+                        for (GridColumnAnswerLine a : d.getDataGridColumn()) {
+
+                            JsonObject column = a.getColumn();
+
+                            if (column.has("fileUpload")) {
+
+                                JsonArray fileUploadList = column.getAsJsonArray("fileUpload");
+
+                                for (JsonElement e : fileUploadList) {
+
+                                    JsonObject fileObj = e.getAsJsonObject();
+                                    String name = fileObj.get("caption").getAsString();
+                                    String fileName = null;
+                                    if (fileObj.get("url") != null) {
+                                        fileName = fileObj.get("url").getAsString();
+                                    }
+                                    String filePath = "";
+                                    if (fileObj.get("path") != null && !fileObj.get("path").getAsString().trim().equalsIgnoreCase("")) {
+                                        filePath = fileObj.get("path").getAsString();
+                                    }
+                                    String mimeType = getMimeType(filePath);
+
+                                    LabelPath lPath = new LabelPath(labelPaths.size(), question.getLabelName(), filePath, fileName, mimeType);
+                                    labelPaths.add(lPath);
+                                }
+
+                            }
+                        }
+                    }
+
                 }
-//                else if (question.getFieldDataType().equalsIgnoreCase("dataGrid")) {
-//
-//                    QuestionnaireGridView gridFieldView = (QuestionnaireGridView) viewsList.get(question.getLabelName());
-//
-//                    ArrayList<DataGrid> dataGridList = new ArrayList<>();
-//
-//                    if (gridFieldView != null){
-//
-//                        dataGridList = gridFieldView.getGridDataList();
-//                    }
-//
-//                    AnswerLine obj = new AnswerLine();
-//                    obj.setLabelName(question.getLabelName());
-//
-//                    JsonObject answer = new JsonObject();
-//                    Gson gson = new Gson();
-//                    JsonElement element = gson.toJsonTree(dataGridList);
-//                    answer.add("dataGrid", element);
-//
-//                    obj.setAnswer(answer);
-//                    answerLines.add(obj);
-//                }
             }
 
             input.setAnswerLines(answerLines);
@@ -600,7 +637,9 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                                 for (LabelPath p : imagePathList) {
 
-                                    if (url.getUrl().contains(p.getFileName())) {
+                                    String fileName = URLEncoder.encode(p.getFileName(), StandardCharsets.UTF_8.toString());
+
+                                    if (fileName != null && fileName.trim().length() > 0 && url.getUrl().contains(fileName)) {
 
                                         p.setUrl(url.getUrl());
                                     }
@@ -734,6 +773,12 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
             urlObj.put("uid", result.getUrls().get(i).getUid());
             urlObj.put("labelName", result.getUrls().get(i).getLabelName());
+            urlObj.put("url", result.getUrls().get(i).getUrl());
+            urlObj.put("document", result.getUrls().get(i).getDocument());
+            if (result.getUrls().get(i).getColumnId() != null && !result.getUrls().get(i).getColumnId().trim().equalsIgnoreCase("")) {
+                urlObj.put("columnId", result.getUrls().get(i).getColumnId());
+                urlObj.put("gridOrder", 1);
+            }
 
             uploadArray.put(urlObj);
 
@@ -800,6 +845,13 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
             urlObj.put("uid", result.getUrls().get(i).getUid());
             urlObj.put("labelName", result.getUrls().get(i).getLabelName());
+            urlObj.put("url", result.getUrls().get(i).getUrl());
+            urlObj.put("document", result.getUrls().get(i).getDocument());
+            if (result.getUrls().get(i).getColumnId() != null && !result.getUrls().get(i).getColumnId().trim().equalsIgnoreCase("")) {
+                urlObj.put("columnId", result.getUrls().get(i).getColumnId());
+                urlObj.put("gridOrder", 1);
+            }
+
 
             uploadArray.put(urlObj);
 
@@ -1264,51 +1316,59 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 addListField(listModel);
 
+            } else if (question.getFieldDataType().equalsIgnoreCase("dataGrid")) {
+
+                QuestionnaireGridView gridView = new QuestionnaireGridView(this);
+                gridView.setQuestionData(question);
+
+                ArrayList<DataGrid> dataGridList = new ArrayList<>();
+
+                for (AnswerLine answerLine : qInput.getAnswerLines()) {
+                    if (answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
+
+                        dataGridList = answerLine.getDataGridList();
+                    }
+                }
+                gridView.setGridDataList(dataGridList);
+
+                gridView.getLlAdd().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        SharedPreference.getInstance(UpdateQuestionnaire.this).setValue(Constants.QUESTION, "");
+                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTION, new Gson().toJson(question));
+
+                        DataGridFragment dataGridFragment = DataGridFragment.newInstance("");
+                        dataGridFragment.setGridView(gridView);
+                        final FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.container, dataGridFragment).addToBackStack("DataGrid")
+                                .commit();
+                    }
+                });
+
+                gridView.setiDataGridListener(new IDataGridListener() {
+                    @Override
+                    public void onEditClick(DataGrid gridObj, int position) {
+
+                        SharedPreference.getInstance(UpdateQuestionnaire.this).setValue(Constants.QUESTION, "");
+                        SharedPreference.getInstance(mContext).setValue(Constants.ANSWER, "");
+
+                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTION, new Gson().toJson(question));
+                        SharedPreference.getInstance(mContext).setValue(Constants.ANSWER, new Gson().toJson(gridObj));
+
+                        DataGridFragment dataGridFragment = DataGridFragment.newInstance("", "", position);
+                        dataGridFragment.setGridView(gridView);
+                        final FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.container, dataGridFragment).addToBackStack("DataGrid")
+                                .commit();
+                    }
+                });
+                llParentLayout.addView(gridView);
+                viewsList.put(question.getLabelName(), gridView);
+
             }
-//            else if (question.getFieldDataType().equalsIgnoreCase("dataGrid")) {
-//
-//                QuestionnaireGridView gridView = new QuestionnaireGridView(this);
-//                gridView.setQuestionData(question);
-//
-//                ArrayList<DataGrid> dataGridList = new ArrayList<>();
-//
-//                for (AnswerLine answerLine : qInput.getAnswerLines()) {
-//                    if (answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
-//
-//                        dataGridList = answerLine.getDataGridList();
-//                    }
-//                }
-//                gridView.setGridDataList(dataGridList);
-//
-//                gridView.getLlAdd().setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//
-//                        DataGridFragment dataGridFragment = DataGridFragment.newInstance(question);
-//                        dataGridFragment.setGridView(gridView);
-//                        final FragmentManager fragmentManager = getSupportFragmentManager();
-//                        fragmentManager.beginTransaction()
-//                                .replace(R.id.container, dataGridFragment).addToBackStack("DataGrid")
-//                                .commit();
-//                    }
-//                });
-//
-//                gridView.setiDataGridListener(new IDataGridListener() {
-//                    @Override
-//                    public void onEditClick(DataGrid gridObj, int position) {
-//
-//                        DataGridFragment dataGridFragment = DataGridFragment.newInstance(question, gridObj, position);
-//                        dataGridFragment.setGridView(gridView);
-//                        final FragmentManager fragmentManager = getSupportFragmentManager();
-//                        fragmentManager.beginTransaction()
-//                                .replace(R.id.container, dataGridFragment).addToBackStack("DataGrid")
-//                                .commit();
-//                    }
-//                });
-//                llParentLayout.addView(gridView);
-//                viewsList.put(question.getLabelName(), gridView);
-//
-//            }
         }
 
     }
@@ -2560,4 +2620,10 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         startActivity(browserIntent);
     }
 
+    public static String getMimeType(String path) {
+        String extension = path.substring(path.lastIndexOf("."));
+        String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extension);
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(mimeTypeMap);
+        return mimeType;
+    }
 }

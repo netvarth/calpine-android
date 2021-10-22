@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.custom;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.LinearLayout;
 
 import androidx.fragment.app.FragmentManager;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.Interface.IDataGrid;
 import com.jaldeeinc.jaldee.Interface.IFilesInterface;
@@ -19,6 +21,7 @@ import com.jaldeeinc.jaldee.adapter.FilesAdapter;
 import com.jaldeeinc.jaldee.model.AnswerLine;
 import com.jaldeeinc.jaldee.model.DataGridModel;
 import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
+import com.jaldeeinc.jaldee.model.LabelPath;
 import com.jaldeeinc.jaldee.model.QuestionnaireCheckbox;
 import com.jaldeeinc.jaldee.response.DataGridColumns;
 import com.jaldeeinc.jaldee.response.GetQuestion;
@@ -43,7 +46,8 @@ public class QuestionnaireFileUploadView extends LinearLayout implements IFilesI
     private GetQuestion question;
     private DataGridColumns gridColumns;
     MultiSpinnerSearch filesSpinner;
-    private IFilesInterface iFilesInterface;
+    private FilesAdapter filesAdapter;
+    private IFilesInterface iFilesInterface, listener;
 
 
     public QuestionnaireFileUploadView(Context context) {
@@ -117,6 +121,11 @@ public class QuestionnaireFileUploadView extends LinearLayout implements IFilesI
 
         setQuestionName(gQuestion.getLabel());
         setMandatory(gQuestion.isMandatory() ? "*" : "");
+        if (gQuestion.getFileProperties().getFileTypes() != null) {
+            setSupportedTypes(gQuestion.getFileProperties().getFileTypes().toString());
+        } else {
+            setSupportedTypes("jpeg,png,jpg,pdf,wmv,mp4,webm,flw,mov,avi,.wmv,.mp4,.webm,.flw,.mov,.avi,mpeg,.mpeg,wav,.wav");
+        }
 
         ArrayList<KeyPairBoolData> filesList = new ArrayList<>();
 
@@ -129,11 +138,45 @@ public class QuestionnaireFileUploadView extends LinearLayout implements IFilesI
 
         }
 
+        if (gQuestion.getAnswer() != null) {
+
+            GridColumnAnswerLine answerLine = gQuestion.getAnswer();
+            JsonObject column = answerLine.getColumn();
+
+            if (column.get("fileUpload") != null) {
+
+                JsonArray fileUploadList = column.getAsJsonArray("fileUpload");
+
+                for (KeyPairBoolData k : filesList) {
+
+                    for (JsonElement f : fileUploadList) {
+
+                        JsonObject fileObj = f.getAsJsonObject();
+                        String name = fileObj.get("caption").getAsString();
+                        String type = fileObj.get("type").getAsString();
+                        String filePath = "";
+                        if (fileObj.get("path") != null && !fileObj.get("path").getAsString().trim().equalsIgnoreCase("")) {
+                            filePath = fileObj.get("path").getAsString();
+                        } else if (fileObj.get("s3path") != null && !fileObj.get("s3path").getAsString().trim().equalsIgnoreCase("")){
+                            filePath = fileObj.get("s3path").getAsString();
+                        }
+                        if (k.getName().equalsIgnoreCase(name)) {
+
+                            k.setImagePath(filePath);
+                            k.setType(type);
+                        }
+                    }
+                }
+
+            }
+        }
+
+
         // get file names and get files need to be done.
 
         rvFiles.setLayoutManager(new LinearLayoutManager(getContext()));
-        FilesAdapter filesAdapter = new FilesAdapter(filesList, getContext(), false, iFilesInterface);
-        filesAdapter.setLabelName(gQuestion.getLabel());
+        filesAdapter = new FilesAdapter(filesList, getContext(), false, iFilesInterface);
+        filesAdapter.setLabelName(gQuestion.getColumnId());
         rvFiles.setAdapter(filesAdapter);
 
         filesSpinner.setItems(filesList, new MultiSpinnerListener() {
@@ -147,6 +190,11 @@ public class QuestionnaireFileUploadView extends LinearLayout implements IFilesI
             }
         });
 
+    }
+
+    public void setListener(IFilesInterface objListener) {
+
+        listener = objListener;
     }
 
     public void setAnswerData(GetQuestion q) {
@@ -163,6 +211,14 @@ public class QuestionnaireFileUploadView extends LinearLayout implements IFilesI
 
         if (tvQuestionName != null && questionName != null) {
             tvQuestionName.setText(questionName);
+        }
+    }
+
+    public void setSupportedTypes(String supportedTypes) {
+
+
+        if (supportedTypes != null) {
+            tvSupportedTypes.setText(supportedTypes);
         }
     }
 
@@ -206,7 +262,7 @@ public class QuestionnaireFileUploadView extends LinearLayout implements IFilesI
 
         fileInfo.addProperty("index", 0);
         fileInfo.addProperty("caption", question.getFileProperties().getAllowedDocuments().get(0));
-        fileInfo.addProperty("action",  "add");
+        fileInfo.addProperty("action", "add");
         uploadList.add(fileInfo);
         answer.add("fileUpload", uploadList);
         obj.setAnswer(answer);
@@ -222,9 +278,44 @@ public class QuestionnaireFileUploadView extends LinearLayout implements IFilesI
         obj.setColumnId(gridColumns.getColumnId());
 
         JsonObject column = new JsonObject();
-        JsonArray list = new JsonArray();
+        JsonArray fileUploadList = new JsonArray();
 
-        column.add("fileUpload", list);
+        List<KeyPairBoolData> files = filesAdapter.getFiles();
+
+        for (int i = 0; i < files.size(); i++) {
+
+            if (files.get(i).getImagePath() != null && !files.get(i).getImagePath().trim().equalsIgnoreCase("")) {
+
+                if (!(files.get(i).getImagePath().contains("http://") || files.get(i).getImagePath().contains("https://"))) {
+
+                    JsonObject fileInfo = new JsonObject();
+
+                    String path = files.get(i).getImagePath();
+                    String mimeType = getMimeType(path);
+
+                    if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video"))) {
+
+                        String filename = path.substring(path.lastIndexOf("/") + 1);
+
+                        fileInfo.addProperty("mimeType", mimeType);
+                        fileInfo.addProperty("url", filename);
+
+                    } else {
+
+                        fileInfo.addProperty("index", i);
+                    }
+
+                    fileInfo.addProperty("path", path);
+
+                    fileInfo.addProperty("caption", files.get(i).getName());
+                    fileInfo.addProperty("action", "add");
+                    fileUploadList.add(fileInfo);
+
+                }
+            }
+        }
+
+        column.add("fileUpload", fileUploadList);
 
         obj.setColumn(column);
 
@@ -234,6 +325,11 @@ public class QuestionnaireFileUploadView extends LinearLayout implements IFilesI
 
     @Override
     public void onFileUploadClick(KeyPairBoolData data, String labelName) {
+
+        if (listener != null) {
+
+            listener.onFileUploadClick(data, labelName);
+        }
 
     }
 
@@ -245,8 +341,14 @@ public class QuestionnaireFileUploadView extends LinearLayout implements IFilesI
     public boolean isValid() {
 
 
-
         return true;
+    }
+
+    public static String getMimeType(String path) {
+        String extension = path.substring(path.lastIndexOf("."));
+        String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extension);
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(mimeTypeMap);
+        return mimeType;
     }
 
 

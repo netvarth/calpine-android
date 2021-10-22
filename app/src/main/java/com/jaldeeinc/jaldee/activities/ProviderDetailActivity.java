@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -1039,7 +1040,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 for (String value : mBusinessDataList.getLanguagesSpoken()) {
                     language.add(value.substring(0, 1).toUpperCase() + value.substring(1));
                 }
-                tvSpLanguagesKnown.setText(language.toString().replace("[","").replace("]",""));
+                tvSpLanguagesKnown.setText(language.toString().replace("[", "").replace("]", ""));
             } else {
                 tvSpLanguagesKnown.setVisibility(View.GONE);
                 tvLanguagesKnownHint.setVisibility(View.GONE);
@@ -2238,8 +2239,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
                         catalogs = (ArrayList<Catalog>) objects[4];
 
-                    }
-                    else {
+                    } else {
 
                         queueList = (ArrayList<QueueList>) objects[0];
                         schedulesList = (ArrayList<ScheduleList>) objects[1];
@@ -2565,7 +2565,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             @Override
                             public void onClick(View v) {
                                 if (favFlag) {
-                                    ApiRemoveFavo(mBusinessDataList.getId());
+
+                                    showAlert(mBusinessDataList.getId());
 
                                 } else {
                                     ApiAddFavo(mBusinessDataList.getId());
@@ -2585,6 +2586,41 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                 Config.logV("Fail---------------" + t.toString());
             }
         });
+    }
+
+    private void showAlert(int id) {
+
+
+        final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+        dialog.setContentView(R.layout.cancelcheckin);
+        dialog.show();
+        Button btSend = (Button) dialog.findViewById(R.id.btn_send);
+        Button btCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
+                "fonts/JosefinSans-SemiBold.ttf");
+        btSend.setTypeface(tyface1);
+        btCancel.setTypeface(tyface1);
+        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+        TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
+        txtsendmsg.setText("Are you sure about removing this provider from your favourites ?");
+        btSend.setText("YES");
+        btCancel.setText("NO");
+
+        btSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ApiRemoveFavo(id, dialog);
+
+            }
+        });
+        btCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
     }
 
     private void ApiAddFavo(int providerID) {
@@ -2627,7 +2663,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     }
 
 
-    private void ApiRemoveFavo(int providerID) {
+    private void ApiRemoveFavo(int providerID, BottomSheetDialog dialog) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
@@ -2643,6 +2679,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
+                            dialog.dismiss();
                             Toast.makeText(mContext, "Removed from favourites", Toast.LENGTH_LONG).show();
                             ApiFavList();
                         }
@@ -2821,7 +2858,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             Intent intent = new Intent(ProviderDetailActivity.this, CheckInActivity.class);
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
-            intent.putExtra("locationName",tvLocationName.getText().toString());
+            intent.putExtra("locationName", tvLocationName.getText().toString());
             intent.putExtra("providerId", providerId);
             intent.putExtra("locationId", locationId);
             intent.putExtra("checkInInfo", checkinServiceInfo);
@@ -2839,7 +2876,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             Intent intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
-            intent.putExtra("locationName",tvLocationName.getText().toString());
+            intent.putExtra("locationName", tvLocationName.getText().toString());
             intent.putExtra("locationId", locationId);
             intent.putExtra("providerId", providerId);
             intent.putExtra("fromUser", false);
@@ -2901,7 +2938,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         providerIntent.putExtra("locationName", tvLocationName.getText().toString());
         providerIntent.putExtra("isToken", isToken);
         providerIntent.putExtra("providerName", tvSpName.getText().toString());
-        providerIntent.putExtra("sector",  mBusinessDataList.getServiceSector());
+        providerIntent.putExtra("sector", mBusinessDataList.getServiceSector());
 
         startActivity(providerIntent);
 

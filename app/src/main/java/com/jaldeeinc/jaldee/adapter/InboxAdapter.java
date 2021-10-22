@@ -15,12 +15,14 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.ChatActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.DetailInboxList;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.response.InboxModel;
 
@@ -77,6 +79,18 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
 
             if (inboxList.getMsg() != null) {
                 myViewHolder.tv_message.setText(Html.fromHtml(inboxList.getMsg()));
+            } else {
+                myViewHolder.tv_message.setText("Message");
+            }
+
+            if (inboxList.getUnReadCount() > 0){
+
+                myViewHolder.rlCount.setVisibility(View.VISIBLE);
+                myViewHolder.tvCount.setText("" + inboxList.getUnReadCount());
+            } else {
+
+                myViewHolder.rlCount.setVisibility(View.GONE);
+                myViewHolder.tvCount.setText("0");
             }
 //        Log.i("kingiii",new Gson().toJson(inboxList.getAttachments()));
             myViewHolder.tv_message.setOnClickListener(new View.OnClickListener() {
@@ -113,9 +127,6 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(inboxList.getTimeStamp());
             myViewHolder.tv_date.setText(formatter.format(calendar.getTime()));
-            
-
-            // String cap_Provider = inboxList.getUserName().substring(0, 1).toUpperCase() + inboxList.getUserName().substring(1);
             myViewHolder.tv_provider.setText(inboxList.getAccountName());
             myViewHolder.linear_inbox_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -133,17 +144,6 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
                             intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
                         }
                         intent.putExtra("name", inboxList.getAccountName());
-//                        if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_wl")) {
-//                            intent.putExtra("from", Constants.CHECKIN);
-//                        } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_appt")) {
-//                            intent.putExtra("from", Constants.APPOINTMENT);
-//                        } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_odr")) {
-//                            intent.putExtra("from", Constants.ORDERS);
-//                        } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_dtn")) {
-//                            intent.putExtra("from", Constants.DONATION);
-//                        } else {
-//                            intent.putExtra("from", Constants.PROVIDER);
-//                        }
                         intent.putExtra("from", Constants.INBOX);
                         mContext.startActivity(intent);
                     }
@@ -171,6 +171,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
         TextView tv_provider, tv_date, tv_message;
         LinearLayout linear_inbox_layout;
         private CardView cvCard;
+        RelativeLayout rlCount;
+        CustomTextViewBold tvCount;
 
         public MyViewHolder(View view, boolean isLoading) {
             super(view);
@@ -179,6 +181,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
             tv_message = (TextView) view.findViewById(R.id.txt_message);
             linear_inbox_layout = (LinearLayout) view.findViewById(R.id.inbox_layout);
             cvCard = view.findViewById(R.id.card);
+            rlCount = view.findViewById(R.id.rl_count);
+            tvCount = view.findViewById(R.id.tv_count);
+
 
 
         }

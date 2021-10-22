@@ -52,7 +52,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
     @Override
     public TimeSlotsAdapter.TimeSlotsAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflate the layout file
-        View queueView = LayoutInflater.from(parent.getContext()).inflate(R.layout.timeslots, parent, false);
+        View queueView = LayoutInflater.from(parent.getContext()).inflate(R.layout.appt_time_slots, parent, false);
         TimeSlotsAdapterViewHolder gvh = new TimeSlotsAdapterViewHolder(queueView);
         return gvh;
     }

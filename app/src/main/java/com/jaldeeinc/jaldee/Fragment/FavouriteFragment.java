@@ -22,6 +22,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +61,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 
 /**
@@ -287,7 +291,36 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
     @Override
     public void onMethodDeleteFavourite(int ProviderID) {
-        ApiRemoveFavo(ProviderID);
+
+        final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+        dialog.setContentView(R.layout.cancelcheckin);
+        dialog.show();
+        Button btSend = (Button) dialog.findViewById(R.id.btn_send);
+        Button btCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
+                "fonts/JosefinSans-SemiBold.ttf");
+        btSend.setTypeface(tyface1);
+        btCancel.setTypeface(tyface1);
+        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+        TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
+        txtsendmsg.setText("Are you sure about removing this provider from your favourites ?");
+        btSend.setText("YES");
+        btCancel.setText("NO");
+
+        btSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ApiRemoveFavo(ProviderID,dialog);
+
+            }
+        });
+        btCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
 
     }
 
@@ -659,7 +692,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
     }
 
-    private void ApiRemoveFavo(int providerID) {
+    private void ApiRemoveFavo(int providerID, BottomSheetDialog dialog) {
 
 
         ApiInterface apiService =
@@ -686,6 +719,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                     if (response.code() == 200) {
 
                         if (response.body().string().equalsIgnoreCase("true")) {
+                            dialog.dismiss();
                             Toast.makeText(mContext,"Removed from favourites",Toast.LENGTH_LONG).show();
                             ApiFavList();
                         }

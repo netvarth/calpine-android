@@ -1,25 +1,50 @@
 package com.jaldeeinc.jaldee.Fragment;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Constants;
+import com.jaldeeinc.jaldee.adapter.FilesAdapter;
+import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
+import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
 import com.jaldeeinc.jaldee.custom.QuestionnaireBoolView;
 import com.jaldeeinc.jaldee.custom.QuestionnaireDateView;
 import com.jaldeeinc.jaldee.custom.QuestionnaireFileUploadView;
@@ -27,16 +52,23 @@ import com.jaldeeinc.jaldee.custom.QuestionnaireGridView;
 import com.jaldeeinc.jaldee.custom.QuestionnaireListView;
 import com.jaldeeinc.jaldee.custom.QuestionnaireNumberView;
 import com.jaldeeinc.jaldee.custom.QuestionnaireTextView;
-
 import com.jaldeeinc.jaldee.model.DataGrid;
-import com.jaldeeinc.jaldee.model.DataGridAnswerLine;
 import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
+import com.jaldeeinc.jaldee.model.QuestionnaireInput;
 import com.jaldeeinc.jaldee.response.DataGridColumns;
 import com.jaldeeinc.jaldee.response.GetQuestion;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 
-import org.json.JSONException;
+import org.apache.commons.io.IOUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,8 +86,21 @@ public class DataGridFragment extends Fragment {
     QuestionnaireGridView gridView;
     int position = -1;
 
+    private int GALLERY = 3, CAMERA = 4;
+    private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
+    String[] videoFormats = new String[]{"wmv", "mp4", "webm", "flw", "mov", "avi", ".wmv", ".mp4", ".webm", ".flw", ".mov", ".avi"};
+
     private GetQuestion mQuestion = new GetQuestion();
     private DataGrid mAnswer = new DataGrid();
+    private KeyPairBoolData fileObject = new KeyPairBoolData();
+    private String qLabelName = "";
+    private HashMap<String, View> viewsList = new HashMap<>();
+
+    private Uri mImageUri;
+    File f;
+    File file;
+    String singleFilePath = "";
+    Bitmap bitmap;
 
 
     public DataGridFragment() {
@@ -63,21 +108,21 @@ public class DataGridFragment extends Fragment {
     }
 
 
-    public static DataGridFragment newInstance(GetQuestion question) {
+    public static DataGridFragment newInstance(String question) {
         DataGridFragment fragment = new DataGridFragment();
         Bundle args = new Bundle();
-        args.putSerializable(GRID_QUESTION, question);
-        args.putSerializable(GRID_ANSWERS, null);
+        args.putString(GRID_QUESTION, question);
+        args.putString(GRID_ANSWERS, null);
         args.putInt(POSITION, -1);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static DataGridFragment newInstance(GetQuestion question, DataGrid answer, int position) {
+    public static DataGridFragment newInstance(String question, String answer, int position) {
         DataGridFragment fragment = new DataGridFragment();
         Bundle args = new Bundle();
-        args.putSerializable(GRID_QUESTION, question);
-        args.putSerializable(GRID_ANSWERS, answer);
+        args.putString(GRID_QUESTION, question);
+        args.putString(GRID_ANSWERS, answer);
         args.putInt(POSITION, position);
         fragment.setArguments(args);
         return fragment;
@@ -88,9 +133,42 @@ public class DataGridFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mQuestion = (GetQuestion) getArguments().getSerializable(GRID_QUESTION);
-            mAnswer = (DataGrid) getArguments().getSerializable(GRID_ANSWERS);
             position = getArguments().getInt(POSITION, -1);
+        }
+
+        String question = SharedPreference.getInstance(getContext()).getStringValue(Constants.QUESTION, "");
+        String answer = SharedPreference.getInstance(getContext()).getStringValue(Constants.ANSWER, null);
+
+        if (question != null && !question.trim().equalsIgnoreCase("")) {
+
+            try {
+
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                mQuestion = gson.fromJson(question, GetQuestion.class);
+
+            } catch (JsonSyntaxException e) {
+                mQuestion = new GetQuestion();
+                e.printStackTrace();
+            }
+
+        } else {
+
+            mQuestion = new GetQuestion();
+        }
+
+        if (answer != null && !answer.trim().equalsIgnoreCase("")) {
+
+            try {
+
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                mAnswer = gson.fromJson(answer, DataGrid.class);
+
+            } catch (JsonSyntaxException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+            mAnswer = null;
         }
     }
 
@@ -136,6 +214,9 @@ public class DataGridFragment extends Fragment {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    SharedPreference.getInstance(getContext()).setValue(Constants.QUESTION, "");
+                    SharedPreference.getInstance(getContext()).setValue(Constants.ANSWER, "");
+
                     getFragmentManager().popBackStack("DataGrid", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     return true;
                 }
@@ -146,6 +227,9 @@ public class DataGridFragment extends Fragment {
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                SharedPreference.getInstance(getContext()).setValue(Constants.QUESTION, "");
+                SharedPreference.getInstance(getContext()).setValue(Constants.ANSWER, "");
 
                 getFragmentManager().popBackStack("DataGrid", FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
@@ -183,7 +267,27 @@ public class DataGridFragment extends Fragment {
                     QuestionnaireFileUploadView fileUploadView = new QuestionnaireFileUploadView(getContext());
                     fileUploadView.setGridQuestionData(question);
 
+                    fileUploadView.setListener(new IFilesInterface() {
+                        @Override
+                        public void onFileUploadClick(KeyPairBoolData data, String labelName) {
+
+                            fileObject = new KeyPairBoolData();
+                            fileObject.setId(data.getId());
+                            fileObject.setName(data.getName());
+                            qLabelName = labelName;
+                            openImageOptions();
+
+                        }
+
+                        @Override
+                        public void onCloseClick(KeyPairBoolData data) {
+
+                        }
+                    });
+
+
                     llParentLayout.addView(fileUploadView);
+                    viewsList.put(question.getColumnId(), fileUploadView);
 
                 } else if (question.getDataType().equalsIgnoreCase("plainText")) {
 
@@ -191,6 +295,7 @@ public class DataGridFragment extends Fragment {
                     textView.setGridQuestionData(question);
 
                     llParentLayout.addView(textView);
+                    viewsList.put(question.getColumnId(), textView);
 
                 } else if (question.getDataType().equalsIgnoreCase("date")) {
 
@@ -198,6 +303,8 @@ public class DataGridFragment extends Fragment {
                     dateView.setGridQuestionData(question);
 
                     llParentLayout.addView(dateView);
+                    viewsList.put(question.getColumnId(), dateView);
+
 
                 } else if (question.getDataType().equalsIgnoreCase("number")) {
 
@@ -205,6 +312,8 @@ public class DataGridFragment extends Fragment {
                     numberView.setGridQuestionData(question);
 
                     llParentLayout.addView(numberView);
+                    viewsList.put(question.getColumnId(), numberView);
+
 
                 } else if (question.getDataType().equalsIgnoreCase("bool")) {
 
@@ -212,6 +321,8 @@ public class DataGridFragment extends Fragment {
                     boolView.setGridQuestionData(question);
 
                     llParentLayout.addView(boolView);
+                    viewsList.put(question.getColumnId(), boolView);
+
 
                 } else if (question.getDataType().equalsIgnoreCase("list")) {
 
@@ -219,6 +330,8 @@ public class DataGridFragment extends Fragment {
                     listView.setGridQuestionData(question);
 
                     llParentLayout.addView(listView);
+                    viewsList.put(question.getColumnId(), listView);
+
 
                 }
             }
@@ -302,11 +415,355 @@ public class DataGridFragment extends Fragment {
 
     }
 
+    private void openImageOptions() {
+
+        try {
+
+            Dialog dialog = new Dialog(getContext());
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.camera_options);
+            dialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+            DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
+            int width = (int) (metrics.widthPixels * 1);
+            dialog.getWindow().setGravity(Gravity.BOTTOM);
+            dialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout llGallery = dialog.findViewById(R.id.ll_gallery);
+            LinearLayout llCamera = dialog.findViewById(R.id.ll_camera);
+
+            llCamera.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    openCamera();
+                    dialog.dismiss();
+                }
+            });
+
+            llGallery.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    openGallery();
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openGallery() {
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{
+                            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, GALLERY);
+
+                    return;
+                } else {
+                    Intent intent = new Intent();
+                    intent.setType("*/*");
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+                }
+            } else {
+
+                Intent intent = new Intent();
+                intent.setType("*/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    private void openCamera() {
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+
+                    requestPermissions(new String[]{
+                            Manifest.permission.CAMERA}, CAMERA);
+
+                    return;
+                } else {
+                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    Intent cameraIntent = new Intent();
+                    cameraIntent.setType("image/*");
+                    cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+                    cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(intent, CAMERA);
+                }
+            } else {
+
+                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                Intent cameraIntent = new Intent();
+                cameraIntent.setType("image/*");
+                cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+                cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent, CAMERA);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == GALLERY) {
+            if (data != null) {
+                try {
+                    if (data.getData() != null) {
+                        Uri uri = data.getData();
+                        String orgFilePath = getRealPathFromURI(uri, getActivity());
+                        String filepath = "";//default fileName
 
+                        String mimeType = getActivity().getContentResolver().getType(uri);
+                        String uriString = uri.toString();
+                        String extension = "";
+                        if (uriString.contains(".")) {
+                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
+                        }
+
+                        if (mimeType != null) {
+                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
+                        }
+                        if (orgFilePath == null) {
+                            orgFilePath = getFilePathFromURI(getContext(), uri, extension);
+                        }
+
+                        View fileUploadView = viewsList.get(qLabelName);
+                        RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
+                        CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
+                        FilesAdapter filesAdapter = (FilesAdapter) rvFiles.getAdapter();
+
+                        if (tvSupportedTypes.getText().toString().contains(extension)) {
+                            fileObject.setImagePath(orgFilePath);
+                            filesAdapter.updateFileObject(fileObject);
+                        } else {
+
+                            Toast.makeText(getContext(), "File type not supported", Toast.LENGTH_SHORT).show();
+                        }
+
+
+                    } else if (data.getClipData() != null) {
+                        ClipData mClipData = data.getClipData();
+                        for (int i = 0; i < mClipData.getItemCount(); i++) {
+                            ClipData.Item item = mClipData.getItemAt(i);
+                            Uri imageUri = item.getUri();
+                            String orgFilePath = getRealPathFromURI(imageUri, getActivity());
+                            String filepath = "";//default fileName
+
+                            String mimeType = getActivity().getContentResolver().getType(imageUri);
+                            String uriString = imageUri.toString();
+                            String extension = "";
+                            if (uriString.contains(".")) {
+                                extension = uriString.substring(uriString.lastIndexOf(".") + 1);
+                            }
+
+                            if (mimeType != null) {
+                                extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
+                            }
+                            if (orgFilePath == null) {
+                                orgFilePath = getFilePathFromURI(getContext(), imageUri, extension);
+                            }
+
+                            View fileUploadView = viewsList.get(qLabelName);
+                            RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
+                            CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
+                            FilesAdapter filesAdapter = (FilesAdapter) rvFiles.getAdapter();
+
+                            if (tvSupportedTypes.getText().toString().contains(extension)) {
+                                fileObject.setImagePath(orgFilePath);
+                                filesAdapter.updateFileObject(fileObject);
+                            } else {
+                                Toast.makeText(getContext(), "File type not supported", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } else if (requestCode == CAMERA) {
+            if (data != null && data.getExtras() != null) {
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                String path = saveImage(bitmap);
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                if (path != null) {
+                    mImageUri = Uri.parse(path);
+
+                    View fileUploadView = viewsList.get(qLabelName);
+                    RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
+                    FilesAdapter filesAdapter = (FilesAdapter) rvFiles.getAdapter();
+
+                    fileObject.setImagePath(path);
+                    filesAdapter.updateFileObject(fileObject);
+                }
+                try {
+                    bytes.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+        }
     }
+
+    public String getRealPathFromURI(Uri contentURI, Activity context) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        @SuppressWarnings("deprecation")
+        Cursor cursor = context.managedQuery(contentURI, projection, null,
+                null, null);
+        if (cursor == null)
+            return null;
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        if (cursor.moveToFirst()) {
+            String s = cursor.getString(column_index);
+            // cursor.close();
+            return s;
+        }
+        // cursor.close();
+        return null;
+    }
+
+
+    public String saveImage(Bitmap myBitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        if (myBitmap != null) {
+            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        }
+        File wallpaperDirectory = new File(
+                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
+        // have the object build the directory structure, if needed.
+        if (!wallpaperDirectory.exists()) {
+            wallpaperDirectory.mkdirs();
+        }
+
+        try {
+            f = new File(wallpaperDirectory, Calendar.getInstance()
+                    .getTimeInMillis() + ".jpg");
+            f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(bytes.toByteArray());
+            MediaScannerConnection.scanFile(getActivity(),
+                    new String[]{f.getPath()},
+                    new String[]{"image/jpeg"}, null);
+            fo.close();
+            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
+
+            return f.getAbsolutePath();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return "";
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public String getPDFPath(Uri uri) {
+
+        final String id = DocumentsContract.getDocumentId(uri);
+        final Uri contentUri = ContentUris.withAppendedId(
+                Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getActivity().getContentResolver().query(contentUri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+    public String getFilePathFromURI(Uri contentUri, Context context) {
+        //copy file and send new file path
+        String fileName = getFileName(contentUri);
+        if (!TextUtils.isEmpty(fileName)) {
+            File copyFile = new File(context.getExternalCacheDir() + File.separator + fileName);
+            //copy(context, contentUri, copyFile);
+            return copyFile.getAbsolutePath();
+        }
+        return null;
+    }
+
+    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
+        //copy file and send new file path
+        String fileName = getFileNameInfo(contentUri);
+        if (!TextUtils.isEmpty(fileName)) {
+            String ext = "";
+            if (fileName.contains(".")) {
+            } else {
+                ext = "." + extension;
+            }
+            File wallpaperDirectoryFile = new File(
+                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
+            copy(context, contentUri, wallpaperDirectoryFile);
+            return wallpaperDirectoryFile.getAbsolutePath();
+        }
+        return null;
+    }
+
+    protected static String getFileNameInfo(Uri uri) {
+        if (uri == null) {
+            return null;
+        }
+        String fileName = null;
+        String path = uri.getPath();
+        int cut = path.lastIndexOf('/');
+        if (cut != -1) {
+            fileName = path.substring(cut + 1);
+        }
+        return fileName;
+    }
+
+    public static void copy(Context context, Uri srcUri, File dstFile) {
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
+            if (inputStream == null) return;
+            FileOutputStream outputStream = new FileOutputStream(dstFile);
+            IOUtils.copy(inputStream, outputStream);
+            inputStream.close();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getFileName(Uri uri) {
+        if (uri == null) return null;
+        String fileName = null;
+        String path = uri.getPath();
+        int cut = path.lastIndexOf('/');
+        if (cut != -1) {
+            fileName = path.substring(cut + 1);
+        }
+        return fileName;
+    }
+
+    public String getRealFilePath(Uri uri) {
+        String path = uri.getPath();
+        String[] pathArray = path.split(":");
+        String fileName = pathArray[pathArray.length - 1];
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
+    }
+
+
 }

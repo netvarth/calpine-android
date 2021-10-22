@@ -21,6 +21,8 @@
         android:padding="@dimen/dimen_10dp"
         android:layout_gravity="end"
         android:gravity="end"
+        android:textIsSelectable="true"
+        android:autoLink="web|phone"
         android:layout_marginEnd="@dimen/dimen_8dp"
         android:textColor="@color/white"
         >

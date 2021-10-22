@@ -8,6 +8,7 @@ public class QuestionnaireUrls implements Serializable {
     public String url;
     public String labelName;
     public String document;
+    public String columnId;
 
     public String getUid() {
         return uid;
@@ -39,5 +40,13 @@ public class QuestionnaireUrls implements Serializable {
 
     public void setDocument(String document) {
         this.document = document;
+    }
+
+    public String getColumnId() {
+        return columnId;
+    }
+
+    public void setColumnId(String columnId) {
+        this.columnId = columnId;
     }
 }

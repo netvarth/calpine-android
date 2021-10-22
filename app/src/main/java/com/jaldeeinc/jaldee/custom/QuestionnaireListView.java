@@ -240,6 +240,11 @@ public class QuestionnaireListView extends LinearLayout {
             if (checkBoxAdapter != null) {
                 checkedCount = checkBoxAdapter.getCheckedCount();
             }
+
+            if (minAnswers == 0 && maxAnswers == 0){
+
+                return true;
+            }
             if (checkedCount < minAnswers) {
 
                 tvError.setVisibility(View.VISIBLE);
