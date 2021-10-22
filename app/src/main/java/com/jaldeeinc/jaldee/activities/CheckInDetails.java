@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -212,6 +213,9 @@ public class CheckInDetails extends AppCompatActivity {
     @BindView(R.id.ll_phoneNumber)
     LinearLayout llPhoneNumber;
 
+    @BindView(R.id.scrollView)
+    ScrollView scrollView;
+
     boolean firstTimeRating = false;
     boolean isTvViewMore = false;
 
@@ -228,7 +232,7 @@ public class CheckInDetails extends AppCompatActivity {
     private String uuid;
     private PrescriptionDialog prescriptionDialog;
     private Bookings bookings = new Bookings();
-    String ynwUUid, accountId, countryCode;
+    String ynwUUid, accountId, countryCode, click_action;
     private boolean fromPushNotification = false;
     String uid;
     int id;
@@ -249,6 +253,7 @@ public class CheckInDetails extends AppCompatActivity {
             ynwUUid = i.getStringExtra("uuid");
             accountId = i.getStringExtra("account");
             fromPushNotification = i.getBooleanExtra(Constants.PUSH_NOTIFICATION, false);
+            click_action = i.getStringExtra("click_action");
         }
 
         cvBack.setOnClickListener(new View.OnClickListener() {
@@ -353,18 +358,7 @@ public class CheckInDetails extends AppCompatActivity {
         tvViewMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (llMoreDetails.getVisibility() != View.VISIBLE) {
-
-                    llMoreDetails.setVisibility(View.VISIBLE);
-                    tvViewMore.setText("View Less");
-                    isTvViewMore = true;
-
-                } else {
-
-                    llMoreDetails.setVisibility(View.GONE);
-                    tvViewMore.setText("View More");
-                    isTvViewMore = false;
-                }
+                ViewMoreActions();
             }
         });
 
@@ -453,6 +447,10 @@ public class CheckInDetails extends AppCompatActivity {
 
                 // this gets called when activity is launched from push notification
                 if (ynwUUid != null) {
+                    if(click_action != null && click_action != "" && click_action.equalsIgnoreCase("CONSUMER_SHARE_PRESCRIPTION")) {
+                        ViewMoreActions();
+                        scrollView.scrollTo(0, scrollView.getBottom());
+                    }
                     getBookingDetails(ynwUUid, Integer.parseInt(accountId));
                 }
             }
@@ -990,7 +988,20 @@ public class CheckInDetails extends AppCompatActivity {
     BottomSheetDialog dialog;
     float rate = 0;
     String comment = "";
+    private void ViewMoreActions(){
+        if (llMoreDetails.getVisibility() != View.VISIBLE) {
 
+            llMoreDetails.setVisibility(View.VISIBLE);
+            tvViewMore.setText("View Less");
+            isTvViewMore = true;
+
+        } else {
+
+            llMoreDetails.setVisibility(View.GONE);
+            tvViewMore.setText("View More");
+            isTvViewMore = false;
+        }
+    }
     private void ApiRating(final String accountID, final String UUID) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);

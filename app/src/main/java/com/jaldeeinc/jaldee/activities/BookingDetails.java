@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -201,7 +202,12 @@ public class BookingDetails extends AppCompatActivity {
     @BindView(R.id.ll_phoneNumber)
     LinearLayout llPhoneNumber;
 
+    @BindView(R.id.scrollView)
+    ScrollView scrollView;
+
     boolean firstTimeRating = false;
+    boolean isTvViewMore = false;
+
     TabLayout tabLayout;
     ViewPager viewPager;
     private Context mContext;
@@ -217,7 +223,7 @@ public class BookingDetails extends AppCompatActivity {
     private MeetingInfo meetingInfo;
     private String uuid;
     private PrescriptionDialog prescriptionDialog;
-    String ynwUUid, accountId, countryCode;
+    String ynwUUid, accountId, countryCode, click_action;
     private boolean fromPushNotification = false;
     String uid;
     int id;
@@ -242,7 +248,7 @@ public class BookingDetails extends AppCompatActivity {
             ynwUUid = i.getStringExtra("uuid");
             accountId = i.getStringExtra("account");
             fromPushNotification = i.getBooleanExtra(Constants.PUSH_NOTIFICATION, false);
-
+            click_action = i.getStringExtra("click_action");
         }
 
         cvBack.setOnClickListener(new View.OnClickListener() {
@@ -342,15 +348,7 @@ public class BookingDetails extends AppCompatActivity {
         tvViewMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (llMoreDetails.getVisibility() != View.VISIBLE) {
-
-                    llMoreDetails.setVisibility(View.VISIBLE);
-                    tvViewMore.setText("View Less");
-                } else {
-
-                    llMoreDetails.setVisibility(View.GONE);
-                    tvViewMore.setText("View More");
-                }
+                ViewMoreActions();
             }
         });
 
@@ -438,6 +436,10 @@ public class BookingDetails extends AppCompatActivity {
 
             // this gets called when activity is launched from push notification
             if (ynwUUid != null) {
+                if(click_action != null && click_action != "" && click_action.equalsIgnoreCase("CONSUMER_SHARE_PRESCRIPTION")) {
+                    ViewMoreActions();
+                    scrollView.scrollTo(0, scrollView.getBottom());
+                }
                 getAppointmentDetails(ynwUUid, Integer.parseInt(accountId));
             }
         }
@@ -595,8 +597,11 @@ public class BookingDetails extends AppCompatActivity {
                 }
 
                 tvViewMore.setVisibility(View.VISIBLE);
-                llMoreDetails.setVisibility(View.GONE);
-
+                if (isTvViewMore) {
+                    llMoreDetails.setVisibility(View.VISIBLE);
+                } else {
+                    llMoreDetails.setVisibility(View.GONE);
+                }
                 if (appointmentInfo.getService() != null) {
                     tvServiceName.setText(appointmentInfo.getService().getName());
 
@@ -1049,7 +1054,21 @@ public class BookingDetails extends AppCompatActivity {
             }
         });
     }
+    private void ViewMoreActions(){
 
+        if (llMoreDetails.getVisibility() != View.VISIBLE) {
+
+            llMoreDetails.setVisibility(View.VISIBLE);
+            tvViewMore.setText("View Less");
+            isTvViewMore = true;
+
+        } else {
+
+            llMoreDetails.setVisibility(View.GONE);
+            tvViewMore.setText("View More");
+            isTvViewMore = false;
+        }
+    }
     BottomSheetDialog dialog;
     float rate = 0;
     String comment = "";

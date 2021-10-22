@@ -1,16 +1,10 @@
 package com.jaldeeinc.jaldee.model;
 
-import com.google.gson.*;
-import com.google.gson.JsonObject;
-import com.jaldeeinc.jaldee.response.AdvancePaymentDetails;
 import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.ServiceInfo;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,6 +12,7 @@ import java.util.ArrayList;
 public class BookingModel implements Serializable {
 
     public String jsonObject;
+    public ArrayList<ShoppingListModel> imagePathList;
     public ArrayList<String> imagesList;
     public String message;
     public int accountId;
@@ -50,6 +45,14 @@ public class BookingModel implements Serializable {
     public double eligibleJcashAmt;
     public float amountRequiredNow;
     public float netTotal;
+
+    public void setImagePathList(ArrayList<ShoppingListModel> imagePathList) {
+        this.imagePathList = imagePathList;
+    }
+
+    public ArrayList<ShoppingListModel> getImagePathList() {
+        return imagePathList;
+    }
 
     public void setWhtsappCountryCode(String whtsappCountryCode) {
         this.whtsappCountryCode = whtsappCountryCode;

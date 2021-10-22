@@ -21,7 +21,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -31,18 +33,15 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
-import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -55,39 +54,39 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.Interface.ICpn;
+import com.jaldeeinc.jaldee.Interface.IDeleteImagesInterface;
 import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.Interface.IMobileSubmit;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
+import com.jaldeeinc.jaldee.Interface.ISaveNotes;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.Interface.ISlotInfo;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
-import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
+import com.jaldeeinc.jaldee.adapter.ImagePreviewAdapter;
 import com.jaldeeinc.jaldee.adapter.MultipleFamilyMemberAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.AddNotes;
+import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomToolTip;
 import com.jaldeeinc.jaldee.custom.CustomerInformationDialog;
-import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.custom.FamilyMemberDialog;
-import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
 import com.jaldeeinc.jaldee.custom.SlotsDialog;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
+import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
-import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.AdvancePaymentDetails;
-import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
@@ -99,8 +98,6 @@ import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.response.ServiceInfo;
-import com.jaldeeinc.jaldee.response.SlotsData;
-import com.jaldeeinc.jaldee.response.WalletCheckSumModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -147,7 +144,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AppointmentActivity extends AppCompatActivity implements PaymentResultWithDataListener, ISlotInfo, IMailSubmit, IPaymentResponse, IMobileSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected, ICpn {
+public class AppointmentActivity extends AppCompatActivity implements PaymentResultWithDataListener, ISlotInfo, IMailSubmit, IPaymentResponse, IMobileSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected, ICpn, IDeleteImagesInterface, ISaveNotes {
 
     @BindView(R.id.tv_providerName)
     CustomTextViewBold tvProviderName;
@@ -310,8 +307,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
-    ArrayList<String> imagePathList = new ArrayList<>();
-    ArrayList<String> imagePathLists = new ArrayList<>();
+    ArrayList<ShoppingListModel> imagePathList = new ArrayList<>();
+    ImagePreviewAdapter imagePreviewAdapter;
+
     private Uri mImageUri;
     File f;
     String path;
@@ -337,7 +335,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     private CustomerInformationDialog customerInformationDialog;
     private ICpn iCpn;
     boolean virtualService;
-
+    private IDeleteImagesInterface iDeleteImagesInterface;
+    private CustomNotes customNotes;
+    private ISaveNotes iSaveNotes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -352,10 +352,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         paymentResponse = this;
         iSendMessage = this;
         iFamilyMemberDetails = this;
+        iDeleteImagesInterface = (IDeleteImagesInterface) this;
+        iSaveNotes = this;
 
         SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, "");
         SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, "");
-
 
         // getting necessary details from intent
         Intent intent = getIntent();
@@ -395,7 +396,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         } else {
             tvAddNotes.setText("Add Note");
         }
-
 
         if (serviceInfo != null) {
             String name = serviceInfo.getServiceName();
@@ -439,7 +439,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
 
             if (serviceInfo.getServiceType() != null && serviceInfo.getServiceType().equalsIgnoreCase("virtualService")) {
 
@@ -530,7 +529,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         ApiGetProviderDetails(uniqueId);
         ApiGetProfileDetail();
 
-
         // click actions
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -612,7 +610,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         });
 
@@ -624,7 +621,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 rlCoupon.setVisibility(View.VISIBLE);
             }
         });
-
 
         tvApply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -710,7 +706,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             DynamicToast.make(AppointmentActivity.this, "Email id is mandatory", AppCompatResources.getDrawable(
                                     AppointmentActivity.this, R.drawable.ic_info_black),
                                     ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
-
                         }
                     } else {
 
@@ -728,7 +723,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                 DynamicToast.make(AppointmentActivity.this, serviceInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
                                         AppointmentActivity.this, R.drawable.ic_info_black),
                                         ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
-
                             }
                         } else {
 
@@ -781,13 +775,12 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
 
                 if (imagePathList != null && imagePathList.size() > 0) {
-                    DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
-                    RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(v.getContext(), 3);
+                    imagePreviewAdapter = new ImagePreviewAdapter(imagePathList, mContext, true, iDeleteImagesInterface);
+                    RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 2);
                     recycle_image_attachment.setLayoutManager(mLayoutManager);
-                    recycle_image_attachment.setAdapter(mDetailFileAdapter);
-                    mDetailFileAdapter.notifyDataSetChanged();
+                    recycle_image_attachment.setAdapter(imagePreviewAdapter);
+                    imagePreviewAdapter.notifyDataSetChanged();
                 }
-
 
                 btn_send.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -796,48 +789,40 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         if (imagePathList != null && imagePathList.size() > 0) {
 
                             tvErrorMessage.setVisibility(View.GONE);
-                            imagePathLists = imagePathList;
+                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
                             dialog.dismiss();
                         } else {
+                            tvAttachFileSize.setText("Attach File");
                             tvErrorMessage.setVisibility(View.VISIBLE);
                         }
-
                     }
                 });
 
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (imagePathList != null && imagePathLists != null) {
-                            imagePathLists.clear();
+                        if (imagePathList != null) {
                             imagePathList.clear();
+                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
+                        } else {
+                            tvAttachFileSize.setText("Attach File");
                         }
                         dialog.dismiss();
                     }
                 });
 
-
                 requestMultiplePermissions();
                 tv_attach.setVisibility(View.VISIBLE);
                 tv_camera.setVisibility(View.VISIBLE);
 
-
                 tv_attach.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (imagePathLists.size() > 0) {
-                            DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathLists, mContext);
-                            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(v.getContext(), 3);
-                            recycle_image_attachment.setLayoutManager(mLayoutManager);
-                            recycle_image_attachment.setAdapter(mDetailFileAdapter);
-                            mDetailFileAdapter.notifyDataSetChanged();
-                        }
                         try {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                     requestPermissions(new String[]{
                                             Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
-
                                     return;
                                 } else {
                                     Intent intent = new Intent();
@@ -858,9 +843,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             ex.printStackTrace();
                         }
                     }
-
                 });
-
 //
                 tv_camera.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -869,10 +852,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 
-
-                                    requestPermissions(new String[]{
-                                            Manifest.permission.CAMERA}, CAMERA);
-
+                                    requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA);
                                     return;
                                 } else {
                                     Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -895,35 +875,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             ex.printStackTrace();
                         }
                     }
-
-                });
-
-                btn_send.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        if (imagePathList != null && imagePathList.size() > 0) {
-                            tvErrorMessage.setVisibility(View.GONE);
-                            imagePathLists = imagePathList;
-                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
-                            dialog.dismiss();
-                        } else {
-                            tvAttachFileSize.setText("Attach File");
-                            tvErrorMessage.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
-
-                btn_cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (imagePathList.size() > 0) {
-                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
-                        } else {
-                            tvAttachFileSize.setText("Attach File");
-                        }
-                        dialog.dismiss();
-                    }
                 });
             }
         });
@@ -938,10 +889,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 startActivity(iCoupons);
             }
         });
-
-
     }
-
 
     private void ApiGetProviderDetails(int uniqueId) {
 
@@ -988,9 +936,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     Config.closeDialog(AppointmentActivity.this, mDialog);
             }
         });
-
     }
-
 
     private void ApiSearchViewTerminology(String termin) {
 
@@ -999,11 +945,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             if (termin != null) {
                 mSearchTerminology = new Gson().fromJson(termin, SearchTerminology.class);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void ApiGetProfileDetail() {
@@ -1066,7 +1010,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 }
             }
 
-
             @Override
             public void onFailure(Call<ProfileModel> call, Throwable t) {
                 // Log error here since request failed
@@ -1075,8 +1018,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     Config.closeDialog(getParent(), mDialog);
             }
         });
-
-
     }
 
     private void ApiSearchViewSetting(String setting) {
@@ -1092,37 +1033,27 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void apiSearchViewDetail(SearchViewDetail profile) {
 
         try {
-
             mBusinessDataList = profile;
-
             if (mBusinessDataList != null) {
-
                 sector = mBusinessDataList.getServiceSector().getDomain();
                 subsector = mBusinessDataList.getServiceSubSector().getSubDomain();
-
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 
     SectorCheckin checkin_sector = null;
     int partySize = 0;
     boolean enableparty = false;
     boolean multiplemem = false;
 
-
     private void ApiJaldeegetS3Coupons(String s3Coupons) {
-
 
         try {
 
@@ -1136,16 +1067,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 } else {
                     tvApplyCode.setVisibility(View.GONE);
                     llCoupons.setVisibility(View.GONE);
-
                 }
-
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     private void ApiJaldeegetProviderCoupons(String providerCoupons) {
@@ -1247,7 +1173,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     } else {
                         modeOfCalling = "Invalid WhatsApp number";
                     }
-                } else if(etVirtualNumber.getText().toString().trim().length() < 7 || (virtual_NmbrCCPicker.getSelectedCountryCode().equalsIgnoreCase("91") && etVirtualNumber.getText().toString().trim().length() != 10  )){
+                } else if (etVirtualNumber.getText().toString().trim().length() < 7 || (virtual_NmbrCCPicker.getSelectedCountryCode().equalsIgnoreCase("91") && etVirtualNumber.getText().toString().trim().length() != 10)) {
                     modeOfCalling = "Invalid Contact number";
                 }
                 DynamicToast.make(AppointmentActivity.this, modeOfCalling, AppCompatResources.getDrawable(
@@ -1275,15 +1201,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 for (int i = 0; i < MultiplefamilyList.size(); i++) {
 
                     waitobj1.put("id", MultiplefamilyList.get(i).getId());
-
-
                     waitobj2.put("firstName", MultiplefamilyList.get(i).getFirstName());
-
-
                     waitobj3.put("lastName", MultiplefamilyList.get(i).getLastName());
-
                     waitobj4.put("apptTime", slotTime);
-
 
                     waitlistArray.put(waitobj1);
                     waitlistArray.put(waitobj2);
@@ -1379,7 +1299,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                         BookingModel model = new BookingModel();
                         model.setJsonObject(queueobj.toString());
-                        model.setImagesList(imagePathList);
+                        model.setImagePathList(imagePathList);
                         model.setMessage(txt_addnote);
                         model.setAccountId(accountId);
                         model.setServiceInfo(serviceInfo);
@@ -1452,7 +1372,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         for (int i = 0; i < imagePathList.size(); i++) {
 
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getImagePath())));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1460,7 +1380,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 path = saveImage(bitmap);
                 file = new File(path);
             } else {
-                file = new File(imagePathList.get(i));
+                file = new File(imagePathList.get(i).getImagePath());
             }
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
@@ -2047,6 +1967,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
             showAlert("Payment Cancelled");
         }
+
         if (requestCode == GALLERY) {
             if (data != null) {
                 try {
@@ -2074,7 +1995,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             return;
                         }
 
-                        imagePathList.add(orgFilePath);
+                        ShoppingListModel model = new ShoppingListModel();
+                        model.setImagePath(orgFilePath);
+                        imagePathList.add(model);
 
                         if (imagePathList.size() > 0) {
                             tvErrorMessage.setVisibility(View.GONE);
@@ -2082,11 +2005,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             tvErrorMessage.setVisibility(View.VISIBLE);
                         }
 
-                        DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
-                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+                        imagePreviewAdapter = new ImagePreviewAdapter(imagePathList, mContext, true, iDeleteImagesInterface);
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 2);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
-                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
-                        mDetailFileAdapter.notifyDataSetChanged();
+                        recycle_image_attachment.setAdapter(imagePreviewAdapter);
+                        imagePreviewAdapter.notifyDataSetChanged();
 
                     } else if (data.getClipData() != null) {
                         ClipData mClipData = data.getClipData();
@@ -2114,22 +2037,22 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                 Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
                                 return;
                             }
-                            imagePathList.add(orgFilePath);
 
+                            ShoppingListModel model = new ShoppingListModel();
+                            model.setImagePath(orgFilePath);
+                            imagePathList.add(model);
 
                             if (imagePathList.size() > 0) {
                                 tvErrorMessage.setVisibility(View.GONE);
                             } else {
                                 tvErrorMessage.setVisibility(View.VISIBLE);
                             }
-
-
                         }
-                        DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
-                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+                        imagePreviewAdapter = new ImagePreviewAdapter(imagePathList, mContext, true, iDeleteImagesInterface);
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 2);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
-                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
-                        mDetailFileAdapter.notifyDataSetChanged();
+                        recycle_image_attachment.setAdapter(imagePreviewAdapter);
+                        imagePreviewAdapter.notifyDataSetChanged();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2147,7 +2070,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 //            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
                 if (path != null) {
                     mImageUri = Uri.parse(path);
-                    imagePathList.add(mImageUri.toString());
+                    ShoppingListModel model = new ShoppingListModel();
+                    model.setImagePath(mImageUri.toString());
+                    imagePathList.add(model);
                     if (imagePathList.size() > 0) {
                         tvErrorMessage.setVisibility(View.GONE);
                     } else {
@@ -2159,11 +2084,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
-                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+                imagePreviewAdapter = new ImagePreviewAdapter(imagePathList, mContext, true, iDeleteImagesInterface);
+                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 2);
                 recycle_image_attachment.setLayoutManager(mLayoutManager);
-                recycle_image_attachment.setAdapter(mDetailFileAdapter);
-                mDetailFileAdapter.notifyDataSetChanged();
+                recycle_image_attachment.setAdapter(imagePreviewAdapter);
+                imagePreviewAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -2420,5 +2345,47 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             }
         });
         return advancePaymentDetails;
+    }
+
+    @Override
+    public void delete(int position, String imagePath) {
+        imagePathList.remove(position);
+        imagePreviewAdapter.notifyDataSetChanged();
+
+        if (imagePathList != null && imagePathList.size() > 0) {
+
+            for (int i = 0; i < imagePathList.size(); i++) {
+
+                if (imagePathList.get(i).getImagePath().equalsIgnoreCase(imagePath)) {
+
+                    imagePathList.remove(i);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void addedNotes(int position) {
+        showNotesDialog(position);
+    }
+
+    private void showNotesDialog(int position) {
+
+        customNotes = new CustomNotes(mContext, position, iSaveNotes, imagePathList.get(position).getCaption());
+        customNotes.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+        customNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        customNotes.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        customNotes.setCancelable(false);
+        customNotes.show();
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels * 1);
+        customNotes.getWindow().setGravity(Gravity.BOTTOM);
+        customNotes.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
+    @Override
+    public void saveMessage(String caption, int position) {
+        imagePathList.get(position).setCaption(caption);
+        imagePreviewAdapter.notifyDataSetChanged();
     }
 }

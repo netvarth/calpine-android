@@ -1,14 +1,11 @@
 package com.jaldeeinc.jaldee.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,10 +16,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.common.Config;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -38,24 +35,19 @@ public class WebViewActivity extends AppCompatActivity {
     WebView browser;
     String url = null;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
-
 
         Intent intent = getIntent();
         url = intent.getStringExtra("URL");
 
         requestMultiplePermissions();
 
-
-
         browser = (WebView) findViewById(R.id.webview);
-
         browser.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+
         WebSettings settings = browser.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setLoadWithOverviewMode(true);
@@ -67,7 +59,17 @@ public class WebViewActivity extends AppCompatActivity {
         settings.setDomStorageEnabled(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
 
-        browser.setWebViewClient(new WebViewClient());
+        Dialog mDialog = Config.getProgressDialog(WebViewActivity.this, "");
+        mDialog.show();
+
+        browser.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
         browser.setWebChromeClient(new WebChromeClient() {
             // Grant permissions for cam
             @Override
@@ -84,14 +86,8 @@ public class WebViewActivity extends AppCompatActivity {
                     }
                 });
             }
-
-
         });
-
         browser.loadUrl(url);
-
-
-
     }
 
     private class MyBrowser extends WebViewClient {
@@ -107,7 +103,7 @@ public class WebViewActivity extends AppCompatActivity {
                 .withPermissions(
                         Manifest.permission.RECORD_AUDIO,
                         Manifest.permission.CAMERA,
-                Manifest.permission.MODIFY_AUDIO_SETTINGS)
+                        Manifest.permission.MODIFY_AUDIO_SETTINGS)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
@@ -155,7 +151,7 @@ public class WebViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                Intent intent = new Intent(WebViewActivity.this,Home.class);
+                Intent intent = new Intent(WebViewActivity.this, Home.class);
                 startActivity(intent);
                 finish();
             }

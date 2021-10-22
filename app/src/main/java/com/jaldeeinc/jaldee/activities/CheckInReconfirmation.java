@@ -3,7 +3,6 @@ package com.jaldeeinc.jaldee.activities;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -26,12 +25,9 @@ import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -41,7 +37,6 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.ServicesAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -53,11 +48,10 @@ import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.LabelPath;
 import com.jaldeeinc.jaldee.model.QuestionnaireInput;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
+import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
-import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
-import com.jaldeeinc.jaldee.response.AdvancePaymentDetails;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.QuestionnaireUrls;
 import com.jaldeeinc.jaldee.response.SearchService;
@@ -209,7 +203,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
     BottomSheetDialog dialog;
     public IPaymentResponse iPaymentResponse;
     ArrayList<LabelPath> imagePathList = new ArrayList<>();
-    ArrayList<String> bookingImagesList = new ArrayList<>();
+    ArrayList<ShoppingListModel> attachedImagePathList = new ArrayList<>();
     ActiveCheckIn activeAppointment;
 
     //files related
@@ -383,11 +377,10 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                 tvPhoneNumber.setText(bookingModel.getCountryCode() + " " + bookingModel.getPhoneNumber());
             }
 
-            if (bookingModel.getImagesList() != null && bookingModel.getImagesList().size() > 0) {
-
-                bookingImagesList = bookingModel.getImagesList();
+            if (bookingModel.getImagePathList() != null && bookingModel.getImagePathList().size() > 0) {
+                attachedImagePathList = bookingModel.getImagePathList();
             } else {
-                bookingImagesList = new ArrayList<>();
+                attachedImagePathList = new ArrayList<>();
             }
 
             String imagesString = SharedPreference.getInstance(mContext).getStringValue(Constants.QIMAGES, "");
@@ -681,7 +674,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
         });
     }
 
-    private void getConfirmationId(int id, String txt_addnote) {
+        private void getConfirmationId(int id, String txt_addnote) {
 
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -729,7 +722,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                                 }
                             } else {
 
-                                if (bookingImagesList.size() > 0) {
+                                if (attachedImagePathList.size() > 0) {
                                     ApiCommunicateCheckin(value, String.valueOf(bookingModel.getAccountId()), txt_addnote, dialog);
                                 }
 
@@ -814,7 +807,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
                         if (!respnseWCSumModel.isGateWayPaymentNeeded()) {
 
-                            if (bookingImagesList.size() > 0) {
+                            if (attachedImagePathList.size() > 0) {
                                 ApiCommunicateCheckin(value, accountID, txt_addnote, dialog);
                             }
                             getConfirmationDetails(Integer.parseInt(accountID));
@@ -1080,15 +1073,16 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
     private void ApiCommunicateCheckin(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         MediaType type;
+        JSONObject captions = new JSONObject();
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
-        for (int i = 0; i < bookingImagesList.size(); i++) {
+        for (int i = 0; i < attachedImagePathList.size(); i++) {
 
             String extension = "";
 
-            if (bookingImagesList.get(i).contains(".")) {
-                extension = bookingImagesList.get(i).substring(bookingImagesList.get(i).lastIndexOf(".") + 1);
+            if (attachedImagePathList.get(i).getImagePath().contains(".")) {
+                extension = attachedImagePathList.get(i).getImagePath().substring(attachedImagePathList.get(i).getImagePath().lastIndexOf(".") + 1);
             }
             if (extension.equalsIgnoreCase("pdf")) {
                 type = MediaType.parse("application/pdf");
@@ -1101,7 +1095,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
             }
 
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(bookingImagesList.get(i))));
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(attachedImagePathList.get(i).getImagePath())));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1109,10 +1103,19 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                 path = saveImage(bitmap);
                 file = new File(path);
             } else {
-                file = new File(bookingImagesList.get(i));
+                file = new File(attachedImagePathList.get(i).getImagePath());
             }
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+            try {
+                captions.put(String.valueOf(i), attachedImagePathList.get(i).getCaption());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
+
+        RequestBody body1 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), String.valueOf(captions));
+        mBuilder.addFormDataPart("captions", "blob", body1);
+
         RequestBody requestBody = mBuilder.build();
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
@@ -1132,7 +1135,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         //Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();///////
-                        bookingImagesList.clear();
+                        attachedImagePathList.clear();
                         dialog.dismiss();
                     } else {
                         if (response.code() == 422) {
@@ -1413,7 +1416,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
     }
 
     private void paymentFinished() {
-        if (bookingImagesList != null && bookingImagesList.size() > 0) {
+        if (attachedImagePathList != null && attachedImagePathList.size() > 0) {
             ApiCommunicateCheckin(value, String.valueOf(bookingModel.getAccountId()), bookingModel.getMessage(), dialog);
         }
         String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
@@ -1450,7 +1453,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
         }
     }
 
-        public void updateUI(SearchService checkInInfo, double eligibleJcashAmt) {
+    public void updateUI(SearchService checkInInfo, double eligibleJcashAmt) {
         if (bookingModel.getNetTotal() != 0) {
             LservicePrepay.setVisibility(View.VISIBLE);
             LserviceAmount.setVisibility(View.VISIBLE);

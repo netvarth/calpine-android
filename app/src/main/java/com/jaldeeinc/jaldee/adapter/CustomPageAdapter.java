@@ -11,20 +11,19 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.webkit.MimeTypeMap;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.widgets.TouchImageView;
 import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -79,21 +78,27 @@ public class CustomPageAdapter extends PagerAdapter {
         }
 
         final String finalUrl = url;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension.equalsIgnoreCase("pdf")) {
 
-        PicassoTrustAll.getInstance(mContext).load(url).fit().centerInside().into(imageView, new Callback() {
-            @Override
-            public void onSuccess() {
+            Glide.with(mContext).load(R.drawable.pdf).fitCenter().into(imageView);
 
-            }
+        } else {
+            PicassoTrustAll.getInstance(mContext).load(url).fit().centerInside().into(imageView, new Callback() {
+                @Override
+                public void onSuccess() {
 
-            @Override
-            public void onError() {
+                }
 
-                PicassoTrustAll.getInstance(mContext).load(finalUrl).placeholder(R.drawable.icon_noimage).into(imageView);
+                @Override
+                public void onError() {
 
-            }
+                    PicassoTrustAll.getInstance(mContext).load(finalUrl).placeholder(R.drawable.icon_noimage).into(imageView);
 
-        });
+                }
+
+            });
+        }
 
         cv_download.setOnClickListener(new View.OnClickListener() {
             @Override

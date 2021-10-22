@@ -11,7 +11,7 @@ public class DepServiceInfo {
     int id;
     String Name;
     String estTime;
-    int peopleInLine;
+    Integer peopleInLine;
     String nextAvailableDate;
     String nextAvailableTime;
     String type;
@@ -107,11 +107,11 @@ public class DepServiceInfo {
         this.estTime = estTime;
     }
 
-    public int getPeopleInLine() {
+    public Integer getPeopleInLine() {
         return peopleInLine;
     }
 
-    public void setPeopleInLine(int peopleInLine) {
+    public void setPeopleInLine(Integer peopleInLine) {
         this.peopleInLine = peopleInLine;
     }
 

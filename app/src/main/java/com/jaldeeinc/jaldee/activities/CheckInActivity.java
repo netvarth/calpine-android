@@ -21,7 +21,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -38,6 +40,7 @@ import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -50,44 +53,43 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.Interface.ICpn;
+import com.jaldeeinc.jaldee.Interface.IDeleteImagesInterface;
 import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.Interface.IMobileSubmit;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
+import com.jaldeeinc.jaldee.Interface.ISaveNotes;
 import com.jaldeeinc.jaldee.Interface.ISelectQ;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
-import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
+import com.jaldeeinc.jaldee.adapter.ImagePreviewAdapter;
 import com.jaldeeinc.jaldee.adapter.MultipleFamilyMemberAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.AddNotes;
 import com.jaldeeinc.jaldee.custom.CheckInSlotsDialog;
+import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomToolTip;
 import com.jaldeeinc.jaldee.custom.CustomerInformationDialog;
-import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.custom.FamilyMemberDialog;
-import com.jaldeeinc.jaldee.custom.MobileNumberDialog;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
+import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AdvancePaymentDetails;
-import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
-import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
@@ -98,7 +100,6 @@ import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
-import com.jaldeeinc.jaldee.response.SlotsData;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -144,7 +145,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CheckInActivity extends AppCompatActivity implements ISelectQ, PaymentResultWithDataListener, IPaymentResponse, IMobileSubmit, IMailSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected, ICpn {
+public class CheckInActivity extends AppCompatActivity implements ISelectQ, PaymentResultWithDataListener, IPaymentResponse, IMobileSubmit, IMailSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected, ICpn, IDeleteImagesInterface, ISaveNotes {
 
     @BindView(R.id.tv_providerName)
     CustomTextViewBold tvProviderName;
@@ -254,100 +255,100 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     @BindView(R.id.cv_back)
     CardView cvBack;
 
-    static CustomTextViewBold tvConsumerName;
-    CountryCodePicker virtual_NmbrCCPicker;
-    CustomTextViewSemiBold tvErrorMessage;
-    static Activity mActivity;
-    static Context mContext;
-    String mFirstName, mLastName;
-    String sector, subsector;
-    String mGender;
-    int consumerID;
-    private int uniqueId;
-    private String providerName;
-    private int providerId;
-    private int locationId;
-    private int serviceId;
-    private String serviceName;
-    private String phoneNumber, whtsappCountryCode, whatsappNumber;
-    private String serviceDescription;
-    private static SearchService checkInInfo = new SearchService();
-    SearchTerminology mSearchTerminology;
-    ProfileModel profileDetails;
-    ArrayList<SlotsData> slotsData = new ArrayList<SlotsData>();
-    ArrayList<AvailableSlotsData> activeSlotsList = new ArrayList<>();
-    private CheckInSlotsDialog slotsDialog;
-    private ISelectQ iSelectQ;
-    String uuid;
-    String value = null;
-    String couponEntered;
-    private int queueId;
-    SearchViewDetail mBusinessDataList;
-    private EmailEditWindow emailEditWindow;
-    private MobileNumberDialog mobileNumberDialog;
-    private IMailSubmit iMailSubmit;
-    private IMobileSubmit iMobileSubmit;
-    ArrayList<String> couponArraylist = new ArrayList<>();
-    ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
-    ArrayList<ProviderCouponResponse> providerCouponList = new ArrayList<>();
-    AdvancePaymentDetails advancePaymentDetails = new AdvancePaymentDetails();
-
-    RecyclerView list;
-    private CouponlistAdapter mAdapter;
     static int familyMEmID;
-    static RecyclerView recycle_family;
-    String slotTime;
-    BottomSheetDialog dialog;
-    private IPaymentResponse paymentResponse;
-    String calcMode;
-    ActiveCheckIn activeAppointment = new ActiveCheckIn();
-    String apiDate = "";
-    private int userId;
-    private boolean isUser;
-    QueueTimeSlotModel queueDetails = new QueueTimeSlotModel();
-    int maxPartysize;
-    private boolean isToken = false;
-    BottomSheetDialog dialogPayment;
-    static ArrayList<FamilyArrayModel> MultiplefamilyList = new ArrayList<>();
-    ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
     static String totalAmountPay;
     static String totalServicePay;
+    static CustomTextViewBold tvConsumerName;
+    static Activity mActivity;
+    static Context mContext;
+    static RecyclerView recycle_family;
+    static ArrayList<FamilyArrayModel> MultiplefamilyList = new ArrayList<>();
     static ArrayList<QueueTimeSlotModel> mQueueTimeSlotList = new ArrayList<>();
 
-    //files related
-    private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
+    private int providerId;
+    private int locationId;
+    private int uniqueId;
+    private int queueId;
+    private int userId;
     private int GALLERY = 1, CAMERA = 2;
-    RecyclerView recycle_image_attachment;
-
-    String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
-    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
-    ArrayList<String> imagePathList = new ArrayList<>();
-    ArrayList<String> imagePathLists = new ArrayList<>();
+    private boolean isUser;
+    private boolean isToken = false;
+    private static SearchService checkInInfo = new SearchService();
+    private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
+    private String providerName;
+    private String phoneNumber;
+    private String countryCode;
+    private String mWhtsappCountryCode;
+    private String mWhatsappNumber;
+    private String mTelegramCountryCode;
+    private String mTelegramNumber;
+    private String mAge;
+    private String accountBusinessName;
+    private String locationName;
+    private CheckInSlotsDialog slotsDialog;
+    private ISelectQ iSelectQ;
+    private IMailSubmit iMailSubmit;
+    private IMobileSubmit iMobileSubmit;
+    private CouponlistAdapter mAdapter;
+    private IPaymentResponse paymentResponse;
     private Uri mImageUri;
-    File f;
-    String path;
-    Bitmap bitmap;
-    EditText edt_message;
-    String txt_message = "";
-    File file;
-    TextView tv_attach, tv_camera;
     private ISendMessage iSendMessage;
     private AddNotes addNotes;
     private String userMessage = "";
-    String checkEncId;
+    private ICpn iCpn;
     private FamilyMemberDialog familyMemberDialog;
     private CustomerInformationDialog customerInformationDialog;
     private IFamilyMemberDetails iFamilyMemberDetails;
-    String emailId, prepayAmount = "", prePayRemainingAmount = "";
-    private String countryCode, mWhtsappCountryCode, mWhatsappNumber, mTelegramCountryCode, mTelegramNumber, mAge;
+    private IDeleteImagesInterface iDeleteImagesInterface;
+    private CustomNotes customNotes;
+    private ISaveNotes iSaveNotes;
+    private SearchSetting mSearchSettings;
     private JSONArray mPreferredLanguages = new JSONArray();
     private JSONObject mBookingLocation = new JSONObject();
     private Provider providerResponse = new Provider();
-    private SearchSetting mSearchSettings;
-    private String accountBusinessName;
-    private String locationName;
-    private ICpn iCpn;
+
     boolean virtualService;
+
+    int consumerID;
+    int maxPartysize;
+
+    String checkEncId;
+    String emailId;
+    String mFirstName;
+    String mLastName;
+    String sector;
+    String subsector;
+    String mGender;
+    String uuid;
+    String value = null;
+    String couponEntered;
+    String apiDate = "";
+    String calcMode;
+    String path;
+    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
+
+    ArrayList<String> couponArraylist = new ArrayList<>();
+    ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
+    ArrayList<ProviderCouponResponse> providerCouponList = new ArrayList<>();
+
+    RecyclerView recycle_image_attachment;
+    RecyclerView list;
+
+    File f;
+    File file;
+
+    AdvancePaymentDetails advancePaymentDetails = new AdvancePaymentDetails();
+    CountryCodePicker virtual_NmbrCCPicker;
+    CustomTextViewSemiBold tvErrorMessage;
+    SearchTerminology mSearchTerminology;
+    ProfileModel profileDetails;
+    SearchViewDetail mBusinessDataList;
+    BottomSheetDialog dialog;
+    ActiveCheckIn activeAppointment = new ActiveCheckIn();
+    ArrayList<ShoppingListModel> imagePathList = new ArrayList<>();
+    ImagePreviewAdapter imagePreviewAdapter;
+    Bitmap bitmap;
+    TextView tv_attach, tv_camera;
 
 
     @Override
@@ -363,6 +364,8 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         paymentResponse = this;
         iSendMessage = this;
         iFamilyMemberDetails = this;
+        iDeleteImagesInterface = (IDeleteImagesInterface) this;
+        iSaveNotes = this;
 
         SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, "");
         SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, "");
@@ -423,7 +426,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     }
                 }
 
-                if (checkInInfo.getCheckInServiceAvailability().getPersonAhead() >= 0) {
+                if (checkInInfo.getCheckInServiceAvailability().getPersonAhead() != null && checkInInfo.getCheckInServiceAvailability().getPersonAhead() >= 0) {
 
                     String changedtext = "People waiting in line : " + "<b>" + checkInInfo.getCheckInServiceAvailability().getPersonAhead() + "</b> ";
                     tvPeopleInLine.setText(Html.fromHtml(changedtext));
@@ -799,11 +802,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
 
                 if (imagePathList != null && imagePathList.size() > 0) {
-                    DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
-                    RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(v.getContext(), 3);
+                    imagePreviewAdapter = new ImagePreviewAdapter(imagePathList, mContext, true, iDeleteImagesInterface);
+                    RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 2);
                     recycle_image_attachment.setLayoutManager(mLayoutManager);
-                    recycle_image_attachment.setAdapter(mDetailFileAdapter);
-                    mDetailFileAdapter.notifyDataSetChanged();
+                    recycle_image_attachment.setAdapter(imagePreviewAdapter);
+                    imagePreviewAdapter.notifyDataSetChanged();
                 }
 
 
@@ -814,10 +817,10 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         if (imagePathList != null && imagePathList.size() > 0) {
 
                             tvErrorMessage.setVisibility(View.GONE);
-                            imagePathLists = imagePathList;
+                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
                             dialog.dismiss();
                         } else {
-
+                            tvAttachFileSize.setText("Attach File");
                             tvErrorMessage.setVisibility(View.VISIBLE);
                         }
 
@@ -827,9 +830,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (imagePathList != null && imagePathLists != null) {
-                            imagePathLists.clear();
+                        if (imagePathList != null) {
                             imagePathList.clear();
+                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
+                        } else {
+                            tvAttachFileSize.setText("Attach File");
                         }
                         dialog.dismiss();
                     }
@@ -844,13 +849,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 tv_attach.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (imagePathLists.size() > 0) {
-                            DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathLists, mContext);
-                            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(v.getContext(), 3);
-                            recycle_image_attachment.setLayoutManager(mLayoutManager);
-                            recycle_image_attachment.setAdapter(mDetailFileAdapter);
-                            mDetailFileAdapter.notifyDataSetChanged();
-                        }
                         try {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -918,35 +916,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     }
 
                 });
-
-                btn_send.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        if (imagePathList != null && imagePathList.size() > 0) {
-
-                            tvErrorMessage.setVisibility(View.GONE);
-                            imagePathLists = imagePathList;
-                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
-                            dialog.dismiss();
-                        } else {
-                            tvAttachFileSize.setText("Attach File");
-                            tvErrorMessage.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
-
-                btn_cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (imagePathList.size() > 0) {
-                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
-                        } else {
-                            tvAttachFileSize.setText("Attach File");
-                        }
-                        dialog.dismiss();
-                    }
-                });
             }
         });
 
@@ -960,9 +929,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 startActivity(iCoupons);
             }
         });
-
     }
-
 
     private void ApiGetProviderDetails(int uniqueId) {
 
@@ -1009,29 +976,22 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     Config.closeDialog(CheckInActivity.this, mDialog);
             }
         });
-
     }
 
 
     private void ApiSearchViewTerminology(String termin) {
-
         try {
-
             if (termin != null) {
                 mSearchTerminology = new Gson().fromJson(termin, SearchTerminology.class);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void apiSearchViewDetail(SearchViewDetail profile) {
 
-
         try {
-
             mBusinessDataList = profile;
 
             if (mBusinessDataList != null) {
@@ -1422,7 +1382,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 if (checkInInfo.getVirtualCallingModes() != null && checkInInfo.getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("whatsApp")) {
                     if (etVirtualNumber.getText().toString().trim().equalsIgnoreCase("")) {
                         modeOfCalling = "Enter WhatsApp number";
-                    } else if(etVirtualNumber.getText().toString().trim().length() < 7 || (virtual_NmbrCCPicker.getSelectedCountryCode().equalsIgnoreCase("91") && etVirtualNumber.getText().toString().trim().length() != 10  )){
+                    } else if (etVirtualNumber.getText().toString().trim().length() < 7 || (virtual_NmbrCCPicker.getSelectedCountryCode().equalsIgnoreCase("91") && etVirtualNumber.getText().toString().trim().length() != 10)) {
                         modeOfCalling = "Invalid WhatsApp number";
                     }
                 } else {
@@ -1558,7 +1518,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                         BookingModel model = new BookingModel();
                         model.setJsonObject(queueobj.toString());
-                        model.setImagesList(imagePathList);
+                        model.setImagePathList(imagePathList);
                         model.setMessage(txt_addnote);
                         model.setAccountId(accountId);
                         model.setCheckInInfo(checkInInfo);
@@ -1634,7 +1594,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         mBuilder.addFormDataPart("message", message);
         for (int i = 0; i < imagePathList.size(); i++) {
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getImagePath())));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1642,7 +1602,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 path = saveImage(bitmap);
                 file = new File(path);
             } else {
-                file = new File(imagePathList.get(i));
+                file = new File(imagePathList.get(i).getImagePath());
             }
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
@@ -2295,7 +2255,10 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        imagePathList.add(orgFilePath);
+
+                        ShoppingListModel model = new ShoppingListModel();
+                        model.setImagePath(orgFilePath);
+                        imagePathList.add(model);
 
                         if (imagePathList.size() > 0) {
                             tvErrorMessage.setVisibility(View.GONE);
@@ -2303,11 +2266,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             tvErrorMessage.setVisibility(View.VISIBLE);
                         }
 
-                        DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
-                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+                        imagePreviewAdapter = new ImagePreviewAdapter(imagePathList, mContext, true, iDeleteImagesInterface);
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 2);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
-                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
-                        mDetailFileAdapter.notifyDataSetChanged();
+                        recycle_image_attachment.setAdapter(imagePreviewAdapter);
+                        imagePreviewAdapter.notifyDataSetChanged();
 
                     } else if (data.getClipData() != null) {
                         ClipData mClipData = data.getClipData();
@@ -2335,7 +2298,10 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                 Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
                                 return;
                             }
-                            imagePathList.add(orgFilePath);
+
+                            ShoppingListModel model = new ShoppingListModel();
+                            model.setImagePath(orgFilePath);
+                            imagePathList.add(model);
 
                             if (imagePathList.size() > 0) {
                                 tvErrorMessage.setVisibility(View.GONE);
@@ -2343,11 +2309,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                                 tvErrorMessage.setVisibility(View.VISIBLE);
                             }
                         }
-                        DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
-                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+                        imagePreviewAdapter = new ImagePreviewAdapter(imagePathList, mContext, true, iDeleteImagesInterface);
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 2);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
-                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
-                        mDetailFileAdapter.notifyDataSetChanged();
+                        recycle_image_attachment.setAdapter(imagePreviewAdapter);
+                        imagePreviewAdapter.notifyDataSetChanged();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2365,8 +2331,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 //            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
                 if (path != null) {
                     mImageUri = Uri.parse(path);
-                    imagePathList.add(mImageUri.toString());
-
+                    ShoppingListModel model = new ShoppingListModel();
+                    model.setImagePath(mImageUri.toString());
+                    imagePathList.add(model);
                     if (imagePathList.size() > 0) {
                         tvErrorMessage.setVisibility(View.GONE);
                     } else {
@@ -2378,12 +2345,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
-                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+                imagePreviewAdapter = new ImagePreviewAdapter(imagePathList, mContext, true, iDeleteImagesInterface);
+                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 2);
                 recycle_image_attachment.setLayoutManager(mLayoutManager);
-                recycle_image_attachment.setAdapter(mDetailFileAdapter);
-                mDetailFileAdapter.notifyDataSetChanged();
-
+                recycle_image_attachment.setAdapter(imagePreviewAdapter);
+                imagePreviewAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -2521,5 +2487,48 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 getAdvancePaymentDetails(userMessage, providerId);
             }
         }
+    }
+
+    @Override
+    public void delete(int position, String imagePath) {
+        imagePathList.remove(position);
+        imagePreviewAdapter.notifyDataSetChanged();
+
+        if (imagePathList != null && imagePathList.size() > 0) {
+
+            for (int i = 0; i < imagePathList.size(); i++) {
+
+                if (imagePathList.get(i).getImagePath().equalsIgnoreCase(imagePath)) {
+
+                    imagePathList.remove(i);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void addedNotes(int position) {
+        showNotesDialog(position);
+    }
+
+    private void showNotesDialog(int position) {
+
+        customNotes = new CustomNotes(mContext, position, iSaveNotes, imagePathList.get(position).getCaption());
+        customNotes.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+        customNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        customNotes.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        customNotes.setCancelable(false);
+        customNotes.show();
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels * 1);
+        customNotes.getWindow().setGravity(Gravity.BOTTOM);
+        customNotes.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
+    @Override
+    public void saveMessage(String caption, int position) {
+
+        imagePathList.get(position).setCaption(caption);
+        imagePreviewAdapter.notifyDataSetChanged();
     }
 }
