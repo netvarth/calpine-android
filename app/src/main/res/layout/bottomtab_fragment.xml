@@ -40,10 +40,10 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:background="@color/white"
-        app:itemIconSize="@dimen/dimen_25dp"
-        app:cnb_unselectedColor="@color/dark_blue"
-        app:cnb_textAppearance="@style/BottomNavigationViewTextStyle"
         app:cnb_menuResource="@menu/bottom_menu"
+        app:cnb_textAppearance="@style/BottomNavigationViewTextStyle"
+        app:cnb_unselectedColor="@color/dark_blue"
+        app:itemIconSize="@dimen/dimen_25dp"
         app:itemIconTint="@color/dark_blue"
         app:itemTextColor="@color/dark_blue" />
 

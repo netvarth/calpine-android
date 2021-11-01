@@ -173,7 +173,7 @@ public class HomeTabFragment extends Fragment {
                 new ChipNavigationBar.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(int i) {
-
+                        ApiGetUnreadMessagesCount();
                         switch (i) {
                             case R.id.action_home:
                                 viewPager.setCurrentItem(0);
