@@ -32,6 +32,7 @@ public class SearchAppoinment implements Serializable {
     boolean consumerNoteMandatory;
     boolean postInfoEnabled;
     boolean preInfoEnabled;
+    boolean serviceDurationEnabled;
     int serviceDuration;
     int id;
     int multiples;
@@ -257,4 +258,7 @@ public class SearchAppoinment implements Serializable {
     }
 
     public String getPaymentDescription() { return paymentDescription; }
+
+    public boolean isServiceDurationEnabled() { return serviceDurationEnabled; }
+
 }

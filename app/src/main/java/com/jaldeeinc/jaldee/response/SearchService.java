@@ -39,6 +39,7 @@ public class SearchService implements Serializable {
     boolean livetrack;
     boolean taxable;
     boolean isPrePayment;
+    boolean serviceDurationEnabled;
     int id;
     int department;
     int locid;
@@ -273,4 +274,6 @@ public class SearchService implements Serializable {
     }
 
     public String getPaymentDescription() { return paymentDescription; }
+
+    public boolean isServiceDurationEnabled() { return serviceDurationEnabled; }
 }
