@@ -213,7 +213,7 @@ public class CheckInDetails extends AppCompatActivity {
     @BindView(R.id.ll_phoneNumber)
     LinearLayout llPhoneNumber;
 
-    @BindView(R.id.scrollView)
+    @BindView(R.id.scroll_view)
     ScrollView scrollView;
 
     boolean firstTimeRating = false;

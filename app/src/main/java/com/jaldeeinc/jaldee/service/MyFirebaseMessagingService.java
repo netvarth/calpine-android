@@ -67,6 +67,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Config.logV("TOKEN REFRESH #################__________________" + refreshedToken);
 
+        Log.e("$$$&#^$&#^&$&#&$*#$*&#$", s);
         Config.ApiUpdateToken(this);
 
     }

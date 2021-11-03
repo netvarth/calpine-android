@@ -223,7 +223,7 @@ public class BasicNotification {
 
                 // Set required fields, including the small icon, the
                 // notification title, and text.
-                .setSmallIcon(R.mipmap.ynw_logo)
+                .setSmallIcon(R.mipmap.logo)
                 .setContentTitle(title)
                 .setContentText(text)
 

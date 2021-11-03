@@ -132,6 +132,41 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/ll_bookingFor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/padding3"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:id="@+id/tv_forHint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="CheckIn for"
+                    android:textColor="@color/title_color"
+                    android:textSize="@dimen/dimen_12dp">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                    android:id="@+id/tv_bookingFor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:maxLines="1"
+                    android:text="Sravan Velanati"
+                    android:textColor="@color/title_color"
+                    android:textSize="@dimen/dimen_16sp">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+
+            </LinearLayout>
+
             <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                 android:id="@+id/tv_tokenno"
                 android:layout_width="wrap_content"
