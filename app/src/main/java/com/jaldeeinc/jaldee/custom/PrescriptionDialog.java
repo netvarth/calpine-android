@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,7 +24,11 @@ import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class PrescriptionDialog extends Dialog {
     private Context mContext;
@@ -137,12 +142,19 @@ public class PrescriptionDialog extends Dialog {
             // this will request for permission when permission is not true
         } else {
             // Download code here
+            URL url1 = null;
+            try {
+                url1 = new URL(url);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            String filname= FilenameUtils.getName(url1.getPath());
 
             File file = new File(Uri.parse(url).toString());
             Uri uri = Uri.parse(url);
             DownloadManager.Request request = new DownloadManager.Request(uri);
             request.setDescription(file.getName());
-            request.setTitle(file.getName());
+            request.setTitle(filname);
             request.setMimeType(getMimeType(longUrl));
 //                        request.setMimeType("application/pdf");
 //                        request.setMimeType("image/jpeg");

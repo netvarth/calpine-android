@@ -25,7 +25,11 @@ import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.widgets.TouchImageView;
 import com.squareup.picasso.Callback;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -109,10 +113,18 @@ public class CustomPageAdapter extends PagerAdapter {
                 } else {
                     // Download code here
                     String url = mGalleryImage.get(position);
+                    URL url1 = null;
+                    try {
+                        url1 = new URL(url);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    String filname= FilenameUtils.getName(url1.getPath());
+
                     File file = new File(Uri.parse(url).toString());
                     DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
                     request.setDescription(file.getName());
-                    request.setTitle(file.getName());
+                    request.setTitle(filname);
                     // request.setMimeType(".jpg");
 // in order for this if to run, you must use the android 3.2 to compile your app
                     request.allowScanningByMediaScanner();
