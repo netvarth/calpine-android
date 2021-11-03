@@ -1911,7 +1911,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                         if (jCashInfo != null) {
                             if (jCashInfo.getTotCashAwarded() != null && Double.parseDouble(jCashInfo.getTotCashAwarded()) > 0 && jCashInfo.getTotCashAvailable() != null) {
                                 cv_jaldee_cash_available.setVisibility(View.VISIBLE);
-                                tv_jaldee_cash_available.setText("Balane:Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(jCashInfo.getTotCashAvailable())));
+                                tv_jaldee_cash_available.setText("Balance:Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(jCashInfo.getTotCashAvailable())));
                             } else {
                                 cv_jaldee_cash_available.setVisibility(View.GONE);
                             }

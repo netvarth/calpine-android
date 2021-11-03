@@ -178,7 +178,7 @@
                                     android:layout_below="@+id/iv_jaldee_cash_logo"
                                     android:layout_weight="@integer/int_1"
                                     android:gravity="center"
-                                    android:text="Balane:Rs."
+                                    android:text="Balance:Rs."
                                     android:textColor="@color/dark_blue"
                                     android:textSize="10dp">
 
