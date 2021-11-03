@@ -221,7 +221,7 @@ public class BasicNotification {
                 // and vibration.
                 .setDefaults(Notification.DEFAULT_ALL)
 
-                // Set required fields, including the small icon, the
+                // Set required fields, the
                 // notification title, and text.
                 .setSmallIcon(R.mipmap.logo)
                 .setContentTitle(title)
@@ -264,7 +264,12 @@ public class BasicNotification {
 
                 // Automatically dismiss the notification when it is touched.
                 .setAutoCancel(true);
-
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            builder.setSmallIcon(R.mipmap.ynw_logo);
+        } else {
+            builder.setSmallIcon(R.drawable.ic_silhouette);
+            builder.setColor(Color.parseColor("#F0B41C"));
+        }
         notify(context, builder.build(), number);
     }
 

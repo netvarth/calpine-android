@@ -127,7 +127,7 @@ public class ServiceInfoDialog extends Dialog {
                 LserviceLayout.setVisibility(View.GONE);
             }
 
-            if (searchService.getServiceDuration() != null) {
+            if (searchService.isServiceDurationEnabled() && searchService.getServiceDuration() != null) {
                 tv_duration.setVisibility(View.VISIBLE);
                 tv_duration.setText(searchService.getServiceDuration() + " mins");
                 Ldurationlayout.setVisibility(View.VISIBLE);

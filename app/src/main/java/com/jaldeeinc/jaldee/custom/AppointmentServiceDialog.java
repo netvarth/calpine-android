@@ -119,7 +119,7 @@ public class AppointmentServiceDialog extends Dialog {
                 tvisTax.setVisibility(View.GONE);
                 LserviceLayout.setVisibility(View.GONE);
             }
-            if (searchService.getServiceDuration() >= 0) {
+            if (searchService.isServiceDurationEnabled() && searchService.getServiceDuration() >= 0) {
                 tv_duration.setVisibility(View.VISIBLE);
                 tv_duration.setText(searchService.getServiceDuration() + " mins");
                 Ldurationlayout.setVisibility(View.VISIBLE);
