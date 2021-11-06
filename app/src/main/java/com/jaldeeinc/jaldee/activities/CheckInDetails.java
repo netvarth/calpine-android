@@ -213,6 +213,15 @@ public class CheckInDetails extends AppCompatActivity {
     @BindView(R.id.ll_phoneNumber)
     LinearLayout llPhoneNumber;
 
+    @BindView(R.id.ll_sendAttachments)
+    LinearLayout llSendAttachments;
+
+    @BindView(R.id.ll_viewAttachments)
+    LinearLayout llViewAttachments;
+
+    @BindView(R.id.ll_questionnaire)
+    LinearLayout llQuestionnaire;
+
     @BindView(R.id.scroll_view)
     ScrollView scrollView;
 
@@ -659,6 +668,7 @@ public class CheckInDetails extends AppCompatActivity {
                     }
                 }
 
+
                 // to set confirmation number
                 if (checkInInfo.getCheckinEncId() != null) {
                     tvConfirmationNumber.setText(checkInInfo.getCheckinEncId());
@@ -804,6 +814,24 @@ public class CheckInDetails extends AppCompatActivity {
                         }
                     }
 
+                    llSendAttachments.setVisibility(View.VISIBLE);
+                    if (checkInInfo.isHasAttachment()){
+
+                        llViewAttachments.setVisibility(View.VISIBLE);
+                    }
+                    else {
+
+                        hideView(llViewAttachments);
+                    }
+
+                    // to show Questionnaire option
+                    if (checkInInfo.getQuestionnaire() != null && checkInInfo.getQuestionnaire().getQuestionAnswers() != null && checkInInfo.getQuestionnaire().getQuestionAnswers().size() > 0) {
+
+                        llQuestionnaire.setVisibility(View.VISIBLE);
+                    } else {
+
+                        hideView(llQuestionnaire);
+                    }
 
                     if (checkInInfo.getService() != null) {
 
@@ -828,6 +856,8 @@ public class CheckInDetails extends AppCompatActivity {
                     hideView(llReschedule);
                     hideView(llCancel);
                     hideView(llLocation);
+                    hideView(llViewAttachments);
+                    hideView(llSendAttachments);
                     if (checkInInfo.isPrescShared()) {
                         llPrescription.setVisibility(View.VISIBLE);
                     } else {

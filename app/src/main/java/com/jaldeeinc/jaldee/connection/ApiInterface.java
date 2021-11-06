@@ -31,6 +31,7 @@ import com.jaldeeinc.jaldee.response.JdnResponse;
 import com.jaldeeinc.jaldee.response.LocationResponse;
 import com.jaldeeinc.jaldee.response.LoginResponse;
 import com.jaldeeinc.jaldee.response.MyPayments;
+import com.jaldeeinc.jaldee.response.NewInbox;
 import com.jaldeeinc.jaldee.response.OrderResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.PaytmChecksum;
@@ -748,5 +749,9 @@ public interface ApiInterface {
 
     @GET("consumer/communications/unreadCount")
     Call<ResponseBody> getUnreadMessagesCount();
+
+    @GET("consumer/communications/latestComm")
+    Call<ArrayList<NewInbox>> getChats();
+
 
 }

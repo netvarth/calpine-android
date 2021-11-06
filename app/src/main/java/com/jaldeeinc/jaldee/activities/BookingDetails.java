@@ -202,6 +202,15 @@ public class BookingDetails extends AppCompatActivity {
     @BindView(R.id.ll_phoneNumber)
     LinearLayout llPhoneNumber;
 
+    @BindView(R.id.ll_sendAttachments)
+    LinearLayout llSendAttachments;
+
+    @BindView(R.id.ll_viewAttachments)
+    LinearLayout llViewAttachments;
+
+    @BindView(R.id.ll_questionnaire)
+    LinearLayout llQuestionnaire;
+
     @BindView(R.id.scrollView)
     ScrollView scrollView;
 
@@ -436,7 +445,7 @@ public class BookingDetails extends AppCompatActivity {
 
             // this gets called when activity is launched from push notification
             if (ynwUUid != null) {
-                if(click_action != null && click_action != "" && click_action.equalsIgnoreCase("CONSUMER_SHARE_PRESCRIPTION")) {
+                if (click_action != null && click_action != "" && click_action.equalsIgnoreCase("CONSUMER_SHARE_PRESCRIPTION")) {
                     ViewMoreActions();
                     scrollView.scrollTo(0, scrollView.getBottom());
                 }
@@ -772,6 +781,23 @@ public class BookingDetails extends AppCompatActivity {
                         }
                     }
 
+                    llSendAttachments.setVisibility(View.VISIBLE);
+                    if (appointmentInfo.isHasAttachment()) {
+
+                        llViewAttachments.setVisibility(View.VISIBLE);
+                    } else {
+
+                        hideView(llViewAttachments);
+                    }
+
+                    // to show Questionnaire option
+                    if (appointmentInfo.getQuestionnaire() != null && appointmentInfo.getQuestionnaire().getQuestionAnswers() != null && appointmentInfo.getQuestionnaire().getQuestionAnswers().size() > 0) {
+
+                        llQuestionnaire.setVisibility(View.VISIBLE);
+                    } else {
+
+                        hideView(llQuestionnaire);
+                    }
 
                 } else {
                     cvShare.setVisibility(View.GONE);
@@ -879,8 +905,8 @@ public class BookingDetails extends AppCompatActivity {
                         iBill.putExtra("encId", appointmentInfo.getAppointmentEncId());
                         iBill.putExtra("bookingStatus", appointmentInfo.getApptStatus());
                         iBill.putExtra("location", appointmentInfo.getLocation().getPlace());
-                        if(appointmentInfo.getProviderAccount() != null && appointmentInfo.getProviderAccount().getServiceSector() != null && appointmentInfo.getProviderAccount().getServiceSector().getDomain() != null) {
-                            if(!appointmentInfo.getProviderAccount().getServiceSector().getDomain().isEmpty()) {
+                        if (appointmentInfo.getProviderAccount() != null && appointmentInfo.getProviderAccount().getServiceSector() != null && appointmentInfo.getProviderAccount().getServiceSector().getDomain() != null) {
+                            if (!appointmentInfo.getProviderAccount().getServiceSector().getDomain().isEmpty()) {
                                 iBill.putExtra("domain", appointmentInfo.getProviderAccount().getServiceSector().getDomain());
                             }
                         }
@@ -1054,7 +1080,8 @@ public class BookingDetails extends AppCompatActivity {
             }
         });
     }
-    private void ViewMoreActions(){
+
+    private void ViewMoreActions() {
 
         if (llMoreDetails.getVisibility() != View.VISIBLE) {
 
@@ -1069,6 +1096,7 @@ public class BookingDetails extends AppCompatActivity {
             isTvViewMore = false;
         }
     }
+
     BottomSheetDialog dialog;
     float rate = 0;
     String comment = "";

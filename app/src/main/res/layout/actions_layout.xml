@@ -521,7 +521,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
                         android:gravity="center"
-                        android:text="Questionnaire"
+                        android:text="More Info"
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
