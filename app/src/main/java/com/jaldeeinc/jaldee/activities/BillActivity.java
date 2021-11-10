@@ -85,7 +85,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     static Context mCOntext;
     static Activity mActivity;
 
-    String ynwUUID, mprovider;
+    String ynwUUID, mprovider, mproviderName;
     TextView tv_provider, tv_customer, tv_date, tv_gstn, tv_bill;
     EditText mbill_coupon_edit;
     BillModel mBillData;
@@ -226,6 +226,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             bookingStatus = extras.getString("bookingStatus");
             location = extras.getString("location");
             domain = extras.getString("domain");
+            mproviderName = extras.getString("providerName");
 
             fromPushNotification = extras.getBoolean(Constants.PUSH_NOTIFICATION, false);
         }
@@ -949,18 +950,20 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         if (mBillData.getAccountProfile() != null) {
 
                             tv_provider.setText(mBillData.getAccountProfile().getBusinessName());
-
-                            if (mBillData.getAccountProfile().getProviderBusinessName() != null) {
-
-                                llproviderlayout.setVisibility(View.VISIBLE);
-                                tvProviderName.setText(mBillData.getAccountProfile().getProviderBusinessName());
+                            if ((mproviderName != null && mproviderName != "") || (mBillData.getAccountProfile().getProviderBusinessName() != null)) {
+                                if (mproviderName != null && mproviderName != "") {
+                                    llproviderlayout.setVisibility(View.VISIBLE);
+                                    tvProviderName.setText(mproviderName);
+                                } else if (mBillData.getAccountProfile().getProviderBusinessName() != null) {
+                                    llproviderlayout.setVisibility(View.VISIBLE);
+                                    tvProviderName.setText(mBillData.getAccountProfile().getProviderBusinessName());
+                                }
                                 if (domain != null && domain.equalsIgnoreCase("healthCare")) {
                                     tv_providerName_hint.setText("Doctor :  ");
                                 } else {
                                     tv_providerName_hint.setText("Provider :  ");
                                 }
                             } else {
-
                                 llproviderlayout.setVisibility(View.GONE);
                             }
                         }

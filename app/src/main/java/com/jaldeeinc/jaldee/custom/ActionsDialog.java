@@ -263,6 +263,9 @@ public class ActionsDialog extends Dialog {
                             Intent iBill = new Intent(context, BillActivity.class);
                             iBill.putExtra("ynwUUID", bookings.getAppointmentInfo().getUid());
                             iBill.putExtra("provider", bookings.getAppointmentInfo().getProviderAccount().getBusinessName());
+                            if (bookings.getProviderName() != null) {
+                                iBill.putExtra("providerName", bookings.getProviderName());
+                            }
                             iBill.putExtra("accountID", String.valueOf(bookings.getAppointmentInfo().getProviderAccount().getId()));
                             iBill.putExtra("payStatus", bookings.getAppointmentInfo().getPaymentStatus());
                             iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
@@ -451,6 +454,9 @@ public class ActionsDialog extends Dialog {
                         Intent iBill = new Intent(context, BillActivity.class);
                         iBill.putExtra("ynwUUID", bookings.getCheckInInfo().getYnwUuid());
                         iBill.putExtra("provider", bookings.getCheckInInfo().getProviderAccount().getBusinessName());
+                        if (bookings.getProviderName() != null) {
+                            iBill.putExtra("providerName", bookings.getProviderName());
+                        }
                         iBill.putExtra("accountID", String.valueOf(bookings.getCheckInInfo().getProviderAccount().getId()));
                         iBill.putExtra("payStatus", bookings.getCheckInInfo().getPaymentStatus());
                         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
@@ -606,6 +612,9 @@ public class ActionsDialog extends Dialog {
                         Intent iBill = new Intent(context, BillActivity.class);
                         iBill.putExtra("ynwUUID", bookings.getAppointmentInfo().getUid());
                         iBill.putExtra("provider", bookings.getAppointmentInfo().getProviderAccount().getBusinessName());
+                        if (bookings.getProviderName() != null) {
+                            iBill.putExtra("providerName", bookings.getProviderName());
+                        }
                         iBill.putExtra("accountID", String.valueOf(bookings.getAppointmentInfo().getProviderAccount().getId()));
                         iBill.putExtra("payStatus", bookings.getAppointmentInfo().getPaymentStatus());
                         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
@@ -663,6 +672,9 @@ public class ActionsDialog extends Dialog {
                         Intent iBill = new Intent(context, BillActivity.class);
                         iBill.putExtra("ynwUUID", bookings.getCheckInInfo().getYnwUuid());
                         iBill.putExtra("provider", bookings.getCheckInInfo().getProviderAccount().getBusinessName());
+                        if (bookings.getProviderName() != null) {
+                            iBill.putExtra("providerName", bookings.getProviderName());
+                        }
                         iBill.putExtra("accountID", String.valueOf(bookings.getCheckInInfo().getProviderAccount().getId()));
                         iBill.putExtra("payStatus", bookings.getCheckInInfo().getPaymentStatus());
                         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);

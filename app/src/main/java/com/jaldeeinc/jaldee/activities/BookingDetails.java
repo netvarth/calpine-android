@@ -1139,6 +1139,14 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                         Intent iBill = new Intent(BookingDetails.this, BillActivity.class);
                         iBill.putExtra("ynwUUID", appointmentInfo.getUid());
                         iBill.putExtra("provider", appointmentInfo.getProviderAccount().getBusinessName());
+                        if (appointmentInfo.getProvider() != null) {
+                            if (appointmentInfo.getProvider().getBusinessName() != null && !appointmentInfo.getProvider().getBusinessName().equalsIgnoreCase("")) {
+                                iBill.putExtra("providerName", appointmentInfo.getProvider().getBusinessName());
+                            } else {
+                                String name = appointmentInfo.getProvider().getFirstName() + " " + appointmentInfo.getProvider().getLastName();
+                                iBill.putExtra("providerName", name);
+                            }
+                        }
                         iBill.putExtra("accountID", String.valueOf(appointmentInfo.getProviderAccount().getId()));
                         iBill.putExtra("payStatus", appointmentInfo.getPaymentStatus());
                         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);

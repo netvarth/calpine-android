@@ -1210,6 +1210,14 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                         Intent iBill = new Intent(CheckInDetails.this, BillActivity.class);
                         iBill.putExtra("ynwUUID", checkInInfo.getYnwUuid());
                         iBill.putExtra("provider", checkInInfo.getProviderAccount().getBusinessName());
+                        if (checkInInfo.getProvider() != null) {
+                            if (checkInInfo.getProvider().getBusinessName() != null && !checkInInfo.getProvider().getBusinessName().equalsIgnoreCase("")) {
+                                iBill.putExtra("providerName", checkInInfo.getProvider().getBusinessName());
+                            } else {
+                                String name = checkInInfo.getProvider().getFirstName() + " " + checkInInfo.getProvider().getLastName();
+                                iBill.putExtra("providerName", name);
+                            }
+                        }
                         iBill.putExtra("accountID", String.valueOf(checkInInfo.getProviderAccount().getId()));
                         iBill.putExtra("payStatus", checkInInfo.getPaymentStatus());
                         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);

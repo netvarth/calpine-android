@@ -60,35 +60,6 @@
                         android:textSize="@dimen/txtsize_title" />
 
                     <LinearLayout
-                        android:id="@+id/ll_providerLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_5dp"
-                        android:visibility="gone">
-
-                        <TextView
-                            android:id="@+id/tv_providerName_hint"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Provider :  "
-                            android:textColor="@color/sec_title_grey"
-                            android:textSize="@dimen/txtsize_12" />
-
-                        <TextView
-                            android:id="@+id/tv_providerName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text=""
-                            android:textColor="@color/title_color"
-                            android:textSize="@dimen/dimen_15dp">
-
-                        </TextView>
-
-                    </LinearLayout>
-
-                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/default_padding"
@@ -139,7 +110,6 @@
                             android:singleLine="true"
                             android:textColor="@color/title_grey"
                             android:textSize="14dp"
-
                             autofit:minTextSize="8dp" />
                     </LinearLayout>
 
@@ -186,23 +156,53 @@
 
                     </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/ll_txtlocn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/default_padding"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-                    <TextView
-                        android:id="@+id/txtlocn"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/ll_providerLayout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_hint"
-                        android:drawableEnd="@drawable/icon_location_lightgray"
-                        android:drawablePadding="@dimen/dimen_5dp"
-                        android:layout_gravity="left"/>
-                </LinearLayout>
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/tv_providerName_hint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Provider :  "
+                            android:textColor="@color/sec_title_grey"
+                            android:textSize="@dimen/txtsize_12" />
+
+                        <TextView
+                            android:id="@+id/tv_providerName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text=""
+                            android:textColor="@color/title_color"
+                            android:textSize="@dimen/dimen_15dp">
+
+                        </TextView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_txtlocn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/default_padding"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/txtlocn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:drawableEnd="@drawable/icon_location_lightgray"
+                            android:drawablePadding="@dimen/dimen_5dp"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+                    </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
