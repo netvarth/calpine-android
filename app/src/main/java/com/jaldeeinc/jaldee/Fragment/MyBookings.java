@@ -298,6 +298,13 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
 
                         if (activeAppointment.getService() != null && activeAppointment.getApptStatus() != null) {
                             bookingInfo.setServiceName(activeAppointment.getService().getName());
+
+                            if (activeAppointment.getService().getDeptName() != null) {
+                                bookingInfo.setDeptName(activeAppointment.getService().getDeptName());
+                            } else {
+                                bookingInfo.setDeptName(null);
+                            }
+
                             if (activeAppointment.getService().getServiceType().equalsIgnoreCase("virtualService")) { //  check if it is a virtual service
                                 bookingInfo.setVirtual(true);
                             }
@@ -383,6 +390,13 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
 
                         if (activeCheckIn.getService() != null && activeCheckIn.getWaitlistStatus() != null) {
                             bookingInfo.setServiceName(activeCheckIn.getService().getName());
+
+                            if (activeCheckIn.getService().getDeptName() != null) {
+                                bookingInfo.setDeptName(activeCheckIn.getService().getDeptName());
+                            } else {
+                                bookingInfo.setDeptName(null);
+                            }
+
                             if (activeCheckIn.getService().getServiceType().equalsIgnoreCase("virtualService")) { //  check if it is a virtual service
                                 bookingInfo.setVirtual(true);
                             }

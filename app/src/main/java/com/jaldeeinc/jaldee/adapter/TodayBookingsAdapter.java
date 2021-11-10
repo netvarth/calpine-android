@@ -99,7 +99,15 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                 } else {
                     viewHolder.ivRescheduled.setVisibility(View.GONE);
                 }
-                viewHolder.tvServiceName.setText(bookings.getServiceName());
+
+                if (bookings.getDeptName() != null) {
+
+                    viewHolder.tvServiceName.setText(bookings.getServiceName() + " (" + bookings.getDeptName() + ")");
+                } else {
+
+                    viewHolder.tvServiceName.setText(bookings.getServiceName());
+
+                }
                 String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
                 if (bookings.getBookingOn() != null && bookings.getBookingType() != null) {
@@ -155,7 +163,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                                 }
                             }
 
-                            if (bookings.getAppointmentInfo().getAppmtFor() != null && bookings.getAppointmentInfo().getAppmtFor().size() > 0){
+                            if (bookings.getAppointmentInfo().getAppmtFor() != null && bookings.getAppointmentInfo().getAppmtFor().size() > 0) {
 
                                 viewHolder.llBookingFor.setVisibility(View.VISIBLE);
                                 viewHolder.tvForHint.setText("Appointment For");
@@ -246,7 +254,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                                 }
                             }
 
-                            if (bookings.getCheckInInfo().getWaitlistingFor() != null && bookings.getCheckInInfo().getWaitlistingFor().size() > 0){
+                            if (bookings.getCheckInInfo().getWaitlistingFor() != null && bookings.getCheckInInfo().getWaitlistingFor().size() > 0) {
 
                                 viewHolder.llBookingFor.setVisibility(View.VISIBLE);
                                 viewHolder.tvForHint.setText("CheckIn For");
@@ -317,7 +325,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                                 }
                             }
 
-                            if (bookings.getCheckInInfo().getWaitlistingFor() != null && bookings.getCheckInInfo().getWaitlistingFor().size() > 0){
+                            if (bookings.getCheckInInfo().getWaitlistingFor() != null && bookings.getCheckInInfo().getWaitlistingFor().size() > 0) {
 
                                 viewHolder.llBookingFor.setVisibility(View.VISIBLE);
                                 viewHolder.tvForHint.setText("Token For");
@@ -454,9 +462,9 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView ivBookingType, ivServiceIcon, ivMore, ivRescheduled;
-        CustomTextViewBold tvSpName,tvBookingFor;
+        CustomTextViewBold tvSpName, tvBookingFor;
         CustomTextViewSemiBold tvProviderName;
-        CustomTextViewMedium tvStatus, tvServiceName, tvDateAndTime, tvpayment, tokenNo,tvForHint;
+        CustomTextViewMedium tvStatus, tvServiceName, tvDateAndTime, tvpayment, tokenNo, tvForHint;
         CardView cvBooking;
         RelativeLayout rlStatus;
         LinearLayout llBookingFor;
@@ -481,8 +489,8 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                 tvpayment = itemView.findViewById(R.id.tv_payment);
                 tokenNo = itemView.findViewById(R.id.tv_tokenno);
                 tvForHint = itemView.findViewById(R.id.tv_forHint);
-                tvBookingFor= itemView.findViewById(R.id.tv_bookingFor);
-                llBookingFor= itemView.findViewById(R.id.ll_bookingFor);
+                tvBookingFor = itemView.findViewById(R.id.tv_bookingFor);
+                llBookingFor = itemView.findViewById(R.id.ll_bookingFor);
 
             }
 

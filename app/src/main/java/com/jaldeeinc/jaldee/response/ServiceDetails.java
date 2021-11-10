@@ -26,6 +26,7 @@ public class ServiceDetails implements Serializable {
 
     String name;
     int id;
+    String deptName;
 
     public String getLivetrack() {
         return livetrack;
@@ -145,5 +146,13 @@ public class ServiceDetails implements Serializable {
 
     public void setConsumerNoteTitle(String consumerNoteTitle) {
         this.consumerNoteTitle = consumerNoteTitle;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
     }
 }

@@ -29,6 +29,7 @@ public class Bookings implements Serializable {
     String videoCallButton;
     String videoCallMessage;
     boolean isRescheduled;
+    String deptName;
 
 
 
@@ -223,5 +224,13 @@ public class Bookings implements Serializable {
 
     public void setHasAttachment(boolean hasAttachment) {
         this.hasAttachment = hasAttachment;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
     }
 }

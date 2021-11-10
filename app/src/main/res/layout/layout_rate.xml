@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingBottom="@dimen/padding25">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="140dp"
+            android:src="@drawable/rate_app"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_gravity="center">
+
+        </ImageView>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Like using Jaldee App"
+            android:textSize="@dimen/dimen_16dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:textColor="@color/dark_black">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recommend us to others by\n rating us on playstore"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dimen_6dp"
+            android:textColor="@color/black">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginStart="@dimen/dimen_15dp"
+            android:layout_marginEnd="@dimen/dimen_15dp">
+
+            <Button
+                android:id="@+id/bt_noRating"
+                android:layout_width="@dimen/dimen_0dp"
+                android:layout_height="@dimen/dimen_35dp"
+                android:text="No, thanks"
+                android:textAllCaps="false"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:background="@drawable/border_items"
+                android:layout_weight="1">
+
+            </Button>
+
+            <Button
+                android:id="@+id/bt_rating"
+                android:layout_width="@dimen/dimen_0dp"
+                android:layout_height="@dimen/dimen_35dp"
+                android:text="RATE US"
+                android:textColor="@color/dark_blue"
+                android:layout_marginStart="@dimen/dimen_8dp"
+                android:layout_weight="@integer/int_1"
+                android:background="@drawable/border_items"
+                android:backgroundTint="@color/active_yellow">
+
+            </Button>
+
+        </LinearLayout>
+
+        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+            android:id="@+id/tv_remindMeLater"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remind me later"
+            android:textSize="@dimen/dimen_14dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:textColor="@color/dark_black">
+
+        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+
+    </LinearLayout>
+
+</LinearLayout>

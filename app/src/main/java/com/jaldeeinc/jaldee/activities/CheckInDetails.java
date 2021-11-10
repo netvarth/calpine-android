@@ -1,20 +1,34 @@
 package com.jaldeeinc.jaldee.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -35,13 +49,20 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
+import com.jaldeeinc.jaldee.Interface.IDeleteImagesInterface;
+import com.jaldeeinc.jaldee.Interface.ISaveNotes;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.adapter.ImagePreviewAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.Contents;
+import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
@@ -55,27 +76,57 @@ import com.jaldeeinc.jaldee.custom.MeetingInfo;
 import com.jaldeeinc.jaldee.custom.PrescriptionDialog;
 import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.model.Bookings;
+import com.jaldeeinc.jaldee.model.LabelPath;
+import com.jaldeeinc.jaldee.model.QuestionnaireResponseInput;
+import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
+import com.jaldeeinc.jaldee.response.AnswerLineResponse;
+import com.jaldeeinc.jaldee.response.GetQuestion;
+import com.jaldeeinc.jaldee.response.QuestionAnswers;
+import com.jaldeeinc.jaldee.response.QuestionnaireResponse;
 import com.jaldeeinc.jaldee.response.RatingResponse;
+import com.jaldeeinc.jaldee.response.ShoppingList;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.payumoney.core.entity.TransactionResponse;
+import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
+import com.payumoney.sdkui.ui.utils.ResultModel;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -84,7 +135,7 @@ import retrofit2.Response;
 
 import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
-public class CheckInDetails extends AppCompatActivity {
+public class CheckInDetails extends AppCompatActivity implements IDeleteImagesInterface, ISaveNotes {
 
     @BindView(R.id.tv_providerName)
     CustomTextViewMedium tvProviderName;
@@ -246,12 +297,35 @@ public class CheckInDetails extends AppCompatActivity {
     String uid;
     int id;
 
+    // files related
+    Bitmap bitmap;
+    File f, file;
+    String path, from, from1 = "";
+    private LinearLayout llNoHistory;
+    private ImageView iv_attach;
+    TextView tv_attach, tv_camera;
+    private BottomSheetDialog bDialog;
+    CustomTextViewSemiBold tvErrorMessage;
+    RecyclerView recycle_image_attachment;
+    private int GALLERY = 1, CAMERA = 2;
+    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
+    private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
+    private Uri mImageUri;
+    ImagePreviewAdapter imagePreviewAdapter;
+    private IDeleteImagesInterface iDeleteImagesInterface;
+    ArrayList<ShoppingListModel> imagePathList = new ArrayList<>();
+    private CustomNotes customNotes;
+    private ISaveNotes iSaveNotes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_in_details);
         ButterKnife.bind(CheckInDetails.this);
         mContext = CheckInDetails.this;
+        iDeleteImagesInterface = (IDeleteImagesInterface) this;
+        iSaveNotes = this;
+
 
         Intent i = getIntent();
         if (i != null) {
@@ -442,6 +516,169 @@ public class CheckInDetails extends AppCompatActivity {
             }
         });
 
+        llSendAttachments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                bDialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
+                bDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+                bDialog.setContentView(R.layout.files_layout);
+                bDialog.show();
+
+                final Button btn_send = bDialog.findViewById(R.id.btn_send);
+                Button btn_cancel = bDialog.findViewById(R.id.btn_cancel);
+                btn_send.setText("Send");
+                Typeface font_style = Typeface.createFromAsset(mContext.getAssets(), "fonts/JosefinSans-SemiBold.ttf");
+                btn_cancel.setTypeface(font_style);
+                btn_send.setTypeface(font_style);
+                tvErrorMessage = bDialog.findViewById(R.id.tv_errorMessage);
+                tv_attach = bDialog.findViewById(R.id.btn);
+                tv_camera = bDialog.findViewById(R.id.camera);
+                recycle_image_attachment = bDialog.findViewById(R.id.recycler_view_image);
+
+                imagePathList.clear();
+
+                btn_send.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if (imagePathList != null && imagePathList.size() > 0) {
+
+                            if (activeCheckIn != null) {
+                                sendAttachments(activeCheckIn.getProviderAccount().getId(), activeCheckIn.getYnwUuid());
+                            }
+                            tvErrorMessage.setVisibility(View.GONE);
+                            bDialog.dismiss();
+                        } else {
+                            tvErrorMessage.setVisibility(View.VISIBLE);
+                        }
+
+                    }
+                });
+
+                btn_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (imagePathList != null && imagePathList != null) {
+                            imagePathList.clear();
+                        }
+                        bDialog.dismiss();
+                    }
+                });
+
+
+                requestMultiplePermissions();
+                tv_attach.setVisibility(View.VISIBLE);
+                tv_camera.setVisibility(View.VISIBLE);
+
+
+                tv_attach.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                    requestPermissions(new String[]{
+                                            Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
+
+                                    return;
+                                } else {
+                                    Intent intent = new Intent();
+                                    intent.setType("*/*");
+                                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+                                }
+                            } else {
+
+                                Intent intent = new Intent();
+                                intent.setType("*/*");
+                                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                });
+
+
+                tv_camera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+                                    requestPermissions(new String[]{
+                                            Manifest.permission.CAMERA}, CAMERA);
+
+                                    return;
+                                } else {
+                                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                    Intent cameraIntent = new Intent();
+                                    cameraIntent.setType("image/*");
+                                    cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                    cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+                                    startActivityForResult(intent, CAMERA);
+                                }
+                            } else {
+
+                                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                Intent cameraIntent = new Intent();
+                                cameraIntent.setType("image/*");
+                                cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(intent, CAMERA);
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                });
+
+            }
+        });
+
+        llViewAttachments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (activeCheckIn != null) {
+                    getWaitlistImages(activeCheckIn.getYnwUuid(), activeCheckIn.getProviderAccount().getId());
+                }
+            }
+        });
+
+        llQuestionnaire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (activeCheckIn != null) {
+
+                    QuestionnaireResponseInput input = buildQuestionnaireInput(activeCheckIn.getQuestionnaire());
+                    ArrayList<LabelPath> labelPaths = buildQuestionnaireLabelPaths(activeCheckIn.getQuestionnaire());
+
+                    SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
+                    SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
+
+                    Intent intent = new Intent(mContext, UpdateQuestionnaire.class);
+                    intent.putExtra("serviceId", activeCheckIn.getService().getId());
+                    intent.putExtra("accountId", activeCheckIn.getProviderAccount().getId());
+                    intent.putExtra("uid", activeCheckIn.getYnwUuid());
+                    intent.putExtra("isEdit", true);
+                    intent.putExtra("from", Constants.BOOKING_CHECKIN);
+                    if (activeCheckIn != null && activeCheckIn.getWaitlistStatus() != null) {
+                        intent.putExtra("status", activeCheckIn.getWaitlistStatus());
+                    }
+                    startActivity(intent);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -452,17 +689,21 @@ public class CheckInDetails extends AppCompatActivity {
             // Api call
             if (uid != null) {
                 getBookingDetails(uid, id);
+
             } else {
 
                 // this gets called when activity is launched from push notification
                 if (ynwUUid != null) {
-                    if(click_action != null && click_action != "" && click_action.equalsIgnoreCase("CONSUMER_SHARE_PRESCRIPTION")) {
+                    if (click_action != null && click_action != "" && click_action.equalsIgnoreCase("CONSUMER_SHARE_PRESCRIPTION")) {
                         ViewMoreActions();
                         scrollView.scrollTo(0, scrollView.getBottom());
                     }
                     getBookingDetails(ynwUUid, Integer.parseInt(accountId));
                 }
             }
+
+            updateImages();
+
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -624,7 +865,13 @@ public class CheckInDetails extends AppCompatActivity {
                 }
 
                 if (checkInInfo.getService() != null) {
-                    tvServiceName.setText(checkInInfo.getService().getName());
+
+                    if (checkInInfo.getService().getDeptName() != null) {
+
+                        tvServiceName.setText(checkInInfo.getService().getName() + " (" + checkInInfo.getService().getDeptName() + ")");
+                    } else {
+                        tvServiceName.setText(checkInInfo.getService().getName());
+                    }
 
                     if (checkInInfo.getService().getServiceType() != null && checkInInfo.getService().getServiceType().equalsIgnoreCase("virtualService")) {
 
@@ -767,7 +1014,12 @@ public class CheckInDetails extends AppCompatActivity {
                         tvTime.setText(checkInInfo.getServiceTime());
                     } else {
                         tvHint.setText("Est wait time");
-                        tvTime.setText(Config.getTimeinHourMinutes(checkInInfo.getAppxWaitingTime()));
+
+                        if (checkInInfo.getAppxWaitingTime() == 0) {
+                            tvTime.setText("Now");
+                        } else {
+                            tvTime.setText(Config.getTimeinHourMinutes(checkInInfo.getAppxWaitingTime()));
+                        }
                     }
                     if (!checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("done") && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("started")) {
                         tvTime.setVisibility(View.VISIBLE);
@@ -815,11 +1067,10 @@ public class CheckInDetails extends AppCompatActivity {
                     }
 
                     llSendAttachments.setVisibility(View.VISIBLE);
-                    if (checkInInfo.isHasAttachment()){
+                    if (checkInInfo.isHasAttachment()) {
 
                         llViewAttachments.setVisibility(View.VISIBLE);
-                    }
-                    else {
+                    } else {
 
                         hideView(llViewAttachments);
                     }
@@ -967,8 +1218,8 @@ public class CheckInDetails extends AppCompatActivity {
                         iBill.putExtra("encId", checkInInfo.getCheckinEncId());
                         iBill.putExtra("bookingStatus", checkInInfo.getWaitlistStatus());
                         iBill.putExtra("location", checkInInfo.getQueue().getLocation().getPlace());
-                        if(checkInInfo.getProviderAccount() != null && checkInInfo.getProviderAccount().getServiceSector() != null && checkInInfo.getProviderAccount().getServiceSector().getDomain() != null) {
-                            if(!checkInInfo.getProviderAccount().getServiceSector().getDomain().isEmpty()) {
+                        if (checkInInfo.getProviderAccount() != null && checkInInfo.getProviderAccount().getServiceSector() != null && checkInInfo.getProviderAccount().getServiceSector().getDomain() != null) {
+                            if (!checkInInfo.getProviderAccount().getServiceSector().getDomain().isEmpty()) {
                                 iBill.putExtra("domain", checkInInfo.getProviderAccount().getServiceSector().getDomain());
                             }
                         }
@@ -1018,7 +1269,8 @@ public class CheckInDetails extends AppCompatActivity {
     BottomSheetDialog dialog;
     float rate = 0;
     String comment = "";
-    private void ViewMoreActions(){
+
+    private void ViewMoreActions() {
         if (llMoreDetails.getVisibility() != View.VISIBLE) {
 
             llMoreDetails.setVisibility(View.VISIBLE);
@@ -1032,6 +1284,7 @@ public class CheckInDetails extends AppCompatActivity {
             isTvViewMore = false;
         }
     }
+
     private void ApiRating(final String accountID, final String UUID) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1339,6 +1592,209 @@ public class CheckInDetails extends AppCompatActivity {
         });
     }
 
+    private void updateImages() {
+
+        if (imagePathList != null && imagePathList.size() > 0) {
+
+            imagePreviewAdapter = new ImagePreviewAdapter(imagePathList, mContext, true, iDeleteImagesInterface);
+            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 2);
+            recycle_image_attachment.setLayoutManager(mLayoutManager);
+            recycle_image_attachment.setAdapter(imagePreviewAdapter);
+            imagePreviewAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private QuestionnaireResponseInput buildQuestionnaireInput(QuestionnaireResponse questionnaire) {
+
+        QuestionnaireResponseInput responseInput = new QuestionnaireResponseInput();
+        responseInput.setQuestionnaireId(questionnaire.getQuestionnaireId());
+        ArrayList<AnswerLineResponse> answerLineResponse = new ArrayList<>();
+        ArrayList<GetQuestion> questions = new ArrayList<>();
+
+        for (QuestionAnswers qAnswers : questionnaire.getQuestionAnswers()) {
+
+            answerLineResponse.add(qAnswers.getAnswerLine());
+            questions.add(qAnswers.getGetQuestion());
+
+        }
+
+        responseInput.setAnswerLines(answerLineResponse);
+        responseInput.setQuestions(questions);
+
+        return responseInput;
+
+    }
+
+    private ArrayList<LabelPath> buildQuestionnaireLabelPaths(QuestionnaireResponse questionnaire) {
+
+        ArrayList<LabelPath> labelPaths = new ArrayList<>();
+
+        for (QuestionAnswers qAnswers : questionnaire.getQuestionAnswers()) {
+
+            if (qAnswers.getGetQuestion().getFieldDataType().equalsIgnoreCase("fileUpload")) {
+
+                JsonArray jsonArray = new JsonArray();
+                jsonArray = qAnswers.getAnswerLine().getAnswer().get("fileUpload").getAsJsonArray();
+                for (int i = 0; i < jsonArray.size(); i++) {
+
+                    LabelPath path = new LabelPath();
+                    path.setId(labelPaths.size());
+                    path.setFileName(jsonArray.get(i).getAsJsonObject().get("caption").getAsString());
+                    path.setLabelName(qAnswers.getAnswerLine().getLabelName());
+                    path.setPath(jsonArray.get(i).getAsJsonObject().get("s3path").getAsString());
+                    path.setType(jsonArray.get(i).getAsJsonObject().get("type").getAsString());
+
+                    labelPaths.add(path);
+                }
+
+            }
+
+        }
+
+        return labelPaths;
+
+    }
+
+
+    private void sendAttachments(int accountId, String ynwUuid) {
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        MediaType type;
+        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
+        mBuilder.setType(MultipartBody.FORM);
+        for (int i = 0; i < imagePathList.size(); i++) {
+
+            String extension = "";
+
+            if (imagePathList.get(i).getImagePath().contains(".")) {
+                extension = imagePathList.get(i).getImagePath().substring(imagePathList.get(i).getImagePath().lastIndexOf(".") + 1);
+            }
+
+            if (extension.equalsIgnoreCase("pdf")) {
+                type = MediaType.parse("application/pdf");
+            } else if (extension.equalsIgnoreCase("png")) {
+                type = MediaType.parse("image/png");
+            } else if (extension.equalsIgnoreCase("jpeg")) {
+                type = MediaType.parse("image/jpeg");
+            } else {
+                type = MediaType.parse("image/*");
+            }
+
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getImagePath())));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (bitmap != null) {
+                path = saveImage(bitmap);
+                file = new File(path);
+            } else {
+                file = new File(imagePathList.get(i).getImagePath());
+            }
+            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+        }
+
+        Map<String, String> query = new HashMap<>();
+        String json = "";
+
+        for (int i = 0; i < imagePathList.size(); i++) {
+
+            query.put(String.valueOf(i), imagePathList.get(i).getCaption());
+
+        }
+        Gson gson = new GsonBuilder().create();
+        json = gson.toJson(query);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+        mBuilder.addFormDataPart("captions", "blob", body);
+        RequestBody requestBody = mBuilder.build();
+        Call<ResponseBody> call = apiService.waitlistSendAttachments(ynwUuid, accountId, requestBody);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(CheckInDetails.this, mDialog);
+
+                    if (response.code() == 200) {
+
+                        if (response.body() != null) {
+
+                            DynamicToast.make(mContext, "Attachments sent successfully",
+                                    ContextCompat.getColor(mContext, R.color.white), ContextCompat.getColor(mContext, R.color.green), Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    } else {
+
+
+                    }
+
+                } catch (
+                        Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(CheckInDetails.this, mDialog);
+            }
+        });
+
+
+    }
+
+    private void getWaitlistImages(String ynwUuid, int id) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ArrayList<ShoppingList>> call = apiService.getWaitlistAttachments(ynwUuid, id);
+        call.enqueue(new Callback<ArrayList<ShoppingList>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ShoppingList>> call, Response<ArrayList<ShoppingList>> response) {
+
+                if (mDialog.isShowing())
+                    Config.closeDialog(CheckInDetails.this, mDialog);
+                try {
+
+                    if (response.code() == 200) {
+
+                        ArrayList<ShoppingList> attachments = new ArrayList<>();
+                        attachments = response.body();
+
+                        if (attachments != null && attachments.size() > 0) {
+
+                            Intent intent = new Intent(mContext, ViewAttachmentActivity.class);
+                            intent.putExtra("imagesList", attachments);
+                            startActivity(intent);
+
+
+                        }
+                    }
+                } catch (
+                        Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ShoppingList>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(CheckInDetails.this, mDialog);
+            }
+        });
+
+    }
+
 
     public static String convertToTitleForm(String name) {
         String convertName = name;
@@ -1432,5 +1888,319 @@ public class CheckInDetails extends AppCompatActivity {
         }
 
         return date;
+    }
+
+    private void requestMultiplePermissions() {
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted
+                        if (report.areAllPermissionsGranted()) {
+//                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            // show alert dialog navigating to Settings
+                            //openSettingsDialog();fc
+                            Toast.makeText(mContext, "You Denied the Permission", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).
+                withErrorListener(new PermissionRequestErrorListener() {
+                    @Override
+                    public void onError(DexterError error) {
+                        Toast.makeText(mContext, "Some Error! ", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .onSameThread()
+                .check();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //   mTxvBuy.setEnabled(true);
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == GALLERY) {
+            if (data != null) {
+                try {
+                    if (data.getData() != null) {
+                        Uri uri = data.getData();
+                        String orgFilePath = getRealPathFromURI(uri, this);
+                        String filepath = "";//default fileName
+
+                        String mimeType = this.mContext.getContentResolver().getType(uri);
+                        String uriString = uri.toString();
+                        String extension = "";
+                        if (uriString.contains(".")) {
+                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
+                        }
+
+                        if (mimeType != null) {
+                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
+                        }
+                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                            if (orgFilePath == null) {
+                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
+                            }
+                        } else {
+                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        ShoppingListModel model = new ShoppingListModel();
+                        model.setImagePath(orgFilePath);
+                        imagePathList.add(model);
+
+
+                        if (imagePathList.size() > 0) {
+                            tvErrorMessage.setVisibility(View.GONE);
+                        } else {
+                            tvErrorMessage.setVisibility(View.VISIBLE);
+                        }
+
+                        /*DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 3);
+                        recycle_image_attachment.setLayoutManager(mLayoutManager);
+                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
+                        mDetailFileAdapter.notifyDataSetChanged();*/
+
+                    } else if (data.getClipData() != null) {
+                        ClipData mClipData = data.getClipData();
+                        for (int i = 0; i < mClipData.getItemCount(); i++) {
+                            ClipData.Item item = mClipData.getItemAt(i);
+                            Uri imageUri = item.getUri();
+                            String orgFilePath = getRealPathFromURI(imageUri, this);
+                            String filepath = "";//default fileName
+
+                            String mimeType = mContext.getContentResolver().getType(imageUri);
+                            String uriString = imageUri.toString();
+                            String extension = "";
+                            if (uriString.contains(".")) {
+                                extension = uriString.substring(uriString.lastIndexOf(".") + 1);
+                            }
+
+                            if (mimeType != null) {
+                                extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
+                            }
+                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                                if (orgFilePath == null) {
+                                    orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
+                                }
+                            } else {
+                                Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            ShoppingListModel model = new ShoppingListModel();
+                            model.setImagePath(orgFilePath);
+                            imagePathList.add(model);
+
+                            if (imagePathList.size() > 0) {
+                                tvErrorMessage.setVisibility(View.GONE);
+                            } else {
+                                tvErrorMessage.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        /*DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 3);
+                        recycle_image_attachment.setLayoutManager(mLayoutManager);
+                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
+                        mDetailFileAdapter.notifyDataSetChanged();*/
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } else if (requestCode == CAMERA) {
+            if (data != null && data.getExtras() != null) {
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                //      imageview.setImageBitmap(bitmap);
+                path = saveImage(bitmap);
+                // imagePathList.add(bitmap.toString());
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                if (bitmap != null) {
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                }
+//            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
+                if (path != null) {
+                    mImageUri = Uri.parse(path);
+                    ShoppingListModel model = new ShoppingListModel();
+                    model.setImagePath(mImageUri.toString());
+                    imagePathList.add(model);
+                    if (imagePathList.size() > 0) {
+                        tvErrorMessage.setVisibility(View.GONE);
+                    } else {
+                        tvErrorMessage.setVisibility(View.VISIBLE);
+                    }
+                }
+                try {
+                    bytes.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                /*DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
+                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 3);
+                recycle_image_attachment.setLayoutManager(mLayoutManager);
+                recycle_image_attachment.setAdapter(mDetailFileAdapter);
+                mDetailFileAdapter.notifyDataSetChanged();*/
+            }
+        }
+    }
+
+
+    public String getRealPathFromURI(Uri contentURI, Activity context) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        @SuppressWarnings("deprecation")
+        Cursor cursor = context.managedQuery(contentURI, projection, null,
+                null, null);
+        if (cursor == null)
+            return null;
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        if (cursor.moveToFirst()) {
+            String s = cursor.getString(column_index);
+            // cursor.close();
+            return s;
+        }
+        // cursor.close();
+        return null;
+    }
+
+    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
+        //copy file and send new file path
+        String fileName = getFileNameInfo(contentUri);
+        if (!TextUtils.isEmpty(fileName)) {
+            String ext = "";
+            if (fileName.contains(".")) {
+            } else {
+                ext = "." + extension;
+            }
+            File wallpaperDirectoryFile = new File(
+                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
+            copy(context, contentUri, wallpaperDirectoryFile);
+            return wallpaperDirectoryFile.getAbsolutePath();
+        }
+        return null;
+    }
+
+    public static void copy(Context context, Uri srcUri, File dstFile) {
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
+            if (inputStream == null) return;
+            FileOutputStream outputStream = new FileOutputStream(dstFile);
+            IOUtils.copy(inputStream, outputStream);
+            inputStream.close();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    protected static String getFileNameInfo(Uri uri) {
+        if (uri == null) {
+            return null;
+        }
+        String fileName = null;
+        String path = uri.getPath();
+        int cut = 0;
+        if (path != null) {
+            cut = path.lastIndexOf('/');
+        }
+        if (cut != -1) {
+            if (path != null) {
+                fileName = path.substring(cut + 1);
+            }
+        }
+        return fileName;
+    }
+
+    public String saveImage(Bitmap myBitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        if (myBitmap != null) {
+            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        }
+        File wallpaperDirectory = new File(
+                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
+        // have the object build the directory structure, if needed.
+        if (!wallpaperDirectory.exists()) {
+            wallpaperDirectory.mkdirs();
+        }
+
+        try {
+            f = new File(wallpaperDirectory, Calendar.getInstance()
+                    .getTimeInMillis() + ".jpg");
+            f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(bytes.toByteArray());
+            MediaScannerConnection.scanFile(mContext,
+                    new String[]{f.getPath()},
+                    new String[]{"image/jpeg"}, null);
+            fo.close();
+            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
+
+            return f.getAbsolutePath();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return "";
+    }
+
+    @Override
+    public void delete(int position, String imagePath) {
+
+        imagePathList.remove(position);
+        imagePreviewAdapter.notifyDataSetChanged();
+
+        if (imagePathList != null && imagePathList.size() > 0) {
+
+            for (int i = 0; i < imagePathList.size(); i++) {
+
+                if (imagePathList.get(i).getImagePath().equalsIgnoreCase(imagePath)) {
+
+                    imagePathList.remove(i);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void addedNotes(int position) {
+
+        showNotesDialog(position);
+
+    }
+
+    private void showNotesDialog(int position) {
+
+        customNotes = new CustomNotes(mContext, position, iSaveNotes, imagePathList.get(position).getCaption());
+        customNotes.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+        customNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        customNotes.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        customNotes.setCancelable(false);
+        customNotes.show();
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels * 1);
+        customNotes.getWindow().setGravity(Gravity.BOTTOM);
+        customNotes.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
+    @Override
+    public void saveMessage(String caption, int position) {
+
+        imagePathList.get(position).setCaption(caption);
+        imagePreviewAdapter.notifyDataSetChanged();
     }
 }

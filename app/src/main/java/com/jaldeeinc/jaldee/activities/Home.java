@@ -34,6 +34,7 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.AppRater;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
 import com.jaldeeinc.jaldee.custom.NotificationDialog;
@@ -42,7 +43,6 @@ import com.jaldeeinc.jaldee.response.JCashInfo;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 import com.jaldeeinc.jaldee.service.LiveTrackService;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -85,6 +85,11 @@ public class Home extends AppCompatActivity {
             Log.i("detailsofDetail", detail);
             Log.i("detailsofDetail", path);
         }
+
+
+        // To show rating option
+//        AppRater.app_launched(this);
+
 
         if (notificationDialog != null && notificationDialog.isShowing()) {
             notificationDialog.dismiss();
