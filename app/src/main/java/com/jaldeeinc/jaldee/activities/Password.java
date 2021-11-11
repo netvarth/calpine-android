@@ -7,9 +7,12 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -53,27 +56,31 @@ import retrofit2.Response;
 
 public class Password extends AppCompatActivity {
 
-
     Context mContext;
-    TextInputEditText mEdtpwd, mEdtconfirmPwd;
-    String otp, from;
-
     //private static final String PASSWORD_PATTERN = "^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$" ;
     private static final String PASSWORD_PATTERN = "^(?=.*?[A-Z])(?=.*?[0-9]).{8,}$";
     private Pattern pattern;
     private Matcher matcher;
-    TextInputLayout txt_InputPwd, txt_Confirm_InputPwd;
+    TextInputEditText mEdtpwd;
+    TextInputEditText mEdtconfirmPwd;
+    TextInputLayout txt_InputPwd;
+    TextInputLayout txt_Confirm_InputPwd;
     TextView txt_ynw, tv_password_title;
     Button btn_pwd_submit;
     ImageView img_indicator;
     String detail;
-    String countryCode="";
+    String countryCode = "";
+    String otp;
+    String from;
+    int newPswd = 0;
+    int confirmPswd = 0;
+    boolean newPswdIsErrorFree;
+    boolean confirmPswdIsErrorFree;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.password);
-
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -82,25 +89,17 @@ public class Password extends AppCompatActivity {
             detail = extras.getString("detail_id");
         }
 
-
         txt_ynw = (TextView) findViewById(R.id.txt_ynw);
         tv_password_title = (TextView) findViewById(R.id.txt_password_title);
         btn_pwd_submit = (Button) findViewById(R.id.pwd_submit);
         img_indicator = (ImageView) findViewById(R.id.img_indicator);
-
         Typeface tyface_btn = Typeface.createFromAsset(getAssets(),
                 "fonts/JosefinSans-Bold.ttf");
         btn_pwd_submit.setTypeface(tyface_btn);
-
         countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
-
-
-
 
         if (from.equalsIgnoreCase("login")) {
             img_indicator.setVisibility(View.GONE);
-
-
             ImageView iBackPress = (ImageView) findViewById(R.id.backpress);
             iBackPress.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -111,110 +110,71 @@ public class Password extends AppCompatActivity {
             });
             TextView tv_title = (TextView) findViewById(R.id.title);
             tv_title.setText("Forgot password");
-
-
-
-
-
-
-           /* String firstWord = "Change ";
-            String secondWord = "Password";
-
-
-            Spannable spannable = new SpannableString(firstWord+secondWord);
-
-            Typeface tyface_edittext1 = Typeface.createFromAsset(getAssets(),
-                    "fonts/Montserrat_Light.otf");
-            Typeface tyface_edittext2 = Typeface.createFromAsset(getAssets(),
-                    "fonts/Montserrat_Bold.otf");
-
-            spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-
-
-            tv_password_title.setText( spannable );*/
             tv_password_title.setVisibility(View.INVISIBLE);
 
         } else {
             LinearLayout layout_toolbar = (LinearLayout) findViewById(R.id.layout_toolbar);
             layout_toolbar.setVisibility(View.GONE);
             txt_ynw.setVisibility(View.VISIBLE);
-
             Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
                     "fonts/JosefinSans-Bold.ttf");
             txt_ynw.setTypeface(tyface_edittext);
             //tv_password_title.setText("Create New Password");
             btn_pwd_submit.setText("Create Password");
-
-
             String firstWord = "Create New ";
             String secondWord = "Password";
-
-
             Spannable spannable = new SpannableString(firstWord + secondWord);
-
             Typeface tyface_edittext1 = Typeface.createFromAsset(getAssets(),
                     "fonts/JosefinSans-Light.ttf");
             Typeface tyface_edittext2 = Typeface.createFromAsset(getAssets(),
                     "fonts/JosefinSans-Bold.ttf");
-
             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
             tv_password_title.setVisibility(View.VISIBLE);
             tv_password_title.setText(spannable);
-
         }
         mContext = this;
         mEdtpwd = (TextInputEditText) findViewById(R.id.editpassword);
         mEdtconfirmPwd = (TextInputEditText) findViewById(R.id.editconfirm_password);
         txt_InputPwd = (TextInputLayout) findViewById(R.id.text_input_layout_pwd);
         txt_Confirm_InputPwd = (TextInputLayout) findViewById(R.id.text_input_layout_pwd_confirm);
-
         mEdtpwd.addTextChangedListener(new MyTextWatcher(mEdtpwd));
         mEdtconfirmPwd.addTextChangedListener(new MyTextWatcher(mEdtconfirmPwd));
-   //     pattern = Pattern.compile(PASSWORD_PATTERN);
-
+        mEdtpwd.setOnFocusChangeListener(new FocuseChange(mEdtpwd));
+        mEdtconfirmPwd.setOnFocusChangeListener(new FocuseChange(mEdtconfirmPwd));
+        //     pattern = Pattern.compile(PASSWORD_PATTERN);
         mEdtpwd.setTransformationMethod(new PasswordTransformationMethod());
         mEdtconfirmPwd.setTransformationMethod(new PasswordTransformationMethod());
-
-
         Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
                 "fonts/JosefinSans-Bold.ttf");
         mEdtpwd.setTypeface(tyface_edittext);
         mEdtconfirmPwd.setTypeface(tyface_edittext);
-
         Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
                 "fonts/JosefinSans-Light.ttf");
         txt_InputPwd.setTypeface(tyface_edittext_hint);
         txt_Confirm_InputPwd.setTypeface(tyface_edittext_hint);
+        setPswdSubmitButtonEnableOrDisable();
         btn_pwd_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Btn_Pwdsubmit(v);
             }
         });
-
         mEdtpwd.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 return true;
             }
         });
-
         mEdtconfirmPwd.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 return true;
             }
         });
-
-
     }
 
-
-//    /**
+    //    /**
 //     * Validate password with regular expression
 //     *
 //     * @param password password for validation
@@ -226,6 +186,66 @@ public class Password extends AppCompatActivity {
 //        return matcher.matches();
 //
 //    }
+    private class FocuseChange implements View.OnFocusChangeListener {
+        private View view;
+
+        private FocuseChange(View view) {
+            this.view = view;
+        }
+
+        public void onFocusChange(View view, boolean b) {
+            if (b == false) {
+                switch (view.getId()) {
+                    case R.id.editpassword:
+                        if (mEdtpwd.getText().toString().trim().isEmpty()) {
+
+                            SpannableString s = new SpannableString("Password is required");
+                            Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
+                                    "fonts/Montserrat_Light.otf");
+                            s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            txt_InputPwd.setError(s);
+                            newPswdIsErrorFree = false;
+
+                        } else if (mEdtpwd.getText().toString().length() < 8) {
+
+                            SpannableString s = new SpannableString("Minimum 8 characters are required");
+                            Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
+                                    "fonts/Montserrat_Light.otf");
+                            s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            txt_InputPwd.setError(s);
+                            newPswdIsErrorFree = false;
+                        } else {
+                            newPswdIsErrorFree = true;
+                        }
+                        newPswd++;
+                        setPswdSubmitButtonEnableOrDisable();
+                        break;
+                    case R.id.editconfirm_password:
+                        if (mEdtconfirmPwd.getText().toString().trim().isEmpty()) {
+
+                            SpannableString s = new SpannableString("Re-enter Password");
+                            Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
+                                    "fonts/Montserrat_Light.otf");
+                            s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            txt_Confirm_InputPwd.setError(s);
+                            confirmPswdIsErrorFree = false;
+                        } else if (mEdtconfirmPwd.getText().toString().length() < 8) {
+                            SpannableString s = new SpannableString("Minimum 8 characters are required");
+                            Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
+                                    "fonts/Montserrat_Light.otf");
+                            s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            txt_Confirm_InputPwd.setError(s);
+                            confirmPswdIsErrorFree = false;
+                        } else {
+                            confirmPswdIsErrorFree = true;
+                        }
+                        confirmPswd++;
+                        setPswdSubmitButtonEnableOrDisable();
+                        break;
+                }
+            }
+        }
+    }
 
     private class MyTextWatcher implements TextWatcher {
 
@@ -247,13 +267,53 @@ public class Password extends AppCompatActivity {
             if (editable.length() > 0) {
                 switch (view.getId()) {
                     case R.id.editpassword:
-                        Config.logV("Text Change---- After");
-                      //  validatePassword();
+                        if (editable.length() < 8 && newPswd > 0) {
+                            SpannableString s = new SpannableString("Minimum 8 characters are required");
+                            Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
+                                    "fonts/Montserrat_Light.otf");
+                            s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            txt_InputPwd.setError(s);
+                            newPswdIsErrorFree = false;
+                        } else if (editable.length() >= 8) {
+                            txt_InputPwd.setError(null);
+                            newPswdIsErrorFree = true;
+                            if (mEdtconfirmPwd.getText().toString().length() >= 8) {
+                                if (mEdtpwd.getText().toString().equals(mEdtconfirmPwd.getText().toString())) {
+                                    txt_Confirm_InputPwd.setError(null);
+                                    confirmPswdIsErrorFree = true;
+                                } else {
+                                    SpannableString s = new SpannableString("Entered passwords does not match");
+                                    Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
+                                            "fonts/Montserrat_Light.otf");
+                                    s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    txt_Confirm_InputPwd.setError(s);
+                                    confirmPswdIsErrorFree = false;
+                                }
+                            }
+                        }
+                        setPswdSubmitButtonEnableOrDisable();
                         break;
                     case R.id.editconfirm_password:
-                        validateConfirmPassword();
+                        if (editable.length() < 8 && confirmPswd > 0) {
+                            SpannableString s = new SpannableString("Minimum 8 characters are required");
+                            Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
+                                    "fonts/Montserrat_Light.otf");
+                            s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            txt_Confirm_InputPwd.setError(s);
+                            confirmPswdIsErrorFree = false;
+                        } else if (editable.length() >= 8 && !mEdtpwd.getText().toString().equals(mEdtconfirmPwd.getText().toString())) {
+                            SpannableString s = new SpannableString("Entered passwords does not match");
+                            Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
+                                    "fonts/Montserrat_Light.otf");
+                            s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            txt_Confirm_InputPwd.setError(s);
+                            confirmPswdIsErrorFree = false;
+                        } else if (editable.length() >= 8) {
+                            txt_Confirm_InputPwd.setError(null);
+                            confirmPswdIsErrorFree = true;
+                        }
+                        setPswdSubmitButtonEnableOrDisable();
                         break;
-
                 }
             }
         }
@@ -265,121 +325,88 @@ public class Password extends AppCompatActivity {
         }
     }
 
-    private boolean validateConfirmPassword() {
-        if (mEdtconfirmPwd.getText().toString().trim().isEmpty()) {
-            //txt_Confirm_InputPwd.setError(getString(R.string.err_msg_password));
-
-            SpannableString s = new SpannableString(getString(R.string.err_msg_password));
-            Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-                    "fonts/JosefinSans-Light.ttf");
-            s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            txt_Confirm_InputPwd.setError(s);
-
-
-            requestFocus(mEdtconfirmPwd);
-            return false;
+    private void setPswdSubmitButtonEnableOrDisable() {  // for set password submit button enabled or disabled
+        if (newPswdIsErrorFree && confirmPswdIsErrorFree) {
+            btn_pwd_submit.setEnabled(true);
+            btn_pwd_submit.setAlpha(1f);
         } else {
-            txt_Confirm_InputPwd.setError(null);
-            txt_Confirm_InputPwd.setErrorEnabled(false);
+            btn_pwd_submit.setEnabled(false);
+            btn_pwd_submit.setAlpha(.5f);
         }
-
-        return true;
     }
-
-//    private boolean validatePassword() {
-//        if (!validatePwd(mEdtpwd.getText().toString())) {
-//
-//            SpannableString s = new SpannableString(getString(R.string.err_pwd_valid));
-//            Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-//                    "fonts/Montserrat_Light.otf");
-//            s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            txt_InputPwd.setError(s);
-//
-//            requestFocus(mEdtpwd);
-//            return false;
-//        } else {
-//            txt_InputPwd.setError(null);
-//            txt_InputPwd.setErrorEnabled(false);
-//        }
-//        return true;
-//    }
 
     public void Btn_Pwdsubmit(View view) {
 
         if (from.equalsIgnoreCase("login")) {
 
-         //   if (validatePassword() && validateConfirmPassword()) {
-                if (mEdtpwd.getText().toString().equals(mEdtconfirmPwd.getText().toString())) {
-                    ApiReSetPassword(otp, mEdtconfirmPwd.getText().toString());
-                } else {
-                    Toast.makeText(mContext, " Password mismatch", Toast.LENGTH_LONG).show();
-                }
-         //   }
+            //   if (validatePassword() && validateConfirmPassword()) {
+            if (mEdtpwd.getText().toString().equals(mEdtconfirmPwd.getText().toString())) {
+                ApiReSetPassword(otp, mEdtconfirmPwd.getText().toString());
+            } else {
+                Toast.makeText(mContext, " Password mismatch", Toast.LENGTH_LONG).show();
+            }
+            //   }
         } else {
 
-
-         //   if (validatePassword() && validateConfirmPassword()) {
-                if (mEdtpwd.getText().toString().equals(mEdtconfirmPwd.getText().toString())) {
-                    ApiSetPassword(otp, mEdtconfirmPwd.getText().toString());
-                } else {
-                    Toast.makeText(mContext, "Password mismatch", Toast.LENGTH_LONG).show();
-                }
-          //  }
+            //   if (validatePassword() && validateConfirmPassword()) {
+            if (mEdtpwd.getText().toString().equals(mEdtconfirmPwd.getText().toString())) {
+                ApiSetPassword(otp, mEdtconfirmPwd.getText().toString());
+            } else {
+                Toast.makeText(mContext, "Password mismatch", Toast.LENGTH_LONG).show();
+            }
+            //  }
         }
     }
 
     private void ApiReSetPassword(String otp, final String pwd) {
-        {
 
-            ApiInterface apiService =
-                    ApiClient.getClient(this).create(ApiInterface.class);
-            final String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
-            JSONObject jsonObj = new JSONObject();
-            try {
-                jsonObj.put("loginId", loginId);
-                jsonObj.put("password", pwd);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-            final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
-            mDialog.show();
-            Call<String> call = apiService.SetResetPassword(otp, body);
+        ApiInterface apiService =
+                ApiClient.getClient(this).create(ApiInterface.class);
+        final String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("loginId", loginId);
+            jsonObj.put("password", pwd);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<String> call = apiService.SetResetPassword(otp, body);
 
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
 
-                    try {
+                try {
 
-                        if (mDialog.isShowing())
-                            Config.closeDialog(getParent(), mDialog);
-
-                        Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                        Config.logV("code---------------" + response.code());
-                        if (response.code() == 200) {
-                            Config.logV("Sucess password----------" + response.body());
-
-                            if (response.body().equalsIgnoreCase("true")) {
-                                ApiLogin(loginId, pwd);
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    // Log error here since request failed
-                    Config.logV("Fail---------------" + t.toString());
                     if (mDialog.isShowing())
                         Config.closeDialog(getParent(), mDialog);
 
-                }
-            });
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("code---------------" + response.code());
+                    if (response.code() == 200) {
+                        Config.logV("Sucess password----------" + response.body());
 
-        }
+                        if (response.body().equalsIgnoreCase("true")) {
+                            ApiLogin(loginId, pwd);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+
+            }
+        });
     }
 
     public void ApiSetPassword(String otp, final String pwd) {
@@ -417,16 +444,14 @@ public class Password extends AppCompatActivity {
                             ApiLogin(loginId, pwd);
 
                         }
-                    }
-                    else{
-                        if(response.code() == 422){
+                    } else {
+                        if (response.code() == 422) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -435,10 +460,8 @@ public class Password extends AppCompatActivity {
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getParent(), mDialog);
-
             }
         });
-
     }
 
     public void ApiLogin(String loginId, String password) {
@@ -465,7 +488,7 @@ public class Password extends AppCompatActivity {
         Config.logV("JSON--------------" + jsonObj);
         final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<LoginResponse> call = apiService.LoginResponse(getDeviceName(),body);
+        Call<LoginResponse> call = apiService.LoginResponse(getDeviceName(), body);
 
         call.enqueue(new Callback<LoginResponse>() {
             @Override
@@ -504,7 +527,6 @@ public class Password extends AppCompatActivity {
                         String version = headerList.get("Version");
                         Config.logV("Header----------" + version);
 
-
                         SharedPreference.getInstance(mContext).setValue("firstname", response.body().getFirstName());
                         SharedPreference.getInstance(mContext).setValue("lastname", response.body().getLastName());
                         SharedPreference.getInstance(mContext).setValue("consumerId", response.body().getId());
@@ -514,22 +536,17 @@ public class Password extends AppCompatActivity {
                         SharedPreference.getInstance(mContext).setValue("countryCode", countryCode);
                         SharedPreference.getInstance(mContext).setValue("firstBooking", response.body().isFirstCheckIn());
 
-
                         Intent iReg = new Intent(mContext, Home.class);
                         iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        if(detail!=null){
+                        if (detail != null) {
                             iReg.putExtra("detail_id", (detail));
                             iReg.putExtra("from", (from));
                         }
                         startActivity(iReg);
                         finish();
-
-
                     } else {
                         Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -541,11 +558,10 @@ public class Password extends AppCompatActivity {
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getParent(), mDialog);
-
             }
         });
-
     }
+
     public static String getDeviceName() {
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;
