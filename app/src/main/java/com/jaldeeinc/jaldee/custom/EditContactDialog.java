@@ -3,17 +3,23 @@ package com.jaldeeinc.jaldee.custom;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+
+import com.google.i18n.phonenumbers.NumberParseException;
 import com.jaldeeinc.jaldee.Interface.IEditContact;
-import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.common.Config;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -67,6 +73,22 @@ public class EditContactDialog extends Dialog {
         etMail.setText(emailAddress);
         etPhone.setText(phoneNumber);
 
+        etPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                tvError.setVisibility(View.INVISIBLE);
+            }
+        });
 
         ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,26 +125,35 @@ public class EditContactDialog extends Dialog {
 
         if (!countryCode.trim().equalsIgnoreCase("") && !mail.trim().equalsIgnoreCase("")) {
 
-            if (number.trim().length() > 9 && android.util.Patterns.PHONE.matcher(number).matches()) {
+            try {
+                if (Config.validatePhoneNumberWithCountryCode(countryCode, number)) {
 
-                tvError.setVisibility(View.GONE);
+                    tvError.setVisibility(View.INVISIBLE);
 
-                if (isValidEmail(mail)){
-                    tvError.setVisibility(View.GONE);
-                    iEditContact.onEdit(countryCode, number, mail);
-                    dismiss();
+                    if (isValidEmail(mail)) {
+                        tvError.setVisibility(View.INVISIBLE);
+                        iEditContact.onEdit(countryCode, number, mail);
+                        dismiss();
+                    } else {
+
+                        tvError.setVisibility(View.VISIBLE);
+                        tvError.setText("* Enter valid email address");
+                        tvError.startAnimation(animShake);
+                    }
+
                 } else {
-
                     tvError.setVisibility(View.VISIBLE);
-                    tvError.setText("* Enter valid email address");
-                    tvError.startAnimation(animShake);
+                    tvError.setText("Enter valid mobile number");
+                    //tvError.startAnimation(animShake);
                 }
-
-            } else {
-
-                tvError.setVisibility(View.VISIBLE);
-                tvError.setText("* Enter valid mobile number");
-                tvError.startAnimation(animShake);
+            } catch (NumberParseException e) {
+                if (e.getErrorType().equals(NumberParseException.ErrorType.INVALID_COUNTRY_CODE)) {
+                    tvError.setVisibility(View.VISIBLE);
+                    tvError.setText("Invalid country code");
+                } else if (e.getErrorType().equals(NumberParseException.ErrorType.NOT_A_NUMBER)) {
+                    tvError.setVisibility(View.VISIBLE);
+                    tvError.setText("Enter valid mobile number");
+                }
             }
 
         } else {
@@ -131,9 +162,7 @@ public class EditContactDialog extends Dialog {
             tvError.setText("* All fields are mandatory");
             tvError.startAnimation(animShake);
         }
-
     }
-
     public static boolean isValidEmail(CharSequence target) {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }

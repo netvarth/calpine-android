@@ -26,9 +26,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Home;
-import com.jaldeeinc.jaldee.activities.Register;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.LoginResponse;
@@ -229,7 +231,7 @@ public class Config {
             String[] sArray = s1.split("(?=\\.)");
             if (sArray.length == 1) {                                                                   //
                 return sArray[0];                                                                       //
-            } else if(sArray.length == 2){                                                                                    //
+            } else if (sArray.length == 2) {                                                                                    //
                 String s2 = getAmountNoOrTwoDecimalPoints(Double.parseDouble(sArray[1]));               //without this if input = 1000000.30 result is 1,000,000.3,,with this 3 line result is 1,000,000.30
                 String s3 = s2.split("(?=\\.)")[1];                                               //
                 return sArray[0].concat(s3);
@@ -591,4 +593,17 @@ public class Config {
         return yourDate;
     }
 
+    public static boolean validatePhoneNumberWithCountryCode(String countryCode, String phNumber) throws NumberParseException {
+        PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+        String isoCode = phoneNumberUtil.getRegionCodeForCountryCode(Integer.parseInt(countryCode));
+        Phonenumber.PhoneNumber phoneNumber = null;
+        phoneNumber = phoneNumberUtil.parse(phNumber, isoCode);
+        boolean isValid = phoneNumberUtil.isValidNumber(phoneNumber);
+        if (isValid) {
+            String internationalFormat = phoneNumberUtil.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
