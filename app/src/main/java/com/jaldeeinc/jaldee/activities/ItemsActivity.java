@@ -206,7 +206,13 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
 
         gridLayoutManager = new GridLayoutManager(ItemsActivity.this, 2);
         rvItems.setLayoutManager(gridLayoutManager);
-        itemsAdapter = new ItemsAdapter(catalogInfo.getCatalogItemsList(), this, true, iItemInterface, accountId, uniqueId, catalogInfo);
+        ArrayList<CatalogItem> catItem = new ArrayList<>();
+        for(CatalogItem citem : catalogInfo.getCatalogItemsList()){  // for remove if item online view from provider is falls
+            if(citem.getItems().isShowOnLandingPage()) {
+                catItem.add(citem);
+            }
+        }
+        itemsAdapter = new ItemsAdapter(catItem, this, true, iItemInterface, accountId, uniqueId, catalogInfo);
         rvItems.setAdapter(itemsAdapter);
 
         if (accountId == db.getAccountId()) {
@@ -390,7 +396,12 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
     public void refreshData() {
 
         ArrayList<CatalogItem> catalogItemsList = new ArrayList<>();
-        catalogItemsList = updateCatalogItemsDiscount(catalogInfo.getCatalogItemsList());
+        for(CatalogItem citem : catalogInfo.getCatalogItemsList()){  // for remove if item online view from provider is falls
+            if(citem.getItems().isShowOnLandingPage()) {
+                catalogItemsList.add(citem);
+            }
+        }
+        catalogItemsList = updateCatalogItemsDiscount(catalogItemsList);
         catalogItemsList = updateCatalogItemsQuantity(catalogItemsList);
         gridLayoutManager = new GridLayoutManager(ItemsActivity.this, 2);
         rvItems.setLayoutManager(gridLayoutManager);

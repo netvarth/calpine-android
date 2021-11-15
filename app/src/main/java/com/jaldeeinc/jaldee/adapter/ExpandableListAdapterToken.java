@@ -39,7 +39,6 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckinShareLocation;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.ProviderDetailActivity;
-import com.jaldeeinc.jaldee.activities.RescheduleActivity;
 import com.jaldeeinc.jaldee.activities.RescheduleCheckinActivity;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
 import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;

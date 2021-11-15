@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.jaldeeinc.jaldee.Fragment.DashboardFragment;
 import com.jaldeeinc.jaldee.Fragment.HomeSearchFragment;
 import com.jaldeeinc.jaldee.Fragment.SearchListFragment;
 import com.jaldeeinc.jaldee.R;

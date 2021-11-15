@@ -27,7 +27,6 @@ import android.widget.TextView;
 import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
 import com.jaldeeinc.jaldee.Interface.IActiveBookings;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.RescheduleActivity;
 import com.jaldeeinc.jaldee.activities.RescheduleCheckinActivity;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
 import com.jaldeeinc.jaldee.common.Config;
