@@ -460,6 +460,11 @@ public class Home extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     public static boolean doubleBackToExitPressedOnce = false;
 
     @Override

@@ -24,6 +24,7 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.response.InboxModel;
+import com.jaldeeinc.jaldee.response.NewInbox;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
     Activity mActivity;
     RecyclerView mrRecylce_inboxlist;
     InboxAdapter mInboxAdapter;
-    ArrayList<InboxModel> mInboxList = new ArrayList<>();
+    ArrayList<NewInbox> mInboxList = new ArrayList<>();
     DatabaseHandler db;
     ArrayList<InboxModel> mDBInboxList = new ArrayList<>();
     ArrayList<InboxModel> mDBSORTInboxList = new ArrayList<>();
@@ -72,7 +73,7 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
 
         linearLayoutManager = new LinearLayoutManager(mContext);
         mrRecylce_inboxlist.setLayoutManager(linearLayoutManager);
-        mInboxAdapter = new InboxAdapter(mDBSORTInboxList, mContext, mActivity, true);
+        mInboxAdapter = new InboxAdapter(mInboxList, mContext, mActivity, true);
         mrRecylce_inboxlist.setAdapter(mInboxAdapter);
 
 
@@ -96,10 +97,10 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
 
         final ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
 
-        Call<ArrayList<InboxModel>> call = apiService.getMessage();
-        call.enqueue(new Callback<ArrayList<InboxModel>>() {
+        Call<ArrayList<NewInbox>> call = apiService.getChats();
+        call.enqueue(new Callback<ArrayList<NewInbox>>() {
             @Override
-            public void onResponse(Call<ArrayList<InboxModel>> call, Response<ArrayList<InboxModel>> response) {
+            public void onResponse(Call<ArrayList<NewInbox>> call, Response<ArrayList<NewInbox>> response) {
 
                 try {
 
@@ -110,65 +111,14 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
                         if (mInboxList == null) {
                             mInboxList = new ArrayList<>();
                         }
-                        mDBInboxList.clear();
-                        mDBSORTInboxList.clear();
-                        db = new DatabaseHandler(mContext);
+
                         if (mInboxList.size() > 0) {
-                            db.DeleteInbox();
+
                             tv_noinbox.setVisibility(View.GONE);
                             mrRecylce_inboxlist.setVisibility(View.VISIBLE);
-                            for (int i = 0; i < mInboxList.size(); i++) {
-
-                                int activeConsumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
-
-
-                                String senderName = String.valueOf(mInboxList.get(i).getAccountName()).toLowerCase().trim();
-
-                                int senderId = mInboxList.get(i).getOwner().getId();
-                                String messageStatus = "in";
-
-                                if (senderId == activeConsumerId) {
-
-                                    senderId = mInboxList.get(i).getReceiver().getReceiverId();
-                                    senderName = String.valueOf(mInboxList.get(i).getReceiver().getReceiverName()).toLowerCase().trim();
-                                    //  Config.logV("SenderID--1111----------" + senderId);
-                                    messageStatus = "out";
-                                }
-
-                                String senderKey = senderId + "_" + senderName;
-                                Config.logV("SenderKEy----------" + senderKey);
-                                InboxModel inbox = new InboxModel();
-                                inbox.setTimeStamp(mInboxList.get(i).getTimeStamp());
-                                inbox.setUserName(senderName);
-                                inbox.setService(mInboxList.get(i).getService());
-                                inbox.setMsg(mInboxList.get(i).getMsg());
-                                inbox.setId(mInboxList.get(i).getOwner().getId());
-                                inbox.setWaitlistId(mInboxList.get(i).getWaitlistId());
-                                inbox.setMessageStatus(messageStatus);
-                                inbox.setAttachments(mInboxList.get(i).getAttachments());
-                                //Config.logV("AccountID--------------"+mInboxList.get(i).getAccountId());
-                                inbox.setUniqueID(mInboxList.get(i).getAccountId());
-                                inbox.setAccountName(mInboxList.get(i).getAccountName());
-                                inbox.setRead(mInboxList.get(i).isRead());
-                                // mDBInboxList.add(inbox);
-
-                                db.insertInboxModel(inbox);
-//                                mDBSORTInboxList.add(inbox);
-                            }
-                            mDBSORTInboxList = db.getAllInboxDetail();
-
-
-                            Collections.sort(mDBSORTInboxList, new Comparator<InboxModel>() {
-                                @Override
-                                public int compare(InboxModel r1, InboxModel r2) {
-                                    return Long.compare(r2.getTimeStamp(), r1.getTimeStamp());
-                                }
-                            });
-
-                            Config.logV("INBOX LIST------NEW----------" + mDBSORTInboxList.size());
                             linearLayoutManager = new LinearLayoutManager(mContext);
                             mrRecylce_inboxlist.setLayoutManager(linearLayoutManager);
-                            mInboxAdapter = new InboxAdapter(mDBSORTInboxList, mContext, mActivity, false);
+                            mInboxAdapter = new InboxAdapter(mInboxList, mContext, mActivity, false);
                             mrRecylce_inboxlist.setAdapter(mInboxAdapter);
 
                         } else {
@@ -191,7 +141,7 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
             }
 
             @Override
-            public void onFailure(Call<ArrayList<InboxModel>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<NewInbox>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
             }
@@ -204,31 +154,7 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
     public void onResume() {
         super.onResume();
 
-        if (Config.isOnline(mContext)) {
-            ApiInboxList();
-        } else {
-            mDBSORTInboxList.clear();
-            db = new DatabaseHandler(mContext);
-            mDBSORTInboxList = db.getAllInboxDetail();
-            if (mDBSORTInboxList.size() > 0) {
-
-                tv_noinbox.setVisibility(View.GONE);
-                mrRecylce_inboxlist.setVisibility(View.VISIBLE);
-                Collections.sort(mDBSORTInboxList, new Comparator<InboxModel>() {
-                    @Override
-                    public int compare(InboxModel r1, InboxModel r2) {
-                        return new Long(r2.getTimeStamp()).compareTo(new Long(r1.getTimeStamp()));
-                    }
-                });
-                linearLayoutManager = new LinearLayoutManager(mContext);
-                mrRecylce_inboxlist.setLayoutManager(linearLayoutManager);
-                mInboxAdapter = new InboxAdapter(mDBSORTInboxList, mContext, mActivity, false);
-                mrRecylce_inboxlist.setAdapter(mInboxAdapter);
-            } else {
-                tv_noinbox.setVisibility(View.VISIBLE);
-                mrRecylce_inboxlist.setVisibility(View.GONE);
-            }
-        }
+        ApiInboxList();
 
     }
 

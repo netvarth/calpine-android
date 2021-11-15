@@ -153,7 +153,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
     @BindView(R.id.cv_back)
     CardView cvBack;
 
-
     private static Context mContext;
     private IFilesInterface iFilesInterface;
     private KeyPairBoolData fileObject = new KeyPairBoolData();
@@ -210,11 +209,18 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
             bookingStatus = "";
         }
 
-        if (!bookingStatus.trim().equalsIgnoreCase("") && !(bookingStatus.equalsIgnoreCase("Confirmed") || bookingStatus.equalsIgnoreCase("Arrived") || bookingStatus.equalsIgnoreCase("checkedIn") || bookingStatus.equalsIgnoreCase("arrived"))) {
+        if (!bookingStatus.trim().equalsIgnoreCase("") && !(bookingStatus.equalsIgnoreCase("Confirmed") || bookingStatus.equalsIgnoreCase("Arrived") || bookingStatus.equalsIgnoreCase("checkedIn") || bookingStatus.equalsIgnoreCase("arrived") || bookingStatus.equalsIgnoreCase(Constants.DONATION))) {
 
-            showAlert();
+            showAlert("Service has started","The given details cannot be edited as the service has started");
         }
 
+        // to show alert in Donation case
+
+        if (bookingStatus.equalsIgnoreCase(Constants.DONATION)){
+
+            showAlert("Donation has been made","The given details cannot be edited.");
+
+        }
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -289,12 +295,18 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
     }
 
-    private void showAlert() {
+    private void showAlert(String title, String message) {
 
-        Config.showAlertBuilder(mContext, "Service has started", "The given details cannot be edited as the service has started.");
+        Config.showAlertBuilder(mContext, title, message);
     }
 
     private void submitQuestionnaire() throws JSONException {
+
+        if (from.equalsIgnoreCase(Constants.DONATION)){
+
+            Toast.makeText(mContext, "The given details cannot be edited.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         QuestionnaireInput input = new QuestionnaireInput();
         input.setQuestionnaireId(qInput.getQuestionnaireId());
@@ -573,6 +585,10 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                     Toast.makeText(mContext, "The given details cannot be edited as the service has started.", Toast.LENGTH_SHORT).show();
 
                 }
+
+            } else if (from.equalsIgnoreCase(Constants.DONATION)){
+
+                Toast.makeText(mContext, "The given details cannot be edited.", Toast.LENGTH_SHORT).show();
 
             }
         }

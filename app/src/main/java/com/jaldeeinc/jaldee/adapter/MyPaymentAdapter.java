@@ -131,6 +131,8 @@ public class MyPaymentAdapter extends ArrayAdapter<MyPayments> {
 
                 Intent iPaymentDetail = new Intent(v.getContext(), PaymentDetail.class);
                 iPaymentDetail.putExtra("myPaymentID", String.valueOf(paymentsList.get(position).getId()));
+                iPaymentDetail.putExtra("txnType",paymentsList.get(position).getTxnType());
+                iPaymentDetail.putExtra("uuid",paymentsList.get(position).getYnwUuid());
                 mContext.startActivity(iPaymentDetail);
             }
 
@@ -142,6 +144,8 @@ public class MyPaymentAdapter extends ArrayAdapter<MyPayments> {
 
                 Intent iPaymentDetail = new Intent(v.getContext(), PaymentDetail.class);
                 iPaymentDetail.putExtra("myPaymentID", String.valueOf(paymentsList.get(position).getId()));
+                iPaymentDetail.putExtra("txnType",paymentsList.get(position).getTxnType());
+                iPaymentDetail.putExtra("uuid",paymentsList.get(position).getYnwUuid());
                 mContext.startActivity(iPaymentDetail);
             }
 

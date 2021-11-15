@@ -2,7 +2,9 @@ package com.jaldeeinc.jaldee.response;
 
 import com.google.gson.JsonObject;
 
-public class ActiveDonation {
+import java.io.Serializable;
+
+public class ActiveDonation implements Serializable {
 
 
     String donationEncId;
@@ -12,6 +14,8 @@ public class ActiveDonation {
     JsonObject service;
     String donationAmount;
     String uid;
+    private QuestionnaireResponse questionnaire;
+
 
     public String getUid() { return uid; }
 
@@ -41,5 +45,13 @@ public class ActiveDonation {
 
     public String getDonationAmount() {
         return donationAmount;
+    }
+
+    public QuestionnaireResponse getQuestionnaire() {
+        return questionnaire;
+    }
+
+    public void setQuestionnaire(QuestionnaireResponse questionnaire) {
+        this.questionnaire = questionnaire;
     }
 }

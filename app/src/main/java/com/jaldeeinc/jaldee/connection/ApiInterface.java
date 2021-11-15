@@ -750,8 +750,10 @@ public interface ApiInterface {
     @GET("consumer/communications/unreadCount")
     Call<ResponseBody> getUnreadMessagesCount();
 
-    @GET("consumer/communications/latestComm")
+    @GET("consumer/communications/filterComm")
     Call<ArrayList<NewInbox>> getChats();
 
+    @GET("consumer/donation/{uid}")
+    Call<ActiveDonation> getDonationDetails(@Path("uid") String uuid);
 
 }

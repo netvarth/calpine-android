@@ -25,6 +25,7 @@ import com.jaldeeinc.jaldee.activities.DetailInboxList;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.response.InboxModel;
+import com.jaldeeinc.jaldee.response.NewInbox;
 
 
 import java.text.DateFormat;
@@ -39,14 +40,14 @@ import java.util.List;
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder> {
 
 
-    private List<InboxModel> mInboxList;
+    private ArrayList<NewInbox> mInboxList;
     Context mContext;
     Activity activity;
     private int lastPosition = -1;
     ArrayList<InboxModel> mDetailInboxList = new ArrayList<>();
     private boolean isLoading;
 
-    public InboxAdapter(List<InboxModel> mInboxList, Context mContext, Activity mActivity, boolean isLoading) {
+    public InboxAdapter(ArrayList<NewInbox> mInboxList, Context mContext, Activity mActivity, boolean isLoading) {
         this.mContext = mContext;
         this.mInboxList = mInboxList;
         this.activity = mActivity;
@@ -72,18 +73,17 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
     public void onBindViewHolder(final InboxAdapter.MyViewHolder myViewHolder, final int position) {
 
         if (!isLoading) {
-            final InboxModel inboxList = mInboxList.get(position);
+            final NewInbox inboxList = mInboxList.get(position);
 
             setAnimation(myViewHolder.cvCard, position);
 
-
-            if (inboxList.getMsg() != null) {
-                myViewHolder.tv_message.setText(Html.fromHtml(inboxList.getMsg()));
+            if (inboxList.getLatestMessage() != null) {
+                myViewHolder.tv_message.setText(Html.fromHtml(inboxList.getLatestMessage()));
             } else {
                 myViewHolder.tv_message.setText("Message");
             }
 
-            if (inboxList.getUnReadCount() > 0){
+            if (inboxList.getUnReadCount() > 0) {
 
                 myViewHolder.rlCount.setVisibility(View.VISIBLE);
                 myViewHolder.tvCount.setText("" + inboxList.getUnReadCount());
@@ -92,30 +92,14 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
                 myViewHolder.rlCount.setVisibility(View.GONE);
                 myViewHolder.tvCount.setText("0");
             }
-//        Log.i("kingiii",new Gson().toJson(inboxList.getAttachments()));
+
             myViewHolder.tv_message.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
                     Intent intent = new Intent(view.getContext(), ChatActivity.class);
-                    if (inboxList.getWaitlistId() != null) {
-                        intent.putExtra("uuid", inboxList.getWaitlistId());
-                    }
-                    if (inboxList.getUniqueID() != null) {
-                        intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
-                    }
+                    intent.putExtra("accountId", inboxList.getAccountId());
                     intent.putExtra("name", inboxList.getAccountName());
-//                    if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_wl")) {
-//                        intent.putExtra("from", Constants.CHECKIN);
-//                    } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_appt")) {
-//                        intent.putExtra("from", Constants.APPOINTMENT);
-//                    } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_odr")) {
-//                        intent.putExtra("from", Constants.ORDERS);
-//                    } else if (inboxList.getWaitlistId() != null && inboxList.getWaitlistId().contains("_dtn")) {
-//                        intent.putExtra("from", Constants.DONATION);
-//                    } else {
-//                        intent.putExtra("from", Constants.PROVIDER);
-//                    }
                     intent.putExtra("from", Constants.INBOX);
                     view.getContext().startActivity(intent);
 
@@ -132,21 +116,12 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
                 @Override
                 public void onClick(View v) {
 
+                    Intent intent = new Intent(v.getContext(), ChatActivity.class);
+                    intent.putExtra("accountId", inboxList.getAccountId());
+                    intent.putExtra("name", inboxList.getAccountName());
+                    intent.putExtra("from", Constants.INBOX);
+                    mContext.startActivity(intent);
 
-                    DatabaseHandler db = new DatabaseHandler(mContext);
-                    mDetailInboxList = db.getInboxDetail(inboxList.getUniqueID());
-                    if (DetailInboxList.setInboxList(mDetailInboxList)) {
-                        Intent intent = new Intent(v.getContext(), ChatActivity.class);
-                        if (inboxList.getWaitlistId() != null) {
-                            intent.putExtra("uuid", inboxList.getWaitlistId());
-                        }
-                        if (inboxList.getUniqueID() != null) {
-                            intent.putExtra("accountId", Integer.parseInt(inboxList.getUniqueID()));
-                        }
-                        intent.putExtra("name", inboxList.getAccountName());
-                        intent.putExtra("from", Constants.INBOX);
-                        mContext.startActivity(intent);
-                    }
                 }
 
             });
@@ -183,7 +158,6 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
             cvCard = view.findViewById(R.id.card);
             rlCount = view.findViewById(R.id.rl_count);
             tvCount = view.findViewById(R.id.tv_count);
-
 
 
         }

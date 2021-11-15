@@ -16,23 +16,33 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.RefundDetailsListAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.model.LabelPath;
+import com.jaldeeinc.jaldee.model.QuestionnaireResponseInput;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.ActiveDonation;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
+import com.jaldeeinc.jaldee.response.AnswerLineResponse;
+import com.jaldeeinc.jaldee.response.GetQuestion;
 import com.jaldeeinc.jaldee.response.MyPayments;
+import com.jaldeeinc.jaldee.response.QuestionAnswers;
+import com.jaldeeinc.jaldee.response.QuestionnaireResponse;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -48,11 +58,13 @@ public class PaymentDetail extends AppCompatActivity {
 
     Context mActivity;
     TextView provider, dateandtime, mode, paymentMode, paymentGateway, amount, status;
-    LinearLayout providerLayout, dateandtimeLayout, modeLayout, paymentModeLayout, paymentGatewayLayout, amountLayout, statusLayout, refundableLayout;
+    LinearLayout providerLayout, dateandtimeLayout, modeLayout, paymentModeLayout, paymentGatewayLayout, amountLayout, statusLayout, refundableLayout, llQuestionnaire;
     String id;
     TextView tv_title;
     Context mContext;
     String uniqueID;
+    String type = null;
+    String uuid;
     ImageView iBackPress;
     RefundDetailsListAdapter refundDetailsListAdapter;
     RecyclerView recycle_refundlist;
@@ -86,6 +98,7 @@ public class PaymentDetail extends AppCompatActivity {
         statusLayout = findViewById(R.id.statusLayout);
         refundableLayout = findViewById(R.id.refundableLayout);
         iBackPress = findViewById(R.id.backpress);
+        llQuestionnaire = findViewById(R.id.ll_questionnaire);
 
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +116,8 @@ public class PaymentDetail extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             id = extras.getString("myPaymentID", "");
+            type = extras.getString("txnType", null);
+            uuid = extras.getString("uuid", null);
         }
 
         provider.setOnClickListener(new View.OnClickListener() {
@@ -116,8 +131,33 @@ public class PaymentDetail extends AppCompatActivity {
             }
         });
 
+        if (type.equalsIgnoreCase("Donation")) {
+
+            getConfirmationId(uuid, Integer.parseInt(id));
+
+        }
+
+        llQuestionnaire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                QuestionnaireResponseInput input = buildQuestionnaireInput(donationDetail.getQuestionnaire());
+                ArrayList<LabelPath> labelPaths = buildQuestionnaireLabelPaths(donationDetail.getQuestionnaire());
+
+                SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
+                SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
+
+                Intent intent = new Intent(mActivity, UpdateQuestionnaire.class);
+                intent.putExtra("isEdit", true);
+                intent.putExtra("from", Constants.DONATION);
+                intent.putExtra("status",Constants.DONATION);
+                startActivity(intent);
+            }
+        });
+
         ApiPayementDetail(id);
     }
+
 
     private void getUniqueId(String customID) {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -345,7 +385,7 @@ public class PaymentDetail extends AppCompatActivity {
 
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-        Call<ActiveDonation> call = apiService.getActiveDonationUUID(uid, String.valueOf(id));
+        Call<ActiveDonation> call = apiService.getDonationDetails(uid);
         call.enqueue(new Callback<ActiveDonation>() {
             @Override
             public void onResponse(Call<ActiveDonation> call, Response<ActiveDonation> response) {
@@ -354,6 +394,16 @@ public class PaymentDetail extends AppCompatActivity {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         donationDetail = response.body();
+
+                        if (donationDetail != null && donationDetail.getQuestionnaire() != null) {
+
+                            llQuestionnaire.setVisibility(View.VISIBLE);
+
+                        } else {
+
+                            llQuestionnaire.setVisibility(View.GONE);
+                        }
+
                     }
                 } catch (Exception e) {
                     Log.i("mnbbnmmnbbnm", e.toString());
@@ -367,6 +417,58 @@ public class PaymentDetail extends AppCompatActivity {
         });
 
     }
+
+    private QuestionnaireResponseInput buildQuestionnaireInput(QuestionnaireResponse questionnaire) {
+
+        QuestionnaireResponseInput responseInput = new QuestionnaireResponseInput();
+        responseInput.setQuestionnaireId(questionnaire.getQuestionnaireId());
+        ArrayList<AnswerLineResponse> answerLineResponse = new ArrayList<>();
+        ArrayList<GetQuestion> questions = new ArrayList<>();
+
+        for (QuestionAnswers qAnswers : questionnaire.getQuestionAnswers()) {
+
+            answerLineResponse.add(qAnswers.getAnswerLine());
+            questions.add(qAnswers.getGetQuestion());
+
+        }
+
+        responseInput.setAnswerLines(answerLineResponse);
+        responseInput.setQuestions(questions);
+
+        return responseInput;
+
+    }
+
+    private ArrayList<LabelPath> buildQuestionnaireLabelPaths(QuestionnaireResponse questionnaire) {
+
+        ArrayList<LabelPath> labelPaths = new ArrayList<>();
+
+        for (QuestionAnswers qAnswers : questionnaire.getQuestionAnswers()) {
+
+            if (qAnswers.getGetQuestion().getFieldDataType().equalsIgnoreCase("fileUpload")) {
+
+                JsonArray jsonArray = new JsonArray();
+                jsonArray = qAnswers.getAnswerLine().getAnswer().get("fileUpload").getAsJsonArray();
+                for (int i = 0; i < jsonArray.size(); i++) {
+
+                    LabelPath path = new LabelPath();
+                    path.setId(labelPaths.size());
+                    path.setFileName(jsonArray.get(i).getAsJsonObject().get("caption").getAsString());
+                    path.setLabelName(qAnswers.getAnswerLine().getLabelName());
+                    path.setPath(jsonArray.get(i).getAsJsonObject().get("s3path").getAsString());
+                    path.setType(jsonArray.get(i).getAsJsonObject().get("type").getAsString());
+
+                    labelPaths.add(path);
+                }
+
+            }
+
+        }
+
+        return labelPaths;
+
+    }
+
 
     private void getOrderDetails(String orderUUid, int accountId) {
 

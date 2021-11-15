@@ -433,31 +433,7 @@ public class ChatActivity extends AppCompatActivity {
         //   mTxvBuy.setEnabled(true);
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
 
-
-            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
-            ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
-
-            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
-
-                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
-                    showAlert("Payment Successful");
-                    finish();
-                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.CANCELLED)) {
-                    showAlert("Payment Cancelled");
-                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.FAILED)) {
-                    showAlert("Payment Failed");
-                }
-
-            } else if (resultModel != null && resultModel.getError() != null) {
-                Toast.makeText(this, "Error check log", Toast.LENGTH_SHORT).show();
-            } else {
-                //  Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
-            }
-        } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
-            showAlert("Payment Cancelled");
-        }
         if (requestCode == GALLERY) {
             if (data != null) {
                 try {

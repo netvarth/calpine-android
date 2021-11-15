@@ -7,21 +7,13 @@ import java.io.Serializable;
 
 public class NewInbox implements Serializable {
 
-    @SerializedName("msg")
+    @SerializedName("latestMsg")
     @Expose
     private String latestMessage;
-
-    @SerializedName("messageId")
-    @Expose
-    private int messageId;
 
     @SerializedName("timeStamp")
     @Expose
     private long timeStamp;
-
-    @SerializedName("waitlistId")
-    @Expose
-    private String waitlistId;
 
     @SerializedName("accountId")
     @Expose
@@ -44,28 +36,12 @@ public class NewInbox implements Serializable {
         this.latestMessage = latestMessage;
     }
 
-    public int getMessageId() {
-        return messageId;
-    }
-
-    public void setMessageId(int messageId) {
-        this.messageId = messageId;
-    }
-
     public long getTimeStamp() {
         return timeStamp;
     }
 
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
-    }
-
-    public String getWaitlistId() {
-        return waitlistId;
-    }
-
-    public void setWaitlistId(String waitlistId) {
-        this.waitlistId = waitlistId;
     }
 
     public int getAccountId() {
