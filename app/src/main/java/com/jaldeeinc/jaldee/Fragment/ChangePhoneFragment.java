@@ -6,8 +6,8 @@ import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.SpannableString;
 
+import com.google.i18n.phonenumbers.NumberParseException;
 import com.hbb20.CountryCodePicker;
-import com.jaldeeinc.jaldee.activities.AppointmentActivity;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 
@@ -18,8 +18,6 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.fragment.app.FragmentTransaction;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,10 +33,6 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,13 +45,12 @@ import retrofit2.Response;
 public class ChangePhoneFragment extends RootFragment {
     Context mContext;
 
-
     TextInputEditText edtPhone;
     Button mDone;
     TextInputLayout text_input_phone;
     TextView txtmobile;
     CountryCodePicker cCodePicker;
-    String countryCode;// = "+91";
+    String countryCode;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,14 +87,10 @@ public class ChangePhoneFragment extends RootFragment {
             }
         });
 
-
-        // setupUI(row.findViewById(R.id.mainlayout));
-
         tv_title.setText("Change Phone Number");
 
         edtPhone = (TextInputEditText) row.findViewById(R.id.edtPhone);
         text_input_phone = (TextInputLayout) row.findViewById(R.id.text_input_phone);
-        edtPhone.addTextChangedListener(new MyTextWatcher(edtPhone));
         mDone = (Button) row.findViewById(R.id.btnsubmit);
 
         Typeface tfButton = Typeface.createFromAsset(mContext.getAssets(),
@@ -112,38 +101,41 @@ public class ChangePhoneFragment extends RootFragment {
             @Override
             public void onClick(View v) {
                 if (Config.isOnline(mContext)) {
-                    if (validatePhone()) {
-                        Toast.makeText(mContext, "Please recheck the country code and number", Toast.LENGTH_SHORT).show();
-                    } // this code is temporary,need to change if country code check corrected by REST side
-                    else {
+                    if (isValidPhone(countryCode, edtPhone.getText().toString())) {
                         ApiChangePhone(edtPhone.getText().toString(), countryCode);
+                    } else {
+                        Toast.makeText(mContext, "Please recheck the country code and number", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         });
 
-
         Typeface tyface_edittext = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/JosefinSans-Regular.ttf");
         edtPhone.setTypeface(tyface_edittext);
         text_input_phone.setTypeface(tyface_edittext);
-
-
         return row;
     }
 
-    private boolean validatePhone() {
-        if (edtPhone.getText().toString().trim().isEmpty() ||  edtPhone.getText().toString().trim().length() < 7 || (countryCode.equalsIgnoreCase("+91") && edtPhone.getText().toString().trim().length() != 10  )) {
-            //text_input_phone.setError(getString(R.string.err_msg_phone));
-            text_input_phone.setError("Invalid Phone number");
-            requestFocus(edtPhone);
-            return true;
-        } else {
-            text_input_phone.setError(null);
-            return false;
-
-        }
-
+    private boolean isValidPhone(String countryCode, String phoneNumber) {
+        try {
+            if (Config.validatePhoneNumberWithCountryCode(countryCode, phoneNumber)) {
+                text_input_phone.setError(null);
+                return true;
+            } else {
+                text_input_phone.setError("Invalid Phone number");
+                requestFocus(edtPhone);
+                return false;
+            }
+        } catch (NumberParseException e) {
+            if (e.getErrorType().equals(NumberParseException.ErrorType.INVALID_COUNTRY_CODE)) {
+                text_input_phone.setVisibility(View.VISIBLE);
+                text_input_phone.setError("Invalid country code");
+            } else if (e.getErrorType().equals(NumberParseException.ErrorType.NOT_A_NUMBER)) {
+                text_input_phone.setVisibility(View.VISIBLE);
+                text_input_phone.setError("Enter valid mobile number");
+            }        }
+        return false;
     }
 
     private void requestFocus(View view) {
@@ -153,7 +145,6 @@ public class ChangePhoneFragment extends RootFragment {
     }
 
     private void ApiGetProfileDetail() {
-
 
         ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
@@ -169,7 +160,6 @@ public class ChangePhoneFragment extends RootFragment {
             public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
 
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
@@ -180,11 +170,9 @@ public class ChangePhoneFragment extends RootFragment {
                         Config.logV("Response--mob-------------------------" + response.body().getUserprofile().getPrimaryMobileNo());
 
                         SharedPreference.getInstance(mContext).setValue("mobile", response.body().getUserprofile().getPrimaryMobileNo());
-                        // SharedPreference.getInstance(mContext).setValue("countryCode","");
 
                         String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
                         String countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
-
 
                         String firstWord = "Your Current Mobile # ";
                         String secondWord = countryCode + " " + mobile;
@@ -193,15 +181,10 @@ public class ChangePhoneFragment extends RootFragment {
                         Spannable spannable = new SpannableString(firstWord + secondWord);
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         txtmobile.setText(spannable);
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -210,36 +193,8 @@ public class ChangePhoneFragment extends RootFragment {
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
-    }
-
-
-    private class MyTextWatcher implements TextWatcher {
-
-        private View view;
-
-        private MyTextWatcher(View view) {
-            this.view = view;
-        }
-
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
-
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
-
-        public void afterTextChanged(Editable editable) {
-            switch (view.getId()) {
-                case R.id.editmobno:
-                    validatePhone();
-                    break;
-
-            }
-        }
     }
 
     private void ApiChangePhone(final String mPhone, String countryCode) {
@@ -261,7 +216,6 @@ public class ChangePhoneFragment extends RootFragment {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         Config.logV("Response----------------");
-                        //  if(response.body().string().equalsIgnoreCase("true")) {
 
                         EmailOtpFragment emailFragment = new EmailOtpFragment();
                         Bundle bundle = new Bundle();
@@ -273,18 +227,12 @@ public class ChangePhoneFragment extends RootFragment {
                         transaction.replace(R.id.mainlayout, emailFragment).commit();
 
                         edtPhone.setText("");
-                        //}
-
-
                     } else {
                         Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -293,37 +241,7 @@ public class ChangePhoneFragment extends RootFragment {
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
-    /*public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-    }
-    public void setupUI(View view) {
-
-        // Set up touch listener for non-text box views to hide keyboard.
-        if (!(view instanceof TextInputEditText)) {
-            view.setOnTouchListener(new View.OnTouchListener() {
-                public boolean onTouch(View v, MotionEvent event) {
-                    hideSoftKeyboard(getActivity());
-                    return false;
-                }
-            });
-        }
-
-        //If a layout container, iterate over children and seed recursion.
-        if (view instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                View innerView = ((ViewGroup) view).getChildAt(i);
-                setupUI(innerView);
-            }
-        }
-    }*/
-
-
 }

@@ -598,7 +598,16 @@ public class Config {
         String isoCode = phoneNumberUtil.getRegionCodeForCountryCode(Integer.parseInt(countryCode));
         Phonenumber.PhoneNumber phoneNumber = null;
         phoneNumber = phoneNumberUtil.parse(phNumber, isoCode);
-        boolean isValid = phoneNumberUtil.isValidNumber(phoneNumber);
+        boolean isValid = false;
+        if (phNumber.startsWith("555")) { //// if 555 account not need to validate using "phoneNumberUtil.isValidNumber(phoneNumber);"
+            if (phNumber.trim().isEmpty() || phNumber.trim().length() < 7 || ((countryCode.equalsIgnoreCase("+91") || countryCode.equalsIgnoreCase("91")) && phNumber.trim().length() != 10)) {
+                isValid = false;
+            } else {
+                isValid = true;
+            }
+        } else {
+            isValid = phoneNumberUtil.isValidNumber(phoneNumber);
+        }
         if (isValid) {
             String internationalFormat = phoneNumberUtil.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL);
             return true;
