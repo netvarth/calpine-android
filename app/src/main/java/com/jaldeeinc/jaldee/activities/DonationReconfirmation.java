@@ -55,12 +55,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -668,9 +666,9 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
     }
 
     @Override
-    public void sendPaymentResponse(String paymentStatus) {
+    public void sendPaymentResponse(String paymentStatus, String orderid) {
         if (paymentStatus.equalsIgnoreCase("TXN_SUCCESS")) {
-            paymentFinished();
+            ApiCheckPaytmPaymentStatus(orderid);
         } else {
             paymentError();
         }
@@ -681,11 +679,108 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
         try {
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
             new PaymentGateway(mContext, DonationReconfirmation.this).sendPaymentStatus(razorpayModel, "SUCCESS");
-            paymentFinished();
+            ApiCheckRazorpayPaymentStatus(razorpayModel);
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentSuccess", e);
         }
     }
+
+    private void ApiCheckRazorpayPaymentStatus(RazorpayModel razorpayModel) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        JSONObject jsonObj = new JSONObject();
+        try {
+
+            jsonObj.put("paymentId", razorpayModel.getRazorpay_payment_id());
+            jsonObj.put("orderId", razorpayModel.getRazorpay_order_id());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call = apiService.checkRazorpayPaymentStatus(body, bookingModel.getAccountId());
+        call.enqueue(new Callback<ResponseBody>() {
+
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(DonationReconfirmation.this, mDialog);
+
+                    if (response.code() == 200) {
+
+                        paymentFinished();
+
+                    } else {
+
+                        paymentError();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void ApiCheckPaytmPaymentStatus(String orderId) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        JSONObject jsonObj = new JSONObject();
+        try {
+
+            jsonObj.put("paymentId", orderId );
+            jsonObj.put("orderId", orderId);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call = apiService.checkPaytmPaymentStatus(body, bookingModel.getAccountId());
+        call.enqueue(new Callback<ResponseBody>() {
+
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(DonationReconfirmation.this, mDialog);
+
+                    if (response.code() == 200) {
+
+                        paymentFinished();
+
+                    } else {
+
+                        paymentError();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
 
     @Override
     public void onPaymentError(int i, String s, PaymentData paymentData) {
@@ -754,17 +849,6 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
             }
         }
 
-        /*AlertDialog alertDialog = new AlertDialog.Builder(this)
-                .setCancelable(false)
-                .setView(R.layout.successful_donation)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //set what would happen when positive button is clicked
-                        finish();
-                    }
-                })
-                .show();*/
     }
 
     private void paymentError() {
@@ -797,10 +881,10 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 01 && data != null) {
             if (data.getStringExtra("response").contains("TXN_SUCCESS")) {
-                sendPaymentResponse("TXN_SUCCESS");
+                sendPaymentResponse("TXN_SUCCESS", "");
                 Toast.makeText(this, "Payment Successful", Toast.LENGTH_LONG).show();
             } else {
-                sendPaymentResponse("TXN_FAILED");
+                sendPaymentResponse("TXN_FAILED", "");
             }
             Log.e(TAG, " data " + data.getStringExtra("nativeSdkForMerchantMessage"));
             Log.e(TAG, " data response - " + data.getStringExtra("response"));

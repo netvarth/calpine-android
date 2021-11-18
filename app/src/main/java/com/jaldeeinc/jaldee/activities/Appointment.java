@@ -44,7 +44,6 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
-import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -83,7 +82,6 @@ import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
-import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AppointmentSchedule;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
@@ -96,7 +94,6 @@ import com.jaldeeinc.jaldee.response.SearchAppoinment;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
-import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchUsers;
@@ -129,7 +126,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -5570,7 +5566,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     }
 
     @Override
-    public void sendPaymentResponse(String paymentStatus) {
+    public void sendPaymentResponse(String paymentStatus, String orderid) {
 
         getConfirmationDetails();
     }

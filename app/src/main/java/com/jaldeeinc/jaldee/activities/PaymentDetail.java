@@ -150,7 +150,7 @@ public class PaymentDetail extends AppCompatActivity {
                 Intent intent = new Intent(mActivity, UpdateQuestionnaire.class);
                 intent.putExtra("isEdit", true);
                 intent.putExtra("from", Constants.DONATION);
-                intent.putExtra("status",Constants.DONATION);
+                intent.putExtra("status", Constants.DONATION);
                 startActivity(intent);
             }
         });
@@ -425,15 +425,18 @@ public class PaymentDetail extends AppCompatActivity {
         ArrayList<AnswerLineResponse> answerLineResponse = new ArrayList<>();
         ArrayList<GetQuestion> questions = new ArrayList<>();
 
-        for (QuestionAnswers qAnswers : questionnaire.getQuestionAnswers()) {
+        if (questionnaire.getQuestionAnswers() != null) {
 
-            answerLineResponse.add(qAnswers.getAnswerLine());
-            questions.add(qAnswers.getGetQuestion());
+            for (QuestionAnswers qAnswers : questionnaire.getQuestionAnswers()) {
+
+                answerLineResponse.add(qAnswers.getAnswerLine());
+                questions.add(qAnswers.getGetQuestion());
+
+            }
+            responseInput.setAnswerLines(answerLineResponse);
+            responseInput.setQuestions(questions);
 
         }
-
-        responseInput.setAnswerLines(answerLineResponse);
-        responseInput.setQuestions(questions);
 
         return responseInput;
 
@@ -443,26 +446,28 @@ public class PaymentDetail extends AppCompatActivity {
 
         ArrayList<LabelPath> labelPaths = new ArrayList<>();
 
-        for (QuestionAnswers qAnswers : questionnaire.getQuestionAnswers()) {
+        if (questionnaire.getQuestionAnswers() != null) {
 
-            if (qAnswers.getGetQuestion().getFieldDataType().equalsIgnoreCase("fileUpload")) {
+            for (QuestionAnswers qAnswers : questionnaire.getQuestionAnswers()) {
 
-                JsonArray jsonArray = new JsonArray();
-                jsonArray = qAnswers.getAnswerLine().getAnswer().get("fileUpload").getAsJsonArray();
-                for (int i = 0; i < jsonArray.size(); i++) {
+                if (qAnswers.getGetQuestion().getFieldDataType().equalsIgnoreCase("fileUpload")) {
 
-                    LabelPath path = new LabelPath();
-                    path.setId(labelPaths.size());
-                    path.setFileName(jsonArray.get(i).getAsJsonObject().get("caption").getAsString());
-                    path.setLabelName(qAnswers.getAnswerLine().getLabelName());
-                    path.setPath(jsonArray.get(i).getAsJsonObject().get("s3path").getAsString());
-                    path.setType(jsonArray.get(i).getAsJsonObject().get("type").getAsString());
+                    JsonArray jsonArray = qAnswers.getAnswerLine().getAnswer().get("fileUpload").getAsJsonArray();
+                    for (int i = 0; i < jsonArray.size(); i++) {
 
-                    labelPaths.add(path);
+                        LabelPath path = new LabelPath();
+                        path.setId(labelPaths.size());
+                        path.setFileName(jsonArray.get(i).getAsJsonObject().get("caption").getAsString());
+                        path.setLabelName(qAnswers.getAnswerLine().getLabelName());
+                        path.setPath(jsonArray.get(i).getAsJsonObject().get("s3path").getAsString());
+                        path.setType(jsonArray.get(i).getAsJsonObject().get("type").getAsString());
+
+                        labelPaths.add(path);
+                    }
+
                 }
 
             }
-
         }
 
         return labelPaths;

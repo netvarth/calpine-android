@@ -1959,7 +1959,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     }
 
     @Override
-    public void sendPaymentResponse(String paymentStatus) {
+    public void sendPaymentResponse(String paymentStatus, String orderid) {
 
         // Paytm
 

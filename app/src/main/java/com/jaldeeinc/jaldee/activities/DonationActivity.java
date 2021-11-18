@@ -1,6 +1,5 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -675,7 +674,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     }
 
     @Override
-    public void sendPaymentResponse(String paymentStatus) {
+    public void sendPaymentResponse(String paymentStatus, String orderid) {
 
         AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setCancelable(false)

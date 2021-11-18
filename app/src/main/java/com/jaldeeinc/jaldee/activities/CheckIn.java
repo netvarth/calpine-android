@@ -42,7 +42,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -3917,7 +3916,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     }
 
     @Override
-    public void sendPaymentResponse(String paymentStatus) {
+    public void sendPaymentResponse(String paymentStatus, String orderid) {
 
         // Paytm
         getConfirmationDetails();

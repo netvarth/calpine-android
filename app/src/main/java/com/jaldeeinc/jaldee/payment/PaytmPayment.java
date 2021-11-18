@@ -3,17 +3,12 @@ package com.jaldeeinc.jaldee.payment;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
@@ -23,7 +18,6 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.PaytmChecksum;
 import com.jaldeeinc.jaldee.response.WalletPaytmChecksum;
 import com.paytm.pgsdk.PaytmOrder;
-import com.paytm.pgsdk.PaytmPGService;
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 import com.paytm.pgsdk.TransactionManager;
 
@@ -36,7 +30,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import okio.Buffer;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -351,14 +344,14 @@ public class PaytmPayment extends AppCompatActivity {
                     if (inResponse.toString().contains("TXN_SUCCESS")) {
 
                         if (purpose.equalsIgnoreCase(Constants.PURPOSE_PREPAYMENT) || purpose.equalsIgnoreCase(Constants.DONATION) || purpose.equalsIgnoreCase(Constants.PURPOSE_BILLPAYMENT)) {
-                            iPaymentResponse.sendPaymentResponse("TXN_SUCCESS");
+                            iPaymentResponse.sendPaymentResponse("TXN_SUCCESS",inResponse.getString("ORDERID"));
                         } else {
                             Toast.makeText(context, "Payment Successful", Toast.LENGTH_LONG).show();
                         }
                         //((Activity) context).finish();
                     } else {
                         Toast.makeText(context, "Payment Failed ", Toast.LENGTH_LONG).show();
-                        iPaymentResponse.sendPaymentResponse("TXN_FAILED");
+                        iPaymentResponse.sendPaymentResponse("TXN_FAILED", inResponse.getString("ORDERID"));
                     }
                 }
 
@@ -366,48 +359,48 @@ public class PaytmPayment extends AppCompatActivity {
                 public void networkNotAvailable() {
                     Log.d("LOG", "UI Error Occur.");
                     Toast.makeText(context, " UI Error Occur. ", Toast.LENGTH_LONG).show();
-                    iPaymentResponse.sendPaymentResponse("TXN_FAILED");
+                    iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
                 }
 
                 @Override
                 public void onErrorProceed(String s) {
                     Log.d("LOG", "Error Occur.");
                     Toast.makeText(context, " Error Occur. ", Toast.LENGTH_LONG).show();
-                    iPaymentResponse.sendPaymentResponse("TXN_FAILED");
+                    iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
                 }
 
                 @Override
                 public void clientAuthenticationFailed(String inErrorMessage) {
                     Log.d("LOG", "UI Error Occur.");
                     Toast.makeText(context, " Severside Error " + inErrorMessage, Toast.LENGTH_LONG).show();
-                    iPaymentResponse.sendPaymentResponse("TXN_FAILED");
+                    iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
                 }
 
                 @Override
                 public void someUIErrorOccurred(String s) {
                     Log.d("LOG", "UI Error Occur.");
                     Toast.makeText(context, " UI Error Occur. ", Toast.LENGTH_LONG).show();
-                    iPaymentResponse.sendPaymentResponse("TXN_FAILED");
+                    iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
                 }
 
                 @Override
                 public void onErrorLoadingWebPage(int iniErrorCode, String inErrorMessage, String inFailingUrl) {
                     Log.d("LOG", inErrorMessage);
-                    iPaymentResponse.sendPaymentResponse("TXN_FAILED");
+                    iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
                 }
 
                 @Override
                 public void onBackPressedCancelTransaction() {
                     Log.d("LOG", "Back");
                     Toast.makeText(context, "Payment Cancelled ", Toast.LENGTH_LONG).show();
-                    iPaymentResponse.sendPaymentResponse("TXN_FAILED");
+                    iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
                 }
 
                 @Override
                 public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
                     Log.d("LOG", "Payment Transaction Failed " + inErrorMessage);
                     Toast.makeText(context, "Payment Transaction Failed ", Toast.LENGTH_LONG).show();
-                    iPaymentResponse.sendPaymentResponse("TXN_FAILED");
+                    iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
                 }
             });
 

@@ -3002,7 +3002,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
     }
 
     @Override
-    public void sendPaymentResponse(String paymentStatus) {
+    public void sendPaymentResponse(String paymentStatus, String orderid) {
 
     }
     //

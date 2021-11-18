@@ -218,9 +218,17 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
         if (bookingStatus.equalsIgnoreCase(Constants.DONATION)){
 
-            showAlert("Donation has been made","The given details cannot be edited.");
+            Toast.makeText(mContext,"Details cannot be edited as the donation has been made",Toast.LENGTH_SHORT).show();
+            cvSubmit.setVisibility(View.GONE);
 
+        } else {
+
+            cvSubmit.setVisibility(View.VISIBLE);
         }
+
+
+
+
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -34,7 +34,6 @@ import com.jaldeeinc.jaldee.adapter.BIllDiscountAdapter;
 import com.jaldeeinc.jaldee.adapter.BillCouponAdapter;
 import com.jaldeeinc.jaldee.adapter.BillDemandDisplayNotesAdapter;
 import com.jaldeeinc.jaldee.adapter.BillServiceAdapter;
-import com.jaldeeinc.jaldee.adapter.CouponsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -72,6 +71,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -1551,15 +1551,14 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             }
         });
 
-
     }
 
     @Override
-    public void sendPaymentResponse(String paymentStatus) {
+    public void sendPaymentResponse(String paymentStatus, String orderid) {
         //Paytm
         if (paymentStatus.equalsIgnoreCase("TXN_SUCCESS")) {
-            paymentFinished();
-            Toast.makeText(mCOntext, "Payment Successful", Toast.LENGTH_LONG).show();
+
+            ApiCheckPaytmPaymentStatus(orderid);
         } else {
             paymentError();
         }
@@ -1571,12 +1570,112 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         try {
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
             new PaymentGateway(mCOntext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
-            Toast.makeText(mCOntext, "Payment Successful", Toast.LENGTH_LONG).show();
-            paymentFinished();
+
+            ApiCheckRazorpayPaymentStatus(razorpayModel);
+
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentSuccess", e);
         }
     }
+
+    private void ApiCheckRazorpayPaymentStatus(RazorpayModel razorpayModel) {
+
+        ApiInterface apiService = ApiClient.getClient(mCOntext).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mCOntext, mCOntext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        JSONObject jsonObj = new JSONObject();
+        try {
+
+            jsonObj.put("paymentId", razorpayModel.getRazorpay_payment_id());
+            jsonObj.put("orderId", razorpayModel.getRazorpay_order_id());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call = apiService.checkRazorpayPaymentStatus(body, Integer.parseInt(accountID));
+        call.enqueue(new Callback<ResponseBody>() {
+
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(BillActivity.this, mDialog);
+
+                    if (response.code() == 200) {
+
+                        Toast.makeText(mCOntext, "Payment Successful", Toast.LENGTH_LONG).show();
+                        paymentFinished();
+
+                    } else {
+
+                        paymentError();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void ApiCheckPaytmPaymentStatus(String orderId) {
+
+        ApiInterface apiService = ApiClient.getClient(mCOntext).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mCOntext, mCOntext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        JSONObject jsonObj = new JSONObject();
+        try {
+
+            jsonObj.put("paymentId", orderId );
+            jsonObj.put("orderId", orderId);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call = apiService.checkPaytmPaymentStatus(body, Integer.parseInt(accountID));
+        call.enqueue(new Callback<ResponseBody>() {
+
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(BillActivity.this, mDialog);
+
+                    if (response.code() == 200) {
+
+                        Toast.makeText(mCOntext, "Payment Successful", Toast.LENGTH_LONG).show();
+                        paymentFinished();
+
+                    } else {
+
+                        paymentError();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
 
     @Override
     public void onPaymentError(int code, String response, PaymentData paymentData) {
@@ -1625,10 +1724,10 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 01 && data != null) {
             if (data.getStringExtra("response").contains("TXN_SUCCESS")) {
-                sendPaymentResponse("TXN_SUCCESS");
+                sendPaymentResponse("TXN_SUCCESS", "");
                 Toast.makeText(this, "Payment Successful", Toast.LENGTH_LONG).show();
             } else {
-                sendPaymentResponse("TXN_FAILED");
+                sendPaymentResponse("TXN_FAILED", "");
             }
             Log.e(TAG, " data " + data.getStringExtra("nativeSdkForMerchantMessage"));
             Log.e(TAG, " data response - " + data.getStringExtra("response"));

@@ -102,7 +102,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -110,9 +109,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -1764,9 +1761,9 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     }
 
     @Override
-    public void sendPaymentResponse(String paymentStatus) {
+    public void sendPaymentResponse(String paymentStatus, String orderid) {
         if (paymentStatus.equalsIgnoreCase("TXN_SUCCESS")) {
-            paymentFinished();
+            ApiCheckPaytmPaymentStatus(orderid);
         } else {
             paymentError();
         }
@@ -1829,12 +1826,111 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
         try {
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
             new PaymentGateway(mContext, CheckoutListActivity.this).sendPaymentStatus(razorpayModel, "SUCCESS");
-            Toast.makeText(mContext, "Payment Successful", Toast.LENGTH_LONG).show();
-            paymentFinished();
+
+            ApiCheckRazorpayPaymentStatus(razorpayModel);
+
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentSuccess", e);
         }
     }
+
+    private void ApiCheckRazorpayPaymentStatus(RazorpayModel razorpayModel) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        JSONObject jsonObj = new JSONObject();
+        try {
+
+            jsonObj.put("paymentId", razorpayModel.getRazorpay_payment_id());
+            jsonObj.put("orderId", razorpayModel.getRazorpay_order_id());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call = apiService.checkRazorpayPaymentStatus(body, accountId);
+        call.enqueue(new Callback<ResponseBody>() {
+
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(CheckoutListActivity.this, mDialog);
+
+                    if (response.code() == 200) {
+
+                        Toast.makeText(mContext, "Payment Successful", Toast.LENGTH_LONG).show();
+                        paymentFinished();
+
+                    } else {
+
+                        paymentError();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void ApiCheckPaytmPaymentStatus(String orderId) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        JSONObject jsonObj = new JSONObject();
+        try {
+
+            jsonObj.put("paymentId", orderId );
+            jsonObj.put("orderId", orderId);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call = apiService.checkPaytmPaymentStatus(body, accountId);
+        call.enqueue(new Callback<ResponseBody>() {
+
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(CheckoutListActivity.this, mDialog);
+
+                    if (response.code() == 200) {
+
+                        paymentFinished();
+
+                    } else {
+
+                        paymentError();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
 
     @Override
     public void onPaymentError(int i, String s, PaymentData paymentData) {
@@ -1876,10 +1972,10 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 01 && data != null) {
             if (data.getStringExtra("response").contains("TXN_SUCCESS")) {
-                sendPaymentResponse("TXN_SUCCESS");
+                sendPaymentResponse("TXN_SUCCESS", "");
                 Toast.makeText(this, "Payment Successful", Toast.LENGTH_LONG).show();
             } else {
-                sendPaymentResponse("TXN_FAILED");
+                sendPaymentResponse("TXN_FAILED", "");
             }
             Log.e(TAG, " data " + data.getStringExtra("nativeSdkForMerchantMessage"));
             Log.e(TAG, " data response - " + data.getStringExtra("response"));

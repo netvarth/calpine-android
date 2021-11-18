@@ -289,7 +289,6 @@ public class HomeTabFragment extends Fragment {
             }
         }
 
-
     }
 
     public boolean onBackPressed() {

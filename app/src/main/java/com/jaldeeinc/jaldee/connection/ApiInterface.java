@@ -756,4 +756,10 @@ public interface ApiInterface {
     @GET("consumer/donation/{uid}")
     Call<ActiveDonation> getDonationDetails(@Path("uid") String uuid);
 
+    @POST("provider/payment/razorpay/update?")
+    Call<ResponseBody> checkRazorpayPaymentStatus(@Body RequestBody jsonObj, @Query("account") int accountId);
+
+    @POST("provider/payment/paytm/update?")
+    Call<ResponseBody> checkPaytmPaymentStatus(@Body RequestBody jsonObj, @Query("account") int accountId);
+
 }
