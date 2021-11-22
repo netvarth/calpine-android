@@ -34,6 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.IConsumerNameSubmit;
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.Interface.IMobileSubmit;
@@ -53,6 +54,7 @@ import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.response.ActiveDonation;
 import com.jaldeeinc.jaldee.response.ProfileModel;
+import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
@@ -430,7 +432,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                     tvAmountHint.setTextColor(Color.parseColor("#dc3545"));
                     llAmountHint.setVisibility(View.VISIBLE);
                     tvErrorAmount.setVisibility(View.GONE);
-                } else if ((multipls != 1) && (amount % multipls != 0)) {
+                } else if (amount % multipls != 0) {
                     Toast.makeText(DonationActivity.this, "Donation amount must be multiples of " + multipls, Toast.LENGTH_SHORT).show();
                     tvAmountHint.setTextColor(Color.parseColor("#484848"));
                     llAmountHint.setVisibility(View.VISIBLE);
@@ -517,34 +519,48 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
 
     private void ApiSearchViewTerminology(int muniqueID) {
         ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+                ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
+
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<SearchTerminology> call = apiService.getSearchViewTerminology(muniqueID, sdf.format(currentTime));
-        call.enqueue(new Callback<SearchTerminology>() {
+        Call<Provider> call = apiService.getTerminologies(muniqueID);
+
+        call.enqueue(new Callback<Provider>() {
             @Override
-            public void onResponse(Call<SearchTerminology> call, Response<SearchTerminology> response) {
+            public void onResponse(Call<Provider> call, Response<Provider> response) {
 
                 try {
+
                     if (mDialog.isShowing())
                         Config.closeDialog(getParent(), mDialog);
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
+
                     if (response.code() == 200) {
-                        mSearchTerminology = response.body();
+
+                        Provider providerResponse = new Provider();
+
+                        providerResponse = response.body();
+
+                        if (providerResponse != null) {
+
+                            if (providerResponse.getTerminologies() != null) {
+                                mSearchTerminology = new Gson().fromJson(providerResponse.getTerminologies(), SearchTerminology.class);
+                            }
+                        }
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
             }
 
             @Override
-            public void onFailure(Call<SearchTerminology> call, Throwable t) {
+            public void onFailure(Call<Provider> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
