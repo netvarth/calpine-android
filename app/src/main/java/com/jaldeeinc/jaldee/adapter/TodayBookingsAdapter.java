@@ -167,7 +167,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
 
                                 viewHolder.llBookingFor.setVisibility(View.VISIBLE);
                                 viewHolder.tvForHint.setText("Appointment For");
-                                String name = bookings.getAppointmentInfo().getAppmtFor().get(0).getFirstName() + bookings.getAppointmentInfo().getAppmtFor().get(0).getLastName();
+                                String name = bookings.getAppointmentInfo().getAppmtFor().get(0).getFirstName() + " " + bookings.getAppointmentInfo().getAppmtFor().get(0).getLastName();
                                 viewHolder.tvBookingFor.setText(name);
                             } else {
 
@@ -258,7 +258,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
 
                                 viewHolder.llBookingFor.setVisibility(View.VISIBLE);
                                 viewHolder.tvForHint.setText("CheckIn For");
-                                String name = bookings.getCheckInInfo().getWaitlistingFor().get(0).getFirstName() + bookings.getCheckInInfo().getWaitlistingFor().get(0).getLastName();
+                                String name = bookings.getCheckInInfo().getWaitlistingFor().get(0).getFirstName() + " " + bookings.getCheckInInfo().getWaitlistingFor().get(0).getLastName();
                                 viewHolder.tvBookingFor.setText(name);
                             } else {
 
@@ -329,7 +329,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
 
                                 viewHolder.llBookingFor.setVisibility(View.VISIBLE);
                                 viewHolder.tvForHint.setText("Token For");
-                                String name = bookings.getCheckInInfo().getWaitlistingFor().get(0).getFirstName() + bookings.getCheckInInfo().getWaitlistingFor().get(0).getLastName();
+                                String name = bookings.getCheckInInfo().getWaitlistingFor().get(0).getFirstName() + " " + bookings.getCheckInInfo().getWaitlistingFor().get(0).getLastName();
                                 viewHolder.tvBookingFor.setText(name);
                             } else {
 
@@ -338,7 +338,6 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                         }
                     }
                 }
-
 
                 // to set icon based on booking
                 if (bookings.getBookingType() != null) {
