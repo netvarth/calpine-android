@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.activities;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.app.Application;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.ComponentName;
@@ -43,6 +44,7 @@ import com.jaldeeinc.jaldee.response.JCashInfo;
 import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 import com.jaldeeinc.jaldee.service.LiveTrackService;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -156,7 +158,7 @@ public class Home extends AppCompatActivity {
                 }
             }
         }
-        if (isfrom != "" && isfrom.equalsIgnoreCase("signup")) {
+        if (isfrom != "" && isfrom.equalsIgnoreCase("signup")) {     // this for showing jcash information dialog box at first login only
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -283,10 +285,9 @@ public class Home extends AppCompatActivity {
             String bookingId = intent.getStringExtra("uuid");
             String bodyMessage = intent.getStringExtra("body");
             String titleString = intent.getStringExtra("title");
-            if (action.equals("INSTANT_VIDEO")) {         // instantVideocall
-                meetingLink = intent.getStringExtra("meetingLink");
+            if (action != null && action.equals("INSTANT_VIDEO")) {         // if instantVideocall, get meetingLink
+                meetingLink = intent.getStringExtra("link");
             }
-
 
             if (action != null) {
                 switch (action) {
