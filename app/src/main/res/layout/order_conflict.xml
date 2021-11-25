@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_10dp"
             android:gravity="center"
-            android:text="Your cart contains items from a different store. Would you like to reset your cart before browsing this restaurant?"
+            android:text="Your cart contains items from a different store. Would you like to reset your cart?"
             android:textColor="@color/title_color"
             android:textSize="14dp" />
 
