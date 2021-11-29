@@ -3,13 +3,11 @@ package com.jaldeeinc.jaldee.custom;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.content.res.AppCompatResources;
@@ -23,8 +21,6 @@ import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
 import com.jaldeeinc.jaldee.Interface.ISlotInfo;
 import com.jaldeeinc.jaldee.Interface.OnBottomReachedListener;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.Appointment;
-import com.jaldeeinc.jaldee.activities.AppointmentActivity;
 import com.jaldeeinc.jaldee.adapter.TimeSlotsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -44,7 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SlotsDialog extends Dialog implements ISelectSlotInterface,OnBottomReachedListener {
+public class SlotsDialog extends Dialog implements ISelectSlotInterface, OnBottomReachedListener {
 
     private Context context;
     private CustomTextViewBold tvDate;
@@ -67,7 +63,6 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface,OnBottom
     private String displayTime = "", slotTime = "";
     private int scheduleId;
     private OnBottomReachedListener onBottomReachedListener;
-
 
     public SlotsDialog(Context context, int serviceId, int locationId, ISlotInfo iSlotInfo, int providerId, String availableDate) {
         super(context);
@@ -159,8 +154,7 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface,OnBottom
                 if (displayTime != null && !displayTime.trim().equalsIgnoreCase("")) {
                     iSlotInfo.sendSlotInfo(displayTime, slotTime, scheduleId, tvDate.getText().toString(), tvCalenderDate.getText().toString());
                     dismiss();
-                }
-                else {
+                } else {
 
                     DynamicToast.make(context, "Please select a time slot", AppCompatResources.getDrawable(
                             context, R.drawable.ic_info_black),
@@ -220,6 +214,7 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface,OnBottom
         });
 
     }
+
     public String UpdateDAte(String sDate) {
         Date selecteddate = null;
         String dtStart = tvCalenderDate.getText().toString();
@@ -343,10 +338,9 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface,OnBottom
                                     tvDate.setVisibility(View.VISIBLE);
                                     tvTime.setVisibility(View.VISIBLE);
                                     cvConfirm.setVisibility(View.VISIBLE);
-                                    if (activeSlotsList.size()>15){
+                                    if (activeSlotsList.size() > 15) {
                                         llSeeMoreHint.setVisibility(View.VISIBLE);
-                                    }
-                                    else {
+                                    } else {
                                         llSeeMoreHint.setVisibility(View.GONE);
                                     }
                                     scheduleId = activeSlotsList.get(0).getScheduleId();
@@ -357,7 +351,7 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface,OnBottom
                                     tvCalenderDate.setText(getCalenderDateFormat(slotsData.get(0).getDate()));
                                     RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 3);
                                     rvSlots.setLayoutManager(mLayoutManager);
-                                    sAdapter = new TimeSlotsAdapter(context, activeSlotsList, iSelectSlotInterface,onBottomReachedListener);
+                                    sAdapter = new TimeSlotsAdapter(context, activeSlotsList, iSelectSlotInterface, onBottomReachedListener);
                                     rvSlots.setAdapter(sAdapter);
                                 } else {
 
@@ -391,7 +385,7 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface,OnBottom
         });
     }
 
-    public void showNoSlots(){
+    public void showNoSlots() {
 
         rvSlots.setVisibility(View.GONE);
         llNoSlots.setVisibility(View.VISIBLE);

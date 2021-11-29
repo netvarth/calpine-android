@@ -6,6 +6,23 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ServiceDetails implements Serializable {
+
+    int id;
+    boolean priceDynamic;
+    boolean preInfoEnabled;
+    boolean postInfoEnabled;
+    String serviceType;
+    String livetrack;
+    String callingMode;
+    String postInfoTitle;
+    String postInfoText;
+    String preInfoTitle;
+    String preInfoText;
+    String virtualServiceType;
+    String consumerNoteTitle;
+    String name;
+    String deptName;
+
     public String getServiceType() {
         return serviceType;
     }
@@ -13,8 +30,6 @@ public class ServiceDetails implements Serializable {
     public void setServiceType(String serviceType) {
         this.serviceType = serviceType;
     }
-
-    String serviceType;
 
     public String getName() {
         return name;
@@ -24,10 +39,6 @@ public class ServiceDetails implements Serializable {
         this.name = name;
     }
 
-    String name;
-    int id;
-    String deptName;
-
     public String getLivetrack() {
         return livetrack;
     }
@@ -36,16 +47,11 @@ public class ServiceDetails implements Serializable {
         this.livetrack = livetrack;
     }
 
-    String livetrack;
-
-
     public ArrayList<ServiceDetails> getVirtualCallingModes() {
         return virtualCallingModes;
     }
 
-    public void setVirtualCallingModes(ArrayList<ServiceDetails> virtualCallingModes) {
-        this.virtualCallingModes = virtualCallingModes;
-    }
+    public void setVirtualCallingModes(ArrayList<ServiceDetails> virtualCallingModes) { this.virtualCallingModes = virtualCallingModes; }
 
     @SerializedName("virtualCallingModes")
     private ArrayList<ServiceDetails> virtualCallingModes;
@@ -57,10 +63,6 @@ public class ServiceDetails implements Serializable {
     public void setCallingMode(String callingMode) {
         this.callingMode = callingMode;
     }
-
-    String callingMode;
-
-
 
     public String getPreInfoTitle() {
         return preInfoTitle;
@@ -78,8 +80,6 @@ public class ServiceDetails implements Serializable {
         this.preInfoText = preInfoText;
     }
 
-
-
     public String getPostInfoTitle() {
         return postInfoTitle;
     }
@@ -96,14 +96,6 @@ public class ServiceDetails implements Serializable {
         this.postInfoText = postInfoText;
     }
 
-    boolean preInfoEnabled;
-    String preInfoTitle;
-    String preInfoText;
-    boolean postInfoEnabled;
-    String virtualServiceType;
-    String consumerNoteTitle;
-
-
     public boolean isPreInfoEnabled() {
         return preInfoEnabled;
     }
@@ -116,13 +108,7 @@ public class ServiceDetails implements Serializable {
         return postInfoEnabled;
     }
 
-    public void setPostInfoEnabled(boolean postInfoEnabled) {
-        this.postInfoEnabled = postInfoEnabled;
-    }
-
-    String postInfoTitle;
-    String postInfoText;
-
+    public void setPostInfoEnabled(boolean postInfoEnabled) { this.postInfoEnabled = postInfoEnabled; }
 
     public int getId() {
         return id;
@@ -136,17 +122,13 @@ public class ServiceDetails implements Serializable {
         return virtualServiceType;
     }
 
-    public void setVirtualServiceType(String virtualServiceType) {
-        this.virtualServiceType = virtualServiceType;
-    }
+    public void setVirtualServiceType(String virtualServiceType) { this.virtualServiceType = virtualServiceType; }
 
     public String getConsumerNoteTitle() {
         return consumerNoteTitle;
     }
 
-    public void setConsumerNoteTitle(String consumerNoteTitle) {
-        this.consumerNoteTitle = consumerNoteTitle;
-    }
+    public void setConsumerNoteTitle(String consumerNoteTitle) { this.consumerNoteTitle = consumerNoteTitle; }
 
     public String getDeptName() {
         return deptName;
@@ -155,4 +137,7 @@ public class ServiceDetails implements Serializable {
     public void setDeptName(String deptName) {
         this.deptName = deptName;
     }
+
+    public boolean isPriceDynamic() { return priceDynamic; }
+
 }

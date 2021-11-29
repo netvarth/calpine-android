@@ -299,7 +299,7 @@
                         android:layout_height="2dp"
                         android:layout_below="@id/relative"
                         android:src="@drawable/dash_gap"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <LinearLayout
                         android:id="@+id/ll_virtualNumber"

@@ -7,6 +7,7 @@ import com.jaldeeinc.jaldee.model.CheckSumModelTest;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
+import com.jaldeeinc.jaldee.model.PriceList;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.TestModel;
@@ -761,5 +762,8 @@ public interface ApiInterface {
 
     @POST("provider/payment/paytm/update?")
     Call<ResponseBody> checkPaytmPaymentStatus(@Body RequestBody jsonObj, @Query("account") int accountId);
+
+    @GET("consumer/appointment/schedule/{serviceId}/pricelist")
+    Call<ArrayList<PriceList>> getPriceListOfService(@Path("serviceId") int serviceId);
 
 }

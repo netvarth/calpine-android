@@ -42,7 +42,6 @@ import android.widget.Toast;
 import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.Interface.ISlotInfo;
@@ -60,14 +59,12 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.SlotsDialog;
 import com.jaldeeinc.jaldee.model.FileAttachment;
+import com.jaldeeinc.jaldee.model.PriceList;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
-import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
-import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SlotsData;
-import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -96,10 +93,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -118,7 +113,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, ISelectSlotInterface, OnBottomReachedListener, ISendMessage {
-
 
     @BindView(R.id.tv_spName)
     CustomTextViewBold tvSpName;
@@ -189,8 +183,10 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
     @BindView(R.id.tv_addNote)
     CustomTextViewMedium tvAddNotes;
 
+    @BindView(R.id.tv_balance_info)
+    CustomTextViewMedium tv_balance_info;
 
-    int scheduleId, serviceId, locationId, accountId;
+    int currentScheduleId, scheduleId, serviceId, locationId, accountId;
     String slotTime, apiDate;
     private SlotsDialog slotsDialog;
     private RecyclerView rvSlots;
@@ -218,8 +214,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
     ArrayList<String> imagePathLists = new ArrayList<>();
     private int GALLERY = 1, CAMERA = 2;
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
-    private static final String IMAGE_DIRECTORY = "/Jaldee" +
-            "";
+    private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
     String path;
     File f;
     private Uri mImageUri;
@@ -229,8 +224,10 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
     ActiveAppointment activeAppointment = new ActiveAppointment();
     SearchTerminology mSearchTerminology;
     int userId;
-    String uniqueId, ynwuuid;
-
+    String uniqueId;
+    String ynwuuid;
+    boolean isPriceDynamic;
+    private ArrayList<PriceList> priceLists = new ArrayList<PriceList>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -591,7 +588,8 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                         appointmentInfo = response.body();
 
                         if (appointmentInfo != null) {
-
+                            currentScheduleId = appointmentInfo.getSchedule().getId();
+                            isPriceDynamic = appointmentInfo.getService().isPriceDynamic();
                             if (appointmentInfo.getService() != null && appointmentInfo.getService().getConsumerNoteTitle() != null && !appointmentInfo.getService().getConsumerNoteTitle().equalsIgnoreCase("")) {
                                 tvAddNotes.setText(appointmentInfo.getService().getConsumerNoteTitle());
                             } else {
@@ -1223,6 +1221,9 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
         cvSubmit.setClickable(true);
         cvSubmit.setEnabled(true);
         cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.location_theme));
+        if (isPriceDynamic) {
+            getPriceListOfService(serviceId, currentScheduleId, scheduleId);
+        }
     }
 
     @Override
@@ -1725,4 +1726,49 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
         });
     }
 
+
+    private void getPriceListOfService(int serviceId, int currentScheduleId, int selectedScheduleId) {
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<ArrayList<PriceList>> call = apiService.getPriceListOfService(serviceId);
+        call.enqueue(new Callback<ArrayList<PriceList>>() {
+            @Override
+            public void onResponse(Call<ArrayList<PriceList>> call, Response<ArrayList<PriceList>> response) {
+                if (response.code() == 200) {
+                    if (response.body() != null) {
+                        priceLists = response.body();
+                        double oldPrice = 0;
+                        double newPrice = 0;
+                        double changePrice = 0;
+                        double amountDifference = 0;
+                        for (PriceList pl : priceLists) {
+                            if (pl.getSchedule().getId() == currentScheduleId) {
+                                oldPrice = pl.getPrice();
+                            }
+                            if (pl.getSchedule().getId() == selectedScheduleId) {
+                                newPrice = pl.getPrice();
+                            }
+                        }
+                        changePrice = newPrice - oldPrice;
+                        amountDifference = appointmentInfo.getAmountDue() + changePrice;
+                        if (amountDifference > 0) {
+                            tv_balance_info.setVisibility(View.VISIBLE);
+                            tv_balance_info.setText("The balance amount for the rescheduled booking will be ₹" + Config.getAmountNoOrTwoDecimalPoints(amountDifference) + ". Contact your provider directly for payment adjustments.");
+                        } else if (amountDifference < 0) {
+                            tv_balance_info.setVisibility(View.VISIBLE);
+                            tv_balance_info.setText("Contact your provider directly for payment adjustments.");
+                        } else {
+                            tv_balance_info.setVisibility(View.GONE);
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<PriceList>> call, Throwable t) {
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+    }
 }

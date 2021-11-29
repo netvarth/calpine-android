@@ -7,26 +7,19 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 
-import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
 import com.jaldeeinc.jaldee.Interface.OnBottomReachedListener;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.Appointment;
-import com.jaldeeinc.jaldee.activities.AppointmentDate;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 
 import java.util.ArrayList;
-
 
 public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.TimeSlotsAdapterViewHolder> {
     ArrayList<AvailableSlotsData> timeSlots = new ArrayList<>();
@@ -77,6 +70,8 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
 
                 myViewHolder.flSlotBackground.setBackgroundResource(R.drawable.selected_slot);
                 myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.white));
+                iSelectSlotInterface.sendSelectedTime(timeSlots.get(position).getDisplayTime(), timeSlots.get(position).getSlotTime(), timeSlots.get(position).getScheduleId());// default selected slot
+
             } else {
                 myViewHolder.flSlotBackground.setBackgroundResource(R.drawable.unselected_slot);
                 myViewHolder.tvTimeSlot.setTextColor(ContextCompat.getColor(context, R.color.gray));
@@ -106,9 +101,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.Time
                 }
             });
         }
-
     }
-
 
     @Override
     public int getItemCount() {
