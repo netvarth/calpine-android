@@ -395,7 +395,7 @@ public class PaymentDetail extends AppCompatActivity {
                     if (response.code() == 200) {
                         donationDetail = response.body();
 
-                        if (donationDetail != null && donationDetail.getQuestionnaire() != null) {
+                        if (donationDetail != null && donationDetail.getQuestionnaire() != null && donationDetail.getQuestionnaire().getQuestionAnswers() != null) {
 
                             llQuestionnaire.setVisibility(View.VISIBLE);
 
