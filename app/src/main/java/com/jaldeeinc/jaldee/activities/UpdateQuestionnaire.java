@@ -211,23 +211,20 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
         if (!bookingStatus.trim().equalsIgnoreCase("") && !(bookingStatus.equalsIgnoreCase("Confirmed") || bookingStatus.equalsIgnoreCase("Arrived") || bookingStatus.equalsIgnoreCase("checkedIn") || bookingStatus.equalsIgnoreCase("arrived") || bookingStatus.equalsIgnoreCase(Constants.DONATION))) {
 
-            showAlert("Service has started","The given details cannot be edited as the service has started");
+            showAlert("Service has started", "The given details cannot be edited as the service has started");
         }
 
         // to show alert in Donation case
 
-        if (bookingStatus.equalsIgnoreCase(Constants.DONATION)){
+        if (bookingStatus.equalsIgnoreCase(Constants.DONATION)) {
 
-            Toast.makeText(mContext,"Details cannot be edited as the donation has been made",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "Details cannot be edited as the donation has been made", Toast.LENGTH_SHORT).show();
             cvSubmit.setVisibility(View.GONE);
 
         } else {
 
             cvSubmit.setVisibility(View.VISIBLE);
         }
-
-
-
 
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,7 +235,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         });
 
         String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
-
 
         if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
 
@@ -310,7 +306,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
     private void submitQuestionnaire() throws JSONException {
 
-        if (from.equalsIgnoreCase(Constants.DONATION)){
+        if (from.equalsIgnoreCase(Constants.DONATION)) {
 
             Toast.makeText(mContext, "The given details cannot be edited.", Toast.LENGTH_SHORT).show();
             return;
@@ -594,7 +590,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 }
 
-            } else if (from.equalsIgnoreCase(Constants.DONATION)){
+            } else if (from.equalsIgnoreCase(Constants.DONATION)) {
 
                 Toast.makeText(mContext, "The given details cannot be edited.", Toast.LENGTH_SHORT).show();
 
@@ -1575,7 +1571,10 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 }
             }
         });
-
+        if (from.equalsIgnoreCase(Constants.DONATION) && !isEdit) {  // if it from Donation, its not need to editable,there for use a masking layout above the parent layout
+            llUpload.setOnClickListener(null);
+            ivClose.setOnClickListener(null);
+        }
 
         llParentLayout.addView(fileUploadView);
         viewsList.put(singleFile.getLabelName(), fileUploadView);
@@ -1636,7 +1635,9 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
             }
         });
-
+        if (from.equalsIgnoreCase(Constants.DONATION) && !isEdit) {  // if it from Donation, its not need to editable,there for use a masking layout above the parent layout
+            filesSpinner.setVisibility(View.GONE);
+        }
 
         llParentLayout.addView(fileUploadView);
         viewsList.put(model.getLabelName(), fileUploadView);
@@ -1647,6 +1648,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
         View textFieldView = getLayoutInflater().inflate(R.layout.edittext_field, null, false);
 
+        LinearLayout ll_mask = (LinearLayout) textFieldView.findViewById(R.id.ll_mask);
         CustomTextViewSemiBold tvQuestionName = (CustomTextViewSemiBold) textFieldView.findViewById(R.id.tv_questionName);
         CustomTextViewBold tvTextFieldManditory = (CustomTextViewBold) textFieldView.findViewById(R.id.tv_manditory);
         CustomEditTextRegular etTextField = (CustomEditTextRegular) textFieldView.findViewById(R.id.et_textBox);
@@ -1691,7 +1693,11 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
             }
         });
-
+        if (from.equalsIgnoreCase(Constants.DONATION) && !isEdit) {  // if it from Donation, its not need to editable,there for use a masking layout above the parent layout
+            ll_mask.setVisibility(View.VISIBLE);
+        } else {
+            ll_mask.setVisibility(View.GONE);
+        }
         llParentLayout.addView(textFieldView);
         viewsList.put(textField.getLabelName(), textFieldView);
 
@@ -1702,6 +1708,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
         View dateFieldView = getLayoutInflater().inflate(R.layout.date_item, null, false);
 
+        LinearLayout ll_mask = (LinearLayout) dateFieldView.findViewById(R.id.ll_mask);
         CustomTextViewSemiBold tvQuestionName = (CustomTextViewSemiBold) dateFieldView.findViewById(R.id.tv_questionName);
         CustomTextViewBold tvTextFieldManditory = (CustomTextViewBold) dateFieldView.findViewById(R.id.tv_manditory);
         RelativeLayout rlCalender = (RelativeLayout) dateFieldView.findViewById(R.id.rl_calender);
@@ -1735,11 +1742,14 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 mDatePickerDialogFragment.show(getSupportFragmentManager(), "DATE PICK");
             }
         });
-
+        if (from.equalsIgnoreCase(Constants.DONATION) && !isEdit) {  // if it from Donation, its not need to editable,there for use a masking layout above the parent layout
+            ll_mask.setVisibility(View.VISIBLE);
+        } else {
+            ll_mask.setVisibility(View.GONE);
+        }
 
         llParentLayout.addView(dateFieldView);
         viewsList.put(dateField.getLabelName(), dateFieldView);
-
 
     }
 
@@ -1747,11 +1757,11 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
         View dateFieldView = getLayoutInflater().inflate(R.layout.numberfield_item, null, false);
 
+        LinearLayout ll_mask = (LinearLayout) dateFieldView.findViewById(R.id.ll_mask);
         CustomTextViewSemiBold tvQuestionName = (CustomTextViewSemiBold) dateFieldView.findViewById(R.id.tv_questionName);
         CustomTextViewBold tvTextFieldManditory = (CustomTextViewBold) dateFieldView.findViewById(R.id.tv_manditory);
         CustomEditTextRegular etTextField = (CustomEditTextRegular) dateFieldView.findViewById(R.id.et_textBox);
         CustomTextViewMedium tvHint = (CustomTextViewMedium) dateFieldView.findViewById(R.id.tv_hint);
-
 
         tvQuestionName.setText(numberField.getQuestionName());
 
@@ -1763,7 +1773,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         } else {
             tvHint.setVisibility(View.GONE);
         }
-
 
         if (numberField.isManditory()) {
             tvTextFieldManditory.setVisibility(View.VISIBLE);
@@ -1789,9 +1798,13 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 // Place the logic here for your output edittext
 
-
             }
         });
+        if (from.equalsIgnoreCase(Constants.DONATION) && !isEdit) {  // if it from Donation, its not need to editable,there for use a masking layout above the parent layout
+            ll_mask.setVisibility(View.VISIBLE);
+        } else {
+            ll_mask.setVisibility(View.GONE);
+        }
 
         llParentLayout.addView(dateFieldView);
         viewsList.put(numberField.getLabelName(), dateFieldView);
@@ -1802,13 +1815,13 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
         View boolFieldView = getLayoutInflater().inflate(R.layout.boolean_item, null, false);
 
+        LinearLayout ll_mask = (LinearLayout) boolFieldView.findViewById(R.id.ll_mask);
         CustomTextViewSemiBold tvQuestionName = (CustomTextViewSemiBold) boolFieldView.findViewById(R.id.tv_questionName);
         CustomTextViewBold tvTextFieldManditory = (CustomTextViewBold) boolFieldView.findViewById(R.id.tv_manditory);
         RadioGroup radioGroup = (RadioGroup) boolFieldView.findViewById(R.id.rg_radioGroup);
         RadioButton radioButtonYes = (RadioButton) boolFieldView.findViewById(R.id.rb_yes);
         RadioButton radioButtonNo = (RadioButton) boolFieldView.findViewById(R.id.rb_no);
         CustomTextViewMedium tvHint = (CustomTextViewMedium) boolFieldView.findViewById(R.id.tv_hint);
-
 
         tvQuestionName.setText(boolField.getQuestionName());
 
@@ -1838,7 +1851,11 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
             radioButtonNo.setChecked(true);
         }
-
+        if (from.equalsIgnoreCase(Constants.DONATION) && !isEdit) {  // if it from Donation, its not need to editable,there for use a masking layout above the parent layout
+            ll_mask.setVisibility(View.VISIBLE);
+        } else {
+            ll_mask.setVisibility(View.GONE);
+        }
         llParentLayout.addView(boolFieldView);
         viewsList.put(boolField.getLabelName(), boolFieldView);
 
@@ -1848,12 +1865,11 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
         View listFieldView = getLayoutInflater().inflate(R.layout.list_fielditem, null, false);
 
+        LinearLayout ll_mask = (LinearLayout) listFieldView.findViewById(R.id.ll_mask);
         CustomTextViewSemiBold tvQuestionName = (CustomTextViewSemiBold) listFieldView.findViewById(R.id.tv_questionName);
         CustomTextViewBold tvTextFieldManditory = (CustomTextViewBold) listFieldView.findViewById(R.id.tv_manditory);
-        LinearLayout llParent = (LinearLayout) listFieldView.findViewById(R.id.ll_parent);
         RecyclerView rvCheckBoxes = (RecyclerView) listFieldView.findViewById(R.id.rv_checkBoxes);
         CustomTextViewMedium tvHint = (CustomTextViewMedium) listFieldView.findViewById(R.id.tv_hint);
-
 
         tvQuestionName.setText(listModel.getQuestionName());
 
@@ -1894,14 +1910,16 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         rvCheckBoxes.setLayoutManager(new LinearLayoutManager(this));
         CheckBoxAdapter checkBoxAdapter = new CheckBoxAdapter(checkBoxList, mContext);
         rvCheckBoxes.setAdapter(checkBoxAdapter);
-
+        if (from.equalsIgnoreCase(Constants.DONATION) && !isEdit) {  // if it from Donation, its not need to editable,there for use a masking layout above the parent layout
+            ll_mask.setVisibility(View.VISIBLE);
+        } else {
+            ll_mask.setVisibility(View.GONE);
+        }
 
         llParentLayout.addView(listFieldView);
         viewsList.put(listModel.getLabelName(), listFieldView);
 
-
     }
-
 
     @Override
     public void onFileUploadClick(KeyPairBoolData data, String labelName) {
@@ -1923,7 +1941,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 //        FilesAdapter filesAdapter = (FilesAdapter) rvFiles.getAdapter();
 //
 //        List<KeyPairBoolData> files = filesAdapter.getFiles();
-
 
     }
 
@@ -2069,7 +2086,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                             Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
                         }
 
-
                     } else if (data.getClipData() != null) {
                         ClipData mClipData = data.getClipData();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
@@ -2091,7 +2107,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                             if (orgFilePath == null) {
                                 orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
                             }
-
 
                             View fileUploadView = viewsList.get(qLabelName);
                             RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
@@ -2134,7 +2149,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
 
             }
         } else if (requestCode == GALLERY) {
@@ -2279,15 +2293,12 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                     ivClose.setVisibility(View.VISIBLE);
                     tvPath.setText(path);
 
-
                 }
                 try {
                     bytes.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-
             }
         }
     }
@@ -2504,7 +2515,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         return "";
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public String getPDFPath(Uri uri) {
 
@@ -2597,7 +2607,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         return 0;
     }
 
-
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
 
@@ -2613,7 +2622,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         String selectedDate = dateParser.format(mCalender.getTime());
         tvDate.setText(selectedDate);
     }
-
 
     public void openPdf(Context context, String path) {
         File file = new File(path);

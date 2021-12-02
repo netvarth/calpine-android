@@ -1792,7 +1792,6 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
         CustomTextViewSemiBold tvQuestionName = (CustomTextViewSemiBold) listFieldView.findViewById(R.id.tv_questionName);
         CustomTextViewBold tvTextFieldManditory = (CustomTextViewBold) listFieldView.findViewById(R.id.tv_manditory);
-        LinearLayout llParent = (LinearLayout) listFieldView.findViewById(R.id.ll_parent);
         RecyclerView rvCheckBoxes = (RecyclerView) listFieldView.findViewById(R.id.rv_checkBoxes);
         CustomTextViewMedium tvHint = (CustomTextViewMedium) listFieldView.findViewById(R.id.tv_hint);
 

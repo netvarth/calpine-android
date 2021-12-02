@@ -148,7 +148,7 @@ public class PaymentDetail extends AppCompatActivity {
                 SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
 
                 Intent intent = new Intent(mActivity, UpdateQuestionnaire.class);
-                intent.putExtra("isEdit", true);
+                intent.putExtra("isEdit", false);
                 intent.putExtra("from", Constants.DONATION);
                 intent.putExtra("status", Constants.DONATION);
                 startActivity(intent);
