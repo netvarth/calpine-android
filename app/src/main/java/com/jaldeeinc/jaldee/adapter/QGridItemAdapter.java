@@ -54,15 +54,15 @@ public class QGridItemAdapter extends RecyclerView.Adapter<QGridItemAdapter.View
         }
 
         if (column != null) {
-
+            String answerString = null;
             if (column.has("plainText")) {
-                viewHolder.tvAnswer.setText(column.get("plainText").toString());
+                answerString = column.get("plainText").getAsString();
             } else if (column.has("number")) {
-                viewHolder.tvAnswer.setText(column.get("number").toString());
+                answerString = column.get("number").getAsString();
             } else if (column.has("bool")) {
-                viewHolder.tvAnswer.setText(column.get("bool").toString());
+                answerString = column.get("bool").getAsString();
             } else if (column.has("date")) {
-                viewHolder.tvAnswer.setText(column.get("date").toString());
+                answerString = column.get("date").getAsString();
             } else if (column.has("list")) {
 
                 JsonArray list = column.getAsJsonArray("list");
@@ -74,13 +74,18 @@ public class QGridItemAdapter extends RecyclerView.Adapter<QGridItemAdapter.View
                 }
 
                 String s = TextUtils.join(",", values);
-                viewHolder.tvAnswer.setText(s);
+                answerString = s;
             } else if (column.has("fileUpload")) {
 
                 JsonArray fileUploadList = column.getAsJsonArray("fileUpload");
-                viewHolder.tvAnswer.setText(fileUploadList.size() + " Attachment(s)");
+                answerString = fileUploadList.size() + " Attachment(s)";
             }
 
+            if (answerString != null && !answerString.isEmpty()) {
+                viewHolder.tvAnswer.setText(answerString);
+            } else {
+                viewHolder.tvAnswer.setText("N/A");
+            }
         }
     }
 
