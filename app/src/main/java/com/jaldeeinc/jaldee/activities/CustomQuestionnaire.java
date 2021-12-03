@@ -245,7 +245,6 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 finish();
             }
         });
