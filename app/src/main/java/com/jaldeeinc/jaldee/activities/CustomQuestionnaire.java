@@ -2246,6 +2246,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                     openCamera();
                     dialog.dismiss();
                 }
+
             });
 
             llGallery.setOnClickListener(new View.OnClickListener() {
