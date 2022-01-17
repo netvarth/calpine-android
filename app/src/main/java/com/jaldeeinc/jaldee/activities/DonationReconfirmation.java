@@ -205,20 +205,12 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
             if (bookingModel.getDonationAmount() != null && !bookingModel.getDonationAmount().trim().equalsIgnoreCase("")) {
                 tvAmount.setText("₹ " + Config.getMoneyFormat(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(bookingModel.getDonationAmount()))));
             }
-            mSearchTerminology = bookingModel.getmSearchTerminology();
-
-            APIPayment(bookingModel.getAccountId());
-
             int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
             familyMEmID = consumerId;
-
             String imagesString = SharedPreference.getInstance(mContext).getStringValue(Constants.QIMAGES, "");
-
             if (imagesString != null && !imagesString.trim().equalsIgnoreCase("")) {
-
                 Type labelPathType = new TypeToken<ArrayList<LabelPath>>() {
                 }.getType();
-
                 try {
                     ArrayList<LabelPath> pathList = new Gson().fromJson(imagesString, labelPathType);
                     imagePathList = pathList;
@@ -226,8 +218,13 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
                     imagePathList = new ArrayList<>();
                     e.printStackTrace();
                 }
-
             }
+            mSearchTerminology = bookingModel.getmSearchTerminology();
+
+
+            APIPayment(bookingModel.getAccountId());
+
+
         }
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -468,7 +465,7 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(String.valueOf(accountID), Constants.PURPOSE_DONATIONPAYMENT);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentMod(String.valueOf(accountID), Constants.PURPOSE_DONATIONPAYMENT);
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
             public void onResponse(Call<ArrayList<PaymentModel>> call, Response<ArrayList<PaymentModel>> response) {
@@ -678,7 +675,7 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
     public void onPaymentSuccess(String s, PaymentData paymentData) {
         try {
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
-            new PaymentGateway(mContext, DonationReconfirmation.this).sendPaymentStatus(razorpayModel, "SUCCESS");
+            //new PaymentGateway(mContext, DonationReconfirmation.this).sendPaymentStatus(razorpayModel, "SUCCESS");
             ApiCheckRazorpayPaymentStatus(razorpayModel);
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentSuccess", e);
@@ -742,7 +739,7 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
         JSONObject jsonObj = new JSONObject();
         try {
 
-            jsonObj.put("paymentId", orderId );
+            jsonObj.put("paymentId", orderId);
             jsonObj.put("orderId", orderId);
 
         } catch (JSONException e) {

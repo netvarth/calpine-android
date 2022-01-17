@@ -2,42 +2,27 @@ package com.jaldeeinc.jaldee.Fragment;
 
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-
-import com.bumptech.glide.Glide;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.widget.Toolbar;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 import com.jaldeeinc.jaldee.R;
-
-import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.adapter.ViewPagerAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.response.JCashInfo;
-import com.jaldeeinc.jaldee.utils.AppPreferences;
 import com.jaldeeinc.jaldee.utils.CustomViewPager;
 
 import okhttp3.ResponseBody;
@@ -131,7 +116,7 @@ public class HomeTabFragment extends Fragment {
         return rootView;
     }
 
-    private void ApiGetUnreadMessagesCount() {
+    public void ApiGetUnreadMessagesCount() {
 
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
 
@@ -145,7 +130,7 @@ public class HomeTabFragment extends Fragment {
                         if (response.body() != null) {
                             String count = response.body().string();
 
-                            bottomNavigationView.showBadge(R.id.action_inbox,Integer.parseInt(count));
+                            bottomNavigationView.showBadge(R.id.action_inbox, Integer.parseInt(count));
                         }
 
 
@@ -266,7 +251,7 @@ public class HomeTabFragment extends Fragment {
         myJaldeeFragment.setArguments(bundle);
         // checkinFragment = new CheckinsFragmentCopy();
         favFragment = new FavouriteFragment();
-        inboxFragment = new InboxFragment();
+        inboxFragment = new InboxFragment(bottomNavigationView);
         profileFragment = new ProfileFragment();
 
         adapter.addFragment(homeSearchFragment);

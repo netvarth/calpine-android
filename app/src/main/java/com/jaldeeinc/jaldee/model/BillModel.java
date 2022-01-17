@@ -49,8 +49,11 @@ public class BillModel {
     double taxableTotal;
     double totalTaxAmount;
     double taxPercentage;
+    double customerPaidCharges;
 
-
+    public double getCustomerPaidCharges() {
+        return customerPaidCharges;
+    }
 
     public double getNetTotal() {
         return netTotal;

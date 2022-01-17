@@ -297,6 +297,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     private int locationId;
     String accountType = "";
     boolean isToken;
+    private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
     private String sharingId = "";
     private boolean onlinePresence = false;
     private boolean orderEnabled = false;
@@ -522,7 +523,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                         FrameLayout qr_card = settingsDialog.findViewById(R.id.qr_card);
                         ImageView avatar = settingsDialog.findViewById(R.id.profile_picture);
                         ImageView ivShare = settingsDialog.findViewById(R.id.iv_share);
-                        ivShare.setVisibility(View.GONE);
+                        Glide.with(ProviderDetailActivity.this).load(R.drawable.icon_share).into(ivShare);
+                        ivShare.setVisibility(View.VISIBLE);
                         //LinearLayout ll_qr = settingsDialog.findViewById(R.id.ll_qr);
                         //RelativeLayout rl_close = settingsDialog.findViewById(R.id.rl_close);
 
@@ -546,6 +548,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                         }
                                     })
                                     .into(avatar);
+                        } else {
+                            Glide.with(ProviderDetailActivity.this).load(R.drawable.icon_noimage).into(avatar);
                         }
                         ivShare.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -556,7 +560,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                     Bitmap bitmap1 = getBitmapFromView(qr_card);
                                     ivShare.setImageResource(R.drawable.icon_share);
 
-                                    File cachePath = new File(context.getCacheDir(), "images");
+                                    File cachePath = new File(context.getCacheDir(), IMAGE_DIRECTORY + "/images");
                                     cachePath.mkdirs(); // don't forget to make the directory
                                     FileOutputStream stream = new FileOutputStream(new File(cachePath, "image.png")); // overwrites this image every time
                                     bitmap1.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -567,7 +571,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
-                                File imagePath = new File(context.getCacheDir(), "images");
+                                File imagePath = new File(context.getCacheDir(), IMAGE_DIRECTORY + "/images");
                                 File newFile = new File(imagePath, "image.png");
                                 Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", newFile);
 
@@ -1722,7 +1726,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                     if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
                                         serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
                                     }
-                                    if(checkInService.getCheckInServiceAvailability().getPersonAhead() != null) {
+                                    if (checkInService.getCheckInServiceAvailability().getPersonAhead() != null) {
                                         serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
                                     }
                                     serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
@@ -1989,7 +1993,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                         if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
                                             serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
                                         }
-                                        if(checkInService.getCheckInServiceAvailability().getPersonAhead() != null) {
+                                        if (checkInService.getCheckInServiceAvailability().getPersonAhead() != null) {
                                             serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
                                         }
                                         serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
@@ -2290,7 +2294,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                                 if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
                                                     serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
                                                 }
-                                                if(checkInService.getCheckInServiceAvailability().getPersonAhead() != null) {
+                                                if (checkInService.getCheckInServiceAvailability().getPersonAhead() != null) {
                                                     serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
                                                 }
                                                 serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
@@ -2887,6 +2891,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             intent.putExtra("providerId", providerId);
             intent.putExtra("fromUser", false);
             intent.putExtra("sector", mBusinessDataList.getServiceSector().getDomain());
+
             ServiceInfo serviceInfo = new ServiceInfo();
             serviceInfo.setServiceId(appointmentServiceInfo.getId());
             serviceInfo.setServiceName(appointmentServiceInfo.getName());

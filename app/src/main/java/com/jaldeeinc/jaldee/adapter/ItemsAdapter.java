@@ -67,7 +67,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     private Catalog catalogInfo;
 
 
-
     public ItemsAdapter(ArrayList<CatalogItem> itemsList, Context context, boolean isLoading, IItemInterface iItemInterface, int accountId, int uniqueId, Catalog catalogInfo) {
         this.itemsList = itemsList;
         this.context = context;
@@ -105,7 +104,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
             setAnimation(viewHolder.cvCard, position);
 
-            if (catalogItem.getItems().isStockAvailable()){
+            if (catalogItem.getItems().isStockAvailable()) {
                 viewHolder.llLoader.setVisibility(View.GONE);
             } else {
                 viewHolder.llLoader.setVisibility(View.VISIBLE);
@@ -136,7 +135,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             }
 
             // to set shortDescription of item
-            if (catalogItem.getItems().getShortDescription() != null){
+            if (catalogItem.getItems().getShortDescription() != null) {
                 viewHolder.tvShortDescription.setText(catalogItem.getItems().getShortDescription());
             }
 
@@ -194,14 +193,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
                         viewHolder.shimmer.setVisibility(View.GONE);
                         viewHolder.bIvItemImage.setVisibility(View.VISIBLE);
-                        viewHolder.bIvItemImage.setImageResource(R.drawable.icon_noimage);
+                        Glide.with(context).load(R.drawable.ic_item).into(viewHolder.bIvItemImage);
                     }
                 }
             } else {
 
                 viewHolder.shimmer.setVisibility(View.GONE);
                 viewHolder.bIvItemImage.setVisibility(View.VISIBLE);
-                viewHolder.bIvItemImage.setImageResource(R.drawable.icon_noimage);
+                Glide.with(context).load(R.drawable.ic_item).into(viewHolder.bIvItemImage);
             }
 
             // to set itemPrice
@@ -248,12 +247,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                         item.setDiscount(catalogItem.getItems().getPromotionalPrice());
                         item.setDiscountedPrice(catalogItem.getItems().getDiscountedPrice());
                         item.setItemType(catalogItem.getItems().getItemType());
-                        if (catalogItem.getItems().isTaxable()){
+                        if (catalogItem.getItems().isTaxable()) {
                             item.setIsTaxable(1);
                         } else {
                             item.setIsTaxable(0);
                         }
-                        if (catalogItem.getItems().isTaxable()){
+                        if (catalogItem.getItems().isTaxable()) {
                             if (catalogInfo != null) {
                                 item.setTax(catalogInfo.getTaxPercentage());
                             }
@@ -425,7 +424,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         private SkeletonLoadingView shimmer;
         private LinearLayout llLoader, llActionPreventor;
         private RelativeLayout rlTag;
-        private CustomTextViewMedium tvTag,tvShortDescription;
+        private CustomTextViewMedium tvTag, tvShortDescription;
 
         public ViewHolder(@NonNull View itemView, boolean isLoading) {
 

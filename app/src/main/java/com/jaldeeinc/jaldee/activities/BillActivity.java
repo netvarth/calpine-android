@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,12 +29,14 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.jaldeeinc.jaldee.Interface.IPaymentGateway;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.BIllDiscountAdapter;
 import com.jaldeeinc.jaldee.adapter.BillCouponAdapter;
 import com.jaldeeinc.jaldee.adapter.BillDemandDisplayNotesAdapter;
 import com.jaldeeinc.jaldee.adapter.BillServiceAdapter;
+import com.jaldeeinc.jaldee.adapter.PaymentModeAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -42,12 +45,12 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
-import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
+import com.jaldeeinc.jaldee.response.PayMode;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
@@ -79,8 +82,7 @@ import retrofit2.Response;
 /**
  * Created by sharmila on 1/10/18.
  */
-
-public class BillActivity extends AppCompatActivity implements PaymentResultWithDataListener, IPaymentResponse {
+public class BillActivity extends AppCompatActivity implements PaymentResultWithDataListener, IPaymentResponse, IPaymentGateway {
 
     static Context mCOntext;
     static Activity mActivity;
@@ -89,7 +91,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     TextView tv_provider, tv_customer, tv_date, tv_gstn, tv_bill;
     EditText mbill_coupon_edit;
     BillModel mBillData;
-    TextView tv_paid, tv_totalamt, tv_jaldeeCouponLabel, tv_providerCouponLabel, gstLabel, tv_refundamount;
+    TextView tv_customerPaidCharges, tv_paid, tv_totalamt, tv_jaldeeCouponLabel, tv_providerCouponLabel, gstLabel, tv_refundamount;
     RecyclerView recycle_item, recycle_discount_total, coupon_added, proCoupon_added, recycle_display_notes;
     BillServiceAdapter billServiceAdapter;
     BillCouponAdapter billCouponAdapter, billProCouponAdapter;
@@ -101,9 +103,12 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     ArrayList<BillModel> discountArrayList = new ArrayList<>();
     ArrayList<BillModel> coupanArrayList = new ArrayList<>();
 
+    ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
+    ArrayList<RefundDetails> refundData = new ArrayList<>();
+
     Button btn_pay, mbill_applybtn;
     TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax, billLabel, jdnLabel, jdnValue, txtrefund, txtdelivery, tv_deliveryCharge, tv_amount_Saved;
-    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin, jcLayout, pcLayout, jdnLayout, refundLayout, deliveryLayout, llproviderlayout, ll_amount_Saved, llJCash;
+    LinearLayout ll_customerPaidCharges, paidlayout, amountlayout, taxlayout, couponCheckin, jcLayout, pcLayout, jdnLayout, refundLayout, deliveryLayout, llproviderlayout, ll_amount_Saved, llJCash;
     CheckBox cbJCash;
     CustomTextViewMedium tvJCashHint;
     String sAmountPay;
@@ -121,14 +126,23 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     ArrayList<ProviderCouponResponse> providerCouponList = new ArrayList<>();
     WalletEligibleJCash walletEligibleJCash = new WalletEligibleJCash();
-    private IPaymentResponse paymentResponse;
     String encId;
+    public boolean indiaPay = false;
+    public boolean internationalPay = false;
+    public String PAYMENT_LINK_FLAG;
+    public ArrayList<PayMode> payModes = new ArrayList<>();
+    public PaymentModeAdapter paymentModeAdapter;
+    boolean isInternational = false;
+    public String selectedpaymentMode;
+    public IPaymentGateway iPaymentGateway;
+    private IPaymentResponse iPaymentResponse;
     String bookingStatus;
     TextView tv_title;
     TextView txtlocn;
     LinearLayout ll_txtlocn;
     private boolean fromPushNotification = false;
     private Provider providerResponse = new Provider();
+    private BottomSheetDialog dialog;
 
 
     @Override
@@ -137,9 +151,12 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         setContentView(R.layout.bill);
         mCOntext = this;
         mActivity = this;
-        paymentResponse = this;
+        iPaymentResponse = this;
+        iPaymentGateway = this;
+
         mbill_applybtn = findViewById(R.id.bill_applybtn);
         mbill_coupon_edit = findViewById(R.id.bill_coupon_edit);
+        ll_customerPaidCharges = findViewById(R.id.ll_customerPaidCharges);
         paidlayout = findViewById(R.id.paidlayout);
         couponCheckin = findViewById(R.id.couponCheckin);
         llJCash = findViewById(R.id.ll_jCash);
@@ -159,6 +176,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         txtaxval = findViewById(R.id.txtaxval);
         taxlayout = findViewById(R.id.taxlayout);
         tv_amount = findViewById(R.id.txtamt);
+        tv_customerPaidCharges = findViewById(R.id.tv_customerPaidCharges);
         tv_paid = findViewById(R.id.amtpaid);
         tv_totalamt = findViewById(R.id.totalamt);
         btn_pay = findViewById(R.id.btn_pay);
@@ -332,101 +350,174 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         } else {
             try {
                 btn_pay.setVisibility(View.VISIBLE);
-                final BottomSheetDialog dialog = new BottomSheetDialog(mCOntext);
-                dialog.setContentView(R.layout.prepayment);
-                dialog.show();
-
-                Button btn_paytm = dialog.findViewById(R.id.btn_paytm);
-                Button btn_payu = dialog.findViewById(R.id.btn_payu);
-                CustomTextViewBold tv_international_payment_link = (CustomTextViewBold) dialog.findViewById(R.id.tv_international_payment_link);
-
-                /*if (showPaytmWallet) {
-                    btn_paytm.setVisibility(View.VISIBLE);
-                } else {
-                    btn_paytm.setVisibility(View.GONE);
-                }
-                if (showPayU) {
-                    btn_payu.setVisibility(View.VISIBLE);
-                } else {
-                    btn_payu.setVisibility(View.GONE);
-                }*/
-                if (showPaytmWallet && showPayU) {
-                    btn_paytm.setVisibility(View.VISIBLE);
-                    btn_payu.setVisibility(View.VISIBLE);
-                    btn_payu.setText("Credit Card/Debit Card/Net Banking");
-                    btn_paytm.setText("Paytm");
-                } else if (showPayU && !showPaytmWallet) {
-                    btn_payu.setVisibility(View.VISIBLE);
-                    btn_paytm.setVisibility(View.GONE);
-                    btn_payu.setText("CC/DC/UPI");
-                } else if (!showPayU && showPaytmWallet) {
-                    btn_payu.setVisibility(View.GONE);
-                    btn_paytm.setVisibility(View.VISIBLE);
-                    btn_paytm.setText("CC/DC/UPI");
-                }
-                if (showForInternationalPayment) {
-                    tv_international_payment_link.setVisibility(View.VISIBLE);
-                } else {
-                    tv_international_payment_link.setVisibility(View.GONE);
-                }
-                final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-                TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
-//                        DecimalFormat format = new DecimalFormat("0.00");
-                if (cbJCash.isChecked()) {
-                    txtamt.setText("Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(payRemainingAmount)));
-
-                } else {
-                    txtamt.setText("Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(sAmountPay)));
-                }
-                Typeface tyface1 = Typeface.createFromAsset(mCOntext.getAssets(),
-                        "fonts/Montserrat_Bold.otf");
-                txtamt.setTypeface(tyface1);
-                btn_payu.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (cbJCash.isChecked()) {
-                            new PaymentGateway(mCOntext, mActivity).ApiGenerateHash2(ynwUUID, sAmountPay, accountID, purpose, "bill", true, false, true, false);
-
-                        } else {
-                            new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, purpose, "bill", customerId, Constants.SOURCE_PAYMENT);
-                        }
-                        dialog.dismiss();
-                    }
-                });
-
-                btn_paytm.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        PaytmPayment payment = new PaytmPayment(mCOntext, paymentResponse);
-                        if (cbJCash.isChecked()) {
-                            payment.ApiGenerateHashPaytm2(ynwUUID, sAmountPay, accountID, purpose, "", true, false, false, true, encId, mCOntext, mActivity);
-
-                        } else {
-                            payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, purpose, mCOntext, mActivity, "", customerId, encId);
-                        }
-                        dialog.dismiss();
-                    }
-                });
-
-                tv_international_payment_link.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (cbJCash.isChecked()) {
-                            new PaymentGateway(mCOntext, mActivity).ApiGenerateHash2(ynwUUID, sAmountPay, accountID, purpose, "bill", true, false, true, false);
-
-                        } else {
-                            new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, purpose, "bill", customerId, Constants.SOURCE_PAYMENT);
-                        }
-                        dialog.dismiss();
-                    }
-                });
+                ApiGetPaymentModes();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
+    public void ApiGetPaymentModes() {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mCOntext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mCOntext, mCOntext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID, 0, Constants.PURPOSE_BILLPAYMENT);
+
+        call.enqueue(new Callback<ArrayList<PaymentModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<PaymentModel>> call, Response<ArrayList<PaymentModel>> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+
+                        mPaymentData = response.body();
+
+                        dialog = new BottomSheetDialog(BillActivity.this);
+                        dialog.setContentView(R.layout.prepayment);
+                        dialog.setCancelable(false);
+                        dialog.show();
+                        LinearLayout ll_cancellation_policy = (LinearLayout) dialog.findViewById(R.id.ll_cancellation_policy);
+                        ll_cancellation_policy.setVisibility(View.GONE);
+                        Button btn_pay = (Button) dialog.findViewById(R.id.btn_pay);
+                        CustomTextViewBold tv_payment_link = (CustomTextViewBold) dialog.findViewById(R.id.tv_international_payment_link);
+                        ImageView ivClose = dialog.findViewById(R.id.iv_close);
+                        ivClose.setVisibility(View.VISIBLE);
+                        //RecyclerView rv_payment_modes = (RecyclerView) dialog.findViewById(R.id.rv_payment_modes);
+                        GridView gv_payment_modes = (GridView) dialog.findViewById(R.id.gv_payment_modes);
+
+                        TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+                        if (cbJCash.isChecked()) {
+                            txtamt.setText("Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(payRemainingAmount)));
+
+                        } else {
+                            txtamt.setText("Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(sAmountPay)));
+                        }
+                        Typeface tyface1 = Typeface.createFromAsset(BillActivity.this.getAssets(),
+                                "fonts/JosefinSans-SemiBold.ttf");
+                        txtamt.setTypeface(tyface1);
+                        ivClose.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                finish();
+                            }
+                        });
+                        btn_pay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (selectedpaymentMode != null) {
+
+                                    if (cbJCash.isChecked()) {
+                                        new PaymentGateway(mCOntext, mActivity, iPaymentResponse).ApiGenerateHashWallet(sAmountPay, selectedpaymentMode, ynwUUID, accountID, Constants.PURPOSE_BILLPAYMENT, 0, isInternational, encId, true);
+                                    } else {
+                                        new PaymentGateway(mCOntext, mActivity, iPaymentResponse).ApiGenerateHash(sAmountPay, selectedpaymentMode, ynwUUID, accountID, Constants.PURPOSE_BILLPAYMENT, 0, isInternational, encId, customerId);
+                                    }
+                                    dialog.dismiss();
+                                } else {
+                                    Toast.makeText(mCOntext, "Please select mode of payment", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+                        tv_payment_link.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (!PAYMENT_LINK_FLAG.isEmpty() && PAYMENT_LINK_FLAG != null) {
+                                    if (PAYMENT_LINK_FLAG.equalsIgnoreCase("INDIA")) {
+                                        tv_payment_link.setVisibility(View.VISIBLE);
+                                        tv_payment_link.setText("Indian Payment ? Click here");
+                                        payModes = mPaymentData.get(0).getInternationalBankInfo();
+                                        PAYMENT_LINK_FLAG = "INTERNATIONAL";
+                                        isInternational = true;
+                                    } else if (PAYMENT_LINK_FLAG.equalsIgnoreCase("INTERNATIONAL")) {
+                                        tv_payment_link.setVisibility(View.VISIBLE);
+                                        tv_payment_link.setText("Non Indian Payment ? Click here");
+                                        payModes = mPaymentData.get(0).getIndiaBankInfo();
+                                        PAYMENT_LINK_FLAG = "INDIA";
+                                        isInternational = false;
+                                    }
+                                    selectedpaymentMode = null;
+
+                                    gv_payment_modes.setVisibility(View.VISIBLE);
+                                    gv_payment_modes.setAdapter(new PaymentModeAdapter(mCOntext, payModes, iPaymentGateway));
+
+                                } else {
+                                    tv_payment_link.setVisibility(View.GONE);
+                                }
+                            }
+                        });
+                        indiaPay = mPaymentData.get(0).isIndiaPay();
+                        internationalPay = mPaymentData.get(0).isInternationalPay();
+                        if (indiaPay && mPaymentData.get(0).getIndiaBankInfo().size() > 0) {
+                            selectedpaymentMode = null;
+                            PAYMENT_LINK_FLAG = "INDIA";            /******** for set PAYMENT_LINK_FLAG **/
+                            tv_payment_link.setVisibility(View.VISIBLE);
+                            if (mPaymentData != null && mPaymentData.get(0).getIndiaBankInfo().size() > 0) {
+                                payModes = mPaymentData.get(0).getIndiaBankInfo();
+
+                                gv_payment_modes.setVisibility(View.VISIBLE);
+                                gv_payment_modes.setAdapter(new PaymentModeAdapter(mCOntext, payModes, iPaymentGateway));
+
+                                if (internationalPay && mPaymentData.get(0).getInternationalBankInfo().size() > 0) {
+                                    tv_payment_link.setText("Non Indian Payment ? Click here");
+                                } else {
+                                    tv_payment_link.setVisibility(View.GONE);
+                                }
+                                isInternational = false;
+                            }
+                        } else if (internationalPay && mPaymentData.get(0).getInternationalBankInfo().size() > 0) {
+                            selectedpaymentMode = null;
+                            PAYMENT_LINK_FLAG = "INTERNATIONAL";     /******** for set PAYMENT_LINK_FLAG **/
+                            tv_payment_link.setVisibility(View.VISIBLE);
+                            if (mPaymentData != null && mPaymentData.get(0).getInternationalBankInfo().size() > 0) {
+                                payModes = mPaymentData.get(0).getInternationalBankInfo();
+
+                                gv_payment_modes.setVisibility(View.VISIBLE);
+                                gv_payment_modes.setAdapter(new PaymentModeAdapter(mCOntext, payModes, iPaymentGateway));
+
+                                if (indiaPay && mPaymentData.get(0).getIndiaBankInfo().size() > 0) {
+                                    tv_payment_link.setText("Indian Payment ? Click here");
+                                } else {
+                                    tv_payment_link.setVisibility(View.GONE);
+                                }
+                                isInternational = true;
+                            }
+                        } else {
+                            tv_payment_link.setVisibility(View.GONE);
+                        }
+
+                    } else {
+                        if (response.code() != 419)
+                            Toast.makeText(mCOntext, response.errorBody().string(), Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<PaymentModel>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
+    }
     public void isGateWayPaymentNeeded(String ynwUUID, final String amount, String accountID, String purpose, boolean isJcashUsed, boolean isreditUsed, boolean isRazorPayPayment, boolean isPayTmPayment, String paymentMode) {
 
         ApiInterface apiService =
@@ -682,94 +773,6 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     }
 
 
-    boolean showPaytmWallet = false;
-    boolean showPayU = false;
-    boolean showForInternationalPayment = false;
-    ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
-    ArrayList<RefundDetails> refundData = new ArrayList<>();
-
-    private void APIPayment(String accountID) {
-
-
-        ApiInterface apiService =
-                ApiClient.getClient(mCOntext).create(ApiInterface.class);
-
-
-        final Dialog mDialog = Config.getProgressDialog(mCOntext, mCOntext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-
-
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID, Constants.PURPOSE_BILLPAYMENT);
-
-        call.enqueue(new Callback<ArrayList<PaymentModel>>() {
-            @Override
-            public void onResponse(Call<ArrayList<PaymentModel>> call, Response<ArrayList<PaymentModel>> response) {
-
-                try {
-
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
-                    if (response.code() == 200) {
-
-                        mPaymentData = response.body();
-
-                        /*for (int i = 0; i < mPaymentData.size(); i++) {
-                            if (mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")) {
-                                showPaytmWallet = true;
-                            }
-
-                            if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
-                                showPayU = true;
-                            }
-                        }*/
-
-                        String countryCode = SharedPreference.getInstance(mCOntext).getStringValue("countryCode", "").replace("+", "");
-                        if (mPaymentData.get(0).isJaldeeBank()) {
-                            if (!countryCode.equalsIgnoreCase("91"))  // for international number it shows Razorpay gateway only
-                            {
-                                showPaytmWallet = false;
-                                showPayU = true;
-                                showForInternationalPayment = false;
-                            } else {
-                                showPaytmWallet = true;
-                                showPayU = false;
-                                showForInternationalPayment = true;
-                            }
-                        } else {
-                            if (mPaymentData.get(0).getPayGateways().contains("PAYTM")) {
-                                showPaytmWallet = true;
-                            }
-                            if (mPaymentData.get(0).getPayGateways().contains("RAZORPAY")) {
-                                showPayU = true;
-                            }
-                        }
-                        if (!showPaytmWallet && !showPayU) {
-                            btn_pay.setVisibility(View.INVISIBLE);
-                        }
-                    } else {
-                        btn_pay.setVisibility(View.INVISIBLE);
-                        if (response.code() != 419)
-                            Toast.makeText(mCOntext, response.errorBody().string(), Toast.LENGTH_LONG).show();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<PaymentModel>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
-            }
-        });
-    }
 
 
     private void APIRefundInfo(String ynwUUID) {
@@ -1028,17 +1031,20 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         } else {
                             deliveryLayout.setVisibility(View.GONE);
                         }
-
-
                         if (mBillData.getTotalAmountPaid() != 0) {
                             paidlayout.setVisibility(View.VISIBLE);
 //                            DecimalFormat format = new DecimalFormat("0.00");
                             tv_paid.setText("₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(mBillData.getTotalAmountPaid()));
                         } else {
-
                             paidlayout.setVisibility(View.GONE);
                         }
-
+                        if (mBillData.getCustomerPaidCharges() != 0) {
+                            ll_customerPaidCharges.setVisibility(View.VISIBLE);
+//                            DecimalFormat format = new DecimalFormat("0.00");
+                            tv_customerPaidCharges.setText("₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(mBillData.getCustomerPaidCharges()));
+                        } else {
+                            ll_customerPaidCharges.setVisibility(View.GONE);
+                        }
                         if (!bookingStatus.equals("Cancelled")) {
                             txttotal.setVisibility(View.VISIBLE);
                             tv_totalamt.setVisibility(View.VISIBLE);
@@ -1246,7 +1252,6 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                APIPayment(accountID);
             }
 
             @Override
@@ -1569,7 +1574,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         Log.i("mani", "here");
         try {
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
-            new PaymentGateway(mCOntext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
+            //new PaymentGateway(mCOntext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
 
             ApiCheckRazorpayPaymentStatus(razorpayModel);
 
@@ -1787,5 +1792,10 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         Intent homeIntent = new Intent(BillActivity.this, Home.class);
         homeIntent.putExtra("isOrder", "ORDER");
         startActivity(homeIntent);
+    }
+
+    @Override
+    public void selectedPaymentMode(String mode) {
+        selectedpaymentMode = mode;
     }
 }

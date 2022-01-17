@@ -75,7 +75,7 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
 
             setAnimation(viewHolder.cvBooking, position);
 
-            if (orders.getShoppingList() != null) {
+            if (orders.getShoppingList() != null || orders.getTotalItemQuantity() <= 0) {
 
                 viewHolder.rlQuantity.setVisibility(View.GONE);
             } else {
@@ -121,7 +121,7 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                         time = orders.getTimeSlot().getsTime() + " - " + orders.getTimeSlot().geteTime();
                     }
                     if (date.equalsIgnoreCase(orders.getOrderDate())) {
-                        if(time != null && !time.equals("")) {
+                        if (time != null && !time.equals("")) {
                             viewHolder.tvDateAndTime.setText("Today," + " " + time);
                         } else {
                             viewHolder.tvDateAndTime.setText("Today");
@@ -131,11 +131,11 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                     }
                 }
 
-                if(orders.getItemsList() != null && orders.getItemsList().size() > 0 ) {   //to get the order contains virtual item only
+                if (orders.getItemsList() != null && orders.getItemsList().size() > 0) {   //to get the order contains virtual item only
                     isVirtualItemsOnly = isVirtualItemsOnly(orders.getItemsList());
                 }
                 // To set icon for delivery type
-                if(!isVirtualItemsOnly) {
+                if (!isVirtualItemsOnly) {
                     if (orders.isHomeDelivery()) {
                         viewHolder.ivBookingType.setImageResource(R.drawable.home_delivery);
                     } else if (orders.isStorePickup()) {
@@ -261,10 +261,11 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
 
         }
     }
-    private boolean isVirtualItemsOnly(ArrayList<ItemDetails> itemsList){
+
+    private boolean isVirtualItemsOnly(ArrayList<ItemDetails> itemsList) {
         boolean isContainsPhysicalItems = false;
         for (ItemDetails item : itemsList) {
-            if (item.getItemType() == null || item.getItemType().isEmpty() ||item.getItemType().equalsIgnoreCase("PHYSICAL")) {
+            if (item.getItemType() == null || item.getItemType().isEmpty() || item.getItemType().equalsIgnoreCase("PHYSICAL")) {
                 isContainsPhysicalItems = true;
             }
         }
@@ -274,6 +275,7 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
             return false;
         }
     }
+
     public static String convertToTitleForm(String name) {
 
         String convertName = name;

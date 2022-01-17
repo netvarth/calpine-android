@@ -1,14 +1,9 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +11,10 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.adapter.InboxAdapter;
@@ -25,12 +24,10 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.response.InboxModel;
 import com.jaldeeinc.jaldee.response.NewInbox;
-import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,9 +37,10 @@ import retrofit2.Response;
  */
 
 public class InboxFragment extends RootFragment /*implements FragmentInterface*/ {
+    ChipNavigationBar bottomNavigationView;
 
-
-    public InboxFragment() {
+    public InboxFragment(ChipNavigationBar bottomNavigationView) {
+        this.bottomNavigationView = bottomNavigationView;
         // Required empty public constructor
     }
 
@@ -153,12 +151,37 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
     @Override
     public void onResume() {
         super.onResume();
-
         ApiInboxList();
-
+        ApiGetUnreadMessagesCount(); // for update message count at bottom dashboard inbox badge
     }
 
+    public void ApiGetUnreadMessagesCount() {
 
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        Call<ResponseBody> call = apiService.getUnreadMessagesCount();
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    if (response.code() == 200) {
+
+                        if (response.body() != null) {
+                            String count = response.body().string();
+                            bottomNavigationView.showBadge(R.id.action_inbox, Integer.parseInt(count));
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
     /*@Override
     public void fragmentBecameVisible() {
         Config.logV("OnResume------INBox Frgamrnt VIisble--------------------");

@@ -57,7 +57,7 @@ public class ResponseInteceptor implements Interceptor {
                 .build();
 
 
-        Response response =  chain.proceed(request);
+        Response response = chain.proceed(request);
 
         Headers headerList = response.headers();
         //  String versionheader = headerList.get("Version");
@@ -70,26 +70,25 @@ public class ResponseInteceptor implements Interceptor {
         }
 */
 
-        Config.logV("RESPONSE CODE@@@@@@@@@@@@@@@@@"+response.code());
-        if (response.code() == 419){
+        Config.logV("RESPONSE CODE@@@@@@@@@@@@@@@@@" + response.code());
+        if (response.code() == 419) {
             // Magic is here ( Handle the error as your way )
-            Config.logV("RESPONSE @@@@@@@@@@@@@@@@@"+response.code());
+            Config.logV("RESPONSE @@@@@@@@@@@@@@@@@" + response.code());
 
 
             //SharedPreference.getInstance(context).clear();
-            DatabaseHandler db=new DatabaseHandler(context);
+            DatabaseHandler db = new DatabaseHandler(context);
             db.deleteDatabase();
 
             String loginId = SharedPreference.getInstance(context).getStringValue("mobno", "");
             String password = SharedPreference.getInstance(context).getStringValue("password", "");
             String countryCode = SharedPreference.getInstance(context).getStringValue("countryCode", "");
-            ApiLogin(loginId,password, countryCode);
-
+            ApiLogin(loginId, password, countryCode);
 
 
         }
 
-        if(response.code()==301){
+        if (response.code() == 301) {
 
             Config.logV(" ERROR  301 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             SharedPreference.getInstance(context).clear();
@@ -97,20 +96,15 @@ public class ResponseInteceptor implements Interceptor {
             db.deleteDatabase();
             // if(response.body().equals("true")) {
 
-              Intent iLogout=new Intent(context, Register.class);
-              iLogout.putExtra("forceupdate","true");
-              iLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-              context.startActivity(iLogout);
-              // mAdapterCallback.onMethodForceUpdate();
+            Intent iLogout = new Intent(context, Register.class);
+            iLogout.putExtra("forceupdate", "true");
+            iLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(iLogout);
+            // mAdapterCallback.onMethodForceUpdate();
 
         }
         return response;
     }
-
-
-
-
-
 
 
     public void ApiLogin(String loginId, String password, String countryCode) {
@@ -121,10 +115,10 @@ public class ResponseInteceptor implements Interceptor {
 
         SharedPreferences pref = context.getSharedPreferences(Config.SHARED_PREF, 0);
         String regId = pref.getString("regId", null);
-        Config.logV("REGISTARION ID______________@@@@@@@___"+regId);
+        Config.logV("REGISTARION ID______________@@@@@@@___" + regId);
 
-        Config.logV("login ID______________@@@@@@@___"+loginId);
-        Config.logV("password ID______________@@@@@@@___"+password);
+        Config.logV("login ID______________@@@@@@@___" + loginId);
+        Config.logV("password ID______________@@@@@@@___" + password);
 
         JSONObject jsonObj = new JSONObject();
         try {
@@ -139,14 +133,13 @@ public class ResponseInteceptor implements Interceptor {
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Config.logV("JSON--------------" + jsonObj);
 
-        Call<LoginResponse> call = apiService.LoginResponse(getDeviceName(), body);
+        Call<LoginResponse> call = apiService.LoginResponse(body);
 
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, retrofit2.Response<LoginResponse> response) {
 
                 try {
-
 
 
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
@@ -157,13 +150,13 @@ public class ResponseInteceptor implements Interceptor {
 
                         // get header value
 
-                        String cookie ="" ;
+                        String cookie = "";
                         List<String> cookiess = response.headers().values("Set-Cookie");
                         StringBuffer Cookie_header = new StringBuffer();
 
-                        for(String key : cookiess){
+                        for (String key : cookiess) {
                             String Cookiee = key.substring(0, key.indexOf(";"));
-                            Cookie_header.append(Cookiee +';');
+                            Cookie_header.append(Cookiee + ';');
                         }
 
                         Config.logV("Response--Cookie response-------------------------" + Cookie_header);
@@ -177,7 +170,7 @@ public class ResponseInteceptor implements Interceptor {
                             SharedPreference.getInstance(context).setValue("PREF_COOKIES", Cookie_header.toString());
                             Config.logV("Set Cookie sharedpref response------------" + Cookie_header);
 
-                            LogUtil.writeLogTest("****Login Cookie****"+Cookie_header);
+                            LogUtil.writeLogTest("****Login Cookie****" + Cookie_header);
 
                         }
 
@@ -200,15 +193,15 @@ public class ResponseInteceptor implements Interceptor {
                         SharedPreference.getInstance(context).setValue("countryCode", countryCode);
 
                         Intent iReg = new Intent(context, Home.class);
-                        iReg.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        iReg.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         context.startActivity(iReg);
-                        ((Activity)context).finish();
+                        ((Activity) context).finish();
 
 
-                    }else{
+                    } else {
                         /*if(response.code()!=419)
                         Toast.makeText(context,response.errorBody().string(),Toast.LENGTH_LONG).show();*/
-                        Config.logV("Response Error-----------"+response.errorBody().string());
+                        Config.logV("Response Error-----------" + response.errorBody().string());
                     }
 
 
@@ -226,15 +219,5 @@ public class ResponseInteceptor implements Interceptor {
 
             }
         });
-
     }
-    public static String getDeviceName() {
-        String manufacturer = Build.MANUFACTURER;
-        String model = Build.MODEL;
-        if (model.startsWith(manufacturer)) {
-            return model;
-        }
-        return manufacturer + " " + model;
-    }
-
 }

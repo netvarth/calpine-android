@@ -46,8 +46,6 @@ public class JaldeeWalletActivity extends AppCompatActivity {
         jCashBalance = findViewById(R.id.tv_jcash);
         ll_img_right_arrow = findViewById(R.id.ll_img_right_arrow);
         card = findViewById(R.id.card);
-        Typeface tyface1 = Typeface.createFromAsset(JaldeeWalletActivity.this.getAssets(),
-                "fonts/Montserrat_Bold.otf");
         mActivity = this;
         mContext = this;
         ApiGetJCashInfo();
@@ -103,6 +101,8 @@ public class JaldeeWalletActivity extends AppCompatActivity {
                         if (jCashInfo != null) {
                             if (jCashInfo.getTotCashAvailable() != null) {
                                 jCashBalance.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(jCashInfo.totCashAvailable)));
+                            } else {
+                                jCashBalance.setText("₹ 0");
                             }
                             if (jCashInfo.getTotCashAwarded() != null && Double.parseDouble(jCashInfo.getTotCashAwarded()) == 0) {
                                 ll_img_right_arrow.setVisibility(View.GONE);

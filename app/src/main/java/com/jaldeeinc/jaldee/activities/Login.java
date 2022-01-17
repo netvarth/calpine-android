@@ -12,9 +12,12 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
@@ -47,8 +50,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.jaldeeinc.jaldee.utils.DialogUtilsKt.showUIDialog;
 
 /**
  * Created by sharmila on 3/7/18.
@@ -85,7 +86,7 @@ public class Login extends AppCompatActivity {
         txt_InputPwd = findViewById(R.id.text_input_layout_pwd);
         edtpassword_login = findViewById(R.id.edtpassword_login);
         edtpassword_login.addTextChangedListener(new MyTextWatcher(edtpassword_login));
-      //  pattern = Pattern.compile(PASSWORD_PATTERN);
+        //  pattern = Pattern.compile(PASSWORD_PATTERN);
         tv_account = findViewById(R.id.txt_account);
         btn_login = findViewById(R.id.btn_login);
         TextView tv_ynw = findViewById(R.id.txtynw);
@@ -132,9 +133,6 @@ public class Login extends AppCompatActivity {
     }
 
 
-
-
-
 //    public boolean validatePwd(String password) {
 //
 //        matcher = pattern.matcher(password);
@@ -160,7 +158,7 @@ public class Login extends AppCompatActivity {
         public void afterTextChanged(Editable editable) {
             switch (view.getId()) {
                 case R.id.editpassword:
-                   // validatePassword();
+                    // validatePassword();
                     break;
             }
         }
@@ -202,7 +200,7 @@ public class Login extends AppCompatActivity {
         Config.logV("REGISTARION ID______________@@@@@@@___" + regId);
         JSONObject jsonObj = new JSONObject();
         try {
-            jsonObj.put("countryCode",countryCode);
+            jsonObj.put("countryCode", countryCode);
             jsonObj.put("loginId", loginId);
             jsonObj.put("password", password);
             jsonObj.put("mUniqueId", regId);
@@ -214,7 +212,7 @@ public class Login extends AppCompatActivity {
         Config.logV("JSON--------------" + jsonObj);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<LoginResponse> call = apiService.LoginResponse(getDeviceName(), body);
+        Call<LoginResponse> call = apiService.LoginResponse(body);
 
         call.enqueue(new Callback<LoginResponse>() {
             @Override
@@ -277,7 +275,7 @@ public class Login extends AppCompatActivity {
 
 
                         Intent iReg = new Intent(mContext, Home.class);
-                        if(detail!=null){
+                        if (detail != null) {
                             iReg.putExtra("detail_id", (detail));
                         }
                         iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -311,9 +309,9 @@ public class Login extends AppCompatActivity {
 
     public void BtnLogin(View view) {
         String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
-      //  if (validatePassword()) {
-            ApiLogin(loginId, edtpassword_login.getText().toString());
-      //  }
+        //  if (validatePassword()) {
+        ApiLogin(loginId, edtpassword_login.getText().toString());
+        //  }
 
 //        showUIDialog(Login.this, "", "Payment successful", () -> {
 //            Intent intent = new Intent(Login.this, Register.class);
@@ -351,7 +349,7 @@ public class Login extends AppCompatActivity {
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
-                      //  Toast.makeText(mContext, "Otp has been send to " + loginId, Toast.LENGTH_LONG).show();
+                        //  Toast.makeText(mContext, "Otp has been send to " + loginId, Toast.LENGTH_LONG).show();
                         Intent iReg = new Intent(mContext, ResetOtp.class);
                         startActivity(iReg);
 
@@ -390,15 +388,5 @@ public class Login extends AppCompatActivity {
 
             }
         });
-
-
-    }
-    public static String getDeviceName() {
-        String manufacturer = Build.MANUFACTURER;
-        String model = Build.MODEL;
-        if (model.startsWith(manufacturer)) {
-            return model;
-        }
-        return manufacturer + " " + model;
     }
 }

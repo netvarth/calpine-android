@@ -545,6 +545,39 @@
                              android:textColor="@color/title_grey"
                              android:textSize="@dimen/txtsize_hint" />
                      </LinearLayout>-->
+                    <LinearLayout
+                        android:id="@+id/ll_customerPaidCharges"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding3"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:gravity="left"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:gravity="right"
+                            android:text="Processing Fee"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_12" />
+
+                        <TextView
+                            android:id="@+id/tv_customerPaidCharges"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.4"
+                            android:gravity="right"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/paidlayout"
@@ -772,7 +805,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimen_10dp"
                         android:orientation="vertical"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <CheckBox
                             android:id="@+id/cb_jCash"

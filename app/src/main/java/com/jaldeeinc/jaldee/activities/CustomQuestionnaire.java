@@ -634,7 +634,7 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
             SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
             SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
 
-            if (from.equalsIgnoreCase(Constants.CHECKIN)) {
+            /*if (from.equalsIgnoreCase(Constants.CHECKIN)) {
                 Intent intent = new Intent(CustomQuestionnaire.this, CheckInReconfirmation.class);
                 intent.putExtra("data", bookingModel);
                 startActivity(intent);
@@ -644,6 +644,11 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
                 startActivity(intent);
             } else if (from.equalsIgnoreCase(Constants.DONATION)) {
                 Intent intent = new Intent(CustomQuestionnaire.this, DonationReconfirmation.class);
+                intent.putExtra("data", bookingModel);
+                startActivity(intent);
+            } */
+            if (from.equalsIgnoreCase(Constants.CHECKIN) || from.equalsIgnoreCase(Constants.APPOINTMENT) || from.equalsIgnoreCase(Constants.DONATION)) {
+                Intent intent = new Intent(CustomQuestionnaire.this, ReconfirmationActivity.class);
                 intent.putExtra("data", bookingModel);
                 startActivity(intent);
             } else if (from.equalsIgnoreCase(Constants.BOOKING_APPOINTMENT)) {

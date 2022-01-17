@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -103,6 +104,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -817,10 +819,9 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                             public void onClick(View view) {
 
                                 Dialog settingsDialog = new Dialog(BookingDetails.this);
-                                settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-                                settingsDialog.getWindow().getAttributes().windowAnimations = R.style.zoomInAndOut;
-                                settingsDialog.setContentView(getLayoutInflater().inflate(R.layout.image_layout
-                                        , null));
+                                settingsDialog.setContentView(getLayoutInflater().inflate(R.layout.image_layout, null));
+                                LinearLayout ll_download_qr = settingsDialog.findViewById(R.id.ll_download_qr);
+
                                 ImageView imageView = settingsDialog.findViewById(R.id.iv_close);
                                 ImageView ivQR = settingsDialog.findViewById(R.id.iv_Qr);
                                 imageView.setOnClickListener(new View.OnClickListener() {
@@ -830,8 +831,18 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                                         settingsDialog.dismiss();
                                     }
                                 });
-
-                                ivQR.setImageBitmap(bitmap);
+                                ll_download_qr.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                            ActivityCompat.requestPermissions((Activity) view.getContext(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                                            // this will request for permission when permission is not true
+                                        } else {
+                                            storeImage(bitmap);
+                                        }
+                                    }
+                                });
+                                Glide.with(context).load(bitmap).into(ivQR);
                                 settingsDialog.show();
                             }
                         });
@@ -1098,39 +1109,44 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                         tvAmountToPay.setText(amount);
                         tvAmountToPay.setVisibility(View.VISIBLE);
                     }
-                    cvBill.setVisibility(View.VISIBLE);
+                    if(appointmentInfo.getBillStatus() != null && appointmentInfo.getBillId() != null && !appointmentInfo.getBillId().equalsIgnoreCase("0")) {
+                        cvBill.setVisibility(View.VISIBLE);
+                    } else {
+                        cvBill.setVisibility(View.GONE);
+                    }
                     tvBillText.setText("Bill");
                     RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) cvBill.getLayoutParams();
                     lp.addRule(RelativeLayout.ALIGN_PARENT_END);
                     cvBill.setLayoutParams(lp);
                 }
+                if (!apptInfo.getUid().contains("h_")) {   //below code only execute if it is not a history booking
+                    if (appointmentInfo.getBillViewStatus() != null && !appointmentInfo.getApptStatus().equalsIgnoreCase("cancelled")) {
+                        if (appointmentInfo.getBillViewStatus().equalsIgnoreCase("Show")) {
+                            cvBill.setVisibility(View.VISIBLE);
+                        } else {
+                            cvBill.setVisibility(View.GONE);
+                        }
 
-                if (appointmentInfo.getBillViewStatus() != null && !appointmentInfo.getApptStatus().equalsIgnoreCase("cancelled")) {
-                    if (appointmentInfo.getBillViewStatus().equalsIgnoreCase("Show")) {
-                        cvBill.setVisibility(View.VISIBLE);
                     } else {
+                        /**26-3-21*/
+                        /**/
+                        if (!appointmentInfo.getPaymentStatus().equalsIgnoreCase("NotPaid")) {
+                            cvBill.setVisibility(View.VISIBLE);
+                        } else {
+                            cvBill.setVisibility(View.GONE);
+                        }/**/
+                        //cvBill.setVisibility(View.GONE);
+                        /***/
+                    }
+                    /**26-3-21*/
+                    if (appointmentInfo.getBillViewStatus() == null || appointmentInfo.getBillViewStatus().equalsIgnoreCase("NotShow") || appointmentInfo.getBillStatus().equals("Settled") || appointmentInfo.getApptStatus().equals("Rejected")) {
                         cvBill.setVisibility(View.GONE);
                     }
-
-                } else {
-                    /**26-3-21*/
-                    /**/
-                    if (!appointmentInfo.getPaymentStatus().equalsIgnoreCase("NotPaid")) {
-                        cvBill.setVisibility(View.VISIBLE);
-                    } else {
+                    if (appointmentInfo.getApptStatus().equalsIgnoreCase("Cancelled"))
                         cvBill.setVisibility(View.GONE);
-                    }/**/
-                    //cvBill.setVisibility(View.GONE);
+
                     /***/
                 }
-                /**26-3-21*/
-                if (appointmentInfo.getBillViewStatus() == null || appointmentInfo.getBillViewStatus().equalsIgnoreCase("NotShow") || appointmentInfo.getBillStatus().equals("Settled") || appointmentInfo.getApptStatus().equals("Rejected")) {
-                    cvBill.setVisibility(View.GONE);
-                }
-                if (appointmentInfo.getApptStatus().equalsIgnoreCase("Cancelled"))
-                    cvBill.setVisibility(View.GONE);
-
-                /***/
 
                 cvBill.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -2131,5 +2147,67 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
 
         imagePathList.get(position).setCaption(caption);
         imagePreviewAdapter.notifyDataSetChanged();
+    }
+
+    private void storeImage(Bitmap image) {
+
+        File pictureFile = getOutputMediaFile();
+        if (pictureFile == null) {
+            //"Error creating media file, check storage permissions: "
+            return;
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile);
+            image.compress(Bitmap.CompressFormat.PNG, 90, fos);
+            fos.close();
+            Toast.makeText(this, "Saved to Gallery", Toast.LENGTH_SHORT).show();
+
+           /* Uri uri = Uri.fromFile(pictureFile);
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            String path = uri.getPath();
+            String extension = path.substring(path.lastIndexOf("."));;
+            String type = mime.getMimeTypeFromExtension(extension);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(uri, type);*/
+
+        } catch (FileNotFoundException e) {
+            //Log.d(TAG, "File not found: " + e.getMessage());
+            e.printStackTrace();
+
+        } catch (IOException e) {
+            //Log.d(TAG, "Error accessing file: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+    }
+
+    /**
+     * Create a File for saving an image or video
+     */
+    private File getOutputMediaFile() {
+// To be safe, you should check that the SDCard is mounted
+// using Environment.getExternalStorageState() before doing this.
+        File mediaStorageDir = new
+                File(Environment.getExternalStorageDirectory() + "/Download");
+                /*File(Environment.getExternalStorageDirectory()
+                + "/Android/data/"
+                + getApplicationContext().getPackageName()
+                + "/Files");*/
+
+// This location works best if you want the created images to be shared
+// between applications and persist after your app has been uninstalled.
+
+// Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                return null;
+            }
+        }
+// Create a media file name
+        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
+        File mediaFile;
+        String mImageName = "JALDEE_" + timeStamp + ".jpg";
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
+        return mediaFile;
     }
 }

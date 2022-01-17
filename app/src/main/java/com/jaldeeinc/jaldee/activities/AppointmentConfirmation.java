@@ -2,19 +2,31 @@ package com.jaldeeinc.jaldee.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+
+import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -29,7 +41,14 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.InstructionsDialog;
 import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,16 +63,16 @@ public class AppointmentConfirmation extends AppCompatActivity {
 
     ActiveAppointment activeCheckInInfo = new ActiveAppointment();
     private LinearLayout llBatchNo;
-    Button btnOk,btnOk1;
+    Button btnOk, btnOk1;
     private String terminology;
-    ImageView icon_service,ivQR;
+    ImageView icon_service, ivQR;
     private String from;
-    CustomTextViewSemiBold tvViewMore,tvViewLess;
-    CustomTextViewMedium tvProviderName,tvServiceName,tv_location;
-    CustomTextViewBold tvProvider,tvConfirmationNumber,tv_consumer,tvStatus,tvDate,tvTime,tvBatchNo,tvAmount,tv_heading;
+    CustomTextViewSemiBold tvViewMore, tvViewLess;
+    CustomTextViewMedium tvProviderName, tvServiceName, tv_location;
+    CustomTextViewBold tvProvider, tvConfirmationNumber, tv_consumer, tvStatus, tvDate, tvTime, tvBatchNo, tvAmount, tv_heading;
     Context mContext;
     LinearLayout llPayment;
-    CardView cvBack,cvShare;
+    CardView cvBack, cvShare;
     NeomorphFrameLayout llMoreDetails;
     LinearLayout llMessage, llInstructions, llViewMore, llViewLess;
     private String uuid;
@@ -89,15 +108,15 @@ public class AppointmentConfirmation extends AppCompatActivity {
             }
         });
 
-        if(value!=null && providerId!=null){
+        if (value != null && providerId != null) {
             getConfirmationDetails(Integer.parseInt(providerId));
         } else {
 
         }
 
 
-
     }
+
     private void openMapView(String latitude, String longitude, String locationName) {
         Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude + "?q=" + locationName);
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
@@ -272,8 +291,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
                             }
                         } else if (activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("phone")) {
                             icon_service.setImageResource(R.drawable.phoneicon_sized);
-                        }
-                        else if (activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("VideoCall")) {
+                        } else if (activeCheckInInfo.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("VideoCall")) {
                             icon_service.setImageResource(R.drawable.ic_jaldeevideo);
                         }
                     } else {
@@ -353,10 +371,20 @@ public class AppointmentConfirmation extends AppCompatActivity {
             if (activeCheckInInfo.getAppointmentEncId() != null) {
                 //Encode with a QR Code image
                 String statusUrl = Constants.URL + "status/" + activeCheckInInfo.getAppointmentEncId();
+
+                WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
+                Display display = manager.getDefaultDisplay();
+                Point point = new Point();
+                display.getSize(point);
+                int width = point.x;
+                int height = point.y;
+                int smallerDimension = width < height ? width : height;
+                smallerDimension = smallerDimension * 3 / 4;
+
                 QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(statusUrl,
                         null,
                         Contents.Type.TEXT,
-                        BarcodeFormat.QR_CODE.toString(), 175);
+                        BarcodeFormat.QR_CODE.toString(), smallerDimension);
                 try {
                     Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
                     ivQR.setImageBitmap(bitmap);
@@ -366,10 +394,9 @@ public class AppointmentConfirmation extends AppCompatActivity {
                         public void onClick(View view) {
 
                             Dialog settingsDialog = new Dialog(AppointmentConfirmation.this);
-                            settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-                            settingsDialog.getWindow().getAttributes().windowAnimations = R.style.zoomInAndOut;
-                            settingsDialog.setContentView(getLayoutInflater().inflate(R.layout.image_layout
-                                    , null));
+                            settingsDialog.setContentView(getLayoutInflater().inflate(R.layout.image_layout, null));
+                            LinearLayout ll_download_qr = settingsDialog.findViewById(R.id.ll_download_qr);
+
                             ImageView imageView = settingsDialog.findViewById(R.id.iv_close);
                             ImageView ivQR = settingsDialog.findViewById(R.id.iv_Qr);
                             imageView.setOnClickListener(new View.OnClickListener() {
@@ -379,8 +406,18 @@ public class AppointmentConfirmation extends AppCompatActivity {
                                     settingsDialog.dismiss();
                                 }
                             });
-
-                            ivQR.setImageBitmap(bitmap);
+                            ll_download_qr.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                        ActivityCompat.requestPermissions((Activity) view.getContext(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                                        // this will request for permission when permission is not true
+                                    } else {
+                                        storeImage(bitmap);
+                                    }
+                                }
+                            });
+                            Glide.with(context).load(bitmap).into(ivQR);
                             settingsDialog.show();
                         }
                     });
@@ -529,6 +566,68 @@ public class AppointmentConfirmation extends AppCompatActivity {
         startActivity(home);
         finish();
         super.onBackPressed();
+    }
+
+    private void storeImage(Bitmap image) {
+
+        File pictureFile = getOutputMediaFile();
+        if (pictureFile == null) {
+            //"Error creating media file, check storage permissions: "
+            return;
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile);
+            image.compress(Bitmap.CompressFormat.PNG, 90, fos);
+            fos.close();
+            Toast.makeText(this, "Saved to Gallery", Toast.LENGTH_SHORT).show();
+
+           /* Uri uri = Uri.fromFile(pictureFile);
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            String path = uri.getPath();
+            String extension = path.substring(path.lastIndexOf("."));;
+            String type = mime.getMimeTypeFromExtension(extension);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(uri, type);*/
+
+        } catch (FileNotFoundException e) {
+            //Log.d(TAG, "File not found: " + e.getMessage());
+            e.printStackTrace();
+
+        } catch (IOException e) {
+            //Log.d(TAG, "Error accessing file: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+    }
+
+    /**
+     * Create a File for saving an image or video
+     */
+    private File getOutputMediaFile() {
+// To be safe, you should check that the SDCard is mounted
+// using Environment.getExternalStorageState() before doing this.
+        File mediaStorageDir = new
+                File(Environment.getExternalStorageDirectory() + "/Download");
+                /*File(Environment.getExternalStorageDirectory()
+                + "/Android/data/"
+                + getApplicationContext().getPackageName()
+                + "/Files");*/
+
+// This location works best if you want the created images to be shared
+// between applications and persist after your app has been uninstalled.
+
+// Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                return null;
+            }
+        }
+// Create a media file name
+        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
+        File mediaFile;
+        String mImageName = "JALDEE_" + timeStamp + ".jpg";
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
+        return mediaFile;
     }
 
 }

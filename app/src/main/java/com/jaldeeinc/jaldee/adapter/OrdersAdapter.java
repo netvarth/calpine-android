@@ -3,7 +3,6 @@ package com.jaldeeinc.jaldee.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.text.Html;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,40 +11,26 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
+import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.custom.AddressDialog;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.ViewNotesDialog;
-import com.jaldeeinc.jaldee.model.Bookings;
-import com.jaldeeinc.jaldee.response.ActiveOrders;
-import com.jaldeeinc.jaldee.response.Item;
 import com.jaldeeinc.jaldee.response.ItemDetails;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
 import com.squareup.picasso.Callback;
 
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
 
@@ -128,15 +113,17 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                             public void onError() {
 
                                 viewHolder.bvImage.setVisibility(View.VISIBLE);
-                                viewHolder.bvImage.setImageResource(R.drawable.icon_noimage);
+                                Glide.with(context).load(R.drawable.icon_noimage).into(viewHolder.bvImage);
                             }
                         });
                     }
 
                 }
             } else {
-
-                viewHolder.bvImage.setImageResource(R.drawable.icon_noimage);
+                Glide.with(context)
+                        .load(R.drawable.ic_item)
+                        .fitCenter()
+                        .into(viewHolder.bvImage);
             }
 
 

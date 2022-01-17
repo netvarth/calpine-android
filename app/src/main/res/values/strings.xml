@@ -27,6 +27,8 @@
     <string name="working_hours">Working\nHours</string>
     <string name="first_coupon">Sign Up\nCoupon</string>
     <string name="change"><u>Change</u></string>
+    <string name="contact_information"><u>Contact Information</u></string>
+
     <!--Error dialog-->
     <string name="location_updated">Jaldee running in background</string>
     <string name="dialog_no_network_text">Please check your internet connection</string>

@@ -37,11 +37,11 @@
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/cv_back"
-            android:maxLines="1"
             android:layout_marginStart="@dimen/dimen_15dp"
+            android:layout_toEndOf="@id/cv_back"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text=""
             android:textColor="@color/dark_blue"
             android:textSize="@dimen/dimen_18dp">
@@ -79,8 +79,8 @@
                 android:layout_marginStart="@dimen/dimen_5dp"
                 android:layout_marginTop="@dimen/dimen_5dp"
                 android:layout_marginEnd="@dimen/dimen_5dp"
-                android:visibility="visible"
-                android:layout_marginBottom="@dimen/dimen_50dp">
+                android:layout_marginBottom="@dimen/dimen_50dp"
+                android:visibility="visible">
 
             </androidx.recyclerview.widget.RecyclerView>
 
@@ -108,8 +108,8 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_marginTop="@dimen/dimen_20dp"
-                    android:visibility="visible"
-                    android:src="@drawable/hi">
+                    android:src="@drawable/hi"
+                    android:visibility="visible">
 
                 </pl.droidsonroids.gif.GifImageView>
 
@@ -129,15 +129,15 @@
         android:orientation="horizontal">
 
 
-            <ImageView
-                android:id="@+id/iv_attachFile"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:layout_gravity="center"
-                android:layout_weight="0.1"
-                android:src="@drawable/icon_attachments_active_new"
-                tools:ignore="HardcodedText"
-                app:tint="@color/dark_blue" />
+        <ImageView
+            android:id="@+id/iv_attachFile"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.1"
+            android:src="@drawable/icon_attachments_active_new"
+            app:tint="@color/dark_blue"
+            tools:ignore="HardcodedText" />
 
 
         <EditText
@@ -145,11 +145,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="0.9"
             android:background="@drawable/editbox"
             android:ems="10"
-            android:layout_marginEnd="@dimen/dimen_10dp"
             android:hint="Your message"
             android:importantForAutofill="no"
             android:inputType="textMultiLine"
@@ -161,10 +161,10 @@
         <androidx.cardview.widget.CardView
             android:layout_width="8dp"
             android:layout_height="40dp"
-            android:layout_weight="0.1"
+            android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/dimen_15dp"
-            app:cardBackgroundColor="@color/dark_blue"
-            android:layout_gravity="center_vertical">
+            android:layout_weight="0.1"
+            app:cardBackgroundColor="@color/dark_blue">
 
             <ImageView
                 android:id="@+id/iv_submit_message"
@@ -172,8 +172,8 @@
                 android:layout_height="26dp"
                 android:layout_gravity="center"
                 android:src="@drawable/send_icon"
-                tools:ignore="HardcodedText"
-                app:tint="@color/white" />
+                app:tint="@color/white"
+                tools:ignore="HardcodedText" />
 
         </androidx.cardview.widget.CardView>
 

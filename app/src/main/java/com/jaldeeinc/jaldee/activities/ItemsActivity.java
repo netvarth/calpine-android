@@ -38,6 +38,7 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.Interface.IDeleteImagesInterface;
 import com.jaldeeinc.jaldee.Interface.IDialogInterface;
 import com.jaldeeinc.jaldee.Interface.IItemInterface;
@@ -207,8 +208,8 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         gridLayoutManager = new GridLayoutManager(ItemsActivity.this, 2);
         rvItems.setLayoutManager(gridLayoutManager);
         ArrayList<CatalogItem> catItem = new ArrayList<>();
-        for(CatalogItem citem : catalogInfo.getCatalogItemsList()){  // for remove if item online view from provider is falls
-            if(citem.getItems().isShowOnLandingPage()) {
+        for (CatalogItem citem : catalogInfo.getCatalogItemsList()) {  // for remove if item online view from provider is falls
+            if (citem.getItems().isShowOnLandingPage()) {
                 catItem.add(citem);
             }
         }
@@ -250,8 +251,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                         }
                     });
                 } else {
-
-                    ivCatalogImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.icon_noimage));
+                    Glide.with(mContext).load(R.drawable.ic_catalogue).into(ivCatalogImage);
                 }
 
                 if (catalogInfo.getCatLogName() != null) {
@@ -267,7 +267,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                 }
 
                 if (catalogInfo.getHomeDelivery() != null && catalogInfo.getHomeDelivery().isHomeDelivery()) {
-                    tvHomeDeliveryRadiuse.setText("(In "+ catalogInfo.getHomeDelivery().getDeliveryRadius() +"\u00a0km radius)");
+                    tvHomeDeliveryRadiuse.setText("(In " + catalogInfo.getHomeDelivery().getDeliveryRadius() + "\u00a0km radius)");
                     llHomeDelivery.setVisibility(View.VISIBLE);
                 } else {
                     llHomeDelivery.setVisibility(View.GONE);
@@ -391,13 +391,11 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
     }
 
 
-
-
     public void refreshData() {
 
         ArrayList<CatalogItem> catalogItemsList = new ArrayList<>();
-        for(CatalogItem citem : catalogInfo.getCatalogItemsList()){  // for remove if item online view from provider is falls
-            if(citem.getItems().isShowOnLandingPage()) {
+        for (CatalogItem citem : catalogInfo.getCatalogItemsList()) {  // for remove if item online view from provider is falls
+            if (citem.getItems().isShowOnLandingPage()) {
                 catalogItemsList.add(citem);
             }
         }
@@ -405,7 +403,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         catalogItemsList = updateCatalogItemsQuantity(catalogItemsList);
         gridLayoutManager = new GridLayoutManager(ItemsActivity.this, 2);
         rvItems.setLayoutManager(gridLayoutManager);
-        itemsAdapter = new ItemsAdapter(catalogItemsList, this, false, iItemInterface, accountId, uniqueId,catalogInfo);
+        itemsAdapter = new ItemsAdapter(catalogItemsList, this, false, iItemInterface, accountId, uniqueId, catalogInfo);
         rvItems.setAdapter(itemsAdapter);
         updateCartUI();
     }
@@ -441,7 +439,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
 
         if (itemList != null && itemList.size() > 0) {
 
-            mDetailFileAdapter = new ImagePreviewAdapter(itemList, mContext,true,iDeleteImagesInterface);
+            mDetailFileAdapter = new ImagePreviewAdapter(itemList, mContext, true, iDeleteImagesInterface);
             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(ItemsActivity.this, 2);
             rvImages.setLayoutManager(mLayoutManager);
             rvImages.setAdapter(mDetailFileAdapter);
@@ -821,7 +819,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                             return;
                         }
 
-                        ShoppingListModel model  = new ShoppingListModel();
+                        ShoppingListModel model = new ShoppingListModel();
                         model.setImagePath(orgFilePath);
                         itemList.add(model);
 
@@ -860,7 +858,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                                 return;
                             }
 
-                            ShoppingListModel model  = new ShoppingListModel();
+                            ShoppingListModel model = new ShoppingListModel();
                             model.setImagePath(orgFilePath);
                             itemList.add(model);
 
@@ -889,7 +887,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
 //            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
                 if (path != null) {
                     mImageUri = Uri.parse(path);
-                    ShoppingListModel model  = new ShoppingListModel();
+                    ShoppingListModel model = new ShoppingListModel();
                     model.setImagePath(mImageUri.toString());
                     itemList.add(model);
 
@@ -978,11 +976,11 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         itemList.remove(position);
         mDetailFileAdapter.notifyDataSetChanged();
 
-        if (itemList != null && itemList.size() > 0){
+        if (itemList != null && itemList.size() > 0) {
 
-            for (int i = 0;i<itemList.size();i++){
+            for (int i = 0; i < itemList.size(); i++) {
 
-                if (itemList.get(i).getImagePath().equalsIgnoreCase(imagePath)){
+                if (itemList.get(i).getImagePath().equalsIgnoreCase(imagePath)) {
 
                     itemList.remove(i);
                 }
@@ -998,7 +996,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
 
     private void showNotesDialog(int position) {
 
-        customNotes = new CustomNotes(mContext, position, iSaveNotes,itemList.get(position).getCaption());
+        customNotes = new CustomNotes(mContext, position, iSaveNotes, itemList.get(position).getCaption());
         customNotes.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
         customNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
         customNotes.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

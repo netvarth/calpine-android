@@ -35,16 +35,42 @@ public class BookingModel implements Serializable {
     public String countryCode;
     public String hint;
     public String peopleWaiting;
-    public String checkInOrToken;
     public ArrayList<FamilyArrayModel> multipleFamilyMembers = new ArrayList<>();
     public String totalAmount;
     public String totalServicePay;
     public String donationAmount;
     public String whtsappCountryCode;
     public String whtsappPhoneNumber;
+    public String providerPhoneNumber;
+    public String providerEmail;
     public double eligibleJcashAmt;
     public float amountRequiredNow;
     public float netTotal;
+    public boolean isToken;
+
+    public void setToken(boolean token) {
+        isToken = token;
+    }
+
+    public boolean isToken() {
+        return isToken;
+    }
+
+    public String getProviderEmail() {
+        return providerEmail;
+    }
+
+    public void setProviderEmail(String providerEmail) {
+        this.providerEmail = providerEmail;
+    }
+
+    public String getProviderPhoneNumber() {
+        return providerPhoneNumber;
+    }
+
+    public void setProviderPhoneNumber(String providerPhoneNumber) {
+        this.providerPhoneNumber = providerPhoneNumber;
+    }
 
     public void setImagePathList(ArrayList<ShoppingListModel> imagePathList) {
         this.imagePathList = imagePathList;
@@ -276,14 +302,6 @@ public class BookingModel implements Serializable {
 
     public void setPeopleWaiting(String peopleWaiting) {
         this.peopleWaiting = peopleWaiting;
-    }
-
-    public String getCheckInOrToken() {
-        return checkInOrToken;
-    }
-
-    public void setCheckInOrToken(String checkInOrToken) {
-        this.checkInOrToken = checkInOrToken;
     }
 
     public ArrayList<FamilyArrayModel> getMultipleFamilyMembers() {

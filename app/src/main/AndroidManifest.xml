@@ -305,5 +305,10 @@
                 android:resource="@xml/filepaths" />
         </provider>
     </application>
-
+    <queries>
+        <package android:name="com.paytm.pgsdk.TransactionManager.PAYTM_APP_PACKAGE" />
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+        </intent>
+    </queries>
 </manifest>

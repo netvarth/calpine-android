@@ -48,7 +48,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyOrders extends RootFragment implements ISelectedOrder,IActions {
+public class MyOrders extends RootFragment implements ISelectedOrder, IActions {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
@@ -163,7 +163,7 @@ public class MyOrders extends RootFragment implements ISelectedOrder,IActions {
                     if (response.code() == 200) {
                         ordersList.clear();
                         ordersList = response.body();
-                        if (ordersList == null){
+                        if (ordersList == null) {
                             ordersList = new ArrayList<>();
                         }
                         apiGetAllOrdersFuture();
@@ -291,10 +291,16 @@ public class MyOrders extends RootFragment implements ISelectedOrder,IActions {
 
 
     @Override
-    public void onOrderClick(ActiveOrders orders) {
-
+    public void onOrderClick(ActiveOrders orderInfo) {
+        boolean isActive = false;
+        if (orderInfo != null && orderInfo.getOrderStatus() != null) {
+            if (!orderInfo.getOrderStatus().equalsIgnoreCase("Cancelled") && !orderInfo.getOrderStatus().equalsIgnoreCase("Completed")) {
+                isActive = true;
+            }
+        }
         Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
-        intent.putExtra("orderInfo", orders);
+        intent.putExtra("orderInfo", orderInfo);
+        intent.putExtra("isActive", isActive);
         startActivity(intent);
     }
 
@@ -303,12 +309,12 @@ public class MyOrders extends RootFragment implements ISelectedOrder,IActions {
 
 
         boolean isActive = false;
-        if (orderInfo != null && orderInfo.getOrderStatus() != null){
-            if (!orderInfo.getOrderStatus().equalsIgnoreCase("Cancelled") && !orderInfo.getOrderStatus().equalsIgnoreCase("Completed")){
+        if (orderInfo != null && orderInfo.getOrderStatus() != null) {
+            if (!orderInfo.getOrderStatus().equalsIgnoreCase("Cancelled") && !orderInfo.getOrderStatus().equalsIgnoreCase("Completed")) {
                 isActive = true;
             }
         }
-        orderActionsDialog = new OrderActionsDialog(mContext,isActive,orderInfo,iActions);
+        orderActionsDialog = new OrderActionsDialog(mContext, isActive, orderInfo, iActions);
         orderActionsDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
         orderActionsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         orderActionsDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

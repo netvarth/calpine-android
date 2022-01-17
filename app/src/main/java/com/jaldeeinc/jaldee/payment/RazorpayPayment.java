@@ -2,12 +2,14 @@ package com.jaldeeinc.jaldee.payment;
 
 import android.app.Activity;
 import android.content.Context;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -19,6 +21,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,16 +30,17 @@ import retrofit2.Response;
  * Created by Mani on 01/07/2020.
  */
 
-public class RazorpayPayment{
+public class RazorpayPayment {
 
     static Context mContext;
     static Activity mActivity;
     String paymentResponse;
 
-    RazorpayPayment (Context mContext, Activity mActivity) {
+    RazorpayPayment(Context mContext, Activity mActivity) {
         this.mContext = mContext;
         this.mActivity = mActivity;
     }
+
     public void startPayment(CheckSumModel order) {
         /*
           You need to pass current activity in order to let Razorpay create CheckoutActivity
@@ -53,16 +57,24 @@ public class RazorpayPayment{
             options.put("currency", "INR");
             options.put("amount", order.getAmount());
             options.put("order_id", order.getOrderId());
-            if (order.isRetry()){
+            if (order.isRetry()) {
 
-            }else {
-                options.put("timeout",540);
+            } else {
+                options.put("timeout", 540);
             }
 //            options.put("key", order.getRazorpayId());
             JSONObject preFill = new JSONObject();
             preFill.put("email", order.getConsumerEmail());
             preFill.put("contact", order.getConsumerPhoneumber());
             preFill.put("name", order.getConsumerName());
+            if (Constants.razorpayMethods.stream().anyMatch(order.getPaymentmode()::equalsIgnoreCase)) {
+                if (order.getPaymentmode().equalsIgnoreCase("DC") || order.getPaymentmode().equalsIgnoreCase("CC")) {
+                    preFill.put("method", "card");
+                } else {
+                    preFill.put("method", order.getPaymentmode());
+                }
+            }
+
             options.put("prefill", preFill);
 
             JSONObject retryObj = new JSONObject();
@@ -80,7 +92,7 @@ public class RazorpayPayment{
         }
     }
 
-    public void sendPaymentStatus(RazorpayModel razorpayModel) {
+ /*   public void sendPaymentStatus(RazorpayModel razorpayModel) {
         final ApiInterface apiService =
                 ApiClient.getClient( this.mContext).create(ApiInterface.class);
         Log.i("razorpayModel", new Gson().toJson(razorpayModel));
@@ -89,7 +101,7 @@ public class RazorpayPayment{
         razorMap.put("razorpay_order_id", razorpayModel.getRazorpay_order_id());
         razorMap.put("razorpay_signature", razorpayModel.getRazorpay_signature());
         razorMap.put("status", razorpayModel.getStatus());
-        razorMap.put("txnid", razorpayModel.getTxnid());
+        razorMap.put("txnid", razorpayModel.getTxnid());*/
 //        Toast.makeText(mContext, "Payment Successful", Toast.LENGTH_SHORT).show();
 //        Call<String> call = apiService.verifyRazorpayPayment(razorMap);
 //        call.enqueue(new Callback<String>() {
@@ -116,7 +128,7 @@ public class RazorpayPayment{
 //            }
 //        });
 //        Toast.makeText(mContext, "Payment Successful", Toast.LENGTH_SHORT).show();
-       // Call<String> call = apiService.verifyRazorpayPayment(razorMap);
+    // Call<String> call = apiService.verifyRazorpayPayment(razorMap);
 //        call.enqueue(new Callback<String>() {
 //            @Override
 //            public void onResponse(Call<String> call, Response<String> response) {
@@ -140,5 +152,5 @@ public class RazorpayPayment{
 //                Toast.makeText(mContext, "Error in payment: " + t.getMessage(), Toast.LENGTH_LONG);
 //            }
 //        });
-    }
+    //  }
 }

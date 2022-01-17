@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingBottom="@dimen/dimen_5dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/dimen_5dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding3"
-        android:layout_marginRight="@dimen/padding3"
         android:layout_marginTop="@dimen/dimen_5dp"
+        android:layout_marginRight="@dimen/padding3"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="10dp"
         app:cardElevation="5dp"
@@ -62,23 +62,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding5"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:layout_toLeftOf="@id/rl_count"
+                    android:autoLink="web"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="message"
-                    android:layout_marginEnd="@dimen/dimen_10dp"
-                    android:layout_toLeftOf="@id/rl_count"
-                    android:textSize="@dimen/txtsize_12"
-                    android:autoLink="web"/>
+                    android:textSize="@dimen/txtsize_12" />
 
                 <RelativeLayout
                     android:id="@+id/rl_count"
                     android:layout_width="@dimen/dimen_20dp"
                     android:layout_height="@dimen/dimen_20dp"
-                    android:visibility="gone"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:background="@drawable/rounded_green_bg"
                     android:backgroundTint="@color/dark_blue"
-                    android:background="@drawable/rounded_green_bg">
+                    android:visibility="gone">
 
                     <com.jaldeeinc.jaldee.custom.CustomTextViewBold
                         android:id="@+id/tv_count"
@@ -96,7 +96,6 @@
             </RelativeLayout>
 
 
-
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
@@ -106,11 +105,11 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/padding7"
         android:layout_marginLeft="@dimen/padding20"
-        android:layout_marginRight="@dimen/padding20"
         android:layout_marginTop="-12dp"
-        android:elevation="@dimen/dimen_5dp"
+        android:layout_marginRight="@dimen/padding20"
         android:background="@drawable/roundedrect_shade"
         android:backgroundTint="@color/special_background"
+        android:elevation="@dimen/dimen_5dp"
 
         />
 

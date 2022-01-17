@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
@@ -320,7 +321,18 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                     iv_img1.setVisibility(View.VISIBLE);
                     attachmentsText.setVisibility(View.GONE);
                     iv_img2.setVisibility(View.GONE);
-                    builder.build().load(message.getAttachments().get(0).getS3path()).fit().into(iv_img1);
+
+                    String url = message.getAttachments().get(0).getS3path();
+                    if (url.contains(" ")) {
+                        url = url.replaceAll(" ", "%20");
+                    }
+                    String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+                    if (extension.equalsIgnoreCase("pdf")) {
+                        builder.build().load(R.drawable.pdf).fit().into(iv_img1);
+                    } else {
+                        builder.build().load(message.getAttachments().get(0).getS3path()).fit().into(iv_img1);
+                    }
+
                 } else if (message.getAttachments().size() == 2) {
                     Picasso.Builder builder = new Picasso.Builder(iv_img1.getContext());
                     builder.listener(new Picasso.Listener() {

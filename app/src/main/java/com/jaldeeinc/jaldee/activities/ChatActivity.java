@@ -569,7 +569,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     public String getRealPathFromURI(Uri contentURI, Activity context) {
-        String[] projection = {MediaStore.Images.Media.DATA};
+        /*String[] projection = {MediaStore.Images.Media.DATA};
         @SuppressWarnings("deprecation")
         Cursor cursor = context.managedQuery(contentURI, projection, null,
                 null, null);
@@ -583,7 +583,22 @@ public class ChatActivity extends AppCompatActivity {
             return s;
         }
         // cursor.close();
-        return null;
+        return null;*/
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentURI, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } catch (Exception e) {
+            // Log.e(TAG, "getRealPathFromURI Exception : " + e.toString());
+            return "";
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 
     public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
@@ -595,10 +610,27 @@ public class ChatActivity extends AppCompatActivity {
             } else {
                 ext = "." + extension;
             }
-            File wallpaperDirectoryFile = new File(
-                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
-            copy(context, contentUri, wallpaperDirectoryFile);
-            return wallpaperDirectoryFile.getAbsolutePath();
+           /* File wallpaperDirectoryFile = new File(
+                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);*/
+            File wallpaperDirectoryFile = new File(Environment.getExternalStorageDirectory().toString(), IMAGE_DIRECTORY);
+
+            File file = null;
+            try {
+                file = File.createTempFile(fileName, ext, wallpaperDirectoryFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (!wallpaperDirectoryFile.exists() && !wallpaperDirectoryFile.isDirectory()) {
+                try {
+                    wallpaperDirectoryFile.mkdirs();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            copy(context, contentUri, file);
+            return file.getAbsolutePath();
         }
         return null;
     }
@@ -1185,7 +1217,7 @@ public class ChatActivity extends AppCompatActivity {
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
 
-        Call<ResponseBody> call = apiService.readMessages("0",ids,String.valueOf(accountID));
+        Call<ResponseBody> call = apiService.readMessages("0", ids, String.valueOf(accountID));
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

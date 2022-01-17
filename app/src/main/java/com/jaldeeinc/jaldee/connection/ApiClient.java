@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.connection;
 
 import android.content.Context;
+import android.os.Build;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -11,6 +12,7 @@ import com.jaldeeinc.jaldee.utils.SharedPreference;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
@@ -18,10 +20,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class ApiClient {
-//    public static final String BASE_URL = "https://www.jaldee.com/v1/rest/";
+    //public static final String BASE_URL = "https://www.jaldee.com/v1/rest/";
     public static final String BASE_URL = "https://scale.jaldee.com/v1/rest/";
     //public static final String BASE_URL = "https://test.jaldee.com/v1/rest/";
-    //public static final String BASE_URL = "http://192.168.1.4:8080/v1/rest/";
+    //public static final String BASE_URL = "http://192.168.30.3:8080/v1/rest/";
 
 
     private static Retrofit retrofit = null;
@@ -131,7 +133,15 @@ public class ApiClient {
 
 
         builder.addInterceptor(logging);
-
+        builder.addInterceptor(chain -> {
+            Request request = chain.request().newBuilder()
+                    .addHeader("Accept", "application/json")
+                    .addHeader("User-Agent", "android")
+                    .addHeader("BOOKING_REQ_FROM", "CONSUMER_APP")
+                    .addHeader("device-name", getDeviceName())
+                    .build();
+            return chain.proceed(request);
+        });
 
         builder.readTimeout(60, TimeUnit.SECONDS);
         builder.connectTimeout(60, TimeUnit.SECONDS);
@@ -163,5 +173,19 @@ public class ApiClient {
         return okHttpClient;
     }
 
+    public static String getDeviceName() {
+        String deviceName = Build.MANUFACTURER
+                + " " + Build.MODEL + " " + Build.VERSION.RELEASE
+                + " " + Build.VERSION_CODES.class.getFields()[android.os.Build.VERSION.SDK_INT].getName();
+
+
+       /* String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.startsWith(manufacturer)) {
+            return model;
+        }
+        return manufacturer + " " + model;*/
+        return deviceName;
+    }
 
 }

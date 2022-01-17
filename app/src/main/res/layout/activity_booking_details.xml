@@ -1155,7 +1155,7 @@
                                             android:layout_height="wrap_content"
                                             android:layout_marginStart="@dimen/dimen_5dp"
                                             android:layout_marginTop="@dimen/dimen_5dp"
-                                            android:text="Rs.2456.00"
+                                            android:text="Rs.0"
                                             android:textColor="@color/white"
                                             android:textSize="@dimen/txtsize_12">
 

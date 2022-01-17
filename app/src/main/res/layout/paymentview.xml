@@ -61,7 +61,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="left|center_vertical"
-                                android:text="₹1.00000"
+                                android:text=""
                                 android:textColor="@color/title_grey"
                                 android:textSize="@dimen/txtsize_14"
                                 android:textStyle="bold" />

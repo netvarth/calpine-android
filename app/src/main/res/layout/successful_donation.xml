@@ -89,9 +89,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/tv_divider1"
+                android:gravity="right"
                 android:text="Name of the provider"
-                android:textColor="@color/title_color"
-                android:gravity="right">
+                android:textColor="@color/title_color">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -99,9 +99,9 @@
                 android:id="@+id/tv_divider1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
                 android:text=" : "
-                android:layout_alignParentTop="true"
                 android:textColor="@color/title_color">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
@@ -111,12 +111,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/tv_divider1"
+                android:gravity="left"
                 android:text=""
-                android:textColor="@color/title_color"
-                android:gravity="left">
+                android:textColor="@color/title_color">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -126,9 +127,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/tv_divider2"
+                android:gravity="right"
                 android:text="Location"
-                android:textColor="@color/title_color"
-                android:gravity="right">
+                android:textColor="@color/title_color">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -136,9 +137,9 @@
                 android:id="@+id/tv_divider2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
                 android:text=" : "
-                android:layout_alignParentTop="true"
                 android:textColor="@color/title_color">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
@@ -148,12 +149,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/tv_divider2"
+                android:gravity="left"
                 android:text=""
-                android:textColor="@color/title_color"
-                android:gravity="left">
+                android:textColor="@color/title_color">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -163,9 +165,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/tv_divider3"
+                android:gravity="right"
                 android:text="Donor"
-                android:textColor="@color/title_color"
-                android:gravity="right">
+                android:textColor="@color/title_color">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -173,9 +175,9 @@
                 android:id="@+id/tv_divider3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
                 android:text=" : "
-                android:layout_alignParentTop="true"
                 android:textColor="@color/title_color">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
@@ -185,12 +187,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/tv_divider3"
+                android:gravity="left"
                 android:text=""
-                android:textColor="@color/title_color"
-                android:gravity="left">
+                android:textColor="@color/title_color">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -200,9 +203,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/tv_divider4"
+                android:gravity="right"
                 android:text="Cause"
-                android:textColor="@color/title_color"
-                android:gravity="right">
+                android:textColor="@color/title_color">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -210,9 +213,9 @@
                 android:id="@+id/tv_divider4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
                 android:text=" : "
-                android:layout_alignParentTop="true"
                 android:textColor="@color/title_color">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
@@ -222,9 +225,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/tv_divider4"
+                android:gravity="left"
                 android:text=""
-                android:textColor="@color/title_color"
-                android:gravity="left">
+                android:textColor="@color/title_color">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
         </RelativeLayout>
@@ -248,9 +251,9 @@
                 android:id="@+id/tv_divider5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
                 android:text=" : "
-                android:layout_alignParentTop="true"
                 android:textColor="@color/title_color">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
@@ -260,53 +263,63 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/tv_divider5"
+                android:gravity="left"
                 android:text=""
-                android:textColor="@color/title_color"
-                android:gravity="left">
+                android:textColor="@color/title_color">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
         </RelativeLayout>
-        <LinearLayout
-            android:id="@+id/ll_postInfo"
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="horizontal"
-            android:weightSum="1"
-            android:gravity="center"
-            android:visibility="gone">
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/dimen_15dp">
+
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/ll_postInfo"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_8dp"
-                android:background="@drawable/default_border"
-                android:orientation="vertical"
-                android:layout_gravity="center"
-                android:layout_weight="0.6"
-                android:padding="@dimen/dimen_8dp">
-                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                    android:id="@+id/tv_postInfoTitle"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="1">
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/tv_divider5"
-                    android:text="sdfsdf"
-                    android:textColor="@color/title_color"
-                    android:gravity="left"
-                    android:visibility="gone">
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/dimen_8dp"
+                    android:layout_weight="0.6"
+                    android:background="@drawable/default_border"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dimen_8dp">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
-                <com.jaldeeinc.jaldee.custom.CustomTextViewLight
-                    android:id="@+id/tv_postInfoText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/tv_divider5"
-                    android:text="sfsf"
-                    android:textColor="@color/title_color"
-                    android:gravity="left"
-                    android:visibility="gone">
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:id="@+id/tv_postInfoTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/tv_divider5"
+                        android:gravity="left"
+                        android:text="sdfsdf"
+                        android:textColor="@color/title_color"
+                        android:visibility="gone">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewLight>
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewLight
+                        android:id="@+id/tv_postInfoText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/tv_divider5"
+                        android:gravity="left"
+                        android:text="sfsf"
+                        android:textColor="@color/title_color"
+                        android:visibility="gone">
+
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewLight>
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 </LinearLayout>

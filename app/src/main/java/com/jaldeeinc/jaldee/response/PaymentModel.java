@@ -7,18 +7,40 @@ import java.util.ArrayList;
  */
 
 public class PaymentModel {
-    ArrayList<PayModes> payModes;
-    ArrayList<String> payGateways;
+    boolean indiaPay;
+    boolean internationalPay;
+    ArrayList<PayMode> indiaBankInfo;
+    ArrayList<PayMode> internationalBankInfo;
     boolean isJaldeeBank;
+    String paymentGateways;
+    String PayGateways;
 
-    public ArrayList<PayModes> getPayModes() {
-        return payModes;
+    public String getPayGateways() {
+        return PayGateways;
     }
 
-    public ArrayList<String> getPayGateways() {
-        return payGateways;
+    public String getPaymentGateways() {
+        return paymentGateways;
     }
 
-    public boolean isJaldeeBank() { return isJaldeeBank; }
+    public boolean isIndiaPay() {
+        return indiaPay;
+    }
+
+    public boolean isInternationalPay() {
+        return internationalPay;
+    }
+
+    public ArrayList<PayMode> getIndiaBankInfo() {
+        return indiaBankInfo;
+    }
+
+    public ArrayList<PayMode> getInternationalBankInfo() {
+        return internationalBankInfo;
+    }
+
+    public boolean isJaldeeBank() {
+        return isJaldeeBank;
+    }
 
 }

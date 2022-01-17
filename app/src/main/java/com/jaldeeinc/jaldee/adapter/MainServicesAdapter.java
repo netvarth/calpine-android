@@ -103,7 +103,11 @@ public class MainServicesAdapter extends RecyclerView.Adapter<MainServicesAdapte
                     Glide.with(context).load(servicesInfoList.get(position).getProviderImage()).placeholder(R.drawable.icon_noimage).into(viewHolder.ivImage);
 
                 } else {
-                    viewHolder.ivImage.setImageResource(R.drawable.icon_noimage);
+                    if (servicesInfoList.get(position).getType().equalsIgnoreCase(Constants.ORDERS)) {
+                        Glide.with(context).load(R.drawable.ic_catalogue).into(viewHolder.ivImage);
+                    } else {
+                        Glide.with(context).load(R.drawable.icon_noimage).into(viewHolder.ivImage);
+                    }
                 }
             } else {
                 viewHolder.llTime.setVisibility(View.VISIBLE);

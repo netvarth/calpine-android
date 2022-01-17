@@ -666,12 +666,12 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                                 intent.putExtra("from", Constants.DONATION);
                                 startActivity(intent);
                             } else {
-                                Intent intent = new Intent(DonationActivity.this, DonationReconfirmation.class);
+                                Intent intent = new Intent(DonationActivity.this, ReconfirmationActivity.class);
                                 intent.putExtra("data", model);
                                 startActivity(intent);
                             }
                         } else {
-                            Intent intent = new Intent(DonationActivity.this, DonationReconfirmation.class);
+                            Intent intent = new Intent(DonationActivity.this, ReconfirmationActivity.class);
                             intent.putExtra("data", model);
                             startActivity(intent);
                         }
@@ -825,7 +825,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
 
         try {
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
-            new PaymentGateway(mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
+            //new PaymentGateway(mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
             paymentFinished();
 
         } catch (Exception e) {

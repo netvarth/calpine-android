@@ -1,42 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <com.jaldeeinc.jaldee.widgets.TouchImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitCenter"
-        android:id="@+id/imageView"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:scaleType="fitCenter" />
+
     <androidx.cardview.widget.CardView
+        android:id="@+id/download"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/download"
-        android:background="@drawable/chat_receive"
+        android:layout_gravity="center"
         android:layout_marginTop="@dimen/dimen_10dp"
         android:layout_marginBottom="@dimen/dimen_10dp"
-        android:layout_gravity="center"
-        android:visibility="visible"
-        >
+        android:background="@drawable/chat_receive"
+        android:visibility="visible">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Download"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:textSize="@dimen/dimen_12sp"
-        android:background="@color/location_theme"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:padding="@dimen/dimen_5dp"
-        android:textAllCaps="false"
-        >
-    </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="14dp"
+            android:layout_gravity="center"
+            android:background="@color/location_theme"
+            android:gravity="center"
+            android:padding="@dimen/dimen_5dp"
+            android:text="Download"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_12sp"
+            android:textStyle="bold"></TextView>
     </androidx.cardview.widget.CardView>
-
 
 
 </LinearLayout>

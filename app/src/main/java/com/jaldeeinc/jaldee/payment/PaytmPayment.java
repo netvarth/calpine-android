@@ -198,7 +198,7 @@ public class PaytmPayment extends AppCompatActivity {
                             map.put("CHECKSUMHASH", response_data.getChecksum());
                             map.put("MERC_UNQ_REF", accountID + "_" + encId);
                             map.put("txnToken", response_data.getTxnToken());
-                            PaytmPay(map, from, response_data.getPaymentEnv(), purpose);
+                            PaytmPay(map, response_data.getPaymentEnv(), purpose);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -299,7 +299,7 @@ public class PaytmPayment extends AppCompatActivity {
                                 map.put("CHECKSUMHASH", response_data.getChecksum());
                                 map.put("MERC_UNQ_REF", accountID + "_" + encId);
                                 map.put("txnToken", response_data.getTxnToken());
-                                PaytmPay(map, from, response_data.getPaymentEnv(), purpose);
+                                PaytmPay(map, response_data.getPaymentEnv(), purpose);
 
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -324,18 +324,18 @@ public class PaytmPayment extends AppCompatActivity {
         });
     }
 
-    public void PaytmPay(Map<String, String> paramMap, final String from, String paymentEnv, String purpose) {
+    public void PaytmPay(Map<String, String> paramMap, String paymentEnv, String purpose) {
         String host = "";
         if (paymentEnv.equalsIgnoreCase("production")) {
             // for test mode use it
             host = "https://securegw.paytm.in/";
+
         } else {
             // for production mode use it
             host = "https://securegw-stage.paytm.in/";
         }
 
         PaytmOrder Order = new PaytmOrder(paramMap.get("ORDER_ID"), paramMap.get("MID"), paramMap.get("txnToken"), paramMap.get("TXN_AMOUNT"), paramMap.get("CALLBACK_URL"));
-
         try {
             TransactionManager transactionManager = new TransactionManager(Order, new PaytmPaymentTransactionCallback() {
                 @Override
@@ -344,7 +344,7 @@ public class PaytmPayment extends AppCompatActivity {
                     if (inResponse.toString().contains("TXN_SUCCESS")) {
 
                         if (purpose.equalsIgnoreCase(Constants.PURPOSE_PREPAYMENT) || purpose.equalsIgnoreCase(Constants.DONATION) || purpose.equalsIgnoreCase(Constants.PURPOSE_BILLPAYMENT)) {
-                            iPaymentResponse.sendPaymentResponse("TXN_SUCCESS",inResponse.getString("ORDERID"));
+                            iPaymentResponse.sendPaymentResponse("TXN_SUCCESS", inResponse.getString("ORDERID"));
                         } else {
                             Toast.makeText(context, "Payment Successful", Toast.LENGTH_LONG).show();
                         }
@@ -405,11 +405,12 @@ public class PaytmPayment extends AppCompatActivity {
             });
 
             transactionManager.setShowPaymentUrl(host + "theia/api/v1/showPaymentPage");
-            transactionManager.setAppInvokeEnabled(true);
+            transactionManager.setAppInvokeEnabled(false);
             transactionManager.startTransaction((Activity) context, ActivityRequestCode);
 
         } catch (Exception ews) {
             ews.printStackTrace();
         }
     }
+
 }

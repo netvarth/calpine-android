@@ -3,11 +3,6 @@ package com.jaldeeinc.jaldee.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
-
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,21 +13,22 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.ChatActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
-import com.jaldeeinc.jaldee.activities.DetailInboxList;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.response.InboxModel;
 import com.jaldeeinc.jaldee.response.NewInbox;
-
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by sharmila on 14/8/18.
@@ -47,11 +43,13 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
     ArrayList<InboxModel> mDetailInboxList = new ArrayList<>();
     private boolean isLoading;
 
+    //@RequiresApi(api = Build.VERSION_CODES.N)
     public InboxAdapter(ArrayList<NewInbox> mInboxList, Context mContext, Activity mActivity, boolean isLoading) {
         this.mContext = mContext;
         this.mInboxList = mInboxList;
         this.activity = mActivity;
         this.isLoading = isLoading;
+        Collections.sort(this.mInboxList, Comparator.comparing(NewInbox::getTimeStamp).reversed());
     }
 
     @Override

@@ -4,12 +4,16 @@ import android.os.Build;
 
 import com.jaldeeinc.jaldee.R;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Constants {
 
 
     // Must change based on release type
     public static final String URL = "https://scale.jaldee.com/";
-
+    //public static final String URL = "https://test.jaldee.com/";
 //    public static final String URL = "http://103.70.197.233/";
 
 
@@ -20,6 +24,9 @@ public class Constants {
     public static final String MERCHANT_KEY = "rjQUPktU";
     public static final String MERCHANT_ID = "4934580";
     public static final boolean DEBUG = true;
+
+    public static final List<String> razorpayMethods = Arrays.asList("dc", "cc", "netbanking", "wallet", "emi", "upi");
+    //public static final List<String> paytmMethods = Arrays.asList( "BALANCE", "PPBL", "UPI", "CREDIT_CARD" "DEBIT_CARD" NET_BANKINGFor Net Banking EMI PAYTM_DIGITAL_CREDIT);
 
     public static final String PREFS = "com.jaldeeinc.jaldee";
 

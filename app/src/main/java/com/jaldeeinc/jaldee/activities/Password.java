@@ -488,7 +488,7 @@ public class Password extends AppCompatActivity {
         Config.logV("JSON--------------" + jsonObj);
         final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<LoginResponse> call = apiService.LoginResponse(getDeviceName(), body);
+        Call<LoginResponse> call = apiService.LoginResponse(body);
 
         call.enqueue(new Callback<LoginResponse>() {
             @Override
@@ -560,14 +560,5 @@ public class Password extends AppCompatActivity {
                     Config.closeDialog(getParent(), mDialog);
             }
         });
-    }
-
-    public static String getDeviceName() {
-        String manufacturer = Build.MANUFACTURER;
-        String model = Build.MODEL;
-        if (model.startsWith(manufacturer)) {
-            return model;
-        }
-        return manufacturer + " " + model;
     }
 }

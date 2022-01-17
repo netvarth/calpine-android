@@ -320,7 +320,7 @@ public class Config {
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Config.logV("JSON--------------" + jsonObj);
-        Call<LoginResponse> call = apiService.LoginResponse(getDeviceName(), body);
+        Call<LoginResponse> call = apiService.LoginResponse(body);
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, retrofit2.Response<LoginResponse> response) {
@@ -560,15 +560,6 @@ public class Config {
         }
 
         return builder.toString();
-    }
-
-    public static String getDeviceName() {
-        String manufacturer = Build.MANUFACTURER;
-        String model = Build.MODEL;
-        if (model.startsWith(manufacturer)) {
-            return model;
-        }
-        return manufacturer + " " + model;
     }
 
     public static String getCustomDateString(String d) throws ParseException {

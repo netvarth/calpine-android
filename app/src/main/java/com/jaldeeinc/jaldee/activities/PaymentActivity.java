@@ -158,7 +158,7 @@ public class PaymentActivity extends AppCompatActivity implements IPaymentRespon
         mDialog.show();
 
 
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID, Constants.PURPOSE_BILLPAYMENT);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentMod(accountID, Constants.PURPOSE_BILLPAYMENT);
 
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
@@ -259,7 +259,7 @@ public class PaymentActivity extends AppCompatActivity implements IPaymentRespon
             public void onClick(View v) {
 
                 PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
-                payment.ApiGenerateHashPaytm(ynwUUID, String.valueOf(amountDue), accountID, purpose, mContext, mActivity, "home", customerId,encId);
+                payment.ApiGenerateHashPaytm(ynwUUID, String.valueOf(amountDue), accountID, purpose, mContext, mActivity, "home", customerId, encId);
             }
         });
 

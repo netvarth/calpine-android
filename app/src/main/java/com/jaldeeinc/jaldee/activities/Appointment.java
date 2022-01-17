@@ -480,7 +480,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                     }
                 });
-              //  imagePathList.clear();
+                //  imagePathList.clear();
                 tv_attach = dialog.findViewById(R.id.btn);
                 tv_camera = dialog.findViewById(R.id.camera);
                 recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
@@ -496,7 +496,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 tv_attach.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(imagePathLists.size()>0){
+                        if (imagePathLists.size() > 0) {
                             DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathLists, mContext);
                             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(v.getContext(), 3);
                             recycle_image_attachment.setLayoutManager(mLayoutManager);
@@ -965,11 +965,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         selectedService = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
                         isPrepay = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getIsPrePayment();
 
-                        if (((SearchAppoinment) mSpinnerService.getSelectedItem()).getConsumerNoteTitle() != null){
+                        if (((SearchAppoinment) mSpinnerService.getSelectedItem()).getConsumerNoteTitle() != null) {
 
                             tv_addnote.setText(((SearchAppoinment) mSpinnerService.getSelectedItem()).getConsumerNoteTitle());
-                        }
-                        else {
+                        } else {
 
                             tv_addnote.setText("Add Note");
                         }
@@ -2159,7 +2158,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         mDialog.show();
 
 
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID, Constants.PURPOSE_PREPAYMENT);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentMod(accountID, Constants.PURPOSE_PREPAYMENT);
 
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
@@ -4598,14 +4597,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             e.printStackTrace();
         }
 
-        String deviceName = Build.MANUFACTURER
-                + " " + Build.MODEL + " " + Build.VERSION.RELEASE
-                + " " + Build.VERSION_CODES.class.getFields()[android.os.Build.VERSION.SDK_INT].getName();
-
-
-
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<CheckSumModel> call = apiService.generateHash(deviceName,body);
+        Call<CheckSumModel> call = apiService.generateHash(body);
 
         call.enqueue(new Callback<CheckSumModel>() {
             @Override
@@ -4923,7 +4916,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                                             Config.logV("Account ID --------Paytm------" + modifyAccountID);
                                             PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
-                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID,"");
+                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID, "");
                                             //payment.generateCheckSum(sAmountPay);
                                             dialog.dismiss();
                                             //ApiGenerateHash(value, sAmountPay, accountID);
@@ -5046,7 +5039,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                             Bundle b = new Bundle();
                             b.putSerializable("BookingDetails", activeAppointment);
-                            b.putString("terminology",mSearchTerminology.getProvider());
+                            b.putString("terminology", mSearchTerminology.getProvider());
                             Intent checkin = new Intent(Appointment.this, AppointmentConfirmation.class);
                             checkin.putExtras(b);
                             startActivity(checkin);
@@ -5518,7 +5511,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         try {
             //   Log.i("Success1111",  new Gson().toJson(paymentData));
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
-            new PaymentGateway(this.mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
+            //new PaymentGateway(this.mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
             Toast.makeText(this.mContext, "Payment Successful", Toast.LENGTH_LONG).show();
             paymentFinished(razorpayModel);
         } catch (Exception e) {

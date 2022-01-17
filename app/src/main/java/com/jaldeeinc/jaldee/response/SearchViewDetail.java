@@ -11,13 +11,23 @@ import java.util.ArrayList;
  * Created by sharmila on 24/7/18.
  */
 
-public class  SearchViewDetail implements Serializable {
+public class SearchViewDetail implements Serializable {
 
     String label;
     String resource;
     String instance;
     String permission;
     ArrayList<String> languagesSpoken;
+    String accountLinkedPhNo;
+    String countryCode;
+
+    public String getAccountLinkedPhNo() {
+        return accountLinkedPhNo;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
 
     public ArrayList<String> getLanguagesSpoken() {
         return languagesSpoken;
@@ -215,7 +225,6 @@ public class  SearchViewDetail implements Serializable {
     String lattitude;
 
 
-
     public SearchViewDetail logo;
 
     public float getAvgRating() {
@@ -297,7 +306,6 @@ public class  SearchViewDetail implements Serializable {
     }
 
 
-
     public String getDomain() {
         return domain;
     }
@@ -322,8 +330,6 @@ public class  SearchViewDetail implements Serializable {
     public void setAccountType(String accountType) {
         this.accountType = accountType;
     }
-
-
 
 
     public String getBusinessDesc() {

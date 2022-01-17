@@ -100,7 +100,6 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
         mLJCash = (LinearLayout) row.findViewById(R.id.ljcash);
 
 
-
         mLappfeed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -450,13 +449,13 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
 
     }
 
-    @Override
+    /*@Override
     public void onDestroyView() {
 
         ViewGroup mContainer = (ViewGroup) getActivity().findViewById(R.id.mainlayout);
         mContainer.removeAllViews();
         super.onDestroyView();
-    }
+    }*/
 
 /*
     @Override

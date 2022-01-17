@@ -295,6 +295,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     String apiDate = "";
     private int userId;
     String sector, subsector;
+    String providerPhNo;
     int maxPartysize;
     SearchViewDetail mBusinessDataList;
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
@@ -369,6 +370,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         providerId = intent.getIntExtra("providerId", 0);
         userId = intent.getIntExtra("userId", 0);
         sector = intent.getStringExtra("sector");
+
         tvConsumerName = findViewById(R.id.tv_consumerName);
         list = findViewById(R.id.list);
         recycle_family = findViewById(R.id.recycle_family);
@@ -1318,6 +1320,11 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         model.setCountryCode(countryCode);
                         model.setWhtsappCountryCode(mWhtsappCountryCode);
                         model.setWhtsappPhoneNumber(mWhatsappNumber);
+                        String pCountryCode = providerResponse.getBusinessProfile().getCountryCode();
+                        String pPhNo = providerResponse.getBusinessProfile().getAccountLinkedPhNo();
+                        if ((pCountryCode != null) && (!pCountryCode.isEmpty()) && (pPhNo != null) && (!pPhNo.isEmpty())) {
+                            model.setProviderPhoneNumber(pCountryCode + " " + pPhNo);
+                        }
                         //model.setJacshSelected(cbJCash.isChecked());
                         if (advancePaymentDetails != null) {
                             model.setAmountRequiredNow(advancePaymentDetails.getAmountRequiredNow());
@@ -1691,7 +1698,7 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
         try {
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
-            new PaymentGateway(this.mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
+            //new PaymentGateway(this.mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
             Toast.makeText(this.mContext, "Payment Successful", Toast.LENGTH_LONG).show();
             paymentFinished(razorpayModel);
         } catch (Exception e) {

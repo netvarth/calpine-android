@@ -1526,14 +1526,14 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         model.setFamilyEMIID(familyMEmID);
                         model.setPhoneNumber(phoneNumber);
                         model.setQuestionnaire(questionnaire);
-                        model.setFrom(Constants.APPOINTMENT);
+                        model.setFrom(Constants.CHECKIN);
                         model.setProviderName(providerName);
                         model.setAccountBusinessName(accountBusinessName);
                         model.setLocationName(locationName);
                         model.setDate(tvCheckInDate.getText().toString());
                         model.setHint(tvHint.getText().toString());
                         model.setPeopleWaiting(tvPeopleInLine.getText().toString());
-                        model.setCheckInOrToken(tvTerm.getText().toString());
+                        model.setToken(isToken);
                         model.setCustomerName(tvConsumerName.getText().toString());
                         model.setEmailId(tvEmail.getText().toString());
                         model.setCountryCode(countryCode);
@@ -1561,13 +1561,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
                             } else {
 
-                                Intent intent = new Intent(CheckInActivity.this, CheckInReconfirmation.class);
+                                Intent intent = new Intent(CheckInActivity.this, ReconfirmationActivity.class);
                                 intent.putExtra("data", model);
                                 startActivity(intent);
                             }
                         } else {
 
-                            Intent intent = new Intent(CheckInActivity.this, CheckInReconfirmation.class);
+                            Intent intent = new Intent(CheckInActivity.this, ReconfirmationActivity.class);
                             intent.putExtra("data", model);
                             startActivity(intent);
                         }
@@ -1925,7 +1925,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
         try {
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
-            new PaymentGateway(mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
+            //new PaymentGateway(mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
             Toast.makeText(mContext, "Payment Successful", Toast.LENGTH_LONG).show();
             paymentFinished(razorpayModel);
         } catch (Exception e) {

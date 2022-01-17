@@ -22,7 +22,7 @@
                 android:layout_weight="0.6"
                 android:layout_height="wrap_content"
                 android:gravity="left"
-                android:text="Bridal MakeUp @ 700.00"
+                android:text=""
                 android:textColor="@color/title_grey"
                 android:textSize="@dimen/txtsize_hint" />
 

@@ -1,16 +1,23 @@
 package com.jaldeeinc.jaldee.activities;
 
+import static com.jaldeeinc.jaldee.connection.ApiClient.context;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -21,7 +28,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView;
@@ -40,6 +49,10 @@ import com.jaldeeinc.jaldee.custom.StoreDetailsDialog;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.StoreDetails;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -360,10 +373,9 @@ public class OrderConfirmation extends AppCompatActivity {
                             public void onClick(View view) {
 
                                 Dialog settingsDialog = new Dialog(OrderConfirmation.this);
-                                settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-                                settingsDialog.getWindow().getAttributes().windowAnimations = R.style.zoomInAndOut;
-                                settingsDialog.setContentView(getLayoutInflater().inflate(R.layout.image_layout
-                                        , null));
+                                settingsDialog.setContentView(getLayoutInflater().inflate(R.layout.image_layout, null));
+                                LinearLayout ll_download_qr = settingsDialog.findViewById(R.id.ll_download_qr);
+
                                 ImageView imageView = settingsDialog.findViewById(R.id.iv_close);
                                 ImageView ivQR = settingsDialog.findViewById(R.id.iv_Qr);
                                 imageView.setOnClickListener(new View.OnClickListener() {
@@ -373,8 +385,18 @@ public class OrderConfirmation extends AppCompatActivity {
                                         settingsDialog.dismiss();
                                     }
                                 });
-
-                                ivQR.setImageBitmap(bitmap);
+                                ll_download_qr.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                            ActivityCompat.requestPermissions((Activity) view.getContext(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                                            // this will request for permission when permission is not true
+                                        } else {
+                                            storeImage(bitmap);
+                                        }
+                                    }
+                                });
+                                Glide.with(context).load(bitmap).into(ivQR);
                                 settingsDialog.show();
                             }
                         });
@@ -418,5 +440,67 @@ public class OrderConfirmation extends AppCompatActivity {
         Intent homeIntent = new Intent(OrderConfirmation.this, Home.class);
         homeIntent.putExtra("isOrder", "ORDER");
         startActivity(homeIntent);
+    }
+
+    private void storeImage(Bitmap image) {
+
+        File pictureFile = getOutputMediaFile();
+        if (pictureFile == null) {
+            //"Error creating media file, check storage permissions: "
+            return;
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile);
+            image.compress(Bitmap.CompressFormat.PNG, 90, fos);
+            fos.close();
+            Toast.makeText(this, "Saved to Gallery", Toast.LENGTH_SHORT).show();
+
+           /* Uri uri = Uri.fromFile(pictureFile);
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            String path = uri.getPath();
+            String extension = path.substring(path.lastIndexOf("."));;
+            String type = mime.getMimeTypeFromExtension(extension);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(uri, type);*/
+
+        } catch (FileNotFoundException e) {
+            //Log.d(TAG, "File not found: " + e.getMessage());
+            e.printStackTrace();
+
+        } catch (IOException e) {
+            //Log.d(TAG, "Error accessing file: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+    }
+
+    /**
+     * Create a File for saving an image or video
+     */
+    private File getOutputMediaFile() {
+// To be safe, you should check that the SDCard is mounted
+// using Environment.getExternalStorageState() before doing this.
+        File mediaStorageDir = new
+                File(Environment.getExternalStorageDirectory() + "/Download");
+                /*File(Environment.getExternalStorageDirectory()
+                + "/Android/data/"
+                + getApplicationContext().getPackageName()
+                + "/Files");*/
+
+// This location works best if you want the created images to be shared
+// between applications and persist after your app has been uninstalled.
+
+// Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                return null;
+            }
+        }
+// Create a media file name
+        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
+        File mediaFile;
+        String mImageName = "JALDEE_" + timeStamp + ".jpg";
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
+        return mediaFile;
     }
 }

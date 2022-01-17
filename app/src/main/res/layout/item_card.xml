@@ -22,28 +22,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp">
 
-            <com.jaldeeinc.jaldee.custom.BorderImageView
-                android:id="@+id/iv_itemImage"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginStart="@dimen/dimen_4dp"
-                android:layout_marginTop="@dimen/dimen_4dp"
-                android:layout_marginEnd="@dimen/dimen_4dp"
-                android:scaleType="centerCrop"
-                android:visibility="visible">
+                <com.jaldeeinc.jaldee.custom.BorderImageView
+                    android:id="@+id/iv_itemImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_marginStart="@dimen/dimen_4dp"
+                    android:layout_marginTop="@dimen/dimen_4dp"
+                    android:layout_marginEnd="@dimen/dimen_4dp"
+                    android:scaleType="centerInside"
+                    android:visibility="visible">
 
-            </com.jaldeeinc.jaldee.custom.BorderImageView>
+                </com.jaldeeinc.jaldee.custom.BorderImageView>
 
 
-            <com.omjoonkim.skeletonloadingview.SkeletonLoadingView
-                android:id="@+id/shimmer"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:visibility="gone"
-                app:baseColor="#F4F4F4"
-                app:deepColor="@color/white">
+                <com.omjoonkim.skeletonloadingview.SkeletonLoadingView
+                    android:id="@+id/shimmer"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:visibility="gone"
+                    app:baseColor="#F4F4F4"
+                    app:deepColor="@color/white">
 
-            </com.omjoonkim.skeletonloadingview.SkeletonLoadingView>
+                </com.omjoonkim.skeletonloadingview.SkeletonLoadingView>
 
             </FrameLayout>
 
@@ -75,9 +75,9 @@
                     android:layout_below="@id/tv_itemName"
                     android:layout_marginStart="@dimen/dimen_5dp"
                     android:layout_marginTop="6dp"
-                    android:text=""
-                    android:maxLines="2"
                     android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text=""
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/dimen_12dp"
                     android:visibility="visible">
@@ -91,17 +91,17 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_gravity="center"
+                    android:orientation="horizontal"
                     android:paddingStart="@dimen/dimen_5dp"
                     android:paddingEnd="@dimen/dimen_5dp"
-                    android:paddingBottom="@dimen/dimen_10dp"
-                    android:orientation="horizontal">
+                    android:paddingBottom="@dimen/dimen_10dp">
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
                         android:layout_weight="0.3"
-                        android:orientation="horizontal"
-                        android:layout_centerVertical="true">
+                        android:orientation="horizontal">
 
 
                         <LinearLayout
@@ -113,30 +113,27 @@
                                 android:id="@+id/tv_price"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:singleLine="true"
                                 android:maxLines="1"
-                                android:textSize="14dp"
-                                autofit:minTextSize="8dp"
+                                android:singleLine="true"
                                 android:text=""
                                 android:textColor="@color/red"
-                                />
+                                android:textSize="14dp"
+                                autofit:minTextSize="8dp" />
 
 
                             <com.jaldeeinc.jaldee.custom.AutofitTextView
                                 android:id="@+id/tv_discountedPrice"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:singleLine="true"
                                 android:maxLines="1"
-                                android:visibility="visible"
-                                android:textSize="14dp"
-                                autofit:minTextSize="8dp"
+                                android:singleLine="true"
                                 android:text=""
                                 android:textColor="@color/title_color"
-                                />
+                                android:textSize="14dp"
+                                android:visibility="visible"
+                                autofit:minTextSize="8dp" />
 
                         </LinearLayout>
-
 
 
                     </LinearLayout>
@@ -144,16 +141,16 @@
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_weight="0.7">
 
                         <LinearLayout
                             android:layout_width="@dimen/dimen_1dp"
                             android:layout_height="@dimen/dimen_25dp"
-                            android:layout_marginTop="@dimen/dimen_4dp"
-                            android:layout_marginStart="@dimen/dimen_8dp"
-                            android:layout_marginEnd="@dimen/dimen_5dp"
                             android:layout_alignParentStart="true"
+                            android:layout_marginStart="@dimen/dimen_8dp"
+                            android:layout_marginTop="@dimen/dimen_4dp"
+                            android:layout_marginEnd="@dimen/dimen_5dp"
                             android:layout_marginBottom="@dimen/dimen_4dp"
                             android:background="@color/light_grey">
 
@@ -275,16 +272,15 @@
         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Out of Stock"
             android:layout_marginBottom="@dimen/dimen_25dp"
-            android:textSize="@dimen/dimen_20dp"
-            android:textColor="@color/red">
+            android:text="Out of Stock"
+            android:textColor="@color/red"
+            android:textSize="@dimen/dimen_20dp">
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
 
 
     </LinearLayout>
-
 
 
 </androidx.cardview.widget.CardView>

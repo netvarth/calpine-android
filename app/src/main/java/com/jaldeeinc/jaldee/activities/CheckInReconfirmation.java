@@ -100,7 +100,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
     public Context mContext;
 
     @BindView(R.id.LservicePrepay)
-    LinearLayout LservicePrepay;
+    LinearLayout cv_servicePrepay;
 
     @BindView(R.id.txtprepayamount)
     CustomTextViewSemiBold txtprepayamount;
@@ -204,7 +204,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
     public IPaymentResponse iPaymentResponse;
     ArrayList<LabelPath> imagePathList = new ArrayList<>();
     ArrayList<ShoppingListModel> attachedImagePathList = new ArrayList<>();
-    ActiveCheckIn activeAppointment;
+    ActiveCheckIn activeCheckIn;
 
     //files related
     private static final String IMAGE_DIRECTORY = "/Jaldee" +
@@ -329,11 +329,11 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                 }
             }
 
-            if (bookingModel.getCheckInOrToken() != null) {
+            /*if (bookingModel.getCheckInOrToken() != null) {
 
                 tvBookingForHint.setText(bookingModel.getCheckInOrToken());
             }
-
+*/
             if (bookingModel.getHint() != null) {
 
                 tvTimeHint.setText(bookingModel.getHint());
@@ -376,20 +376,16 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
             if (bookingModel.getPhoneNumber() != null && bookingModel.getCountryCode() != null) {
                 tvPhoneNumber.setText(bookingModel.getCountryCode() + " " + bookingModel.getPhoneNumber());
             }
-
+            familyMEmID = bookingModel.getFamilyEMIID();
             if (bookingModel.getImagePathList() != null && bookingModel.getImagePathList().size() > 0) {
                 attachedImagePathList = bookingModel.getImagePathList();
             } else {
                 attachedImagePathList = new ArrayList<>();
             }
-
             String imagesString = SharedPreference.getInstance(mContext).getStringValue(Constants.QIMAGES, "");
-
             if (imagesString != null && !imagesString.trim().equalsIgnoreCase("")) {
-
                 Type labelPathListType = new TypeToken<ArrayList<LabelPath>>() {
                 }.getType();
-
                 try {
                     ArrayList<LabelPath> pathList = new Gson().fromJson(imagesString, labelPathListType);
                     imagePathList = pathList;
@@ -397,10 +393,10 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                     imagePathList = new ArrayList<>();
                     e.printStackTrace();
                 }
-
             }
             mSearchTerminology = bookingModel.getmSearchTerminology();
-            familyMEmID = bookingModel.getFamilyEMIID();
+
+
             if (bookingModel.getCheckInInfo().isPrePayment()) {
                 APIPayment(String.valueOf(bookingModel.getAccountId()));
             } else {
@@ -674,7 +670,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
         });
     }
 
-        private void getConfirmationId(int id, String txt_addnote) {
+    private void getConfirmationId(int id, String txt_addnote) {
 
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -686,10 +682,10 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
-                        activeAppointment = response.body();
+                        activeCheckIn = response.body();
 
-                        if (activeAppointment != null) {
-                            checkEncId = activeAppointment.getCheckinEncId();
+                        if (activeCheckIn != null) {
+                            checkEncId = activeCheckIn.getCheckinEncId();
 
                             if (bookingModel.getCheckInInfo().isPrePayment()) {
                                 if (cbJCash.isChecked() && Double.parseDouble(prePayRemainingAmount) <= 0) {
@@ -733,7 +729,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                                     QuestionnaireInput input = new QuestionnaireInput();
                                     Gson gson = new GsonBuilder().setPrettyPrinting().create();
                                     input = gson.fromJson(inputString, QuestionnaireInput.class);
-                                    ApiSubmitQuestionnnaire(input, activeAppointment.getYnwUuid());
+                                    ApiSubmitQuestionnnaire(input, activeCheckIn.getYnwUuid());
                                 } else {
 
                                     getConfirmationDetails(bookingModel.getAccountId());
@@ -805,7 +801,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
                         WalletCheckSumModel respnseWCSumModel = response.body();
 
-                        if (!respnseWCSumModel.isGateWayPaymentNeeded()) {
+                        if (respnseWCSumModel != null && !respnseWCSumModel.isGateWayPaymentNeeded()) {
 
                             if (attachedImagePathList.size() > 0) {
                                 ApiCommunicateCheckin(value, accountID, txt_addnote, dialog);
@@ -971,7 +967,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
                                                 if (mDialog.isShowing())
                                                     Config.closeDialog(getParent(), mDialog);
-                                                ApiCheckStatus(activeAppointment.getYnwUuid(), bookingModel.getAccountId(), result);
+                                                ApiCheckStatus(activeCheckIn.getYnwUuid(), bookingModel.getAccountId(), result);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
@@ -1183,6 +1179,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                                 imagePathList.clear();
                                 if (activeAppointment != null) {
                                     checkEncId = activeAppointment.getCheckinEncId();
+                                    Bundle b = new Bundle();
 
                                     Intent checkin = new Intent(CheckInReconfirmation.this, CheckInConfirmation.class);
                                     checkin.putExtra("terminology", mSearchTerminology.getProvider());
@@ -1260,7 +1257,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
         mDialog.show();
 
 
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID, Constants.PURPOSE_PREPAYMENT);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentMod(accountID, Constants.PURPOSE_PREPAYMENT);
 
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
@@ -1309,7 +1306,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
                         }
                         if ((showPayU) || showPaytmWallet) {
                             Config.logV("URL----%%%%%---@@--");
-                            LservicePrepay.setVisibility(View.VISIBLE);
+                            cv_servicePrepay.setVisibility(View.VISIBLE);
                             LPrepay.setVisibility(View.VISIBLE);
                             ll_cancellation_policy.setVisibility(View.VISIBLE);
                             Typeface tyface = Typeface.createFromAsset(getAssets(),
@@ -1404,7 +1401,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
     public void onPaymentSuccess(String s, PaymentData paymentData) {
         try {
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
-            new PaymentGateway(this.mContext, CheckInReconfirmation.this).sendPaymentStatus(razorpayModel, "SUCCESS");
+            //new PaymentGateway(this.mContext, CheckInReconfirmation.this).sendPaymentStatus(razorpayModel, "SUCCESS");
 
             ApiCheckRazorpayPaymentStatus(razorpayModel);
 
@@ -1471,7 +1468,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
         JSONObject jsonObj = new JSONObject();
         try {
 
-            jsonObj.put("paymentId", orderId );
+            jsonObj.put("paymentId", orderId);
             jsonObj.put("orderId", orderId);
 
         } catch (JSONException e) {
@@ -1525,7 +1522,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
             QuestionnaireInput input = new QuestionnaireInput();
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             input = gson.fromJson(inputString, QuestionnaireInput.class);
-            ApiSubmitQuestionnnaire(input, activeAppointment.getYnwUuid());
+            ApiSubmitQuestionnnaire(input, activeCheckIn.getYnwUuid());
         } else {
             getConfirmationDetails(bookingModel.getAccountId());
         }
@@ -1556,7 +1553,7 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
 
     public void updateUI(SearchService checkInInfo, double eligibleJcashAmt) {
         if (bookingModel.getNetTotal() != 0) {
-            LservicePrepay.setVisibility(View.VISIBLE);
+            cv_servicePrepay.setVisibility(View.VISIBLE);
             LserviceAmount.setVisibility(View.VISIBLE);
             String firstWord = "";
             String thirdWord;

@@ -549,39 +549,68 @@
                 android:id="@+id/rl_coupon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_padding"
-                android:layout_marginTop="@dimen/padding5"
-                android:layout_marginEnd="@dimen/default_padding"
-                android:background="@drawable/edittext"
-                android:orientation="horizontal"
                 android:visibility="gone">
 
-                <EditText
-                    android:id="@+id/et_code"
+                <LinearLayout
+                    android:id="@+id/ll_chint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/white"
-                    android:hint="Coupon Code"
-                    android:inputType="text"
-                    android:paddingStart="@dimen/padding5"
-                    android:paddingTop="@dimen/padding5"
-                    android:paddingBottom="@dimen/padding5"
-                    android:textAllCaps="true"
-                    android:textColor="@color/title_grey"
-                    android:textSize="@dimen/dimen_15sp" />
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:orientation="horizontal">
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
-                    android:id="@+id/tv_apply"
-                    android:layout_width="wrap_content"
+                    <ImageView
+                        android:layout_width="@dimen/txtsize_14"
+                        android:layout_height="@dimen/txtsize_14"
+                        android:layout_gravity="center"
+                        android:src="@drawable/icon_notification_bell"
+                        app:tint="@color/button_background" />
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center_vertical"
+                        android:text=" Coupon will be applied on the final bill"
+                        android:textColor="@color/button_background"
+                        android:textSize="14dp" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/dimen_10dp"
-                    android:text="Apply"
-                    android:textColor="@color/location_theme"
-                    android:textSize="@dimen/txtsize_subtitle" />
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:layout_marginTop="@dimen/padding5"
+                    android:layout_marginEnd="@dimen/default_padding"
+                    android:background="@drawable/edittext"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/et_code"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/white"
+                        android:hint="Coupon Code"
+                        android:inputType="text"
+                        android:paddingStart="@dimen/padding5"
+                        android:paddingTop="@dimen/padding5"
+                        android:paddingBottom="@dimen/padding5"
+                        android:textAllCaps="true"
+                        android:textColor="@color/title_grey"
+                        android:textSize="@dimen/dimen_15sp" />
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                        android:id="@+id/tv_apply"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:text="Apply"
+                        android:textColor="@color/location_theme"
+                        android:textSize="@dimen/txtsize_subtitle" />
 
 
+                </RelativeLayout>
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView

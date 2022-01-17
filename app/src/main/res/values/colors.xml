@@ -22,12 +22,10 @@
     <color name="action_color">#5B84B1FF</color>
     <color name="unselect">#F2F2F2</color>
 
-
+    <color name="yellow1">#FFC107</color>
     <color name="dark_yellow">#FFC107</color>
     <color name="dark_yellow1">#FFCC00</color>
     <color name="soft_yellow1">#FEE8A4</color>
-
-
 
     <color name="gray">#D1D0CE</color>
 
@@ -44,6 +42,8 @@
     <color name="tab_unchecked">#3E4A59</color>
     <color name="button_background">#7a7a7a</color>
     <color name="fadedgrey">#E9E8E5</color>
+    <color name="grey3">#F0F0F0</color>
+    <color name="grey4">#DCDCDC</color>
 
 
     <!--   Login screen-->
@@ -58,8 +58,6 @@
 
 
     <color name="unclaimed">#EBEBE4</color>
-
-
 
 
     <!-- <color name="title_subtitle_grey">#707070</color>-->
@@ -105,20 +103,8 @@
     <color name="alpha_red">#ffcccc</color>
 
     <color name="telegram_bg">#0088cc</color>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <color name="grey1">#959699</color>
+    <color name="grey2">#e5e5e5</color>
 
 
 </resources>

@@ -431,7 +431,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                     }
                 });
-              //  imagePathList.clear();
+                //  imagePathList.clear();
                 tv_attach = dialog.findViewById(R.id.btn);
                 tv_camera = dialog.findViewById(R.id.camera);
                 recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
@@ -443,7 +443,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 tv_attach.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(imagePathLists.size()>0){
+                        if (imagePathLists.size() > 0) {
                             DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathLists, mContext);
                             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(v.getContext(), 3);
                             recycle_image_attachment.setLayoutManager(mLayoutManager);
@@ -522,7 +522,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                      //  imagePathList.clear();
+                        //  imagePathList.clear();
                         dialog.dismiss();
                     }
                 });
@@ -1792,7 +1792,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID, Constants.PURPOSE_PREPAYMENT);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentMod(accountID, Constants.PURPOSE_PREPAYMENT);
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
             public void onResponse(Call<ArrayList<PaymentModel>> call, Response<ArrayList<PaymentModel>> response) {
@@ -3157,13 +3157,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String deviceName = Build.MANUFACTURER
-                + " " + Build.MODEL + " " + Build.VERSION.RELEASE
-                + " " + Build.VERSION_CODES.class.getFields()[android.os.Build.VERSION.SDK_INT].getName();
-
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<CheckSumModel> call = apiService.generateHash(deviceName,body);
+        Call<CheckSumModel> call = apiService.generateHash(body);
 
         call.enqueue(new Callback<CheckSumModel>() {
             @Override
@@ -3416,7 +3412,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                                             Config.logV("Account ID --------Paytm------" + modifyAccountID);
                                             PaytmPayment payment = new PaytmPayment(mContext, paymentResponse);
-                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID,"");
+                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID, "");
                                             //payment.generateCheckSum(sAmountPay);
                                             dialogPayment.dismiss();
                                             //ApiGenerateHash(value, sAmountPay, accountID);
@@ -3877,7 +3873,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         try {
 //            Log.i("Success1111",  new Gson().toJson(paymentData));
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
-            new PaymentGateway(this.mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
+            //new PaymentGateway(this.mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
             Toast.makeText(this.mContext, "Payment Successful", Toast.LENGTH_LONG).show();
             paymentFinished();
         } catch (Exception e) {

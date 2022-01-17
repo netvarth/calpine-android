@@ -1914,6 +1914,7 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
                                 tv_jaldee_cash_available.setText("Balance:Rs." + Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(jCashInfo.getTotCashAvailable())));
                             } else {
                                 cv_jaldee_cash_available.setVisibility(View.GONE);
+                                tv_jaldee_cash_available.setText("Balance:Rs.0");
                             }
                         }
                     }

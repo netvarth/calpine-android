@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.Interface.ISelectedService;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
@@ -112,7 +113,11 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
 
                 PicassoTrustAll.getInstance(context).load(child.getProviderImage()).fit().placeholder(R.drawable.icon_noimage).into(viewHolder.ivImage);
             } else {
-                viewHolder.ivImage.setImageResource(R.drawable.icon_noimage);
+                if (child.getType().equalsIgnoreCase(Constants.ORDERS)) {
+                    Glide.with(context).load(R.drawable.ic_catalogue).into(viewHolder.ivImage);
+                } else {
+                    Glide.with(context).load(R.drawable.icon_noimage).into(viewHolder.ivImage);
+                }
             }
         } else {
             viewHolder.llTime.setVisibility(View.VISIBLE);

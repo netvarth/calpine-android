@@ -6,7 +6,6 @@ public class WalletPaytmChecksum {
     boolean isJCashPaymentSucess;
     boolean isGateWayPaymentNeeded;
 
-
     public PaytmChecksum getResponse() {
         return response;
     }

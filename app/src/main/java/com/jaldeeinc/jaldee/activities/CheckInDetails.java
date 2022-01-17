@@ -4,6 +4,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,6 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,11 +24,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,9 +41,12 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
@@ -107,6 +119,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -819,23 +832,32 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                 if (checkInInfo.getCheckinEncId() != null) {
                     //Encode with a QR Code image
                     String statusUrl = Constants.URL + "status/" + checkInInfo.getCheckinEncId();
+
+                    WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
+                    Display display = manager.getDefaultDisplay();
+                    Point point = new Point();
+                    display.getSize(point);
+                    int width = point.x;
+                    int height = point.y;
+                    int smallerDimension = width < height ? width : height;
+                    smallerDimension = smallerDimension * 3 / 4;
+
                     QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(statusUrl,
                             null,
                             Contents.Type.TEXT,
-                            BarcodeFormat.QR_CODE.toString(), 0);
+                            BarcodeFormat.QR_CODE.toString(), smallerDimension);
                     try {
                         Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
-                        ivQR.setImageBitmap(bitmap);
+                        Glide.with(context).load(bitmap).into(ivQR);
 
                         ivQR.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
 
                                 Dialog settingsDialog = new Dialog(CheckInDetails.this);
-                                settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-                                settingsDialog.getWindow().getAttributes().windowAnimations = R.style.zoomInAndOut;
-                                settingsDialog.setContentView(getLayoutInflater().inflate(R.layout.image_layout
-                                        , null));
+                                settingsDialog.setContentView(getLayoutInflater().inflate(R.layout.image_layout, null));
+                                LinearLayout ll_download_qr = settingsDialog.findViewById(R.id.ll_download_qr);
+
                                 ImageView imageView = settingsDialog.findViewById(R.id.iv_close);
                                 ImageView ivQR = settingsDialog.findViewById(R.id.iv_Qr);
                                 imageView.setOnClickListener(new View.OnClickListener() {
@@ -845,8 +867,18 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                                         settingsDialog.dismiss();
                                     }
                                 });
-
-                                ivQR.setImageBitmap(bitmap);
+                                ll_download_qr.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                            ActivityCompat.requestPermissions((Activity) view.getContext(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                                            // this will request for permission when permission is not true
+                                        } else {
+                                            storeImage(bitmap);
+                                        }
+                                    }
+                                });
+                                Glide.with(context).load(bitmap).into(ivQR);
                                 settingsDialog.show();
                             }
                         });
@@ -1163,45 +1195,50 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                         tvAmountToPay.setText(amount);
                         tvAmountToPay.setVisibility(View.VISIBLE);
                     }
-                    cvBill.setVisibility(View.VISIBLE);
+                    if(checkInInfo.getBillStatus() != null && checkInInfo.getBillId() != 0) {
+                        cvBill.setVisibility(View.VISIBLE);
+                    } else {
+                        cvBill.setVisibility(View.GONE);
+                    }
                     tvBillText.setText("Bill");
                     RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) cvBill.getLayoutParams();
                     lp.addRule(RelativeLayout.ALIGN_PARENT_END);
                     cvBill.setLayoutParams(lp);
                 }
+                if (!activeCheckIn.getYnwUuid().contains("h_")) {   //below code only execute if it is not a history booking
 
-                if (checkInInfo.getBillViewStatus() != null && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
-                    if (checkInInfo.getBillViewStatus().equalsIgnoreCase("Show")) {
-                        cvBill.setVisibility(View.VISIBLE);
-                    } else {
-                        cvBill.setVisibility(View.GONE);
-                    }
-
-                } else {
-                    /**26-3-21*/
-                    /**/
-                    if (!checkInInfo.getPaymentStatus().equalsIgnoreCase("NotPaid")) {
-                        cvBill.setVisibility(View.VISIBLE);
-                        if (checkInInfo.getPaymentStatus().equalsIgnoreCase("Refund")) {
+                    if (checkInInfo.getBillViewStatus() != null && !checkInInfo.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                        if (checkInInfo.getBillViewStatus().equalsIgnoreCase("Show")) {
+                            cvBill.setVisibility(View.VISIBLE);
+                        } else {
                             cvBill.setVisibility(View.GONE);
                         }
-                    } else {
-                        cvBill.setVisibility(View.GONE);
-                    }/**/
-                    // cvBill.setVisibility(View.GONE);
-                    /***/
-                }
-                /**26-3-21*/
-                if (checkInInfo.getBillViewStatus() == null || checkInInfo.getBillViewStatus().equalsIgnoreCase("NotShow") || checkInInfo.getWaitlistStatus().equals("Rejected")) {
-                    cvBill.setVisibility(View.GONE);
-                }
-                if (checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled"))
-                    cvBill.setVisibility(View.GONE);
-                /***/
-                if (checkInInfo.getParentUuid() != null) {
-                    cvBill.setVisibility(View.GONE);
-                }
 
+                    } else {
+                        /**26-3-21*/
+                        /**/
+                        if (!checkInInfo.getPaymentStatus().equalsIgnoreCase("NotPaid")) {
+                            cvBill.setVisibility(View.VISIBLE);
+                            if (checkInInfo.getPaymentStatus().equalsIgnoreCase("Refund")) {
+                                cvBill.setVisibility(View.GONE);
+                            }
+                        } else {
+                            cvBill.setVisibility(View.GONE);
+                        }/**/
+                        // cvBill.setVisibility(View.GONE);
+                        /***/
+                    }
+                    /**26-3-21*/
+                    if (checkInInfo.getBillViewStatus() == null || checkInInfo.getBillViewStatus().equalsIgnoreCase("NotShow") || checkInInfo.getWaitlistStatus().equals("Rejected")) {
+                        cvBill.setVisibility(View.GONE);
+                    }
+                    if (checkInInfo.getWaitlistStatus().equalsIgnoreCase("Cancelled"))
+                        cvBill.setVisibility(View.GONE);
+                    /***/
+                    if (checkInInfo.getParentUuid() != null) {
+                        cvBill.setVisibility(View.GONE);
+                    }
+                }
 
                 cvBill.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -2211,4 +2248,67 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
         imagePathList.get(position).setCaption(caption);
         imagePreviewAdapter.notifyDataSetChanged();
     }
+
+    private void storeImage(Bitmap image) {
+
+        File pictureFile = getOutputMediaFile();
+        if (pictureFile == null) {
+            //"Error creating media file, check storage permissions: "
+            return;
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile);
+            image.compress(Bitmap.CompressFormat.PNG, 90, fos);
+            fos.close();
+            Toast.makeText(this, "Saved to Gallery", Toast.LENGTH_SHORT).show();
+
+           /* Uri uri = Uri.fromFile(pictureFile);
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            String path = uri.getPath();
+            String extension = path.substring(path.lastIndexOf("."));;
+            String type = mime.getMimeTypeFromExtension(extension);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(uri, type);*/
+
+        } catch (FileNotFoundException e) {
+            //Log.d(TAG, "File not found: " + e.getMessage());
+            e.printStackTrace();
+
+        } catch (IOException e) {
+            //Log.d(TAG, "Error accessing file: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+    }
+
+    /**
+     * Create a File for saving an image or video
+     */
+    private File getOutputMediaFile() {
+// To be safe, you should check that the SDCard is mounted
+// using Environment.getExternalStorageState() before doing this.
+        File mediaStorageDir = new
+                File(Environment.getExternalStorageDirectory() + "/Download");
+                /*File(Environment.getExternalStorageDirectory()
+                + "/Android/data/"
+                + getApplicationContext().getPackageName()
+                + "/Files");*/
+
+// This location works best if you want the created images to be shared
+// between applications and persist after your app has been uninstalled.
+
+// Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                return null;
+            }
+        }
+// Create a media file name
+        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
+        File mediaFile;
+        String mImageName = "JALDEE_" + timeStamp + ".jpg";
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
+        return mediaFile;
+    }
+
 }
