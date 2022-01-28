@@ -1510,10 +1510,10 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            /*if (bookingModel.getFrom().equalsIgnoreCase(Constants.APPOINTMENT) || bookingModel.getFrom().equalsIgnoreCase(Constants.CHECKIN)) {
+                            if (bookingModel.getFrom().equalsIgnoreCase(Constants.APPOINTMENT) || bookingModel.getFrom().equalsIgnoreCase(Constants.CHECKIN) ||  bookingModel.getFrom().equalsIgnoreCase(Constants.TOKEN)) {
                                 Intent homeIntent = new Intent(ReconfirmationActivity.this, Home.class);
                                 startActivity(homeIntent);
-                            }*/
+                            }
                             finish();
 
                         }

@@ -91,7 +91,6 @@ import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.StoreDetails;
 import com.jaldeeinc.jaldee.response.WalletCheckSumModel;
 import com.jaldeeinc.jaldee.response.WalletEligibleJCash;
-import com.jaldeeinc.jaldee.utils.DialogUtilities;
 import com.jaldeeinc.jaldee.utils.DialogUtilsKt;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
@@ -2061,9 +2060,9 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
 
-                            Intent homeIntent = new Intent(CheckoutListActivity.this, Home.class);
+                            /*Intent homeIntent = new Intent(CheckoutListActivity.this, Home.class);
                             startActivity(homeIntent);
-                            finish();
+                            finish();*/
                         }
                     });
             alertDialog.show();
