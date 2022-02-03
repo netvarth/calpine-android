@@ -40,6 +40,12 @@ public class SearchDonation implements Serializable {
     String postInfoText;
     String consumerNoteTitle;
     boolean consumerNoteMandatory;
+    String maxBookingsAllowed;
+    String resoucesRequired;
+    boolean internationalCard;
+    String bankId;
+    boolean priceDynamic;
+    boolean serviceDurationEnabled;
 
     public ArrayList<SearchDonation> getServicegallery() {
         return servicegallery;
@@ -310,8 +316,33 @@ public class SearchDonation implements Serializable {
     public String getConsumerNoteTitle() {
         return consumerNoteTitle;
     }
+
     public boolean isConsumerNoteMandatory() {
         return consumerNoteMandatory;
+    }
+
+    public String getMaxBookingsAllowed() {
+        return maxBookingsAllowed;
+    }
+
+    public String getResoucesRequired() {
+        return resoucesRequired;
+    }
+
+    public boolean isInternationalCard() {
+        return internationalCard;
+    }
+
+    public String getBankId() {
+        return bankId;
+    }
+
+    public boolean isPriceDynamic() {
+        return priceDynamic;
+    }
+
+    public boolean isServiceDurationEnabled() {
+        return serviceDurationEnabled;
     }
 }
 

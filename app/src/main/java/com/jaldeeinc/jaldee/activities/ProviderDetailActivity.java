@@ -1524,8 +1524,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                             // to parse donation services
 
                             if (providerResponse.getDonationServices() != null) {
-                                donationServices = new Gson().fromJson(providerResponse.getDonationServices(), new TypeToken<ArrayList<SearchDonation>>() {
-                                }.getType());
+                                //donationServices = new Gson().fromJson(providerResponse.getDonationServices(), new TypeToken<ArrayList<SearchDonation>>() {
+                                //}.getType());
+                                donationServices = providerResponse.getDonationServices();
                             }
                             getOnlyServices(uniqueId, mlocationId, mProviderId);
                         }
@@ -1547,8 +1548,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
                             // to parse donation services
                             if (providerResponse.getDonationServices() != null) {
-                                donationServices = new Gson().fromJson(providerResponse.getDonationServices(), new TypeToken<ArrayList<SearchDonation>>() {
-                                }.getType());
+                                //donationServices = new Gson().fromJson(providerResponse.getDonationServices(), new TypeToken<ArrayList<SearchDonation>>() {
+                                //}.getType());
+                                donationServices = providerResponse.getDonationServices();
                             }
                             getOnlyServices(uniqueId, mlocationId, mProviderId);
                         }
@@ -1584,8 +1586,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             }
 
             if (providerResponse.getDonationServices() != null) {
-                donationServices = new Gson().fromJson(providerResponse.getDonationServices(), new TypeToken<ArrayList<SearchDonation>>() {
-                }.getType());
+                //donationServices = new Gson().fromJson(providerResponse.getDonationServices(), new TypeToken<ArrayList<SearchDonation>>() {
+                //}.getType());
+                donationServices = providerResponse.getDonationServices();
             }
 
             if (departmentProviders != null) {
@@ -1616,8 +1619,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             }
 
             if (providerResponse.getDonationServices() != null) {
-                donationServices = new Gson().fromJson(providerResponse.getDonationServices(), new TypeToken<ArrayList<SearchDonation>>() {
-                }.getType());
+                //donationServices = new Gson().fromJson(providerResponse.getDonationServices(), new TypeToken<ArrayList<SearchDonation>>() {
+                //}.getType());
+                donationServices = providerResponse.getDonationServices();
             }
 
             if (providersList != null) {
@@ -2965,6 +2969,11 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         intent.putExtra("providerId", providerId);
         intent.putExtra("donationInfo", donationServiceInfo);
         intent.putExtra("locationName", tvLocationName.getText().toString());
+        String pCountryCode = providerResponse.getBusinessProfile().getCountryCode();
+        String pPhNo = providerResponse.getBusinessProfile().getAccountLinkedPhNo();
+        if ((pCountryCode != null) && (!pCountryCode.isEmpty()) && (pPhNo != null) && (!pPhNo.isEmpty())) {
+            intent.putExtra("providerPhNumber", pCountryCode + " " + pPhNo);
+        }
         startActivity(intent);
     }
 

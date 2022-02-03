@@ -1125,6 +1125,37 @@
 
                     </LinearLayout>
 
+                    <RelativeLayout
+                        android:id="@+id/rv_totalBill"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_8dp"
+                        android:layout_marginEnd="@dimen/dimen_15dp"
+                        android:layout_marginBottom="@dimen/dimen_5dp">
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="To Pay"
+                            android:textColor="@color/dark_black"
+                            android:textSize="13dp">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                            android:id="@+id/tv_bill"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text=""
+                            android:textColor="@color/dark_black"
+                            android:textSize="14dp">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                    </RelativeLayout>
+
                     <LinearLayout
                         android:id="@+id/ll_advanceAmount"
                         android:layout_width="match_parent"
@@ -1159,7 +1190,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimen_5dp"
-                        android:layout_marginBottom="@dimen/dimen_5dp"
+                        android:layout_marginBottom="@dimen/dimen_20dp"
                         android:orientation="vertical"
                         android:visibility="visible">
 
@@ -1184,36 +1215,6 @@
                             android:textSize="@dimen/txtsize_12" />
                     </LinearLayout>
 
-                    <RelativeLayout
-                        android:id="@+id/rv_totalBill"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_8dp"
-                        android:layout_marginEnd="@dimen/dimen_15dp"
-                        android:layout_marginBottom="@dimen/dimen_15dp">
-
-                        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="To Pay"
-                            android:textColor="@color/dark_black"
-                            android:textSize="13dp">
-
-                        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
-
-
-                        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                            android:id="@+id/tv_bill"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:text=""
-                            android:textColor="@color/dark_black"
-                            android:textSize="14dp">
-
-                        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
-
-                    </RelativeLayout>
 
                     <RelativeLayout
                         android:id="@+id/rl_prepayment"

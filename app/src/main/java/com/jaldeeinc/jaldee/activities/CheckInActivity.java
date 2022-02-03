@@ -1542,6 +1542,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         model.setTotalServicePay(totalServicePay);
                         model.setWhtsappCountryCode(mWhtsappCountryCode);
                         model.setWhtsappPhoneNumber(mWhatsappNumber);
+                        String pCountryCode = providerResponse.getBusinessProfile().getCountryCode();
+                        String pPhNo = providerResponse.getBusinessProfile().getAccountLinkedPhNo();
+                        if ((pCountryCode != null) && (!pCountryCode.isEmpty()) && (pPhNo != null) && (!pPhNo.isEmpty())) {
+                            model.setProviderPhoneNumber(pCountryCode + " " + pPhNo);
+                        }
                         // model.setJacshSelected(cbJCash.isChecked());
                         if (advancePaymentDetails != null) {
                             model.setAmountRequiredNow(advancePaymentDetails.getAmountRequiredNow());

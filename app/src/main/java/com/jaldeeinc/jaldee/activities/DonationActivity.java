@@ -169,6 +169,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
     String mFirstName;
     String mLastName;
     private String locationName;
+    String providerPhNumber = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,7 +199,10 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         locationId = intent.getIntExtra("locationId", 0);
         locationName = intent.getStringExtra("locationName");
         serviceInfo = (SearchDonation) intent.getSerializableExtra("donationInfo");
+        providerPhNumber = intent.getStringExtra("providerPhNumber");
+
         cvSubmit.setCardBackgroundColor(Color.parseColor("#fae8ba"));
+
         Spanned s1 = null;
         Spanned s2 = null;
         Spanned s3 = null;
@@ -221,7 +225,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 llAmountHint.setVisibility(View.VISIBLE);
                 tvErrorAmount.setVisibility(View.GONE);
                 et_note.setHint(serviceInfo.getConsumerNoteTitle());
-                if(Double.parseDouble(serviceInfo.getMinDonationAmount()) == Double.parseDouble(serviceInfo.getMaxDonationAmount())) {
+                if (Double.parseDouble(serviceInfo.getMinDonationAmount()) == Double.parseDouble(serviceInfo.getMaxDonationAmount())) {
                     etAmount.setText(Config.getAmountNoOrTwoDecimalPoints(Double.parseDouble(serviceInfo.getMinDonationAmount())));
                     tvSubmit.setText("Donate now");
                     cvSubmit.setCardBackgroundColor(Color.parseColor("#F1B51C"));
@@ -659,6 +663,9 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                         model.setEmailId(tvEmail.getText().toString());
                         model.setCountryCode(countryCode);
                         model.setDonationAmount(etAmount.getText().toString());
+                        if (providerPhNumber != null) {
+                            model.setProviderPhoneNumber(providerPhNumber);
+                        }
                         if (questionnaire != null) {
                             if (questionnaire.getQuestionsList() != null) {
                                 Intent intent = new Intent(DonationActivity.this, CustomQuestionnaire.class);
@@ -877,6 +884,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
         this.mLastName = lastName;
         tvConsumerName.setText(mFirstName + " " + mLastName);
     }
+
     private void addReadMore(final String text, final TextView textView) {
         SpannableString ss = new SpannableString(text.substring(0, 260) + "... read more");
         ClickableSpan clickableSpan = new ClickableSpan() {
@@ -884,6 +892,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
             public void onClick(View view) {
                 addReadLess(text, textView);
             }
+
             @Override
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
@@ -895,7 +904,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 }
             }
         };
-        ss.setSpan(clickableSpan, ss.length() - 10, ss.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(clickableSpan, ss.length() - 10, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textView.setText(ss);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
@@ -907,6 +916,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
             public void onClick(View view) {
                 addReadMore(text, textView);
             }
+
             @Override
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
@@ -918,7 +928,7 @@ public class DonationActivity extends AppCompatActivity implements IPaymentRespo
                 }
             }
         };
-        ss.setSpan(clickableSpan, ss.length() - 10, ss.length() , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(clickableSpan, ss.length() - 10, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textView.setText(ss);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }

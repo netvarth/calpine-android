@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Provider {
 
@@ -41,7 +42,7 @@ public class Provider {
 
     @SerializedName("donationServices")
     @Expose
-    private String donationServices;
+    private ArrayList<SearchDonation> donationServices;
 
     @SerializedName("gallery")
     @Expose
@@ -108,11 +109,11 @@ public class Provider {
         this.location = location;
     }
 
-    public String getDonationServices() {
+    public ArrayList<SearchDonation> getDonationServices() {
         return donationServices;
     }
 
-    public void setDonationServices(String donationServices) {
+    public void setDonationServices(ArrayList<SearchDonation> donationServices) {
         this.donationServices = donationServices;
     }
 
