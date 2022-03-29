@@ -10,7 +10,6 @@ import android.widget.SpinnerAdapter;
 import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.jaldeeinc.jaldee.Interface.IDocumentType;
-import com.jaldeeinc.jaldee.activities.QuestionareActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;

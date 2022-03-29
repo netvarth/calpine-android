@@ -27,11 +27,6 @@ import com.jaldeeinc.jaldee.activities.CheckInDetails;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.OrderDetailActivity;
-import com.jaldeeinc.jaldee.activities.PaymentDetail;
-import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.connection.ApiClient;
-import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.response.ActiveAppointment;
 
 import java.util.Random;
 

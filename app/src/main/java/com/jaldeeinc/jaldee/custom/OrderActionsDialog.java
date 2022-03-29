@@ -25,18 +25,30 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.jaldeeinc.jaldee.Interface.IActions;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
 import com.jaldeeinc.jaldee.activities.ChatActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.OrderDetailActivity;
+import com.jaldeeinc.jaldee.activities.ReleasedQNRActivity;
+import com.jaldeeinc.jaldee.activities.UpdateQuestionnaire;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.Bookings;
+import com.jaldeeinc.jaldee.model.LabelPath;
+import com.jaldeeinc.jaldee.model.QuestionnaireResponseInput;
+import com.jaldeeinc.jaldee.model.RlsdQnr;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
+import com.jaldeeinc.jaldee.response.AnswerLineResponse;
+import com.jaldeeinc.jaldee.response.GetQuestion;
+import com.jaldeeinc.jaldee.response.QuestionAnswers;
+import com.jaldeeinc.jaldee.response.QuestionnaireResponse;
 import com.jaldeeinc.jaldee.response.RatingResponse;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import org.json.JSONException;
@@ -46,8 +58,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -85,6 +99,8 @@ public class OrderActionsDialog extends Dialog {
     @BindView(R.id.tv_bill)
     CustomTextViewMedium tvBill;
 
+    @BindView(R.id.ll_questionnaire)
+    LinearLayout llQuestionnaire;
 
     public OrderActionsDialog(@NonNull Context context, boolean isActive, ActiveOrders activeOrder, IActions iActions) {
         super(context);
@@ -122,7 +138,22 @@ public class OrderActionsDialog extends Dialog {
             hideView(llCancel);
             llRating.setVisibility(View.VISIBLE);
         }
-
+        // to show questionnaire option
+        if (orderInfo != null) {
+            if (orderInfo.getReleasedQnr() != null) {
+                List<RlsdQnr> fReleasedQNR = orderInfo.getReleasedQnr().stream()
+                        .filter(p -> !p.getStatus().equalsIgnoreCase("unReleased")).collect(Collectors.toList());
+                orderInfo.getReleasedQnr().clear();
+                orderInfo.setReleasedQnr((ArrayList<RlsdQnr>) fReleasedQNR); // remove releasedqnr response and add rlsdqnr with remove "unReleased" status
+            }
+        }
+        if (orderInfo.getReleasedQnr() != null && orderInfo.getQuestionnaire() != null && orderInfo.getQuestionnaire().getQuestionAnswers() != null && orderInfo.getQuestionnaire().getQuestionAnswers().size() > 0) {
+            llQuestionnaire.setVisibility(View.VISIBLE);
+        } else if (orderInfo.getReleasedQnr() != null && orderInfo.getReleasedQnr().size() > 0) {
+            llQuestionnaire.setVisibility(View.VISIBLE);
+        } else {
+            hideView(llQuestionnaire);
+        }
 
         // To show Bill details
         if (orderInfo.getBill() != null) {
@@ -147,7 +178,7 @@ public class OrderActionsDialog extends Dialog {
                 }
             }
             /**26-3-21*/
-            if(orderInfo.getBill().getBillViewStatus() == null || orderInfo.getBill().getBillViewStatus().equalsIgnoreCase("NotShow")  || orderInfo.getBill().getBillStatus().equals("Settled") || orderInfo.getOrderStatus().equals("Rejected") || orderInfo.getOrderStatus().equals("Cancelled")){
+            if (orderInfo.getBill().getBillViewStatus() == null || orderInfo.getBill().getBillViewStatus().equalsIgnoreCase("NotShow") || orderInfo.getBill().getBillStatus().equals("Settled") || orderInfo.getOrderStatus().equals("Rejected") || orderInfo.getOrderStatus().equals("Cancelled")) {
                 hideView(llBill);
             }
             /***/
@@ -188,7 +219,9 @@ public class OrderActionsDialog extends Dialog {
             public void onClick(View v) {
 
                 Intent intent = new Intent(mContext, OrderDetailActivity.class);
-                intent.putExtra("orderInfo", orderInfo);
+                //intent.putExtra("orderInfo", orderInfo);
+                intent.putExtra("uuid", orderInfo.getUid());
+                intent.putExtra("account", String.valueOf(orderInfo.getProviderAccount().getId()));
                 mContext.startActivity(intent);
                 dismiss();
             }
@@ -222,6 +255,94 @@ public class OrderActionsDialog extends Dialog {
 
             }
         });
+        llQuestionnaire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (orderInfo != null) {
+                    if (orderInfo.getReleasedQnr() != null) {
+                        if (orderInfo.getReleasedQnr().size() == 1 && orderInfo.getReleasedQnr().get(0).getStatus().equalsIgnoreCase("submitted")) {
+
+                            QuestionnaireResponseInput input = buildQuestionnaireInput(orderInfo.getQuestionnaire());
+                            ArrayList<LabelPath> labelPaths = buildQuestionnaireLabelPaths(orderInfo.getQuestionnaire());
+
+                            SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
+                            SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
+
+                            Intent intent = new Intent(mContext, UpdateQuestionnaire.class);
+                            intent.putExtra("serviceId", orderInfo.getCatalog().getCatLogId());
+                            intent.putExtra("accountId", orderInfo.getProviderAccount().getId());
+                            intent.putExtra("uid", orderInfo.getUid());
+                            intent.putExtra("isEdit", true);
+                            intent.putExtra("from", Constants.ORDERS);
+                            if (orderInfo != null && orderInfo.getOrderStatus() != null) {
+                                intent.putExtra("status", orderInfo.getOrderStatus());
+                            }
+                            mContext.startActivity(intent);
+                        } else {
+                            Gson gson = new Gson();
+                            String myJson = gson.toJson(orderInfo);
+
+                            Intent intent = new Intent(mContext, ReleasedQNRActivity.class);
+                            intent.putExtra("bookingInfo", myJson);
+                            intent.putExtra("from", Constants.ORDERS);
+                            mContext.startActivity(intent);
+                        }
+                    }
+                }
+                dismiss();
+            }
+        });
+    }
+
+    private QuestionnaireResponseInput buildQuestionnaireInput(QuestionnaireResponse questionnaire) {
+
+        QuestionnaireResponseInput responseInput = new QuestionnaireResponseInput();
+        responseInput.setQuestionnaireId(questionnaire.getQuestionnaireId());
+        ArrayList<AnswerLineResponse> answerLineResponse = new ArrayList<>();
+        ArrayList<GetQuestion> questions = new ArrayList<>();
+
+        for (QuestionAnswers qAnswers : questionnaire.getQuestionAnswers()) {
+
+            answerLineResponse.add(qAnswers.getAnswerLine());
+            questions.add(qAnswers.getGetQuestion());
+
+        }
+
+        responseInput.setAnswerLines(answerLineResponse);
+        responseInput.setQuestions(questions);
+
+        return responseInput;
+
+    }
+
+    private ArrayList<LabelPath> buildQuestionnaireLabelPaths(QuestionnaireResponse questionnaire) {
+
+        ArrayList<LabelPath> labelPaths = new ArrayList<>();
+
+        for (QuestionAnswers qAnswers : questionnaire.getQuestionAnswers()) {
+
+            if (qAnswers.getGetQuestion().getFieldDataType().equalsIgnoreCase("fileUpload")) {
+
+                JsonArray jsonArray = new JsonArray();
+                jsonArray = qAnswers.getAnswerLine().getAnswer().get("fileUpload").getAsJsonArray();
+                for (int i = 0; i < jsonArray.size(); i++) {
+
+                    LabelPath path = new LabelPath();
+                    path.setId(labelPaths.size());
+                    path.setFileName(jsonArray.get(i).getAsJsonObject().get("caption").getAsString());
+                    path.setLabelName(qAnswers.getAnswerLine().getLabelName());
+                    path.setPath(jsonArray.get(i).getAsJsonObject().get("s3path").getAsString());
+                    path.setType(jsonArray.get(i).getAsJsonObject().get("type").getAsString());
+
+                    labelPaths.add(path);
+                }
+
+            }
+
+        }
+
+        return labelPaths;
 
     }
 

@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.response;
 
 import com.google.gson.annotations.SerializedName;
 import com.jaldeeinc.jaldee.model.FileAttachment;
+import com.jaldeeinc.jaldee.model.RlsdQnr;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class ActiveAppointment implements Serializable {
 
     String appointmentEncId;
     String uid;
+
     @SerializedName("consumer")
     private ActiveAppointment consumer;
     int id;
@@ -150,6 +152,15 @@ public class ActiveAppointment implements Serializable {
     boolean isRescheduled;
     private QuestionnaireResponse questionnaire;
     ArrayList<FileAttachment> attchment;
+    ArrayList<RlsdQnr> releasedQnr;
+
+    public ArrayList<RlsdQnr> getReleasedQnr() {
+        return releasedQnr;
+    }
+
+    public void setReleasedQnr(ArrayList<RlsdQnr> releasedQnr) {
+        this.releasedQnr = releasedQnr;
+    }
 
     public ArrayList<FileAttachment> getAttchment() {
         return attchment;
@@ -1103,7 +1114,6 @@ public class ActiveAppointment implements Serializable {
     }
 
 
-
     public String getStatusUpdatedTime() {
         return statusUpdatedTime;
     }
@@ -1174,5 +1184,16 @@ public class ActiveAppointment implements Serializable {
 
     public void setQuestionnaire(QuestionnaireResponse questionnaire) {
         this.questionnaire = questionnaire;
+    }
+
+    @SerializedName("questionnaires")
+    ArrayList<QuestionnaireResponse> questionnaires;
+
+    public ArrayList<QuestionnaireResponse> getQuestionnaires() {
+        return questionnaires;
+    }
+
+    public void setQuestionnaires(ArrayList<QuestionnaireResponse> questionnaires) {
+        this.questionnaires = questionnaires;
     }
 }

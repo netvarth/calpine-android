@@ -249,20 +249,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             fromPushNotification = extras.getBoolean(Constants.PUSH_NOTIFICATION, false);
         }
 
-        if (encId == null && ynwUUID != null) {   // if encId is null then  the activity is launched from notification, so checking for required values and getting them via API calls
-
-            if (ynwUUID.contains("_appt")) {
-                getAppointmentDetails(ynwUUID, accountID);
-            } else if (ynwUUID.contains("_wl")) {
-                getCheckInDetails(ynwUUID, accountID);
-            } else if (ynwUUID.contains("_odr")) {
-                getOrderDetails(ynwUUID, Integer.parseInt(accountID));
-            }
-        } else {
-
-            // if launched directly from APP
-            UpdateUI();
-        }
+        update();
         cbJCash.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -270,7 +257,10 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                 if (cbJCash.isChecked()) {
                     if (walletEligibleJCash.getjCashAmt() < Double.parseDouble(sAmountPay)) {
                         tvJCashHint.setVisibility(View.VISIBLE);
-                    }
+                        //  tv_totalamt.setText("₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(Math.abs(mBillData.getAmountDue() - walletEligibleJCash.getjCashAmt())));  ////negative amountDue is the refundamound ,there for use getAmountDue() as the refund amount
+                    } /*else {
+                        tv_totalamt.setText("₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(Math.abs(0)));
+                    }*/
                 } else {
                     tvJCashHint.setVisibility(View.GONE);
                 }
@@ -315,6 +305,23 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         });
 
 
+    }
+    @Override
+    public void update() {
+        if (encId == null && ynwUUID != null) {   // if encId is null then  the activity is launched from notification, so checking for required values and getting them via API calls
+
+            if (ynwUUID.contains("_appt")) {
+                getAppointmentDetails(ynwUUID, accountID);
+            } else if (ynwUUID.contains("_wl")) {
+                getCheckInDetails(ynwUUID, accountID);
+            } else if (ynwUUID.contains("_odr")) {
+                getOrderDetails(ynwUUID, Integer.parseInt(accountID));
+            }
+        } else {
+
+            // if launched directly from APP
+            UpdateUI();
+        }
     }
 
     private void getPrePayRemainingAmntNeeded(String amount) {
@@ -518,6 +525,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             }
         });
     }
+
     public void isGateWayPaymentNeeded(String ynwUUID, final String amount, String accountID, String purpose, boolean isJcashUsed, boolean isreditUsed, boolean isRazorPayPayment, boolean isPayTmPayment, String paymentMode) {
 
         ApiInterface apiService =
@@ -771,8 +779,6 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             }
         });
     }
-
-
 
 
     private void APIRefundInfo(String ynwUUID) {
@@ -1641,7 +1647,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         JSONObject jsonObj = new JSONObject();
         try {
 
-            jsonObj.put("paymentId", orderId );
+            jsonObj.put("paymentId", orderId);
             jsonObj.put("orderId", orderId);
 
         } catch (JSONException e) {

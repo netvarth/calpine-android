@@ -10,11 +10,11 @@
         android:id="@+id/fl_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_10dp"
         android:focusable="true"
         android:visibility="visible"
-        android:layout_margin="@dimen/dimen_10dp"
-        app:cardCornerRadius="@dimen/dimen_10dp"
-        app:cardBackgroundColor="#f8f8f8">
+        app:cardBackgroundColor="#f8f8f8"
+        app:cardCornerRadius="@dimen/dimen_10dp">
 
 
         <GridLayout
@@ -26,9 +26,9 @@
             android:layout_marginEnd="@dimen/dimen_20dp"
             android:layout_marginBottom="@dimen/dimen_20dp"
             android:columnCount="3"
-            android:useDefaultMargins="true"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp">
+            android:padding="@dimen/dimen_10dp"
+            android:useDefaultMargins="true">
 
             <LinearLayout
                 android:id="@+id/ll_cancel"
@@ -55,8 +55,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text="Cancel Order"
                         android:gravity="center"
+                        android:text="Cancel Order"
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -95,8 +95,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text="  Bill  "
                         android:gravity="center"
+                        android:text="  Bill  "
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -132,8 +132,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text="Order Details"
                         android:gravity="center"
+                        android:text="Order Details"
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -169,8 +169,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text="Messages"
                         android:gravity="center"
+                        android:text="Messages"
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -206,8 +206,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding5"
-                        android:text="     Rate    "
                         android:gravity="center"
+                        android:text="     Rate    "
                         android:textColor="@color/title_color"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="visible">
@@ -215,6 +215,44 @@
                     </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
                 </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_questionnaire"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/dimen_30dp"
+                        android:layout_height="@dimen/dimen_30dp"
+                        android:src="@drawable/questionnaire_icon">
+
+                    </ImageView>
+
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding5"
+                        android:gravity="center"
+                        android:text="More Info"
+                        android:textColor="@color/title_color"
+                        android:textSize="@dimen/txtsize_12"
+                        android:visibility="visible">
+
+                    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                </LinearLayout>
+
+
             </LinearLayout>
 
 

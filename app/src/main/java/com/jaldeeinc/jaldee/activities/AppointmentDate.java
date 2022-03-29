@@ -1,11 +1,10 @@
 package com.jaldeeinc.jaldee.activities;
 
+import static com.jaldeeinc.jaldee.activities.Appointment.dateTime;
+import static com.jaldeeinc.jaldee.activities.Appointment.earliestAvailable;
+import static com.jaldeeinc.jaldee.common.MyApplication.getContext;
+
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -13,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.TimeSlotsAdapter;
@@ -32,14 +34,6 @@ import java.util.Date;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.jaldeeinc.jaldee.activities.Appointment.btn_checkin;
-import static com.jaldeeinc.jaldee.activities.Appointment.coupon_link;
-import static com.jaldeeinc.jaldee.activities.Appointment.dateTime;
-import static com.jaldeeinc.jaldee.activities.Appointment.earliestAvailable;
-import static com.jaldeeinc.jaldee.activities.Appointment.llCoupons;
-import static com.jaldeeinc.jaldee.activities.Appointment.tvNoServiceMessage;
-import static com.jaldeeinc.jaldee.common.MyApplication.getContext;
 
 /**
  * Created by sharmila on 8/8/18.

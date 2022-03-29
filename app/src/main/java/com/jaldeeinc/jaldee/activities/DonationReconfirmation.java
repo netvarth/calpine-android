@@ -672,6 +672,11 @@ public class DonationReconfirmation extends AppCompatActivity implements Payment
     }
 
     @Override
+    public void update() {
+
+    }
+
+    @Override
     public void onPaymentSuccess(String s, PaymentData paymentData) {
         try {
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);

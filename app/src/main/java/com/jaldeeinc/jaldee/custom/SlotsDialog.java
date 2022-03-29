@@ -25,16 +25,20 @@ import com.jaldeeinc.jaldee.adapter.TimeSlotsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.model.SelectedSlotDetail;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.SlotsData;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,6 +59,7 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface, OnBotto
     private int activeScheduleId, serviceId, locationId, providerId;
     private ISlotInfo iSlotInfo;
     ArrayList<AvailableSlotsData> activeSlotsList = new ArrayList<>();
+    ArrayList<AvailableSlotsData> availableSlots = new ArrayList<>();
     ArrayList<SlotsData> slotsData = new ArrayList<SlotsData>();
     TimeSlotsAdapter sAdapter;
     private LinearLayout llSeeMoreHint;
@@ -63,8 +68,11 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface, OnBotto
     private String displayTime = "", slotTime = "";
     private int scheduleId;
     private OnBottomReachedListener onBottomReachedListener;
+    int maxBookingsAllowed;
+    List<SelectedSlotDetail> selectedSlotDetails = new ArrayList<>();
+    boolean showOnlyAvailableSlots;
 
-    public SlotsDialog(Context context, int serviceId, int locationId, ISlotInfo iSlotInfo, int providerId, String availableDate) {
+    public SlotsDialog(Context context, int serviceId, int locationId, ISlotInfo iSlotInfo, int providerId, String availableDate, int maxBookingsAllowed, boolean showOnlyAvailableSlots) {
         super(context);
         this.context = context;
         this.serviceId = serviceId;
@@ -72,7 +80,19 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface, OnBotto
         this.iSlotInfo = iSlotInfo;
         this.providerId = providerId;
         this.defaultDate = availableDate;
+        this.maxBookingsAllowed = maxBookingsAllowed;
+        this.showOnlyAvailableSlots = showOnlyAvailableSlots;
+    }
 
+    public SlotsDialog(Context context, int serviceId, int locationId, ISlotInfo iSlotInfo, int providerId, String availableDate, boolean showOnlyAvailableSlots) {
+        super(context);
+        this.context = context;
+        this.serviceId = serviceId;
+        this.locationId = locationId;
+        this.iSlotInfo = iSlotInfo;
+        this.providerId = providerId;
+        this.defaultDate = availableDate;
+        this.showOnlyAvailableSlots = showOnlyAvailableSlots;
     }
 
     @Override
@@ -150,17 +170,31 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface, OnBotto
         cvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (displayTime != null && !displayTime.trim().equalsIgnoreCase("")) {
-                    iSlotInfo.sendSlotInfo(displayTime, slotTime, scheduleId, tvDate.getText().toString(), tvCalenderDate.getText().toString());
+/*
+                if (maxBookingsAllowed > 1) {
+*/
+                if (selectedSlotDetails != null & selectedSlotDetails.size() > 0) {
+                    for (SelectedSlotDetail s : selectedSlotDetails) {
+                        s.setDate(tvDate.getText().toString());
+                        s.setCalendarDate(tvCalenderDate.getText().toString());
+                    }
+                    iSlotInfo.sendSlotInfo(selectedSlotDetails);
                     dismiss();
                 } else {
-
                     DynamicToast.make(context, "Please select a time slot", AppCompatResources.getDrawable(
                             context, R.drawable.ic_info_black),
                             ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
-
                 }
+               /* } else {
+                    if (displayTime != null && !displayTime.trim().equalsIgnoreCase("")) {
+                        iSlotInfo.sendSlotInfo(displayTime, slotTime, scheduleId, tvDate.getText().toString(), tvCalenderDate.getText().toString());
+                        dismiss();
+                    } else {
+                        DynamicToast.make(context, "Please select a time slot", AppCompatResources.getDrawable(
+                                context, R.drawable.ic_info_black),
+                                ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
+                    }
+                }*/
             }
         });
 
@@ -313,23 +347,35 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface, OnBotto
 
                         if (response.body() != null) {
                             slotsData = response.body();
-
                             activeSlotsList.clear();
+                            availableSlots.clear();
                             for (int i = 0; i < slotsData.size(); i++) {
                                 ArrayList<AvailableSlotsData> availableSlotsList = new ArrayList<>();
                                 availableSlotsList = slotsData.get(i).getAvailableSlots();
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                                Timestamp timenow = new Timestamp(new Date().getTime());
 
                                 for (int j = 0; j < availableSlotsList.size(); j++) {
-                                    if (availableSlotsList.get(j).getNoOfAvailableSlots() != 0 && availableSlotsList.get(j).isActive()) {
 
+                                    if (availableSlotsList.get(j).getNoOfAvailableSlots() != 0 && availableSlotsList.get(j).isActive()) {
                                         availableSlotsList.get(j).setScheduleId(slotsData.get(i).getScheduleId());
                                         String displayTime = getDisplayTime(availableSlotsList.get(j).getSlotTime());
                                         availableSlotsList.get(j).setDisplayTime(displayTime);
                                         activeSlotsList.add(availableSlotsList.get(j));
                                     }
+                                    if (!showOnlyAvailableSlots) {
+                                        Date date1 = sdf.parse(slotsData.get(i).getDate() + " " + availableSlotsList.get(j).getSlotTime().split("-")[0]);
+                                        Timestamp slottime = new Timestamp(date1.getTime());
+                                        int c1 = slottime.compareTo(timenow);
+                                        if (c1 >= 0) {
+                                            availableSlotsList.get(j).setScheduleId(slotsData.get(i).getScheduleId());
+                                            String displayTime = getDisplayTime(availableSlotsList.get(j).getSlotTime());
+                                            availableSlotsList.get(j).setDisplayTime(displayTime);
+                                            availableSlots.add(availableSlotsList.get(j));
+                                        }
+                                    }
                                 }
                             }
-
                             if (activeSlotsList != null) {
                                 if (activeSlotsList.size() > 0) {
 
@@ -351,7 +397,19 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface, OnBotto
                                     tvCalenderDate.setText(getCalenderDateFormat(slotsData.get(0).getDate()));
                                     RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 3);
                                     rvSlots.setLayoutManager(mLayoutManager);
-                                    sAdapter = new TimeSlotsAdapter(context, activeSlotsList, iSelectSlotInterface, onBottomReachedListener);
+                                    if (showOnlyAvailableSlots) {
+                                        AtomicInteger x = new AtomicInteger();
+                                        activeSlotsList.stream()
+                                                .filter(n -> n != null)
+                                                .forEach(slot -> slot.setPosition(x.getAndIncrement()));  //imp-- set position to all slots
+                                        sAdapter = new TimeSlotsAdapter(context, activeSlotsList, iSelectSlotInterface, onBottomReachedListener, maxBookingsAllowed);
+                                    } else {
+                                        AtomicInteger x = new AtomicInteger();
+                                        availableSlots.stream()
+                                                .filter(n -> n != null)
+                                                .forEach(slot -> slot.setPosition(x.getAndIncrement()));   //imp-- set position to all slots
+                                        sAdapter = new TimeSlotsAdapter(context, availableSlots, iSelectSlotInterface, onBottomReachedListener, maxBookingsAllowed);
+                                    }
                                     rvSlots.setAdapter(sAdapter);
                                 } else {
 
@@ -454,6 +512,21 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface, OnBotto
         displayTime = dspTime;
         slotTime = sTime;
         scheduleId = schdId;
+    }
+
+    @Override
+    public void sendSelectedTime(List<SelectedSlotDetail> selectedSlotDetails) {
+        this.selectedSlotDetails = selectedSlotDetails;
+
+        if (selectedSlotDetails.size() == 1) {
+            // assigning
+            tvTime.setText(selectedSlotDetails.get(0).getDisplayTime());
+            displayTime = selectedSlotDetails.get(0).getDisplayTime();
+            slotTime = selectedSlotDetails.get(0).getSlotTime();
+            scheduleId = selectedSlotDetails.get(0).getScheduleId();
+        } else {
+            this.selectedSlotDetails = selectedSlotDetails;
+        }
     }
 
     public Date addDays(Date date, int days) {

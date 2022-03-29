@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.CalendarContract;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -51,9 +52,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
 
 import retrofit2.Call;
@@ -71,15 +74,14 @@ public class CheckInConfirmation extends AppCompatActivity {
     String terminology;
     ImageView icon_service, ivQR;
     private String from;
-    Button btnOk, btnOk1;
-    CustomTextViewSemiBold tvViewMore, tvViewLess;
+    Button btnOk;
     CustomTextViewMedium tvProviderName, tvServiceName, tvLocation;
     CustomTextViewBold tvProvider, tvConfirmationNumber, tvConsumerName, tvStatus, tvDate, tvTime, tvBatchNo, tvAmount, tv_heading;
     Context mContext;
     LinearLayout llPayment, llBatchNo;
     CardView cvBack, cvShare;
     NeomorphFrameLayout llMoreDetails;
-    LinearLayout llMessage, llInstructions, llViewMore, llViewLess;
+    LinearLayout llMessage, llInstructions, ll_add_to_calendar;
     private String uuid;
     private InstructionsDialog instructionsDialog;
     CustomTextViewLight tvHint;
@@ -130,7 +132,6 @@ public class CheckInConfirmation extends AppCompatActivity {
         tvProvider = findViewById(R.id.tv_doctorName);
         tvConfirmationNumber = findViewById(R.id.tv_confirmationNumber);
         btnOk = findViewById(R.id.cv_ok);
-        btnOk1 = findViewById(R.id.cv_ok1);
         icon_service = findViewById(R.id.iv_teleService);
         tvConsumerName = findViewById(R.id.tv_consumerName);
         tvLocation = findViewById(R.id.tv_locationName);
@@ -148,12 +149,9 @@ public class CheckInConfirmation extends AppCompatActivity {
         llMoreDetails = findViewById(R.id.ll_moreDetails);
         llMessage = findViewById(R.id.ll_message);
         llInstructions = findViewById(R.id.ll_instructions);
-        tvViewMore = findViewById(R.id.tv_viewMore);
-        tvViewLess = findViewById(R.id.tv_viewLess);
-        llViewMore = findViewById(R.id.ll_viewMore);
-        llViewLess = findViewById(R.id.ll_viewLess);
         tvHint = findViewById(R.id.tv_hint);
         tvTokenWaitTime = findViewById(R.id.tv_tokenWaitTime);
+        ll_add_to_calendar = findViewById(R.id.ll_add_to_calendar);
     }
 
 
@@ -491,26 +489,64 @@ public class CheckInConfirmation extends AppCompatActivity {
                 }
             });
 
-
-            btnOk1.setOnClickListener(new View.OnClickListener() {
+            ll_add_to_calendar.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    if (livetrack) {
-                        Intent checkinShareLocations = new Intent(mContext, CheckinShareLocation.class);
-                        checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
-                        checkinShareLocations.putExtra("uuid", activeCheckInInfo.getYnwUuid());
-                        checkinShareLocations.putExtra("accountID", providerId);
-                        checkinShareLocations.putExtra("title", activeCheckInInfo.getProviderAccount().getBusinessName());
-                        checkinShareLocations.putExtra("terminology", terminology);
-                        checkinShareLocations.putExtra("calcMode", activeCheckInInfo.getCalculationMode());
-                        checkinShareLocations.putExtra("queueStartTime", "");
-                        checkinShareLocations.putExtra("queueEndTime", "");
-                        checkinShareLocations.putExtra("from", "checkin");
-                        startActivity(checkinShareLocations);
+                public void onClick(View view) {
+                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm aa");
+                    DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    Date sTime = null;
+                    Date eTime = null;
+                    Calendar calSTime = Calendar.getInstance();
+                    Calendar calETime = Calendar.getInstance();
+
+                    try {
+                        String d1 = sdf.format(df.parse(activeCheckInInfo.getDate() + " " + activeCheckInInfo.getQueue().getQueueStartTime()));
+                        String d2 = sdf.format(df.parse(activeCheckInInfo.getDate() + " " + activeCheckInInfo.getQueue().getQueueEndTime()));
+                        sTime = sdf.parse(d1);
+                        eTime = sdf.parse(d2);
+                        calSTime.setTime(sTime);
+                        calETime.setTime(eTime);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                           /* ContentResolver cr = mContext.getContentResolver();
+                            ContentValues cv = new ContentValues();
+                            cv.put(CalendarContract.Events.TITLE, "jaldee booking - " + activeCheckInInfo.getAppointmentEncId());
+                            cv.put(CalendarContract.Events.DESCRIPTION, "Service provider : " + activeCheckInInfo.getBusinessName() + "\u2028Location : " + activeCheckInInfo.getLocation().getPlace());
+                            cv.put(CalendarContract.Events.EVENT_LOCATION, activeCheckInInfo.getLocation().getPlace());
+                            cv.put(CalendarContract.Events.DTSTART, calSTime.getTimeInMillis());
+                            cv.put(CalendarContract.Events.DTEND, calETime.getTimeInMillis());
+                            cv.put(CalendarContract.Events.CALENDAR_ID, 3);
+                            cv.put(CalendarContract.Events.EVENT_TIMEZONE, Calendar.getInstance().getTimeZone().getID());
+                            Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, cv);*/
+
+
+                    Intent intent = new Intent(Intent.ACTION_INSERT);
+                    intent.setData(CalendarContract.Events.CONTENT_URI);
+                    if (activeCheckInInfo.getProviderAccount().getBusinessName() != null && !activeCheckInInfo.getProviderAccount().getBusinessName().equalsIgnoreCase("")) {
+                        intent.putExtra(CalendarContract.Events.TITLE, "booking with - " + activeCheckInInfo.getProviderAccount().getBusinessName());//activeCheckInInfo.getCheckinEncId());
+
+                        intent.putExtra(CalendarContract.Events.DESCRIPTION, "Service provider : " + activeCheckInInfo.getProviderAccount().getBusinessName() + "\nLocation : " + activeCheckInInfo.getQueue().getLocation().getPlace());
                     } else {
-                        Intent home = new Intent(CheckInConfirmation.this, Home.class);
-                        startActivity(home);
-                        finish();
+                        String name = activeCheckInInfo.getProvider().getFirstName() + " " + activeCheckInInfo.getProvider().getLastName();
+                        intent.putExtra(CalendarContract.Events.TITLE, "booking with - " + name);// activeCheckInInfo.getCheckinEncId());
+
+                        intent.putExtra(CalendarContract.Events.DESCRIPTION, "Service provider : " + name + "\nLocation : " + activeCheckInInfo.getQueue().getLocation().getPlace());
+                    }
+                    intent.putExtra(CalendarContract.Events.EVENT_LOCATION, activeCheckInInfo.getQueue().getLocation().getPlace());
+                    //intent.putExtra(CalendarContract.Events.DTSTART, calSTime.getTime());
+                    //intent.putExtra(CalendarContract.Events.DTEND, calETime.getTime());
+                    intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calSTime.getTimeInMillis());
+                    intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, calETime.getTimeInMillis());
+                    intent.putExtra(CalendarContract.Events.EVENT_TIMEZONE, Calendar.getInstance().getTimeZone().getID());
+                    //intent.putExtra(CalendarContract.Events.ALL_DAY, false);
+                    //intent.putExtra(Intent.EXTRA_EMAIL, "test@yahoo.com, test2@yahoo.com, test3@yahoo.com");
+
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(CheckInConfirmation.this, "There is no app that support this action", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -535,25 +571,6 @@ public class CheckInConfirmation extends AppCompatActivity {
                         startActivity(home);
                         finish();
                     }
-                }
-            });
-
-
-            tvViewMore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    llViewMore.setVisibility(View.GONE);
-                    llMoreDetails.setVisibility(View.VISIBLE);
-                    llViewLess.setVisibility(View.VISIBLE);
-                }
-            });
-
-            tvViewLess.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    llViewLess.setVisibility(View.GONE);
-                    llMoreDetails.setVisibility(View.GONE);
-                    llViewMore.setVisibility(View.VISIBLE);
                 }
             });
 
@@ -627,8 +644,12 @@ public class CheckInConfirmation extends AppCompatActivity {
     }
 
     private void storeImage(Bitmap image) {
-
-        File pictureFile = getOutputMediaFile();
+        File pictureFile = null;
+        try {
+            pictureFile = Config.createFile(context, "png", false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (pictureFile == null) {
             //"Error creating media file, check storage permissions: "
             return;
@@ -656,35 +677,5 @@ public class CheckInConfirmation extends AppCompatActivity {
             e.printStackTrace();
 
         }
-    }
-
-    /**
-     * Create a File for saving an image or video
-     */
-    private File getOutputMediaFile() {
-// To be safe, you should check that the SDCard is mounted
-// using Environment.getExternalStorageState() before doing this.
-        File mediaStorageDir = new
-                File(Environment.getExternalStorageDirectory() + "/Download");
-                /*File(Environment.getExternalStorageDirectory()
-                + "/Android/data/"
-                + getApplicationContext().getPackageName()
-                + "/Files");*/
-
-// This location works best if you want the created images to be shared
-// between applications and persist after your app has been uninstalled.
-
-// Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                return null;
-            }
-        }
-// Create a media file name
-        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
-        File mediaFile;
-        String mImageName = "JALDEE_" + timeStamp + ".jpg";
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
-        return mediaFile;
     }
 }

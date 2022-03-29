@@ -22,24 +22,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.BuildConfig;
-import com.jaldeeinc.jaldee.Interface.IEditAddress;
 import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.AudioActivity;
-import com.jaldeeinc.jaldee.activities.CustomQuestionnaire;
 import com.jaldeeinc.jaldee.activities.ImageActivity;
-import com.jaldeeinc.jaldee.activities.UpdateQuestionnaire;
 import com.jaldeeinc.jaldee.activities.VideoActivity;
-import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
-import com.jaldeeinc.jaldee.model.Address;
 
 import java.io.File;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> {

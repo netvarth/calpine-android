@@ -55,7 +55,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
     CustomTextViewMedium tvMobileNumber, tvEmailId;
     DatabaseHandler db;
     String countryCode = "";
-
+    String supportMail;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -79,7 +79,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
 
         db = new DatabaseHandler(mContext);
         countryCode = SharedPreference.getInstance(mContext).getStringValue("countryCode", "");
-
+        supportMail = getString(R.string.support_mail);
 
         ivEdit = row.findViewById(R.id.iv_edit);
         tvUserName = row.findViewById(R.id.tv_userName);
@@ -104,7 +104,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
             @Override
             public void onClick(View v) {
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto", "support@jaldee.com", null));
+                        "mailto", supportMail, null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Jaldee Feedback");
                 emailIntent.putExtra(Intent.EXTRA_TEXT, "");
                 try {

@@ -31,6 +31,7 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView;
@@ -46,6 +47,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.custom.StoreDetailsDialog;
+import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.StoreDetails;
 
@@ -139,9 +141,10 @@ public class OrderConfirmation extends AppCompatActivity {
         setContentView(R.layout.activity_order_confirmation);
         ButterKnife.bind(OrderConfirmation.this);
         mContext = OrderConfirmation.this;
+        Gson gson = new Gson();
 
         Intent intent = getIntent();
-        orderInfo = (ActiveOrders) intent.getSerializableExtra("orderInfo");
+        orderInfo = gson.fromJson(intent.getStringExtra("orderInfo"), ActiveOrders.class);
         isVirtualItemsOnly = (boolean) intent.getBooleanExtra("isVirtualItemsOnly", false);
 
 
@@ -444,7 +447,12 @@ public class OrderConfirmation extends AppCompatActivity {
 
     private void storeImage(Bitmap image) {
 
-        File pictureFile = getOutputMediaFile();
+        File pictureFile = null;
+        try {
+            pictureFile = Config.createFile(context, "png", false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (pictureFile == null) {
             //"Error creating media file, check storage permissions: "
             return;
@@ -472,35 +480,5 @@ public class OrderConfirmation extends AppCompatActivity {
             e.printStackTrace();
 
         }
-    }
-
-    /**
-     * Create a File for saving an image or video
-     */
-    private File getOutputMediaFile() {
-// To be safe, you should check that the SDCard is mounted
-// using Environment.getExternalStorageState() before doing this.
-        File mediaStorageDir = new
-                File(Environment.getExternalStorageDirectory() + "/Download");
-                /*File(Environment.getExternalStorageDirectory()
-                + "/Android/data/"
-                + getApplicationContext().getPackageName()
-                + "/Files");*/
-
-// This location works best if you want the created images to be shared
-// between applications and persist after your app has been uninstalled.
-
-// Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                return null;
-            }
-        }
-// Create a media file name
-        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
-        File mediaFile;
-        String mImageName = "JALDEE_" + timeStamp + ".jpg";
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
-        return mediaFile;
     }
 }

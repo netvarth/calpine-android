@@ -242,10 +242,10 @@
                                             android:id="@+id/tv_doctorName"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:paddingLeft="@dimen/dimen_4dp"
                                             android:layout_marginEnd="8dp"
                                             android:ellipsize="end"
                                             android:maxLines="2"
+                                            android:paddingLeft="@dimen/dimen_4dp"
                                             android:text=""
                                             android:textColor="@color/title_color"
                                             android:textSize="@dimen/dimen_20dp">
@@ -621,100 +621,52 @@
 
                             </LinearLayout>
 
-                            <LinearLayout
-                                android:id="@+id/ll_viewMore"
+                            <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+                                android:id="@+id/ll_moreDetails"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@id/layout"
-                                android:layout_marginStart="@dimen/dimen_20dp"
-                                android:layout_marginTop="@dimen/dimen_25dp"
-                                android:layout_marginEnd="@dimen/padding15"
-                                android:layout_marginBottom="@dimen/dimen_25dp"
-                                android:orientation="horizontal"
-                                android:visibility="visible">
-
-                                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                                    android:id="@+id/tv_viewMore"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerVertical="true"
-                                    android:layout_weight="0.5"
-                                    android:paddingRight="@dimen/dimen_20dp"
-                                    android:text="View More"
-                                    android:textAllCaps="true"
-                                    android:textColor="@color/location_theme"
-                                    android:textSize="@dimen/txtsize_12">
-
-                                </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
-
-                                <Button
-                                    android:id="@+id/cv_ok"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0.5"
-                                    android:background="@drawable/curved_save"
-                                    android:backgroundTint="@color/location_theme"
-                                    android:text="OK"
-                                    android:textColor="@color/white"
-                                    android:textStyle="bold">
-
-                                </Button>
-
-
-                            </LinearLayout>
-
-                        </RelativeLayout>
-
-                        <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
-                            android:id="@+id/ll_moreDetails"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/rl_new"
-                            android:layout_marginStart="@dimen/dimen_5dp"
-                            android:layout_marginTop="@dimen/dimen_5dp"
-                            android:layout_marginEnd="@dimen/dimen_5dp"
-                            android:layout_marginBottom="@dimen/dimen_5dp"
-                            android:elevation="@dimen/dimen_10dp"
-                            android:visibility="gone"
-                            app:neomorph_corner_radius="@dimen/dimen_8dp"
-                            app:neomorph_shadow_type="inner"
-                            card_view:cardBackgroundColor="#f8f8f8">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@id/rl_new"
+                                android:layout_marginStart="@dimen/dimen_5dp"
                                 android:layout_marginTop="@dimen/dimen_5dp"
-                                android:orientation="vertical"
-                                android:visibility="visible">
+                                android:layout_marginEnd="@dimen/dimen_5dp"
+                                android:layout_marginBottom="@dimen/dimen_5dp"
+                                android:elevation="@dimen/dimen_10dp"
+                                android:visibility="visible"
+                                app:neomorph_corner_radius="@dimen/dimen_8dp"
+                                app:neomorph_shadow_type="inner"
+                                card_view:cardBackgroundColor="#f8f8f8">
 
                                 <LinearLayout
-                                    android:id="@+id/ll_options"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginBottom="@dimen/dimen_10dp"
+                                    android:layout_marginTop="@dimen/dimen_5dp"
                                     android:orientation="vertical"
                                     android:visibility="visible">
 
+
                                     <LinearLayout
+                                        android:id="@+id/ll_options"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginStart="@dimen/dimen_15dp"
-                                        android:layout_marginEnd="@dimen/dimen_15dp"
-
-                                        android:orientation="horizontal">
-
+                                        android:orientation="vertical"
+                                        android:visibility="visible">
 
                                         <LinearLayout
-                                            android:id="@+id/ll_message"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="match_parent"
-                                            android:layout_columnWeight="1"
-                                            android:layout_marginTop="@dimen/dimen_10dp">
+                                            android:id="@+id/gridLayout"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:gravity="center"
+                                            android:orientation="horizontal"
+                                            android:padding="@dimen/dimen_10dp"
+                                            android:weightSum="3">
+
 
                                             <LinearLayout
-                                                android:layout_width="match_parent"
-                                                android:layout_height="wrap_content"
+                                                android:id="@+id/ll_message"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="match_parent"
+                                                android:layout_marginRight="@dimen/dimen_10dp"
+                                                android:layout_weight="1"
                                                 android:gravity="center"
                                                 android:orientation="vertical"
                                                 android:visibility="visible">
@@ -741,20 +693,15 @@
 
                                             </LinearLayout>
 
-                                        </LinearLayout>
-
-                                        <LinearLayout
-                                            android:id="@+id/ll_instructions"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="match_parent"
-                                            android:layout_columnWeight="1">
 
                                             <LinearLayout
-                                                android:layout_width="match_parent"
-                                                android:layout_height="wrap_content"
-                                                android:layout_marginTop="@dimen/dimen_10dp"
+                                                android:id="@+id/ll_instructions"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="match_parent"
+                                                android:layout_weight="1"
                                                 android:gravity="center"
-                                                android:orientation="vertical">
+                                                android:orientation="vertical"
+                                                android:visibility="visible">
 
                                                 <ImageView
                                                     android:layout_width="@dimen/dimen_30dp"
@@ -778,67 +725,86 @@
 
                                             </LinearLayout>
 
-                                        </LinearLayout>
-                                    </LinearLayout>
+                                            <LinearLayout
+                                                android:id="@+id/ll_add_to_calendar"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="match_parent"
+                                                android:layout_marginLeft="@dimen/dimen_10dp"
+                                                android:layout_weight="1"
+                                                android:gravity="center"
+                                                android:orientation="vertical"
+                                                android:visibility="visible">
 
+
+                                                <ImageView
+                                                    android:layout_width="@dimen/dimen_30dp"
+                                                    android:layout_height="@dimen/dimen_30dp"
+                                                    android:src="@drawable/icon_add_to_calendar"
+                                                    app:tint="@color/title_color">
+
+                                                </ImageView>
+
+                                                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_marginTop="@dimen/padding5"
+                                                    android:text="Add to Calendar"
+                                                    android:textColor="@color/title_color"
+                                                    android:textSize="@dimen/txtsize_12"
+                                                    android:visibility="visible">
+
+                                                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                                            </LinearLayout>
+
+
+                                        </LinearLayout>
+
+                                    </LinearLayout>
 
                                 </LinearLayout>
 
+                            </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
+                            <LinearLayout
+                                android:id="@+id/ll_viewMore"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/ll_moreDetails"
+                                android:layout_marginStart="@dimen/dimen_10dp"
+                                android:layout_marginTop="@dimen/dimen_25dp"
+                                android:layout_marginEnd="@dimen/dimen_10dp"
+                                android:layout_marginBottom="@dimen/dimen_25dp"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:visibility="visible"
+                                android:weightSum="1">
+
+                                <Button
+                                    android:id="@+id/cv_ok"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.5"
+                                    android:background="@drawable/curved_save"
+                                    android:backgroundTint="@color/location_theme"
+                                    android:text="OK"
+                                    android:textColor="@color/white"
+                                    android:textStyle="bold">
+
+                                </Button>
+
                             </LinearLayout>
 
-                        </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
-
-                        <LinearLayout
-                            android:id="@+id/ll_viewLess"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/ll_moreDetails"
-                            android:layout_marginStart="@dimen/dimen_20dp"
-                            android:layout_marginTop="@dimen/dimen_25dp"
-                            android:layout_marginEnd="@dimen/padding15"
-                            android:layout_marginBottom="@dimen/dimen_25dp"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
-
-                            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                                android:id="@+id/tv_viewLess"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_weight="0.5"
-                                android:paddingRight="@dimen/dimen_20dp"
-                                android:text="View Less"
-                                android:textAllCaps="true"
-                                android:textColor="@color/location_theme"
-                                android:textSize="@dimen/txtsize_12">
-
-                            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
-
-                            <Button
-                                android:id="@+id/cv_ok1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.5"
-                                android:background="@drawable/curved_save"
-                                android:backgroundTint="@color/location_theme"
-                                android:text="OK"
-                                android:textColor="@color/white"
-                                android:textStyle="bold">
-
-                            </Button>
-
-
-                        </LinearLayout>
-
+                        </RelativeLayout>
 
                     </RelativeLayout>
 
                 </ScrollView>
-
 
             </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
 
         </LinearLayout>
 
     </soup.neumorphism.NeumorphCardView>
+
 </LinearLayout>

@@ -20,29 +20,32 @@ import android.widget.LinearLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.IActions;
 import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
 import com.jaldeeinc.jaldee.Interface.ISelectedOrder;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.OrderDetailActivity;
+import com.jaldeeinc.jaldee.activities.ReleasedQNRActivity;
 import com.jaldeeinc.jaldee.adapter.TodayOrdersAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.ActionsDialog;
 import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.custom.OrderActionsDialog;
-import com.jaldeeinc.jaldee.model.Bookings;
+import com.jaldeeinc.jaldee.model.RlsdQnr;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,7 +70,7 @@ public class MyOrders extends RootFragment implements ISelectedOrder, IActions {
     boolean hideMoreInfo = false;
     private IActions iActions;
     private OrderActionsDialog orderActionsDialog;
-
+    List<RlsdQnr> fReleasedQNR, fReleasedQNR1;
 
     public MyOrders() {
         // Required empty public constructor
@@ -298,10 +301,37 @@ public class MyOrders extends RootFragment implements ISelectedOrder, IActions {
                 isActive = true;
             }
         }
-        Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
-        intent.putExtra("orderInfo", orderInfo);
-        intent.putExtra("isActive", isActive);
-        startActivity(intent);
+        if (orderInfo != null) {
+            if (orderInfo.getReleasedQnr() != null) {
+                fReleasedQNR = orderInfo.getReleasedQnr().stream()
+                        .filter(p -> p.getStatus().equalsIgnoreCase("released")).collect(Collectors.toList());
+
+                fReleasedQNR1 = orderInfo.getReleasedQnr().stream()
+                        .filter(p -> !p.getStatus().equalsIgnoreCase("unReleased")).collect(Collectors.toList());
+                orderInfo.getReleasedQnr().clear();
+                orderInfo.setReleasedQnr((ArrayList<RlsdQnr>) fReleasedQNR); // remove releasedqnr response and add rlsdqnr without "unReleased" status
+
+            }
+            if (fReleasedQNR != null && !fReleasedQNR.isEmpty() && fReleasedQNR.size() > 0) {
+                Gson gson = new Gson();
+                String myJson = gson.toJson(orderInfo);
+
+                Intent intent = new Intent(mContext, ReleasedQNRActivity.class);
+                intent.putExtra("bookingInfo", myJson);
+                intent.putExtra("from", Constants.ORDERS);
+                mContext.startActivity(intent);
+
+            } else {
+                Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
+
+                //intent.putExtra("orderInfo", String.valueOf(orderInfo));
+                intent.putExtra("uuid", orderInfo.getUid());
+                intent.putExtra("account", String.valueOf(orderInfo.getProviderAccount().getId()));
+
+                intent.putExtra("isActive", isActive);
+                startActivity(intent);
+            }
+        }
     }
 
     @Override

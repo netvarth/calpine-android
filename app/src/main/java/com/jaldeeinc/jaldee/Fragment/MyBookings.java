@@ -54,6 +54,7 @@ import com.jaldeeinc.jaldee.activities.BookingDetails;
 import com.jaldeeinc.jaldee.activities.CheckInDetails;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.Home;
+import com.jaldeeinc.jaldee.activities.ReleasedQNRActivity;
 import com.jaldeeinc.jaldee.activities.ViewAttachmentActivity;
 import com.jaldeeinc.jaldee.adapter.ImagePreviewAdapter;
 import com.jaldeeinc.jaldee.adapter.TodayBookingsAdapter;
@@ -66,6 +67,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.Bookings;
+import com.jaldeeinc.jaldee.model.RlsdQnr;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
@@ -99,6 +101,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.functions.Consumer;
@@ -139,6 +142,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
     private ActionsDialog actionsDialog;
     boolean hideMoreInfo = false;
     private ISendData iSendData;
+    List<RlsdQnr> fReleasedQNR, fReleasedQNR1;
 
     // files related
     Bitmap bitmap;
@@ -285,6 +289,9 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                         bookingInfo.setBookingType(Constants.APPOINTMENT);
                         bookingInfo.setAppointmentInfo(activeAppointment);
                         bookingInfo.setRescheduled(activeAppointment.isRescheduled());
+                        if (activeAppointment.getReleasedQnr() != null) {
+                            bookingInfo.setReleasedQnr(activeAppointment.getReleasedQnr());
+                        }
                         if (activeAppointment.getProviderAccount() != null) {
                             bookingInfo.setSpName(activeAppointment.getProviderAccount().getBusinessName());
                         }
@@ -361,7 +368,9 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
                         Bookings bookingInfo = new Bookings();
                         bookingInfo.setBookingId(activeCheckIn.getYnwUuid());
                         bookingInfo.setRescheduled(activeCheckIn.isRescheduled());
-
+                        if (activeCheckIn.getReleasedQnr() != null) {
+                            bookingInfo.setReleasedQnr(activeCheckIn.getReleasedQnr());
+                        }
                         if (activeCheckIn.getShowToken().equalsIgnoreCase("true")) {
                             bookingInfo.setBookingType(Constants.TOKEN);
                         } else {
@@ -738,36 +747,77 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
         if (bookings != null) {
 
             if (bookings.getBookingType().equalsIgnoreCase(Constants.APPOINTMENT)) {
+                if (bookings.getAppointmentInfo() != null) {
+                    if (bookings.getAppointmentInfo().getReleasedQnr() != null) {
+                        fReleasedQNR = bookings.getAppointmentInfo().getReleasedQnr().stream()
+                                .filter(p -> p.getStatus().equalsIgnoreCase("released")).collect(Collectors.toList());
 
-                Intent intent = new Intent(mContext, BookingDetails.class);
-                intent.putExtra("uid", bookings.getAppointmentInfo().getUid());
-                intent.putExtra("accountId", bookings.getAppointmentInfo().getProviderAccount().getId());
-                if (bookings.getBookingStatus() != null) {
-                    if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled") && !bookings.getBookingStatus().equalsIgnoreCase("Completed")) {
-                        intent.putExtra("isActive", true);
+                        fReleasedQNR1 = bookings.getAppointmentInfo().getReleasedQnr().stream()
+                                .filter(p -> !p.getStatus().equalsIgnoreCase("unReleased")).collect(Collectors.toList());
+                        bookings.getAppointmentInfo().getReleasedQnr().clear();
+                        bookings.getAppointmentInfo().setReleasedQnr((ArrayList<RlsdQnr>) fReleasedQNR); // remove releasedqnr response and add rlsdqnr without "unReleased" status
+
+                    }
+                    if (fReleasedQNR != null && !fReleasedQNR.isEmpty() && fReleasedQNR.size() > 0) {
+                        Gson gson = new Gson();
+                        String myJson = gson.toJson(bookings.getAppointmentInfo());
+
+                        Intent intent = new Intent(mContext, ReleasedQNRActivity.class);
+                        intent.putExtra("bookingInfo", myJson);
+                        intent.putExtra("from", Constants.BOOKING_APPOINTMENT);
+                        mContext.startActivity(intent);
+
                     } else {
-                        intent.putExtra("isActive", false);
+                        Intent intent = new Intent(mContext, BookingDetails.class);
+                        intent.putExtra("uid", bookings.getAppointmentInfo().getUid());
+                        intent.putExtra("accountId", bookings.getAppointmentInfo().getProviderAccount().getId());
+                        if (bookings.getBookingStatus() != null) {
+                            if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled") && !bookings.getBookingStatus().equalsIgnoreCase("Completed")) {
+                                intent.putExtra("isActive", true);
+                            } else {
+                                intent.putExtra("isActive", false);
+                            }
+                        }
+                        startActivity(intent);
                     }
                 }
-                startActivity(intent);
             } else if (bookings.getBookingType().equalsIgnoreCase(Constants.CHECKIN) || bookings.getBookingType().equalsIgnoreCase(Constants.TOKEN)) {
+                if (bookings.getCheckInInfo() != null) {
 
-                Intent intent = new Intent(mContext, CheckInDetails.class);
-                intent.putExtra("uid", bookings.getCheckInInfo().getYnwUuid());
-                intent.putExtra("accountId", bookings.getCheckInInfo().getProviderAccount().getId());
-                if (bookings.getBookingStatus() != null) {
-                    if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled")) {
-                        intent.putExtra("isActive", true);
+                    if (bookings.getCheckInInfo().getReleasedQnr() != null) {
+                        fReleasedQNR = bookings.getCheckInInfo().getReleasedQnr().stream()
+                                .filter(p -> p.getStatus().equalsIgnoreCase("released")).collect(Collectors.toList());
+
+                        fReleasedQNR1 = bookings.getCheckInInfo().getReleasedQnr().stream()
+                                .filter(p -> !p.getStatus().equalsIgnoreCase("unReleased")).collect(Collectors.toList());
+                        bookings.getCheckInInfo().getReleasedQnr().clear();
+                        bookings.getCheckInInfo().setReleasedQnr((ArrayList<RlsdQnr>) fReleasedQNR); // remove releasedqnr response and add rlsdqnr without "unReleased" status
+
+                    }
+                    if (fReleasedQNR != null && !fReleasedQNR.isEmpty() && fReleasedQNR.size() > 0) {
+                        Gson gson = new Gson();
+                        String myJson = gson.toJson(bookings.getCheckInInfo());
+
+                        Intent intent = new Intent(mContext, ReleasedQNRActivity.class);
+                        intent.putExtra("bookingInfo", myJson);
+                        intent.putExtra("from", Constants.BOOKING_CHECKIN);
+                        mContext.startActivity(intent);
                     } else {
-                        intent.putExtra("isActive", false);
+                        Intent intent = new Intent(mContext, CheckInDetails.class);
+                        intent.putExtra("uid", bookings.getCheckInInfo().getYnwUuid());
+                        intent.putExtra("accountId", bookings.getCheckInInfo().getProviderAccount().getId());
+                        if (bookings.getBookingStatus() != null) {
+                            if (!bookings.getBookingStatus().equalsIgnoreCase("Cancelled")) {
+                                intent.putExtra("isActive", true);
+                            } else {
+                                intent.putExtra("isActive", false);
+                            }
+                        }
+                        startActivity(intent);
                     }
                 }
-                startActivity(intent);
-
             }
-
         }
-
     }
 
     @Override

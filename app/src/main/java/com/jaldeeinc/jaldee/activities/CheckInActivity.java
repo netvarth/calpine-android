@@ -1,41 +1,21 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipData;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.text.Html;
-import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
@@ -51,6 +31,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -61,7 +50,6 @@ import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.Interface.IMobileSubmit;
-import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.Interface.ISaveNotes;
 import com.jaldeeinc.jaldee.Interface.ISelectQ;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
@@ -84,9 +72,7 @@ import com.jaldeeinc.jaldee.custom.FamilyMemberDialog;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
-import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
-import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AdvancePaymentDetails;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
@@ -112,15 +98,11 @@ import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
-import com.razorpay.PaymentData;
-import com.razorpay.PaymentResultWithDataListener;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -137,15 +119,12 @@ import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CheckInActivity extends AppCompatActivity implements ISelectQ, PaymentResultWithDataListener, IPaymentResponse, IMobileSubmit, IMailSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected, ICpn, IDeleteImagesInterface, ISaveNotes {
+public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMobileSubmit, IMailSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected, ICpn, IDeleteImagesInterface, ISaveNotes {
 
     @BindView(R.id.tv_providerName)
     CustomTextViewBold tvProviderName;
@@ -290,7 +269,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     private IMailSubmit iMailSubmit;
     private IMobileSubmit iMobileSubmit;
     private CouponlistAdapter mAdapter;
-    private IPaymentResponse paymentResponse;
     private Uri mImageUri;
     private ISendMessage iSendMessage;
     private AddNotes addNotes;
@@ -361,7 +339,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         iSelectQ = this;
         iMailSubmit = this;
         iMobileSubmit = this;
-        paymentResponse = this;
         iSendMessage = this;
         iFamilyMemberDetails = this;
         iDeleteImagesInterface = (IDeleteImagesInterface) this;
@@ -1278,7 +1255,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
             e.printStackTrace();
         }
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), queueobj.toString());
-        Call<AdvancePaymentDetails> call = apiService.getWlAdvancePaymentDetails(String.valueOf(id), requestBody);
+        // Call<AdvancePaymentDetails> call = apiService.getWlAdvancePaymentDetails(String.valueOf(id), requestBody);
+        Call<AdvancePaymentDetails> call = apiService.getAdvancePaymentDetails("waitlist", String.valueOf(id), requestBody);
+
         call.enqueue(new Callback<AdvancePaymentDetails>() {
 
             @Override
@@ -1590,112 +1569,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
         });
     }
 
-
-    private void ApiCommunicateCheckin(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
-        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type = MediaType.parse("*/*");
-        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
-        mBuilder.setType(MultipartBody.FORM);
-        mBuilder.addFormDataPart("message", message);
-        for (int i = 0; i < imagePathList.size(); i++) {
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getImagePath())));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (bitmap != null) {
-                path = saveImage(bitmap);
-                file = new File(path);
-            } else {
-                file = new File(imagePathList.get(i).getImagePath());
-            }
-            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
-        }
-        RequestBody requestBody = mBuilder.build();
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        JSONObject jsonObj = new JSONObject();
-        try {
-            jsonObj.put("message", message);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<ResponseBody> call = apiService.waitlistSendAttachments(waitListId, Integer.parseInt(accountID.split("-")[0]), requestBody);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-                    if (response.code() == 200) {
-                        //Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();///////
-                        imagePathList.clear();
-                        dialog.dismiss();
-                    } else {
-                        if (response.code() == 422) {
-                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-            }
-        });
-    }
-
-
-    private void getConfirmationDetails(int id) {
-
-        final ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-        Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(value, String.valueOf(id));
-        call.enqueue(new Callback<ActiveCheckIn>() {
-            @Override
-            public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
-                try {
-                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-                    if (response.code() == 200) {
-                        activeAppointment = response.body();
-
-                        if (activeAppointment != null) {
-                            checkEncId = activeAppointment.getCheckinEncId();
-
-                            Intent checkin = new Intent(CheckInActivity.this, CheckInConfirmation.class);
-                            checkin.putExtra("BookingDetails", activeAppointment);
-                            checkin.putExtra("terminology", mSearchTerminology.getProvider());
-                            checkin.putExtra("waitlistPhonenumber", phoneNumber);
-                            checkin.putExtra("livetrack", checkInInfo.isLivetrack());
-                            if (isUser) {
-                                checkin.putExtra("accountID", String.valueOf(userId));
-                            } else {
-                                checkin.putExtra("accountID", String.valueOf(providerId));
-                            }
-                            checkin.putExtra("confId", value);
-                            startActivity(checkin);
-                        }
-
-                    }
-                } catch (Exception e) {
-                    Log.i("mnbbnmmnbbnm", e.toString());
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
-            }
-        });
-
-    }
-
     private void ApiQueueTimeSlot(int locationId, int subSeriveID, int accountID, String mDate) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1902,94 +1775,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
     }
 
-    public void paymentFinished(RazorpayModel razorpayModel) {
-
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //Do something here
-                if (isUser) {
-                    if (imagePathList.size() > 0) {
-                        ApiCommunicateCheckin(value, String.valueOf(userId), userMessage, dialog);
-                    }
-                    getConfirmationDetails(userId);
-
-                } else {
-                    if (imagePathList.size() > 0) {
-                        ApiCommunicateCheckin(value, String.valueOf(providerId), userMessage, dialog);
-                    }
-                    getConfirmationDetails(providerId);
-
-                }
-            }
-        }, 1000);
-    }
-
-    @Override
-    public void onPaymentSuccess(String s, PaymentData paymentData) {
-
-        try {
-            RazorpayModel razorpayModel = new RazorpayModel(paymentData);
-            //new PaymentGateway(mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
-            Toast.makeText(mContext, "Payment Successful", Toast.LENGTH_LONG).show();
-            paymentFinished(razorpayModel);
-        } catch (Exception e) {
-            Log.e("TAG", "Exception in onPaymentSuccess", e);
-        }
-    }
-
-    @Override
-    public void onPaymentError(int i, String s, PaymentData paymentData) {
-
-        try {
-            AlertDialog alertDialog = new AlertDialog.Builder(CheckInActivity.this).create();
-            alertDialog.setTitle("Payment Failed");
-            alertDialog.setMessage("Unable to process your request.Please try again after some time");
-            alertDialog.setCancelable(false);
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-                            Intent homeIntent = new Intent(CheckInActivity.this, Home.class);
-                            startActivity(homeIntent);
-                            finish();
-
-                        }
-                    });
-            alertDialog.show();
-        } catch (Exception e) {
-            Log.e("TAG", "Exception in onPaymentError..", e);
-        }
-    }
-
-    @Override
-    public void sendPaymentResponse(String paymentStatus, String orderid) {
-
-        // Paytm
-
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //Do something here
-                if (isUser) {
-                    if (imagePathList.size() > 0) {
-                        ApiCommunicateCheckin(value, String.valueOf(userId), userMessage, dialog);
-                    }
-                    getConfirmationDetails(userId);
-
-                } else {
-                    if (imagePathList.size() > 0) {
-                        ApiCommunicateCheckin(value, String.valueOf(providerId), userMessage, dialog);
-                    }
-                    getConfirmationDetails(providerId);
-
-                }
-            }
-        }, 1000);
-
-    }
-
     @Override
     public void mailUpdated() {
         String mail = SharedPreference.getInstance(mContext).getStringValue("email", "");
@@ -2017,143 +1802,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
     }
 
     // files related
-
-    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
-        //copy file and send new file path
-        String fileName = getFileNameInfo(contentUri);
-        if (!TextUtils.isEmpty(fileName)) {
-            String ext = "";
-            if (fileName.contains(".")) {
-            } else {
-                ext = "." + extension;
-            }
-            File wallpaperDirectoryFile = new File(
-                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
-            copy(context, contentUri, wallpaperDirectoryFile);
-            return wallpaperDirectoryFile.getAbsolutePath();
-        }
-        return null;
-    }
-
-    protected static String getFileNameInfo(Uri uri) {
-        if (uri == null) {
-            return null;
-        }
-        String fileName = null;
-        String path = uri.getPath();
-        int cut = path.lastIndexOf('/');
-        if (cut != -1) {
-            fileName = path.substring(cut + 1);
-        }
-        return fileName;
-    }
-
-    public static void copy(Context context, Uri srcUri, File dstFile) {
-        try {
-            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
-            if (inputStream == null) return;
-            FileOutputStream outputStream = new FileOutputStream(dstFile);
-            IOUtils.copy(inputStream, outputStream);
-            inputStream.close();
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String getRealPathFromURI(Uri contentURI, Activity context) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        @SuppressWarnings("deprecation")
-        Cursor cursor = context.managedQuery(contentURI, projection, null,
-                null, null);
-        if (cursor == null)
-            return null;
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        if (cursor.moveToFirst()) {
-            String s = cursor.getString(column_index);
-            // cursor.close();
-            return s;
-        }
-        // cursor.close();
-        return null;
-    }
-
-
-    public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        if (myBitmap != null) {
-            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        }
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            f = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".jpg");
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(mContext,
-                    new String[]{f.getPath()},
-                    new String[]{"image/jpeg"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-
-            return f.getAbsolutePath();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
-    }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public String getPDFPath(Uri uri) {
-
-        final String id = DocumentsContract.getDocumentId(uri);
-        final Uri contentUri = ContentUris.withAppendedId(
-                Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = mActivity.getApplicationContext().getContentResolver().query(contentUri, projection, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
-
-    public String getFilePathFromURI(Uri contentUri, Context context) {
-        //copy file and send new file path
-        String fileName = getFileName(contentUri);
-        if (!TextUtils.isEmpty(fileName)) {
-            File copyFile = new File(context.getExternalCacheDir() + File.separator + fileName);
-            //copy(context, contentUri, copyFile);
-            return copyFile.getAbsolutePath();
-        }
-        return null;
-    }
-
-    public String getFileName(Uri uri) {
-        if (uri == null) return null;
-        String fileName = null;
-        String path = uri.getPath();
-        int cut = path.lastIndexOf('/');
-        if (cut != -1) {
-            fileName = path.substring(cut + 1);
-        }
-        return fileName;
-    }
-
-    public String getRealFilePath(Uri uri) {
-        String path = uri.getPath();
-        String[] pathArray = path.split(":");
-        String fileName = pathArray[pathArray.length - 1];
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
-    }
 
     private void requestMultiplePermissions() {
         Dexter.withActivity(this)
@@ -2192,18 +1840,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 .check();
     }
 
-    public static float getImageSize(Context context, Uri uri) {
-        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-        if (cursor != null) {
-            int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
-            cursor.moveToFirst();
-            float imageSize = cursor.getLong(sizeIndex);
-            cursor.close();
-            return imageSize / (1024f * 1024f); // returns size in bytes
-        }
-        return 0;
-    }
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
 
@@ -2238,8 +1874,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                 try {
                     if (data.getData() != null) {
                         Uri uri = data.getData();
-                        String orgFilePath = getRealPathFromURI(uri, this);
-                        String filepath = "";//default fileName
 
                         String mimeType = this.mContext.getContentResolver().getType(uri);
                         String uriString = uri.toString();
@@ -2248,13 +1882,36 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             extension = uriString.substring(uriString.lastIndexOf(".") + 1);
                         }
 
-
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
+                        File photoFile = null;
+
+                        try {
+                            // Creating file
+                            try {
+                                photoFile = Config.createFile(mContext, extension, true);
+                            } catch (IOException ex) {
+                                Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                // Log.d(TAG, "Error occurred while creating the file");
+                            }
+
+                            InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                            FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                            // Copying
+                            Config.copyStream(inputStream, fileOutputStream);
+                            fileOutputStream.close();
+                            inputStream.close();
+                        } catch (Exception e) {
+                            Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                            //Log.d(TAG, "onActivityResult: " + e.toString());
+                        }
+                        String orgFilePath = photoFile.getAbsolutePath();
                         if (Arrays.asList(fileExtsSupported).contains(extension)) {
                             if (orgFilePath == null) {
-                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
+                                orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                             }
                         } else {
                             Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
@@ -2281,12 +1938,9 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                         ClipData mClipData = data.getClipData();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
-                            Uri imageUri = item.getUri();
-                            String orgFilePath = getRealPathFromURI(imageUri, this);
-                            String filepath = "";//default fileName
-
-                            String mimeType = mContext.getContentResolver().getType(imageUri);
-                            String uriString = imageUri.toString();
+                            Uri uri = item.getUri();
+                            String mimeType = this.mContext.getContentResolver().getType(uri);
+                            String uriString = uri.toString();
                             String extension = "";
                             if (uriString.contains(".")) {
                                 extension = uriString.substring(uriString.lastIndexOf(".") + 1);
@@ -2295,9 +1949,34 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                             if (mimeType != null) {
                                 extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                             }
+                            File photoFile = null;
+
+                            try {
+                                // Creating file
+                                try {
+                                    photoFile = Config.createFile(mContext, extension, true);
+                                } catch (IOException ex) {
+                                    Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                    // Log.d(TAG, "Error occurred while creating the file");
+                                }
+
+                                InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                                FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                                // Copying
+                                Config.copyStream(inputStream, fileOutputStream);
+                                fileOutputStream.close();
+                                inputStream.close();
+                            } catch (Exception e) {
+                                Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                                //Log.d(TAG, "onActivityResult: " + e.toString());
+                            }
+                            String orgFilePath = photoFile.getAbsolutePath();
                             if (Arrays.asList(fileExtsSupported).contains(extension)) {
+
                                 if (orgFilePath == null) {
-                                    orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
+                                    orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                                 }
                             } else {
                                 Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
@@ -2327,13 +2006,22 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
 
         } else if (requestCode == CAMERA) {
             if (data != null && data.getExtras() != null) {
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                //      imageview.setImageBitmap(bitmap);
-                path = saveImage(bitmap);
-                // imagePathList.add(bitmap.toString());
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
+                File photoFile = null;/////////
+                // ///////
+                try {//////////
+                    photoFile = Config.createFile(mContext, "png", true);//////////
+                } catch (IOException e) {/////////////
+                    e.printStackTrace();///////////
+                }///////////
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");/////////
+                try (FileOutputStream out = new FileOutputStream(photoFile)) {////////////
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance////////////
+                    // PNG is a lossless format, the compression factor (100) is ignored/////////
+                } catch (IOException e) {////////////
+                    e.printStackTrace();///////////
+                }////////
+                String path = photoFile.getAbsolutePath();////////
+
                 if (path != null) {
                     mImageUri = Uri.parse(path);
                     ShoppingListModel model = new ShoppingListModel();
@@ -2344,11 +2032,6 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, Paym
                     } else {
                         tvErrorMessage.setVisibility(View.VISIBLE);
                     }
-                }
-                try {
-                    bytes.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
                 imagePreviewAdapter = new ImagePreviewAdapter(imagePathList, mContext, true, iDeleteImagesInterface);
                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 2);

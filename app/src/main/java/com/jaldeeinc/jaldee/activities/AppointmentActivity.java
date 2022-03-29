@@ -1,39 +1,21 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipData;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.text.Html;
-import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
@@ -49,6 +31,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -59,7 +50,6 @@ import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
 import com.jaldeeinc.jaldee.Interface.IMailSubmit;
 import com.jaldeeinc.jaldee.Interface.IMobileSubmit;
-import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.Interface.ISaveNotes;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
 import com.jaldeeinc.jaldee.Interface.ISlotInfo;
@@ -82,9 +72,8 @@ import com.jaldeeinc.jaldee.custom.SlotsDialog;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
-import com.jaldeeinc.jaldee.model.RazorpayModel;
+import com.jaldeeinc.jaldee.model.SelectedSlotDetail;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
-import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.AdvancePaymentDetails;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
@@ -110,16 +99,11 @@ import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
-import com.razorpay.PaymentData;
-import com.razorpay.PaymentResultWithDataListener;
 
-
-import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -133,18 +117,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AppointmentActivity extends AppCompatActivity implements PaymentResultWithDataListener, ISlotInfo, IMailSubmit, IPaymentResponse, IMobileSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected, ICpn, IDeleteImagesInterface, ISaveNotes {
+public class AppointmentActivity extends AppCompatActivity implements ISlotInfo, IMailSubmit, IMobileSubmit, ISendMessage, IFamilyMemberDetails, IFamillyListSelected, ICpn, IDeleteImagesInterface, ISaveNotes {
 
     @BindView(R.id.tv_providerName)
     CustomTextViewBold tvProviderName;
@@ -287,7 +269,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     static RecyclerView recycle_family;
     String slotTime;
     BottomSheetDialog dialog;
-    private IPaymentResponse paymentResponse;
     String calcMode;
     ActiveAppointment activeAppointment = new ActiveAppointment();
     static Activity mActivity;
@@ -339,6 +320,8 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
     private IDeleteImagesInterface iDeleteImagesInterface;
     private CustomNotes customNotes;
     private ISaveNotes iSaveNotes;
+    boolean showOnlyAvailableSlots;
+    List<SelectedSlotDetail> selectedSlotDetails = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -350,7 +333,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         mActivity = this;
         mContext = this;
         iMobileSubmit = this;
-        paymentResponse = this;
         iSendMessage = this;
         iFamilyMemberDetails = this;
         iDeleteImagesInterface = (IDeleteImagesInterface) this;
@@ -387,19 +369,20 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             tvProviderName.setText(providerName);
         }
 
-        if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
-            tvButtonName.setText("Next");
-        } else {
-            tvButtonName.setText("Next");
-        }
-
-        if (serviceInfo.getConsumerNoteTitle() != null && !serviceInfo.getConsumerNoteTitle().equalsIgnoreCase("")) {
-            tvAddNotes.setText(serviceInfo.getConsumerNoteTitle());
-        } else {
-            tvAddNotes.setText("Add Note");
-        }
-
         if (serviceInfo != null) {
+            showOnlyAvailableSlots = serviceInfo.isShowOnlyAvailableSlots();
+            if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
+                tvButtonName.setText("Next");
+            } else {
+                tvButtonName.setText("Next");
+            }
+
+            if (serviceInfo.getConsumerNoteTitle() != null && !serviceInfo.getConsumerNoteTitle().equalsIgnoreCase("")) {
+                tvAddNotes.setText(serviceInfo.getConsumerNoteTitle());
+            } else {
+                tvAddNotes.setText("Add Note");
+            }
+
             String name = serviceInfo.getServiceName();
             tvServiceName.setText(name);
             tvDescription.setText(serviceInfo.getDescription());
@@ -594,11 +577,17 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
                 try {
                     if (serviceInfo.getAvailableDate() != null) {
+                        int maxAvailableSlots;
+                        if(serviceInfo.getIsPrePayment().equalsIgnoreCase("true")){
+                            maxAvailableSlots = 1;
+                        } else {
+                            maxAvailableSlots = serviceInfo.getMaxBookingsAllowed();
+                        }
                         if (serviceInfo.isUser()) {
-                            slotsDialog = new SlotsDialog(AppointmentActivity.this, serviceInfo.getServiceId(), locationId, iSlotInfo, userId, apiDate);
+                            slotsDialog = new SlotsDialog(AppointmentActivity.this, serviceInfo.getServiceId(), locationId, iSlotInfo, userId, apiDate, maxAvailableSlots, showOnlyAvailableSlots);
 
                         } else {
-                            slotsDialog = new SlotsDialog(AppointmentActivity.this, serviceInfo.getServiceId(), locationId, iSlotInfo, providerId, apiDate);
+                            slotsDialog = new SlotsDialog(AppointmentActivity.this, serviceInfo.getServiceId(), locationId, iSlotInfo, providerId, apiDate, maxAvailableSlots, showOnlyAvailableSlots);
 
                         }
                         slotsDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
@@ -677,48 +666,15 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 if (tvNumber.length() < 10) {
                     Toast.makeText(AppointmentActivity.this, "Mobile number should have 10 digits" + "", Toast.LENGTH_SHORT).show();
                 } else {
-                    if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {  // check if selected service requires prepayment
-                        if (tvEmail.getText().toString() != null && tvEmail.getText().length() > 0) { // if selected service requires prepayment..then Email is mandatory
-
-                            if (serviceInfo.isNoteManidtory()) { // check if notes is mandatory for selected service
-
-                                if (userMessage != null && !userMessage.trim().equalsIgnoreCase("")) {
-
-                                    if (serviceInfo.isUser()) {
-                                        ApiAppointment(userMessage, userId);
-                                    } else {
-                                        ApiAppointment(userMessage, providerId);
-                                    }
-                                } else {
-                                    DynamicToast.make(AppointmentActivity.this, "Please provide " + serviceInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
-                                            AppointmentActivity.this, R.drawable.ic_info_black),
-                                            ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
-                                }
-
-                            } else {
-
-                                if (serviceInfo.isUser()) {
-                                    ApiAppointment(userMessage, userId);
-                                } else {
-                                    ApiAppointment(userMessage, providerId);
-                                }
-                            }
-                        } else {
-
-                            DynamicToast.make(AppointmentActivity.this, "Email id is mandatory", AppCompatResources.getDrawable(
-                                    AppointmentActivity.this, R.drawable.ic_info_black),
-                                    ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-
+                    if (selectedSlotDetails != null && !selectedSlotDetails.isEmpty() && selectedSlotDetails.size() > 1) {
                         if (serviceInfo.isNoteManidtory()) {
 
                             if (userMessage != null && !userMessage.trim().equalsIgnoreCase("")) {
 
                                 if (serviceInfo.isUser()) {
-                                    ApiAppointment(userMessage, userId);
+                                    ApiMultipleAppointment(userMessage, userId);
                                 } else {
-                                    ApiAppointment(userMessage, providerId);
+                                    ApiMultipleAppointment(userMessage, providerId);
                                 }
                             } else {
 
@@ -729,9 +685,68 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         } else {
 
                             if (serviceInfo.isUser()) {
-                                ApiAppointment(userMessage, userId);
+                                ApiMultipleAppointment(userMessage, userId);
                             } else {
-                                ApiAppointment(userMessage, providerId);
+                                ApiMultipleAppointment(userMessage, providerId);
+                            }
+                        }
+                    } else {
+                        if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {  // check if selected service requires prepayment
+                            if (tvEmail.getText().toString() != null && tvEmail.getText().length() > 0) { // if selected service requires prepayment..then Email is mandatory
+
+                                if (serviceInfo.isNoteManidtory()) { // check if notes is mandatory for selected service
+
+                                    if (userMessage != null && !userMessage.trim().equalsIgnoreCase("")) {
+
+                                        if (serviceInfo.isUser()) {
+                                            ApiAppointment(userMessage, userId);
+                                        } else {
+                                            ApiAppointment(userMessage, providerId);
+                                        }
+                                    } else {
+                                        DynamicToast.make(AppointmentActivity.this, "Please provide " + serviceInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
+                                                AppointmentActivity.this, R.drawable.ic_info_black),
+                                                ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+                                    }
+
+                                } else {
+
+                                    if (serviceInfo.isUser()) {
+                                        ApiAppointment(userMessage, userId);
+                                    } else {
+                                        ApiAppointment(userMessage, providerId);
+                                    }
+                                }
+                            } else {
+
+                                DynamicToast.make(AppointmentActivity.this, "Email id is mandatory", AppCompatResources.getDrawable(
+                                        AppointmentActivity.this, R.drawable.ic_info_black),
+                                        ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+
+                            if (serviceInfo.isNoteManidtory()) {
+
+                                if (userMessage != null && !userMessage.trim().equalsIgnoreCase("")) {
+
+                                    if (serviceInfo.isUser()) {
+                                        ApiAppointment(userMessage, userId);
+                                    } else {
+                                        ApiAppointment(userMessage, providerId);
+                                    }
+                                } else {
+
+                                    DynamicToast.make(AppointmentActivity.this, serviceInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
+                                            AppointmentActivity.this, R.drawable.ic_info_black),
+                                            ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+
+                                if (serviceInfo.isUser()) {
+                                    ApiAppointment(userMessage, userId);
+                                } else {
+                                    ApiAppointment(userMessage, providerId);
+                                }
                             }
                         }
                     }
@@ -1100,6 +1115,224 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     }
 
+    private void ApiMultipleAppointment(final String txt_addnote, int id) {
+
+        ArrayList<BookingModel> bookingModels = new ArrayList<>();
+        uuid = UUID.randomUUID().toString();
+        String countryVirtualCode = "";
+        if (virtual_NmbrCCPicker.getSelectedCountryCode() != null) {
+            countryVirtualCode = virtual_NmbrCCPicker.getSelectedCountryCode();
+        } else {
+            DynamicToast.make(AppointmentActivity.this, "Countrycode needed", AppCompatResources.getDrawable(
+                    AppointmentActivity.this, R.drawable.ic_info_black),
+                    ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        for (SelectedSlotDetail s : selectedSlotDetails) {
+
+            // getting data from dialog
+            String convertedTime = s.getDisplayTime().replace("am", "AM").replace("pm", "PM").replaceAll(" ", "\u00a0");
+            //tvTime.setText(convertedTime);
+            //tvDate.setText(s.getDisplayTime());
+            tvSelectedDateHint.setText("Selected Time slot");
+            scheduleId = s.getScheduleId();
+            slotTime = s.getSlotTime();
+            try {
+                apiDate = getApiDateFormat(s.getCalendarDate());  // to convert selected date to api date format
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            JSONObject queueobj = new JSONObject();
+            JSONObject waitobj = new JSONObject();
+            JSONObject waitobj1 = new JSONObject();
+            JSONObject waitobj2 = new JSONObject();
+            JSONObject waitobj3 = new JSONObject();
+            JSONObject waitobj4 = new JSONObject();
+            JSONObject sejsonobj = new JSONObject();
+            JSONArray waitlistArray = new JSONArray();
+            JSONObject sjsonobj = new JSONObject();
+            JSONObject virtualService = new JSONObject();
+            JSONObject pjsonobj = new JSONObject();
+
+            JSONObject jsonObj2 = new JSONObject();
+            JSONObject jsonObj3 = new JSONObject();
+            try {
+
+                queueobj.put("appmtDate", apiDate);
+                sjsonobj.put("id", scheduleId);
+                queueobj.put("consumerNote", txt_addnote);
+                queueobj.put("phoneNumber", phoneNumber);
+                queueobj.put("countryCode", countryCode);
+                if (serviceInfo.isUser()) {
+                    pjsonobj.put("id", providerId);
+                } else {
+                    pjsonobj.put("id", 0);
+                }
+
+
+                if (etVirtualNumber.getText().toString().trim().length() >= 7) {
+                    if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("whatsApp")) {
+                        virtualService.put("WhatsApp", countryVirtualCode + etVirtualNumber.getText());
+                        mWhtsappCountryCode = countryVirtualCode;
+                        mWhatsappNumber = etVirtualNumber.getText().toString();
+                    } else if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                        virtualService.put("GoogleMeet", serviceInfo.getVirtualCallingValue());
+                    } else if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("Zoom")) {
+                        virtualService.put("Zoom", serviceInfo.getVirtualCallingValue());
+                    } else if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("Phone")) {
+                        virtualService.put("Phone", countryVirtualCode + etVirtualNumber.getText());
+                        phoneNumber = etVirtualNumber.getText().toString();
+                    } else if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("VideoCall")) {
+                        virtualService.put("VideoCall", serviceInfo.getVirtualCallingValue());
+                    }
+                } else {
+
+                    String modeOfCalling = "";
+                    if (serviceInfo.getCallingMode() != null && serviceInfo.getCallingMode().equalsIgnoreCase("whatsApp")) {
+                        if (etVirtualNumber.getText().toString().trim().equalsIgnoreCase("")) {
+                            modeOfCalling = "Enter WhatsApp number";
+                        } else {
+                            modeOfCalling = "Invalid WhatsApp number";
+                        }
+                    } else if (etVirtualNumber.getText().toString().trim().length() < 7 || (virtual_NmbrCCPicker.getSelectedCountryCode().equalsIgnoreCase("91") && etVirtualNumber.getText().toString().trim().length() != 10)) {
+                        modeOfCalling = "Invalid Contact number";
+                    }
+                    DynamicToast.make(AppointmentActivity.this, modeOfCalling, AppCompatResources.getDrawable(
+                            AppointmentActivity.this, R.drawable.ic_info_black),
+                            ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                sejsonobj.put("id", serviceInfo.getServiceId());
+                JSONArray couponList = new JSONArray();
+
+                for (int i = 0; i < couponArraylist.size(); i++) {
+                    couponList.put(couponArraylist.get(i));
+                }
+                Log.i("kooooooo", couponList.toString());
+                queueobj.put("coupons", couponList);
+                Log.i("couponList", couponList.toString());
+
+                if (familyMEmID == 0) {
+                    familyMEmID = consumerID;
+                }
+
+                if (MultiplefamilyList.size() > 0) {
+                    for (int i = 0; i < MultiplefamilyList.size(); i++) {
+
+                        waitobj1.put("id", MultiplefamilyList.get(i).getId());
+                        waitobj2.put("firstName", MultiplefamilyList.get(i).getFirstName());
+                        waitobj3.put("lastName", MultiplefamilyList.get(i).getLastName());
+                        waitobj4.put("apptTime", slotTime);
+
+                        waitlistArray.put(waitobj1);
+                        waitlistArray.put(waitobj2);
+                        waitlistArray.put(waitobj3);
+                        waitlistArray.put(waitobj4);
+                    }
+                } else {
+                    if (familyMEmID == consumerID) {
+                        familyMEmID = 0;
+                    }
+                    waitobj.put("id", familyMEmID);
+                    waitobj.put("firstName", mFirstName);
+                    waitobj.put("lastName", mLastName);
+
+                    waitobj.put("apptTime", slotTime);
+
+                    if (mWhatsappNumber != null && !mWhatsappNumber.isEmpty()) {
+                        jsonObj2.put("countryCode", mWhtsappCountryCode);
+                        jsonObj2.put("number", mWhatsappNumber);
+                        waitobj.putOpt("whatsAppNum", jsonObj2);
+                    }
+                    if (mTelegramNumber != null && !mTelegramNumber.isEmpty()) {
+                        jsonObj3.put("countryCode", mTelegramCountryCode);
+                        jsonObj3.put("number", mTelegramNumber);
+                        waitobj.putOpt("telegramNum", jsonObj3);
+                    }
+                    if (mAge != null && !mAge.isEmpty()) {
+                        waitobj.put("age", mAge);
+                    }
+                    if (mPreferredLanguages != null) {
+                        waitobj.putOpt("preferredLanguage", mPreferredLanguages);
+                    }
+                    if (mBookingLocation != null) {
+                        waitobj.putOpt("bookingLocation", mBookingLocation);
+                    }
+                    if (emailId != null && !emailId.equalsIgnoreCase("")) {
+                        waitobj.put("email", emailId);
+                    }
+                    if (mGender != null && !mGender.isEmpty()) {
+                        waitobj.put("gender", mGender);
+                    }
+                }
+                waitlistArray.put(waitobj);
+
+                queueobj.putOpt("service", sejsonobj);
+                // queueobj.putOpt("queue", qjsonObj);
+                queueobj.putOpt("appmtFor", waitlistArray);
+                queueobj.putOpt("schedule", sjsonobj);
+                queueobj.putOpt("provider", pjsonobj);
+
+                if (serviceInfo.getServiceType().equalsIgnoreCase("virtualService")) {
+                    queueobj.putOpt("virtualService", virtualService);
+                }
+
+            } catch (
+                    JSONException e) {
+                e.printStackTrace();
+            }
+            BookingModel model = new BookingModel();
+            model.setJsonObject(queueobj.toString());
+            model.setImagePathList(imagePathList);
+            model.setMessage(txt_addnote);
+            if (serviceInfo.isUser()) {
+                model.setAccountId(userId);
+            } else {
+                model.setAccountId(providerId);
+            }
+            model.setServiceInfo(serviceInfo);
+            model.setmSearchTerminology(mSearchTerminology);
+            model.setFamilyEMIID(familyMEmID);
+            model.setPhoneNumber(phoneNumber);
+            //model.setQuestionnaire(questionnaire);
+            model.setFrom(Constants.APPOINTMENT);
+            model.setProviderName(providerName);
+            model.setAccountBusinessName(accountBusinessName);
+            model.setLocationName(locationName);
+            model.setDate(s.getDate());
+            model.setTime(convertedTime);
+            model.setCustomerName(tvConsumerName.getText().toString());
+            model.setEmailId(tvEmail.getText().toString());
+            model.setCountryCode(countryCode);
+            model.setWhtsappCountryCode(mWhtsappCountryCode);
+            model.setWhtsappPhoneNumber(mWhatsappNumber);
+            String pCountryCode = providerResponse.getBusinessProfile().getCountryCode();
+            String pPhNo = providerResponse.getBusinessProfile().getAccountLinkedPhNo();
+            if ((pCountryCode != null) && (!pCountryCode.isEmpty()) && (pPhNo != null) && (!pPhNo.isEmpty())) {
+                model.setProviderPhoneNumber(pCountryCode + " " + pPhNo);
+            }
+            //model.setJacshSelected(cbJCash.isChecked());
+            if (advancePaymentDetails != null) {
+                model.setAmountRequiredNow(advancePaymentDetails.getAmountRequiredNow());
+                model.setNetTotal(advancePaymentDetails.getNetTotal());
+            }
+            if (advancePaymentDetails != null && advancePaymentDetails.getEligibleJcashAmt() != null) {
+                model.setEligibleJcashAmt(advancePaymentDetails.getEligibleJcashAmt().get("jCashAmt").getAsDouble());
+            }
+            bookingModels.add(model);
+        }
+        if (serviceInfo.isUser()) {
+
+            getMltpleApptQuestionnaire(serviceInfo.getServiceId(), userId, txt_addnote, bookingModels);
+        } else {
+            getMltpleApptQuestionnaire(serviceInfo.getServiceId(), providerId, txt_addnote, bookingModels);
+        }
+        /*Intent intent = new Intent(AppointmentActivity.this, ReconfirmationMultipleApptActivity.class);
+        intent.putExtra("datas", bookingModels);
+        startActivity(intent);*/
+    }
+
     private void ApiAppointment(final String txt_addnote, int id) {
 
         final Dialog mDialog = Config.getProgressDialog(AppointmentActivity.this, AppointmentActivity.this.getResources().getString(R.string.dialog_log_in));
@@ -1120,8 +1353,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             return;
         }
 
-        ApiInterface apiService = ApiClient.getClient(AppointmentActivity.this).create(ApiInterface.class);
-        JSONObject qjsonObj = new JSONObject();
         JSONObject queueobj = new JSONObject();
         JSONObject waitobj = new JSONObject();
         JSONObject waitobj1 = new JSONObject();
@@ -1343,7 +1574,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                                 startActivity(intent);
 
                             } else {
-
                                 Intent intent = new Intent(AppointmentActivity.this, ReconfirmationActivity.class);
                                 intent.putExtra("data", model);
                                 startActivity(intent);
@@ -1367,126 +1597,54 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
             }
         });
     }
-
-
-    private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
-
-        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type = MediaType.parse("*/*");
-        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
-        mBuilder.setType(MultipartBody.FORM);
-        mBuilder.addFormDataPart("message", message);
-        for (int i = 0; i < imagePathList.size(); i++) {
-
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getImagePath())));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (bitmap != null) {
-                path = saveImage(bitmap);
-                file = new File(path);
-            } else {
-                file = new File(imagePathList.get(i).getImagePath());
-            }
-            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
-        }
-        RequestBody requestBody = mBuilder.build();
-
+    private void getMltpleApptQuestionnaire(int serviceId, int accountId, String txt_addnote, ArrayList<BookingModel> bookingModels) {
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        JSONObject jsonObj = new JSONObject();
-        try {
-            jsonObj.put("message", message);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<ResponseBody> call = apiService.appointmentSendAttachments(waitListId, Integer.parseInt(accountID.split("-")[0]), requestBody);
+        Call<Questionnaire> call = apiService.getQuestions(serviceId, 0, accountId);
+        call.enqueue(new Callback<Questionnaire>() {
 
-        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+            public void onResponse(Call<Questionnaire> call, Response<Questionnaire> response) {
                 try {
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
-                    if (response.code() == 200) {
-                        imagePathList.clear();
-                        dialog.dismiss();
-
-
-                    } else {
-                        if (response.code() == 422) {
-                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-            }
-        });
-
-    }
-
-    private void getConfirmationDetails(int userId) {
-
-        final ApiInterface apiService =
-                ApiClient.getClient(AppointmentActivity.this).create(ApiInterface.class);
-        Call<ActiveAppointment> call = apiService.getActiveAppointmentUUID(value, String.valueOf(userId));
-        call.enqueue(new Callback<ActiveAppointment>() {
-            @Override
-            public void onResponse(Call<ActiveAppointment> call, Response<ActiveAppointment> response) {
-                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
-                        activeAppointment = response.body();
-                        if (activeAppointment != null) {
-                            appEncId = activeAppointment.getAppointmentEncId();
-                            Bundle b = new Bundle();
-                            b.putSerializable("BookingDetails", activeAppointment);
-                            b.putString("terminology", mSearchTerminology.getProvider());
-                            b.putString("from", "");
-                            b.putString("waitlistPhonenumber", phoneNumber);
-                            if (serviceInfo.isUser()) {
-                                b.putString("accountID", String.valueOf(userId));
-                            } else {
-                                b.putString("accountID", String.valueOf(providerId));
-                            }
-                            b.putString("livetrack", serviceInfo.getLivetrack());
-                            b.putString("confId", value);
-                            Intent checkin = new Intent(AppointmentActivity.this, AppointmentConfirmation.class);
-                            checkin.putExtras(b);
-                            startActivity(checkin);
-                        }
+                        Questionnaire questionnaire = response.body();
+                        if (questionnaire != null) {
+                            bookingModels.get(bookingModels.size() - 1).setQuestionnaire(questionnaire);
+                            if (questionnaire.getQuestionsList() != null) {
 
+                                Intent intent = new Intent(AppointmentActivity.this, CustomQuestionnaire.class);
+                                intent.putExtra("datas", bookingModels);
+                                intent.putExtra("from", Constants.APPOINTMENT);
+                                startActivity(intent);
+
+                            } else {
+                                Intent intent = new Intent(AppointmentActivity.this, ReconfirmationMultipleApptActivity.class);
+                                intent.putExtra("datas", bookingModels);
+                                startActivity(intent);
+                            }
+                        } else {
+                            Intent intent = new Intent(AppointmentActivity.this, ReconfirmationMultipleApptActivity.class);
+                            intent.putExtra("datas", bookingModels);
+                            startActivity(intent);
+                        }
                     }
-                } catch (Exception e) {
-                    Log.i("mnbbnmmnbbnm", e.toString());
+                } catch  (Exception e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ActiveAppointment> call, Throwable t) {
+            public void onFailure(Call<Questionnaire> call, Throwable t) {
+
             }
         });
-
     }
-
-
     public static String convertDate(String date) {
 
         String finalDate = "";
@@ -1611,6 +1769,49 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
     }
 
+    @Override
+    public void sendSlotInfo(List<SelectedSlotDetail> selectedSlotDetails) {
+        if (selectedSlotDetails.size() == 1) {
+            try {
+                this.selectedSlotDetails = selectedSlotDetails;
+
+                // getting data from dialog
+                String convertedTime = selectedSlotDetails.get(0).getDisplayTime().replace("am", "AM").replace("pm", "PM");
+                tvTime.setText(convertedTime);
+                tvDate.setText(selectedSlotDetails.get(0).getDate());
+                tvSelectedDateHint.setText("Selected Time slot");
+                scheduleId = selectedSlotDetails.get(0).getScheduleId();
+                slotTime = selectedSlotDetails.get(0).getSlotTime();
+                try {
+                    apiDate = getApiDateFormat(selectedSlotDetails.get(0).getCalendarDate());  // to convert selected date to api date format
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                if (serviceInfo.isUser()) {
+                    getAdvancePaymentDetails(userMessage, userId);
+                } else {
+                    getAdvancePaymentDetails(userMessage, providerId);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            String time = selectedSlotDetails
+                    .stream()
+                    .map(a -> String.valueOf(a.getDisplayTime().replaceAll(" ", "\u00a0")))
+                    .collect(Collectors.joining(", "));
+            String convertedTime = time.replaceAll("am", "AM").replaceAll("pm", "PM");
+            if (selectedSlotDetails.size() > 2) {
+                tvTime.setTextSize(20);
+            }
+            tvTime.setText(convertedTime);
+            tvDate.setText(selectedSlotDetails.get(0).getDate());
+            tvSelectedDateHint.setText("Selected Time slot");
+            this.selectedSlotDetails = selectedSlotDetails;
+        }
+    }
+
     public static String getApiDateFormat(String d) throws ParseException {
 
         SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
@@ -1674,82 +1875,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
         finish();
     }
 
-    public void paymentFinished(RazorpayModel razorpayModel) {
-
-
-        if (serviceInfo.isUser()) {
-            if (imagePathList.size() > 0) {
-                ApiCommunicateAppointment(value, String.valueOf(userId), userMessage, dialog);
-            }
-            getConfirmationDetails(userId);
-
-        } else {
-            if (imagePathList.size() > 0) {
-                ApiCommunicateAppointment(value, String.valueOf(providerId), userMessage, dialog);
-            }
-            getConfirmationDetails(providerId);
-
-        }
-    }
-
-
-    @Override
-    public void onPaymentSuccess(String s, PaymentData paymentData) {
-
-        try {
-            RazorpayModel razorpayModel = new RazorpayModel(paymentData);
-            //new PaymentGateway(this.mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
-            Toast.makeText(this.mContext, "Payment Successful", Toast.LENGTH_LONG).show();
-            paymentFinished(razorpayModel);
-        } catch (Exception e) {
-            Log.e("TAG", "Exception in onPaymentSuccess", e);
-        }
-    }
-
-    @Override
-    public void onPaymentError(int i, String s, PaymentData paymentData) {
-
-        try {
-            AlertDialog alertDialog = new AlertDialog.Builder(AppointmentActivity.this).create();
-            alertDialog.setTitle("Payment Failed");
-            alertDialog.setMessage("Unable to process your request.Please try again after some time");
-            alertDialog.setCancelable(false);
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-                            Intent homeIntent = new Intent(AppointmentActivity.this, Home.class);
-                            startActivity(homeIntent);
-                            finish();
-
-                        }
-                    });
-            alertDialog.show();
-        } catch (Exception e) {
-            Log.e("TAG", "Exception in onPaymentError..", e);
-        }
-    }
-
-    @Override
-    public void sendPaymentResponse(String paymentStatus, String orderid) {
-
-        // Paytm
-        if (serviceInfo.isUser()) {
-            if (imagePathList.size() > 0) {
-                ApiCommunicateAppointment(value, String.valueOf(userId), userMessage, dialog);
-            }
-            getConfirmationDetails(userId);
-
-        } else {
-            if (imagePathList.size() > 0) {
-                ApiCommunicateAppointment(value, String.valueOf(providerId), userMessage, dialog);
-            }
-            getConfirmationDetails(providerId);
-
-        }
-    }
-
     @Override
     public void mobileUpdated() {
         phoneNumber = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
@@ -1758,143 +1883,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
 
 // files related
-
-    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
-        //copy file and send new file path
-        String fileName = getFileNameInfo(contentUri);
-        if (!TextUtils.isEmpty(fileName)) {
-            String ext = "";
-            if (fileName.contains(".")) {
-            } else {
-                ext = "." + extension;
-            }
-            File wallpaperDirectoryFile = new File(
-                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
-            copy(context, contentUri, wallpaperDirectoryFile);
-            return wallpaperDirectoryFile.getAbsolutePath();
-        }
-        return null;
-    }
-
-    protected static String getFileNameInfo(Uri uri) {
-        if (uri == null) {
-            return null;
-        }
-        String fileName = null;
-        String path = uri.getPath();
-        int cut = path.lastIndexOf('/');
-        if (cut != -1) {
-            fileName = path.substring(cut + 1);
-        }
-        return fileName;
-    }
-
-    public static void copy(Context context, Uri srcUri, File dstFile) {
-        try {
-            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
-            if (inputStream == null) return;
-            FileOutputStream outputStream = new FileOutputStream(dstFile);
-            IOUtils.copy(inputStream, outputStream);
-            inputStream.close();
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String getRealPathFromURI(Uri contentURI, Activity context) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        @SuppressWarnings("deprecation")
-        Cursor cursor = context.managedQuery(contentURI, projection, null,
-                null, null);
-        if (cursor == null)
-            return null;
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        if (cursor.moveToFirst()) {
-            String s = cursor.getString(column_index);
-            // cursor.close();
-            return s;
-        }
-        // cursor.close();
-        return null;
-    }
-
-
-    public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        if (myBitmap != null) {
-            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        }
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            f = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".jpg");
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(mContext,
-                    new String[]{f.getPath()},
-                    new String[]{"image/jpeg"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-
-            return f.getAbsolutePath();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
-    }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public String getPDFPath(Uri uri) {
-
-        final String id = DocumentsContract.getDocumentId(uri);
-        final Uri contentUri = ContentUris.withAppendedId(
-                Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = mActivity.getApplicationContext().getContentResolver().query(contentUri, projection, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
-
-    public String getFilePathFromURI(Uri contentUri, Context context) {
-        //copy file and send new file path
-        String fileName = getFileName(contentUri);
-        if (!TextUtils.isEmpty(fileName)) {
-            File copyFile = new File(context.getExternalCacheDir() + File.separator + fileName);
-            //copy(context, contentUri, copyFile);
-            return copyFile.getAbsolutePath();
-        }
-        return null;
-    }
-
-    public String getFileName(Uri uri) {
-        if (uri == null) return null;
-        String fileName = null;
-        String path = uri.getPath();
-        int cut = path.lastIndexOf('/');
-        if (cut != -1) {
-            fileName = path.substring(cut + 1);
-        }
-        return fileName;
-    }
-
-    public String getRealFilePath(Uri uri) {
-        String path = uri.getPath();
-        String[] pathArray = path.split(":");
-        String fileName = pathArray[pathArray.length - 1];
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
-    }
 
     private void requestMultiplePermissions() {
         Dexter.withActivity(this)
@@ -1933,18 +1921,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 .check();
     }
 
-    public static float getImageSize(Context context, Uri uri) {
-        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-        if (cursor != null) {
-            int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
-            cursor.moveToFirst();
-            float imageSize = cursor.getLong(sizeIndex);
-            cursor.close();
-            return imageSize / (1024f * 1024f); // returns size in bytes
-        }
-        return 0;
-    }
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
 
@@ -1980,8 +1956,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                 try {
                     if (data.getData() != null) {
                         Uri uri = data.getData();
-                        String orgFilePath = getRealPathFromURI(uri, this);
-                        String filepath = "";//default fileName
 
                         String mimeType = this.mContext.getContentResolver().getType(uri);
                         String uriString = uri.toString();
@@ -1993,9 +1967,33 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
+                        File photoFile = null;
+
+                        try {
+                            // Creating file
+                            try {
+                                photoFile = Config.createFile(mContext, extension, true);
+                            } catch (IOException ex) {
+                                Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                // Log.d(TAG, "Error occurred while creating the file");
+                            }
+
+                            InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                            FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                            // Copying
+                            Config.copyStream(inputStream, fileOutputStream);
+                            fileOutputStream.close();
+                            inputStream.close();
+                        } catch (Exception e) {
+                            Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                            //Log.d(TAG, "onActivityResult: " + e.toString());
+                        }
+                        String orgFilePath = photoFile.getAbsolutePath();
                         if (Arrays.asList(fileExtsSupported).contains(extension)) {
                             if (orgFilePath == null) {
-                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
+                                orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                             }
                         } else {
                             Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
@@ -2022,12 +2020,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                         ClipData mClipData = data.getClipData();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
-                            Uri imageUri = item.getUri();
-                            String orgFilePath = getRealPathFromURI(imageUri, this);
-                            String filepath = "";//default fileName
-
-                            String mimeType = mContext.getContentResolver().getType(imageUri);
-                            String uriString = imageUri.toString();
+                            Uri uri = item.getUri();
+                            String mimeType = this.mContext.getContentResolver().getType(uri);
+                            String uriString = uri.toString();
                             String extension = "";
                             if (uriString.contains(".")) {
                                 extension = uriString.substring(uriString.lastIndexOf(".") + 1);
@@ -2036,15 +2031,39 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                             if (mimeType != null) {
                                 extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                             }
+                            File photoFile = null;
+
+                            try {
+                                // Creating file
+                                try {
+                                    photoFile = Config.createFile(mContext, extension, true);
+                                } catch (IOException ex) {
+                                    Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                    // Log.d(TAG, "Error occurred while creating the file");
+                                }
+
+                                InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                                FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                                // Copying
+                                Config.copyStream(inputStream, fileOutputStream);
+                                fileOutputStream.close();
+                                inputStream.close();
+                            } catch (Exception e) {
+                                Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                                //Log.d(TAG, "onActivityResult: " + e.toString());
+                            }
+                            String orgFilePath = photoFile.getAbsolutePath();
                             if (Arrays.asList(fileExtsSupported).contains(extension)) {
+
                                 if (orgFilePath == null) {
-                                    orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
+                                    orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                                 }
                             } else {
                                 Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
                                 return;
                             }
-
                             ShoppingListModel model = new ShoppingListModel();
                             model.setImagePath(orgFilePath);
                             imagePathList.add(model);
@@ -2068,13 +2087,21 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
         } else if (requestCode == CAMERA) {
             if (data != null && data.getExtras() != null) {
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                //      imageview.setImageBitmap(bitmap);
-                path = saveImage(bitmap);
-                // imagePathList.add(bitmap.toString());
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
+                File photoFile = null;/////////
+                // ///////
+                try {//////////
+                    photoFile = Config.createFile(mContext, "png", true);//////////
+                } catch (IOException e) {/////////////
+                    e.printStackTrace();///////////
+                }///////////
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");/////////
+                try (FileOutputStream out = new FileOutputStream(photoFile)) {////////////
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out); //////////////
+                    // PNG is a lossless format, the compression factor (100) is ignored/////////
+                } catch (IOException e) {////////////
+                    e.printStackTrace();///////////
+                }////////
+                String path = photoFile.getAbsolutePath();////////
                 if (path != null) {
                     mImageUri = Uri.parse(path);
                     ShoppingListModel model = new ShoppingListModel();
@@ -2085,11 +2112,6 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
                     } else {
                         tvErrorMessage.setVisibility(View.VISIBLE);
                     }
-                }
-                try {
-                    bytes.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
                 imagePreviewAdapter = new ImagePreviewAdapter(imagePathList, mContext, true, iDeleteImagesInterface);
                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 2);
@@ -2310,7 +2332,9 @@ public class AppointmentActivity extends AppCompatActivity implements PaymentRes
 
         Log.i("QueueObj Appointment", queueobj.toString());
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), queueobj.toString());
-        Call<AdvancePaymentDetails> call = apiService.getApptAdvancePaymentDetails(String.valueOf(id), body);
+        //Call<AdvancePaymentDetails> call = apiService.getApptAdvancePaymentDetails(String.valueOf(id), body);
+        Call<AdvancePaymentDetails> call = apiService.getAdvancePaymentDetails("appointment", String.valueOf(id), body);
+
         call.enqueue(new Callback<AdvancePaymentDetails>() {
             @Override
             public void onResponse(Call<AdvancePaymentDetails> call, Response<AdvancePaymentDetails> response) {

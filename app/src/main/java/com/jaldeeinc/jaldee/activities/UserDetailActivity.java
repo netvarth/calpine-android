@@ -569,7 +569,7 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
                                             if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
                                                 serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
                                             }
-                                            if(checkInService.getCheckInServiceAvailability().getPersonAhead() != null) {
+                                            if (checkInService.getCheckInServiceAvailability().getPersonAhead() != null) {
                                                 serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
                                             }
                                             serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
@@ -778,6 +778,10 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             if (appointmentServiceInfo.getTotalAmount() != null) {
                 serviceInfo.setTotalAmount(appointmentServiceInfo.getTotalAmount());
             }
+            if (appointmentServiceInfo.getMaxBookingsAllowed() > 0) {
+                serviceInfo.setMaxBookingsAllowed(appointmentServiceInfo.getMaxBookingsAllowed());
+            }
+            serviceInfo.setShowOnlyAvailableSlots(appointmentServiceInfo.isShowOnlyAvailableSlots());
 
             intent.putExtra("serviceInfo", serviceInfo);
             intent.putExtra("sector", sector);

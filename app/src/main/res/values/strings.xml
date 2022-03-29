@@ -3,9 +3,14 @@
     <string name="url">https://www.jaldee.com/v1/rest/</string>
     <string name="url_terms">https://www.jaldee.com/terms</string>
     <string name="url_privacy">https://www.jaldee.com/#/privacy</string>
+
+    <string name="support_mail">support@jaldee.com</string>
+    <string name="support_number_1">8880125000</string>
+    <string name="support_number_2">0487-2325650</string>
+    <string name="whatsapp_number">7306823011</string>
+
     <string name="permission_rationale">Location permission is needed for core functionality</string>
-    <string name="permission_denied_explanation">Permission was denied, but is needed for core
-        functionality.</string>
+    <string name="permission_denied_explanation">Permission was denied, but is needed for core functionality.</string>
     <string name="settings">Settings</string>
     <string name="ok">OK</string>
     <string name="request_location_updates">Request location updates</string>
@@ -169,6 +174,9 @@
     <string name="signup_coupon">Sign Up Coupon</string>
 
     <string name="donation_quote">\"Remember that the happiest people are not those getting more, but those Giving more\"</string>
+
+    <string name="cancelation_policy_2">Consumers can cancel the VARIABLE anytime</string>
+    <string name="cancelation_policy_3">If the consumer cancels the VARIABLE, 3% will be deducted from the amount(which includes Jaldee service charges and Online Gateway fees).</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

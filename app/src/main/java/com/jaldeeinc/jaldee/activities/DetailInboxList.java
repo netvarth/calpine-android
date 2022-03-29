@@ -19,13 +19,16 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
 import androidx.annotation.RequiresApi;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -106,7 +109,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
     ArrayList<String> fileAttachment;
     String path;
     Bitmap bitmap;
-    File f,file;
+    File f, file;
     RecyclerView recycle_image_attachment;
     RelativeLayout displayImages;
     ArrayList<String> imagePathList = new ArrayList<>();
@@ -186,7 +189,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         tv_camera = dialog.findViewById(R.id.camera);
         recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
         //  imageview = dialog.findViewById(R.id.iv);
-       // RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
+        // RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
 
 
         if (waitListId != null) {
@@ -294,7 +297,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
             @Override
             public void onClick(View v) {
 
-                if(waitListId.contains("_appt")){
+                if (waitListId.contains("_appt")) {
 
 
                     if (waitListId != null) {
@@ -323,7 +326,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                         ApiCommunicateWithoutAppointmentID(String.valueOf(accountID), edt_message.getText().toString(), dialog);
                     }
 
-                }else{
+                } else {
                     if (waitListId != null) {
                         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                         String dateString = formatter.format(new Date(timestamp));
@@ -354,13 +357,6 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 }
 
 
-
-
-
-
-
-
-
             }
         });
 
@@ -373,65 +369,6 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         });
     }
 
-    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
-        //copy file and send new file path
-        String fileName = getFileNameInfo(contentUri);
-        if (!TextUtils.isEmpty(fileName)) {
-            String ext = "";
-            if (fileName.contains(".")) {
-            } else {
-                ext = "." + extension;
-            }
-            File wallpaperDirectoryFile = new File(
-                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
-            copy(context, contentUri, wallpaperDirectoryFile);
-            return wallpaperDirectoryFile.getAbsolutePath();
-        }
-        return null;
-    }
-
-    protected static String getFileNameInfo(Uri uri) {
-        if (uri == null) {
-            return null;
-        }
-        String fileName = null;
-        String path = uri.getPath();
-        int cut = path.lastIndexOf('/');
-        if (cut != -1) {
-            fileName = path.substring(cut + 1);
-        }
-        return fileName;
-    }
-
-    public static void copy(Context context, Uri srcUri, File dstFile) {
-        try {
-            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
-            if (inputStream == null) return;
-            FileOutputStream outputStream = new FileOutputStream(dstFile);
-            IOUtils.copy(inputStream, outputStream);
-            inputStream.close();
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public String getRealPathFromURI(Uri contentURI, Activity context) {
-        String[] projection = { MediaStore.Images.Media.DATA };
-        @SuppressWarnings("deprecation")
-        Cursor cursor = context.managedQuery(contentURI, projection, null,
-                null, null);
-        if (cursor == null)
-            return null;
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        if (cursor.moveToFirst()) {
-            String s = cursor.getString(column_index);
-            // cursor.close();
-            return s;
-        }
-        // cursor.close();
-        return null;
-    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -445,10 +382,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 try {
                     if (data.getData() != null) {
                         Uri uri = data.getData();
-                        String orgFilePath = getRealPathFromURI(uri, DetailInboxList.this);
-                        String filepath = "";//default fileName
-                        //Uri filePathUri = uri;
-                        // File file;
+
                         String mimeType = this.mContext.getContentResolver().getType(uri);
                         String uriString = uri.toString();
                         String extension = "";
@@ -456,75 +390,50 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                             extension = uriString.substring(uriString.lastIndexOf(".") + 1);
                         }
 
-
-//                        if(Arrays.asList(imgExtsSupported).contains(extension)) {
-//                            try {
-//                                file = new File(new URI(uri.toString()));
-//                                if (file.exists())
-//                                    filepath = file.getAbsolutePath();
-//
-//                            } catch (URISyntaxException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-                        //
-                        //    else {
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
+                        File photoFile = null;
+
+                        try {
+                            // Creating file
+                            try {
+                                photoFile = Config.createFile(mContext, extension, true);
+                            } catch (IOException ex) {
+                                Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                // Log.d(TAG, "Error occurred while creating the file");
+                            }
+
+                            InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                            FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                            // Copying
+                            Config.copyStream(inputStream, fileOutputStream);
+                            fileOutputStream.close();
+                            inputStream.close();
+                        } catch (Exception e) {
+                            Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                            //Log.d(TAG, "onActivityResult: " + e.toString());
+                        }
+                        String orgFilePath = photoFile.getAbsolutePath();
                         if (Arrays.asList(fileExtsSupported).contains(extension)) {
-                            if(orgFilePath == null) {
-                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
+                            if (orgFilePath == null) {
+                                orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                             }
                         } else {
                             Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
-//                        if (uri.getScheme().toString().compareTo("external/images/media") == 0) {
-//
-////                            String[] projection = { MediaStore.Images.Media.DATA };
-////                            Cursor cursor = this.mContext.getContentResolver().query(uri, projection, null, null, null);
-////                            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-////
-////                            cursor.moveToFirst();
-////                            String mImagePath = cursor.getString(column_index);
-////                            cursor.close();
-////                            }
-//                            filepath = getFilePathFromURI(this.mContext, uri);
-//                        } else if (uri.getScheme().compareTo("file") == 0) {
-//                            try {
-//                                file = new File(new URI(uri.toString()));
-//                                if (file.exists())
-//                                    filepath = file.getAbsolutePath();
-//
-//                            } catch (URISyntaxException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }  else {
-//                            filepath = uri.getPath();
-//                        }
                         imagePathList.add(orgFilePath);
-//                        Uri mImageUri = data.getData();
-//                        filePath = data.getData().getPath();
-//                        String ext1 = FilenameUtils.getExtension(filePath);
-//
-//
-//                        imagePathList.add(mImageUri.toString());
-//             //         bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mImageUri);
-//                       // if(bitmap!=null){
-//                    //    path = saveImage(bitmap);}
-//
-//                      //  else{
-//                            path = getRealFilePath(mImageUri);
-//                     //   }
 
                         DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(DetailInboxList.this, 3);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
-                        if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                        if (imagePathList.size() > 0 && edt_message.getText().toString().equals("")) {
                             Toast.makeText(mContext, "Please enter message", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -534,22 +443,25 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
             }
 
         } else if (requestCode == CAMERA) {
-            if(data!=null) {
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                //      imageview.setImageBitmap(bitmap);
-                path = saveImage(bitmap);
-                // imagePathList.add(bitmap.toString());
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
+            if (data != null) {
+                File photoFile = null;/////////
+                // ///////
+                try {//////////
+                    photoFile = Config.createFile(mContext, "png", true);//////////
+                } catch (IOException e) {/////////////
+                    e.printStackTrace();///////////
+                }///////////
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");/////////
+                try (FileOutputStream out = new FileOutputStream(photoFile)) {////////////
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance////////////
+                    // PNG is a lossless format, the compression factor (100) is ignored/////////
+                } catch (IOException e) {////////////
+                    e.printStackTrace();///////////
+                }////////
+                String path = photoFile.getAbsolutePath();////////
                 if (path != null) {
                     mImageUri = Uri.parse(path);
                     imagePathList.add(mImageUri.toString());
-                }
-                try {
-                    bytes.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
                 DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(DetailInboxList.this, 3);
@@ -563,37 +475,6 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         }
     }
 
-
-    public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        if (myBitmap != null) {
-            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        }
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            f = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".jpg");
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(mContext,
-                    new String[]{f.getPath()},
-                    new String[]{"image/jpeg"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-
-            return f.getAbsolutePath();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
-    }
 
     private void requestMultiplePermissions() {
         Dexter.withActivity((Activity) mContext)
@@ -632,51 +513,6 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 .onSameThread()
                 .check();
     }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public String getPDFPath(Uri uri) {
-
-        final String id = DocumentsContract.getDocumentId(uri);
-        final Uri contentUri = ContentUris.withAppendedId(
-                Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = mContext.getContentResolver().query(contentUri, projection, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
-
-    public String getFilePathFromURI(Uri contentUri, Context context) {
-        //copy file and send new file path
-        String fileName = getFileName(contentUri);
-        if (!TextUtils.isEmpty(fileName)) {
-            File copyFile = new File(context.getExternalCacheDir() + File.separator + fileName);
-            //copy(context, contentUri, copyFile);
-            return copyFile.getAbsolutePath();
-        }
-        return null;
-    }
-
-    public String getFileName(Uri uri) {
-        if (uri == null) return null;
-        String fileName = null;
-        String path = uri.getPath();
-        int cut = path.lastIndexOf('/');
-        if (cut != -1) {
-            fileName = path.substring(cut + 1);
-        }
-        return fileName;
-    }
-
-    public String getRealFilePath(Uri uri) {
-        String path = uri.getPath();
-        String[] pathArray = path.split(":");
-        String fileName = pathArray[pathArray.length - 1];
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
-    }
-
-
 
     private void ApiCommunicateWithoutWaitListID(String accountID, String message, final BottomSheetDialog dialog) {
 
@@ -809,7 +645,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
     private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
 
-        Log.i("poiioppo",accountID);
+        Log.i("poiioppo", accountID);
 
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -823,20 +659,8 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 //                File file = new File(String.valueOf(imageUri));
 //                mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
 //            }
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (bitmap != null) {
-                path = saveImage(bitmap);
-                 file = new File(path);
-            }
-//            else{
-//                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
-//            }
-            else{
-             file = new File(imagePathList.get(i));}
+            file = new File(imagePathList.get(i));
+
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
         RequestBody requestBody = mBuilder.build();
@@ -863,7 +687,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                     if (mDialog.isShowing())
                         Config.closeDialog(DetailInboxList.this, mDialog);
 
-                        Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
@@ -890,7 +714,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
-                 Config.closeDialog( DetailInboxList.this, mDialog);
+                    Config.closeDialog(DetailInboxList.this, mDialog);
 
             }
         });
@@ -911,20 +735,8 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 //                File file = new File(String.valueOf(imageUri));
 //                mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
 //            }
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (bitmap != null) {
-                path = saveImage(bitmap);
-                file = new File(path);
-            }
-//            else{
-//                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
-//            }
-            else{
-                file = new File(imagePathList.get(i));}
+            file = new File(imagePathList.get(i));
+
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
         RequestBody requestBody = mBuilder.build();
@@ -978,7 +790,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
-                    Config.closeDialog( DetailInboxList.this, mDialog);
+                    Config.closeDialog(DetailInboxList.this, mDialog);
 
             }
         });

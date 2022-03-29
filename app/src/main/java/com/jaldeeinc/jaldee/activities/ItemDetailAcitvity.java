@@ -52,6 +52,7 @@ import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
 import com.jaldeeinc.jaldee.custom.SelectedItemsDialog;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.CartItemModel;
+import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CatalogItem;
 import com.jaldeeinc.jaldee.response.ItemImages;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
@@ -141,6 +142,7 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
     private IItemInterface iItemInterface;
     private DetailPageItemsAdapter detailPageItemsAdapter;
     ArrayList<CatalogItem> remainingItemsList = new ArrayList<>();
+    private Catalog catalogInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +160,7 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
         itemDetails = (CatalogItem) intent.getSerializableExtra("itemInfo");
         accountId = intent.getIntExtra("accountId", 0);
         uniqueId = intent.getIntExtra("uniqueId", 0);
+        catalogInfo = (Catalog) intent.getSerializableExtra("catalogInfo");
         remainingItemsList = (ArrayList<CatalogItem>) intent.getSerializableExtra("catalogItems");
         mBusinessDataList = (SearchViewDetail) intent.getSerializableExtra("providerInfo");
 
@@ -401,8 +404,11 @@ public class ItemDetailAcitvity extends AppCompatActivity implements IImageInter
             public void onClick(View v) {
 
                 Intent intent = new Intent(ItemDetailAcitvity.this, CartActivity.class);
-                intent.putExtra("accountId", accountId);
+                intent.putExtra("providerAccountId", accountId);
                 intent.putExtra("providerInfo", mBusinessDataList);
+                intent.putExtra("catalogInfo", catalogInfo);
+                intent.putExtra("serviceId", catalogInfo.getCatLogId());
+
                 startActivity(intent);
 
             }

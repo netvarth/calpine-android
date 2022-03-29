@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.response;
 
 import com.google.gson.annotations.SerializedName;
 import com.jaldeeinc.jaldee.model.FileAttachment;
+import com.jaldeeinc.jaldee.model.RlsdQnr;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -154,7 +155,15 @@ public class ActiveCheckIn implements Serializable {
     int appxWaitingTime;
     String appmtDate;
     String appmtTime;
+    ArrayList<RlsdQnr> releasedQnr;
 
+    public void setReleasedQnr(ArrayList<RlsdQnr> releasedQnr) {
+        this.releasedQnr = releasedQnr;
+    }
+
+    public ArrayList<RlsdQnr> getReleasedQnr() {
+        return releasedQnr;
+    }
     public boolean isHasAttachment() {
         return hasAttachment;
     }
@@ -861,5 +870,16 @@ public class ActiveCheckIn implements Serializable {
 
     public ArrayList<FileAttachment> getAttchment() {
         return attchment;
+    }
+
+    @SerializedName("questionnaires")
+    ArrayList<QuestionnaireResponse> questionnaires;
+
+    public ArrayList<QuestionnaireResponse> getQuestionnaires() {
+        return questionnaires;
+    }
+
+    public void setQuestionnaires(ArrayList<QuestionnaireResponse> questionnaires) {
+        this.questionnaires = questionnaires;
     }
 }

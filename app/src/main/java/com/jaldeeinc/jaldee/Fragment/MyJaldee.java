@@ -4,12 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,31 +12,21 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
+import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.tabs.TabLayout;
-import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.AppointmentActivity;
-import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.HistoryActivity;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.OrdersHistoryActivity;
 import com.jaldeeinc.jaldee.adapter.JaldeeTabs;
-import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.NotificationDialog;
-import com.jaldeeinc.jaldee.model.Bookings;
-import com.jaldeeinc.jaldee.payment.PaymentGateway;
-import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 public class MyJaldee extends RootFragment {

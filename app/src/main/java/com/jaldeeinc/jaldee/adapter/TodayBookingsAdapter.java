@@ -1,5 +1,7 @@
 package com.jaldeeinc.jaldee.adapter;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -7,6 +9,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -26,12 +29,15 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.Bookings;
+import com.jaldeeinc.jaldee.model.RlsdQnr;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdapter.ViewHolder> {
 
@@ -41,7 +47,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
     private int lastPosition = -1;
     private ISelectedBooking iSelectedBooking;
     private boolean hideMoreInfo = false;
-
+    List<RlsdQnr> fReleasedQNR;
 
     public TodayBookingsAdapter(ArrayList<Bookings> bookingsList, Context context, boolean isLoading, ISelectedBooking iSelectedBooking, boolean hideMoreInfo) {
         this.context = context;
@@ -357,28 +363,43 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
 
                 // to set status
                 if (bookings.getBookingStatus() != null) {
-
-                    viewHolder.tvStatus.setVisibility(View.VISIBLE);
-                    viewHolder.rlStatus.setVisibility(View.VISIBLE);
-                    if (bookings.getBookingStatus().equalsIgnoreCase("Done")) {
-                        viewHolder.tvStatus.setText("Completed");
-                    } else {
-                        viewHolder.tvStatus.setText(convertToTitleForm(bookings.getBookingStatus()));
+                    if (bookings.getReleasedQnr() != null && bookings.getReleasedQnr().size() > 0) {
+                        fReleasedQNR = bookings.getReleasedQnr().stream()
+                                .filter(p -> p.getStatus().equalsIgnoreCase("released")).collect(Collectors.toList());
                     }
-                    if (bookings.getBookingStatus().equalsIgnoreCase(Constants.CONFIRMED)) {
-                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
-                    } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.ARRIVED)) {
-                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
-                    } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.COMPLETED)) {
-                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.location_theme));
-                    } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.CANCELLED)) {
-                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.cb_errorRed));
-                    } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.CHECKEDIN)) {
-                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
-                    } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.DONE)) {
-                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.location_theme));
+                    if (fReleasedQNR != null && !fReleasedQNR.isEmpty() && fReleasedQNR.size() > 0) {
+                        viewHolder.rl_qnr_info_needed.setVisibility(View.VISIBLE);
+                        viewHolder.rlStatus.setVisibility(View.GONE);
+                        Animation anim = new AlphaAnimation(0.0f, 1.0f);
+                        anim.setDuration(800); //You can manage the blinking time with this parameter
+                        anim.setStartOffset(20);
+                        anim.setRepeatMode(Animation.REVERSE);
+                        anim.setRepeatCount(Animation.INFINITE);
+                        viewHolder.rl_qnr_info_needed.startAnimation(anim);
                     } else {
-                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.orange));
+                        viewHolder.rl_qnr_info_needed.setVisibility(View.GONE);
+                        viewHolder.tvStatus.setVisibility(View.VISIBLE);
+                        viewHolder.rlStatus.setVisibility(View.VISIBLE);
+                        if (bookings.getBookingStatus().equalsIgnoreCase("Done")) {
+                            viewHolder.tvStatus.setText("Completed");
+                        } else {
+                            viewHolder.tvStatus.setText(convertToTitleForm(bookings.getBookingStatus()));
+                        }
+                        if (bookings.getBookingStatus().equalsIgnoreCase(Constants.CONFIRMED)) {
+                            viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
+                        } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.ARRIVED)) {
+                            viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
+                        } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.COMPLETED)) {
+                            viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.location_theme));
+                        } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.CANCELLED)) {
+                            viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.cb_errorRed));
+                        } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.CHECKEDIN)) {
+                            viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
+                        } else if (bookings.getBookingStatus().equalsIgnoreCase(Constants.DONE)) {
+                            viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.location_theme));
+                        } else {
+                            viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.orange));
+                        }
                     }
                 } else {
                     viewHolder.tvStatus.setVisibility(View.GONE);
@@ -465,6 +486,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
         CustomTextViewSemiBold tvProviderName;
         CustomTextViewMedium tvStatus, tvServiceName, tvDateAndTime, tvpayment, tokenNo, tvForHint;
         CardView cvBooking;
+        RelativeLayout rl_qnr_info_needed;
         RelativeLayout rlStatus;
         LinearLayout llBookingFor;
 
@@ -490,6 +512,7 @@ public class TodayBookingsAdapter extends RecyclerView.Adapter<TodayBookingsAdap
                 tvForHint = itemView.findViewById(R.id.tv_forHint);
                 tvBookingFor = itemView.findViewById(R.id.tv_bookingFor);
                 llBookingFor = itemView.findViewById(R.id.ll_bookingFor);
+                rl_qnr_info_needed = itemView.findViewById(R.id.rl_qnr_info_needed);
 
             }
 

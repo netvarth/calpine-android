@@ -1,38 +1,24 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.annotation.SuppressLint;
-
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 
-import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
-import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.jaldeeinc.jaldee.Interface.ITimeSlot;
 import com.jaldeeinc.jaldee.Interface.OnBottomReachedListener;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.Appointment;
-import com.jaldeeinc.jaldee.activities.AppointmentDate;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
-import com.jaldeeinc.jaldee.response.AvailableSlotsData;
-import com.jaldeeinc.jaldee.response.CatalogSchedule;
 import com.jaldeeinc.jaldee.response.CatalogTimeSlot;
-import com.jaldeeinc.jaldee.response.Schedule;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class OrderTimeSlotAdapter extends RecyclerView.Adapter<OrderTimeSlotAdapter.MyViewHolder> {

@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.jaldeeinc.jaldee">
-
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Permission for checking whether wifi is enabled -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -20,8 +21,7 @@
         android:name="android.permission.READ_PHONE_STATE"
         tools:node="remove" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<!--    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" /> -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -30,6 +30,14 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
+
+    <queries>
+        <package android:name="com.paytm.pgsdk.TransactionManager.PAYTM_APP_PACKAGE" />
+
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+        </intent>
+    </queries>
 
     <application
         android:name=".common.MyApplication"
@@ -44,14 +52,19 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-
+        <activity
+            android:name=".activities.MultipleAppointmentConfirmation"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ReleasedQNRActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.JaldeeWalletActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.JaldeeCashActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.AudioActivity"></activity>
+        <activity android:name=".activities.AudioActivity" />
         <activity
             android:name=".activities.VideoActivity"
             android:screenOrientation="portrait" />
@@ -71,13 +84,13 @@
             android:name=".activities.ReconfirmationActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activities.ReconfirmationMultipleApptActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activities.CustomQuestionnaire"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.WebViewActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.QuestionareActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.EditProfileActivity"
@@ -305,10 +318,5 @@
                 android:resource="@xml/filepaths" />
         </provider>
     </application>
-    <queries>
-        <package android:name="com.paytm.pgsdk.TransactionManager.PAYTM_APP_PACKAGE" />
-        <intent>
-            <action android:name="android.intent.action.MAIN" />
-        </intent>
-    </queries>
+
 </manifest>

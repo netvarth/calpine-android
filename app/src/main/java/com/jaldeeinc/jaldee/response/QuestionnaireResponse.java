@@ -12,6 +12,10 @@ public class QuestionnaireResponse implements Serializable {
     @Expose
     private int questionnaireId;
 
+    @SerializedName("questionnaireName")
+    @Expose
+    private String questionnaireName;
+
     @SerializedName("questionAnswers")
     @Expose
     private ArrayList<QuestionAnswers> questionAnswers;
@@ -30,5 +34,13 @@ public class QuestionnaireResponse implements Serializable {
 
     public void setQuestionAnswers(ArrayList<QuestionAnswers> questionAnswers) {
         this.questionAnswers = questionAnswers;
+    }
+
+    public String getQuestionnaireName() {
+        return questionnaireName;
+    }
+
+    public void setQuestionnaireName(String questionnaireName) {
+        this.questionnaireName = questionnaireName;
     }
 }

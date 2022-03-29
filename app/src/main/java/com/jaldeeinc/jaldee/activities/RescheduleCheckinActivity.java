@@ -1,23 +1,5 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
-
-import com.google.gson.Gson;
-import com.jaldeeinc.jaldee.Interface.ISelectQ;
-import com.jaldeeinc.jaldee.Interface.ISelectedQueue;
-import com.jaldeeinc.jaldee.R;
-
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -27,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.media.MediaScannerConnection;
@@ -35,9 +16,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.text.Html;
-import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -50,16 +28,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
+import com.google.gson.Gson;
+import com.jaldeeinc.jaldee.Interface.ISelectQ;
+import com.jaldeeinc.jaldee.Interface.ISelectedQueue;
 import com.jaldeeinc.jaldee.Interface.ISendMessage;
-import com.jaldeeinc.jaldee.Interface.ISlotInfo;
-import com.jaldeeinc.jaldee.Interface.OnBottomReachedListener;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.adapter.QueuesAdapter;
-import com.jaldeeinc.jaldee.adapter.TimeSlotsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -69,17 +54,11 @@ import com.jaldeeinc.jaldee.custom.CustomAutoSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
-import com.jaldeeinc.jaldee.custom.SlotsDialog;
 import com.jaldeeinc.jaldee.model.FileAttachment;
-import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
-import com.jaldeeinc.jaldee.response.AvailableSlotsData;
-import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
-import com.jaldeeinc.jaldee.response.SlotsData;
-import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -92,7 +71,6 @@ import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -110,7 +88,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -877,74 +854,6 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
         });
         alertDialog.show();
     }
-
-    public String getRealPathFromURI(Uri contentURI, Activity context) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        @SuppressWarnings("deprecation")
-        Cursor cursor = context.managedQuery(contentURI, projection, null,
-                null, null);
-        if (cursor == null)
-            return null;
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        if (cursor.moveToFirst()) {
-            String s = cursor.getString(column_index);
-            // cursor.close();
-            return s;
-        }
-        // cursor.close();
-        return null;
-    }
-
-    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
-        //copy file and send new file path
-        String fileName = getFileNameInfo(contentUri);
-        if (!TextUtils.isEmpty(fileName)) {
-            String ext = "";
-            if (fileName.contains(".")) {
-            } else {
-                ext = "." + extension;
-            }
-            File wallpaperDirectoryFile = new File(
-                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
-            copy(context, contentUri, wallpaperDirectoryFile);
-            return wallpaperDirectoryFile.getAbsolutePath();
-        }
-        return null;
-    }
-
-    public static void copy(Context context, Uri srcUri, File dstFile) {
-        try {
-            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
-            if (inputStream == null) return;
-            FileOutputStream outputStream = new FileOutputStream(dstFile);
-            IOUtils.copy(inputStream, outputStream);
-            inputStream.close();
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    protected static String getFileNameInfo(Uri uri) {
-        if (uri == null) {
-            return null;
-        }
-        String fileName = null;
-        String path = uri.getPath();
-        int cut = 0;
-        if (path != null) {
-            cut = path.lastIndexOf('/');
-        }
-        if (cut != -1) {
-            if (path != null) {
-                fileName = path.substring(cut + 1);
-            }
-        }
-        return fileName;
-    }
-
     public String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         if (myBitmap != null) {
@@ -1048,8 +957,6 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                 try {
                     if (data.getData() != null) {
                         Uri uri = data.getData();
-                        String orgFilePath = getRealPathFromURI(uri, this);
-                        String filepath = "";//default fileName
 
                         String mimeType = this.mContext.getContentResolver().getType(uri);
                         String uriString = uri.toString();
@@ -1061,9 +968,33 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
+                        File photoFile = null;
+
+                        try {
+                            // Creating file
+                            try {
+                                photoFile = Config.createFile(mContext, extension, true);
+                            } catch (IOException ex) {
+                                Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                // Log.d(TAG, "Error occurred while creating the file");
+                            }
+
+                            InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                            FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                            // Copying
+                            Config.copyStream(inputStream, fileOutputStream);
+                            fileOutputStream.close();
+                            inputStream.close();
+                        } catch (Exception e) {
+                            Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                            //Log.d(TAG, "onActivityResult: " + e.toString());
+                        }
+                        String orgFilePath = photoFile.getAbsolutePath();
                         if (Arrays.asList(fileExtsSupported).contains(extension)) {
                             if (orgFilePath == null) {
-                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
+                                orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                             }
                         } else {
                             Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
@@ -1087,12 +1018,9 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                         ClipData mClipData = data.getClipData();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
-                            Uri imageUri = item.getUri();
-                            String orgFilePath = getRealPathFromURI(imageUri, this);
-                            String filepath = "";//default fileName
-
-                            String mimeType = mContext.getContentResolver().getType(imageUri);
-                            String uriString = imageUri.toString();
+                            Uri uri = item.getUri();
+                            String mimeType = this.mContext.getContentResolver().getType(uri);
+                            String uriString = uri.toString();
                             String extension = "";
                             if (uriString.contains(".")) {
                                 extension = uriString.substring(uriString.lastIndexOf(".") + 1);
@@ -1101,14 +1029,40 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                             if (mimeType != null) {
                                 extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                             }
+                            File photoFile = null;
+
+                            try {
+                                // Creating file
+                                try {
+                                    photoFile = Config.createFile(mContext, extension, true);
+                                } catch (IOException ex) {
+                                    Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                    // Log.d(TAG, "Error occurred while creating the file");
+                                }
+
+                                InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                                FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                                // Copying
+                                Config.copyStream(inputStream, fileOutputStream);
+                                fileOutputStream.close();
+                                inputStream.close();
+                            } catch (Exception e) {
+                                Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                                //Log.d(TAG, "onActivityResult: " + e.toString());
+                            }
+                            String orgFilePath = photoFile.getAbsolutePath();
                             if (Arrays.asList(fileExtsSupported).contains(extension)) {
+
                                 if (orgFilePath == null) {
-                                    orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
+                                    orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                                 }
                             } else {
                                 Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
                                 return;
                             }
+
                             imagePathList.add(orgFilePath);
                             if (imagePathList.size() > 0) {
                                 tvErrorMessage.setVisibility(View.GONE);
@@ -1129,15 +1083,21 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
         } else if (requestCode == CAMERA) {
             if (data != null) {
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                //      imageview.setImageBitmap(bitmap);
-                path = saveImage(bitmap);
-                // imagePathList.add(bitmap.toString());
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                if (bitmap != null) {
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                }
-//            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
+                File photoFile = null;/////////
+                // ///////
+                try {//////////
+                    photoFile = Config.createFile(mContext, "png", true);//////////
+                } catch (IOException e) {/////////////
+                    e.printStackTrace();///////////
+                }///////////
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");/////////
+                try (FileOutputStream out = new FileOutputStream(photoFile)) {////////////
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance////////////
+                    // PNG is a lossless format, the compression factor (100) is ignored/////////
+                } catch (IOException e) {////////////
+                    e.printStackTrace();///////////
+                }////////
+                String path = photoFile.getAbsolutePath();////////
                 if (path != null) {
                     mImageUri = Uri.parse(path);
                     imagePathList.add(mImageUri.toString());
@@ -1146,11 +1106,6 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                     } else {
                         tvErrorMessage.setVisibility(View.VISIBLE);
                     }
-                }
-                try {
-                    bytes.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
                 DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
@@ -1184,17 +1139,8 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
                 type = MediaType.parse("image/*");
             }
 
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (bitmap != null) {
-                path = saveImage(bitmap);
-                file = new File(path);
-            } else {
-                file = new File(imagePathList.get(i));
-            }
+            file = new File(imagePathList.get(i));
+
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
         RequestBody requestBody = mBuilder.build();

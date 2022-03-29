@@ -162,6 +162,7 @@ public class PaymentGateway {
                         if (response.code() == 422) {
                             Toast.makeText(mCOntext, responseerror, Toast.LENGTH_SHORT).show();
                         }
+                        iPaymentResponse.update();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -279,6 +280,7 @@ public class PaymentGateway {
                         if (response.code() == 422) {
                             Toast.makeText(mCOntext, responseerror, Toast.LENGTH_SHORT).show();
                         }
+                        iPaymentResponse.update();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

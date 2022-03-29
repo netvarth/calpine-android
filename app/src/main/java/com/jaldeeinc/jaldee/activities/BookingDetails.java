@@ -13,25 +13,23 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipData;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
+import android.provider.CalendarContract;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -78,6 +76,7 @@ import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.model.LabelPath;
 import com.jaldeeinc.jaldee.model.QuestionnaireResponseInput;
+import com.jaldeeinc.jaldee.model.RlsdQnr;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.AnswerLineResponse;
@@ -98,18 +97,15 @@ import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -119,6 +115,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -262,7 +260,8 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
 
     @BindView(R.id.scrollView)
     ScrollView scrollView;
-
+    //@BindView(R.id.ll_calender)
+    //LinearLayout ll_calender;
     boolean firstTimeRating = false;
     boolean isTvViewMore = false;
 
@@ -306,7 +305,6 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
     private CustomNotes customNotes;
     private ISaveNotes iSaveNotes;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -321,7 +319,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
 
         Intent i = getIntent();
         if (i != null) {
-            bookingInfo = (Bookings) i.getSerializableExtra("bookingInfo");
+            //bookingInfo = (Bookings) i.getSerializableExtra("bookingInfo");
             uid = i.getStringExtra("uid");
             id = i.getIntExtra("accountId", 0);
             isActive = i.getBooleanExtra("isActive", true);
@@ -330,7 +328,36 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             fromPushNotification = i.getBooleanExtra(Constants.PUSH_NOTIFICATION, false);
             click_action = i.getStringExtra("click_action");
         }
+        /*ll_calender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_INSERT);
+                intent.setData(CalendarContract.Events.CONTENT_URI);
+                intent.putExtra(CalendarContract.Events.TITLE, "jaldee booking - " + apptInfo.getAppointmentEncId());
+                intent.putExtra(CalendarContract.Events.EVENT_LOCATION, apptInfo.getLocation().getPlace());
+                intent.putExtra(CalendarContract.Events.DESCRIPTION, "Service provider : " + apptInfo.getBusinessName() + "\u2028Location : " + apptInfo.getLocation().getPlace());
+                intent.putExtra(CalendarContract.Events.DTSTART, apptInfo.getSchedule().getApptSchedule().getTimeSlots().get(0).getsTime());
+                intent.putExtra(CalendarContract.Events.DTEND, apptInfo.getSchedule().getApptSchedule().getTimeSlots().get(0).geteTime());
 
+                //intent.putExtra(Intent.EXTRA_EMAIL, "test@yahoo.com, test2@yahoo.com, test3@yahoo.com");
+                if(intent.resolveActivity(getPackageManager()) != null){
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(BookingDetails.this, "There is no app that support this action", Toast.LENGTH_SHORT).show();
+                }
+                *//*if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+
+                    requestPermissions(new String[]{Manifest.permission.READ_CALENDAR}, CAMERA);
+
+                } else if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+
+                    requestPermissions(new String[]{Manifest.permission.WRITE_CALENDAR}, CAMERA);
+
+                }else {
+                    getContentResolver().insert(uri, values);
+                }*//*
+            }
+        });*/
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -649,23 +676,35 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             public void onClick(View view) {
 
                 if (apptInfo != null) {
+                    if (apptInfo.getReleasedQnr() != null) {
+                        if (apptInfo.getReleasedQnr().size() == 1 && apptInfo.getReleasedQnr().get(0).getStatus().equalsIgnoreCase("submitted")) {
 
-                    QuestionnaireResponseInput input = buildQuestionnaireInput(apptInfo.getQuestionnaire());
-                    ArrayList<LabelPath> labelPaths = buildQuestionnaireLabelPaths(apptInfo.getQuestionnaire());
+                            QuestionnaireResponseInput input = buildQuestionnaireInput(apptInfo.getQuestionnaire());
+                            ArrayList<LabelPath> labelPaths = buildQuestionnaireLabelPaths(apptInfo.getQuestionnaire());
 
-                    SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
-                    SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
+                            SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
+                            SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
 
-                    Intent intent = new Intent(mContext, UpdateQuestionnaire.class);
-                    intent.putExtra("serviceId", apptInfo.getService().getId());
-                    intent.putExtra("accountId", apptInfo.getProviderAccount().getId());
-                    intent.putExtra("uid", apptInfo.getUid());
-                    intent.putExtra("isEdit", true);
-                    intent.putExtra("from", Constants.BOOKING_APPOINTMENT);
-                    if (apptInfo != null && apptInfo.getApptStatus() != null) {
-                        intent.putExtra("status", apptInfo.getApptStatus());
+                            Intent intent = new Intent(mContext, UpdateQuestionnaire.class);
+                            intent.putExtra("serviceId", apptInfo.getService().getId());
+                            intent.putExtra("accountId", apptInfo.getProviderAccount().getId());
+                            intent.putExtra("uid", apptInfo.getUid());
+                            intent.putExtra("isEdit", true);
+                            intent.putExtra("from", Constants.BOOKING_APPOINTMENT);
+                            if (apptInfo != null && apptInfo.getApptStatus() != null) {
+                                intent.putExtra("status", apptInfo.getApptStatus());
+                            }
+                            mContext.startActivity(intent);
+                        } else {
+                            Gson gson = new Gson();
+                            String myJson = gson.toJson(apptInfo);
+
+                            Intent intent = new Intent(mContext, ReleasedQNRActivity.class);
+                            intent.putExtra("bookingInfo", myJson);
+                            intent.putExtra("from", Constants.BOOKING_APPOINTMENT);
+                            mContext.startActivity(intent);
+                        }
                     }
-                    startActivity(intent);
                 }
             }
         });
@@ -735,6 +774,12 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
 
                             } else {
                                 isActive = false;
+                            }
+                            if (apptInfo.getReleasedQnr() != null) {
+                                List<RlsdQnr> fReleasedQNR = apptInfo.getReleasedQnr().stream()
+                                        .filter(p -> !p.getStatus().equalsIgnoreCase("unReleased")).collect(Collectors.toList());
+                                apptInfo.getReleasedQnr().clear();
+                                apptInfo.setReleasedQnr((ArrayList<RlsdQnr>) fReleasedQNR); // remove releasedqnr response and add rlsdqnr with remove "unReleased" status
                             }
                             updateUI(apptInfo);
                         }
@@ -1045,10 +1090,10 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
 
                     // to show Questionnaire option
                     if (appointmentInfo.getQuestionnaire() != null && appointmentInfo.getQuestionnaire().getQuestionAnswers() != null && appointmentInfo.getQuestionnaire().getQuestionAnswers().size() > 0) {
-
+                        llQuestionnaire.setVisibility(View.VISIBLE);
+                    } else if (appointmentInfo.getReleasedQnr() != null && appointmentInfo.getReleasedQnr().size() > 0) {
                         llQuestionnaire.setVisibility(View.VISIBLE);
                     } else {
-
                         hideView(llQuestionnaire);
                     }
 
@@ -1109,7 +1154,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                         tvAmountToPay.setText(amount);
                         tvAmountToPay.setVisibility(View.VISIBLE);
                     }
-                    if(appointmentInfo.getBillStatus() != null && appointmentInfo.getBillId() != null && !appointmentInfo.getBillId().equalsIgnoreCase("0")) {
+                    if (appointmentInfo.getBillStatus() != null && appointmentInfo.getBillId() != null && !appointmentInfo.getBillId().equalsIgnoreCase("0")) {
                         cvBill.setVisibility(View.VISIBLE);
                     } else {
                         cvBill.setVisibility(View.GONE);
@@ -1576,17 +1621,8 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                 type = MediaType.parse("image/*");
             }
 
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getImagePath())));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (bitmap != null) {
-                path = saveImage(bitmap);
-                file = new File(path);
-            } else {
-                file = new File(imagePathList.get(i).getImagePath());
-            }
+            file = new File(imagePathList.get(i).getImagePath());
+
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
 
@@ -1776,7 +1812,7 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             final Date dateObj = sdf.parse(time);
             time = new SimpleDateFormat("hh:mm aa").format(dateObj);
-            formattedTime = time.replace("am", "AM").replace("pm", "PM");
+            formattedTime = time.replace("am", "AM").replace("pm", "PM").replaceAll(" ", "\u00a0");
 
         } catch (final ParseException e) {
             e.printStackTrace();
@@ -1882,8 +1918,6 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                 try {
                     if (data.getData() != null) {
                         Uri uri = data.getData();
-                        String orgFilePath = getRealPathFromURI(uri, this);
-                        String filepath = "";//default fileName
 
                         String mimeType = this.mContext.getContentResolver().getType(uri);
                         String uriString = uri.toString();
@@ -1895,9 +1929,33 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
+                        File photoFile = null;
+
+                        try {
+                            // Creating file
+                            try {
+                                photoFile = Config.createFile(mContext, extension, true);
+                            } catch (IOException ex) {
+                                Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                // Log.d(TAG, "Error occurred while creating the file");
+                            }
+
+                            InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                            FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                            // Copying
+                            Config.copyStream(inputStream, fileOutputStream);
+                            fileOutputStream.close();
+                            inputStream.close();
+                        } catch (Exception e) {
+                            Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                            //Log.d(TAG, "onActivityResult: " + e.toString());
+                        }
+                        String orgFilePath = photoFile.getAbsolutePath();
                         if (Arrays.asList(fileExtsSupported).contains(extension)) {
                             if (orgFilePath == null) {
-                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
+                                orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                             }
                         } else {
                             Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
@@ -1925,12 +1983,9 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                         ClipData mClipData = data.getClipData();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
-                            Uri imageUri = item.getUri();
-                            String orgFilePath = getRealPathFromURI(imageUri, this);
-                            String filepath = "";//default fileName
-
-                            String mimeType = mContext.getContentResolver().getType(imageUri);
-                            String uriString = imageUri.toString();
+                            Uri uri = item.getUri();
+                            String mimeType = this.mContext.getContentResolver().getType(uri);
+                            String uriString = uri.toString();
                             String extension = "";
                             if (uriString.contains(".")) {
                                 extension = uriString.substring(uriString.lastIndexOf(".") + 1);
@@ -1939,9 +1994,34 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                             if (mimeType != null) {
                                 extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                             }
+                            File photoFile = null;
+
+                            try {
+                                // Creating file
+                                try {
+                                    photoFile = Config.createFile(mContext, extension, true);
+                                } catch (IOException ex) {
+                                    Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                    // Log.d(TAG, "Error occurred while creating the file");
+                                }
+
+                                InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                                FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                                // Copying
+                                Config.copyStream(inputStream, fileOutputStream);
+                                fileOutputStream.close();
+                                inputStream.close();
+                            } catch (Exception e) {
+                                Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                                //Log.d(TAG, "onActivityResult: " + e.toString());
+                            }
+                            String orgFilePath = photoFile.getAbsolutePath();
                             if (Arrays.asList(fileExtsSupported).contains(extension)) {
+
                                 if (orgFilePath == null) {
-                                    orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
+                                    orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                                 }
                             } else {
                                 Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
@@ -1970,15 +2050,22 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
 
         } else if (requestCode == CAMERA) {
             if (data != null && data.getExtras() != null) {
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                //      imageview.setImageBitmap(bitmap);
-                path = saveImage(bitmap);
-                // imagePathList.add(bitmap.toString());
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                if (bitmap != null) {
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                }
-//            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
+                File photoFile = null;/////////
+                // ///////
+                try {//////////
+                    photoFile = Config.createFile(mContext, "png", true);//////////
+                } catch (IOException e) {/////////////
+                    e.printStackTrace();///////////
+                }///////////
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");/////////
+                try (FileOutputStream out = new FileOutputStream(photoFile)) {////////////
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance////////////
+                    // PNG is a lossless format, the compression factor (100) is ignored/////////
+                } catch (IOException e) {////////////
+                    e.printStackTrace();///////////
+                }////////
+                String path = photoFile.getAbsolutePath();////////
+
                 if (path != null) {
                     mImageUri = Uri.parse(path);
                     ShoppingListModel model = new ShoppingListModel();
@@ -1990,11 +2077,6 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                         tvErrorMessage.setVisibility(View.VISIBLE);
                     }
                 }
-                try {
-                    bytes.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 /*DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 3);
                 recycle_image_attachment.setLayoutManager(mLayoutManager);
@@ -2004,104 +2086,6 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
         }
     }
 
-
-    public String getRealPathFromURI(Uri contentURI, Activity context) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        @SuppressWarnings("deprecation")
-        Cursor cursor = context.managedQuery(contentURI, projection, null,
-                null, null);
-        if (cursor == null)
-            return null;
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        if (cursor.moveToFirst()) {
-            String s = cursor.getString(column_index);
-            // cursor.close();
-            return s;
-        }
-        // cursor.close();
-        return null;
-    }
-
-    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
-        //copy file and send new file path
-        String fileName = getFileNameInfo(contentUri);
-        if (!TextUtils.isEmpty(fileName)) {
-            String ext = "";
-            if (fileName.contains(".")) {
-            } else {
-                ext = "." + extension;
-            }
-            File wallpaperDirectoryFile = new File(
-                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
-            copy(context, contentUri, wallpaperDirectoryFile);
-            return wallpaperDirectoryFile.getAbsolutePath();
-        }
-        return null;
-    }
-
-    public static void copy(Context context, Uri srcUri, File dstFile) {
-        try {
-            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
-            if (inputStream == null) return;
-            FileOutputStream outputStream = new FileOutputStream(dstFile);
-            IOUtils.copy(inputStream, outputStream);
-            inputStream.close();
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    protected static String getFileNameInfo(Uri uri) {
-        if (uri == null) {
-            return null;
-        }
-        String fileName = null;
-        String path = uri.getPath();
-        int cut = 0;
-        if (path != null) {
-            cut = path.lastIndexOf('/');
-        }
-        if (cut != -1) {
-            if (path != null) {
-                fileName = path.substring(cut + 1);
-            }
-        }
-        return fileName;
-    }
-
-    public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        if (myBitmap != null) {
-            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        }
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            f = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".jpg");
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(mContext,
-                    new String[]{f.getPath()},
-                    new String[]{"image/jpeg"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-
-            return f.getAbsolutePath();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
-    }
 
     @Override
     public void delete(int position, String imagePath) {
@@ -2151,7 +2135,12 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
 
     private void storeImage(Bitmap image) {
 
-        File pictureFile = getOutputMediaFile();
+        File pictureFile = null;
+        try {
+            pictureFile = Config.createFile(context, "png", false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (pictureFile == null) {
             //"Error creating media file, check storage permissions: "
             return;
@@ -2179,35 +2168,5 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
             e.printStackTrace();
 
         }
-    }
-
-    /**
-     * Create a File for saving an image or video
-     */
-    private File getOutputMediaFile() {
-// To be safe, you should check that the SDCard is mounted
-// using Environment.getExternalStorageState() before doing this.
-        File mediaStorageDir = new
-                File(Environment.getExternalStorageDirectory() + "/Download");
-                /*File(Environment.getExternalStorageDirectory()
-                + "/Android/data/"
-                + getApplicationContext().getPackageName()
-                + "/Files");*/
-
-// This location works best if you want the created images to be shared
-// between applications and persist after your app has been uninstalled.
-
-// Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                return null;
-            }
-        }
-// Create a media file name
-        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
-        File mediaFile;
-        String mImageName = "JALDEE_" + timeStamp + ".jpg";
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
-        return mediaFile;
     }
 }

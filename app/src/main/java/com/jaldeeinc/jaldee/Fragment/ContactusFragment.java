@@ -8,7 +8,9 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.core.content.ContextCompat;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,10 +28,10 @@ import com.jaldeeinc.jaldee.common.Config;
 
 public class ContactusFragment extends RootFragment {
     Context mContext;
-    LinearLayout layout_phone,maillayout, layout_support;
+    LinearLayout layout_phone, maillayout, layout_whatsapp;
     private final int CALL_REQUEST = 100;
-    TextView tv_phone,tv_support;
-    String phoneNumber;
+    TextView tv_phone, tv_support;
+    String supportPhoneNumber1, whatsappNumber,supportMail;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,6 +41,9 @@ public class ContactusFragment extends RootFragment {
         View row = inflater.inflate(R.layout.contactus, container, false);
 
         mContext = getActivity();
+        supportMail = getString(R.string.support_mail);
+        supportPhoneNumber1 = getString(R.string.support_number_1);
+        whatsappNumber = getString(R.string.whatsapp_number);
 
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
         TextView txt_appname = (TextView) row.findViewById(R.id.txt_appname);
@@ -48,8 +53,8 @@ public class ContactusFragment extends RootFragment {
         tv_support = (TextView) row.findViewById(R.id.txtwhatsapp);
         LinearLayout contactLayout = (LinearLayout) row.findViewById(R.id.contactLayout);
         layout_phone = (LinearLayout) row.findViewById(R.id.layout_phone);
-        maillayout= (LinearLayout) row.findViewById(R.id.maillayout);
-        layout_support = (LinearLayout) row.findViewById(R.id.layout_whatsapp);
+        maillayout = (LinearLayout) row.findViewById(R.id.maillayout);
+        layout_whatsapp = (LinearLayout) row.findViewById(R.id.layout_whatsapp);
 
         contactLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +81,6 @@ public class ContactusFragment extends RootFragment {
         layout_phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                phoneNumber = tv_phone.getText().toString();
                 callPhoneNumber();
             }
         });
@@ -84,7 +88,7 @@ public class ContactusFragment extends RootFragment {
             @Override
             public void onClick(View v) {
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto","support@jaldee.com", null));
+                        "mailto", supportMail, null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Jaldee Feedback");
                 emailIntent.putExtra(Intent.EXTRA_TEXT, "");
                 try {
@@ -95,23 +99,15 @@ public class ContactusFragment extends RootFragment {
             }
         });
 
-        layout_support.setOnClickListener(new View.OnClickListener() {
+        layout_whatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                phoneNumber = tv_support.getText().toString();
-                callPhoneNumber();
+                openWhatsapp();
             }
         });
-
-
         return row;
     }
-    /*@Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-    }*/
+
     public void callPhoneNumber() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -120,33 +116,20 @@ public class ContactusFragment extends RootFragment {
 
                     //requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, CALL_REQUEST);
 
-                    requestPermissions(new String[]{
-                            Manifest.permission.CALL_PHONE}, CALL_REQUEST);
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, CALL_REQUEST);
 
                     return;
-                }else{
-                    if(phoneNumber.equals("Phone  0487-2325650")){
+                } else {
+                    if (supportPhoneNumber1 != null && !supportPhoneNumber1.isEmpty() && !supportPhoneNumber1.equals("")) {
                         Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:0487-2325650"));
+                        callIntent.setData(Uri.parse("tel:" + supportPhoneNumber1));
                         startActivity(callIntent);
                     }
-                    else{
-                        Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:8880125000"));
-                        startActivity(callIntent);
-                    }
-
                 }
-            }else {
-
-                if(phoneNumber.equals("Phone  0487-2325650")){
+            } else {
+                if (supportPhoneNumber1 != null && !supportPhoneNumber1.isEmpty() && !supportPhoneNumber1.equals("")) {
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:0487-2325650"));
-                    startActivity(callIntent);
-                }
-                else{
-                    Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:8880125000"));
+                    callIntent.setData(Uri.parse("tel:" + supportPhoneNumber1));
                     startActivity(callIntent);
                 }
             }
@@ -155,20 +138,41 @@ public class ContactusFragment extends RootFragment {
         }
     }
 
+    public void openWhatsapp() {
+        //So you can get the edittext value
+        String message = "";
+        boolean installed = appInstalledOrNot("com.whatsapp");
+        if (installed) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("http://api.whatsapp.com/send?phone=" + "+91" + whatsappNumber + "&text=" + message));
+            startActivity(intent);
+        } else {
+            Toast.makeText(getActivity(), "Whats app not installed on your device", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //Create method appInstalledOrNot
+    private boolean appInstalledOrNot(String url) {
+        PackageManager packageManager = getActivity().getPackageManager();
+        boolean app_installed;
+        try {
+            packageManager.getPackageInfo(url, PackageManager.GET_ACTIVITIES);
+            app_installed = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            app_installed = false;
+        }
+        return app_installed;
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
         if (requestCode == CALL_REQUEST) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Config.logV("CALL GRANTED @@@@@@@@@@@@@@");
-                if(phoneNumber.equals("Phone  0487-2325650")){
+                if (supportPhoneNumber1 != null && !supportPhoneNumber1.isEmpty() && !supportPhoneNumber1.equals("")) {
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:0487-2325650"));
-                    startActivity(callIntent);
-                }
-                else{
-                    Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:8880125000"));
+                    callIntent.setData(Uri.parse("tel:" + supportPhoneNumber1));
                     startActivity(callIntent);
                 }
             } else {

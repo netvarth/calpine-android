@@ -5,6 +5,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -22,21 +23,29 @@ import com.jaldeeinc.jaldee.Interface.ISaveNotes;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.SelectedItemsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.connection.ApiClient;
+import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
+import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.CartItemModel;
+import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CatalogItem;
+import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class CartActivity extends AppCompatActivity implements ICartInterface,ISaveNotes {
+public class CartActivity extends AppCompatActivity implements ICartInterface, ISaveNotes {
 
     @BindView(R.id.rv_items)
     RecyclerView rvItems;
@@ -60,7 +69,7 @@ public class CartActivity extends AppCompatActivity implements ICartInterface,IS
     CardView cvBack;
 
     private Context mContext;
-    private int accountId;
+    private int providerAccountId, serviceId;
     private CatalogItem itemDetails;
     private LinearLayoutManager linearLayoutManager;
     private SelectedItemsAdapter selectedItemsAdapter;
@@ -70,6 +79,7 @@ public class CartActivity extends AppCompatActivity implements ICartInterface,IS
     private CustomNotes customNotes;
     private SearchViewDetail mBusinessDataList = new SearchViewDetail();
     ArrayList<CartItemModel> cartItemsList = new ArrayList<>();
+    private Catalog catalogInfo = new Catalog();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,34 +88,29 @@ public class CartActivity extends AppCompatActivity implements ICartInterface,IS
         ButterKnife.bind(CartActivity.this);
         mContext = CartActivity.this;
         iCartInterface = (ICartInterface) this;
-        iSaveNotes = (ISaveNotes)this;
+        iSaveNotes = (ISaveNotes) this;
 
         Intent intent = getIntent();
-        accountId = intent.getIntExtra("accountId",0);
+        catalogInfo = (Catalog)  intent.getSerializableExtra("catalogInfo");
+        serviceId = intent.getIntExtra("serviceId", 0);
+        providerAccountId = intent.getIntExtra("providerAccountId", 0);
         mBusinessDataList = (SearchViewDetail) intent.getSerializableExtra("providerInfo");
-
 
         updateUI();
 
         cvCheckOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent = new Intent(CartActivity.this, CheckoutItemsActivity.class);
-                intent.putExtra("accountId",accountId);
-                intent.putExtra("providerInfo",mBusinessDataList);
-                startActivity(intent);
+                getQuestionnaire(serviceId, providerAccountId);
             }
         });
 
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 finish();
             }
         });
-
     }
 
     private void updateUI() {
@@ -121,14 +126,14 @@ public class CartActivity extends AppCompatActivity implements ICartInterface,IS
             rvItems.setVisibility(View.VISIBLE);
             linearLayoutManager = new LinearLayoutManager(mContext);
             rvItems.setLayoutManager(linearLayoutManager);
-            selectedItemsAdapter = new SelectedItemsAdapter(cartItemsList, mContext, false, iCartInterface,true);
+            selectedItemsAdapter = new SelectedItemsAdapter(cartItemsList, mContext, false, iCartInterface, true);
             rvItems.setAdapter(selectedItemsAdapter);
 
             if (db.getCartPrice() == db.getCartDiscountedPrice()) {
                 tvSubTotal.setVisibility(View.GONE);
                 tvDiscountedPrice.setVisibility(View.VISIBLE);
                 String discountedPrice = Config.getAmountNoOrTwoDecimalPoints(db.getCartPrice());
-                tvDiscountedPrice.setText("₹ " +discountedPrice);
+                tvDiscountedPrice.setText("₹ " + discountedPrice);
             } else {
 
                 tvSubTotal.setVisibility(View.VISIBLE);
@@ -160,7 +165,7 @@ public class CartActivity extends AppCompatActivity implements ICartInterface,IS
     @Override
     public void openNotes(int itemId, String instruction) {
 
-        customNotes = new CustomNotes(mContext, itemId, iSaveNotes,instruction);
+        customNotes = new CustomNotes(mContext, itemId, iSaveNotes, instruction);
         customNotes.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
         customNotes.requestWindowFeature(Window.FEATURE_NO_TITLE);
         customNotes.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -176,7 +181,57 @@ public class CartActivity extends AppCompatActivity implements ICartInterface,IS
     @Override
     public void saveMessage(String message, int itemId) {
 
-        db.addInstructions(itemId,message);
+        db.addInstructions(itemId, message);
         updateUI();
+    }
+
+    private void getQuestionnaire(int serviceId, int providerAccountId) {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<Questionnaire> call = apiService.getOrdersQuestions(serviceId, providerAccountId);
+        call.enqueue(new Callback<Questionnaire>() {
+
+            @Override
+            public void onResponse(Call<Questionnaire> call, Response<Questionnaire> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        Questionnaire questionnaire = response.body();
+                        BookingModel model = new BookingModel();
+                        model.setAccountId(providerAccountId);
+                        model.setCatalogInfo(catalogInfo);
+                        model.setQuestionnaire(questionnaire);
+                        model.setFrom(Constants.ORDERS);
+
+                        if (questionnaire != null && questionnaire.getQuestionsList() != null) {
+                            Intent intent = new Intent(CartActivity.this, CustomQuestionnaire.class);
+                            intent.putExtra("data", model);
+                            intent.putExtra("from", Constants.ORDERS);
+                            startActivity(intent);
+                        } else {
+
+                            Intent intent = new Intent(CartActivity.this, CheckoutItemsActivity.class);
+                            intent.putExtra("accountId", providerAccountId);
+                            intent.putExtra("providerInfo", mBusinessDataList);
+                            startActivity(intent);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Questionnaire> call, Throwable t) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
     }
 }

@@ -7,6 +7,7 @@ package com.jaldeeinc.jaldee.common;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,16 +15,20 @@ import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 
 import androidx.core.content.ContextCompat;
 
+import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.ProgressBar;
 
 import com.google.i18n.phonenumbers.NumberParseException;
@@ -37,9 +42,15 @@ import com.jaldeeinc.jaldee.response.LoginResponse;
 import com.jaldeeinc.jaldee.utils.LogUtil;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -77,6 +88,7 @@ public class Config {
     // id to handle the notification in the notification tray
     public static final int NOTIFICATION_ID = 100;
     public static final int NOTIFICATION_ID_BIG_IMAGE = 101;
+    private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
 
 
     public static void logV(String message) {
@@ -605,5 +617,110 @@ public class Config {
         } else {
             return false;
         }
+    }
+
+    public static File createFile(Context mContext, String extension, boolean isTempFile) throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String fileName = "jaldee_" + timeStamp + "_";
+        File image;
+        File storageDir;
+        if (isTempFile) {
+            storageDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            image = File.createTempFile(
+                    fileName,  /* prefix */
+                    "." + extension,         /* suffix */
+                    storageDir      /* directory */
+            );
+        } else {
+            storageDir = new File(Environment.getExternalStorageDirectory() + "/Download");
+            if (!storageDir.exists()) {
+                if (!storageDir.mkdirs()) {
+                    return null;
+                }
+            }
+            image = new File(storageDir.getPath() + File.separator + fileName + "." + extension);
+        }
+        // Save a file: path for use with ACTION_VIEW intents
+        //mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    public static void copyStream(InputStream input, OutputStream output) throws IOException {
+        byte[] buffer = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = input.read(buffer)) != -1) {
+            output.write(buffer, 0, bytesRead);
+        }
+    }
+
+    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
+        //copy file and send new file path
+        String fileName = getFileNameInfo(contentUri);
+        if (!TextUtils.isEmpty(fileName)) {
+            String ext = "";
+            if (fileName.contains(".")) {
+            } else {
+                ext = "." + extension;
+            }
+            File wallpaperDirectoryFile = new File(
+                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
+            copy(context, contentUri, wallpaperDirectoryFile);
+            return wallpaperDirectoryFile.getAbsolutePath();
+        }
+        return null;
+    }
+
+    protected static String getFileNameInfo(Uri uri) {
+        if (uri == null) {
+            return null;
+        }
+        String fileName = null;
+        String path = uri.getPath();
+        int cut = path.lastIndexOf('/');
+        if (cut != -1) {
+            fileName = path.substring(cut + 1);
+        }
+        return fileName;
+    }
+
+    public static void copy(Context context, Uri srcUri, File dstFile) {
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
+            if (inputStream == null) return;
+            FileOutputStream outputStream = new FileOutputStream(dstFile);
+            IOUtils.copy(inputStream, outputStream);
+            inputStream.close();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void openPdf(Context context, String path) {
+
+        File file = new File(Environment.getExternalStorageDirectory(), path);
+        Uri uri = Uri.fromFile(file);
+        Intent pdfOpenIntent = new Intent(Intent.ACTION_VIEW);
+        pdfOpenIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        pdfOpenIntent.setDataAndType(uri, "application/pdf");
+        try {
+            context.startActivity(pdfOpenIntent);
+        } catch (ActivityNotFoundException e) {
+
+        }
+    }
+
+    public static void openOnlinePdf(Context mContext, String filePath) {
+
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(filePath));
+        mContext.startActivity(browserIntent);
+    }
+
+    public static String getMimeType(String path) {
+        String extension = path.substring(path.lastIndexOf("."));
+        String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extension);
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(mimeTypeMap);
+        return mimeType;
     }
 }

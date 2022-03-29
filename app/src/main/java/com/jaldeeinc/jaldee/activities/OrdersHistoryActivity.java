@@ -141,7 +141,8 @@ public class OrdersHistoryActivity extends AppCompatActivity implements ISelecte
     public void onOrderClick(ActiveOrders orders) {
 
         Intent intent = new Intent(OrdersHistoryActivity.this,OrderDetailActivity.class);
-        intent.putExtra("orderInfo",orders);
+        intent.putExtra("uuid", orders.getUid());
+        intent.putExtra("account", String.valueOf(orders.getProviderAccount().getId()));
         startActivity(intent);
 
     }

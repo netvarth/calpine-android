@@ -2,12 +2,34 @@ package com.jaldeeinc.jaldee.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.jaldeeinc.jaldee.model.RlsdQnr;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ActiveOrders implements Serializable {
+    private Catalog catalog;
+    private QuestionnaireResponse questionnaire;
     int accesScope;
+    int account;
+
+    public Catalog getCatalog() {
+        return catalog;
+    }
+
+    public void setCatalog(Catalog catalog) {
+        this.catalog = catalog;
+    }
+
+
+    public QuestionnaireResponse getQuestionnaire() {
+        return questionnaire;
+    }
+
+    public void setQuestionnaire(QuestionnaireResponse questionnaire) {
+        this.questionnaire = questionnaire;
+    }
+
     public int getAccesScope() {
         return accesScope;
     }
@@ -16,7 +38,6 @@ public class ActiveOrders implements Serializable {
         this.accesScope = accesScope;
     }
 
-    int account;
     public int getAccount() {
         return account;
     }
@@ -273,5 +294,25 @@ public class ActiveOrders implements Serializable {
 
     public void setOrderNote(String orderNote) {
         this.orderNote = orderNote;
+    }
+    ArrayList<RlsdQnr> releasedQnr;
+
+    public ArrayList<RlsdQnr> getReleasedQnr() {
+        return releasedQnr;
+    }
+
+    public void setReleasedQnr(ArrayList<RlsdQnr> releasedQnr) {
+        this.releasedQnr = releasedQnr;
+    }
+
+    @SerializedName("questionnaires")
+    ArrayList<QuestionnaireResponse> questionnaires;
+
+    public ArrayList<QuestionnaireResponse> getQuestionnaires() {
+        return questionnaires;
+    }
+
+    public void setQuestionnaires(ArrayList<QuestionnaireResponse> questionnaires) {
+        this.questionnaires = questionnaires;
     }
 }

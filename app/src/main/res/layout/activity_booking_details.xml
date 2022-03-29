@@ -466,6 +466,27 @@
                                         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
                                     </LinearLayout>
+                                   <!-- <LinearLayout
+                                        android:id="@+id/ll_calender"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_columnWeight="1"
+                                        android:layout_marginTop="@dimen/dimen_10dp"
+                                        android:layout_marginEnd="@dimen/dimen_8dp"
+                                        android:orientation="vertical">
+
+                                        <com.jaldeeinc.jaldee.custom.CustomTextViewLight
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Payment"
+                                            android:textAllCaps="true"
+                                            android:textSize="@dimen/txtsize_12">
+
+                                        </com.jaldeeinc.jaldee.custom.CustomTextViewLight>
+
+
+
+                                    </LinearLayout>-->
 
                                 </GridLayout>
 

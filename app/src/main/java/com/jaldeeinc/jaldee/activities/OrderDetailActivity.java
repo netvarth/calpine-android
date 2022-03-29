@@ -43,6 +43,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView;
@@ -60,10 +62,18 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.custom.StoreDetailsDialog;
+import com.jaldeeinc.jaldee.model.LabelPath;
+import com.jaldeeinc.jaldee.model.QuestionnaireResponseInput;
+import com.jaldeeinc.jaldee.model.RlsdQnr;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
+import com.jaldeeinc.jaldee.response.AnswerLineResponse;
+import com.jaldeeinc.jaldee.response.GetQuestion;
 import com.jaldeeinc.jaldee.response.ItemDetails;
+import com.jaldeeinc.jaldee.response.QuestionAnswers;
+import com.jaldeeinc.jaldee.response.QuestionnaireResponse;
 import com.jaldeeinc.jaldee.response.RatingResponse;
 import com.jaldeeinc.jaldee.response.StoreDetails;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import org.json.JSONException;
@@ -78,7 +88,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -174,6 +186,9 @@ public class OrderDetailActivity extends AppCompatActivity {
     @BindView(R.id.ll_time)
     LinearLayout ll_time;
 
+    @BindView(R.id.ll_questionnaire)
+    LinearLayout llQuestionnaire;
+
     private Context mContext;
     private String orderUUid;
     private int accountId;
@@ -193,25 +208,23 @@ public class OrderDetailActivity extends AppCompatActivity {
         ButterKnife.bind(OrderDetailActivity.this);
         mContext = OrderDetailActivity.this;
 
-
         Intent intent = getIntent();
-        orderInfo = (ActiveOrders) intent.getSerializableExtra("orderInfo");
+        //orderInfo = (ActiveOrders) intent.getSerializableExtra("orderInfo");
         orderUUid = intent.getStringExtra("uuid");
-        String account = intent.getStringExtra("account");
+        String aId = intent.getStringExtra("account");
+        if (aId != null && !aId.isEmpty() && !aId.equalsIgnoreCase("")) {
+            accountId = Integer.parseInt(intent.getStringExtra("account"));
+        } else {
+            accountId = 0;
+        }
         isActive = intent.getBooleanExtra("isActive", false);
 
         fromPushNotification = intent.getBooleanExtra(Constants.PUSH_NOTIFICATION, false);
 
-        if (account != null) {
-            accountId = Integer.parseInt(account);
-        }
+        //if (account != null) {
+        //accountId = Integer.parseInt(account);
+        // }
 
-        if (orderInfo != null) {
-            orderUUid = orderInfo.getUid();
-            if (orderInfo.getProviderAccount() != null) {
-                accountId = orderInfo.getProviderAccount().getId();
-            }
-        }
         llCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -306,7 +319,43 @@ public class OrderDetailActivity extends AppCompatActivity {
 
             return false;
         });
+        llQuestionnaire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                if (orderInfo != null) {
+                    if (orderInfo.getReleasedQnr() != null) {
+                        if (orderInfo.getReleasedQnr().size() == 1 && orderInfo.getReleasedQnr().get(0).getStatus().equalsIgnoreCase("submitted")) {
+
+                            QuestionnaireResponseInput input = buildQuestionnaireInput(orderInfo.getQuestionnaire());
+                            ArrayList<LabelPath> labelPaths = buildQuestionnaireLabelPaths(orderInfo.getQuestionnaire());
+
+                            SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
+                            SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
+
+                            Intent intent = new Intent(mContext, UpdateQuestionnaire.class);
+                            intent.putExtra("serviceId", orderInfo.getCatalog().getCatLogId());
+                            intent.putExtra("accountId", orderInfo.getProviderAccount().getId());
+                            intent.putExtra("uid", orderInfo.getUid());
+                            intent.putExtra("isEdit", true);
+                            intent.putExtra("from", Constants.ORDERS);
+                            if (orderInfo != null && orderInfo.getOrderStatus() != null) {
+                                intent.putExtra("status", orderInfo.getOrderStatus());
+                            }
+                            mContext.startActivity(intent);
+                        } else {
+                            Gson gson = new Gson();
+                            String myJson = gson.toJson(orderInfo);
+
+                            Intent intent = new Intent(mContext, ReleasedQNRActivity.class);
+                            intent.putExtra("bookingInfo", myJson);
+                            intent.putExtra("from", Constants.ORDERS);
+                            mContext.startActivity(intent);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -333,9 +382,13 @@ public class OrderDetailActivity extends AppCompatActivity {
 
                         orderInfo = response.body();
                         if (orderInfo != null) {
-
+                            if (orderInfo.getReleasedQnr() != null) {
+                                List<RlsdQnr> fReleasedQNR = orderInfo.getReleasedQnr().stream()
+                                        .filter(p -> !p.getStatus().equalsIgnoreCase("unReleased")).collect(Collectors.toList());
+                                orderInfo.getReleasedQnr().clear();
+                                orderInfo.setReleasedQnr((ArrayList<RlsdQnr>) fReleasedQNR); // remove releasedqnr response and add rlsdqnr with remove "unReleased" status
+                            }
                             updateUI(orderInfo);
-
                         }
                     }
 
@@ -414,6 +467,14 @@ public class OrderDetailActivity extends AppCompatActivity {
                         hideView(llCancel);
                         llCancel.setVisibility(View.GONE);
                     }
+                    // to show Questionnaire option
+                    if (orderInfo.getReleasedQnr() != null && orderInfo.getQuestionnaire() != null && orderInfo.getQuestionnaire().getQuestionAnswers() != null && orderInfo.getQuestionnaire().getQuestionAnswers().size() > 0) {
+                        llQuestionnaire.setVisibility(View.VISIBLE);
+                    } else if (orderInfo.getReleasedQnr() != null && orderInfo.getReleasedQnr().size() > 0) {
+                        llQuestionnaire.setVisibility(View.VISIBLE);
+                    } else {
+                        hideView(llQuestionnaire);
+                    }
                 } else {
                     llCancel.setVisibility(View.GONE);
                     hideView(llCancel);
@@ -442,7 +503,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                             tvAmountToPay.setText(amount);
                             tvAmountToPay.setVisibility(View.VISIBLE);
                         }
-                        if(orderInfo.getBill().getBillStatus() != null && orderInfo.getBill().getBillId() != null && orderInfo.getBill().getBillId().equalsIgnoreCase("0")) {
+                        if (orderInfo.getBill().getBillStatus() != null && orderInfo.getBill().getBillId() != null && orderInfo.getBill().getBillId().equalsIgnoreCase("0")) {
                             cvBill.setVisibility(View.VISIBLE);
                         } else {
                             cvBill.setVisibility(View.GONE);
@@ -697,8 +758,12 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     private void storeImage(Bitmap image) {
-
-        File pictureFile = getOutputMediaFile();
+        File pictureFile = null;
+        try {
+            pictureFile = Config.createFile(context, "png", false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (pictureFile == null) {
             //"Error creating media file, check storage permissions: "
             return;
@@ -726,36 +791,6 @@ public class OrderDetailActivity extends AppCompatActivity {
             e.printStackTrace();
 
         }
-    }
-
-    /**
-     * Create a File for saving an image or video
-     */
-    private File getOutputMediaFile() {
-// To be safe, you should check that the SDCard is mounted
-// using Environment.getExternalStorageState() before doing this.
-        File mediaStorageDir = new
-                File(Environment.getExternalStorageDirectory() + "/Download");
-                /*File(Environment.getExternalStorageDirectory()
-                + "/Android/data/"
-                + getApplicationContext().getPackageName()
-                + "/Files");*/
-
-// This location works best if you want the created images to be shared
-// between applications and persist after your app has been uninstalled.
-
-// Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                return null;
-            }
-        }
-// Create a media file name
-        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
-        File mediaFile;
-        String mImageName = "JALDEE_" + timeStamp + ".jpg";
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
-        return mediaFile;
     }
 
     private void hideView(View view) {
@@ -991,5 +1026,56 @@ public class OrderDetailActivity extends AppCompatActivity {
                     Config.closeDialog(OrderDetailActivity.this, mDialog);
             }
         });
+    }
+
+    private QuestionnaireResponseInput buildQuestionnaireInput(QuestionnaireResponse questionnaire) {
+
+        QuestionnaireResponseInput responseInput = new QuestionnaireResponseInput();
+        responseInput.setQuestionnaireId(questionnaire.getQuestionnaireId());
+        ArrayList<AnswerLineResponse> answerLineResponse = new ArrayList<>();
+        ArrayList<GetQuestion> questions = new ArrayList<>();
+
+        for (QuestionAnswers qAnswers : questionnaire.getQuestionAnswers()) {
+
+            answerLineResponse.add(qAnswers.getAnswerLine());
+            questions.add(qAnswers.getGetQuestion());
+
+        }
+
+        responseInput.setAnswerLines(answerLineResponse);
+        responseInput.setQuestions(questions);
+
+        return responseInput;
+
+    }
+
+    private ArrayList<LabelPath> buildQuestionnaireLabelPaths(QuestionnaireResponse questionnaire) {
+
+        ArrayList<LabelPath> labelPaths = new ArrayList<>();
+
+        for (QuestionAnswers qAnswers : questionnaire.getQuestionAnswers()) {
+
+            if (qAnswers.getGetQuestion().getFieldDataType().equalsIgnoreCase("fileUpload")) {
+
+                JsonArray jsonArray = new JsonArray();
+                jsonArray = qAnswers.getAnswerLine().getAnswer().get("fileUpload").getAsJsonArray();
+                for (int i = 0; i < jsonArray.size(); i++) {
+
+                    LabelPath path = new LabelPath();
+                    path.setId(labelPaths.size());
+                    path.setFileName(jsonArray.get(i).getAsJsonObject().get("caption").getAsString());
+                    path.setLabelName(qAnswers.getAnswerLine().getLabelName());
+                    path.setPath(jsonArray.get(i).getAsJsonObject().get("s3path").getAsString());
+                    path.setType(jsonArray.get(i).getAsJsonObject().get("type").getAsString());
+
+                    labelPaths.add(path);
+                }
+
+            }
+
+        }
+
+        return labelPaths;
+
     }
 }

@@ -34,6 +34,7 @@
             android:layout_marginLeft="@dimen/padding20"
             android:layout_marginRight="@dimen/padding20"
             android:layout_marginTop="@dimen/padding20"
+            android:paddingBottom="@dimen/padding30"
             android:background="@drawable/input_border_gray_bg"
             android:orientation="vertical">
 
@@ -89,9 +90,15 @@
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/dimen_5dp"
-                    android:text="Email  :  support@jaldee.com"
+                    android:text="Email  :  "
+                    android:textColor="@color/title_color"
+                    android:textSize="@dimen/txtsize_hint" />
+                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text= "@string/support_mail"
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/txtsize_hint" />
 
@@ -113,16 +120,20 @@
                     android:src="@drawable/call_icon" />
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                    android:id="@+id/txtphone"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/dimen_5dp"
-                    android:text="Support  :  +91 8880125000"
+                    android:text="Support  :  +91 "
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/txtsize_hint" />
 
-
-
+                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:id="@+id/txtphone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/support_number_1"
+                    android:textColor="@color/title_color"
+                    android:textSize="@dimen/txtsize_hint" />
 
             </LinearLayout>
 
@@ -131,7 +142,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingBottom="@dimen/dimen_20dp"
                 android:layout_marginTop="@dimen/default_padding"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/dimen_20dp">
@@ -145,20 +155,17 @@
                 <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                     android:id="@+id/txtsupport"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="WhatsApp : "
+                    android:layout_height="match_parent"
+                    android:text="WhatsApp  :  +91 "
                     android:layout_marginStart="@dimen/dimen_5dp"
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/txtsize_hint" />
-
-
-
 
                 <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                     android:id="@+id/txtwhatsapp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="+91 7306823011"
+                    android:text="@string/whatsapp_number"
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/txtsize_hint" />
 

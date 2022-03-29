@@ -1,6 +1,5 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
@@ -10,34 +9,24 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.ClipData;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -102,12 +91,10 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -208,10 +195,11 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         if (bookingStatus == null) {
             bookingStatus = "";
         }
+        if (!from.equalsIgnoreCase(Constants.ORDERS)) {
+            if (!bookingStatus.trim().equalsIgnoreCase("") && !(bookingStatus.equalsIgnoreCase("Confirmed") || bookingStatus.equalsIgnoreCase("Arrived") || bookingStatus.equalsIgnoreCase("checkedIn") || bookingStatus.equalsIgnoreCase("arrived") || bookingStatus.equalsIgnoreCase(Constants.DONATION))) {
 
-        if (!bookingStatus.trim().equalsIgnoreCase("") && !(bookingStatus.equalsIgnoreCase("Confirmed") || bookingStatus.equalsIgnoreCase("Arrived") || bookingStatus.equalsIgnoreCase("checkedIn") || bookingStatus.equalsIgnoreCase("arrived") || bookingStatus.equalsIgnoreCase(Constants.DONATION))) {
-
-            showAlert("Service has started", "The given details cannot be edited as the service has started");
+                showAlert("Service has started", "The given details cannot be edited as the service has started");
+            }
         }
 
         // to show alert in Donation case
@@ -347,8 +335,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                                 JsonArray uploadList = new JsonArray();
                                 JsonObject fileInfo = new JsonObject();
                                 String filename = null;
-                                String mimeType = mContext.getContentResolver().getType(Uri.fromFile(new File(path)));
-
+                                String mimeType = Config.getMimeType(path);
 
                                 if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video"))) {
 
@@ -359,10 +346,19 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                                 } else {
 
-                                    fileInfo.addProperty("index", labelPaths.size());
+                                    /*if (!from.equalsIgnoreCase(Constants.ORDERS)) {
+                                        fileInfo.addProperty("index", labelPaths.size());
+                                    }*/
+                                    filename = path.substring(path.lastIndexOf("/") + 1);
+
+                                    fileInfo.addProperty("mimeType", mimeType);
+                                    fileInfo.addProperty("url", filename);
                                 }
+                                File file = new File(path);
+                                int file_size = Integer.parseInt(String.valueOf(file.length()));
                                 fileInfo.addProperty("caption", question.getFileProperties().getAllowedDocuments().get(0));
                                 fileInfo.addProperty("action", isEdit ? "update" : "add");
+                                fileInfo.addProperty("size", file_size);
                                 uploadList.add(fileInfo);
                                 answer.add("fileUpload", uploadList);
                                 obj.setAnswer(answer);
@@ -396,7 +392,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                                     JsonObject fileInfo = new JsonObject();
 
                                     String path = files.get(i).getImagePath();
-                                    String mimeType = mContext.getContentResolver().getType(Uri.fromFile(new File(path)));
+                                    String mimeType = Config.getMimeType(path);
 
                                     String filename = path.substring(path.lastIndexOf("/") + 1);
 
@@ -460,7 +456,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                     obj.setLabelName(question.getLabelName());
 
                     JsonObject answer = new JsonObject();
-                    answer.addProperty("bool", radioButtonYes.isSelected());
+                    answer.addProperty("bool", radioButtonYes.isChecked());
 
                     obj.setAnswer(answer);
                     answerLines.add(obj);
@@ -517,50 +513,50 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                         dataGridList = gridFieldView.getGridDataList();
                     }
+                    if (dataGridList != null && dataGridList.size() > 0) {
+                        AnswerLine obj = new AnswerLine();
+                        obj.setLabelName(question.getLabelName());
 
-                    AnswerLine obj = new AnswerLine();
-                    obj.setLabelName(question.getLabelName());
+                        JsonObject answer = new JsonObject();
+                        Gson gson = new Gson();
+                        JsonElement element = gson.toJsonTree(dataGridList);
+                        answer.add("dataGrid", element);
 
-                    JsonObject answer = new JsonObject();
-                    Gson gson = new Gson();
-                    JsonElement element = gson.toJsonTree(dataGridList);
-                    answer.add("dataGrid", element);
+                        obj.setAnswer(answer);
+                        answerLines.add(obj);
 
-                    obj.setAnswer(answer);
-                    answerLines.add(obj);
+                        for (DataGrid d : dataGridList) {
 
-                    for (DataGrid d : dataGridList) {
+                            for (GridColumnAnswerLine a : d.getDataGridColumn()) {
 
-                        for (GridColumnAnswerLine a : d.getDataGridColumn()) {
+                                JsonObject column = a.getColumn();
 
-                            JsonObject column = a.getColumn();
+                                if (column.has("fileUpload")) {
 
-                            if (column.has("fileUpload")) {
+                                    JsonArray fileUploadList = column.getAsJsonArray("fileUpload");
 
-                                JsonArray fileUploadList = column.getAsJsonArray("fileUpload");
+                                    for (JsonElement e : fileUploadList) {
 
-                                for (JsonElement e : fileUploadList) {
+                                        JsonObject fileObj = e.getAsJsonObject();
+                                        String name = fileObj.get("caption").getAsString();
+                                        String fileName = null;
+                                        if (fileObj.get("url") != null) {
+                                            fileName = fileObj.get("url").getAsString();
+                                        }
+                                        String filePath = "";
+                                        if (fileObj.get("path") != null && !fileObj.get("path").getAsString().trim().equalsIgnoreCase("")) {
+                                            filePath = fileObj.get("path").getAsString();
+                                        }
+                                        String mimeType = Config.getMimeType(filePath);
 
-                                    JsonObject fileObj = e.getAsJsonObject();
-                                    String name = fileObj.get("caption").getAsString();
-                                    String fileName = null;
-                                    if (fileObj.get("url") != null) {
-                                        fileName = fileObj.get("url").getAsString();
+                                        LabelPath lPath = new LabelPath(labelPaths.size(), question.getLabelName(), filePath, fileName, mimeType);
+                                        labelPaths.add(lPath);
                                     }
-                                    String filePath = "";
-                                    if (fileObj.get("path") != null && !fileObj.get("path").getAsString().trim().equalsIgnoreCase("")) {
-                                        filePath = fileObj.get("path").getAsString();
-                                    }
-                                    String mimeType = getMimeType(filePath);
 
-                                    LabelPath lPath = new LabelPath(labelPaths.size(), question.getLabelName(), filePath, fileName, mimeType);
-                                    labelPaths.add(lPath);
                                 }
-
                             }
                         }
                     }
-
                 }
             }
 
@@ -590,6 +586,10 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 }
 
+            } else if (from.equalsIgnoreCase(Constants.ORDERS)) {
+                String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
+                System.out.println(inputString);
+                ApiUpdateOrderQuestionnaire(input, labelPaths);
             } else if (from.equalsIgnoreCase(Constants.DONATION)) {
 
                 Toast.makeText(mContext, "The given details cannot be edited.", Toast.LENGTH_SHORT).show();
@@ -599,6 +599,98 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
     }
 
+    private void ApiUpdateOrderQuestionnaire(QuestionnaireInput input, ArrayList<LabelPath> imagePathList) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        MediaType type = MediaType.parse("*/*");
+        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
+        mBuilder.setType(MultipartBody.FORM);
+        for (int i = 0; i < imagePathList.size(); i++) {
+
+           /* try {
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getPath())));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (bitmap != null) {
+                String path = saveImage(bitmap);
+                file = new File(path);
+            } else {
+                file = new File(imagePathList.get(i).getPath());
+            }*/
+            file = new File(imagePathList.get(i).getPath());
+
+            mBuilder.addFormDataPart("files", file.getName(), RequestBody.create(type, file));
+        }
+
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(input);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+        mBuilder.addFormDataPart("question", "blob", body);
+        RequestBody requestBody = mBuilder.build();
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<SubmitQuestionnaire> call = null;
+        call = apiService.reSubmitOrderQuestionnaire(uid, requestBody, accountId);
+
+        call.enqueue(new Callback<SubmitQuestionnaire>() {
+            @Override
+            public void onResponse(Call<SubmitQuestionnaire> call, Response<SubmitQuestionnaire> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    if (response.code() == 200) {
+
+                        SubmitQuestionnaire result = response.body();
+
+                        if (result != null && result.getUrls().size() > 0) {
+
+                            for (QuestionnaireUrls url : result.getUrls()) {
+
+                                for (LabelPath p : imagePathList) {
+
+                                    if (url.getUrl().contains(p.getFileName())) {
+
+                                        p.setUrl(url.getUrl());
+                                    }
+                                }
+                            }
+
+                            uploadFilesToS3(imagePathList, result);
+                        } else {
+                            SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, "");
+                            SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, "");
+                            Toast.makeText(mContext, "Updated Successfully", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+
+                    } else {
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SubmitQuestionnaire> call, Throwable t) {
+                // Log error here since request failed
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+
+    }
 
     private void ApiUpdateApptQuestionnaire(QuestionnaireInput input, ArrayList<LabelPath> imagePathList) {
 
@@ -608,21 +700,19 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         mBuilder.setType(MultipartBody.FORM);
         for (int i = 0; i < imagePathList.size(); i++) {
 
-            try {
-                if (imagePathList.get(i).getPath().contains("http://") || imagePathList.get(i).getPath().contains("https://")) {
+            if (imagePathList.get(i).getPath().contains("http://") || imagePathList.get(i).getPath().contains("https://")) {
 
 
+            } else {
+                /*bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getPath())));
+                if (bitmap != null) {
+                    String path = saveImage(bitmap);
+                    file = new File(path);
                 } else {
-                    bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getPath())));
-                    if (bitmap != null) {
-                        String path = saveImage(bitmap);
-                        file = new File(path);
-                    } else {
-                        file = new File(imagePathList.get(i).getPath());
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+                    file = new File(imagePathList.get(i).getPath());
+                }*/
+                file = new File(imagePathList.get(i).getPath());
+
             }
 
             mBuilder.addFormDataPart("files", file.getName(), RequestBody.create(type, file));
@@ -668,7 +758,8 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                             uploadFilesToS3(imagePathList, result);
                         } else {
-
+                            SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, "");
+                            SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, "");
                             Toast.makeText(mContext, "Updated Successfully", Toast.LENGTH_SHORT).show();
                             finish();
 
@@ -703,26 +794,20 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         try {
 
             ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-
+            final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+            mDialog.show();
             List<Observable<?>> requests = new ArrayList<>();
-
             for (LabelPath l : filesList) {
-
                 if (l.getUrl() != null && !l.getUrl().trim().equalsIgnoreCase("")) {
-
                     RequestBody requestFile = RequestBody.create(MediaType.parse(l.getType()), new File(l.getPath()));
-
                     requests.add(apiService.uploadPreSignedS3File(l.getUrl(), requestFile));
                 }
             }
-
             // Zip all requests with the Function, which will receive the results.
             Observable.zip(requests, new Function<Object[], Object>() {
                 @Override
                 public Object apply(Object[] objects) throws Exception {
                     // Objects[] is an array of combined results of completed requests
-
-
                     // do something with those results and emit new event
                     return objects;
                 }
@@ -736,30 +821,21 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                                 public void accept(Object object) throws Exception {
                                     //Do something on successful completion of all requests
                                     Log.e("ListOf Calls", "0");
-
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             // Stuff that updates the UI
                                             try {
-                                                if (from.equalsIgnoreCase(Constants.BOOKING_APPOINTMENT)) {
-
-                                                    ApiCheckStatus(uid, accountId, result);
-
-                                                } else if (from.equalsIgnoreCase(Constants.BOOKING_CHECKIN)) {
-
-                                                    ApiCheckWaitlistUploadStatus(uid, accountId, result);
-                                                }
+                                                if (mDialog.isShowing())
+                                                    Config.closeDialog(getParent(), mDialog);
+                                                ApiCheckStatus(uid, accountId, result);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
                                         }
                                     });
-
-
                                 }
                             },
-
                             // Will be triggered if any error during requests will happen
                             new Consumer<Throwable>() {
                                 @Override
@@ -807,81 +883,15 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         uploadObj.putOpt("urls", uploadArray);
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
-
-        Call<ResponseBody> call = apiService.checkAppointmentUploadStatus(uid, accountId, body);
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                try {
-
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
-
-                    if (response.code() == 200) {
-
-                        Toast.makeText(mContext, "Updated Successfully", Toast.LENGTH_SHORT).show();
-                        finish();
-
-
-                    } else {
-                        if (response.code() == 422) {
-                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Log error here since request failed
-                if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
-                Config.logV("Fail---------------" + t.toString());
-            }
-        });
-
-    }
-
-    private void ApiCheckWaitlistUploadStatus(String uid, int accountId, SubmitQuestionnaire result) throws JSONException {
-
-        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-
-        JSONObject uploadObj = new JSONObject();
-        JSONArray uploadArray = new JSONArray();
-
-        for (int i = 0; i < result.getUrls().size(); i++) {
-
-            JSONObject urlObj = new JSONObject();
-
-            urlObj.put("uid", result.getUrls().get(i).getUid());
-            urlObj.put("labelName", result.getUrls().get(i).getLabelName());
-            urlObj.put("url", result.getUrls().get(i).getUrl());
-            urlObj.put("document", result.getUrls().get(i).getDocument());
-            if (result.getUrls().get(i).getColumnId() != null && !result.getUrls().get(i).getColumnId().trim().equalsIgnoreCase("")) {
-                urlObj.put("columnId", result.getUrls().get(i).getColumnId());
-                urlObj.put("gridOrder", 1);
-            }
-
-
-            uploadArray.put(urlObj);
-
+        Call<ResponseBody> call = null;
+        if (from.equalsIgnoreCase(Constants.BOOKING_APPOINTMENT)) {
+            call = apiService.checkAppointmentUploadStatus(uid, accountId, body);
+        } else if (from.equalsIgnoreCase(Constants.BOOKING_CHECKIN)) {
+            call = apiService.checkWaitlistUploadStatus(uid, accountId, body);
+        } else if (from.equalsIgnoreCase(Constants.ORDERS)) {
+            call = apiService.checkOrderUploadStatus(uid, accountId, body);
         }
 
-        uploadObj.putOpt("urls", uploadArray);
-
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
-        Call<ResponseBody> call = apiService.checkWaitlistUploadStatus(uid, accountId, body);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -892,7 +902,8 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                         Config.closeDialog(getParent(), mDialog);
 
                     if (response.code() == 200) {
-
+                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, "");
+                        SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, "");
                         Toast.makeText(mContext, "Updated Successfully", Toast.LENGTH_SHORT).show();
                         finish();
 
@@ -930,24 +941,21 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         mBuilder.setType(MultipartBody.FORM);
         for (int i = 0; i < imagePathList.size(); i++) {
 
-            try {
-                if (imagePathList.get(i).getPath().contains("http://") || imagePathList.get(i).getPath().contains("https://")) {
+            if (imagePathList.get(i).getPath().contains("http://") || imagePathList.get(i).getPath().contains("https://")) {
 
 
+            } else {
+                /*bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getPath())));
+                if (bitmap != null) {
+                    String path = saveImage(bitmap);
+                    file = new File(path);
                 } else {
-                    bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getPath())));
-                    if (bitmap != null) {
-                        String path = saveImage(bitmap);
-                        file = new File(path);
-                    } else {
-                        file = new File(imagePathList.get(i).getPath());
-                    }
+                    file = new File(imagePathList.get(i).getPath());
+                }*/
+                file = new File(imagePathList.get(i).getPath());
 
-                    mBuilder.addFormDataPart("files", file.getName(), RequestBody.create(type, file));
+                mBuilder.addFormDataPart("files", file.getName(), RequestBody.create(type, file));
 
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
 
         }
@@ -990,7 +998,8 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                             uploadFilesToS3(imagePathList, result);
                         } else {
-
+                            SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, "");
+                            SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, "");
                             Toast.makeText(mContext, "Updated Successfully", Toast.LENGTH_SHORT).show();
                             finish();
 
@@ -1117,7 +1126,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 RadioButton radioButtonNo = (RadioButton) boolFieldView.findViewById(R.id.rb_no);
                 CustomItalicTextViewNormal tvError = (CustomItalicTextViewNormal) boolFieldView.findViewById(R.id.tv_error);
 
-                if (!radioButtonYes.isSelected() && !radioButtonNo.isSelected()) {
+                if (!radioButtonYes.isChecked() && !radioButtonNo.isChecked()) {
 
                     tvError.setVisibility(View.VISIBLE);
                     tvError.setText("Select atleast one option");
@@ -1235,7 +1244,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 textField.setHint(question.getHint());
 
                 for (AnswerLine answerLine : qInput.getAnswerLines()) {
-                    if (answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
+                    if (answerLine != null && answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
                         JSONObject txtObj = new JSONObject(answerLine.getAnswer().toString());
                         String text = txtObj.optString("plainText");
                         if (text.equalsIgnoreCase("05:30 AM")) {
@@ -1256,7 +1265,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 dateField.setHint(question.getHint());
 
                 for (AnswerLine answerLine : qInput.getAnswerLines()) {
-                    if (answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
+                    if (answerLine != null && answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
                         JSONObject txtObj = new JSONObject(answerLine.getAnswer().toString());
                         String text = txtObj.optString("date");
                         if (text.equalsIgnoreCase("05:30 AM")) {
@@ -1277,7 +1286,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 numberField.setHint(question.getHint());
 
                 for (AnswerLine answerLine : qInput.getAnswerLines()) {
-                    if (answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
+                    if (answerLine != null && answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
                         JSONObject txtObj = new JSONObject(answerLine.getAnswer().toString());
                         int number = txtObj.optInt("number");
                         numberField.setNumber(String.valueOf(number));
@@ -1298,7 +1307,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 boolField.setLabels(values);
 
                 for (AnswerLine answerLine : qInput.getAnswerLines()) {
-                    if (answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
+                    if (answerLine != null && answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
                         JSONObject txtObj = new JSONObject(answerLine.getAnswer().toString());
                         Boolean isSelected = txtObj.optBoolean("bool");
                         boolField.setSelected(isSelected);
@@ -1318,7 +1327,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 listModel.setLabels(values);
 
                 for (AnswerLine answerLine : qInput.getAnswerLines()) {
-                    if (answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
+                    if (answerLine != null && answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
 
                         JSONObject txtObj = new JSONObject(answerLine.getAnswer().toString());
 //                        LinkedTreeMap list = (LinkedTreeMap) txtObj.get("list");
@@ -1344,7 +1353,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 ArrayList<DataGrid> dataGridList = new ArrayList<>();
 
                 for (AnswerLine answerLine : qInput.getAnswerLines()) {
-                    if (answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
+                    if (answerLine != null && answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
 
                         dataGridList = answerLine.getDataGridList();
                     }
@@ -1422,7 +1431,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                     extension = singleFile.getType().substring(singleFile.getType().lastIndexOf("/") + 1);
                 }
 
-                if (singleFile.getType() != null && singleFile.getType().equalsIgnoreCase(".pdf")) {
+                if (singleFile.getType() != null && (singleFile.getType().equalsIgnoreCase(".pdf") || extension.equalsIgnoreCase("pdf"))) {
 
                     ivSingleFile.setImageDrawable(getResources().getDrawable(R.drawable.pdfs));
                 } else if (singleFile.getType() != null && singleFile.getType().contains("audio")) {
@@ -1517,7 +1526,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                     if (singleFile.getType() != null && singleFile.getType().equalsIgnoreCase(".pdf")) {
 
-                        openOnlinePdf(mContext, singleFile.getFilePath());
+                        Config.openOnlinePdf(mContext, singleFile.getFilePath());
 
                     } else if (Arrays.asList(videoFormats).contains(extension)) {
 
@@ -1550,7 +1559,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                     if (imagePath.substring(imagePath.lastIndexOf(".") + 1).equals("pdf")) {
 
-                        openPdf(getApplicationContext(), imagePath);
+                        Config.openPdf(getApplicationContext(), imagePath);
 
                     } else if (Arrays.asList(formats).contains(extension)) {
 
@@ -2056,10 +2065,8 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 try {
                     if (data.getData() != null) {
                         Uri uri = data.getData();
-                        String orgFilePath = getRealPathFromURI(uri, this);
-                        String filepath = "";//default fileName
 
-                        String mimeType = mContext.getContentResolver().getType(uri);
+                        String mimeType = this.mContext.getContentResolver().getType(uri);
                         String uriString = uri.toString();
                         String extension = "";
                         if (uriString.contains(".")) {
@@ -2069,8 +2076,33 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
+                        File photoFile = null;
+
+                        try {
+                            // Creating file
+                            try {
+                                photoFile = Config.createFile(mContext, extension, true);
+                            } catch (IOException ex) {
+                                Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                // Log.d(TAG, "Error occurred while creating the file");
+                            }
+
+                            InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                            FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                            // Copying
+                            Config.copyStream(inputStream, fileOutputStream);
+                            fileOutputStream.close();
+                            inputStream.close();
+                        } catch (Exception e) {
+                            Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                            //Log.d(TAG, "onActivityResult: " + e.toString());
+                        }
+                        String orgFilePath = photoFile.getAbsolutePath();
+
                         if (orgFilePath == null) {
-                            orgFilePath = getFilePathFromURI(mContext, uri, extension);
+                            orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                         }
 
                         View fileUploadView = viewsList.get(qLabelName);
@@ -2090,12 +2122,9 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                         ClipData mClipData = data.getClipData();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
-                            Uri imageUri = item.getUri();
-                            String orgFilePath = getRealPathFromURI(imageUri, this);
-                            String filepath = "";//default fileName
-
-                            String mimeType = mContext.getContentResolver().getType(imageUri);
-                            String uriString = imageUri.toString();
+                            Uri uri = item.getUri();
+                            String mimeType = this.mContext.getContentResolver().getType(uri);
+                            String uriString = uri.toString();
                             String extension = "";
                             if (uriString.contains(".")) {
                                 extension = uriString.substring(uriString.lastIndexOf(".") + 1);
@@ -2104,8 +2133,33 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                             if (mimeType != null) {
                                 extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                             }
+                            File photoFile = null;
+
+                            try {
+                                // Creating file
+                                try {
+                                    photoFile = Config.createFile(mContext, extension, true);
+                                } catch (IOException ex) {
+                                    Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                    // Log.d(TAG, "Error occurred while creating the file");
+                                }
+
+                                InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                                FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                                // Copying
+                                Config.copyStream(inputStream, fileOutputStream);
+                                fileOutputStream.close();
+                                inputStream.close();
+                            } catch (Exception e) {
+                                Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                                //Log.d(TAG, "onActivityResult: " + e.toString());
+                            }
+                            String orgFilePath = photoFile.getAbsolutePath();
+
                             if (orgFilePath == null) {
-                                orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
+                                orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                             }
 
                             View fileUploadView = viewsList.get(qLabelName);
@@ -2130,10 +2184,25 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
         } else if (requestCode == CAMERA_FOR_ONE) {
             if (data != null && data.getExtras() != null) {
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                File photoFile = null;/////////
+                // ///////
+                try {//////////
+                    photoFile = Config.createFile(mContext, "png", true);//////////
+                } catch (IOException e) {/////////////
+                    e.printStackTrace();///////////
+                }///////////
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");/////////
+                try (FileOutputStream out = new FileOutputStream(photoFile)) {////////////
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance////////////
+                    // PNG is a lossless format, the compression factor (100) is ignored/////////
+                } catch (IOException e) {////////////
+                    e.printStackTrace();///////////
+                }////////
+                String path = photoFile.getAbsolutePath();////////
+                /*Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 String path = saveImage(bitmap);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);*/
                 if (path != null) {
                     mImageUri = Uri.parse(path);
 
@@ -2144,11 +2213,11 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                     fileObject.setImagePath(path);
                     filesAdapter.updateFileObject(fileObject);
                 }
-                try {
+                /*try {
                     bytes.close();
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
+                }*/
 
             }
         } else if (requestCode == GALLERY) {
@@ -2157,8 +2226,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 try {
                     if (data.getData() != null) {
                         Uri uri = data.getData();
-                        String orgFilePath = getRealPathFromURI(uri, this);
-                        String filepath = "";//default fileName
 
                         String mimeType = this.mContext.getContentResolver().getType(uri);
                         String uriString = uri.toString();
@@ -2170,8 +2237,33 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
+                        File photoFile = null;
+
+                        try {
+                            // Creating file
+                            try {
+                                photoFile = Config.createFile(mContext, extension, true);
+                            } catch (IOException ex) {
+                                Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                // Log.d(TAG, "Error occurred while creating the file");
+                            }
+
+                            InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                            FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                            // Copying
+                            Config.copyStream(inputStream, fileOutputStream);
+                            fileOutputStream.close();
+                            inputStream.close();
+                        } catch (Exception e) {
+                            Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                            //Log.d(TAG, "onActivityResult: " + e.toString());
+                        }
+                        String orgFilePath = photoFile.getAbsolutePath();
+
                         if (orgFilePath == null) {
-                            orgFilePath = getFilePathFromURI(mContext, uri, extension);
+                            orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                         }
 
                         singleFilePath = orgFilePath;
@@ -2214,12 +2306,9 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                         ClipData mClipData = data.getClipData();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
-                            Uri imageUri = item.getUri();
-                            String orgFilePath = getRealPathFromURI(imageUri, this);
-                            String filepath = "";//default fileName
-
-                            String mimeType = mContext.getContentResolver().getType(imageUri);
-                            String uriString = imageUri.toString();
+                            Uri uri = item.getUri();
+                            String mimeType = this.mContext.getContentResolver().getType(uri);
+                            String uriString = uri.toString();
                             String extension = "";
                             if (uriString.contains(".")) {
                                 extension = uriString.substring(uriString.lastIndexOf(".") + 1);
@@ -2228,8 +2317,33 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                             if (mimeType != null) {
                                 extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                             }
+                            File photoFile = null;
+
+                            try {
+                                // Creating file
+                                try {
+                                    photoFile = Config.createFile(mContext, extension, true);
+                                } catch (IOException ex) {
+                                    Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                    // Log.d(TAG, "Error occurred while creating the file");
+                                }
+
+                                InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                                FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                                // Copying
+                                Config.copyStream(inputStream, fileOutputStream);
+                                fileOutputStream.close();
+                                inputStream.close();
+                            } catch (Exception e) {
+                                Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                                //Log.d(TAG, "onActivityResult: " + e.toString());
+                            }
+                            String orgFilePath = photoFile.getAbsolutePath();
+
                             if (orgFilePath == null) {
-                                orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
+                                orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                             }
 
                             singleFilePath = orgFilePath;
@@ -2277,10 +2391,25 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         } else if (requestCode == CAMERA) {
 
             if (data != null && data.getExtras() != null) {
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                File photoFile = null;/////////
+                // ///////
+                try {//////////
+                    photoFile = Config.createFile(mContext, "png", true);//////////
+                } catch (IOException e) {/////////////
+                    e.printStackTrace();///////////
+                }///////////
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");/////////
+                try (FileOutputStream out = new FileOutputStream(photoFile)) {////////////
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance////////////
+                    // PNG is a lossless format, the compression factor (100) is ignored/////////
+                } catch (IOException e) {////////////
+                    e.printStackTrace();///////////
+                }////////
+                String path = photoFile.getAbsolutePath();////////
+                /*Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 String path = saveImage(bitmap);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);*/
                 if (path != null) {
                     mImageUri = Uri.parse(path);
 
@@ -2294,11 +2423,11 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                     tvPath.setText(path);
 
                 }
-                try {
+                /*try {
                     bytes.close();
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
         }
     }
@@ -2408,155 +2537,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
     // files related
 
-    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
-        //copy file and send new file path
-        String fileName = getFileNameInfo(contentUri);
-        if (!TextUtils.isEmpty(fileName)) {
-            String ext = "";
-            if (fileName.contains(".")) {
-            } else {
-                ext = "." + extension;
-            }
-            File wallpaperDirectoryFile = new File(
-                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
-            copy(context, contentUri, wallpaperDirectoryFile);
-            return wallpaperDirectoryFile.getAbsolutePath();
-        }
-        return null;
-    }
-
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "IMG_" + System.currentTimeMillis(), null);
-        return Uri.parse(path);
-    }
-
-    public String getPathFromUri(Uri uri) {
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return cursor.getString(idx);
-    }
-
-    protected static String getFileNameInfo(Uri uri) {
-        if (uri == null) {
-            return null;
-        }
-        String fileName = null;
-        String path = uri.getPath();
-        int cut = path.lastIndexOf('/');
-        if (cut != -1) {
-            fileName = path.substring(cut + 1);
-        }
-        return fileName;
-    }
-
-    public static void copy(Context context, Uri srcUri, File dstFile) {
-        try {
-            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
-            if (inputStream == null) return;
-            FileOutputStream outputStream = new FileOutputStream(dstFile);
-            IOUtils.copy(inputStream, outputStream);
-            inputStream.close();
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String getRealPathFromURI(Uri contentURI, Activity context) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        @SuppressWarnings("deprecation")
-        Cursor cursor = context.managedQuery(contentURI, projection, null,
-                null, null);
-        if (cursor == null)
-            return null;
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        if (cursor.moveToFirst()) {
-            String s = cursor.getString(column_index);
-            // cursor.close();
-            return s;
-        }
-        // cursor.close();
-        return null;
-    }
-
-
-    public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        if (myBitmap != null) {
-            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        }
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            f = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".jpg");
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(mContext,
-                    new String[]{f.getPath()},
-                    new String[]{"image/jpeg"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-
-            return f.getAbsolutePath();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public String getPDFPath(Uri uri) {
-
-        final String id = DocumentsContract.getDocumentId(uri);
-        final Uri contentUri = ContentUris.withAppendedId(
-                Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = mContext.getContentResolver().query(contentUri, projection, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
-
-    public String getFilePathFromURI(Uri contentUri, Context context) {
-        //copy file and send new file path
-        String fileName = getFileName(contentUri);
-        if (!TextUtils.isEmpty(fileName)) {
-            File copyFile = new File(context.getExternalCacheDir() + File.separator + fileName);
-            //copy(context, contentUri, copyFile);
-            return copyFile.getAbsolutePath();
-        }
-        return null;
-    }
-
-    public String getFileName(Uri uri) {
-        if (uri == null) return null;
-        String fileName = null;
-        String path = uri.getPath();
-        int cut = path.lastIndexOf('/');
-        if (cut != -1) {
-            fileName = path.substring(cut + 1);
-        }
-        return fileName;
-    }
-
-    public String getRealFilePath(Uri uri) {
-        String path = uri.getPath();
-        String[] pathArray = path.split(":");
-        String fileName = pathArray[pathArray.length - 1];
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
-    }
 
     private void requestMultiplePermissions() {
         Dexter.withActivity(this)
@@ -2595,17 +2575,6 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 .check();
     }
 
-    public static float getImageSize(Context context, Uri uri) {
-        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-        if (cursor != null) {
-            int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
-            cursor.moveToFirst();
-            float imageSize = cursor.getLong(sizeIndex);
-            cursor.close();
-            return imageSize / (1024f * 1024f); // returns size in bytes
-        }
-        return 0;
-    }
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
@@ -2621,41 +2590,5 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         CustomTextViewSemiBold tvDate = (CustomTextViewSemiBold) numberFieldView.findViewById(R.id.tv_date);
         String selectedDate = dateParser.format(mCalender.getTime());
         tvDate.setText(selectedDate);
-    }
-
-    public void openPdf(Context context, String path) {
-        File file = new File(path);
-        if (file.exists()) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.fromFile(file), "application/pdf");
-            PackageManager pm = context.getPackageManager();
-            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
-            sendIntent.setType("application/pdf");
-            Intent openInChooser = Intent.createChooser(intent, "Choose");
-            List<ResolveInfo> resInfo = pm.queryIntentActivities(sendIntent, 0);
-            if (resInfo.size() > 0) {
-                try {
-                    context.startActivity(openInChooser);
-                } catch (Throwable throwable) {
-                    Toast.makeText(context, "PDF apps are not installed", Toast.LENGTH_SHORT).show();
-                    // PDF apps are not installed
-                }
-            } else {
-                Toast.makeText(context, "PDF apps are not installed", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void openOnlinePdf(Context mContext, String filePath) {
-
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(filePath));
-        startActivity(browserIntent);
-    }
-
-    public static String getMimeType(String path) {
-        String extension = path.substring(path.lastIndexOf("."));
-        String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extension);
-        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(mimeTypeMap);
-        return mimeType;
     }
 }

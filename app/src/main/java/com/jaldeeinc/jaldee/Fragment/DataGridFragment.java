@@ -1,25 +1,15 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipData;
-import android.content.ContentUris;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -29,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -43,6 +32,7 @@ import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.adapter.FilesAdapter;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
 import com.jaldeeinc.jaldee.custom.QuestionnaireBoolView;
@@ -54,20 +44,15 @@ import com.jaldeeinc.jaldee.custom.QuestionnaireNumberView;
 import com.jaldeeinc.jaldee.custom.QuestionnaireTextView;
 import com.jaldeeinc.jaldee.model.DataGrid;
 import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
-import com.jaldeeinc.jaldee.model.QuestionnaireInput;
 import com.jaldeeinc.jaldee.response.DataGridColumns;
 import com.jaldeeinc.jaldee.response.GetQuestion;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
-import org.apache.commons.io.IOUtils;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -528,6 +513,46 @@ public class DataGridFragment extends Fragment {
                 try {
                     if (data.getData() != null) {
                         Uri uri = data.getData();
+
+                        String mimeType = this.getActivity().getContentResolver().getType(uri);
+                        String uriString = uri.toString();
+                        String extension = "";
+                        if (uriString.contains(".")) {
+                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
+                        }
+
+                        if (mimeType != null) {
+                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
+                        }
+                        File photoFile = null;
+
+                        try {
+                            // Creating file
+                            try {
+                                photoFile = Config.createFile(getActivity(), extension, true);
+                            } catch (IOException ex) {
+                                Toast.makeText(getActivity(), "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                // Log.d(TAG, "Error occurred while creating the file");
+                            }
+
+                            InputStream inputStream = getActivity().getContentResolver().openInputStream(data.getData());
+                            FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                            // Copying
+                            Config.copyStream(inputStream, fileOutputStream);
+                            fileOutputStream.close();
+                            inputStream.close();
+                        } catch (Exception e) {
+                            Toast.makeText(getActivity(), "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                            //Log.d(TAG, "onActivityResult: " + e.toString());
+                        }
+                        String orgFilePath = photoFile.getAbsolutePath();
+
+                        if (orgFilePath == null) {
+                            orgFilePath = Config.getFilePathFromURI(getActivity(), uri, extension);
+                        }
+                        /*Uri uri = data.getData();
                         String orgFilePath = getRealPathFromURI(uri, getActivity());
                         String filepath = "";//default fileName
 
@@ -543,7 +568,7 @@ public class DataGridFragment extends Fragment {
                         }
                         if (orgFilePath == null) {
                             orgFilePath = getFilePathFromURI(getContext(), uri, extension);
-                        }
+                        }*/
 
                         View fileUploadView = viewsList.get(qLabelName);
                         RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
@@ -563,12 +588,9 @@ public class DataGridFragment extends Fragment {
                         ClipData mClipData = data.getClipData();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
-                            Uri imageUri = item.getUri();
-                            String orgFilePath = getRealPathFromURI(imageUri, getActivity());
-                            String filepath = "";//default fileName
-
-                            String mimeType = getActivity().getContentResolver().getType(imageUri);
-                            String uriString = imageUri.toString();
+                            Uri uri = item.getUri();
+                            String mimeType = this.getActivity().getContentResolver().getType(uri);
+                            String uriString = uri.toString();
                             String extension = "";
                             if (uriString.contains(".")) {
                                 extension = uriString.substring(uriString.lastIndexOf(".") + 1);
@@ -577,8 +599,33 @@ public class DataGridFragment extends Fragment {
                             if (mimeType != null) {
                                 extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                             }
+                            File photoFile = null;
+
+                            try {
+                                // Creating file
+                                try {
+                                    photoFile = Config.createFile(getActivity(), extension, true);
+                                } catch (IOException ex) {
+                                    Toast.makeText(getActivity(), "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                    // Log.d(TAG, "Error occurred while creating the file");
+                                }
+
+                                InputStream inputStream = getActivity().getContentResolver().openInputStream(data.getData());
+                                FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                                // Copying
+                                Config.copyStream(inputStream, fileOutputStream);
+                                fileOutputStream.close();
+                                inputStream.close();
+                            } catch (Exception e) {
+                                Toast.makeText(getActivity(), "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                                //Log.d(TAG, "onActivityResult: " + e.toString());
+                            }
+                            String orgFilePath = photoFile.getAbsolutePath();
+
                             if (orgFilePath == null) {
-                                orgFilePath = getFilePathFromURI(getContext(), imageUri, extension);
+                                orgFilePath = Config.getFilePathFromURI(getActivity(), uri, extension);
                             }
 
                             View fileUploadView = viewsList.get(qLabelName);
@@ -602,10 +649,25 @@ public class DataGridFragment extends Fragment {
 
         } else if (requestCode == CAMERA) {
             if (data != null && data.getExtras() != null) {
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                File photoFile = null;/////////
+                // ///////
+                try {//////////
+                    photoFile = Config.createFile(getActivity(), "png", true);//////////
+                } catch (IOException e) {/////////////
+                    e.printStackTrace();///////////
+                }///////////
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");/////////
+                try (FileOutputStream out = new FileOutputStream(photoFile)) {////////////
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance////////////
+                    // PNG is a lossless format, the compression factor (100) is ignored/////////
+                } catch (IOException e) {////////////
+                    e.printStackTrace();///////////
+                }////////
+                String path = photoFile.getAbsolutePath();////////
+                /*Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 String path = saveImage(bitmap);
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);*/
                 if (path != null) {
                     mImageUri = Uri.parse(path);
 
@@ -616,154 +678,12 @@ public class DataGridFragment extends Fragment {
                     fileObject.setImagePath(path);
                     filesAdapter.updateFileObject(fileObject);
                 }
-                try {
+                /*try {
                     bytes.close();
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
-
-
+                }*/
             }
-
         }
     }
-
-    public String getRealPathFromURI(Uri contentURI, Activity context) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        @SuppressWarnings("deprecation")
-        Cursor cursor = context.managedQuery(contentURI, projection, null,
-                null, null);
-        if (cursor == null)
-            return null;
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        if (cursor.moveToFirst()) {
-            String s = cursor.getString(column_index);
-            // cursor.close();
-            return s;
-        }
-        // cursor.close();
-        return null;
-    }
-
-
-    public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        if (myBitmap != null) {
-            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        }
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            f = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".jpg");
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(getActivity(),
-                    new String[]{f.getPath()},
-                    new String[]{"image/jpeg"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-
-            return f.getAbsolutePath();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
-    }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public String getPDFPath(Uri uri) {
-
-        final String id = DocumentsContract.getDocumentId(uri);
-        final Uri contentUri = ContentUris.withAppendedId(
-                Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getActivity().getContentResolver().query(contentUri, projection, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
-
-    public String getFilePathFromURI(Uri contentUri, Context context) {
-        //copy file and send new file path
-        String fileName = getFileName(contentUri);
-        if (!TextUtils.isEmpty(fileName)) {
-            File copyFile = new File(context.getExternalCacheDir() + File.separator + fileName);
-            //copy(context, contentUri, copyFile);
-            return copyFile.getAbsolutePath();
-        }
-        return null;
-    }
-
-    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
-        //copy file and send new file path
-        String fileName = getFileNameInfo(contentUri);
-        if (!TextUtils.isEmpty(fileName)) {
-            String ext = "";
-            if (fileName.contains(".")) {
-            } else {
-                ext = "." + extension;
-            }
-            File wallpaperDirectoryFile = new File(
-                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
-            copy(context, contentUri, wallpaperDirectoryFile);
-            return wallpaperDirectoryFile.getAbsolutePath();
-        }
-        return null;
-    }
-
-    protected static String getFileNameInfo(Uri uri) {
-        if (uri == null) {
-            return null;
-        }
-        String fileName = null;
-        String path = uri.getPath();
-        int cut = path.lastIndexOf('/');
-        if (cut != -1) {
-            fileName = path.substring(cut + 1);
-        }
-        return fileName;
-    }
-
-    public static void copy(Context context, Uri srcUri, File dstFile) {
-        try {
-            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
-            if (inputStream == null) return;
-            FileOutputStream outputStream = new FileOutputStream(dstFile);
-            IOUtils.copy(inputStream, outputStream);
-            inputStream.close();
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String getFileName(Uri uri) {
-        if (uri == null) return null;
-        String fileName = null;
-        String path = uri.getPath();
-        int cut = path.lastIndexOf('/');
-        if (cut != -1) {
-            fileName = path.substring(cut + 1);
-        }
-        return fileName;
-    }
-
-    public String getRealFilePath(Uri uri) {
-        String path = uri.getPath();
-        String[] pathArray = path.split(":");
-        String fileName = pathArray[pathArray.length - 1];
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
-    }
-
-
 }

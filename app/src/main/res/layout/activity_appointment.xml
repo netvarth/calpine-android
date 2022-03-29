@@ -160,10 +160,11 @@
                     <RelativeLayout
                         android:id="@+id/relative"
                         android:layout_width="match_parent"
-                        android:layout_height="180dp"
+                        android:layout_height="wrap_content"
                         android:layout_below="@id/uImage"
                         android:layout_marginStart="@dimen/padding5"
-                        android:layout_marginEnd="@dimen/padding5">
+                        android:layout_marginEnd="@dimen/padding5"
+                        android:minHeight="180dp">
 
 
                         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
@@ -185,6 +186,7 @@
                             android:id="@+id/ll_appoint"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@+id/tv_timeHint"
                             android:layout_centerInParent="true"
                             android:orientation="vertical"
                             android:visibility="gone">
@@ -205,6 +207,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
+                                android:gravity="center"
                                 android:letterSpacing="0.1"
                                 android:text=""
                                 android:textColor="@color/appoint_theme"
@@ -217,7 +220,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
+                                android:gravity="center"
                                 android:letterSpacing="0.1"
+                                android:nestedScrollingEnabled="true"
                                 android:text=""
                                 android:textColor="@color/appoint_theme"
                                 android:textSize="@dimen/dimen_30sp">
@@ -278,6 +283,7 @@
                             android:id="@+id/tv_changeTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@+id/ll_appoint"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentBottom="true"
                             android:layout_marginEnd="@dimen/padding15"

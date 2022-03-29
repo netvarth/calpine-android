@@ -1,6 +1,5 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
@@ -8,30 +7,20 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipData;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
-import android.provider.OpenableColumns;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -48,6 +37,8 @@ import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.adapter.ImagePreviewAdapter;
 import com.jaldeeinc.jaldee.adapter.ItemsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.connection.ApiClient;
+import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.AutofitTextView;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomNotes;
@@ -58,10 +49,12 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.SelectedItemsDialog;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
+import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.CartItemModel;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CatalogItem;
+import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -73,21 +66,18 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
 import com.squareup.picasso.Callback;
 
-import org.apache.commons.io.IOUtils;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class ItemsActivity extends AppCompatActivity implements IItemInterface, IDialogInterface, IDeleteImagesInterface, ISaveNotes {
 
@@ -315,8 +305,11 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
             public void onClick(View v) {
 
                 Intent intent = new Intent(ItemsActivity.this, CartActivity.class);
-                intent.putExtra("accountId", accountId);
+                intent.putExtra("providerAccountId", accountId);
                 intent.putExtra("providerInfo", mBusinessDataList);
+                intent.putExtra("catalogInfo", catalogInfo);
+                intent.putExtra("serviceId", catalogInfo.getCatLogId());
+
                 startActivity(intent);
 
             }
@@ -335,13 +328,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
             public void onClick(View v) {
 
                 if (itemList != null && itemList.size() > 0) {
-
-                    Intent intent = new Intent(ItemsActivity.this, CheckoutListActivity.class);
-                    intent.putExtra("IMAGESLIST", itemList);
-                    intent.putExtra("uniqueId", uniqueId);
-                    intent.putExtra("accountId", accountId);
-                    intent.putExtra("catalogId", catalogInfo.getCatLogId());
-                    startActivity(intent);
+                    getQuestionnaire(catalogInfo.getCatLogId(), accountId);
                 }
 
             }
@@ -522,6 +509,8 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         intent.putExtra("itemInfo", catalogItem);
         intent.putExtra("accountId", accountId);
         intent.putExtra("uniqueId", uniqueId);
+        intent.putExtra("catalogInfo", catalogInfo);
+
         if (catalogInfo != null && catalogInfo.getCatalogItemsList() != null && catalogInfo.getCatalogItemsList().size() > 0) {
             ArrayList<CatalogItem> updatedList = new ArrayList<>();
             for (int i = 0; i < catalogInfo.getCatalogItemsList().size(); i++) {
@@ -601,143 +590,6 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
 
     // files related
 
-    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
-        //copy file and send new file path
-        String fileName = getFileNameInfo(contentUri);
-        if (!TextUtils.isEmpty(fileName)) {
-            String ext = "";
-            if (fileName.contains(".")) {
-            } else {
-                ext = "." + extension;
-            }
-            File wallpaperDirectoryFile = new File(
-                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
-            copy(context, contentUri, wallpaperDirectoryFile);
-            return wallpaperDirectoryFile.getAbsolutePath();
-        }
-        return null;
-    }
-
-    protected static String getFileNameInfo(Uri uri) {
-        if (uri == null) {
-            return null;
-        }
-        String fileName = null;
-        String path = uri.getPath();
-        int cut = path.lastIndexOf('/');
-        if (cut != -1) {
-            fileName = path.substring(cut + 1);
-        }
-        return fileName;
-    }
-
-    public static void copy(Context context, Uri srcUri, File dstFile) {
-        try {
-            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
-            if (inputStream == null) return;
-            FileOutputStream outputStream = new FileOutputStream(dstFile);
-            IOUtils.copy(inputStream, outputStream);
-            inputStream.close();
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String getRealPathFromURI(Uri contentURI, Activity context) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        @SuppressWarnings("deprecation")
-        Cursor cursor = context.managedQuery(contentURI, projection, null,
-                null, null);
-        if (cursor == null)
-            return null;
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        if (cursor.moveToFirst()) {
-            String s = cursor.getString(column_index);
-            // cursor.close();
-            return s;
-        }
-        // cursor.close();
-        return null;
-    }
-
-
-    public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        if (myBitmap != null) {
-            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        }
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            f = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".jpg");
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(mContext,
-                    new String[]{f.getPath()},
-                    new String[]{"image/jpeg"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-
-            return f.getAbsolutePath();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
-    }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public String getPDFPath(Uri uri) {
-
-        final String id = DocumentsContract.getDocumentId(uri);
-        final Uri contentUri = ContentUris.withAppendedId(
-                Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = mContext.getApplicationContext().getContentResolver().query(contentUri, projection, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
-
-    public String getFilePathFromURI(Uri contentUri, Context context) {
-        //copy file and send new file path
-        String fileName = getFileName(contentUri);
-        if (!TextUtils.isEmpty(fileName)) {
-            File copyFile = new File(context.getExternalCacheDir() + File.separator + fileName);
-            //copy(context, contentUri, copyFile);
-            return copyFile.getAbsolutePath();
-        }
-        return null;
-    }
-
-    public String getFileName(Uri uri) {
-        if (uri == null) return null;
-        String fileName = null;
-        String path = uri.getPath();
-        int cut = path.lastIndexOf('/');
-        if (cut != -1) {
-            fileName = path.substring(cut + 1);
-        }
-        return fileName;
-    }
-
-    public String getRealFilePath(Uri uri) {
-        String path = uri.getPath();
-        String[] pathArray = path.split(":");
-        String fileName = pathArray[pathArray.length - 1];
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
-    }
-
     private void requestMultiplePermissions() {
         Dexter.withActivity(this)
                 .withPermissions(
@@ -775,18 +627,6 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                 .check();
     }
 
-    public static float getImageSize(Context context, Uri uri) {
-        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-        if (cursor != null) {
-            int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
-            cursor.moveToFirst();
-            float imageSize = cursor.getLong(sizeIndex);
-            cursor.close();
-            return imageSize / (1024f * 1024f); // returns size in bytes
-        }
-        return 0;
-    }
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
 
@@ -797,8 +637,6 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                 try {
                     if (data.getData() != null) {
                         Uri uri = data.getData();
-                        String orgFilePath = getRealPathFromURI(uri, this);
-                        String filepath = "";//default fileName
 
                         String mimeType = this.mContext.getContentResolver().getType(uri);
                         String uriString = uri.toString();
@@ -810,9 +648,33 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
+                        File photoFile = null;
+
+                        try {
+                            // Creating file
+                            try {
+                                photoFile = Config.createFile(mContext, extension, true);
+                            } catch (IOException ex) {
+                                Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                // Log.d(TAG, "Error occurred while creating the file");
+                            }
+
+                            InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                            FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                            // Copying
+                            Config.copyStream(inputStream, fileOutputStream);
+                            fileOutputStream.close();
+                            inputStream.close();
+                        } catch (Exception e) {
+                            Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                            //Log.d(TAG, "onActivityResult: " + e.toString());
+                        }
+                        String orgFilePath = photoFile.getAbsolutePath();
                         if (Arrays.asList(fileExtsSupported).contains(extension)) {
                             if (orgFilePath == null) {
-                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
+                                orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                             }
                         } else {
                             Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
@@ -835,12 +697,9 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                         ClipData mClipData = data.getClipData();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
-                            Uri imageUri = item.getUri();
-                            String orgFilePath = getRealPathFromURI(imageUri, this);
-                            String filepath = "";//default fileName
-
-                            String mimeType = mContext.getContentResolver().getType(imageUri);
-                            String uriString = imageUri.toString();
+                            Uri uri = item.getUri();
+                            String mimeType = this.mContext.getContentResolver().getType(uri);
+                            String uriString = uri.toString();
                             String extension = "";
                             if (uriString.contains(".")) {
                                 extension = uriString.substring(uriString.lastIndexOf(".") + 1);
@@ -849,9 +708,34 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                             if (mimeType != null) {
                                 extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                             }
+                            File photoFile = null;
+
+                            try {
+                                // Creating file
+                                try {
+                                    photoFile = Config.createFile(mContext, extension, true);
+                                } catch (IOException ex) {
+                                    Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                    // Log.d(TAG, "Error occurred while creating the file");
+                                }
+
+                                InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                                FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                                // Copying
+                                Config.copyStream(inputStream, fileOutputStream);
+                                fileOutputStream.close();
+                                inputStream.close();
+                            } catch (Exception e) {
+                                Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                                //Log.d(TAG, "onActivityResult: " + e.toString());
+                            }
+                            String orgFilePath = photoFile.getAbsolutePath();
                             if (Arrays.asList(fileExtsSupported).contains(extension)) {
+
                                 if (orgFilePath == null) {
-                                    orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
+                                    orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                                 }
                             } else {
                                 Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
@@ -878,13 +762,22 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
 
         } else if (requestCode == CAMERA) {
             if (data != null) {
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                //      imageview.setImageBitmap(bitmap);
-                path = saveImage(bitmap);
-                // imagePathList.add(bitmap.toString());
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
+                File photoFile = null;/////////
+                // ///////
+                try {//////////
+                    photoFile = Config.createFile(mContext, "png", true);//////////
+                } catch (IOException e) {/////////////
+                    e.printStackTrace();///////////
+                }///////////
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");/////////
+                try (FileOutputStream out = new FileOutputStream(photoFile)) {////////////
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance////////////
+                    // PNG is a lossless format, the compression factor (100) is ignored/////////
+                } catch (IOException e) {////////////
+                    e.printStackTrace();///////////
+                }////////
+                String path = photoFile.getAbsolutePath();////////
+
                 if (path != null) {
                     mImageUri = Uri.parse(path);
                     ShoppingListModel model = new ShoppingListModel();
@@ -892,11 +785,6 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                     itemList.add(model);
 
                     imagePathList.add(mImageUri.toString());
-                }
-                try {
-                    bytes.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
                 DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
@@ -1014,5 +902,61 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         itemList.get(position).setCaption(caption);
         mDetailFileAdapter.notifyDataSetChanged();
 
+    }
+
+    private void getQuestionnaire(int serviceId, int providerAccountId) {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<Questionnaire> call = apiService.getOrdersQuestions(serviceId, providerAccountId);
+        call.enqueue(new retrofit2.Callback<Questionnaire>() {
+
+            @Override
+            public void onResponse(Call<Questionnaire> call, Response<Questionnaire> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        Questionnaire questionnaire = response.body();
+                        BookingModel model = new BookingModel();
+                        model.setAccountId(providerAccountId);
+                        model.setCatalogInfo(catalogInfo);
+                        model.setQuestionnaire(questionnaire);
+                        model.setFrom(Constants.ORDERS);
+
+                        if (questionnaire != null && questionnaire.getQuestionsList() != null) {
+                            Intent intent = new Intent(ItemsActivity.this, CustomQuestionnaire.class);
+                            intent.putExtra("data", model);
+                            intent.putExtra("from", Constants.ORDERS);
+
+                            intent.putExtra("IMAGESLIST", itemList);
+                            intent.putExtra("uniqueId", uniqueId);
+                            intent.putExtra("accountId", accountId);
+                            intent.putExtra("catalogId", catalogInfo.getCatLogId());
+                            startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(ItemsActivity.this, CheckoutListActivity.class);
+                            intent.putExtra("IMAGESLIST", itemList);
+                            intent.putExtra("uniqueId", uniqueId);
+                            intent.putExtra("accountId", accountId);
+                            intent.putExtra("serviceId", catalogInfo.getCatLogId());
+                            startActivity(intent);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Questionnaire> call, Throwable t) {
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+            }
+        });
     }
 }

@@ -25,7 +25,7 @@ public class Constants {
     public static final String MERCHANT_ID = "4934580";
     public static final boolean DEBUG = true;
 
-    public static final List<String> razorpayMethods = Arrays.asList("dc", "cc", "netbanking", "wallet", "emi", "upi");
+    public static final List<String> razorpayMethods = Arrays.asList("dc", "cc", "netbanking", "NB", "wallet", "emi", "upi");
     //public static final List<String> paytmMethods = Arrays.asList( "BALANCE", "PPBL", "UPI", "CREDIT_CARD" "DEBIT_CARD" NET_BANKINGFor Net Banking EMI PAYTM_DIGITAL_CREDIT);
 
     public static final String PREFS = "com.jaldeeinc.jaldee";

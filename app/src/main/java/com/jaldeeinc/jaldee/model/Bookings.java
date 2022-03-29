@@ -4,6 +4,7 @@ import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Bookings implements Serializable {
 
@@ -30,8 +31,15 @@ public class Bookings implements Serializable {
     String videoCallMessage;
     boolean isRescheduled;
     String deptName;
+    ArrayList<RlsdQnr> releasedQnr;
 
+    public ArrayList<RlsdQnr> getReleasedQnr() {
+        return releasedQnr;
+    }
 
+    public void setReleasedQnr(ArrayList<RlsdQnr> releasedQnr) {
+        this.releasedQnr = releasedQnr;
+    }
 
     public Bookings(){
 
@@ -50,6 +58,7 @@ public class Bookings implements Serializable {
         this.appointmentInfo = appointmentInfo;
         this.checkInInfo = checkInInfo;
     }
+
     public boolean isRescheduled() {
         return isRescheduled;
     }

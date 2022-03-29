@@ -79,6 +79,7 @@ import com.jaldeeinc.jaldee.custom.EmailEditWindow;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
+import com.jaldeeinc.jaldee.model.SelectedSlotDetail;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
@@ -1975,6 +1976,11 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         selectedShcdId = scheduleId;
         timeSlot = displayTime;
         cvSlots.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void sendSelectedTime(List<SelectedSlotDetail> selectedSlotDetails) {
 
     }
 
@@ -5562,6 +5568,11 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     public void sendPaymentResponse(String paymentStatus, String orderid) {
 
         getConfirmationDetails();
+    }
+
+    @Override
+    public void update() {
+
     }
 }
 

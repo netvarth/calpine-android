@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -24,6 +25,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.model.RlsdQnr;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.ItemDetails;
 
@@ -32,7 +34,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 
 public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.ViewHolder> {
@@ -44,6 +48,7 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
     private ISelectedOrder iSelectedOrder;
     private boolean hideMoreInfo = false;
     private boolean isVirtualItemsOnly = false;
+    List<RlsdQnr> fReleasedQNR;
 
     public TodayOrdersAdapter(ArrayList<ActiveOrders> ordersList, Context context, boolean isLoading, ISelectedOrder iSelectedOrder, boolean hideMoreInfo) {
         this.context = context;
@@ -147,26 +152,41 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
 
                 // to set status
                 if (orders.getOrderStatus() != null && !orders.getUid().contains("h_")) {
-
-                    viewHolder.tvStatus.setVisibility(View.VISIBLE);
-                    viewHolder.rlStatus.setVisibility(View.VISIBLE);
-                    if (orders.getOrderStatus().equalsIgnoreCase("Done")) {
-                        viewHolder.tvStatus.setText("Completed");
-                    } else {
-                        viewHolder.tvStatus.setText(convertToTitleForm(orders.getOrderStatus()));
+                    if (orders.getReleasedQnr() != null && orders.getReleasedQnr().size() > 0) {
+                        fReleasedQNR = orders.getReleasedQnr().stream()
+                                .filter(p -> p.getStatus().equalsIgnoreCase("released")).collect(Collectors.toList());
                     }
-                    if (orders.getOrderStatus().equalsIgnoreCase(Constants.CONFIRMED)) {
-                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
-                    } else if (orders.getOrderStatus().equalsIgnoreCase(Constants.ARRIVED)) {
-                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
-                    } else if (orders.getOrderStatus().equalsIgnoreCase(Constants.COMPLETED)) {
-                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.location_theme));
-                    } else if (orders.getOrderStatus().equalsIgnoreCase(Constants.CANCELLED)) {
-                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.cb_errorRed));
-                    } else if (orders.getOrderStatus().equalsIgnoreCase(Constants.CHECKEDIN)) {
-                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
+                    if (fReleasedQNR != null && !fReleasedQNR.isEmpty() && fReleasedQNR.size() > 0) {
+                        viewHolder.rl_qnr_info_needed.setVisibility(View.VISIBLE);
+                        viewHolder.rlStatus.setVisibility(View.GONE);
+                        Animation anim = new AlphaAnimation(0.0f, 1.0f);
+                        anim.setDuration(800); //You can manage the blinking time with this parameter
+                        anim.setStartOffset(20);
+                        anim.setRepeatMode(Animation.REVERSE);
+                        anim.setRepeatCount(Animation.INFINITE);
+                        viewHolder.rl_qnr_info_needed.startAnimation(anim);
                     } else {
-                        viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.orange));
+                        viewHolder.rl_qnr_info_needed.setVisibility(View.GONE);
+                        viewHolder.tvStatus.setVisibility(View.VISIBLE);
+                        viewHolder.rlStatus.setVisibility(View.VISIBLE);
+                        if (orders.getOrderStatus().equalsIgnoreCase("Done")) {
+                            viewHolder.tvStatus.setText("Completed");
+                        } else {
+                            viewHolder.tvStatus.setText(convertToTitleForm(orders.getOrderStatus()));
+                        }
+                        if (orders.getOrderStatus().equalsIgnoreCase(Constants.CONFIRMED)) {
+                            viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
+                        } else if (orders.getOrderStatus().equalsIgnoreCase(Constants.ARRIVED)) {
+                            viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
+                        } else if (orders.getOrderStatus().equalsIgnoreCase(Constants.COMPLETED)) {
+                            viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.location_theme));
+                        } else if (orders.getOrderStatus().equalsIgnoreCase(Constants.CANCELLED)) {
+                            viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.cb_errorRed));
+                        } else if (orders.getOrderStatus().equalsIgnoreCase(Constants.CHECKEDIN)) {
+                            viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.appoint_theme));
+                        } else {
+                            viewHolder.rlStatus.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.orange));
+                        }
                     }
                 } else {
                     viewHolder.tvStatus.setVisibility(View.GONE);
@@ -235,6 +255,7 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
         CustomTextViewSemiBold tvProviderName, ivOrderNo;
         CustomTextViewMedium tvStatus, tvServiceName, tvDateAndTime, tvpayment, tvQuantity;
         CardView cvBooking;
+        RelativeLayout rl_qnr_info_needed;
         RelativeLayout rlStatus, rlQuantity;
 
 
@@ -256,6 +277,7 @@ public class TodayOrdersAdapter extends RecyclerView.Adapter<TodayOrdersAdapter.
                 tvpayment = itemView.findViewById(R.id.tv_payment);
                 tvQuantity = itemView.findViewById(R.id.tv_quantityValue);
                 rlQuantity = itemView.findViewById(R.id.rl_quantitiy);
+                rl_qnr_info_needed = itemView.findViewById(R.id.rl_qnr_info_needed);
 
             }
 

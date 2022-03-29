@@ -3005,6 +3005,11 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
     public void sendPaymentResponse(String paymentStatus, String orderid) {
 
     }
+
+    @Override
+    public void update() {
+
+    }
     //
 //    private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
 //

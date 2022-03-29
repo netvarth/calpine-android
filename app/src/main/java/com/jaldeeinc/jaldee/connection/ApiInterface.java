@@ -1,6 +1,8 @@
 package com.jaldeeinc.jaldee.connection;
 
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.model.Address;
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
@@ -519,6 +521,9 @@ public interface ApiInterface {
     @POST("consumer/waitlist")
     Call<ResponseBody> Checkin(@Query("account") String account, @Body RequestBody jsonObj);
 
+    @PUT("consumer/{channel}/advancePayment")
+    Call<AdvancePaymentDetails> getAdvancePaymentDetails(@Path("channel") String uuid, @Query("account") String account, @Body RequestBody jsonObj);
+
     //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @PUT("consumer/waitlist/advancePayment")
     Call<AdvancePaymentDetails> getWlAdvancePaymentDetails(@Query("account") String account, @Body RequestBody jsonObj);
@@ -795,7 +800,7 @@ public interface ApiInterface {
     Call<ActiveOrders> getOrderDetails(@Path("uuid") String uuid, @Query("account") int account);
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @GET("consumer/orders/settings/store/contact/info/{id}Fan")
+    @GET("consumer/orders/settings/store/contact/info/{id}")
     Call<StoreDetails> getStoreDetails(@Path("id") int id);
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
@@ -850,39 +855,53 @@ public interface ApiInterface {
     @GET("provider/account/settings/config/{uniqueId}/businessProfile")
     Call<Provider> getProvider(@Path("uniqueId") int uniqueId);
 
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("provider/imagePropries/logo/{queueId}")
     Call<LinkedHashMap<String, ArrayList<ProfilePicture>>> getLogo(@Path("queueId") String id);
 
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
+
+    /****************   Questionnaire URLs  ***************/
+
     @GET("consumer/questionnaire/service/{serviceId}/consumer/{consumerId}")
     Call<Questionnaire> getQuestions(@Path("serviceId") int serviceId, @Path("consumerId") int consumerId, @Query("account") int account);
 
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("consumer/questionnaire/donation/{serviceId}")
     Call<Questionnaire> getDonationQuestions(@Path("serviceId") int serviceId, @Query("account") int account);
 
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
+    @GET("consumer/questionnaire/order/{serviceId}")
+    Call<Questionnaire> getOrdersQuestions(@Path("serviceId") int serviceId, @Query("account") int account);
+
     @POST("consumer/appointment/questionnaire/{uid}?")
     Call<SubmitQuestionnaire> submitAppointmentQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj, @Query("account") int accountId);
 
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @POST("consumer/waitlist/questionnaire/{uid}?")
     Call<SubmitQuestionnaire> submitWaitListQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj, @Query("account") int accountId);
 
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @POST("consumer/donation/questionnaire/submit/{uid}?")
     Call<ResponseBody> submitDonationQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj, @Query("account") int accountId);
 
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
+    @POST("consumer/orders/questionnaire/{uid}?")
+    Call<SubmitQuestionnaire> submitOrderQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj, @Query("account") int accountId);
+
     @POST("consumer/appointment/questionnaire/resubmit/{uid}?")
     Call<SubmitQuestionnaire> reSubmitAppQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj, @Query("account") int accountId);
 
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @POST("consumer/waitlist/questionnaire/resubmit/{uid}?")
     Call<SubmitQuestionnaire> reSubmitWlQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj, @Query("account") int accountId);
 
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
+    @POST("consumer/orders/questionnaire/resubmit/{uid}?")
+    Call<SubmitQuestionnaire> reSubmitOrderQuestionnaire(@Path("uid") String uid, @Body RequestBody jsonObj, @Query("account") int accountId);
+
+    @GET("consumer/appointment/questionnaire/{uid}?")
+    Call<ArrayList<Questionnaire>> getAppointmentAfterQuestionnaire(@Path("uid") String uid, @Query("account") int accountId);
+
+    @GET("consumer/waitlist/questionnaire/{uid}?")
+    Call<ArrayList<Questionnaire>> getWaitlistAfterQuestionnaire(@Path("uid") String uid, @Query("account") int accountId);
+
+    @GET("consumer/orders/questionnaire/{uid}?")
+    Call<ArrayList<Questionnaire>> getOrderAfterQuestionnaire(@Path("uid") String uid, @Query("account") int accountId);
+    /****************   Questionnaire URLs  ***************/
+
+
     @PUT
     Observable<Response<Void>> uploadPreSignedS3File(@Url String url, @Body RequestBody image);
 
@@ -893,6 +912,9 @@ public interface ApiInterface {
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @PUT("consumer/waitlist/questionnaire/upload/status/{uid}?")
     Call<ResponseBody> checkWaitlistUploadStatus(@Path("uid") String id, @Query("account") int accountId, @Body RequestBody jsonObj);
+
+    @PUT("consumer/orders/questionnaire/upload/status/{uid}?")
+    Call<ResponseBody> checkOrderUploadStatus(@Path("uid") String id, @Query("account") int accountId, @Body RequestBody jsonObj);
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("consumer/wallet/redeem/eligible/amt")

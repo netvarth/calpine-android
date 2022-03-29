@@ -1,5 +1,6 @@
 package com.jaldeeinc.jaldee.model;
 
+import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.Questionnaire;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
@@ -19,6 +20,7 @@ public class BookingModel implements Serializable {
     public ServiceInfo serviceInfo;
     public SearchService checkInInfo;
     private SearchDonation donationServiceInfo;
+    private Catalog catalogInfo;
     SearchTerminology mSearchTerminology;
     public int familyEMIID;
     public String phoneNumber;
@@ -47,6 +49,14 @@ public class BookingModel implements Serializable {
     public float amountRequiredNow;
     public float netTotal;
     public boolean isToken;
+
+    public Catalog getCatalogInfo() {
+        return catalogInfo;
+    }
+
+    public void setCatalogInfo(Catalog catalogInfo) {
+        this.catalogInfo = catalogInfo;
+    }
 
     public void setToken(boolean token) {
         isToken = token;

@@ -1,23 +1,15 @@
 package com.jaldeeinc.jaldee.custom;
 
-import android.animation.LayoutTransition;
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,50 +17,29 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
-import com.jaldeeinc.jaldee.Interface.ISelectSlotInterface;
-import com.jaldeeinc.jaldee.Interface.ISlotInfo;
-import com.jaldeeinc.jaldee.Interface.OnBottomReachedListener;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.AppointmentActivity;
 import com.jaldeeinc.jaldee.activities.CheckInActivity;
 import com.jaldeeinc.jaldee.adapter.CheckIn_FamilyMemberListAdapter;
-import com.jaldeeinc.jaldee.adapter.CheckIn_FamilyMemberListAdapterAppointment;
-import com.jaldeeinc.jaldee.adapter.CustomSpinnerAdapter;
-import com.jaldeeinc.jaldee.adapter.TimeSlotsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
-import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.ProfileModel;
-import com.jaldeeinc.jaldee.response.SearchDepartment;
-import com.jaldeeinc.jaldee.response.SlotsData;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
-import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import okhttp3.RequestBody;

@@ -33,10 +33,20 @@ public class SearchAppoinment implements Serializable {
     boolean postInfoEnabled;
     boolean preInfoEnabled;
     boolean serviceDurationEnabled;
+    boolean showOnlyAvailableSlots;
     int serviceDuration;
     int id;
     int multiples;
     int department;
+    int maxBookingsAllowed	;
+
+    public boolean isShowOnlyAvailableSlots() {
+        return showOnlyAvailableSlots;
+    }
+
+    public int getMaxBookingsAllowed() {
+        return maxBookingsAllowed;
+    }
 
     @SerializedName("provider")
     private SearchAppoinment provider;

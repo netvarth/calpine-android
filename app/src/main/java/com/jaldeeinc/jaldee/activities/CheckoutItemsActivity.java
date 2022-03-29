@@ -6,11 +6,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.text.format.DateUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
@@ -42,7 +47,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.Interface.IAddressInterface;
 import com.jaldeeinc.jaldee.Interface.ICpn;
@@ -62,6 +69,7 @@ import com.jaldeeinc.jaldee.custom.AddressDialog;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomEditTextRegular;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.EditContactDialog;
@@ -72,7 +80,9 @@ import com.jaldeeinc.jaldee.custom.SuccessDialog;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.Address;
 import com.jaldeeinc.jaldee.model.CartItemModel;
+import com.jaldeeinc.jaldee.model.LabelPath;
 import com.jaldeeinc.jaldee.model.OrderItem;
+import com.jaldeeinc.jaldee.model.QuestionnaireInput;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
@@ -85,9 +95,11 @@ import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
+import com.jaldeeinc.jaldee.response.QuestionnaireUrls;
 import com.jaldeeinc.jaldee.response.Schedule;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.StoreDetails;
+import com.jaldeeinc.jaldee.response.SubmitQuestionnaire;
 import com.jaldeeinc.jaldee.response.WalletCheckSumModel;
 import com.jaldeeinc.jaldee.utils.DialogUtilsKt;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
@@ -99,20 +111,29 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.functions.Function;
 import kotlin.Unit;
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -327,7 +348,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     private String selectedTime = "";
     private String ynwUUID = null;
     private String prepayAmount = "";
-    private int accountId, catalogId, uniqueId;
+    private int providerId, catalogId, uniqueId;
     private AddressDialog addressDialog;
     private IPaymentResponse iPaymentResponse;
     private CheckoutItemsAdapter checkoutItemsAdapter;
@@ -342,6 +363,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     private BottomSheetDialog dialog;
     private String phoneNumber = "", countryCode = "", email = "";
     private ActiveOrders activeOrders = new ActiveOrders();
+    public ArrayList<LabelPath> imagePathList = new ArrayList<>();
     private SuccessDialog successDialog;
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
     private ProfileModel profileDetails = new ProfileModel();
@@ -360,7 +382,11 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     private Address selectedAddress = new Address();
 
     private ICpn iCpn;
-
+    public String path;
+    public Bitmap bitmap;
+    public File file;
+    public File f;
+    private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -377,8 +403,10 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
         uniqueId = db.getUniqueId();
         catalogId = db.getCatalogId();
-        accountId = db.getAccountId();
-        getCatalogDetails(accountId);
+        providerId = db.getAccountId();
+        getQuestionnaireImages();
+
+        getCatalogDetails(providerId);
         getProviderDetails(uniqueId);
         // to fetch user addresses list
 
@@ -438,7 +466,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             @Override
             public void onClick(View v) {
 
-                getStoreDetails(accountId);
+                getStoreDetails(providerId);
 
             }
         });
@@ -461,7 +489,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     isStore = true;
                     rbStore.setChecked(true);
                     rbHome.setChecked(false);
-                    getStorePickupSchedules(catalogId, accountId);
+                    getStorePickupSchedules(catalogId, providerId);
                     updateBill();
                 } else {
                     isStore = false;
@@ -478,7 +506,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                     isStore = false;
                     rbHome.setChecked(true);
                     rbStore.setChecked(false);
-                    getHomeDeliverySchedules(catalogId, accountId);
+                    getHomeDeliverySchedules(catalogId, providerId);
                     getAddressList();
                     updateBill();
                 } else {
@@ -555,7 +583,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             @Override
             public void onClick(View v) {
 
-                placeOrder(accountId);
+                placeOrder(providerId);
             }
         });
 
@@ -828,7 +856,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                             if (cbJCash.isChecked()) {
                                 getPrePayRemainingAmntNeeded(prepayAmount);
                             } else {
-                                getConfirmationId(ynwUUID, accountId);
+                                getOrderConfirmationId(ynwUUID, accountId);
                             }
 
                         }
@@ -875,7 +903,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                 Config.logV("Response--code-------------------------" + response.code());
                 if (response.code() == 200) {
                     prePayRemainingAmount = response.body();
-                    getConfirmationId(ynwUUID, accountId);
+                    getOrderConfirmationId(ynwUUID, providerId);
                 }
             }
 
@@ -895,7 +923,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         });
     }
 
-    private void getConfirmationId(String value, int acctId) {
+    private void getOrderConfirmationId(String value, int acctId) {
 
         final ApiInterface apiService =
                 ApiClient.getClient(CheckoutItemsActivity.this).create(ApiInterface.class);
@@ -926,11 +954,30 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                         e.printStackTrace();
                                     }
                                 } else {
-                                    onOrderSuccess(acctId);
+                                    String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
+
+                                    if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
+
+                                        QuestionnaireInput input = new QuestionnaireInput();
+                                        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                                        input = gson.fromJson(inputString, QuestionnaireInput.class);
+                                        ApiSubmitQuestionnnaire(input, activeOrders.getUid());
+                                    } else {
+                                        getOrderConfirmationDetails(acctId);
+                                    }
                                 }
                             } else {
+                                String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
 
-                                onOrderSuccess(acctId);
+                                if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
+
+                                    QuestionnaireInput input = new QuestionnaireInput();
+                                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                                    input = gson.fromJson(inputString, QuestionnaireInput.class);
+                                    ApiSubmitQuestionnnaire(input, activeOrders.getUid());
+                                } else {
+                                    getOrderConfirmationDetails(acctId);
+                                }
 
                             }
                         }
@@ -964,7 +1011,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         mDialog.show();
 
 
-        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(String.valueOf(accountId), 0, Constants.PURPOSE_BILLPAYMENT);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(String.valueOf(providerId), 0, Constants.PURPOSE_BILLPAYMENT);
 
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
@@ -1020,6 +1067,16 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                 DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
                                 int width = (int) (metrics.widthPixels * 1);
                                 cancellationPolicyDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                                String cancelation_policy_2 = getResources().getString(R.string.cancelation_policy_2);
+                                String cancelation_policy_3 = getResources().getString(R.string.cancelation_policy_3);
+                                cancelation_policy_2 = cancelation_policy_2.replace("VARIABLE", "order");
+                                cancelation_policy_3 = cancelation_policy_3.replace("VARIABLE", "order");
+                                CustomTextViewLight setup_intro_bullet_first_text = cancellationPolicyDialog.findViewById(R.id.setup_intro_bullet_first_text);
+                                CustomTextViewLight setup_intro_bullet_second_text = cancellationPolicyDialog.findViewById(R.id.setup_intro_bullet_second_text);
+                                setup_intro_bullet_first_text.setText(cancelation_policy_2);
+                                setup_intro_bullet_second_text.setText(cancelation_policy_3);
+
                                 cancellationPolicyDialog.show();
 
                                 LinearLayout close = cancellationPolicyDialog.findViewById(R.id.ll_close);
@@ -1045,10 +1102,10 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                 if (selectedpaymentMode != null) {
 
                                     if (cbJCash.isChecked()) {
-                                        new PaymentGateway(mContext, (Activity) mContext, iPaymentResponse).ApiGenerateHashWallet(prepayAmount, selectedpaymentMode, ynwUUID, String.valueOf(accountId), Constants.PURPOSE_PREPAYMENT, 0, isInternational, orderId, true);
+                                        new PaymentGateway(mContext, (Activity) mContext, iPaymentResponse).ApiGenerateHashWallet(prepayAmount, selectedpaymentMode, ynwUUID, String.valueOf(providerId), Constants.PURPOSE_PREPAYMENT, 0, isInternational, orderId, true);
 
                                     } else {
-                                        new PaymentGateway(mContext, (Activity) mContext, iPaymentResponse).ApiGenerateHash(prepayAmount, selectedpaymentMode, ynwUUID, String.valueOf(accountId), Constants.PURPOSE_PREPAYMENT, 0, isInternational, orderId, 0);
+                                        new PaymentGateway(mContext, (Activity) mContext, iPaymentResponse).ApiGenerateHash(prepayAmount, selectedpaymentMode, ynwUUID, String.valueOf(providerId), Constants.PURPOSE_PREPAYMENT, 0, isInternational, orderId, 0);
 
                                     }
                                     dialog.dismiss();
@@ -1197,7 +1254,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
                         if (!respnseWCSumModel.isGateWayPaymentNeeded()) {
 
-                            onOrderSuccess(accountID);
+                            getOrderConfirmationDetails(accountID);
 
                         }
                     } else {
@@ -1217,65 +1274,75 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         });
     }
 
-    private void onOrderSuccess(int acctId) {
+    private void getOrderConfirmationDetails(int acctId) {
 
         final ApiInterface apiService =
                 ApiClient.getClient(CheckoutItemsActivity.this).create(ApiInterface.class);
         final Dialog dialog = Config.getProgressDialog(CheckoutItemsActivity.this, CheckoutItemsActivity.this.getResources().getString(R.string.dialog_log_in));
         dialog.show();
-        Call<ActiveOrders> call = apiService.getOrderDetails(ynwUUID, acctId);
-        call.enqueue(new Callback<ActiveOrders>() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
-            public void onResponse(Call<ActiveOrders> call, Response<ActiveOrders> response) {
-                try {
-                    if (dialog.isShowing())
-                        Config.closeDialog(getParent(), dialog);
-                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-                    if (response.code() == 200) {
-                        activeOrders = response.body();
-                        if (activeOrders != null) {
+            public void run() {
+                Call<ActiveOrders> call = apiService.getOrderDetails(ynwUUID, acctId);
+                call.enqueue(new Callback<ActiveOrders>() {
+                    @Override
+                    public void onResponse(Call<ActiveOrders> call, Response<ActiveOrders> response) {
+                        try {
+                            if (dialog.isShowing())
+                                Config.closeDialog(getParent(), dialog);
+                            Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                            Config.logV("Response--code-------------------------" + response.code());
+                            if (response.code() == 200) {
+                                activeOrders = response.body();
+                                imagePathList.clear();
+                                SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, "");
+                                SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, "");
+                                if (activeOrders != null) {
 
-                            successDialog = new SuccessDialog(mContext, activeOrders.getOrderNumber());
-                            successDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
-                            successDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            successDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                            successDialog.setCancelable(false);
-                            successDialog.show();
-                            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-                            int width = (int) (metrics.widthPixels * 1);
-                            successDialog.getWindow().setGravity(Gravity.BOTTOM);
-                            successDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    successDialog = new SuccessDialog(mContext, activeOrders.getOrderNumber());
+                                    successDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+                                    successDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    successDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    successDialog.setCancelable(false);
+                                    successDialog.show();
+                                    DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                                    int width = (int) (metrics.widthPixels * 1);
+                                    successDialog.getWindow().setGravity(Gravity.BOTTOM);
+                                    successDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Gson gson = new Gson();
+                                            String myJson = gson.toJson(activeOrders);
+                                            successDialog.dismiss();
+                                            db.DeleteCart();
+                                            Intent checkIn = new Intent(CheckoutItemsActivity.this, OrderConfirmation.class);
+                                            checkIn.putExtra("orderInfo", myJson);
+                                            checkIn.putExtra("isVirtualItemsOnly", isVirtualItemsOnly);
+                                            startActivity(checkIn);
+                                        }
+                                    }, 8000);
 
-                                    successDialog.dismiss();
-                                    db.DeleteCart();
-                                    Intent checkIn = new Intent(CheckoutItemsActivity.this, OrderConfirmation.class);
-                                    checkIn.putExtra("orderInfo", activeOrders);
-                                    checkIn.putExtra("isVirtualItemsOnly", isVirtualItemsOnly);
-                                    startActivity(checkIn);
+
                                 }
-                            }, 8000);
 
-
+                            }
+                        } catch (Exception e) {
+                            Log.i("mnbbnmmnbbnm", e.toString());
+                            e.printStackTrace();
                         }
-
                     }
-                } catch (Exception e) {
-                    Log.i("mnbbnmmnbbnm", e.toString());
-                    e.printStackTrace();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<ActiveOrders> call, Throwable t) {
-                if (dialog.isShowing())
-                    Config.closeDialog(getParent(), dialog);
+                    @Override
+                    public void onFailure(Call<ActiveOrders> call, Throwable t) {
+                        if (dialog.isShowing())
+                            Config.closeDialog(getParent(), dialog);
+                    }
+                });
             }
-        });
+        }, 0);
     }
 
     private void getProviderDetails(int id) {
@@ -1405,11 +1472,11 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     }
 
 
-    private void getCatalogDetails(int accountId) {
+    private void getCatalogDetails(int providerId) {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(CheckoutItemsActivity.this, CheckoutItemsActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ArrayList<Catalog>> call = apiService.getListOfCatalogs(accountId);
+        Call<ArrayList<Catalog>> call = apiService.getListOfCatalogs(providerId);
         call.enqueue(new Callback<ArrayList<Catalog>>() {
             @Override
             public void onResponse(Call<ArrayList<Catalog>> call, Response<ArrayList<Catalog>> response) {
@@ -1423,7 +1490,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         catalogs = response.body();
                         if (catalogs != null && catalogs.size() > 0) {
 
-                            getProviderDetails(accountId, catalogs);
+                            getProviderDetails(providerId, catalogs);
                             // to get payment modes
                             //APIPayment(String.valueOf(accountId));
                         }
@@ -1444,12 +1511,12 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     }
 
 
-    private void getStorePickupSchedules(int catalogId, int accountId) {
+    private void getStorePickupSchedules(int catalogId, int providerId) {
 
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(CheckoutItemsActivity.this, CheckoutItemsActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ArrayList<Schedule>> call = apiService.getPickUpSchedule(catalogId, accountId);
+        Call<ArrayList<Schedule>> call = apiService.getPickUpSchedule(catalogId, providerId);
         call.enqueue(new Callback<ArrayList<Schedule>>() {
             @Override
             public void onResponse(Call<ArrayList<Schedule>> call, Response<ArrayList<Schedule>> response) {
@@ -1523,12 +1590,12 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     }
 
 
-    private void getHomeDeliverySchedules(int catalogId, int accountId) {
+    private void getHomeDeliverySchedules(int catalogId, int providerId) {
 
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(CheckoutItemsActivity.this, CheckoutItemsActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ArrayList<Schedule>> call = apiService.getHomeDeliverySchedule(catalogId, accountId);
+        Call<ArrayList<Schedule>> call = apiService.getHomeDeliverySchedule(catalogId, providerId);
         call.enqueue(new Callback<ArrayList<Schedule>>() {
             @Override
             public void onResponse(Call<ArrayList<Schedule>> call, Response<ArrayList<Schedule>> response) {
@@ -1603,11 +1670,11 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     }
 
 
-    private void getProviderDetails(int accountId, ArrayList<Catalog> catalogs) {
+    private void getProviderDetails(int providerId, ArrayList<Catalog> catalogs) {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(CheckoutItemsActivity.this, CheckoutItemsActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<OrderResponse> call = apiService.getOrderEnabledStatus(accountId);
+        Call<OrderResponse> call = apiService.getOrderEnabledStatus(providerId);
         call.enqueue(new Callback<OrderResponse>() {
             @Override
             public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
@@ -1637,12 +1704,12 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         });
     }
 
-    private void getStoreDetails(int accountId) {
+    private void getStoreDetails(int providerId) {
 
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(CheckoutItemsActivity.this, CheckoutItemsActivity.this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<StoreDetails> call = apiService.getStoreDetails(accountId);
+        Call<StoreDetails> call = apiService.getStoreDetails(providerId);
         call.enqueue(new Callback<StoreDetails>() {
             @Override
             public void onResponse(Call<StoreDetails> call, Response<StoreDetails> response) {
@@ -1717,20 +1784,20 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                 rbStore.setVisibility(View.VISIBLE);
                 rbStore.setChecked(true);
                 rbHome.setChecked(false);
-                getStorePickupSchedules(catalogs.get(0).getCatLogId(), accountId);
-                getHomeDeliverySchedules(catalogs.get(0).getCatLogId(), accountId);
+                getStorePickupSchedules(catalogs.get(0).getCatLogId(), providerId);
+                getHomeDeliverySchedules(catalogs.get(0).getCatLogId(), providerId);
             } else if (catalogs.get(0).getPickUp() != null && catalogs.get(0).getPickUp().isOrderPickUp() && catalogs.get(0).getHomeDelivery() == null) {
                 rbHome.setVisibility(View.GONE);
                 rbStore.setVisibility(View.VISIBLE);
                 rbStore.setChecked(true);
                 rbHome.setChecked(false);
-                getStorePickupSchedules(catalogs.get(0).getCatLogId(), accountId);
+                getStorePickupSchedules(catalogs.get(0).getCatLogId(), providerId);
             } else if (catalogs.get(0).getPickUp() == null && catalogs.get(0).getHomeDelivery() != null && catalogs.get(0).getHomeDelivery().isHomeDelivery()) {
                 rbStore.setVisibility(View.GONE);
                 rbHome.setVisibility(View.VISIBLE);
                 rbHome.setChecked(true);
                 rbStore.setChecked(false);
-                getHomeDeliverySchedules(catalogs.get(0).getCatLogId(), accountId);
+                getHomeDeliverySchedules(catalogs.get(0).getCatLogId(), providerId);
             }
         }
     }
@@ -1954,6 +2021,11 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     }
 
     @Override
+    public void update() {
+
+    }
+
+    @Override
     public void onPaymentSuccess(String s, PaymentData paymentData) {
         try {
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
@@ -1983,7 +2055,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         }
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<ResponseBody> call = apiService.checkRazorpayPaymentStatus(body, accountId);
+        Call<ResponseBody> call = apiService.checkRazorpayPaymentStatus(body, providerId);
         call.enqueue(new Callback<ResponseBody>() {
 
             @Override
@@ -2032,7 +2104,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         }
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<ResponseBody> call = apiService.checkPaytmPaymentStatus(body, accountId);
+        Call<ResponseBody> call = apiService.checkPaytmPaymentStatus(body, providerId);
         call.enqueue(new Callback<ResponseBody>() {
 
             @Override
@@ -2070,7 +2142,15 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     }
 
     public void paymentFinished() {
-        onOrderSuccess(accountId);
+        String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
+        if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
+            QuestionnaireInput input = new QuestionnaireInput();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            input = gson.fromJson(inputString, QuestionnaireInput.class);
+            ApiSubmitQuestionnnaire(input, ynwUUID);
+        } else {
+            getOrderConfirmationDetails(providerId);
+        }
     }
 
     private void paymentError() {
@@ -2396,7 +2476,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             e.printStackTrace();
         }
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), inputObj.toString());
-        Call<AdvancePaymentDetailsOrder> call = apiService.getOrderAdvancePaymentDetails(String.valueOf(accountId), requestBody);
+        Call<AdvancePaymentDetailsOrder> call = apiService.getOrderAdvancePaymentDetails(String.valueOf(providerId), requestBody);
         call.enqueue(new Callback<AdvancePaymentDetailsOrder>() {
             @Override
             public void onResponse(Call<AdvancePaymentDetailsOrder> call, Response<AdvancePaymentDetailsOrder> response) {
@@ -2551,5 +2631,241 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             dialog.dismiss();
             dialog = null;
         }
+    }
+
+    public void getQuestionnaireImages() {
+        String imagesString = SharedPreference.getInstance(mContext).getStringValue(Constants.QIMAGES, "");
+        if (imagesString != null && !imagesString.trim().equalsIgnoreCase("")) {
+            Type labelPathType = new TypeToken<ArrayList<LabelPath>>() {
+            }.getType();
+            try {
+                ArrayList<LabelPath> pathList = new Gson().fromJson(imagesString, labelPathType);
+                imagePathList = pathList;
+            } catch (JsonSyntaxException e) {
+                imagePathList = new ArrayList<>();
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void ApiSubmitQuestionnnaire(QuestionnaireInput input, String uid) {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        MediaType type = MediaType.parse("*/*");
+        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
+        mBuilder.setType(MultipartBody.FORM);
+        for (int i = 0; i < imagePathList.size(); i++) {
+
+            /*try {
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i).getPath())));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (bitmap != null) {
+                path = saveImage(bitmap);
+                file = new File(path);
+            } else {
+                file = new File(imagePathList.get(i).getPath());
+            }*/
+            file = new File(imagePathList.get(i).getPath());///////
+
+            mBuilder.addFormDataPart("files", file.getName(), RequestBody.create(type, file));
+        }
+
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(input);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+        mBuilder.addFormDataPart("question", "blob", body);
+        RequestBody requestBody = mBuilder.build();
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<SubmitQuestionnaire> call = null;
+        call = apiService.submitOrderQuestionnaire(uid, requestBody, providerId);
+
+        call.enqueue(new Callback<SubmitQuestionnaire>() {
+            @Override
+            public void onResponse(Call<SubmitQuestionnaire> call, Response<SubmitQuestionnaire> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    if (response.code() == 200) {
+
+                        SubmitQuestionnaire result = response.body();
+
+                        if (result != null && result.getUrls().size() > 0) {
+
+                            for (QuestionnaireUrls url : result.getUrls()) {
+
+                                for (LabelPath p : imagePathList) {
+
+                                    if (url.getUrl().contains(p.getFileName())) {
+
+                                        p.setUrl(url.getUrl());
+                                    }
+                                }
+                            }
+
+                            uploadFilesToS3(imagePathList, result);
+                        } else {
+                            getOrderConfirmationDetails(providerId);
+                        }
+
+                    } else {
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
+                        getOrderConfirmationDetails(providerId);// make confirm Order if any QNR uploading error
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SubmitQuestionnaire> call, Throwable t) {
+                // Log error here since request failed
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+    }
+
+    private void uploadFilesToS3(ArrayList<LabelPath> filesList, SubmitQuestionnaire result) {
+
+        try {
+            ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+            final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+            mDialog.show();
+            List<Observable<?>> requests = new ArrayList<>();
+            for (LabelPath l : filesList) {
+                if (l.getUrl() != null && !l.getUrl().trim().equalsIgnoreCase("")) {
+                    RequestBody requestFile = RequestBody.create(MediaType.parse(l.getType()), new File(l.getPath()));
+                    requests.add(apiService.uploadPreSignedS3File(l.getUrl(), requestFile));
+                }
+            }
+            // Zip all requests with the Function, which will receive the results.
+            Observable.zip(requests, new Function<Object[], Object>() {
+                @Override
+                public Object apply(Object[] objects) throws Exception {
+                    // Objects[] is an array of combined results of completed requests
+                    // do something with those results and emit new event
+                    return objects;
+                }
+            })
+                    // After all requests had been performed the next observer will receive the Object, returned from Function
+
+                    .subscribe(
+                            // Will be triggered if all requests will end successfully (4xx and 5xx also are successful requests too)
+                            new Consumer<Object>() {
+                                @Override
+                                public void accept(Object object) throws Exception {
+                                    //Do something on successful completion of all requests
+                                    Log.e("ListOf Calls", "0");
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            // Stuff that updates the UI
+                                            try {
+                                                if (mDialog.isShowing())
+                                                    Config.closeDialog(getParent(), mDialog);
+
+                                                ApiCheckStatus(ynwUUID, providerId, result);
+
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+                                }
+                            },
+                            // Will be triggered if any error during requests will happen
+                            new Consumer<Throwable>() {
+                                @Override
+                                public void accept(Throwable e) throws Exception {
+                                    Log.e("ListOf Calls", "1");
+
+                                    //Do something on error completion of requests
+                                }
+                            }
+                    );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ApiCheckStatus(String uid, int accountId, SubmitQuestionnaire result) throws JSONException {
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        JSONObject uploadObj = new JSONObject();
+        JSONArray uploadArray = new JSONArray();
+
+        for (int i = 0; i < result.getUrls().size(); i++) {
+
+            JSONObject urlObj = new JSONObject();
+
+            urlObj.put("uid", result.getUrls().get(i).getUid());
+            urlObj.put("labelName", result.getUrls().get(i).getLabelName());
+            urlObj.put("url", result.getUrls().get(i).getUrl());
+            urlObj.put("document", result.getUrls().get(i).getDocument());
+            if (result.getUrls().get(i).getColumnId() != null && !result.getUrls().get(i).getColumnId().trim().equalsIgnoreCase("")) {
+                urlObj.put("columnId", result.getUrls().get(i).getColumnId());
+                urlObj.put("gridOrder", 1);
+            }
+
+            uploadArray.put(urlObj);
+
+        }
+
+
+        uploadObj.putOpt("urls", uploadArray);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
+        Call<ResponseBody> call = null;
+        call = apiService.checkOrderUploadStatus(uid, accountId, body);
+
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    if (response.code() == 200) {
+                        getOrderConfirmationDetails(accountId);
+
+
+                    } else {
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+
     }
 }

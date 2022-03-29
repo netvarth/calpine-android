@@ -25,20 +25,16 @@ public class AvailableSlotsData implements Serializable {
 
     private int scheduleId;
     private String displayTime;
+    private int position;
 
 
-    public AvailableSlotsData() {
-
+    public int getPosition() {
+        return position;
     }
 
-    public AvailableSlotsData(String slotTime, int noOfAvailableSlots, boolean isActive, int capacity) {
-        this.slotTime = slotTime;
-        this.noOfAvailableSlots = noOfAvailableSlots;
-        this.isActive = isActive;
-        this.capacity = capacity;
+    public void setPosition(int position) {
+        this.position = position;
     }
-
-
 
     public String getSlotTime() {
         return slotTime;

@@ -70,6 +70,8 @@ public class RazorpayPayment {
             if (Constants.razorpayMethods.stream().anyMatch(order.getPaymentmode()::equalsIgnoreCase)) {
                 if (order.getPaymentmode().equalsIgnoreCase("DC") || order.getPaymentmode().equalsIgnoreCase("CC")) {
                     preFill.put("method", "card");
+                } else if (order.getPaymentmode().equalsIgnoreCase("NB") || order.getPaymentmode().equalsIgnoreCase("netbanking")) {
+                    preFill.put("method", "netbanking");
                 } else {
                     preFill.put("method", order.getPaymentmode());
                 }

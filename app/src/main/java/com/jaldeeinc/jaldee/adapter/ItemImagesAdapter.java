@@ -29,7 +29,6 @@ import com.bumptech.glide.request.target.Target;
 import com.jaldeeinc.jaldee.Interface.IImageInterface;
 import com.jaldeeinc.jaldee.Interface.IItemInterface;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.ItemDetailAcitvity;
 import com.jaldeeinc.jaldee.activities.ItemsActivity;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;

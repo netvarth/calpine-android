@@ -2935,7 +2935,10 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             if (appointmentServiceInfo.getTotalAmount() != null) {
                 serviceInfo.setTotalAmount(appointmentServiceInfo.getTotalAmount());
             }
-
+            if (appointmentServiceInfo.getMaxBookingsAllowed() > 0) {
+                serviceInfo.setMaxBookingsAllowed(appointmentServiceInfo.getMaxBookingsAllowed());
+            }
+            serviceInfo.setShowOnlyAvailableSlots(appointmentServiceInfo.isShowOnlyAvailableSlots());
             intent.putExtra("serviceInfo", serviceInfo);
             intent.putExtra("sector", mBusinessDataList.getServiceSector().getDomain());
 

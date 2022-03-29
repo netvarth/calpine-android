@@ -40,7 +40,7 @@ import com.jaldeeinc.jaldee.activities.ChatActivity;
 import com.jaldeeinc.jaldee.activities.CheckinShareLocation;
 import com.jaldeeinc.jaldee.activities.CheckinShareLocationAppointment;
 import com.jaldeeinc.jaldee.activities.Constants;
-import com.jaldeeinc.jaldee.activities.CustomQuestionnaire;
+import com.jaldeeinc.jaldee.activities.ReleasedQNRActivity;
 import com.jaldeeinc.jaldee.activities.RescheduleActivity;
 import com.jaldeeinc.jaldee.activities.RescheduleCheckinActivity;
 import com.jaldeeinc.jaldee.activities.UpdateQuestionnaire;
@@ -50,6 +50,7 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.model.LabelPath;
 import com.jaldeeinc.jaldee.model.QuestionnaireResponseInput;
+import com.jaldeeinc.jaldee.model.RlsdQnr;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AnswerLineResponse;
@@ -67,7 +68,9 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -146,12 +149,19 @@ public class ActionsDialog extends Dialog {
                 }
 
                 // to show questionnaire option
-
-                if (bookings.getAppointmentInfo().getQuestionnaire() != null && bookings.getAppointmentInfo().getQuestionnaire().getQuestionAnswers() != null && bookings.getAppointmentInfo().getQuestionnaire().getQuestionAnswers().size() > 0) {
-
+                if (bookings.getAppointmentInfo() != null) {
+                    if (bookings.getAppointmentInfo().getReleasedQnr() != null) {
+                        List<RlsdQnr> fReleasedQNR = bookings.getAppointmentInfo().getReleasedQnr().stream()
+                                .filter(p -> !p.getStatus().equalsIgnoreCase("unReleased")).collect(Collectors.toList());
+                        bookings.getAppointmentInfo().getReleasedQnr().clear();
+                        bookings.getAppointmentInfo().setReleasedQnr((ArrayList<RlsdQnr>) fReleasedQNR); // remove releasedqnr response and add rlsdqnr with remove "unReleased" status
+                    }
+                }
+                if (bookings.getAppointmentInfo().getReleasedQnr() != null && bookings.getAppointmentInfo().getQuestionnaire() != null && bookings.getAppointmentInfo().getQuestionnaire().getQuestionAnswers() != null && bookings.getAppointmentInfo().getQuestionnaire().getQuestionAnswers().size() > 0) {
+                    llQuestionnaire.setVisibility(View.VISIBLE);
+                } else if (bookings.getAppointmentInfo().getReleasedQnr() != null && bookings.getAppointmentInfo().getReleasedQnr().size() > 0) {
                     llQuestionnaire.setVisibility(View.VISIBLE);
                 } else {
-
                     hideView(llQuestionnaire);
                 }
 
@@ -327,11 +337,11 @@ public class ActionsDialog extends Dialog {
                 }
 
                 // to show Questionnaire option
-                if (bookings.getCheckInInfo().getQuestionnaire() != null && bookings.getCheckInInfo().getQuestionnaire().getQuestionAnswers() != null && bookings.getCheckInInfo().getQuestionnaire().getQuestionAnswers().size() > 0) {
-
+                if (bookings.getCheckInInfo().getReleasedQnr() != null && bookings.getCheckInInfo().getQuestionnaire() != null && bookings.getCheckInInfo().getQuestionnaire().getQuestionAnswers() != null && bookings.getCheckInInfo().getQuestionnaire().getQuestionAnswers().size() > 0) {
+                    llQuestionnaire.setVisibility(View.VISIBLE);
+                } else if (bookings.getCheckInInfo().getReleasedQnr() != null && bookings.getCheckInInfo().getReleasedQnr().size() > 0) {
                     llQuestionnaire.setVisibility(View.VISIBLE);
                 } else {
-
                     hideView(llQuestionnaire);
                 }
 
@@ -995,42 +1005,70 @@ public class ActionsDialog extends Dialog {
             public void onClick(View view) {
 
                 if (bookings.getAppointmentInfo() != null) {
+                    if (bookings.getAppointmentInfo().getReleasedQnr() != null) {
+                        if (bookings.getAppointmentInfo().getReleasedQnr().size() == 1 && bookings.getAppointmentInfo().getReleasedQnr().get(0).getStatus().equalsIgnoreCase("submitted")) {
+                            QuestionnaireResponseInput input = buildQuestionnaireInput(bookings.getAppointmentInfo().getQuestionnaire());
+                            ArrayList<LabelPath> labelPaths = buildQuestionnaireLabelPaths(bookings.getAppointmentInfo().getQuestionnaire());
 
-                    QuestionnaireResponseInput input = buildQuestionnaireInput(bookings.getAppointmentInfo().getQuestionnaire());
-                    ArrayList<LabelPath> labelPaths = buildQuestionnaireLabelPaths(bookings.getAppointmentInfo().getQuestionnaire());
+                            SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
+                            SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
 
-                    SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
-                    SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
+                            Intent intent = new Intent(mContext, UpdateQuestionnaire.class);
+                            intent.putExtra("serviceId", bookings.getAppointmentInfo().getService().getId());
+                            intent.putExtra("accountId", bookings.getAppointmentInfo().getProviderAccount().getId());
+                            intent.putExtra("uid", bookings.getAppointmentInfo().getUid());
+                            intent.putExtra("isEdit", true);
+                            intent.putExtra("from", Constants.BOOKING_APPOINTMENT);
+                            if (bookings.getAppointmentInfo() != null && bookings.getAppointmentInfo().getApptStatus() != null) {
+                                intent.putExtra("status", bookings.getAppointmentInfo().getApptStatus());
+                            }
+                            mContext.startActivity(intent);
+                        } else {
+                            Gson gson = new Gson();
+                            String myJson = gson.toJson(bookings.getAppointmentInfo());
 
-                    Intent intent = new Intent(mContext, UpdateQuestionnaire.class);
-                    intent.putExtra("serviceId", bookings.getAppointmentInfo().getService().getId());
-                    intent.putExtra("accountId", bookings.getAppointmentInfo().getProviderAccount().getId());
-                    intent.putExtra("uid", bookings.getAppointmentInfo().getUid());
-                    intent.putExtra("isEdit", true);
-                    intent.putExtra("from", Constants.BOOKING_APPOINTMENT);
-                    if (bookings.getAppointmentInfo() != null && bookings.getAppointmentInfo().getApptStatus() != null) {
-                        intent.putExtra("status", bookings.getAppointmentInfo().getApptStatus());
+                            Intent intent = new Intent(mContext, ReleasedQNRActivity.class);
+                            intent.putExtra("bookingInfo", myJson);
+                            intent.putExtra("from", Constants.BOOKING_APPOINTMENT);
+                            mContext.startActivity(intent);
+
+                        }
+
                     }
-                    mContext.startActivity(intent);
+
 
                 } else if (bookings.getCheckInInfo() != null) {
+                    if (bookings.getCheckInInfo().getReleasedQnr() != null) {
+                        List<RlsdQnr> fReleasedQNR = bookings.getCheckInInfo().getReleasedQnr().stream()
+                                .filter(p -> !p.getStatus().equalsIgnoreCase("unReleased")).collect(Collectors.toList());
+                        if (fReleasedQNR.size() == 1 && fReleasedQNR.get(0).getStatus().equalsIgnoreCase("submitted")) {
 
-                    QuestionnaireResponseInput input = buildQuestionnaireInput(bookings.getCheckInInfo().getQuestionnaire());
-                    ArrayList<LabelPath> labelPaths = buildQuestionnaireLabelPaths(bookings.getCheckInInfo().getQuestionnaire());
+                            QuestionnaireResponseInput input = buildQuestionnaireInput(bookings.getCheckInInfo().getQuestionnaire());
+                            ArrayList<LabelPath> labelPaths = buildQuestionnaireLabelPaths(bookings.getCheckInInfo().getQuestionnaire());
 
-                    SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
-                    SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
+                            SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
+                            SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
 
-                    Intent intent = new Intent(mContext, UpdateQuestionnaire.class);
-                    intent.putExtra("serviceId", bookings.getCheckInInfo().getService().getId());
-                    intent.putExtra("accountId", bookings.getCheckInInfo().getProviderAccount().getId());
-                    intent.putExtra("uid", bookings.getCheckInInfo().getYnwUuid());
-                    intent.putExtra("isEdit", true);
-                    intent.putExtra("from", Constants.BOOKING_CHECKIN);
-                    if (bookings.getCheckInInfo() != null && bookings.getCheckInInfo().getWaitlistStatus() != null) {
-                        intent.putExtra("status", bookings.getCheckInInfo().getWaitlistStatus());
+                            Intent intent = new Intent(mContext, UpdateQuestionnaire.class);
+                            intent.putExtra("serviceId", bookings.getCheckInInfo().getService().getId());
+                            intent.putExtra("accountId", bookings.getCheckInInfo().getProviderAccount().getId());
+                            intent.putExtra("uid", bookings.getCheckInInfo().getYnwUuid());
+                            intent.putExtra("isEdit", true);
+                            intent.putExtra("from", Constants.BOOKING_CHECKIN);
+                            if (bookings.getCheckInInfo() != null && bookings.getCheckInInfo().getWaitlistStatus() != null) {
+                                intent.putExtra("status", bookings.getCheckInInfo().getWaitlistStatus());
+                            }
+                            mContext.startActivity(intent);
+                        } else {
+                            Gson gson = new Gson();
+                            String myJson = gson.toJson(bookings.getCheckInInfo());
+
+                            Intent intent = new Intent(mContext, ReleasedQNRActivity.class);
+                            intent.putExtra("bookingInfo", myJson);
+                            intent.putExtra("from", Constants.BOOKING_CHECKIN);
+                            mContext.startActivity(intent);
+                        }
                     }
-                    mContext.startActivity(intent);
                 }
 
                 dismiss();

@@ -1398,6 +1398,11 @@ public class CheckInReconfirmation extends AppCompatActivity implements PaymentR
     }
 
     @Override
+    public void update() {
+
+    }
+
+    @Override
     public void onPaymentSuccess(String s, PaymentData paymentData) {
         try {
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);

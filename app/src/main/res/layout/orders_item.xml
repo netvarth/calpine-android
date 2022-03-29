@@ -32,6 +32,34 @@
             android:layout_marginTop="@dimen/dimen_12dp"
             android:layout_marginBottom="@dimen/txtsize_12"
             android:orientation="vertical">
+            <!--<androidx.cardview.widget.CardView
+                android:id="@+id/cv_qnr_info_needed"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding5"
+                app:cardCornerRadius="@dimen/padding15"
+                app:cardElevation="@dimen/padding5"
+                app:cardBackgroundColor="@color/red"
+                android:visibility="gone"
+                android:backgroundt="@drawable/custom_status"
+                layout_gravity="end">
+
+                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                    android:id="@+id/tv_qnr_info_needed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:padding="@dimen/padding3"
+                    android:text="Info Needed"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/dimen_10dp"
+                    android:textStyle="bold"
+                    android:visibility="visible"
+                    android:layout_gravity="center">
+
+                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+            </androidx.cardview.widget.CardView>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -55,36 +83,68 @@
 
                 </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
-                <RelativeLayout
-                    android:id="@+id/rl_status"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/padding5"
-                    android:layout_marginTop="@dimen/padding2"
-                    android:layout_marginBottom="@dimen/padding2"
                     android:layout_weight="3"
-                    android:background="@drawable/custom_status">
+                    android:orientation="vertical">
 
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
-                        android:id="@+id/tv_status"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:id="@+id/rl_qnr_info_needed"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:paddingStart="@dimen/dimen_8dp"
-                        android:paddingTop="@dimen/padding3"
-                        android:paddingEnd="@dimen/dimen_2dp"
-                        android:paddingBottom="@dimen/padding3"
-                        android:text=""
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/dimen_10dp"
-                        android:textStyle="bold"
-                        android:visibility="visible">
+                        android:layout_marginTop="@dimen/padding2"
+                        android:layout_marginBottom="@dimen/padding2"
+                        android:background="@drawable/custom_status"
+                        android:backgroundTint="@color/red"
+                        android:visibility="gone">
 
-                    </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                            android:id="@+id/tv_qnr_info_needed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:paddingTop="@dimen/padding3"
+                            android:paddingBottom="@dimen/padding3"
+                            android:text="Info Needed"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/dimen_10dp"
+                            android:textStyle="bold"
+                            android:visibility="visible">
 
-                </RelativeLayout>
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
+                    </RelativeLayout>
 
+                    <RelativeLayout
+                        android:id="@+id/rl_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding2"
+                        android:layout_marginBottom="@dimen/padding2"
+                        android:background="@drawable/custom_status">
+
+                        <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                            android:id="@+id/tv_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:paddingStart="@dimen/dimen_8dp"
+                            android:paddingTop="@dimen/padding3"
+                            android:paddingEnd="@dimen/dimen_2dp"
+                            android:paddingBottom="@dimen/padding3"
+                            android:text=""
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/dimen_10dp"
+                            android:textStyle="bold"
+                            android:visibility="visible">
+
+                        </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
             </LinearLayout>
 
             <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold

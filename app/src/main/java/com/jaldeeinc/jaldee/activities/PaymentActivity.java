@@ -319,4 +319,9 @@ public class PaymentActivity extends AppCompatActivity implements IPaymentRespon
         Toast.makeText(PaymentActivity.this, "Payment Successful", Toast.LENGTH_LONG).show();
 
     }
+
+    @Override
+    public void update() {
+
+    }
 }

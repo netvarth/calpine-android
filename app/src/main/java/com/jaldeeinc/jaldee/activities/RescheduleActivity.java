@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.ClipData;
@@ -17,16 +16,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -60,6 +54,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.SlotsDialog;
 import com.jaldeeinc.jaldee.model.FileAttachment;
 import com.jaldeeinc.jaldee.model.PriceList;
+import com.jaldeeinc.jaldee.model.SelectedSlotDetail;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.AvailableSlotsData;
 import com.jaldeeinc.jaldee.response.Provider;
@@ -77,15 +72,14 @@ import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.ParseException;
@@ -99,6 +93,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -195,6 +190,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
     TimeSlotsAdapter sAdapter;
     private LinearLayout llSeeMoreHint;
     ArrayList<AvailableSlotsData> activeSlotsList = new ArrayList<>();
+    ArrayList<AvailableSlotsData> availableSlots = new ArrayList<>();
     ArrayList<SlotsData> slotsData = new ArrayList<SlotsData>();
     private ISelectSlotInterface iSelectSlotInterface;
     private OnBottomReachedListener onBottomReachedListener;
@@ -218,6 +214,8 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
     String path;
     File f;
     private Uri mImageUri;
+    private ArrayList<PriceList> priceLists = new ArrayList<PriceList>();
+
     Bitmap bitmap;
     File file;
     String value, user;
@@ -227,7 +225,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
     String uniqueId;
     String ynwuuid;
     boolean isPriceDynamic;
-    private ArrayList<PriceList> priceLists = new ArrayList<PriceList>();
+    boolean showOnlyAvailableSlots;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -299,7 +297,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
 
                 try {
                     if (appointmentInfo.getAppmtDate() != null && appointmentInfo.getService() != null && appointmentInfo.getLocation() != null && appointmentInfo.getProviderAccount() != null) {
-                        slotsDialog = new SlotsDialog(RescheduleActivity.this, appointmentInfo.getService().getId(), appointmentInfo.getLocation().getId(), iSlotInfo, appointmentInfo.getProviderAccount().getId(), appointmentInfo.getAppmtDate());
+                        slotsDialog = new SlotsDialog(RescheduleActivity.this, appointmentInfo.getService().getId(), appointmentInfo.getLocation().getId(), iSlotInfo, appointmentInfo.getProviderAccount().getId(), appointmentInfo.getAppmtDate(), showOnlyAvailableSlots);
                         slotsDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                         slotsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         slotsDialog.show();
@@ -588,6 +586,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                         appointmentInfo = response.body();
 
                         if (appointmentInfo != null) {
+                            showOnlyAvailableSlots = appointmentInfo.getService().isShowOnlyAvailableSlots();
                             currentScheduleId = appointmentInfo.getSchedule().getId();
                             isPriceDynamic = appointmentInfo.getService().isPriceDynamic();
                             if (appointmentInfo.getService() != null && appointmentInfo.getService().getConsumerNoteTitle() != null && !appointmentInfo.getService().getConsumerNoteTitle().equalsIgnoreCase("")) {
@@ -898,14 +897,26 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                             for (int i = 0; i < slotsData.size(); i++) {
                                 ArrayList<AvailableSlotsData> availableSlotsList = new ArrayList<>();
                                 availableSlotsList = slotsData.get(i).getAvailableSlots();
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                                Timestamp timenow = new Timestamp(new Date().getTime());
 
                                 for (int j = 0; j < availableSlotsList.size(); j++) {
                                     if (availableSlotsList.get(j).getNoOfAvailableSlots() != 0 && availableSlotsList.get(j).isActive()) {
-
                                         availableSlotsList.get(j).setScheduleId(slotsData.get(i).getScheduleId());
                                         String displayTime = getDisplayTime(availableSlotsList.get(j).getSlotTime());
                                         availableSlotsList.get(j).setDisplayTime(displayTime);
                                         activeSlotsList.add(availableSlotsList.get(j));
+                                    }
+                                    if (!showOnlyAvailableSlots) {
+                                        Date date1 = sdf.parse(slotsData.get(i).getDate() + " " + availableSlotsList.get(j).getSlotTime().split("-")[0]);
+                                        Timestamp slottime = new Timestamp(date1.getTime());
+                                        int c1 = slottime.compareTo(timenow);
+                                        if (c1 >= 0) {
+                                            availableSlotsList.get(j).setScheduleId(slotsData.get(i).getScheduleId());
+                                            String displayTime = getDisplayTime(availableSlotsList.get(j).getSlotTime());
+                                            availableSlotsList.get(j).setDisplayTime(displayTime);
+                                            availableSlots.add(availableSlotsList.get(j));
+                                        }
                                     }
                                 }
                             }
@@ -933,7 +944,19 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                                     tvCalenderDate.setText(getCalenderDateFormat(slotsData.get(0).getDate()));
                                     RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 3);
                                     rvSlots.setLayoutManager(mLayoutManager);
-                                    sAdapter = new TimeSlotsAdapter(mContext, activeSlotsList, iSelectSlotInterface, onBottomReachedListener);
+                                    if (showOnlyAvailableSlots) {
+                                        AtomicInteger x = new AtomicInteger();
+                                        activeSlotsList.stream()
+                                                .filter(n -> n != null)
+                                                .forEach(slot -> slot.setPosition(x.getAndIncrement()));  //imp-- set position to all slots
+                                        sAdapter = new TimeSlotsAdapter(mContext, activeSlotsList, iSelectSlotInterface, onBottomReachedListener);
+                                    } else {
+                                        AtomicInteger x = new AtomicInteger();
+                                        availableSlots.stream()
+                                                .filter(n -> n != null)
+                                                .forEach(slot -> slot.setPosition(x.getAndIncrement()));   //imp-- set position to all slots
+                                        sAdapter = new TimeSlotsAdapter(mContext, availableSlots, iSelectSlotInterface, onBottomReachedListener);
+                                    }
                                     rvSlots.setAdapter(sAdapter);
                                 } else {
 
@@ -1183,6 +1206,32 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
 
     }
 
+    @Override
+    public void sendSlotInfo(List<SelectedSlotDetail> selectedSlotDetails) {
+        if (selectedSlotDetails.size() == 1) {
+            try {
+// getting data from dialog
+                String convertedTime = selectedSlotDetails.get(0).getDisplayTime().replace("am", "AM").replace("pm", "PM");
+                tvTime.setText(convertedTime);
+                tvDate.setText(selectedSlotDetails.get(0).getDate());
+                scheduleId = selectedSlotDetails.get(0).getScheduleId();
+                slotTime = selectedSlotDetails.get(0).getSlotTime();
+                ;
+                cvSubmit.setClickable(true);
+                cvSubmit.setEnabled(true);
+                cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.location_theme));
+
+                try {
+                    apiDate = getApiDateFormat(selectedSlotDetails.get(0).getCalendarDate());  // to convert selected date to api date format
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static String getApiDateFormat(String d) throws ParseException {
 
         SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
@@ -1227,6 +1276,22 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
     }
 
     @Override
+    public void sendSelectedTime(List<SelectedSlotDetail> selectedSlotDetails) {
+        if (selectedSlotDetails.size() == 1) {
+            // assigning
+            tvTime.setText(selectedSlotDetails.get(0).getDisplayTime());
+            slotTime = selectedSlotDetails.get(0).getSlotTime();
+            scheduleId = selectedSlotDetails.get(0).getScheduleId();
+            cvSubmit.setClickable(true);
+            cvSubmit.setEnabled(true);
+            cvSubmit.setCardBackgroundColor(getResources().getColor(R.color.location_theme));
+            if (isPriceDynamic) {
+                getPriceListOfService(serviceId, currentScheduleId, scheduleId);
+            }
+        }
+    }
+
+    @Override
     public void onBottomReached(int position) {
 
         //hide scroll hint when recyclerview reaches to last position
@@ -1254,99 +1319,6 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
             }
         });
         alertDialog.show();
-    }
-
-    public String getRealPathFromURI(Uri contentURI, Activity context) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        @SuppressWarnings("deprecation")
-        Cursor cursor = context.managedQuery(contentURI, projection, null,
-                null, null);
-        if (cursor == null)
-            return null;
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        if (cursor.moveToFirst()) {
-            String s = cursor.getString(column_index);
-            // cursor.close();
-            return s;
-        }
-        // cursor.close();
-        return null;
-    }
-
-    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
-        //copy file and send new file path
-        String fileName = getFileNameInfo(contentUri);
-        if (!TextUtils.isEmpty(fileName)) {
-            String ext = "";
-            if (fileName.contains(".")) {
-            } else {
-                ext = "." + extension;
-            }
-            File wallpaperDirectoryFile = new File(
-                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
-            copy(context, contentUri, wallpaperDirectoryFile);
-            return wallpaperDirectoryFile.getAbsolutePath();
-        }
-        return null;
-    }
-
-    public static void copy(Context context, Uri srcUri, File dstFile) {
-        try {
-            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
-            if (inputStream == null) return;
-            FileOutputStream outputStream = new FileOutputStream(dstFile);
-            IOUtils.copy(inputStream, outputStream);
-            inputStream.close();
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    protected static String getFileNameInfo(Uri uri) {
-        if (uri == null) {
-            return null;
-        }
-        String fileName = null;
-        String path = uri.getPath();
-        int cut = path.lastIndexOf('/');
-        if (cut != -1) {
-            fileName = path.substring(cut + 1);
-        }
-        return fileName;
-    }
-
-    public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        if (myBitmap != null) {
-            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        }
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            f = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".jpg");
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(mContext,
-                    new String[]{f.getPath()},
-                    new String[]{"image/jpeg"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-
-            return f.getAbsolutePath();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
     }
 
 
@@ -1421,8 +1393,6 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                 try {
                     if (data.getData() != null) {
                         Uri uri = data.getData();
-                        String orgFilePath = getRealPathFromURI(uri, this);
-                        String filepath = "";//default fileName
 
                         String mimeType = this.mContext.getContentResolver().getType(uri);
                         String uriString = uri.toString();
@@ -1434,9 +1404,33 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
+                        File photoFile = null;
+
+                        try {
+                            // Creating file
+                            try {
+                                photoFile = Config.createFile(mContext, extension, true);
+                            } catch (IOException ex) {
+                                Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                // Log.d(TAG, "Error occurred while creating the file");
+                            }
+
+                            InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                            FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                            // Copying
+                            Config.copyStream(inputStream, fileOutputStream);
+                            fileOutputStream.close();
+                            inputStream.close();
+                        } catch (Exception e) {
+                            Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                            //Log.d(TAG, "onActivityResult: " + e.toString());
+                        }
+                        String orgFilePath = photoFile.getAbsolutePath();
                         if (Arrays.asList(fileExtsSupported).contains(extension)) {
                             if (orgFilePath == null) {
-                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
+                                orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                             }
                         } else {
                             Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
@@ -1461,12 +1455,9 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                         ClipData mClipData = data.getClipData();
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
-                            Uri imageUri = item.getUri();
-                            String orgFilePath = getRealPathFromURI(imageUri, this);
-                            String filepath = "";//default fileName
-
-                            String mimeType = mContext.getContentResolver().getType(imageUri);
-                            String uriString = imageUri.toString();
+                            Uri uri = item.getUri();
+                            String mimeType = this.mContext.getContentResolver().getType(uri);
+                            String uriString = uri.toString();
                             String extension = "";
                             if (uriString.contains(".")) {
                                 extension = uriString.substring(uriString.lastIndexOf(".") + 1);
@@ -1475,14 +1466,40 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                             if (mimeType != null) {
                                 extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                             }
+                            File photoFile = null;
+
+                            try {
+                                // Creating file
+                                try {
+                                    photoFile = Config.createFile(mContext, extension, true);
+                                } catch (IOException ex) {
+                                    Toast.makeText(mContext, "Error occurred while creating the file", Toast.LENGTH_SHORT).show();
+
+                                    // Log.d(TAG, "Error occurred while creating the file");
+                                }
+
+                                InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+                                FileOutputStream fileOutputStream = new FileOutputStream(photoFile);
+                                // Copying
+                                Config.copyStream(inputStream, fileOutputStream);
+                                fileOutputStream.close();
+                                inputStream.close();
+                            } catch (Exception e) {
+                                Toast.makeText(mContext, "onActivityResult: " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                                //Log.d(TAG, "onActivityResult: " + e.toString());
+                            }
+                            String orgFilePath = photoFile.getAbsolutePath();
                             if (Arrays.asList(fileExtsSupported).contains(extension)) {
+
                                 if (orgFilePath == null) {
-                                    orgFilePath = getFilePathFromURI(mContext, imageUri, extension);
+                                    orgFilePath = Config.getFilePathFromURI(mContext, uri, extension);
                                 }
                             } else {
                                 Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
                                 return;
                             }
+
                             imagePathList.add(orgFilePath);
 
                             if (imagePathList.size() > 0) {
@@ -1504,13 +1521,22 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
 
         } else if (requestCode == CAMERA) {
             if (data != null) {
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                //      imageview.setImageBitmap(bitmap);
-                path = saveImage(bitmap);
-                // imagePathList.add(bitmap.toString());
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
+                File photoFile = null;/////////
+                // ///////
+                try {//////////
+                    photoFile = Config.createFile(mContext, "png", true);//////////
+                } catch (IOException e) {/////////////
+                    e.printStackTrace();///////////
+                }///////////
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");/////////
+                try (FileOutputStream out = new FileOutputStream(photoFile)) {////////////
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance////////////
+                    // PNG is a lossless format, the compression factor (100) is ignored/////////
+                } catch (IOException e) {////////////
+                    e.printStackTrace();///////////
+                }////////
+                String path = photoFile.getAbsolutePath();////////
+
                 if (path != null) {
                     mImageUri = Uri.parse(path);
                     imagePathList.add(mImageUri.toString());
@@ -1521,11 +1547,7 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                         tvErrorMessage.setVisibility(View.VISIBLE);
                     }
                 }
-                try {
-                    bytes.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
                 DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
                 recycle_image_attachment.setLayoutManager(mLayoutManager);
@@ -1561,17 +1583,8 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
                 type = MediaType.parse("image/*");
             }
 
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (bitmap != null) {
-                path = saveImage(bitmap);
-                file = new File(path);
-            } else {
-                file = new File(imagePathList.get(i));
-            }
+            file = new File(imagePathList.get(i));
+
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
         RequestBody requestBody = mBuilder.build();

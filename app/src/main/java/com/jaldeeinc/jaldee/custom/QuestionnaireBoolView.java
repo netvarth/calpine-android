@@ -171,7 +171,7 @@ public class QuestionnaireBoolView extends LinearLayout {
         obj.setLabelName(question.getLabelName());
 
         JsonObject answer = new JsonObject();
-        answer.addProperty("bool", rbYes.isSelected());
+        answer.addProperty("bool", rbYes.isChecked());
 
         obj.setAnswer(answer);
 

@@ -8,9 +8,11 @@ import java.util.ArrayList;
 public class ServiceDetails implements Serializable {
 
     int id;
+    int maxBookingsAllowed;
     boolean priceDynamic;
     boolean preInfoEnabled;
     boolean postInfoEnabled;
+    boolean showOnlyAvailableSlots;
     String serviceType;
     String livetrack;
     String callingMode;
@@ -23,6 +25,17 @@ public class ServiceDetails implements Serializable {
     String name;
     String deptName;
 
+    public boolean isShowOnlyAvailableSlots() {
+        return showOnlyAvailableSlots;
+    }
+
+    public void setShowOnlyAvailableSlots(boolean showOnlyAvailableSlots) {
+        this.showOnlyAvailableSlots = showOnlyAvailableSlots;
+    }
+
+    public int getMaxBookingsAllowed() {
+        return maxBookingsAllowed;
+    }
     public String getServiceType() {
         return serviceType;
     }

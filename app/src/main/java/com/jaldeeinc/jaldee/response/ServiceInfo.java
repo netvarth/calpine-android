@@ -33,6 +33,24 @@ public class ServiceInfo implements Serializable {
     boolean isUser;
     boolean noteManidtory;
     String totalAmount;
+    int maxBookingsAllowed;
+    boolean showOnlyAvailableSlots;
+
+    public boolean isShowOnlyAvailableSlots() {
+        return showOnlyAvailableSlots;
+    }
+
+    public void setShowOnlyAvailableSlots(boolean showOnlyAvailableSlots) {
+        this.showOnlyAvailableSlots = showOnlyAvailableSlots;
+    }
+
+    public int getMaxBookingsAllowed() {
+        return maxBookingsAllowed;
+    }
+
+    public void setMaxBookingsAllowed(int maxBookingsAllowed) {
+        this.maxBookingsAllowed = maxBookingsAllowed;
+    }
 
     public ServiceInfo(){
 
