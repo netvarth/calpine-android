@@ -929,7 +929,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                                 float eligibleJcashAmt = (float) bookingModel.getEligibleJcashAmt();
                                 prepayAmount = String.valueOf(amountReqiuredNow);
 
-                                if (cbJCash.isChecked() && ((amountReqiuredNow - eligibleJcashAmt)>0)) {
+                                if ((amountReqiuredNow - eligibleJcashAmt)>0) {
                                     if (selectedpaymentMode == null) {
                                         Toast.makeText(mContext, "Please select mode of payment", Toast.LENGTH_LONG).show();
                                     } else {
@@ -940,6 +940,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                                 }
                             }
                         } catch (Exception e) {
+                            e.printStackTrace();
                             e.printStackTrace();
                         }
                     }
@@ -1614,6 +1615,8 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                         }
                     });
             alertDialog.show();
+            alertDialog.getButton(alertDialog.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.colorAccent));
+
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
         }

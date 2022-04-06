@@ -524,14 +524,6 @@ public interface ApiInterface {
     @PUT("consumer/{channel}/advancePayment")
     Call<AdvancePaymentDetails> getAdvancePaymentDetails(@Path("channel") String uuid, @Query("account") String account, @Body RequestBody jsonObj);
 
-    //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @PUT("consumer/waitlist/advancePayment")
-    Call<AdvancePaymentDetails> getWlAdvancePaymentDetails(@Query("account") String account, @Body RequestBody jsonObj);
-
-    //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
-    @PUT("consumer/appointment/advancePayment")
-    Call<AdvancePaymentDetails> getApptAdvancePaymentDetails(@Query("account") String account, @Body RequestBody jsonObj);
-
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @PUT("consumer/orders/amount")
     Call<AdvancePaymentDetailsOrder> getOrderAdvancePaymentDetails(@Query("account") String account, @Body RequestBody jsonObj);
@@ -858,9 +850,13 @@ public interface ApiInterface {
     @GET("provider/imagePropries/logo/{queueId}")
     Call<LinkedHashMap<String, ArrayList<ProfilePicture>>> getLogo(@Path("queueId") String id);
 
+    /****************   ServiceOptios URLs  ***************/
+    @GET("consumer/questionnaire/serviceoptions/{serviceId}/{consumerId}")
+    Call<Questionnaire> getServiceOptionQnr(@Path("serviceId") int serviceId, @Path("consumerId") int consumerId, @Query("account") int account);
+    /****************   ServiceOptios URLs  ***************/
+
 
     /****************   Questionnaire URLs  ***************/
-
     @GET("consumer/questionnaire/service/{serviceId}/consumer/{consumerId}")
     Call<Questionnaire> getQuestions(@Path("serviceId") int serviceId, @Path("consumerId") int consumerId, @Query("account") int account);
 
@@ -899,8 +895,6 @@ public interface ApiInterface {
 
     @GET("consumer/orders/questionnaire/{uid}?")
     Call<ArrayList<Questionnaire>> getOrderAfterQuestionnaire(@Path("uid") String uid, @Query("account") int accountId);
-    /****************   Questionnaire URLs  ***************/
-
 
     @PUT
     Observable<Response<Void>> uploadPreSignedS3File(@Url String url, @Body RequestBody image);
@@ -915,6 +909,7 @@ public interface ApiInterface {
 
     @PUT("consumer/orders/questionnaire/upload/status/{uid}?")
     Call<ResponseBody> checkOrderUploadStatus(@Path("uid") String id, @Query("account") int accountId, @Body RequestBody jsonObj);
+    /****************   Questionnaire URLs  ***************/
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("consumer/wallet/redeem/eligible/amt")
