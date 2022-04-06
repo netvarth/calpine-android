@@ -1722,6 +1722,8 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         }
                     });
             alertDialog.show();
+            alertDialog.getButton(alertDialog.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.colorAccent));
+
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
         }
