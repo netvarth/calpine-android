@@ -1,13 +1,5 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -35,6 +27,14 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -45,8 +45,8 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.BuildConfig;
 import com.jaldeeinc.jaldee.Fragment.DataGridFragment;
-import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.Interface.IDataGridListener;
+import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CheckBoxAdapter;
 import com.jaldeeinc.jaldee.adapter.FilesAdapter;
@@ -355,10 +355,12 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<Questionnaire> call = null;
-        if (from.equalsIgnoreCase(Constants.CHECKIN) || from.equalsIgnoreCase(Constants.TOKEN) || from.equalsIgnoreCase(Constants.APPOINTMENT) || from.equalsIgnoreCase(Constants.BOOKING_APPOINTMENT) || from.equalsIgnoreCase(Constants.BOOKING_CHECKIN) || from.equalsIgnoreCase(Constants.DONATION)) {
+        if (from.equalsIgnoreCase(Constants.CHECKIN) || from.equalsIgnoreCase(Constants.TOKEN) || from.equalsIgnoreCase(Constants.APPOINTMENT) || from.equalsIgnoreCase(Constants.BOOKING_APPOINTMENT) || from.equalsIgnoreCase(Constants.BOOKING_CHECKIN)) {
             call = apiService.getQuestions(serviceId, 0, accountId);
         } else if (from.equalsIgnoreCase(Constants.ORDERS)) {
             call = apiService.getOrdersQuestions(serviceId, accountId);
+        } else if (from.equalsIgnoreCase(Constants.DONATION)) {
+            call = apiService.getDonationQuestions(serviceId, accountId);
         }
         call.enqueue(new Callback<Questionnaire>() {
             @Override

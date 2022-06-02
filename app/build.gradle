@@ -7,7 +7,7 @@ android {
         applicationId "com.nv.ynw"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 85
+        versionCode 88
         versionName "1.4.62"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         multiDexEnabled true
