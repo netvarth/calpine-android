@@ -178,7 +178,7 @@
                     android:layout_weight="0.9"
                     android:background="@color/app_background"
                     android:padding="@dimen/default_padding"
-                    android:text="Version  1.10.0"
+                    android:text="Version  1.10.1"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_hint" />
 
