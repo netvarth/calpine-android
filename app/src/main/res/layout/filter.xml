@@ -40,7 +40,7 @@
 
                 </ImageView>
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
+                <com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Close"
@@ -50,7 +50,7 @@
                     android:textSize="@dimen/dimen_15dp"
                     android:textColor="@color/location_theme">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
+                </com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic>
 
             </LinearLayout>
 
