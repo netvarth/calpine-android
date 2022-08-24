@@ -1,7 +1,10 @@
 package com.jaldeeinc.jaldee.response;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -43,6 +46,18 @@ public class ItemDetails implements Serializable {
     @SerializedName("itemType")
     @Expose
     private String itemType;
+
+    @SerializedName("srvAnswers")
+    @Expose
+    private JsonObject srvAnswers;
+
+    public JsonObject getSrvAnswers() {
+        return srvAnswers;
+    }
+
+    public void setSrvAnswers(JsonObject srvAnswers) {
+        this.srvAnswers = srvAnswers;
+    }
 
     public ItemDetails(){
 

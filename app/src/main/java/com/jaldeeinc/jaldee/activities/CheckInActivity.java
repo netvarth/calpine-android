@@ -72,6 +72,7 @@ import com.jaldeeinc.jaldee.custom.FamilyMemberDialog;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
+import com.jaldeeinc.jaldee.model.QuestionnairInpt;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AdvancePaymentDetails;
@@ -327,7 +328,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
     ImagePreviewAdapter imagePreviewAdapter;
     Bitmap bitmap;
     TextView tv_attach, tv_camera;
-
+    float sQnrPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -360,6 +361,11 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
         isUser = intent.getBooleanExtra("fromUser", false);
         sector = intent.getStringExtra("sector");
         tvConsumerName = findViewById(R.id.tv_consumerName);
+
+        //////////////temp serviceoptionprice////////////
+        sQnrPrice = intent.getFloatExtra("sQnrPrice", 0);
+        //////////////temp serviceoptionprice////////////
+
 
         list = findViewById(R.id.list);
         recycle_family = findViewById(R.id.recycle_family);
@@ -538,7 +544,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
             @Override
             public void onClick(View v) {
                 if (tvEmail.getText().toString().equalsIgnoreCase("")) {
-                    familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService);
+                    familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService, providerId);
                     familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     familyMemberDialog.show();
@@ -571,7 +577,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
             @Override
             public void onClick(View v) {
 
-                familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService);
+                familyMemberDialog = new FamilyMemberDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService, providerId);
                 familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                 familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 familyMemberDialog.show();
@@ -627,7 +633,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                                     }
                                 } else {
                                     DynamicToast.make(CheckInActivity.this, "Please provide " + checkInInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
-                                            CheckInActivity.this, R.drawable.ic_info_black),
+                                                    CheckInActivity.this, R.drawable.icon_info),
                                             ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                                 }
 
@@ -642,7 +648,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                         } else {
 
                             DynamicToast.make(CheckInActivity.this, "Email id is mandatory", AppCompatResources.getDrawable(
-                                    CheckInActivity.this, R.drawable.ic_info_black),
+                                            CheckInActivity.this, R.drawable.icon_info),
                                     ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
 
                         }
@@ -660,7 +666,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                             } else {
 
                                 DynamicToast.make(CheckInActivity.this, checkInInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
-                                        CheckInActivity.this, R.drawable.ic_info_black),
+                                                CheckInActivity.this, R.drawable.icon_info),
                                         ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                             }
 
@@ -807,9 +813,13 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (imagePathList != null) {
+                        if (imagePathList != null && imagePathList.size() > 0) {
                             imagePathList.clear();
-                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
+                            if (imagePathList.size() == 0) {
+                                tvAttachFileSize.setText("Attach File");
+                            } else {
+                                tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
+                            }
                         } else {
                             tvAttachFileSize.setText("Attach File");
                         }
@@ -1309,7 +1319,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
             countryVirtualCode = virtual_NmbrCCPicker.getSelectedCountryCode();
         } else {
             DynamicToast.make(CheckInActivity.this, "Country code needed", AppCompatResources.getDrawable(
-                    CheckInActivity.this, R.drawable.ic_info_black),
+                            CheckInActivity.this, R.drawable.icon_info),
                     ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
             mDialog.dismiss();
             return;
@@ -1368,7 +1378,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                     modeOfCalling = "Invalid Contact number";
                 }
                 DynamicToast.make(CheckInActivity.this, modeOfCalling, AppCompatResources.getDrawable(
-                        CheckInActivity.this, R.drawable.ic_info_black),
+                                CheckInActivity.this, R.drawable.icon_info),
                         ContextCompat.getColor(CheckInActivity.this, R.color.white), ContextCompat.getColor(CheckInActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                 mDialog.dismiss();
                 return;
@@ -1403,8 +1413,19 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                     }
                     waitobj1.put("firstName", MultiplefamilyList.get(i).getFirstName());
                     waitobj1.put("lastName", MultiplefamilyList.get(i).getLastName());
+                    String soInputString = SharedPreference.getInstance(mContext).getStringValue(Constants.SERVICEOPTIONQNR, "");
+                    if ((soInputString != null && !soInputString.trim().equalsIgnoreCase(""))) {
+                        QuestionnairInpt answerLine;
+                        Gson gson = new Gson();
+                        answerLine = gson.fromJson(soInputString, QuestionnairInpt.class);
+                        String jsonInString = new Gson().toJson(answerLine);
+                        JSONObject mJSONObject = new JSONObject(jsonInString);
+                        waitobj1.put("srvAnswers", mJSONObject);
+
+                    }
                     waitlistArray.put(waitobj1);
                 }
+
             } else {
                 if (familyMEmID == consumerID) {
                     familyMEmID = 0;
@@ -1442,6 +1463,16 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                 }
                 if (mGender != null && !mGender.isEmpty()) {
                     waitobj.put("gender", mGender);
+                }
+                String soInputString = SharedPreference.getInstance(mContext).getStringValue(Constants.SERVICEOPTIONQNR, "");
+                if ((soInputString != null && !soInputString.trim().equalsIgnoreCase(""))) {
+                    QuestionnairInpt answerLine;
+                    Gson gson = new Gson();
+                    answerLine = gson.fromJson(soInputString, QuestionnairInpt.class);
+                    String jsonInString = new Gson().toJson(answerLine);
+                    JSONObject mJSONObject = new JSONObject(jsonInString);
+                    waitobj.put("srvAnswers", mJSONObject);
+
                 }
                 waitlistArray.put(waitobj);
 
@@ -1529,7 +1560,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                         // model.setJacshSelected(cbJCash.isChecked());
                         if (advancePaymentDetails != null) {
                             model.setAmountRequiredNow(advancePaymentDetails.getAmountRequiredNow());
-                            model.setNetTotal(advancePaymentDetails.getNetTotal());
+                            model.setNetTotal(advancePaymentDetails.getNetTotal() + sQnrPrice);
                         }
                         if (advancePaymentDetails != null && advancePaymentDetails.getEligibleJcashAmt() != null) {
                             model.setEligibleJcashAmt(advancePaymentDetails.getEligibleJcashAmt().get("jCashAmt").getAsDouble());

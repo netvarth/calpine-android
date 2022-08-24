@@ -47,7 +47,7 @@
                     android:id="@+id/txt_toolbarlocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/customfont"
+                    android:fontFamily="@font/font_bold"
                     android:gravity="center|right"
                     android:minHeight="?attr/actionBarSize"
                     android:paddingRight="@dimen/padding3"

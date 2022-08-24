@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white">
 
     <RelativeLayout
@@ -15,9 +15,9 @@
             android:id="@+id/cv_back"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:visibility="gone"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/dimen_16dp"
+            android:visibility="gone"
             app:cardBackgroundColor="@color/white"
             app:cardElevation="@dimen/padding3">
 
@@ -32,39 +32,39 @@
 
         </androidx.cardview.widget.CardView>
 
-        <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBold
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text="Jaldee"
-            android:textSize="@dimen/dimen_18sp"
             android:textColor="@color/location_theme"
-            android:layout_centerInParent="true">
+            android:textSize="@dimen/dimen_18sp">
 
-        </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+        </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv_enquiry"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginEnd="@dimen/dimen_15dp"
-                android:visibility="gone"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                app:cardBackgroundColor="@color/white"
-                app:cardElevation="@dimen/padding3">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_enquiry"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dimen_15dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="@dimen/padding3">
 
-                <ImageView
-                    android:layout_width="@dimen/dimen_24sp"
-                    android:layout_height="@dimen/dimen_26dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/padding5"
-                    android:padding="1dp"
-                    android:src="@drawable/chat_icon"
-                    app:tint="@color/dark_blue">
+            <ImageView
+                android:layout_width="@dimen/dimen_24sp"
+                android:layout_height="@dimen/dimen_26dp"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/padding5"
+                android:padding="1dp"
+                android:src="@drawable/chat_icon"
+                app:tint="@color/dark_blue">
 
-                </ImageView>
+            </ImageView>
 
-            </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
     </RelativeLayout>
 
@@ -87,16 +87,15 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
             <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
                 android:id="@+id/tv_hello"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hello"
-                android:textSize="@dimen/dimen_30sp"
-                android:layout_marginTop="@dimen/dimen_10dp"
                 android:layout_marginStart="@dimen/dimen_10dp"
-                android:textColor="@color/location_theme">
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:text="Hello"
+                android:textColor="@color/location_theme"
+                android:textSize="@dimen/dimen_30sp">
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
@@ -104,56 +103,97 @@
                 android:id="@+id/tv_consumerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
                 android:layout_below="@id/tv_hello"
                 android:layout_marginStart="@dimen/dimen_10dp"
-                android:textSize="@dimen/dimen_30sp"
-                android:textColor="@color/location_theme">
+                android:text=""
+                android:textColor="@color/location_theme"
+                android:textSize="@dimen/dimen_30sp">
 
 
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                android:id="@+id/tv_history"
+            <LinearLayout
+                android:id="@+id/ll_history"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="History"
-                android:textAllCaps="true"
-                android:layout_marginTop="@dimen/padding5"
-                android:layout_marginEnd="@dimen/dimen_10dp"
-                android:textSize="@dimen/txtsize_12"
-                android:layout_marginBottom="@dimen/padding5"
-                android:textColor="@color/location_theme"
                 android:layout_below="@id/tv_consumerName"
-                android:layout_alignParentEnd="true">
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="@dimen/dimen_20dp"
+                android:orientation="horizontal">
 
-            </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                    android:id="@+id/tv_history"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_consumerName"
+                    android:layout_marginTop="@dimen/padding5"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="@dimen/padding5"
+                    android:text="History"
+                    android:textAllCaps="false"
+                    android:textColor="@color/grey6"
+                    android:textSize="@dimen/txtsize_10">
 
+                </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_right_arrow_yellow" />
+            </LinearLayout>
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_history"
-                app:tabTextColor="@color/title_color"
-                app:tabIndicatorFullWidth="true"
-                android:textAlignment="viewStart"
-                app:tabPaddingBottom="-18dp"
+                android:layout_below="@id/ll_history"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="@dimen/dimen_12dp"
+                android:layout_marginLeft="@dimen/dimen_12dp"
+                android:layout_marginTop="@dimen/dimen_12dp"
+                android:layout_marginEnd="@dimen/dimen_12dp"
+                android:layout_marginRight="@dimen/dimen_12dp"
+                android:layout_marginBottom="@dimen/dimen_12dp"
+                android:background="@drawable/tab_rect"
+                android:elevation="3dp"
                 app:tabGravity="fill"
-                app:tabMode="scrollable"
-                android:layout_marginStart="-6dp"
+                app:tabIndicator="@drawable/tab_indicator_my_jaldee"
+                app:tabIndicatorColor="@color/blue1"
+                app:tabIndicatorGravity="stretch"
+                app:tabIndicatorHeight="0dp"
+                app:tabMode="fixed"
+                app:tabPadding="@dimen/dimen_0dp"
+                app:tabRippleColor="@null"
+                app:tabSelectedTextColor="@color/white"
                 app:tabTextAppearance="@style/CustomTabText"
-                app:tabIndicatorHeight="1.5dp"
-                app:tabIndicatorColor="@color/donation_theme"
-                android:background="@color/white">
-            </com.google.android.material.tabs.TabLayout>
+                app:tabTextColor="@color/grey5"></com.google.android.material.tabs.TabLayout>
+
+            <!--android:layout_marginStart="@dimen/dimen_12dp"
+            android:layout_marginTop="@dimen/dimen_12dp"
+            android:layout_marginEnd="@dimen/dimen_12dp"
+            android:layout_marginBottom="@dimen/dimen_12dp"
+            android:background="@drawable/tab_rect"
+            android:elevation="3dp"
+            app:tabIndicatorFullWidth="true"
+            app:tabRippleColor="@null"
+            app:tabTextAppearance="@style/CustomTabText"
+            app:tabTextColor="@color/grey5" />-->
+
+            <!--android:layout_marginStart="@dimen/dimen_2dp"
+            android:layout_marginTop="@dimen/dimen_2dp"
+            android:layout_marginEnd="@dimen/dimen_2dp"
+            android:layout_marginBottom="@dimen/dimen_2dp"
+            android:textAlignment="viewStart"
+            app:tabIndicatorColor="@color/donation_theme"
+            app:tabIndicatorFullWidth="true"
+            app:tabPaddingBottom="0dp"
+            /></com.google.android.material.tabs.TabLayout>-->
 
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tabLayout" />
-
 
 
         </RelativeLayout>

@@ -12,6 +12,18 @@ public class DataGridProperties implements Serializable {
     @Expose
     private ArrayList<DataGridColumns> gridList;
 
+    @SerializedName("dataGridListColumns")  // for serviceOptionQNR
+    @Expose
+    private ArrayList<DataGridColumns> gridListColumns;
+
+    public ArrayList<DataGridColumns> getGridListColumns() {
+        return gridListColumns;
+    }
+
+    public void setGridListColumns(ArrayList<DataGridColumns> gridListColumns) {
+        this.gridListColumns = gridListColumns;
+    }
+
     public ArrayList<DataGridColumns> getGridList() {
         return gridList;
     }

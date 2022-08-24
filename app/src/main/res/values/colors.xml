@@ -19,6 +19,8 @@
     <color name="home_background">#ffffff</color>
     <color name="dark_blue">#1E4079</color>
 
+    <color name="white">#ffffff</color>
+
     <color name="action_color">#5B84B1FF</color>
     <color name="unselect">#F2F2F2</color>
 
@@ -42,8 +44,7 @@
     <color name="tab_unchecked">#3E4A59</color>
     <color name="button_background">#7a7a7a</color>
     <color name="fadedgrey">#E9E8E5</color>
-    <color name="grey3">#F0F0F0</color>
-    <color name="grey4">#DCDCDC</color>
+
 
 
     <!--   Login screen-->
@@ -105,6 +106,56 @@
     <color name="telegram_bg">#0088cc</color>
     <color name="grey1">#959699</color>
     <color name="grey2">#e5e5e5</color>
+    <color name="grey3">#F0F0F0</color>
+    <color name="grey4">#DCDCDC</color>
+    <color name="grey5">#A59E9E</color>
+    <color name="grey6">#525354</color>
+    <color name="grey7">#939393</color>
+    <color name="grey8">#DADADA</color>
+    <color name="grey9">#F1F1F1</color>
+    <color name="grey10">#C4C4C4</color>
+    <color name="grey11">#C4C4C4</color>
+    <color name="grey12">#EAE4E4</color>
+    <color name="grey13">#B6B4B4</color>
+    <color name="grey14">#FAFAFA</color>
+    <color name="grey15">#E6E6E6</color>
+    <color name="grey16">#E5E7E9</color>
+    <color name="grey17">#727272</color>
+
+
+
+
+    <color name="red1">#FC6464</color>
+    <color name="red2">#FF7878</color>
+    <color name="red3">#FFF6F6</color>
+    <color name="red4">#FD7A51</color>
+    <color name="red5">#FFF1E9</color>
+
+
+
+
+    <color name="blue1">#1D4078</color>
+    <color name="blue2">#2D5494</color>
+    <color name="blue3">#123072</color>
+    <color name="blue4">#F6F9FF</color>
+
+
+
+    <color name="black1">#121212</color>
+    <color name="black2">#505050</color>
+    <color name="black3">#242222</color>
+    <color name="black4">#302F2F</color>
+    <color name="black5">#5D5D5F</color>
+
+
+    <color name="green1">#D7F8FF</color>
+    <color name="green2">#0FC2CD</color>
+
+
+
+
+
+
 
 
 </resources>

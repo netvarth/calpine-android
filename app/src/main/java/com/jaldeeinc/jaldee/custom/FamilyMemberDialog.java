@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.hbb20.CountryCodePicker;
 import com.jaldeeinc.jaldee.Interface.IFamillyListSelected;
 import com.jaldeeinc.jaldee.Interface.IFamilyMemberDetails;
@@ -36,6 +38,7 @@ import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -82,9 +85,9 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
     String countryCode = "";
     String gender = null;
     boolean isVirtualService, isCheckin, isAppointment;
+    int providerId;
 
-
-    public FamilyMemberDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode, boolean isVirtualService) {
+    public FamilyMemberDialog(AppointmentActivity appointmentActivity, int familyMEmID, String email, String phone, String prepayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode, boolean isVirtualService, int providerId) {
         super(appointmentActivity);
         this.context = appointmentActivity;
         this.memId = familyMEmID;
@@ -98,9 +101,10 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         this.countryCode = countryCode;
         this.isVirtualService = isVirtualService;
         this.isAppointment = true;
+        this.providerId = providerId;
     }
 
-    public FamilyMemberDialog(CheckInActivity checkInActivity, int familyMEmID, String email, String phone, boolean prePayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode, boolean isVirtualService) {
+    public FamilyMemberDialog(CheckInActivity checkInActivity, int familyMEmID, String email, String phone, boolean prePayment, IFamilyMemberDetails iFamilyMemberDetails, ProfileModel profileDetails, boolean multiple, int update, String countryCode, boolean isVirtualService, int providerId) {
         super(checkInActivity);
         this.context = checkInActivity;
         this.memId = familyMEmID;
@@ -114,6 +118,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         this.countryCode = countryCode;
         this.isVirtualService = isVirtualService;
         this.isCheckin = true;
+        this.providerId = providerId;
     }
 
 
@@ -209,7 +214,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
             bt_save.setEnabled(true);
             bt_save.setBackground(context.getResources().getDrawable(R.drawable.curved_save));
             bt_save.setTextColor(context.getResources().getColor(R.color.white));
-        }else {
+        } else {
             bt_save.setEnabled(false);
             bt_save.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
         }
@@ -220,7 +225,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                 phone = et_phone.getText().toString();
 
                 if (!phone.equalsIgnoreCase("")) {
-                    if ((!cCodePicker.getSelectedCountryCode().equalsIgnoreCase("91") &&phone.trim().length() >= 7) || (cCodePicker.getSelectedCountryCode().equalsIgnoreCase("91") && phone.trim().length() == 10)) {
+                    if ((!cCodePicker.getSelectedCountryCode().equalsIgnoreCase("91") && phone.trim().length() >= 7) || (cCodePicker.getSelectedCountryCode().equalsIgnoreCase("91") && phone.trim().length() == 10)) {
                         if (isVirtualService) {
                             iFamilyMemberDetails.sendFamilyMbrPhoneAndEMail(phone, email, countryCode);
                             dismiss();
@@ -634,7 +639,6 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                         ll_changeMember.setVisibility(View.VISIBLE);
                         ll_changeMember.startAnimation(slideUp);
                         ApiListFamilyMember();
-
 
                     } else {
                         String responseerror = response.errorBody().string();

@@ -151,8 +151,34 @@ public class ActiveAppointment implements Serializable {
     String prescShortUrl;
     boolean isRescheduled;
     private QuestionnaireResponse questionnaire;
+    private QuestionnaireResponse serviceOption;
+
     ArrayList<FileAttachment> attchment;
     ArrayList<RlsdQnr> releasedQnr;
+
+    @SerializedName("questionnaires")
+    ArrayList<QuestionnaireResponse> questionnaires;
+
+    @SerializedName("rating")
+    private ActiveAppointment rating;
+
+    String countryCode;
+    String Phone;
+    String parentUuid;
+    String statusUpdatedTime;
+    String apptTakenTime;
+    String batchName;
+    String stars;
+
+    @SerializedName("virtualCallingModes")
+    private ArrayList<AppointmentCallingModes> virtualCallingModes;
+
+    @SerializedName("provider")
+    private ProviderDetails provider;
+
+    public QuestionnaireResponse getServiceOption() {
+        return serviceOption;
+    }
 
     public ArrayList<RlsdQnr> getReleasedQnr() {
         return releasedQnr;
@@ -198,7 +224,6 @@ public class ActiveAppointment implements Serializable {
         this.hasAttachment = hasAttachment;
     }
 
-
     public String getCountryCode() {
         return countryCode;
     }
@@ -207,8 +232,6 @@ public class ActiveAppointment implements Serializable {
         this.countryCode = countryCode;
     }
 
-    String countryCode;
-
     public boolean isPrescShared() {
         return prescShared;
     }
@@ -216,7 +239,6 @@ public class ActiveAppointment implements Serializable {
     public void setPrescShared(boolean prescShared) {
         this.prescShared = prescShared;
     }
-
 
     public String getPrescUrl() {
         return prescUrl;
@@ -234,8 +256,6 @@ public class ActiveAppointment implements Serializable {
         Phone = phone;
     }
 
-    String Phone;
-
     public String getParentUuid() {
         return parentUuid;
     }
@@ -243,8 +263,6 @@ public class ActiveAppointment implements Serializable {
     public void setParentUuid(String parentUuid) {
         this.parentUuid = parentUuid;
     }
-
-    String parentUuid;
 
     public double getAmountDue() {
         return amountDue;
@@ -254,10 +272,6 @@ public class ActiveAppointment implements Serializable {
         this.amountDue = amountDue;
     }
 
-    String statusUpdatedTime;
-    String apptTakenTime;
-    String batchName;
-
     public ActiveAppointment getRating() {
         return rating;
     }
@@ -266,9 +280,6 @@ public class ActiveAppointment implements Serializable {
         this.rating = rating;
     }
 
-    @SerializedName("rating")
-    private ActiveAppointment rating;
-
     public String getStars() {
         return stars;
     }
@@ -276,8 +287,6 @@ public class ActiveAppointment implements Serializable {
     public void setStars(String stars) {
         this.stars = stars;
     }
-
-    String stars;
 
     public String getBatchName() {
         return batchName;
@@ -446,7 +455,6 @@ public class ActiveAppointment implements Serializable {
     public void setService(ServiceDetails service) {
         this.service = service;
     }
-
 
     public String getName() {
         return name;
@@ -1096,7 +1104,6 @@ public class ActiveAppointment implements Serializable {
         this.billViewStatus = billViewStatus;
     }
 
-
     public String getBillId() {
         return billId;
     }
@@ -1112,7 +1119,6 @@ public class ActiveAppointment implements Serializable {
     public void setAmountPaid(String amountPaid) {
         this.amountPaid = amountPaid;
     }
-
 
     public String getStatusUpdatedTime() {
         return statusUpdatedTime;
@@ -1138,7 +1144,6 @@ public class ActiveAppointment implements Serializable {
         this.batchId = batchId;
     }
 
-
     public ArrayList<AppointmentCallingModes> getVirtualCallingModes() {
         return virtualCallingModes;
     }
@@ -1147,9 +1152,6 @@ public class ActiveAppointment implements Serializable {
         this.virtualCallingModes = virtualCallingModes;
     }
 
-    @SerializedName("virtualCallingModes")
-    private ArrayList<AppointmentCallingModes> virtualCallingModes;
-
     public ProviderDetails getProvider() {
         return provider;
     }
@@ -1157,10 +1159,6 @@ public class ActiveAppointment implements Serializable {
     public void setProvider(ProviderDetails provider) {
         this.provider = provider;
     }
-
-    @SerializedName("provider")
-    private ProviderDetails provider;
-
 
     public String getPhoneNo() {
         return phoneNo;
@@ -1185,10 +1183,6 @@ public class ActiveAppointment implements Serializable {
     public void setQuestionnaire(QuestionnaireResponse questionnaire) {
         this.questionnaire = questionnaire;
     }
-
-    @SerializedName("questionnaires")
-    ArrayList<QuestionnaireResponse> questionnaires;
-
     public ArrayList<QuestionnaireResponse> getQuestionnaires() {
         return questionnaires;
     }

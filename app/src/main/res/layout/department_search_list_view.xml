@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="-20dp"
                     android:background="@color/light_grey"
-                    android:fontFamily="@font/customfont"
+                    android:fontFamily="@font/font_bold"
                     android:gravity="center"
                     android:padding="@dimen/padding3"
                     android:textColor="@color/app_background"

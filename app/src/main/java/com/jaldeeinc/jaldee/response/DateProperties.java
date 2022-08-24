@@ -7,6 +7,14 @@ import java.io.Serializable;
 
 public class DateProperties implements Serializable {
 
+    @SerializedName("start")  // for serviceOptionQNR
+    @Expose
+    private String start;
+
+    @SerializedName("end")  // for serviceOptionQNR
+    @Expose
+    private String end;
+
     @SerializedName("startDate")
     @Expose
     private String startDate;
@@ -18,6 +26,22 @@ public class DateProperties implements Serializable {
     @SerializedName("mandatory")
     @Expose
     private boolean mandatory;
+
+    public String getStart() {
+        return start;
+    }
+
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    public String getEnd() {
+        return end;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
+    }
 
     public String getStartDate() {
         return startDate;

@@ -79,7 +79,7 @@ public class WebViewActivity extends AppCompatActivity {
                     Config.closeDialog(getParent(), mDialog);
             }
         });
-        /*browser.setWebChromeClient(new WebChromeClient() {
+        browser.setWebChromeClient(new WebChromeClient() {
             // Grant permissions for cam
             @Override
             public void onPermissionRequest(final android.webkit.PermissionRequest request) {
@@ -95,9 +95,9 @@ public class WebViewActivity extends AppCompatActivity {
                     }
                 });
             }
-        });*/
-        browser.setWebChromeClient(new WebChromeClient()
-        {
+        });
+       /* browser.setWebChromeClient(new WebChromeClient() {
+
             // For 3.0+ Devices (Start)
             // onActivityResult attached before constructor
             protected void openFileChooser(ValueCallback uploadMsg, String acceptType)
@@ -153,7 +153,7 @@ public class WebViewActivity extends AppCompatActivity {
                 i.setType("image/*");
                 startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE);
             }
-        });
+        });*/
         browser.loadUrl(url);
     }
 
@@ -176,7 +176,7 @@ public class WebViewActivity extends AppCompatActivity {
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-//                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+                             //Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
                         }
 
                         // check for permanent denial of any permission

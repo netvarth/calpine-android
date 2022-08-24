@@ -741,9 +741,9 @@ public class DonationActivity extends AppCompatActivity implements IMailSubmit, 
                 super.updateDrawState(ds);
                 ds.setUnderlineText(false);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    ds.setColor(getResources().getColor(R.color.design_default_color_primary_dark, getTheme()));
+                    ds.setColor(getResources().getColor(R.color.colorPrimaryDark, getTheme()));
                 } else {
-                    ds.setColor(getResources().getColor(R.color.design_default_color_primary_dark));
+                    ds.setColor(getResources().getColor(R.color.colorPrimaryDark));
                 }
             }
         };
@@ -765,9 +765,9 @@ public class DonationActivity extends AppCompatActivity implements IMailSubmit, 
                 super.updateDrawState(ds);
                 ds.setUnderlineText(false);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    ds.setColor(getResources().getColor(R.color.design_default_color_primary_dark, getTheme()));
+                    ds.setColor(getResources().getColor(R.color.colorPrimaryDark, getTheme()));
                 } else {
-                    ds.setColor(getResources().getColor(R.color.design_default_color_primary_dark));
+                    ds.setColor(getResources().getColor(R.color.colorPrimaryDark));
                 }
             }
         };

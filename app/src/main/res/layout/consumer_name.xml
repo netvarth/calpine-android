@@ -96,7 +96,7 @@
         android:layout_marginBottom="@dimen/padding25"
         android:background="@drawable/curved_save"
         android:backgroundTint="@color/button_background"
-        android:fontFamily="@font/customfont"
+        android:fontFamily="@font/font_bold"
         android:padding="@dimen/padding5"
         android:text="OK"
         android:textAllCaps="false"

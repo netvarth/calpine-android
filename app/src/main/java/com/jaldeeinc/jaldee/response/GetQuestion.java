@@ -1,9 +1,15 @@
 package com.jaldeeinc.jaldee.response;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -66,6 +72,10 @@ public class GetQuestion implements Serializable {
     @Expose
     private DataGridProperties dataGridProperties;
 
+    @SerializedName("dataGridListProperties")    // for serviceOptionQNR
+    @Expose
+    private DataGridProperties dataGridListProperties;
+
     @SerializedName("billable")
     @Expose
     private boolean billable;
@@ -74,6 +84,25 @@ public class GetQuestion implements Serializable {
     @Expose
     private boolean mandatory;
 
+    @SerializedName("priceGridList")
+    @Expose
+    private String priceGridList;
+
+    public String getPriceGridList() {
+        return priceGridList;
+    }
+
+    public void setPriceGridList(String priceGridList) {
+        this.priceGridList = priceGridList;
+    }
+
+    public DataGridProperties getDataGridListProperties() {
+        return dataGridListProperties;
+    }
+
+    public void setDataGridListProperties(DataGridProperties dataGridListProperties) {
+        this.dataGridListProperties = dataGridListProperties;
+    }
 
     public int getId() {
         return id;

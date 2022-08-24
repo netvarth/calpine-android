@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -33,7 +34,6 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.adapter.FilesAdapter;
 import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
 import com.jaldeeinc.jaldee.custom.QuestionnaireBoolView;
 import com.jaldeeinc.jaldee.custom.QuestionnaireDateView;
@@ -172,7 +172,7 @@ public class DataGridFragment extends Fragment {
             if (mAnswer == null) {
 
                 for (DataGridColumns question : mQuestion.getDataGridProperties().getGridList()) {
-
+                    //for (DataGridColumns question : mQuestion.getDataGridListProperties().getGridListColumns()) {
                     question.setAnswer(null);
                 }
                 createQuestionnaire(mQuestion);
@@ -572,7 +572,7 @@ public class DataGridFragment extends Fragment {
 
                         View fileUploadView = viewsList.get(qLabelName);
                         RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
-                        CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
+                        TextView tvSupportedTypes = fileUploadView.findViewById(R.id.tv_supportedTypes);
                         FilesAdapter filesAdapter = (FilesAdapter) rvFiles.getAdapter();
 
                         if (tvSupportedTypes.getText().toString().contains(extension)) {
@@ -630,7 +630,7 @@ public class DataGridFragment extends Fragment {
 
                             View fileUploadView = viewsList.get(qLabelName);
                             RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
-                            CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
+                            TextView tvSupportedTypes = fileUploadView.findViewById(R.id.tv_supportedTypes);
                             FilesAdapter filesAdapter = (FilesAdapter) rvFiles.getAdapter();
 
                             if (tvSupportedTypes.getText().toString().contains(extension)) {

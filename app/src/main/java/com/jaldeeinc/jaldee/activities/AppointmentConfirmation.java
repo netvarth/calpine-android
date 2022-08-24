@@ -513,7 +513,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
                     Intent intent = new Intent(Intent.ACTION_INSERT);
                     intent.setData(CalendarContract.Events.CONTENT_URI);
                     if (activeCheckInInfo.getProviderAccount().getBusinessName() != null && !activeCheckInInfo.getProviderAccount().getBusinessName().equalsIgnoreCase("")) {
-                        intent.putExtra(CalendarContract.Events.TITLE, "booking with - " + activeCheckInInfo.getProviderAccount().getBusinessName());//activeCheckInInfo.getCheckinEncId());
+                        intent.putExtra(CalendarContract.Events.TITLE, activeCheckInInfo.getProviderAccount().getBusinessName() +" - "+ activeCheckInInfo.getService().getName());//activeCheckInInfo.getCheckinEncId());
                         if (from.equalsIgnoreCase("Reschedule")) {
                             intent.putExtra(CalendarContract.Events.DESCRIPTION, "Booking Rescheduled\n" + "Service provider : " + activeCheckInInfo.getProviderAccount().getBusinessName() + "\nLocation : " + activeCheckInInfo.getLocation().getPlace());
                         } else {
@@ -521,7 +521,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
                         }
                     } else {
                         String name = activeCheckInInfo.getProvider().getFirstName() + " " + activeCheckInInfo.getProvider().getLastName();
-                        intent.putExtra(CalendarContract.Events.TITLE, "booking with - " + name);// activeCheckInInfo.getCheckinEncId());
+                        intent.putExtra(CalendarContract.Events.TITLE, name +" - "+ activeCheckInInfo.getService().getName());// activeCheckInInfo.getCheckinEncId());
                         if (from.equalsIgnoreCase("Reschedule")) {
                             intent.putExtra(CalendarContract.Events.DESCRIPTION, "Booking Rescheduled\n" + "Service provider : " + name + "\nLocation : " + activeCheckInInfo.getLocation().getPlace());
                         } else {

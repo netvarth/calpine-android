@@ -274,7 +274,7 @@
         android:layout_gravity="right"
         android:layout_marginTop="@dimen/padding5"
         android:background="@color/blue"
-        android:fontFamily="@font/customfont"
+        android:fontFamily="@font/font_bold"
         android:gravity="center"
         android:text="Confirm"
         android:textAllCaps="true"

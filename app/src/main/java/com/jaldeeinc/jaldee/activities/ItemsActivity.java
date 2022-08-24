@@ -3,7 +3,9 @@ package com.jaldeeinc.jaldee.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
@@ -24,18 +26,30 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.jaldeeinc.jaldee.Interface.IDataGrid;
+import com.jaldeeinc.jaldee.Interface.IDataGridListener;
 import com.jaldeeinc.jaldee.Interface.IDeleteImagesInterface;
 import com.jaldeeinc.jaldee.Interface.IDialogInterface;
 import com.jaldeeinc.jaldee.Interface.IItemInterface;
 import com.jaldeeinc.jaldee.Interface.ISaveNotes;
+import com.jaldeeinc.jaldee.Interface.IServiceOption;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.adapter.CartItemServceOptnAdapter;
 import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
+import com.jaldeeinc.jaldee.adapter.DetailPageItemsAdapter;
 import com.jaldeeinc.jaldee.adapter.ImagePreviewAdapter;
 import com.jaldeeinc.jaldee.adapter.ItemsAdapter;
+import com.jaldeeinc.jaldee.adapter.SelectedItemsAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -43,19 +57,30 @@ import com.jaldeeinc.jaldee.custom.AutofitTextView;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
+import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
+import com.jaldeeinc.jaldee.custom.OrderitemServiceoptionadditemDialog;
 import com.jaldeeinc.jaldee.custom.SelectedItemsDialog;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
+import com.jaldeeinc.jaldee.custom.ServiceOptionAddItemDialog;
+import com.jaldeeinc.jaldee.custom.ServiceOptionGridView;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
+import com.jaldeeinc.jaldee.model.AnswerLine;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.CartItemModel;
+import com.jaldeeinc.jaldee.model.DataGrid;
+import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
+import com.jaldeeinc.jaldee.model.QuestionnairInpt;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.CatalogItem;
+import com.jaldeeinc.jaldee.response.DataGridColumns;
 import com.jaldeeinc.jaldee.response.Questionnaire;
+import com.jaldeeinc.jaldee.response.Questions;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -64,7 +89,11 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Callback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -72,17 +101,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.StringJoiner;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class ItemsActivity extends AppCompatActivity implements IItemInterface, IDialogInterface, IDeleteImagesInterface, ISaveNotes {
+public class ItemsActivity extends AppCompatActivity implements IItemInterface, IDialogInterface, IDeleteImagesInterface, ISaveNotes, IDataGrid, IServiceOption {
 
     @BindView(R.id.tv_homeDeliveryRadiuse)
-    CustomTextViewItalicSemiBold tvHomeDeliveryRadiuse;
+    CustomTextViewBoldItalic tvHomeDeliveryRadiuse;
 
     @BindView(R.id.cv_back)
     CardView cvBack;
@@ -170,6 +201,19 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
     String path;
     Bitmap bitmap;
 
+    /**
+     * ServiceOption
+     **/
+    private Questionnaire questionnaire = new Questionnaire();
+    IDataGrid iDataGrid;
+    IServiceOption iServiceOptionListOptionChange;
+    CartItemModel itemDetails1;
+    QuestionnairInpt answerLine;
+
+    /**
+     * ServiceOption
+     **/
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,6 +225,8 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         iDialogInterface = this;
         iDeleteImagesInterface = this;
         iSaveNotes = this;
+        iDataGrid = this;
+        iServiceOptionListOptionChange = this;
         db = new DatabaseHandler(ItemsActivity.this);
 
         Intent i = getIntent();
@@ -203,7 +249,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                 catItem.add(citem);
             }
         }
-        itemsAdapter = new ItemsAdapter(catItem, this, true, iItemInterface, accountId, uniqueId, catalogInfo);
+        itemsAdapter = new ItemsAdapter(catItem, this, true, iItemInterface, accountId, uniqueId, catalogInfo, iDataGrid);
         rvItems.setAdapter(itemsAdapter);
 
         if (accountId == db.getAccountId()) {
@@ -287,7 +333,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
             @Override
             public void onClick(View v) {
 
-                selectedItemsDialog = new SelectedItemsDialog(mContext, iDialogInterface);
+                selectedItemsDialog = new SelectedItemsDialog(mContext, iDialogInterface, accountId);
                 selectedItemsDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
                 selectedItemsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 selectedItemsDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -390,7 +436,7 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         catalogItemsList = updateCatalogItemsQuantity(catalogItemsList);
         gridLayoutManager = new GridLayoutManager(ItemsActivity.this, 2);
         rvItems.setLayoutManager(gridLayoutManager);
-        itemsAdapter = new ItemsAdapter(catalogItemsList, this, false, iItemInterface, accountId, uniqueId, catalogInfo);
+        itemsAdapter = new ItemsAdapter(catalogItemsList, this, false, iItemInterface, accountId, uniqueId, catalogInfo, iDataGrid);
         rvItems.setAdapter(itemsAdapter);
         updateCartUI();
     }
@@ -501,6 +547,42 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
         return catalogItemsList;
     }
 
+    private void apiGetOrderItemServiceOptionQnr(CatalogItem itemDetails, int providerId, boolean fromAddedAsNew) {
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        //final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        //mDialog.show();
+        Call<Questionnaire> call = apiService.getOrderItemServiceOptionQnr(itemDetails.getItems().getItemId(), providerId);
+        call.enqueue(new retrofit2.Callback<Questionnaire>() {
+            @Override
+            public void onResponse(Call<Questionnaire> call, Response<Questionnaire> response) {
+                Config.logV("URL------getQNR response---------" + response.raw().request().url().toString().trim());
+                Config.logV("Response--code-------------------------" + response.code());
+                if (response.code() == 200) {
+                    questionnaire = response.body();
+                    //                        Map<String, Object> retMap = new Gson().fromJson(
+//                                questionnaire.getQuestionsList().get(0).getGetQuestion().getPriceGridList(), new TypeToken<HashMap<String, Object>>() {
+//                                }.getType()
+//                        );
+                    if (questionnaire != null && questionnaire.getQuestionnaireId() != null && questionnaire.getQuestionsList() != null && questionnaire.getQuestionsList().size() > 0) {
+                        OrderitemServiceoptionadditemDialog orderitemServiceoptionadditemDialog = OrderitemServiceoptionadditemDialog.newInstance(questionnaire, itemDetails, null, iServiceOptionListOptionChange, iItemInterface, fromAddedAsNew);
+                        final FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.container, orderitemServiceoptionadditemDialog).addToBackStack("DataGrid")
+                                .commit();
+                    } else {
+                        saveToDB(itemDetails, null, null);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Questionnaire> call, Throwable t) {
+
+            }
+        });
+    }
 
     @Override
     public void onItemClick(CatalogItem catalogItem) {
@@ -526,6 +608,80 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
 
     }
 
+    public void saveToDB(CatalogItem itemDetails, String serviceoption, String serviceOptionAttachedImages) {
+        CartItemModel item = new CartItemModel();
+        item.setItemId(itemDetails.getItems().getItemId());
+        item.setAccountId(accountId);
+        item.setCatalogId(itemDetails.getCatalogId());
+        item.setItemName(itemDetails.getItems().getDisplayName());
+        //item.setImageUrl(catalogItem.getItems().getDisplayImage());
+        if (itemDetails.getItems().getItemImagesList() != null && itemDetails.getItems().getItemImagesList().size() > 0) {
+            for (int i = 0; i < itemDetails.getItems().getItemImagesList().size(); i++) {
+                if (itemDetails.getItems().getItemImagesList().get(i).isDisplayImage()) {
+                    item.setImageUrl(itemDetails.getItems().getItemImagesList().get(i).getUrl());
+                }
+            }
+        }
+        item.setItemPrice(itemDetails.getItems().getPrice());
+        item.setMaxQuantity(itemDetails.getMaxQuantity());
+        item.setQuantity(1);
+        item.setUniqueId(uniqueId);
+        item.setPromotionalType(itemDetails.getItems().getPromotionalPriceType());
+        item.setDiscount(itemDetails.getItems().getPromotionalPrice());
+        item.setDiscountedPrice(itemDetails.getItems().getDiscountedPrice());
+        item.setItemType(itemDetails.getItems().getItemType());
+        if (itemDetails.getItems().isTaxable()) {
+            item.setIsTaxable(1);
+        } else {
+            item.setIsTaxable(0);
+        }
+        if (itemDetails.getItems().isTaxable()) {
+            if (catalogInfo != null) {
+                item.setTax(catalogInfo.getTaxPercentage());
+            }
+        }
+        if (itemDetails.getItems().isShowPromotionalPrice()) {
+            item.setIsPromotional(1);
+        } else {
+            item.setIsPromotional(0);
+        }
+        if (questionnaire.getQuestionsList() != null) {
+            Gson gson = new Gson();
+            String json = gson.toJson(questionnaire);
+            item.setQuestionnaire(json);
+        }
+        if (serviceoption != null && !serviceoption.trim().isEmpty()) {
+            item.setServiceOptioniput(serviceoption);
+        }
+        if (serviceOptionAttachedImages != null && !serviceOptionAttachedImages.trim().isEmpty()) {
+            item.setServiceOptionAtachedImages(serviceOptionAttachedImages);
+        }
+        if (questionnaire.getQuestionsList() != null && serviceoption != null && !serviceoption.trim().isEmpty()) {
+            Gson gson = new Gson();
+            String qnr = gson.toJson(questionnaire);
+            try {
+                float serviceOtpionPrice = calculateTotalPrice(itemDetails.getItems().getItemId(), qnr, serviceoption);
+                item.setServiceOptionPrice(serviceOtpionPrice);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        boolean isSaved = db.insertItemToCart(item);
+        if (isSaved) {
+            if (itemsAdapterVieHolder != null) {
+                itemsAdapterVieHolder.flAdd.setVisibility(View.GONE);
+                itemsAdapterVieHolder.numberButton.setVisibility(View.VISIBLE);
+                itemsAdapterVieHolder.numberButton.setNumber("1");
+            } else if (detailItemsAdapterVieHolder != null) {
+                detailItemsAdapterVieHolder.flAdd.setVisibility(View.GONE);
+                detailItemsAdapterVieHolder.numberButton.setVisibility(View.VISIBLE);
+                detailItemsAdapterVieHolder.numberButton.setNumber("1");
+            }
+        }
+        //checkCartCount(); // commented because of service option
+        updateCartUI();  // newline because of service option
+    }
+
     @Override
     public void checkItemQuantity() {
 
@@ -533,11 +689,28 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
 
     }
 
+    ItemsAdapter.ViewHolder itemsAdapterVieHolder;
+
+    @Override
+    public void checkItemQuantity(CatalogItem itemDetails, ItemsAdapter.ViewHolder viewHolder) {
+        itemsAdapterVieHolder = viewHolder;
+        apiGetOrderItemServiceOptionQnr(itemDetails, accountId, false);
+
+    }
+
+    DetailPageItemsAdapter.ViewHolder detailItemsAdapterVieHolder;
+
+    @Override
+    public void checkItemQuantity(CatalogItem itemDetails, DetailPageItemsAdapter.ViewHolder viewHolder) {
+        detailItemsAdapterVieHolder = viewHolder;
+        apiGetOrderItemServiceOptionQnr(itemDetails, accountId, false);
+    }
+
     @Override
     public void onContinueClick() {
 
         refreshData();
-        updateCartUI();
+        //updateCartUI();
     }
 
     @Override
@@ -958,5 +1131,330 @@ public class ItemsActivity extends AppCompatActivity implements IItemInterface, 
                     Config.closeDialog(getParent(), mDialog);
             }
         });
+    }
+
+    @Override
+    public void onEditClick(DataGrid gridObj, int position) {
+
+    }
+
+    @Override
+    public void onEditClick(Questionnaire qnr, QuestionnairInpt answerGridObj, int position, CartItemModel itemDetails, boolean isEdit) {
+
+    }
+
+
+    @Override
+    public void onDeleteClick(int position) {
+
+    }
+
+    @Override
+    public void onAddClick(int position) {
+
+    }
+
+    @Override
+    public void onAddClick(CatalogItem catalogItem, ItemsAdapter.ViewHolder viewHolder, boolean isDecreaseQty, int newValue) {
+        ItemsAdapter.ViewHolder vHolder = viewHolder;
+        if (isDecreaseQty) {
+            Dialog removeItemSrvcoption;
+
+            removeItemSrvcoption = new Dialog(mContext);
+            removeItemSrvcoption.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+            removeItemSrvcoption.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            removeItemSrvcoption.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            removeItemSrvcoption.setContentView(R.layout.remove_cart_item_serviceoption_dialog);
+            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+            int width = (int) (metrics.widthPixels * 1);
+            removeItemSrvcoption.setCancelable(false);
+            removeItemSrvcoption.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+            removeItemSrvcoption.getWindow().setGravity(Gravity.BOTTOM);
+            ImageView iv_close = removeItemSrvcoption.findViewById(R.id.iv_close);
+            CardView cv_cancel = removeItemSrvcoption.findViewById(R.id.cv_cancel);
+            CardView cv_done = removeItemSrvcoption.findViewById(R.id.cv_done);
+            RecyclerView rv_itemDetails = removeItemSrvcoption.findViewById(R.id.rv_itemDetails);
+
+            removeItemSrvcoption.show();
+            iv_close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    removeItemSrvcoption.cancel();
+                    int qty = Integer.parseInt(vHolder.numberButton.getNumber());
+                    vHolder.numberButton.setNumber(String.valueOf(qty + 1));   // for corecting quantity of items
+
+                }
+            });
+            cv_cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    removeItemSrvcoption.cancel();
+                    int qty = Integer.parseInt(vHolder.numberButton.getNumber());
+                    vHolder.numberButton.setNumber(String.valueOf(qty + 1));   // for corecting quantity of items
+                }
+            });
+            cv_done.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    removeItemSrvcoption.cancel();
+                    String qnr = db.getServiceOptionQnr(itemDetails1.getItemId());
+
+                    if (itemDetails1 != null) {
+                        String inputImages = db.getServiceOptioniputImages(itemDetails1.getItemId());
+                        float serviceOtpionPrice = 0;
+                        if (qnr.trim() != null && answerLine != null && !answerLine.getAnswerLines().isEmpty()) {
+                            Gson gson = new Gson();
+                            try {
+                                serviceOtpionPrice = calculateTotalPrice(itemDetails1.getItemId(), qnr, gson.toJson(answerLine));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        boolean result = db.updateServiceOptionInput(itemDetails1.getItemId(), new Gson().toJson(answerLine), inputImages, serviceOtpionPrice);
+                        if (result) {
+                            db.addQuantity(itemDetails1.getItemId(), newValue);
+
+                        }
+                    } else {
+                        int qty = Integer.parseInt(vHolder.numberButton.getNumber());
+                        vHolder.numberButton.setNumber(String.valueOf(qty + 1));   // for corecting quantity of items
+                    }
+                }
+            });
+
+            CartItemModel cartItemModel = new CartItemModel();
+            cartItemModel.setItemId(catalogItem.getItems().getItemId());
+
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
+            rv_itemDetails.setLayoutManager(linearLayoutManager);
+            CartItemServceOptnAdapter cartItemServceOptnAdapter = new CartItemServceOptnAdapter(cartItemModel, mContext, iDataGrid, false, true);
+            rv_itemDetails.setAdapter(cartItemServceOptnAdapter);
+            rv_itemDetails.setVisibility(View.VISIBLE);
+        } else {
+            float totalPrice = 0;
+
+            answerLine = new QuestionnairInpt();
+            String itemServcOptionName = "";
+            StringJoiner joiner = new StringJoiner(",");
+
+            String input = db.getServiceOptioniput(catalogItem.getItems().getItemId());
+            String inputImages = db.getServiceOptioniputImages(catalogItem.getItems().getItemId());
+//
+//        if (qnr != null && !qnr.trim().isEmpty()) {
+//            Gson gson = new Gson();
+//            this.questionaire = gson.fromJson(qnr, Questionnaire.class);
+//        }
+
+            Dialog serviceOptionrepeatSameDialog;
+
+            serviceOptionrepeatSameDialog = new Dialog(mContext);
+            serviceOptionrepeatSameDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
+            serviceOptionrepeatSameDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            serviceOptionrepeatSameDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            serviceOptionrepeatSameDialog.setContentView(R.layout.service_option_repeat_same_dialog);
+            DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+            int width = (int) (metrics.widthPixels * 1);
+            serviceOptionrepeatSameDialog.setCancelable(false);
+            serviceOptionrepeatSameDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+            serviceOptionrepeatSameDialog.getWindow().setGravity(Gravity.BOTTOM);
+            ImageView iv_close = serviceOptionrepeatSameDialog.findViewById(R.id.iv_close);
+            LinearLayout ll_Add_new = serviceOptionrepeatSameDialog.findViewById(R.id.ll_Add_new);
+            LinearLayout ll_repeat_same = serviceOptionrepeatSameDialog.findViewById(R.id.ll_repeat_same);
+            TextView tv_itemName = serviceOptionrepeatSameDialog.findViewById(R.id.tv_itemName);
+            TextView tv_item_Hint = serviceOptionrepeatSameDialog.findViewById(R.id.tv_item_Hint);
+            TextView tv_item_price = serviceOptionrepeatSameDialog.findViewById(R.id.tv_item_price);
+            TextView tv_total_price = serviceOptionrepeatSameDialog.findViewById(R.id.tv_total_price);
+            LinearLayout llDivider = serviceOptionrepeatSameDialog.findViewById(R.id.ll_divider);
+            serviceOptionrepeatSameDialog.show();
+
+            if (input != null && !input.trim().isEmpty()) {
+                Gson gson = new Gson();
+                answerLine = gson.fromJson(input, QuestionnairInpt.class);
+            }
+            if (answerLine != null && !answerLine.getAnswerLines().isEmpty()) {
+                ArrayList<AnswerLine> als = answerLine.getAnswerLines();
+                for (AnswerLine al : als) {
+                    DataGrid dataGrid = new DataGrid();
+                    ArrayList<DataGrid> dataGridList = new ArrayList<>();
+                    dataGridList = al.getDataGridListList();
+                    dataGrid = dataGridList.get(dataGridList.size() - 1);
+                    ArrayList<GridColumnAnswerLine> dataGridListColumn = dataGrid.dataGridListColumn;
+                    for (int i = 0; i < dataGridListColumn.size(); i++) {
+                        GridColumnAnswerLine gridColumnAnswerLine = dataGridListColumn.get(i);
+                        JsonArray ja = gridColumnAnswerLine.getColumn().getAsJsonArray("list");
+                        if (i == 0) {
+                            if (ja.get(0).toString().trim() != null && !ja.get(0).toString().trim().isEmpty()) {
+                                joiner.add(ja.get(0).getAsString());
+                            }
+                        }
+                        totalPrice = totalPrice + gridColumnAnswerLine.getPrice();
+                    }
+                }
+
+                if (catalogItem != null && catalogItem.getItems().getDisplayName().trim() != null) {
+                    tv_itemName.setText(catalogItem.getItems().getDisplayName());
+                } else {
+                    tv_itemName.setVisibility(View.GONE);
+                }
+                if (totalPrice > 0) {
+                    tv_item_price.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(totalPrice));
+                    tv_total_price.setText("₹ " + Config.getAmountNoOrTwoDecimalPoints(totalPrice));
+                } else {
+                    tv_total_price.setText("₹ 0");
+                }
+                String hint = "";
+                if (joiner.length() > 0) {
+                    hint = joiner.toString();
+                    tv_item_Hint.setText(hint);
+                    tv_item_Hint.setVisibility(View.VISIBLE);
+                } else {
+                    tv_item_Hint.setVisibility(View.GONE);
+                }
+            } else {
+                tv_itemName.setVisibility(View.GONE);
+                tv_item_Hint.setVisibility(View.GONE);
+                //tv_iteme_dit.setVisibility(View.GONE);
+                tv_total_price.setVisibility(View.GONE);
+            }
+            iv_close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    serviceOptionrepeatSameDialog.cancel();
+                    int qty = Integer.parseInt(vHolder.numberButton.getNumber());
+                    if (qty > 0) {
+                        vHolder.numberButton.setNumber(String.valueOf(qty - 1));   // for corecting quantity of items
+                    }
+                }
+            });
+            ll_Add_new.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // llAdd.performClick();
+                    serviceOptionrepeatSameDialog.cancel();
+                    apiGetOrderItemServiceOptionQnr(catalogItem, accountId, true);
+
+                }
+            });
+            ll_repeat_same.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    serviceOptionrepeatSameDialog.cancel();
+                    Toast.makeText(mContext, "item added", Toast.LENGTH_LONG).show();
+//                DynamicToast.make(context, "item added",
+//                        ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
+                    if (answerLine != null && !answerLine.getAnswerLines().isEmpty()) {
+                        ArrayList<AnswerLine> als = answerLine.getAnswerLines();
+                        for (int k = 0; k < als.size(); k++) {
+
+                            AnswerLine al = als.get(k);
+                            DataGrid dataGrid = new DataGrid();
+                            ArrayList<DataGrid> dataGridList = new ArrayList<>();
+                            dataGridList = al.getDataGridListList();
+                            dataGrid = dataGridList.get(dataGridList.size() - 1);
+                            dataGridList.add(dataGrid);
+                            JsonObject answer = new JsonObject();
+                            Gson gson = new Gson();
+                            JsonElement element = gson.toJsonTree(dataGridList);
+                            answer.add("dataGridList", element);
+                            answerLine.getAnswerLines().get(k).setAnswer(answer);
+                        }
+                        String qnr = db.getServiceOptionQnr(catalogItem.getItems().getItemId());
+
+                        float serviceOtpionPrice = 0;
+                        if (qnr.trim() != null && answerLine != null && !answerLine.getAnswerLines().isEmpty()) {
+                            Gson gson = new Gson();
+                            try {
+                                serviceOtpionPrice = calculateTotalPrice(catalogItem.getItems().getItemId(), qnr, gson.toJson(answerLine));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        db.addQuantity(catalogItem.getItems().getItemId(), newValue);
+                        db.updateServiceOptionInput(catalogItem.getItems().getItemId(), new Gson().toJson(answerLine), inputImages, serviceOtpionPrice);
+                        finish();
+                        startActivity(getIntent());
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onAddClick(CartItemModel cartItemModel, SelectedItemsAdapter.ViewHolder viewHolder, boolean isDecreaseQty, int newValue) {
+
+    }
+
+    @Override
+    public void onAddClick(CatalogItem catalogItem, DetailPageItemsAdapter.ViewHolder viewHolder, boolean isDecreaseQty, int newValue) {
+
+    }
+
+
+    @Override
+    public void onRemoveClick(int position, Questionnaire questionnaire, QuestionnairInpt answerLine, CartItemModel itemDetails) {
+        this.answerLine = answerLine;
+        this.itemDetails1 = itemDetails;
+    }
+
+    @Override
+    public void updateTotalPrice() {
+
+    }
+
+    @Override
+    public void radioListItemSelected(String s, Float price) {
+
+    }
+
+    @Override
+    public void savetoDataBase(CatalogItem itemDetails, String serviceOption, String serviceOptionAtachedImages) {
+        saveToDB(itemDetails, serviceOption, serviceOptionAtachedImages);
+    }
+
+    @Override
+    public KeyPairBoolData openImageOptions(KeyPairBoolData fileObject, String qLabelName, HashMap<String, View> viewsList) {
+        return null;
+    }
+
+    public float calculateTotalPrice(int itemId, String qnr, String input) throws JSONException {
+        float itemPrice = 0;
+
+        try {
+            Questionnaire questionaireQnr = new Questionnaire();
+            QuestionnairInpt questionnairInptAnswerLine = new QuestionnairInpt();
+
+            if (input != null && !input.trim().isEmpty()) {
+                Gson gson = new Gson();
+                questionnairInptAnswerLine = gson.fromJson(input, QuestionnairInpt.class);
+            }
+            if (qnr != null && !qnr.trim().isEmpty()) {
+                Gson gson = new Gson();
+                questionaireQnr = gson.fromJson(qnr, Questionnaire.class);
+            }
+            for (Questions question : questionaireQnr.getQuestionsList()) {
+
+                if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("dataGridList")) {
+                    ArrayList<DataGrid> dataGridList = new ArrayList<>();
+                    for (AnswerLine answerLine : questionnairInptAnswerLine.getAnswerLines()) {
+                        if (answerLine != null && answerLine.getLabelName().equalsIgnoreCase(question.getGetQuestion().getLabelName())) {
+                            JSONObject txtObj = new JSONObject(answerLine.getAnswer().toString());
+                            dataGridList = answerLine.getDataGridListList();
+                        }
+                    }
+                    for (DataGrid gridObj : dataGridList) {
+                        ArrayList<GridColumnAnswerLine> datagridListColumns = gridObj.getDataGridListColumn();
+                        if (datagridListColumns.size() > 0) {
+                            for (int i = 0; i < datagridListColumns.size(); i++) {
+                                itemPrice = itemPrice + datagridListColumns.get(i).getPrice();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return itemPrice;
     }
 }

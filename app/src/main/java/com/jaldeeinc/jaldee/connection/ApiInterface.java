@@ -79,6 +79,8 @@ import com.jaldeeinc.jaldee.response.WalletEligibleJCash;
 import com.jaldeeinc.jaldee.response.WalletPaytmChecksum;
 
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -247,6 +249,12 @@ public interface ApiInterface {
     //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("consumer/familyMember")
     Call<ArrayList<FamilyArrayModel>> getFamilyList();
+
+    @GET("consumer/familyMember/providerconsumer/{consumerId}?")
+    Call<ResponseBody> getFamilyMemberProviderConsumer(@Path("consumerId") int familyMemId, @Query("account") Integer account);
+
+    @POST("consumer/familyMember/providerconsumer/{familyMemId}/{providerConsumerId}")
+    Call<ResponseBody> AddFamilyMEmberProviderConsumer(@Path("familyMemId") int familyMemId, @Path("providerConsumerId") int providerConsumerId, @Query("account") String account);
 
     //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("provider/account/settings/locations/{pincode}")
@@ -850,10 +858,37 @@ public interface ApiInterface {
     @GET("provider/imagePropries/logo/{queueId}")
     Call<LinkedHashMap<String, ArrayList<ProfilePicture>>> getLogo(@Path("queueId") String id);
 
-    /****************   ServiceOptios URLs  ***************/
+    /****************   ServiceOptions URLs  ***************/
     @GET("consumer/questionnaire/serviceoptions/{serviceId}/{consumerId}")
     Call<Questionnaire> getServiceOptionQnr(@Path("serviceId") int serviceId, @Path("consumerId") int consumerId, @Query("account") int account);
+
+    @POST("consumer/appointment/serviceoption/{uid}?")
+    Call<SubmitQuestionnaire> submitAppointmentServiceOptionQnr(@Path("uid") String uid, @Body RequestBody jsonObj, @Query("account") int accountId);
+
+    @POST("consumer/waitlist/serviceoption/{uid}?")
+    Call<SubmitQuestionnaire> submitWaitListServiceOptionQnr(@Path("uid") String uid, @Body RequestBody jsonObj, @Query("account") int accountId);
+
+    @PUT("consumer/appointment/serviceoption/upload/status/{uid}?")
+    Call<ResponseBody> checkAppointmentServicOptionUploadStatus(@Path("uid") String id, @Query("account") int accountId, @Body RequestBody jsonObj);
+
+    @PUT("consumer/waitlist/serviceoption/upload/status/{uid}?")
+    Call<ResponseBody> checkWaitlistServicOptionUploadStatus(@Path("uid") String id, @Query("account") int accountId, @Body RequestBody jsonObj);
     /****************   ServiceOptios URLs  ***************/
+
+    /****************   Order ServiceOptions URLs  ***************/
+    @GET("consumer/questionnaire/serviceoptions/order/item/{itemId}")
+    Call<Questionnaire> getOrderItemServiceOptionQnr(@Path("itemId") int itemId, @Query("account") int account);
+
+    @POST("consumer/orders/item/serviceoption/{itemId}/{uid}")
+    Call<SubmitQuestionnaire> submitOrderItemServiceOptionQnr(@Path("itemId") int itemId, @Path("uid") String uid, @Body RequestBody jsonObj, @Query("account") int accountId);
+
+    @POST("consumer/orders/item/serviceoption/resubmit/{uid}")
+    Call<SubmitQuestionnaire> resubmitOrderItemServiceOptionQnr(@Path("uid") String uid, @Body RequestBody jsonObj, @Query("account") int accountId);
+
+    @PUT("consumer/orders/item/serviceoption/upload/status/{uid}?")
+    Call<ResponseBody> checkOrderItemServicOptionUploadStatus(@Path("uid") String id, @Query("account") int accountId, @Body RequestBody jsonObj);
+    /****************   Order ServiceOptions URLs  ***************/
+
 
 
     /****************   Questionnaire URLs  ***************/

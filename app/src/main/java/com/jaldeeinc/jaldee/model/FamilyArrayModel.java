@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Created by sharmila on 11/7/18.
  */
 
-public class FamilyArrayModel  implements Serializable{
+public class FamilyArrayModel implements Serializable {
 
     Integer pincode;
     int age;
@@ -26,25 +26,50 @@ public class FamilyArrayModel  implements Serializable{
     private String city;
     private String state;
     private String district;
+    private Integer parent;
 
-    public void setAge(int age) { this.age = age; }
+    public Integer getParent() {
+        return parent;
+    }
 
-    public int getAge() { return age; }
-   // public void setAge(JsonObject age) { this.age = age; }
+    public void setParent(Integer parent) {
+        this.parent = parent;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public int getAge() {
+        return age;
+    }
+    // public void setAge(JsonObject age) { this.age = age; }
 
     //public JsonObject getAge() { return age; }
 
-    public String getDistrict() { return district; }
+    public String getDistrict() {
+        return district;
+    }
 
-    public void setDistrict(String district) { this.district = district; }
+    public void setDistrict(String district) {
+        this.district = district;
+    }
 
-    public String getCity() { return city; }
+    public String getCity() {
+        return city;
+    }
 
-    public String getState() { return state; }
+    public String getState() {
+        return state;
+    }
 
-    public void setCity(String city) { this.city = city; }
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-    public void setState(String state) { this.state = state; }
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public boolean isAddMember() {
         return isAddMember;
@@ -87,7 +112,7 @@ public class FamilyArrayModel  implements Serializable{
     }
 
     public String getWhtsAppCountryCode() {
-       return whtsAppCountryCode;
+        return whtsAppCountryCode;
     }
 
     public String getTelgrmCountryCode() {
@@ -119,6 +144,7 @@ public class FamilyArrayModel  implements Serializable{
     public void setPreferredLanguages(ArrayList<String> preferredLanguages) {
         this.preferredLanguages = preferredLanguages;
     }
+
     public Integer getPincode() {
         return pincode;
     }
@@ -132,9 +158,9 @@ public class FamilyArrayModel  implements Serializable{
             }
 
             private List<FamilyModel>  mArrayuserProfile;*/
-  public FamilyArrayModel getUserProfile() {
-      return userProfile;
-  }
+    public FamilyArrayModel getUserProfile() {
+        return userProfile;
+    }
 
 
     public String getUser() {
@@ -217,7 +243,8 @@ public class FamilyArrayModel  implements Serializable{
         this.check = check;
     }
 
-    boolean check=false;
+    boolean check = false;
+
     public String toString() {
         return this.firstName + " " + lastName; // Value to be displayed in the Spinner
     }

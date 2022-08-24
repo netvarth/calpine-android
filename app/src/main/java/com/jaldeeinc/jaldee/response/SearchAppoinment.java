@@ -9,6 +9,7 @@ public class SearchAppoinment implements Serializable {
 
     ArrayList<SearchService> servicegallery;
     ArrayList<SearchAppoinment> virtualCallingModes;
+    ArrayList<Integer> serviceOptionIds;
     String name;
     String description;
     String notification;
@@ -38,7 +39,21 @@ public class SearchAppoinment implements Serializable {
     int id;
     int multiples;
     int department;
-    int maxBookingsAllowed	;
+    int maxBookingsAllowed;
+
+    @SerializedName("provider")
+    private SearchAppoinment provider;
+
+    @SerializedName("serviceAvailability")
+    private AppointServiceAvailability appointServiceAvailability;
+
+    public ArrayList<Integer> getServiceOptionIds() {
+        return serviceOptionIds;
+    }
+
+    public void setServiceOptionIds(ArrayList<Integer> serviceOptionIds) {
+        this.serviceOptionIds = serviceOptionIds;
+    }
 
     public boolean isShowOnlyAvailableSlots() {
         return showOnlyAvailableSlots;
@@ -48,11 +63,6 @@ public class SearchAppoinment implements Serializable {
         return maxBookingsAllowed;
     }
 
-    @SerializedName("provider")
-    private SearchAppoinment provider;
-
-    @SerializedName("serviceAvailability")
-    private AppointServiceAvailability appointServiceAvailability;
 
     public int getId() {
         return id;
@@ -162,19 +172,25 @@ public class SearchAppoinment implements Serializable {
         return minPrePaymentAmount;
     }
 
-    public void setMinPrePaymentAmount(String minPrePaymentAmount) { this.minPrePaymentAmount = minPrePaymentAmount; }
+    public void setMinPrePaymentAmount(String minPrePaymentAmount) {
+        this.minPrePaymentAmount = minPrePaymentAmount;
+    }
 
     public String getVirtualServiceType() {
         return virtualServiceType;
     }
 
-    public void setVirtualServiceType(String virtualServiceType) { this.virtualServiceType = virtualServiceType; }
+    public void setVirtualServiceType(String virtualServiceType) {
+        this.virtualServiceType = virtualServiceType;
+    }
 
     public ArrayList<SearchAppoinment> getVirtualCallingModes() {
         return virtualCallingModes;
     }
 
-    public void setVirtualCallingModes(ArrayList<SearchAppoinment> virtualCallingModes) { this.virtualCallingModes = virtualCallingModes; }
+    public void setVirtualCallingModes(ArrayList<SearchAppoinment> virtualCallingModes) {
+        this.virtualCallingModes = virtualCallingModes;
+    }
 
     public String getInstructions() {
         return instructions;
@@ -253,22 +269,32 @@ public class SearchAppoinment implements Serializable {
         return consumerNoteTitle;
     }
 
-    public void setConsumerNoteTitle(String consumerNoteTitle) { this.consumerNoteTitle = consumerNoteTitle; }
+    public void setConsumerNoteTitle(String consumerNoteTitle) {
+        this.consumerNoteTitle = consumerNoteTitle;
+    }
 
-    public AppointServiceAvailability getAppointServiceAvailability() { return appointServiceAvailability; }
+    public AppointServiceAvailability getAppointServiceAvailability() {
+        return appointServiceAvailability;
+    }
 
     public ArrayList<SearchService> getServicegallery() {
         return servicegallery;
     }
 
-    public void setServicegallery(ArrayList<SearchService> servicegallery) { this.servicegallery = servicegallery; }
+    public void setServicegallery(ArrayList<SearchService> servicegallery) {
+        this.servicegallery = servicegallery;
+    }
 
     public boolean isConsumerNoteMandatory() {
         return consumerNoteMandatory;
     }
 
-    public String getPaymentDescription() { return paymentDescription; }
+    public String getPaymentDescription() {
+        return paymentDescription;
+    }
 
-    public boolean isServiceDurationEnabled() { return serviceDurationEnabled; }
+    public boolean isServiceDurationEnabled() {
+        return serviceDurationEnabled;
+    }
 
 }

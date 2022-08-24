@@ -4,27 +4,17 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.IPaymentResponse;
 import com.jaldeeinc.jaldee.R;
-
-import com.jaldeeinc.jaldee.activities.Appointment;
-import com.jaldeeinc.jaldee.activities.CheckIn;
-import com.jaldeeinc.jaldee.activities.CheckInReconfirmation;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
-import com.jaldeeinc.jaldee.response.PaytmChecksum;
 import com.jaldeeinc.jaldee.response.WalletCheckSumModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
-import com.razorpay.Checkout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -157,7 +147,7 @@ public class PaymentGateway {
 
                     } else {
                         String responseerror = response.errorBody().string();
-                        Config.logV("Response--error-------------------------" + responseerror);
+                        Config.logV("Response--error----------------    ---------" + responseerror);
                         Toast.makeText(mCOntext, responseerror, Toast.LENGTH_LONG).show();
                         if (response.code() == 422) {
                             Toast.makeText(mCOntext, responseerror, Toast.LENGTH_SHORT).show();

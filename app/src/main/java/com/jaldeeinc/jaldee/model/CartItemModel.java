@@ -1,6 +1,10 @@
 package com.jaldeeinc.jaldee.model;
 
-public class CartItemModel {
+import com.jaldeeinc.jaldee.response.Questionnaire;
+
+import java.io.Serializable;
+
+public class CartItemModel implements Serializable {
 
     private int id;
     private int itemId;
@@ -12,6 +16,7 @@ public class CartItemModel {
     private int quantity;
     private double itemPrice;
     private double price;
+    private double serviceOptionPrice;
     private String instruction;
     private int maxQuantity;
     private double discount;
@@ -22,8 +27,9 @@ public class CartItemModel {
     private int isTaxable = 0;
     private double tax;
     private String itemType;
-
-
+    private String questionnaire;
+    private String serviceOptioniput;
+    private String serviceOptionAtachedImages;
     public CartItemModel(){
 
     }
@@ -38,7 +44,10 @@ public class CartItemModel {
         this.isPromotional = 0;
     }
 
-    public CartItemModel(int id, int itemId, int accountId, int uniqueId, int catalogId, String itemName, String imageUrl, int quantity, double itemPrice, double price, String instruction, int maxQuantity, double discount, double discountedPrice, String promotionalType, int isPromotional, int isExpired, double tax, String itemType) {
+    public CartItemModel(int id, int itemId, int accountId, int uniqueId, int catalogId, String itemName, String imageUrl,
+                         int quantity, double itemPrice, double price, String instruction, int maxQuantity, double discount,
+                         double discountedPrice, String promotionalType, int isPromotional, int isExpired, double tax,
+                         String itemType, String questionnaire, String serviceOptioniput, String serviceOptionAtachedImages) {
         this.id = id;
         this.itemId = itemId;
         this.accountId = accountId;
@@ -58,6 +67,41 @@ public class CartItemModel {
         this.isExpired = isExpired;
         this.tax = tax;
         this.itemType = itemType;
+        this.questionnaire = questionnaire;
+        this.serviceOptioniput = serviceOptioniput;
+        this.serviceOptionAtachedImages = serviceOptionAtachedImages;
+    }
+
+    public double getServiceOptionPrice() {
+        return serviceOptionPrice;
+    }
+
+    public void setServiceOptionPrice(double serviceOptionPrice) {
+        this.serviceOptionPrice = serviceOptionPrice;
+    }
+
+    public String getQuestionnaire() {
+        return questionnaire;
+    }
+
+    public void setQuestionnaire(String questionnaire) {
+        this.questionnaire = questionnaire;
+    }
+
+    public String getServiceOptioniput() {
+        return serviceOptioniput;
+    }
+
+    public void setServiceOptioniput(String serviceOptioniput) {
+        this.serviceOptioniput = serviceOptioniput;
+    }
+
+    public String getServiceOptionAtachedImages() {
+        return serviceOptionAtachedImages;
+    }
+
+    public void setServiceOptionAtachedImages(String serviceOptionAtachedImages) {
+        this.serviceOptionAtachedImages = serviceOptionAtachedImages;
     }
 
     public String getItemType() { return itemType; }

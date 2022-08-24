@@ -14,8 +14,6 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
 import android.provider.CalendarContract;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -40,10 +38,9 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.Contents;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.InstructionsDialog;
 import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
@@ -85,7 +82,7 @@ public class CheckInConfirmation extends AppCompatActivity {
     private String uuid;
     private InstructionsDialog instructionsDialog;
     CustomTextViewLight tvHint;
-    CustomTextViewItalicSemiBold tvTokenWaitTime;
+    CustomTextViewBoldItalic tvTokenWaitTime;
     private String phoneNumber, providerId;
     boolean livetrack;
     private String value;
@@ -525,12 +522,12 @@ public class CheckInConfirmation extends AppCompatActivity {
                     Intent intent = new Intent(Intent.ACTION_INSERT);
                     intent.setData(CalendarContract.Events.CONTENT_URI);
                     if (activeCheckInInfo.getProviderAccount().getBusinessName() != null && !activeCheckInInfo.getProviderAccount().getBusinessName().equalsIgnoreCase("")) {
-                        intent.putExtra(CalendarContract.Events.TITLE, "booking with - " + activeCheckInInfo.getProviderAccount().getBusinessName());//activeCheckInInfo.getCheckinEncId());
+                        intent.putExtra(CalendarContract.Events.TITLE, activeCheckInInfo.getProviderAccount().getBusinessName() +" - "+ activeCheckInInfo.getService().getName());//activeCheckInInfo.getCheckinEncId());
 
                         intent.putExtra(CalendarContract.Events.DESCRIPTION, "Service provider : " + activeCheckInInfo.getProviderAccount().getBusinessName() + "\nLocation : " + activeCheckInInfo.getQueue().getLocation().getPlace());
                     } else {
                         String name = activeCheckInInfo.getProvider().getFirstName() + " " + activeCheckInInfo.getProvider().getLastName();
-                        intent.putExtra(CalendarContract.Events.TITLE, "booking with - " + name);// activeCheckInInfo.getCheckinEncId());
+                        intent.putExtra(CalendarContract.Events.TITLE, name +" - "+ activeCheckInInfo.getService().getName());// activeCheckInInfo.getCheckinEncId());
 
                         intent.putExtra(CalendarContract.Events.DESCRIPTION, "Service provider : " + name + "\nLocation : " + activeCheckInInfo.getQueue().getLocation().getPlace());
                     }

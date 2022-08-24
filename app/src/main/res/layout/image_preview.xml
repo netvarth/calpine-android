@@ -43,11 +43,11 @@
             android:padding="@dimen/dimen_4dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:tint="@color/dark_blue"
             android:layout_marginEnd="@dimen/dimen_2dp"
             android:background="@drawable/bg_circle"
             android:backgroundTint="@color/spinnerbg"
-            android:src="@drawable/edit_icon" />
+            android:src="@drawable/edit_icon"
+            app:tint="@color/dark_blue" />
 
 
     </RelativeLayout>

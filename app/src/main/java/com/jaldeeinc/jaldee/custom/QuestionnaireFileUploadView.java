@@ -5,29 +5,21 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.jaldeeinc.jaldee.Interface.IDataGrid;
 import com.jaldeeinc.jaldee.Interface.IFilesInterface;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.DataGridAdapter;
 import com.jaldeeinc.jaldee.adapter.FilesAdapter;
 import com.jaldeeinc.jaldee.model.AnswerLine;
-import com.jaldeeinc.jaldee.model.DataGridModel;
 import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
-import com.jaldeeinc.jaldee.model.LabelPath;
-import com.jaldeeinc.jaldee.model.QuestionnaireCheckbox;
 import com.jaldeeinc.jaldee.response.DataGridColumns;
 import com.jaldeeinc.jaldee.response.GetQuestion;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,16 +30,17 @@ public class QuestionnaireFileUploadView extends LinearLayout implements IFilesI
     private AttributeSet attrs;
     private int styleAttr;
 
-    private CustomTextViewSemiBold tvQuestionName;
-    private CustomTextViewBold tvManditory;
-    private CustomTextViewMedium tvHint, tvSupportedTypes;
-    private CustomItalicTextViewNormal tvError;
+    private TextView tvQuestionName;
+    private TextView tvManditory;
+    private TextView tvHint, tvSupportedTypes;
+    private TextView tvError;
     private RecyclerView rvFiles;
     private GetQuestion question;
     private DataGridColumns gridColumns;
     MultiSpinnerSearch filesSpinner;
     private FilesAdapter filesAdapter;
     private IFilesInterface iFilesInterface, listener;
+    float itemPrice;
 
 
     public QuestionnaireFileUploadView(Context context) {
@@ -191,7 +184,11 @@ public class QuestionnaireFileUploadView extends LinearLayout implements IFilesI
         });
 
     }
+    public void setServiceOptionGridQuestionData(DataGridColumns gQuestion, float itemPrice) {
+        setGridQuestionData(gQuestion);
+        this.itemPrice = itemPrice;
 
+    }
     public void setListener(IFilesInterface objListener) {
 
         listener = objListener;
@@ -318,6 +315,10 @@ public class QuestionnaireFileUploadView extends LinearLayout implements IFilesI
         column.add("fileUpload", fileUploadList);
 
         obj.setColumn(column);
+        if(fileUploadList.size() > 0){
+            obj.setPrice(itemPrice);
+            obj.setQuantity(1);
+        }
 
         return obj;
     }

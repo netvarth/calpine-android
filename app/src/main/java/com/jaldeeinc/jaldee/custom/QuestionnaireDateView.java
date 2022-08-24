@@ -3,17 +3,19 @@ package com.jaldeeinc.jaldee.custom;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.widget.DatePicker;
+import android.widget.TextView;
 
 
 import com.google.gson.JsonObject;
+import com.jaldeeinc.jaldee.Interface.IServiceOption;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.model.AnswerLine;
 import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
@@ -33,18 +35,26 @@ public class QuestionnaireDateView extends LinearLayout implements DatePickerDia
 
     CustomDateTimePicker custom;
 
-    private CustomTextViewSemiBold tvQuestionName, tvDate;
-    private CustomTextViewBold tvManditory;
-    private CustomTextViewMedium tvHint;
-    private CustomItalicTextViewNormal tvError;
+    private TextView tvQuestionName, tvDate;
+    private TextView tvManditory;
+    private TextView tvHint;
+    private TextView tvError;
     private ImageView ivCalender;
     private GetQuestion question;
     private DataGridColumns gridQuestion;
+    IServiceOption iServiceOptionListOptionChange;
+    float itemPrice;
 
 
     public QuestionnaireDateView(Context context) {
         super(context);
         this.context = context;
+        initView();
+    }
+    public QuestionnaireDateView(Context context, IServiceOption iServiceOptionListOptionChange) {
+        super(context);
+        this.context = context;
+        this.iServiceOptionListOptionChange = iServiceOptionListOptionChange;
         initView();
     }
 
@@ -85,7 +95,7 @@ public class QuestionnaireDateView extends LinearLayout implements DatePickerDia
                                       int hour24, int hour12, int min, int sec,
                                       String AM_PM) {
                         tvDate.setText("");
-                        tvDate.setText(year + "-" + (monthNumber + 1) + "-" + calendarSelected.get(Calendar.DAY_OF_MONTH));
+                        tvDate.setText(calendarSelected.get(Calendar.DAY_OF_MONTH) + "-" +  (monthNumber + 1) + "-" + year);
                     }
 
                     @Override
@@ -104,7 +114,28 @@ public class QuestionnaireDateView extends LinearLayout implements DatePickerDia
                 custom.showDialog();
             }
         });
+        tvDate.addTextChangedListener(new TextWatcher() {
+            String before = "", after = "";
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                before = charSequence.toString().trim();
+            }
 
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (iServiceOptionListOptionChange != null) {
+                    after = editable.toString().trim();
+                    if ((before.isEmpty() && !after.isEmpty()) || (!before.isEmpty() && after.isEmpty())) {
+                        iServiceOptionListOptionChange.updateTotalPrice();
+                    }
+                }
+            }
+        });
 
     }
 
@@ -148,7 +179,10 @@ public class QuestionnaireDateView extends LinearLayout implements DatePickerDia
         }
 
     }
-
+    public void setServiceOptionGridQuestionData(DataGridColumns gQuestion, float itemPrice) {
+        setGridQuestionData(gQuestion);
+        this.itemPrice = itemPrice;
+    }
 
     public void setAnswerData(GetQuestion q) {
 
@@ -227,7 +261,10 @@ public class QuestionnaireDateView extends LinearLayout implements DatePickerDia
         column.addProperty("date", tvDate.getText().toString());
 
         obj.setColumn(column);
-
+        if(!tvDate.getText().toString().trim().isEmpty()) {
+            obj.setPrice(itemPrice);
+            obj.setQuantity(1);
+        }
         return obj;
 
     }

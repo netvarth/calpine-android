@@ -265,74 +265,76 @@ public class PaytmPayment extends AppCompatActivity {
             host = "https://securegw-stage.paytm.in/";
         }
 
-        PaytmOrder Order = new PaytmOrder(paramMap.get("ORDER_ID"), paramMap.get("MID"), paramMap.get("txnToken"), paramMap.get("TXN_AMOUNT"), paramMap.get("CALLBACK_URL"));
+            PaytmOrder Order = new PaytmOrder(paramMap.get("ORDER_ID"), paramMap.get("MID"),
+                paramMap.get("txnToken"), paramMap.get("TXN_AMOUNT"), paramMap.get("CALLBACK_URL"));
         try {
-            TransactionManager transactionManager = new TransactionManager(Order, new PaytmPaymentTransactionCallback() {
-                @Override
-                public void onTransactionResponse(Bundle inResponse) {
-                    Log.d("LOG", "Payment Transaction : " + inResponse);
-                    if (inResponse.toString().contains("TXN_SUCCESS")) {
+            TransactionManager transactionManager = new TransactionManager(Order,
+                    new PaytmPaymentTransactionCallback() {
+                        @Override
+                        public void onTransactionResponse(Bundle inResponse) {
+                            Log.d("LOG", "Payment Transaction : " + inResponse);
+                            if (inResponse.toString().contains("TXN_SUCCESS")) {
 
-                        if (purpose.equalsIgnoreCase(Constants.PURPOSE_PREPAYMENT) || purpose.equalsIgnoreCase(Constants.DONATION) || purpose.equalsIgnoreCase(Constants.PURPOSE_BILLPAYMENT)) {
-                            iPaymentResponse.sendPaymentResponse("TXN_SUCCESS", inResponse.getString("ORDERID"));
-                        } else {
-                            Toast.makeText(context, "Payment Successful", Toast.LENGTH_LONG).show();
+                                if (purpose.equalsIgnoreCase(Constants.PURPOSE_PREPAYMENT) || purpose.equalsIgnoreCase(Constants.DONATION) || purpose.equalsIgnoreCase(Constants.PURPOSE_BILLPAYMENT)) {
+                                    iPaymentResponse.sendPaymentResponse("TXN_SUCCESS", inResponse.getString("ORDERID"));
+                                } else {
+                                    Toast.makeText(context, "Payment Successful", Toast.LENGTH_LONG).show();
+                                }
+                                //((Activity) context).finish();
+                            } else {
+                                Toast.makeText(context, "Payment Failed ", Toast.LENGTH_LONG).show();
+                                iPaymentResponse.sendPaymentResponse("TXN_FAILED", inResponse.getString("ORDERID"));
+                            }
                         }
-                        //((Activity) context).finish();
-                    } else {
-                        Toast.makeText(context, "Payment Failed ", Toast.LENGTH_LONG).show();
-                        iPaymentResponse.sendPaymentResponse("TXN_FAILED", inResponse.getString("ORDERID"));
-                    }
-                }
 
-                @Override
-                public void networkNotAvailable() {
-                    Log.d("LOG", "UI Error Occur.");
-                    Toast.makeText(context, " UI Error Occur. ", Toast.LENGTH_LONG).show();
-                    iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
-                }
+                        @Override
+                        public void networkNotAvailable() {
+                            Log.d("LOG", "UI Error Occur.");
+                            Toast.makeText(context, " UI Error Occur. ", Toast.LENGTH_LONG).show();
+                            iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
+                        }
 
-                @Override
-                public void onErrorProceed(String s) {
-                    Log.d("LOG", "Error Occur.");
-                    Toast.makeText(context, " Error Occur. ", Toast.LENGTH_LONG).show();
-                    iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
-                }
+                        @Override
+                        public void onErrorProceed(String s) {
+                            Log.d("LOG", "Error Occur.");
+                            Toast.makeText(context, " Error Occur. ", Toast.LENGTH_LONG).show();
+                            iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
+                        }
 
-                @Override
-                public void clientAuthenticationFailed(String inErrorMessage) {
-                    Log.d("LOG", "UI Error Occur.");
-                    Toast.makeText(context, " Severside Error " + inErrorMessage, Toast.LENGTH_LONG).show();
-                    iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
-                }
+                        @Override
+                        public void clientAuthenticationFailed(String inErrorMessage) {
+                            Log.d("LOG", "UI Error Occur.");
+                            Toast.makeText(context, " Severside Error " + inErrorMessage, Toast.LENGTH_LONG).show();
+                            iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
+                        }
 
-                @Override
-                public void someUIErrorOccurred(String s) {
-                    Log.d("LOG", "UI Error Occur.");
-                    Toast.makeText(context, " UI Error Occur. ", Toast.LENGTH_LONG).show();
-                    iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
-                }
+                        @Override
+                        public void someUIErrorOccurred(String s) {
+                            Log.d("LOG", "UI Error Occur.");
+                            Toast.makeText(context, " UI Error Occur. ", Toast.LENGTH_LONG).show();
+                            iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
+                        }
 
-                @Override
-                public void onErrorLoadingWebPage(int iniErrorCode, String inErrorMessage, String inFailingUrl) {
-                    Log.d("LOG", inErrorMessage);
-                    iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
-                }
+                        @Override
+                        public void onErrorLoadingWebPage(int iniErrorCode, String inErrorMessage, String inFailingUrl) {
+                            Log.d("LOG", inErrorMessage);
+                            iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
+                        }
 
-                @Override
-                public void onBackPressedCancelTransaction() {
-                    Log.d("LOG", "Back");
-                    Toast.makeText(context, "Payment Cancelled ", Toast.LENGTH_LONG).show();
-                    iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
-                }
+                        @Override
+                        public void onBackPressedCancelTransaction() {
+                            Log.d("LOG", "Back");
+                            Toast.makeText(context, "Payment Cancelled ", Toast.LENGTH_LONG).show();
+                            iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
+                        }
 
-                @Override
-                public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
-                    Log.d("LOG", "Payment Transaction Failed " + inErrorMessage);
-                    Toast.makeText(context, "Payment Transaction Failed ", Toast.LENGTH_LONG).show();
-                    iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
-                }
-            });
+                        @Override
+                        public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
+                            Log.d("LOG", "Payment Transaction Failed " + inErrorMessage);
+                            Toast.makeText(context, "Payment Transaction Failed ", Toast.LENGTH_LONG).show();
+                            iPaymentResponse.sendPaymentResponse("TXN_FAILED", "");
+                        }
+                    });
 
             transactionManager.setShowPaymentUrl(host + "theia/api/v1/showPaymentPage");
             transactionManager.setAppInvokeEnabled(false);

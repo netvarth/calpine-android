@@ -97,7 +97,7 @@
             </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
 
-            <com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal
+            <com.jaldeeinc.jaldee.custom.CustomTextViewNormalItalic
                 android:id="@+id/tv_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
                 android:textSize="@dimen/dimen_12dp"
                 android:visibility="gone">
 
-            </com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal>
+            </com.jaldeeinc.jaldee.custom.CustomTextViewNormalItalic>
 
             <LinearLayout
                 android:id="@+id/ll_divider"

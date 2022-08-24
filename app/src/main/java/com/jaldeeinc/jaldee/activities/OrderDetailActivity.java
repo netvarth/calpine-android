@@ -45,6 +45,7 @@ import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView;
@@ -63,6 +64,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.custom.StoreDetailsDialog;
 import com.jaldeeinc.jaldee.model.LabelPath;
+import com.jaldeeinc.jaldee.model.QuestionnairInpt;
 import com.jaldeeinc.jaldee.model.QuestionnaireResponseInput;
 import com.jaldeeinc.jaldee.model.RlsdQnr;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
@@ -188,6 +190,9 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     @BindView(R.id.ll_questionnaire)
     LinearLayout llQuestionnaire;
+
+    @BindView(R.id.ll_service_option_qnr)
+    LinearLayout ll_service_option_qnr;
 
     private Context mContext;
     private String orderUUid;
@@ -318,6 +323,26 @@ public class OrderDetailActivity extends AppCompatActivity {
             tvNotes.getParent().requestDisallowInterceptTouchEvent(true);
 
             return false;
+        });
+        ll_service_option_qnr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (orderInfo != null) {
+                    if (orderInfo.getItemsList() != null && orderInfo.getItemsList().size() > 0) {
+
+                        Intent intent = new Intent(mContext, ShowCartServiceOption.class);
+                        //intent.putExtra("serviceId", orderInfo.getCatalog().getCatLogId());
+                        // intent.putExtra("accountId", orderInfo.getProviderAccount().getId());
+                        // intent.putExtra("uid", orderInfo.getUid());
+                        intent.putExtra("orderInfo", new Gson().toJson(orderInfo));
+                        intent.putExtra("from", Constants.ORDERS);
+
+                        mContext.startActivity(intent);
+
+                    }
+                }
+            }
         });
         llQuestionnaire.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -470,7 +495,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                     // to show Questionnaire option
                     if (orderInfo.getReleasedQnr() != null && orderInfo.getQuestionnaire() != null && orderInfo.getQuestionnaire().getQuestionAnswers() != null && orderInfo.getQuestionnaire().getQuestionAnswers().size() > 0) {
                         llQuestionnaire.setVisibility(View.VISIBLE);
-                    } else if (orderInfo.getReleasedQnr() != null && orderInfo.getReleasedQnr().size() > 0) {
+                    } else if (orderInfo.getReleasedQnr() != null && orderInfo.getQuestionnaire() != null && orderInfo.getReleasedQnr().size() > 0) {
                         llQuestionnaire.setVisibility(View.VISIBLE);
                     } else {
                         hideView(llQuestionnaire);
@@ -479,6 +504,21 @@ public class OrderDetailActivity extends AppCompatActivity {
                     llCancel.setVisibility(View.GONE);
                     hideView(llCancel);
                     llRating.setVisibility(View.VISIBLE);
+                }
+                // To show ServiceOption details
+                if(orderInfo.getItemsList() != null && orderInfo.getItemsList().size() > 0){
+                    ArrayList<ItemDetails> itemsDetails = orderInfo.getItemsList();
+                    for(ItemDetails i : itemsDetails){
+                        if(i.getSrvAnswers() != null ){
+                            QuestionnairInpt answerLine;
+                            JsonObject jsonObject = i.getSrvAnswers();
+                            Gson gson = new Gson();
+                            answerLine = gson.fromJson(jsonObject, QuestionnairInpt.class);
+                            if(answerLine.getAnswerLines().size() > 0){
+                                ll_service_option_qnr.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    }
                 }
                 // To show Bill details
                 if (orderInfo.getBill() != null) {

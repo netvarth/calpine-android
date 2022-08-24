@@ -31,6 +31,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.jaldeeinc.jaldee.Interface.IDataGrid;
 import com.jaldeeinc.jaldee.Interface.IItemInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
@@ -61,9 +62,10 @@ public class DetailPageItemsAdapter extends RecyclerView.Adapter<DetailPageItems
     Vibrator vibe;
     ProgressBar progressBar;
     private CardView cvPlus;
+    public IDataGrid iDataGrid;
 
 
-    public DetailPageItemsAdapter(ArrayList<CatalogItem> itemsList, Context context, boolean isLoading, IItemInterface iItemInterface, int accountId, int uniqueId) {
+    public DetailPageItemsAdapter(ArrayList<CatalogItem> itemsList, Context context, boolean isLoading, IItemInterface iItemInterface, int accountId, int uniqueId, IDataGrid iDataGrid) {
         this.itemsList = itemsList;
         this.context = context;
         this.isLoading = isLoading;
@@ -71,6 +73,7 @@ public class DetailPageItemsAdapter extends RecyclerView.Adapter<DetailPageItems
         db = new DatabaseHandler(context);
         this.accountId = accountId;
         this.uniqueId = uniqueId;
+        this.iDataGrid = iDataGrid;
         vibe = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
     }
@@ -203,7 +206,7 @@ public class DetailPageItemsAdapter extends RecyclerView.Adapter<DetailPageItems
 
             } else {
                 viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
-                String amount =Config.getAmountNoOrTwoDecimalPoints(catalogItem.getItems().getPrice());
+                String amount = Config.getAmountNoOrTwoDecimalPoints(catalogItem.getItems().getPrice());
                 viewHolder.tvDiscountedPrice.setText("₹" + amount);
                 viewHolder.tvPrice.setVisibility(View.GONE);
 
@@ -215,10 +218,11 @@ public class DetailPageItemsAdapter extends RecyclerView.Adapter<DetailPageItems
 
                     if (db.getAccountId() == 0 || db.getAccountId() == accountId) {
 
-                        viewHolder.flAdd.setVisibility(View.GONE);
-                        viewHolder.numberButton.setVisibility(View.VISIBLE);
-                        viewHolder.numberButton.setNumber("1");
+//                        viewHolder.flAdd.setVisibility(View.GONE);
+//                        viewHolder.numberButton.setVisibility(View.VISIBLE);
+//                        viewHolder.numberButton.setNumber("1");
 
+                       /*   // commented because of service option
                         CartItemModel item = new CartItemModel();
                         item.setItemId(catalogItem.getItems().getItemId());
                         item.setAccountId(accountId);
@@ -240,7 +244,8 @@ public class DetailPageItemsAdapter extends RecyclerView.Adapter<DetailPageItems
 
                         db.insertItemToCart(item);
 
-                        iItemInterface.checkItemQuantity();
+                        iItemInterface.checkItemQuantity();*/
+                        iItemInterface.checkItemQuantity(catalogItem, viewHolder);
                     } else {
 
                         showAlertDialog();
@@ -277,20 +282,30 @@ public class DetailPageItemsAdapter extends RecyclerView.Adapter<DetailPageItems
                             cvPlus.setBackgroundResource(R.drawable.disabled_plus);
                             cvPlus.setClickable(false);
                         }
-
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                //Do something after 100ms
-
-                                db.addQuantity(catalogItem.getItems().getItemId(), newValue);
-                                iItemInterface.checkItemQuantity();
-
-                                progressBar.setVisibility(View.GONE);
-
+                        boolean isAddedServiceOption = db.isAddedServiceOption(catalogItem.getItems().getItemId());
+                        if (isAddedServiceOption) {
+                            progressBar.setVisibility(View.GONE);
+                            boolean isDecreaseQty = false;
+                            if(newValue < oldValue){
+                                isDecreaseQty = true;
+                            } else if(newValue > oldValue) {
+                                isDecreaseQty = false;
                             }
-                        }, 500);
-                        // plus and minus icons are disabled based on minQuantity and new value
+                            iDataGrid.onAddClick(catalogItem, viewHolder, isDecreaseQty, newValue);
+                        } else {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //Do something after 100ms
+
+                                    db.addQuantity(catalogItem.getItems().getItemId(), newValue);
+                                    iItemInterface.checkItemQuantity();
+                                    progressBar.setVisibility(View.GONE);
+
+                                }
+                            }, 300);
+                            // plus and minus icons are disabled based on minQuantity and new value
+                        }
 
                     } else {
 
@@ -374,9 +389,9 @@ public class DetailPageItemsAdapter extends RecyclerView.Adapter<DetailPageItems
         private CustomTextViewLight tvPrice;
         private CustomTextViewSemiBold tvDiscountedPrice;
         private BorderImageView bIvItemImage;
-        private ElegantNumberButton numberButton;
+        public ElegantNumberButton numberButton;
         private CardView cvCard;
-        private FrameLayout flAdd;
+        public FrameLayout flAdd;
         private SkeletonLoadingView shimmer;
         private LinearLayout llLoader;
         private RelativeLayout rlTag;

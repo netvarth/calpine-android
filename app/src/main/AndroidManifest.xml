@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.jaldeeinc.jaldee">
-    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
-    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Permission for checking whether wifi is enabled -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -52,6 +53,9 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
+        <activity
+            android:name=".activities.ServiceOptionActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.MultipleAppointmentConfirmation"
             android:exported="false" />
@@ -112,6 +116,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.CartActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ShowCartServiceOption"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ItemDetailAcitvity"

@@ -285,7 +285,6 @@ public class HomeSearchFragment extends RootFragment implements GoogleApiClient.
         TOTAL_PAGES = 0;
         currentPage = PAGE_START;
 
-
         if (Config.isOnline(mContext)) {
             APiSearchList();
         } else {

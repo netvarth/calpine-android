@@ -1,16 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <CheckBox
-        android:id="@+id/cb_checkBox"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Checkbox"
-        android:paddingTop="@dimen/dimen_10dp"
-        android:paddingBottom="@dimen/dimen_10dp"
-        android:layout_marginStart="@dimen/dimen_5dp">
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="10">
 
-    </CheckBox>
+        <CheckBox
+            android:id="@+id/cb_checkBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/dark_blue"
+            android:checked="false"
+            android:fontFamily="@font/font_regular"
+            android:padding="@dimen/dimen_8dp"
+            android:text="Checkbox"
+            android:textSize="@dimen/dimen_14dp"
+            android:layout_weight="10"
+            android:visibility="visible">
+
+        </CheckBox>
+        <RadioButton
+            android:id="@+id/rb_radioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/dark_blue"
+            android:checked="false"
+            android:fontFamily="@font/font_regular"
+            android:padding="@dimen/dimen_8dp"
+            android:text="Checkbox"
+            android:textSize="@dimen/dimen_14dp"
+            android:layout_weight="10"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tv_item_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text=""
+            android:textColor="@color/black1"
+            android:textSize="@dimen/dimen_14dp"
+            android:layout_weight="10"
+            android:gravity="center_vertical|end"
+            android:visibility="gone">
+
+        </TextView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:layout_marginStart="@dimen/dimen_30dp"
+        android:background="@color/grey2"
+        android:orientation="horizontal"
+        android:visibility="gone"/>
 </LinearLayout>

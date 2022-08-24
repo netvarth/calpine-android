@@ -203,7 +203,7 @@ public class ServicesAdapter extends SectionRecyclerViewAdapter<DepartmentInfo, 
                     viewHolder.llDonationRange.setVisibility(View.VISIBLE);
                     viewHolder.llTime.setVisibility(View.GONE);
                     viewHolder.llEstwaitTime.setVisibility(View.GONE);
-                    if (Double.parseDouble(child.getMaxDonationAmount()) == Double.parseDouble(getMoneyFormat(child.getMinDonationAmount()))) {
+                    if (Double.parseDouble(child.getMaxDonationAmount()) == Double.parseDouble(child.getMinDonationAmount())) {
                         viewHolder.tvDontnAmount.setText("Donate ₹\u00A0" + getMoneyFormat(child.getMinDonationAmount()));
                     } else {
                         viewHolder.tvDontnAmount.setText("Donate ₹\u00A0" + getMoneyFormat(child.getMinDonationAmount()) + " or more");

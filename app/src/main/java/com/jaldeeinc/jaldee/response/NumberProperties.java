@@ -15,6 +15,22 @@ public class NumberProperties implements Serializable {
     @Expose
     private int end;
 
+    @SerializedName("mandatory")
+    @Expose
+    private boolean mandatory;
+
+    @SerializedName("quantity") // for serviceOptionQNR
+    @Expose
+    private boolean quantity;
+
+    @SerializedName("varPrice") // for serviceOptionQNR
+    @Expose
+    private boolean varPrice;
+
+    @SerializedName("price") // for serviceOptionQNR
+    @Expose
+    private String price;
+
     @SerializedName("minAnswers")
     @Expose
     private int minAnswers;
@@ -23,6 +39,37 @@ public class NumberProperties implements Serializable {
     @Expose
     private int maxAnswers;
 
+    public boolean isMandatory() {
+        return mandatory;
+    }
+
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
+    }
+
+    public boolean isQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(boolean quantity) {
+        this.quantity = quantity;
+    }
+
+    public boolean isVarPrice() {
+        return varPrice;
+    }
+
+    public void setVarPrice(boolean varPrice) {
+        this.varPrice = varPrice;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
 
     public int getStart() {
         return start;

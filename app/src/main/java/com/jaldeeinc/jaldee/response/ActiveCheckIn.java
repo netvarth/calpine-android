@@ -16,15 +16,6 @@ public class ActiveCheckIn implements Serializable {
 
     int token;
     String checkinEncId;
-
-    public String getAppointmentEncId() {
-        return appointmentEncId;
-    }
-
-    public void setAppointmentEncId(String appointmentEncId) {
-        this.appointmentEncId = appointmentEncId;
-    }
-
     String appointmentEncId;
     String date;
     @SerializedName("providerAccount")
@@ -42,6 +33,31 @@ public class ActiveCheckIn implements Serializable {
     String profileId;
     @SerializedName("consumer")
     private ConsumerDetails consumer;
+    String firstName;
+    String lastName;
+    boolean favourite;
+    boolean phone_verified;
+    boolean email_verified;
+    int parent;
+    //    int jaldeeConsumer;
+    String videoCallButton;
+    String videoCallMessage;
+    boolean isRescheduled;
+    private QuestionnaireResponse questionnaire;
+    private QuestionnaireResponse serviceOption;
+    String countryCode;
+
+    public QuestionnaireResponse getServiceOption() {
+        return serviceOption;
+    }
+
+    public String getAppointmentEncId() {
+        return appointmentEncId;
+    }
+
+    public void setAppointmentEncId(String appointmentEncId) {
+        this.appointmentEncId = appointmentEncId;
+    }
 
     public ActiveCheckIn getServiceSector() {
         return serviceSector;
@@ -58,21 +74,6 @@ public class ActiveCheckIn implements Serializable {
     public void setConsumer(ConsumerDetails consumer) {
         this.consumer = consumer;
     }
-
-    String firstName;
-    String lastName;
-    boolean favourite;
-    boolean phone_verified;
-    boolean email_verified;
-    int parent;
-    //    int jaldeeConsumer;
-    String videoCallButton;
-    String videoCallMessage;
-
-    boolean isRescheduled;
-
-    private QuestionnaireResponse questionnaire;
-
 
     public boolean isRescheduled() {
         return isRescheduled;
@@ -93,8 +94,6 @@ public class ActiveCheckIn implements Serializable {
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
     }
-
-    String countryCode;
 
     public ServiceDetails getService() {
         return service;

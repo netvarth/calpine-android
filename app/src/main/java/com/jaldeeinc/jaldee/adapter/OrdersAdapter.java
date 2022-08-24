@@ -22,7 +22,7 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.BorderImageView;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.ViewNotesDialog;
@@ -161,7 +161,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         private CustomTextViewBold tvItemName, tvItemQuantity;
         private CardView cvCard;
         private SkeletonLoadingView shimmer;
-        private CustomTextViewItalicSemiBold tvNotes;
+        private CustomTextViewBoldItalic tvNotes;
         private CustomTextViewSemiBold tvItemPrice;
 
 

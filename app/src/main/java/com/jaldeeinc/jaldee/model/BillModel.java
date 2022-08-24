@@ -12,6 +12,78 @@ import java.util.Map;
  */
 
 public class BillModel {
+    @SerializedName("serviceOptions")
+    public ArrayList<BillModel> serviceOptions;
+
+    @SerializedName("providerCoupon")
+    private Map<String, JsonObject> providerCoupon;
+
+    @SerializedName("service")
+    private ArrayList<BillModel> service;
+
+    @SerializedName("customer")
+    private BillModel customer;
+
+    @SerializedName("userProfile")
+    private BillModel userProfile;
+
+    @SerializedName("jCoupon")
+    private Map<String, JsonObject> jCoupon;
+
+    @SerializedName("accountProfile")
+    private AccountProfile accountProfile;
+
+    public Jdn jdn;
+    public BillDisplayNotes displayNotes;
+    public ArrayList<BillModel> items;
+    public ArrayList<BillModel> discount;
+    public String name;
+    public String billId;
+    public String itemName;
+    public String firstName;
+    public String gstNumber;
+    public String couponName;
+    public String displayNote;
+    public String serviceName;
+    public String createdDate;
+    public String discountName;
+    public String serviceOptionName;
+    public int id;
+    public int quantity;
+    public int GSTpercentage;
+    public int deliveryCharges;
+    public long serviceOptionId;
+    public float totalPrice;
+    public double price;
+    public double netRate;
+    public double netTotal;
+    public double amountDue;
+    public double discValue;
+    public double couponValue;
+    public double taxableTotal;
+    public double taxPercentage;
+    public double discountValue;
+    public double totalTaxAmount;
+    public double refundedAmount;
+    public double totalAmountPaid;
+    public double totalAmountSaved;
+    public double customerPaidCharges;
+
+    public ArrayList<BillModel> getServiceOptions() {
+        return serviceOptions;
+    }
+
+    public long getServiceOptionId() {
+        return serviceOptionId;
+    }
+
+    public String getServiceOptionName() {
+        return serviceOptionName;
+    }
+
+    public float getTotalPrice() {
+        return totalPrice;
+    }
 
     public Jdn getJdn() {
         return jdn;
@@ -21,9 +93,6 @@ public class BillModel {
         this.jdn = jdn;
     }
 
-    Jdn jdn;
-
-
     public BillDisplayNotes getDisplayNotes() {
         return displayNotes;
     }
@@ -31,8 +100,6 @@ public class BillModel {
     public void setDisplayNotes(BillDisplayNotes displayNotes) {
         this.displayNotes = displayNotes;
     }
-
-    BillDisplayNotes displayNotes;
 
     public double getTaxableTotal() {
         return taxableTotal;
@@ -46,11 +113,6 @@ public class BillModel {
         return taxPercentage;
     }
 
-    double taxableTotal;
-    double totalTaxAmount;
-    double taxPercentage;
-    double customerPaidCharges;
-
     public double getCustomerPaidCharges() {
         return customerPaidCharges;
     }
@@ -58,16 +120,6 @@ public class BillModel {
     public double getNetTotal() {
         return netTotal;
     }
-
-    double netTotal;
-   /* public ArrayList<BillModel> getProviderCoupon() {
-        return providerCoupon;
-    }
-
-    ArrayList<BillModel>providerCoupon;*/
-
-    @SerializedName("providerCoupon")
-    private Map<String, JsonObject> providerCoupon;
 
     public Map<String, JsonObject> getProviderCoupon() {
         return providerCoupon;
@@ -77,24 +129,17 @@ public class BillModel {
         return name;
     }
 
-    String name;
     public int getGSTpercentage() {
         return GSTpercentage;
     }
-
-    int GSTpercentage;
 
     public String getCouponName() {
         return couponName;
     }
 
-    String couponName;
-
     public String getDiscountName() {
         return discountName;
     }
-
-    String discountName;
 
     public int getId() {
         return id;
@@ -103,8 +148,6 @@ public class BillModel {
     public double getNetRate() {
         return netRate;
     }
-
-    double netRate;
 
     public double getDiscountValue() {
         return discountValue;
@@ -122,12 +165,6 @@ public class BillModel {
         return discValue;
     }
 
-    double discValue;
-    double discountValue;
-    double couponValue;
-    double totalAmountPaid;
-    int id;
-
     public String getDisplayNote() {
         return displayNote;
     }
@@ -135,8 +172,6 @@ public class BillModel {
     public void setDisplayNote(String displayNote) {
         this.displayNote = displayNote;
     }
-
-    String displayNote;
 
     public String getBillId() {
         return billId;
@@ -146,25 +181,17 @@ public class BillModel {
         this.billId = billId;
     }
 
-    String billId;
-
     public String getItemName() {
         return itemName;
     }
 
-    String  itemName;
     public String getGstNumber() {
         return gstNumber;
     }
 
-    String gstNumber;
-
     public BillModel getCustomer() {
         return customer;
     }
-
-    String serviceName;
-    double  price;
 
     public String getServiceName() {
         return serviceName;
@@ -182,10 +209,6 @@ public class BillModel {
         return service;
     }
 
-    int quantity;
-    @SerializedName("service")
-    private ArrayList<BillModel> service;
-
     public ArrayList<BillModel> getItems() {
         return items;
     }
@@ -193,19 +216,6 @@ public class BillModel {
     public ArrayList<BillModel> getDiscount() {
         return discount;
     }
-
-
-
-    private ArrayList<BillModel>  discount;
-
-
-    private ArrayList<BillModel>  items;
-
-    @SerializedName("customer")
-    private BillModel customer;
-
-    @SerializedName("userProfile")
-    private BillModel userProfile;
 
     public BillModel getUserProfile() {
         return userProfile;
@@ -215,22 +225,13 @@ public class BillModel {
         return firstName;
     }
 
-    String firstName;
-
     public String getCreatedDate() {
         return createdDate;
     }
 
-    String createdDate;
-
-
-    @SerializedName("jCoupon")
-    private Map<String, JsonObject> jCoupon;
-
     public Map<String, JsonObject> getJCoupon() {
         return jCoupon;
     }
-
 
     public int getDeliveryCharges() {
         return deliveryCharges;
@@ -239,15 +240,6 @@ public class BillModel {
     public void setDeliveryCharges(int deliveryCharges) {
         this.deliveryCharges = deliveryCharges;
     }
-
-    private int deliveryCharges;
-
-    private double refundedAmount;
-
-    private double amountDue;
-
-    @SerializedName("accountProfile")
-    private AccountProfile accountProfile;
 
     public double getRefundedAmount() {
         return refundedAmount;
@@ -265,7 +257,6 @@ public class BillModel {
         this.amountDue = amountDue;
     }
 
-
     public AccountProfile getAccountProfile() {
         return accountProfile;
     }
@@ -273,9 +264,9 @@ public class BillModel {
     public void setAccountProfile(AccountProfile accountProfile) {
         this.accountProfile = accountProfile;
     }
-    double totalAmountSaved;
 
     public double getTotalAmountSaved() {
         return totalAmountSaved;
     }
 }
+

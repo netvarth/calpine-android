@@ -13,6 +13,24 @@ public class QuestionnaireListModel {
     public ArrayList<String> properties = new ArrayList<>();
     public ArrayList<String> selectedItems = new ArrayList<>();
     public String hint = "";
+    public int maxAnswerable;
+    public ArrayList<QuestionnaireCheckbox> questionnaireCheckboxes;
+
+    public ArrayList<QuestionnaireCheckbox> getQuestionnaireCheckboxes() {
+        return questionnaireCheckboxes;
+    }
+
+    public void setQuestionnaireCheckboxes(ArrayList<QuestionnaireCheckbox> questionnaireCheckboxes) {
+        this.questionnaireCheckboxes = questionnaireCheckboxes;
+    }
+
+    public int getMaxAnswerable() {
+        return maxAnswerable;
+    }
+
+    public void setMaxAnswerable(int maxAnswerable) {
+        this.maxAnswerable = maxAnswerable;
+    }
 
     public int getId() {
         return id;

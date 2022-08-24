@@ -1,14 +1,6 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -40,6 +32,14 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -106,13 +106,11 @@ import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 import com.jaldeeinc.jaldee.response.ServiceInfo;
 import com.jaldeeinc.jaldee.widgets.CustomDialog;
-import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -132,8 +130,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 public class ProviderDetailActivity extends AppCompatActivity implements IGetSelectedLocation, ISelectedService, ISendMessage {
 
@@ -2654,10 +2650,10 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
 
-                            DynamicToast.make(context, "Added to Favourites", AppCompatResources.getDrawable(
+                           /* DynamicToast.make(context, "Added to Favourites", AppCompatResources.getDrawable(
                                     context, R.drawable.adt_ic_success),
                                     ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
-
+*/
                             ApiFavList();
                         }
                     }
@@ -2867,9 +2863,15 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
     @Override
     public void onCheckInSelected(SearchService checkinServiceInfo) {
-
+        Intent intent = null;
         if (checkinServiceInfo != null) {
-            Intent intent = new Intent(ProviderDetailActivity.this, CheckInActivity.class);
+            if (checkinServiceInfo.getServiceOptionIds() != null && checkinServiceInfo.getServiceOptionIds().size() > 0) {
+                intent = new Intent(ProviderDetailActivity.this, ServiceOptionActivity.class);
+            } else {
+                intent = new Intent(ProviderDetailActivity.this, CheckInActivity.class);
+            }
+            //intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
+
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
             intent.putExtra("locationName", tvLocationName.getText().toString());
@@ -2879,15 +2881,31 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             intent.putExtra("fromUser", false);
             intent.putExtra("sector", mBusinessDataList.getServiceSector().getDomain());
 
+            ServiceInfo serviceInfo = new ServiceInfo();
+            serviceInfo.setServiceId(checkinServiceInfo.getId());
+            serviceInfo.setServiceName(checkinServiceInfo.getName());
+            serviceInfo.setDescription(checkinServiceInfo.getDescription());
+
+            serviceInfo.setType(Constants.CHECKIN);
+
+            intent.putExtra("serviceInfo", serviceInfo);
+
             startActivity(intent);
         }
+
     }
 
     @Override
     public void onAppointmentSelected(SearchAppoinment appointmentServiceInfo) {
-
+        Intent intent = null;
         if (appointmentServiceInfo != null) {
-            Intent intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
+            if (appointmentServiceInfo.getServiceOptionIds() != null && appointmentServiceInfo.getServiceOptionIds().size() > 0) {
+                intent = new Intent(ProviderDetailActivity.this, ServiceOptionActivity.class);
+            } else {
+                intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
+            }
+            //intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
+
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
             intent.putExtra("locationName", tvLocationName.getText().toString());
@@ -2940,7 +2958,6 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
             }
             serviceInfo.setShowOnlyAvailableSlots(appointmentServiceInfo.isShowOnlyAvailableSlots());
             intent.putExtra("serviceInfo", serviceInfo);
-            intent.putExtra("sector", mBusinessDataList.getServiceSector().getDomain());
 
             startActivity(intent);
         }

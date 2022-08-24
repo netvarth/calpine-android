@@ -1,9 +1,6 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-import android.graphics.Paint;
-import android.os.Handler;
-import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,23 +8,15 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jaldeeinc.jaldee.Interface.IAddressInterface;
-import com.jaldeeinc.jaldee.Interface.ICartInterface;
 import com.jaldeeinc.jaldee.Interface.IEditAddress;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
-import com.jaldeeinc.jaldee.custom.ElegantNumberButton;
-import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.Address;
-import com.jaldeeinc.jaldee.model.CartItemModel;
 
 import java.util.ArrayList;
 

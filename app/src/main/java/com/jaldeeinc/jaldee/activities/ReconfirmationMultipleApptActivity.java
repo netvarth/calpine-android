@@ -175,6 +175,11 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
     public ArrayList<LabelPath> imagePathList = new ArrayList<>();
     public ActiveAppointment activeAppointment = new ActiveAppointment();
     public String value = null;
+    public JSONObject jsonObject;
+
+    JSONArray familyArrayModelProviderConsumer = new JSONArray();
+    Integer providerConsumerId;
+    int consumerId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,6 +190,7 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         bookingModels = (ArrayList<BookingModel>) intent.getSerializableExtra("datas");
+        consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
 
         String time = bookingModels
                 .stream()
@@ -203,11 +209,11 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
         bookingModel = bookingModels.get(bookingModels.size() - 1);
 
         if (bookingModel != null) {
-            /*try {
+            try {
                 jsonObject = new JSONObject(bookingModel.getJsonObject());
             } catch (JSONException e) {
                 e.printStackTrace();
-            }*/
+            }
             // to set providerName
             if (bookingModel.getProviderName() != null) {
                 if (bookingModel.getAccountBusinessName() != null) {
@@ -303,12 +309,13 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (bookingModel.getAmountRequiredNow() > 0) {
                     DynamicToast.make(ReconfirmationMultipleApptActivity.this, "Booking not allowed to this service.Please contact your provider", AppCompatResources.getDrawable(
-                            ReconfirmationMultipleApptActivity.this, R.drawable.ic_info_black),
+                                    ReconfirmationMultipleApptActivity.this, R.drawable.ic_info_black),
                             ContextCompat.getColor(ReconfirmationMultipleApptActivity.this, R.color.white), ContextCompat.getColor(ReconfirmationMultipleApptActivity.this, R.color.red), Toast.LENGTH_SHORT).show();
 
                 } else {
                     if (bookingModels != null && bookingModels.size() > 0) {
-                        ApiBooking(bookingModels, bookingModel.getAccountId());
+                        ApiGetFamilyMemberProviderConsumer(); /// add family members to provider consumer if not added
+
                     }
                 }
             }
@@ -702,13 +709,13 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
             }
             // Zip all requests with the Function, which will receive the results.
             Observable.zip(requests, new Function<Object[], Object>() {
-                @Override
-                public Object apply(Object[] objects) throws Exception {
-                    // Objects[] is an array of combined results of completed requests
-                    // do something with those results and emit new event
-                    return objects;
-                }
-            })
+                        @Override
+                        public Object apply(Object[] objects) throws Exception {
+                            // Objects[] is an array of combined results of completed requests
+                            // do something with those results and emit new event
+                            return objects;
+                        }
+                    })
                     // After all requests had been performed the next observer will receive the Object, returned from Function
 
                     .subscribe(
@@ -887,6 +894,7 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
 
 
     }
+
     private void getApptConfirmationId(int userId, String txt_addnote) {
 
         final ApiInterface apiService =
@@ -903,23 +911,23 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
                         activeAppointment = response.body();
 
                         if (activeAppointment != null) {
-                           // encId = activeAppointment.getAppointmentEncId();
+                            // encId = activeAppointment.getAppointmentEncId();
 
-                                if (attachedImagePathList.size() > 0) {
-                                    ApiCommunicate(value, String.valueOf(bookingModel.getAccountId()), txt_addnote);
-                                }
-                                String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
+                            if (attachedImagePathList.size() > 0) {
+                                ApiCommunicate(value, String.valueOf(bookingModel.getAccountId()), txt_addnote);
+                            }
+                            String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
 
-                                if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
+                            if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
 
-                                    QuestionnaireInput input = new QuestionnaireInput();
-                                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                                    input = gson.fromJson(inputString, QuestionnaireInput.class);
-                                    ApiSubmitQuestionnnaire(input, activeAppointment.getUid());
-                                } else {
-                                    getApptConfirmationDetails(bookingModel.getAccountId());
+                                QuestionnaireInput input = new QuestionnaireInput();
+                                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                                input = gson.fromJson(inputString, QuestionnaireInput.class);
+                                ApiSubmitQuestionnnaire(input, activeAppointment.getUid());
+                            } else {
+                                getApptConfirmationDetails(bookingModel.getAccountId());
 
-                                }
+                            }
 
                         }
                     }
@@ -934,5 +942,180 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void ApiGetFamilyMemberProviderConsumer() {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        Call<ResponseBody> call = apiService.getFamilyMemberProviderConsumer(consumerId, bookingModel.getAccountId());
+//        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+
+                        String reader = response.body().string();
+
+                        familyArrayModelProviderConsumer = new JSONArray(reader);
+                        if(familyArrayModelProviderConsumer.length() != 0) {
+
+                            JSONObject jsonObject = familyArrayModelProviderConsumer.getJSONObject(0);
+                            if (jsonObject != null && jsonObject.has("jaldeeConsumer")) {
+                                providerConsumerId = jsonObject.getInt("id");
+                            }
+                            findFamilyMembersNeededToAddProviderConsumer(familyArrayModelProviderConsumer, providerConsumerId);
+                        } else{
+                            ArrayList<Integer> familyMemberIds = new ArrayList<>();
+                            familyMemberIds.add(0);
+                            apiAddFamilyMEmbersProviderConsumer(familyMemberIds, consumerId, bookingModel.getAccountId());
+                        }
+                    } else {
+
+                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
+
+                        Config.logV("Error" + response.errorBody().string());
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+//                if (mDialog.isShowing())
+//                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+    }
+
+    private void findFamilyMembersNeededToAddProviderConsumer(JSONArray familyArrayModelProviderConsumer, Integer providerConsumerId) {
+        try {
+            JSONArray familymemFor = null;
+            if (bookingModel.getFrom().equalsIgnoreCase(Constants.CHECKIN)) {
+                familymemFor = jsonObject.getJSONArray("waitlistingFor");
+            } else if (bookingModel.getFrom().equalsIgnoreCase(Constants.APPOINTMENT)) {
+                familymemFor = jsonObject.getJSONArray("appmtFor");
+            }
+            ArrayList<Integer> familyMemberIds = new ArrayList<>();
+            if (familymemFor != null) {
+                for (int i = 0; i < familymemFor.length(); i++) {
+                    JSONObject j1 = (JSONObject) familymemFor.get(i);
+                    String fName = j1.getString("firstName");
+                    String lName = j1.getString("lastName");
+                    boolean isAlreadyAddedTpProviderConsumer = false;
+                    if (fName != null && lName != null) {
+                        for (int j = 0; j < familyArrayModelProviderConsumer.length(); j++) {
+                            JSONObject j2 = (JSONObject) familyArrayModelProviderConsumer.get(j);
+                            String firstName = j2.getString("firstName");
+                            String lastName = j2.getString("lastName");
+                            if ((firstName != null && lastName != null) && (fName.equals(firstName)) && (lName.equals(lastName))) {
+                                isAlreadyAddedTpProviderConsumer = true;
+                            }
+                        }
+                    }
+                    if (!isAlreadyAddedTpProviderConsumer) {
+                        Integer id = Integer.valueOf(j1.getString("id"));
+                        if (id != null) {
+                            familyMemberIds.add(id);
+                        }
+                    }
+                }
+            }
+            if (familyMemberIds != null && familyMemberIds.size() > 0) {
+                apiAddFamilyMEmbersProviderConsumer(familyMemberIds, providerConsumerId, bookingModel.getAccountId());
+            } else {
+                ApiBooking(bookingModels, bookingModel.getAccountId());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void apiAddFamilyMEmbersProviderConsumer(ArrayList<Integer> familyMemberIds, int providerConsumerId, int providerId) {
+        try {
+            ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+            Call<ResponseBody> call = apiService.AddFamilyMEmberProviderConsumer(familyMemberIds.get(0), providerConsumerId, String.valueOf(providerId));
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    try {
+                        Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                        Config.logV("Response--code-------------------------" + response.code());
+                        familyMemberIds.remove(0);
+                        if (familyMemberIds.size() > 0) {
+                            apiAddFamilyMEmbersProviderConsumer(familyMemberIds, providerConsumerId, providerId);
+                        } else {
+                            ApiBooking(bookingModels, bookingModel.getAccountId());
+                        }
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    // Log error here since request failed
+                    Config.logV("Fail---------------" + t.toString());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        try {
+//            ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+//            List<Observable<?>> requests = new ArrayList<>();
+//            for (Integer l : familyMemberIds) {
+//                if (l != null) {
+//                    requests.add(apiService.AddFamilyMEmberProviderConsumer(l, providerConsumerId, String.valueOf(providerId)));
+//                }
+//            }
+//            Observable.zip(requests, new Function<Object[], Object>() {
+//
+//                        @Override
+//                        public Object apply(Object[] objects) throws Throwable {
+//                            return objects;
+//                        }
+//                    })
+//                    .subscribe(new Consumer<Object>() {
+//                                   @Override
+//                                   public void accept(Object o) throws Throwable {
+//                                       Log.e("ListOf Calls", "0");
+//                                       //ApiSubmit(jsonObject, bookingModel.getAccountId());
+//
+//                                   }
+//                               },
+//                            // Will be triggered if any error during requests will happen
+//                            new Consumer<Throwable>() {
+//                                @Override
+//                                public void accept(Throwable e) throws Exception {
+//                                    Log.e("ListOf Calls", "1");
+//
+//                                    //Do something on error completion of requests
+//                                }
+//                            });
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }

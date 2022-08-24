@@ -11,12 +11,7 @@
 
     </style>
 
-    <style name="BottomNavigationViewTextStyle">
-        ...
-        <item name="android:fontFamily">@font/josefinsans_semibold</item>
-        ...
-    </style>
-
+    <style name="BottomNavigationViewTextStyle"></style>
 
 
     <style name="ProgressBar" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -33,17 +28,14 @@
 
 
     <style name="CustomTabText" parent="TextAppearance.Design.Tab">
-        <item name="android:textSize">@dimen/txtsize_12</item>
+        <item name="android:textSize">@dimen/txtsize_10</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:fontFamily">@font/josefinsans_regular</item>
     </style>
 
     <style name="CustomTextAppearanceTab" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:fontFamily">@font/josefinsans_regular</item>
     </style>
-
 
 
     <style name="CustomAlertDialogStyle">
@@ -62,7 +54,17 @@
     <style name="MyCustomTestThemePopUp" parent="Theme.AppCompat.NoActionBar"></style>
 
     <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:buttonStyle">@style/ButtonStyle</item>
+        <item name="android:fontFamily">@font/font_regular</item>
+    </style>
 
+    <style name="TextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/font_regular</item>
+    </style>
+
+    <style name="ButtonStyle" parent="android:Widget.Holo.Button">
+        <item name="android:fontFamily">@font/font_regular</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
@@ -75,6 +77,7 @@
         <item name="android:windowEnterAnimation">@anim/slide_in_right</item>
         <item name="android:windowExitAnimation">@anim/slide_out_right</item>
         <item name="colorAccent">@color/colorPrimary</item>
+
     </style>
 
     <style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -86,7 +89,7 @@
         <item name="android:typeface">serif</item>
         <item name="android:itemBackground">@color/app_background</item>
         <item name="colorControlNormal">@color/title_grey</item>
-        <item name="android:textViewStyle">@style/Montserrat</item>
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
         <item name="colorControlActivated">@color/colorAccent</item>
 
     </style>
@@ -94,7 +97,7 @@
     <style name="AppSearchView" parent="Widget.AppCompat.SearchView">
         <item name="android:textSize">@dimen/dimen_16dp</item>
         <item name="android:textColor">@color/title_color</item>
-        <item name="android:fontFamily">@font/josefinsans_mediumitalic</item>
+        <item name="android:fontFamily">@font/font_regular</item>
 
     </style>
 
@@ -102,13 +105,8 @@
         <item name="android:textSize">@dimen/txtsize_12</item>
     </style>
 
-    <style name="Montserrat" parent="android:Widget.TextView">
-        <item name="android:fontFamily">@font/montserrat_normal</item>
-    </style>
-
     <style name="SpinnerTheme">
         <item name="android:textColor">@color/title_color</item>
-        <item name="android:fontFamily">@font/josefinsans_regular</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">12sp</item>
 
@@ -175,7 +173,7 @@
         <item name="android:windowCloseOnTouchOutside">true</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:colorBackground">     @android:color/transparent</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.3</item>
         <item name="android:windowFrame">@null</item>
@@ -214,38 +212,38 @@
     </style>
 
     <declare-styleable name="ShimmerFrameLayout">
-        <attr name="shimmer_clip_to_children" format="boolean"/>
-        <attr name="shimmer_colored" format="boolean"/>
-        <attr name="shimmer_base_color" format="color"/>
-        <attr name="shimmer_highlight_color" format="color"/>
-        <attr name="shimmer_base_alpha" format="float"/>
-        <attr name="shimmer_highlight_alpha" format="float"/>
-        <attr name="shimmer_auto_start" format="boolean"/>
-        <attr name="shimmer_duration" format="integer"/>
-        <attr name="shimmer_repeat_count" format="integer"/>
-        <attr name="shimmer_repeat_delay" format="integer"/>
+        <attr name="shimmer_clip_to_children" format="boolean" />
+        <attr name="shimmer_colored" format="boolean" />
+        <attr name="shimmer_base_color" format="color" />
+        <attr name="shimmer_highlight_color" format="color" />
+        <attr name="shimmer_base_alpha" format="float" />
+        <attr name="shimmer_highlight_alpha" format="float" />
+        <attr name="shimmer_auto_start" format="boolean" />
+        <attr name="shimmer_duration" format="integer" />
+        <attr name="shimmer_repeat_count" format="integer" />
+        <attr name="shimmer_repeat_delay" format="integer" />
         <attr name="shimmer_repeat_mode" format="enum">
-            <enum name="restart" value="1"/>
-            <enum name="reverse" value="2"/>
+            <enum name="restart" value="1" />
+            <enum name="reverse" value="2" />
         </attr>
-        <attr name="shimmer_start_delay" format="integer"/>
+        <attr name="shimmer_start_delay" format="integer" />
         <attr name="shimmer_direction" format="enum">
-            <enum name="left_to_right" value="0"/>
-            <enum name="top_to_bottom" value="1"/>
-            <enum name="right_to_left" value="2"/>
-            <enum name="bottom_to_top" value="3"/>
+            <enum name="left_to_right" value="0" />
+            <enum name="top_to_bottom" value="1" />
+            <enum name="right_to_left" value="2" />
+            <enum name="bottom_to_top" value="3" />
         </attr>
-        <attr name="shimmer_dropoff" format="float"/>
-        <attr name="shimmer_fixed_width" format="dimension"/>
-        <attr name="shimmer_fixed_height" format="dimension"/>
-        <attr name="shimmer_intensity" format="float"/>
-        <attr name="shimmer_width_ratio" format="float"/>
-        <attr name="shimmer_height_ratio" format="float"/>
+        <attr name="shimmer_dropoff" format="float" />
+        <attr name="shimmer_fixed_width" format="dimension" />
+        <attr name="shimmer_fixed_height" format="dimension" />
+        <attr name="shimmer_intensity" format="float" />
+        <attr name="shimmer_width_ratio" format="float" />
+        <attr name="shimmer_height_ratio" format="float" />
         <attr name="shimmer_shape" format="enum">
-            <enum name="linear" value="0"/>
-            <enum name="radial" value="1"/>
+            <enum name="linear" value="0" />
+            <enum name="radial" value="1" />
         </attr>
-        <attr name="shimmer_tilt" format="float"/>
+        <attr name="shimmer_tilt" format="float" />
     </declare-styleable>
 
     <declare-styleable name="DiscreteScrollView">

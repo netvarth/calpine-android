@@ -157,7 +157,15 @@ public class ElegantNumberButton extends RelativeLayout {
     public void setOnValueChangeListener(OnValueChangeListener onValueChangeListener) {
         mOnValueChangeListener = onValueChangeListener;
     }
-
+    public void setVisibilityOfAddRemoveButtons(boolean isNeedToVisible) {
+        if(isNeedToVisible){
+            subtractBtn.setVisibility(VISIBLE);
+            cvAdd.setVisibility(VISIBLE);
+        }else{
+            subtractBtn.setVisibility(GONE);
+            cvAdd.setVisibility(GONE);
+        }
+    }
     @FunctionalInterface
     public interface OnClickListener {
         void onClick(View view);

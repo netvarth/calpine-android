@@ -45,7 +45,7 @@ import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
@@ -168,7 +168,7 @@ public class SearchResultsActivity extends AppCompatActivity implements AdapterC
     CardView cvSort;
     private String selectedDomain = "";
     CardView cvDistance, cvJaldeeVerified, cvBack;
-    CustomTextViewItalicSemiBold tvDistance, tvJaldeeVerified;
+    CustomTextViewBoldItalic tvDistance, tvJaldeeVerified;
     //    private Filters filtersDialog;
     private IFilterOptions iFilterOptions;
     private RecyclerView rvFilters, rvAppliedFilters;

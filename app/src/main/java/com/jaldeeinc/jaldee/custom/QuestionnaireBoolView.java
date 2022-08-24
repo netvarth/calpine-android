@@ -6,18 +6,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.jaldeeinc.jaldee.Interface.IDataGrid;
+import com.jaldeeinc.jaldee.Interface.IServiceOption;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.DataGridAdapter;
 import com.jaldeeinc.jaldee.model.AnswerLine;
-import com.jaldeeinc.jaldee.model.DataGridModel;
 import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
 import com.jaldeeinc.jaldee.response.DataGridColumns;
 import com.jaldeeinc.jaldee.response.GetQuestion;
@@ -30,14 +24,16 @@ public class QuestionnaireBoolView extends LinearLayout {
     private AttributeSet attrs;
     private int styleAttr;
 
-    private CustomTextViewSemiBold tvQuestionName;
-    private CustomTextViewBold tvManditory;
-    private CustomTextViewMedium tvHint;
-    private CustomItalicTextViewNormal tvError;
+    private TextView tvQuestionName;
+    private TextView tvManditory;
+    private TextView tvHint;
+    private TextView tvError;
     private RadioGroup radioGroup;
     private RadioButton rbYes, rbNo;
     private GetQuestion question;
     private DataGridColumns gridQuestions;
+    IServiceOption iServiceOptionListOptionChange;
+    float itemPrice;
 
 
     public QuestionnaireBoolView(Context context) {
@@ -45,6 +41,14 @@ public class QuestionnaireBoolView extends LinearLayout {
         this.context = context;
         initView();
     }
+
+    public QuestionnaireBoolView(Context context, IServiceOption iServiceOptionListOptionChange) {
+        super(context);
+        this.context = context;
+        this.iServiceOptionListOptionChange = iServiceOptionListOptionChange;
+        initView();
+    }
+
 
     public QuestionnaireBoolView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -72,7 +76,16 @@ public class QuestionnaireBoolView extends LinearLayout {
         rbNo = findViewById(R.id.rb_no);
         tvHint = findViewById(R.id.tv_hint);
         tvError = findViewById(R.id.tv_error);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if (iServiceOptionListOptionChange != null) {
+
+                    iServiceOptionListOptionChange.updateTotalPrice();
+                }
+            }
+        });
 
     }
 
@@ -116,7 +129,11 @@ public class QuestionnaireBoolView extends LinearLayout {
         }
 
     }
+    public void setServiceOptionGridQuestionData(DataGridColumns gQuestion, float itemPrice){
+        setGridQuestionData(gQuestion);
+        this.itemPrice = itemPrice;
 
+    }
 
     public void setAnswerData(GetQuestion q) {
 
@@ -188,7 +205,13 @@ public class QuestionnaireBoolView extends LinearLayout {
         column.addProperty("bool", rbYes.isChecked() ? "Yes" : (rbNo.isChecked() ? "No" : ""));
 
         obj.setColumn(column);
-
+        if(rbYes.isChecked() && !rbNo.isChecked()) {
+            obj.setPrice(itemPrice);
+            obj.setQuantity(1);
+        } else if(!rbYes.isChecked() && rbNo.isChecked()) {
+            obj.setPrice(0);
+            obj.setQuantity(1);
+        }
         return obj;
 
     }

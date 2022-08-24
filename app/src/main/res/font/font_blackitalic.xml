@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <font-family xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-
-    <!-- bold -->
+    <!--        android:font="@font/inter_variablefont_slnt_wght"
+-->
     <font
-        android:font="@font/montserrat_bold"
-        android:fontStyle="normal"
-        android:fontWeight="700"
-        />
-
+        android:font="@font/font_montserrat_blackitalic"/>
 </font-family>

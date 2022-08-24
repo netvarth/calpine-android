@@ -72,6 +72,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -306,6 +307,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
 
     }
+
     @Override
     public void update() {
         if (encId == null && ynwUUID != null) {   // if encId is null then  the activity is launched from notification, so checking for required values and getting them via API calls
@@ -917,6 +919,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
             }
         });
         alertDialog.show();
+
     }
 
     BIllDiscountAdapter billDiscountAdapter;
@@ -1639,7 +1642,11 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     }
 
     private void ApiCheckPaytmPaymentStatus(String orderId) {
-
+       /* try {
+            TimeUnit.SECONDS.sleep(1);  // important delay for getting result from paytm
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
         ApiInterface apiService = ApiClient.getClient(mCOntext).create(ApiInterface.class);
 
         final Dialog mDialog = Config.getProgressDialog(mCOntext, mCOntext.getResources().getString(R.string.dialog_log_in));

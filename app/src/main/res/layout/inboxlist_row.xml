@@ -41,7 +41,7 @@
                     android:textSize="@dimen/txtsize_hint"
                     android:textStyle="bold" />
 
-                <com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal
+                <com.jaldeeinc.jaldee.custom.CustomTextViewNormalItalic
                     android:id="@+id/txt_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

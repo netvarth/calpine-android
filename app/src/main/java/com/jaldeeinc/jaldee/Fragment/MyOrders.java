@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Interface.IActions;
-import com.jaldeeinc.jaldee.Interface.ISelectedBooking;
 import com.jaldeeinc.jaldee.Interface.ISelectedOrder;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Constants;
@@ -33,7 +32,7 @@ import com.jaldeeinc.jaldee.adapter.TodayOrdersAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic;
 import com.jaldeeinc.jaldee.custom.OrderActionsDialog;
 import com.jaldeeinc.jaldee.model.RlsdQnr;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
@@ -58,7 +57,7 @@ public class MyOrders extends RootFragment implements ISelectedOrder, IActions {
     private String mParam2;
     private Context mContext;
     private Activity mActivity;
-    private CustomTextViewItalicSemiBold tvToday, tvUpcoming;
+    private CustomTextViewBoldItalic tvToday, tvUpcoming;
     private LinearLayout llNoBookingsForToday, llNoBookingsForFuture, llNoBookings, llBookings;
     private RecyclerView rvTodays, rvUpcomings;
     private TodayOrdersAdapter todayOrdersAdapter;

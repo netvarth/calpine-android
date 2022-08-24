@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.custom;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
@@ -155,6 +156,8 @@ public class SlotsDialog extends Dialog implements ISelectSlotInterface, OnBotto
 
                 da.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 da.show();
+                da.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                da.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
             }
         });
 

@@ -31,6 +31,8 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ProgressBar;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
@@ -43,6 +45,7 @@ import com.jaldeeinc.jaldee.utils.LogUtil;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -56,8 +59,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Vector;
 
 import okhttp3.Headers;
@@ -722,5 +728,26 @@ public class Config {
         String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extension);
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(mimeTypeMap);
         return mimeType;
+    }
+
+    public static Map<String, Object> jsonStringToMap(String json) {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        JSONObject jObject = null;
+        try {
+
+            jObject = new JSONObject(json);
+
+            Iterator<?> keys = jObject.keys();
+
+            while (keys.hasNext()) {
+                String key = (String) keys.next();
+                String value = jObject.getString(key);
+                map.put(key, value);
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return map;
     }
 }

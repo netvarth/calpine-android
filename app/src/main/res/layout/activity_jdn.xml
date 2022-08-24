@@ -65,7 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:fontFamily="@font/customfont"
+                    android:fontFamily="@font/font_bold"
                     android:textSize="@dimen/txtsize_hint" />
 
 
@@ -86,7 +86,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/txtsize_hint"
-                    android:fontFamily="@font/customfont"/>
+                    android:fontFamily="@font/font_bold"/>
             </LinearLayout>
 
 

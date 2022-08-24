@@ -71,6 +71,8 @@ public class Constants {
     public static final String NONE = "NONE";
     public static final String FULLAMOUNT = "FULLAMOUNT";
     public static final String FIXED = "FIXED";
+    public static final String SERVICEOPTIONQNR = "serviceoptionqnr";
+    public static final String SERVICEOPTIONQIMAGES = "serviceoptionQImages";
 
     public static final String QUESTIONNAIRE = "questionnaire";
     public static final String QIMAGES = "qImages";

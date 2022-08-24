@@ -11,7 +11,7 @@
         android:layout_margin="@dimen/dimen_10dp"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="@dimen/dimen_5dp"
-        app:cardElevation="@dimen/dimen_10dp">
+        app:cardElevation="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,34 +26,36 @@
                 android:layout_marginStart="@dimen/dimen_8dp"
                 android:layout_marginTop="@dimen/dimen_10dp">
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                <TextView
                     android:id="@+id/tv_questionName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Upload your id card detailsss"
+                    android:fontFamily="@font/font_semibold"
                     android:textColor="@color/title_color"
                     android:layout_weight="0.9"
                     android:textSize="@dimen/dimen_15dp">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+                </TextView>
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                <TextView
                     android:id="@+id/tv_multipleFileManditory"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimen_5dp"
                     android:text="*"
+                    android:fontFamily="@font/font_medium"
                     android:layout_weight="0.1"
                     android:gravity="center"
                     android:visibility="gone"
                     android:textColor="@color/red"
                     android:textSize="@dimen/dimen_15dp">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+                </TextView>
 
             </LinearLayout>
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            <TextView
                 android:id="@+id/tv_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,9 +64,10 @@
                 android:layout_marginStart="@dimen/dimen_8dp"
                 android:layout_marginTop="@dimen/dimen_5dp"
                 android:textColor="@color/tab_disable"
-                android:textSize="@dimen/dimen_12dp">
+                android:textSize="@dimen/dimen_12dp"
+                android:fontFamily="@font/font_medium">
 
-            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+            </TextView>
 
             <com.jaldeeinc.jaldee.custom.MultiSpinnerSearch
                 android:id="@+id/mfilesSpinner"
@@ -87,7 +90,7 @@
 
             </androidx.recyclerview.widget.RecyclerView>
 
-            <com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal
+            <TextView
                 android:id="@+id/tv_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -96,17 +99,19 @@
                 android:visibility="gone"
                 android:layout_marginStart="@dimen/dimen_8dp"
                 android:layout_marginTop="@dimen/dimen_5dp"
-                android:text="">
+                android:text=""
+                android:fontFamily="@font/font_italic">
 
-            </com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal>
+            </TextView>
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            <TextView
                 android:id="@+id/tv_supportedTypes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:fontFamily="@font/font_medium">
 
-            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+            </TextView>
 
 
         </LinearLayout>

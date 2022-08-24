@@ -129,16 +129,17 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center">
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                <TextView
                     android:id="@+id/tv_buttonName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:fontFamily="@font/font_semibold"
                     android:text="Next"
                     android:textColor="@color/white"
                     android:textSize="@dimen/dimen_18sp">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+                </TextView>
 
                 <ImageView
                     android:id="@+id/iv_next"

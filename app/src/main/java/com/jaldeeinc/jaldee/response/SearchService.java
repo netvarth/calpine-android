@@ -14,6 +14,7 @@ public class SearchService implements Serializable {
     ArrayList<SearchService> servicegallery;
     ArrayList<SearchService> mAllService;
     ArrayList<SearchService> virtualCallingModes;
+    ArrayList<Integer> serviceOptionIds;
     String serviceDuration;
     String notification;
     String minPrePaymentAmount;
@@ -50,6 +51,14 @@ public class SearchService implements Serializable {
     @SerializedName("serviceAvailability")
     private CheckInServiceAvailability checkInServiceAvailability;
 
+    public ArrayList<Integer> getServiceOptionIds() {
+        return serviceOptionIds;
+    }
+
+    public void setServiceOptionIds(ArrayList<Integer> serviceOptionIds) {
+        this.serviceOptionIds = serviceOptionIds;
+    }
+
     public boolean isLivetrack() {
         return livetrack;
     }
@@ -70,7 +79,9 @@ public class SearchService implements Serializable {
         return id;
     }
 
-    public void setId(int id) { this.id = id; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getUrl() {
         return url;
@@ -108,7 +119,9 @@ public class SearchService implements Serializable {
         return serviceDuration;
     }
 
-    public void setServiceDuration(String serviceDuration) { this.serviceDuration = serviceDuration; }
+    public void setServiceDuration(String serviceDuration) {
+        this.serviceDuration = serviceDuration;
+    }
 
     public String getNotification() {
         return notification;
@@ -130,7 +143,9 @@ public class SearchService implements Serializable {
         return minPrePaymentAmount;
     }
 
-    public void setMinPrePaymentAmount(String minPrePaymentAmount) { this.minPrePaymentAmount = minPrePaymentAmount; }
+    public void setMinPrePaymentAmount(String minPrePaymentAmount) {
+        this.minPrePaymentAmount = minPrePaymentAmount;
+    }
 
     public String getTotalAmount() {
         return totalAmount;
@@ -152,13 +167,17 @@ public class SearchService implements Serializable {
         return servicegallery;
     }
 
-    public void setServicegallery(ArrayList<SearchService> servicegallery) { this.servicegallery = servicegallery; }
+    public void setServicegallery(ArrayList<SearchService> servicegallery) {
+        this.servicegallery = servicegallery;
+    }
 
     public ArrayList<SearchService> getmAllService() {
         return mAllService;
     }
 
-    public void setmAllService(ArrayList<SearchService> mAllService) { this.mAllService = mAllService; }
+    public void setmAllService(ArrayList<SearchService> mAllService) {
+        this.mAllService = mAllService;
+    }
 
     @Override
     public String toString() {
@@ -181,13 +200,17 @@ public class SearchService implements Serializable {
         return virtualServiceType;
     }
 
-    public void setVirtualServiceType(String virtualServiceType) { this.virtualServiceType = virtualServiceType; }
+    public void setVirtualServiceType(String virtualServiceType) {
+        this.virtualServiceType = virtualServiceType;
+    }
 
     public ArrayList<SearchService> getVirtualCallingModes() {
         return virtualCallingModes;
     }
 
-    public void setVirtualCallingModes(ArrayList<SearchService> virtualCallingModes) { this.virtualCallingModes = virtualCallingModes; }
+    public void setVirtualCallingModes(ArrayList<SearchService> virtualCallingModes) {
+        this.virtualCallingModes = virtualCallingModes;
+    }
 
     public String getInstructions() {
         return instructions;
@@ -261,9 +284,13 @@ public class SearchService implements Serializable {
         return consumerNoteTitle;
     }
 
-    public void setConsumerNoteTitle(String consumerNoteTitle) { this.consumerNoteTitle = consumerNoteTitle; }
+    public void setConsumerNoteTitle(String consumerNoteTitle) {
+        this.consumerNoteTitle = consumerNoteTitle;
+    }
 
-    public CheckInServiceAvailability getCheckInServiceAvailability() { return checkInServiceAvailability; }
+    public CheckInServiceAvailability getCheckInServiceAvailability() {
+        return checkInServiceAvailability;
+    }
 
     public boolean isConsumerNoteMandatory() {
         return consumerNoteMandatory;
@@ -273,7 +300,11 @@ public class SearchService implements Serializable {
         this.taxable = taxable;
     }
 
-    public String getPaymentDescription() { return paymentDescription; }
+    public String getPaymentDescription() {
+        return paymentDescription;
+    }
 
-    public boolean isServiceDurationEnabled() { return serviceDurationEnabled; }
+    public boolean isServiceDurationEnabled() {
+        return serviceDurationEnabled;
+    }
 }

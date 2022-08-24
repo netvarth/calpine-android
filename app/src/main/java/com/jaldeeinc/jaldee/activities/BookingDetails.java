@@ -258,6 +258,9 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
     @BindView(R.id.ll_questionnaire)
     LinearLayout llQuestionnaire;
 
+    @BindView(R.id.ll_service_option_qnr)
+    LinearLayout ll_service_option_qnr;
+
     @BindView(R.id.scrollView)
     ScrollView scrollView;
     //@BindView(R.id.ll_calender)
@@ -670,7 +673,32 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
 
             }
         });
+        ll_service_option_qnr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (apptInfo != null) {
+                    if (apptInfo.getServiceOption() != null && apptInfo.getServiceOption().getQuestionAnswers() != null && apptInfo.getServiceOption().getQuestionAnswers().size() > 0) {
+                        QuestionnaireResponseInput input = buildQuestionnaireInput(apptInfo.getServiceOption());
+                        ArrayList<LabelPath> labelPaths = buildQuestionnaireLabelPaths(apptInfo.getServiceOption());
 
+                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
+                        SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
+
+                        Intent intent = new Intent(mContext, UpdateQuestionnaire.class);
+                        intent.putExtra("serviceId", apptInfo.getService().getId());
+                        intent.putExtra("accountId", apptInfo.getProviderAccount().getId());
+                        intent.putExtra("uid", apptInfo.getUid());
+                        intent.putExtra("isEdit", false);
+                        intent.putExtra("from", Constants.BOOKING_APPOINTMENT);
+                        if (apptInfo != null && apptInfo.getApptStatus() != null) {
+                            intent.putExtra("status", apptInfo.getApptStatus());
+                        }
+                        mContext.startActivity(intent);
+
+                    }
+                }
+            }
+        });
         llQuestionnaire.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1091,12 +1119,17 @@ public class BookingDetails extends AppCompatActivity implements IDeleteImagesIn
                     // to show Questionnaire option
                     if (appointmentInfo.getQuestionnaire() != null && appointmentInfo.getQuestionnaire().getQuestionAnswers() != null && appointmentInfo.getQuestionnaire().getQuestionAnswers().size() > 0) {
                         llQuestionnaire.setVisibility(View.VISIBLE);
-                    } else if (appointmentInfo.getReleasedQnr() != null && appointmentInfo.getReleasedQnr().size() > 0) {
+//                  } else if (appointmentInfo.getReleasedQnr() != null && appointmentInfo.getReleasedQnr().size() > 0) {
+                    } else if (appointmentInfo.getReleasedQnr() != null && appointmentInfo.getQuestionnaire() != null  && appointmentInfo.getQuestionnaire().getQuestionAnswers() != null && appointmentInfo.getReleasedQnr().size() > 0) {
                         llQuestionnaire.setVisibility(View.VISIBLE);
                     } else {
                         hideView(llQuestionnaire);
                     }
-
+                    if (appointmentInfo.getServiceOption() != null && appointmentInfo.getServiceOption().getQuestionAnswers() != null && appointmentInfo.getServiceOption().getQuestionAnswers().size() > 0) {
+                        ll_service_option_qnr.setVisibility(View.VISIBLE);
+                    } else {
+                        hideView(ll_service_option_qnr);
+                    }
                 } else {
                     cvShare.setVisibility(View.GONE);
                     hideView(llReschedule);

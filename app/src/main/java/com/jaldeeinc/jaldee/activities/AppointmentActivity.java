@@ -322,6 +322,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
     private ISaveNotes iSaveNotes;
     boolean showOnlyAvailableSlots;
     List<SelectedSlotDetail> selectedSlotDetails = new ArrayList<>();
+    float sQnrPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -352,6 +353,10 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
         providerId = intent.getIntExtra("providerId", 0);
         userId = intent.getIntExtra("userId", 0);
         sector = intent.getStringExtra("sector");
+
+        //////////////temp serviceoptionprice////////////
+        sQnrPrice = intent.getFloatExtra("sQnrPrice", 0);
+        //////////////temp serviceoptionprice////////////
 
         tvConsumerName = findViewById(R.id.tv_consumerName);
         list = findViewById(R.id.list);
@@ -527,7 +532,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
             @Override
             public void onClick(View v) {
                 if (tvEmail.getText().toString().equalsIgnoreCase("")) {
-                    familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, serviceInfo.getIsPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService);
+                    familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, serviceInfo.getIsPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService, providerId);
                     familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     familyMemberDialog.show();
@@ -559,7 +564,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
         llEditDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, serviceInfo.getIsPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService);
+                familyMemberDialog = new FamilyMemberDialog(AppointmentActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, serviceInfo.getIsPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, virtualService, providerId);
                 familyMemberDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                 familyMemberDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 familyMemberDialog.show();
@@ -578,7 +583,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
                 try {
                     if (serviceInfo.getAvailableDate() != null) {
                         int maxAvailableSlots;
-                        if(serviceInfo.getIsPrePayment().equalsIgnoreCase("true")){
+                        if (serviceInfo.getIsPrePayment().equalsIgnoreCase("true")) {
                             maxAvailableSlots = 1;
                         } else {
                             maxAvailableSlots = serviceInfo.getMaxBookingsAllowed();
@@ -679,7 +684,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
                             } else {
 
                                 DynamicToast.make(AppointmentActivity.this, serviceInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
-                                        AppointmentActivity.this, R.drawable.ic_info_black),
+                                                AppointmentActivity.this, R.drawable.ic_info_black),
                                         ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                             }
                         } else {
@@ -705,7 +710,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
                                         }
                                     } else {
                                         DynamicToast.make(AppointmentActivity.this, "Please provide " + serviceInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
-                                                AppointmentActivity.this, R.drawable.ic_info_black),
+                                                        AppointmentActivity.this, R.drawable.ic_info_black),
                                                 ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                                     }
 
@@ -720,7 +725,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
                             } else {
 
                                 DynamicToast.make(AppointmentActivity.this, "Email id is mandatory", AppCompatResources.getDrawable(
-                                        AppointmentActivity.this, R.drawable.ic_info_black),
+                                                AppointmentActivity.this, R.drawable.ic_info_black),
                                         ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                             }
                         } else {
@@ -737,7 +742,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
                                 } else {
 
                                     DynamicToast.make(AppointmentActivity.this, serviceInfo.getConsumerNoteTitle(), AppCompatResources.getDrawable(
-                                            AppointmentActivity.this, R.drawable.ic_info_black),
+                                                    AppointmentActivity.this, R.drawable.ic_info_black),
                                             ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                                 }
                             } else {
@@ -818,9 +823,13 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (imagePathList != null) {
+                        if (imagePathList != null && imagePathList.size() > 0) {
                             imagePathList.clear();
-                            tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
+                            if (imagePathList.size() == 0) {
+                                tvAttachFileSize.setText("Attach File");
+                            } else {
+                                tvAttachFileSize.setText("Attach File" + "(" + imagePathList.size() + ")");
+                            }
                         } else {
                             tvAttachFileSize.setText("Attach File");
                         }
@@ -1124,7 +1133,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
             countryVirtualCode = virtual_NmbrCCPicker.getSelectedCountryCode();
         } else {
             DynamicToast.make(AppointmentActivity.this, "Countrycode needed", AppCompatResources.getDrawable(
-                    AppointmentActivity.this, R.drawable.ic_info_black),
+                            AppointmentActivity.this, R.drawable.ic_info_black),
                     ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -1198,7 +1207,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
                         modeOfCalling = "Invalid Contact number";
                     }
                     DynamicToast.make(AppointmentActivity.this, modeOfCalling, AppCompatResources.getDrawable(
-                            AppointmentActivity.this, R.drawable.ic_info_black),
+                                    AppointmentActivity.this, R.drawable.ic_info_black),
                             ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -1315,7 +1324,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
             //model.setJacshSelected(cbJCash.isChecked());
             if (advancePaymentDetails != null) {
                 model.setAmountRequiredNow(advancePaymentDetails.getAmountRequiredNow());
-                model.setNetTotal(advancePaymentDetails.getNetTotal());
+                model.setNetTotal(advancePaymentDetails.getNetTotal() + sQnrPrice);
             }
             if (advancePaymentDetails != null && advancePaymentDetails.getEligibleJcashAmt() != null) {
                 model.setEligibleJcashAmt(advancePaymentDetails.getEligibleJcashAmt().get("jCashAmt").getAsDouble());
@@ -1347,7 +1356,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
             countryVirtualCode = virtual_NmbrCCPicker.getSelectedCountryCode();
         } else {
             DynamicToast.make(AppointmentActivity.this, "Countrycode needed", AppCompatResources.getDrawable(
-                    AppointmentActivity.this, R.drawable.ic_info_black),
+                            AppointmentActivity.this, R.drawable.ic_info_black),
                     ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
             mDialog.dismiss();
             return;
@@ -1410,7 +1419,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
                     modeOfCalling = "Invalid Contact number";
                 }
                 DynamicToast.make(AppointmentActivity.this, modeOfCalling, AppCompatResources.getDrawable(
-                        AppointmentActivity.this, R.drawable.ic_info_black),
+                                AppointmentActivity.this, R.drawable.ic_info_black),
                         ContextCompat.getColor(AppointmentActivity.this, R.color.white), ContextCompat.getColor(AppointmentActivity.this, R.color.green), Toast.LENGTH_SHORT).show();
                 mDialog.dismiss();
                 return;
@@ -1559,7 +1568,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
                         //model.setJacshSelected(cbJCash.isChecked());
                         if (advancePaymentDetails != null) {
                             model.setAmountRequiredNow(advancePaymentDetails.getAmountRequiredNow());
-                            model.setNetTotal(advancePaymentDetails.getNetTotal());
+                            model.setNetTotal(advancePaymentDetails.getNetTotal() + sQnrPrice);
                         }
                         if (advancePaymentDetails != null && advancePaymentDetails.getEligibleJcashAmt() != null) {
                             model.setEligibleJcashAmt(advancePaymentDetails.getEligibleJcashAmt().get("jCashAmt").getAsDouble());
@@ -1597,6 +1606,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
             }
         });
     }
+
     private void getMltpleApptQuestionnaire(int serviceId, int accountId, String txt_addnote, ArrayList<BookingModel> bookingModels) {
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1634,7 +1644,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
                             startActivity(intent);
                         }
                     }
-                } catch  (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -1645,6 +1655,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
             }
         });
     }
+
     public static String convertDate(String date) {
 
         String finalDate = "";

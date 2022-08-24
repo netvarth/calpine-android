@@ -10,12 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.text.format.DateUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
@@ -82,6 +78,7 @@ import com.jaldeeinc.jaldee.model.Address;
 import com.jaldeeinc.jaldee.model.CartItemModel;
 import com.jaldeeinc.jaldee.model.LabelPath;
 import com.jaldeeinc.jaldee.model.OrderItem;
+import com.jaldeeinc.jaldee.model.QuestionnairInpt;
 import com.jaldeeinc.jaldee.model.QuestionnaireInput;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
@@ -111,21 +108,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -792,6 +786,16 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         obj.put("consumerNote", "");
                     }
                     obj.put("itemType", itemsList.get(i).getItemType());
+                    QuestionnairInpt answerLine;
+                    String input = db.getServiceOptioniput(itemsList.get(i).getId());
+                    if (input != null && !input.trim().isEmpty()) {
+                        Gson gson = new Gson();
+                        answerLine = gson.fromJson(input, QuestionnairInpt.class);
+                        String jsonInString = new Gson().toJson(answerLine);
+                        JSONObject mJSONObject = new JSONObject(jsonInString);
+                        obj.put("srvAnswers", mJSONObject);
+
+                    }
                     itemsArray.put(obj);
                 }
                 inputObj.put("orderItem", itemsArray);
@@ -806,6 +810,8 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        String asd = inputObj.toString();
+
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), inputObj.toString());
@@ -955,6 +961,43 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                     }
                                 } else {
                                     String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
+                                    ArrayList<OrderItem> itemsList = db.getOrderItems();
+                                    boolean isSrvcOptionPresent = false;
+                                    for (int i = 0; i < itemsList.size(); i++) {
+                                        String srvcOptnInput = itemsList.get(i).getServiceOptionInput();
+                                        if (srvcOptnInput != null && !srvcOptnInput.trim().isEmpty()) {
+                                            isSrvcOptionPresent = true;
+                                        }
+                                    }
+
+                                    if ((inputString != null && !inputString.trim().equalsIgnoreCase("")) || isSrvcOptionPresent) {
+
+                                        if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
+
+                                            QuestionnaireInput input = new QuestionnaireInput();
+                                            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                                            input = gson.fromJson(inputString, QuestionnaireInput.class);
+                                            ApiSubmitQuestionnnaire(input, activeOrders.getUid());
+                                        }
+                                        if (isSrvcOptionPresent) {
+                                            ApiSubmitServiceOptionQuestionnnaire(itemsList, activeOrders.getUid());
+                                        }
+                                        getOrderConfirmationDetails(providerId);
+                                    } else {
+                                        getOrderConfirmationDetails(acctId);
+                                    }
+                                }
+                            } else {
+                                String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
+                                ArrayList<OrderItem> itemsList = db.getOrderItems();
+                                boolean isSrvcOptionPresent = false;
+                                for (int i = 0; i < itemsList.size(); i++) {
+                                    String srvcOptnInput = itemsList.get(i).getServiceOptionInput();
+                                    if (srvcOptnInput != null && !srvcOptnInput.trim().isEmpty()) {
+                                        isSrvcOptionPresent = true;
+                                    }
+                                }
+                                if ((inputString != null && !inputString.trim().equalsIgnoreCase("")) || isSrvcOptionPresent) {
 
                                     if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
 
@@ -962,19 +1005,12 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                         Gson gson = new GsonBuilder().setPrettyPrinting().create();
                                         input = gson.fromJson(inputString, QuestionnaireInput.class);
                                         ApiSubmitQuestionnnaire(input, activeOrders.getUid());
-                                    } else {
-                                        getOrderConfirmationDetails(acctId);
                                     }
-                                }
-                            } else {
-                                String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
+                                    if (isSrvcOptionPresent) {
+                                        ApiSubmitServiceOptionQuestionnnaire(itemsList, activeOrders.getUid());
+                                    }
+                                    getOrderConfirmationDetails(providerId);
 
-                                if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
-
-                                    QuestionnaireInput input = new QuestionnaireInput();
-                                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                                    input = gson.fromJson(inputString, QuestionnaireInput.class);
-                                    ApiSubmitQuestionnnaire(input, activeOrders.getUid());
                                 } else {
                                     getOrderConfirmationDetails(acctId);
                                 }
@@ -2088,6 +2124,11 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     }
 
     private void ApiCheckPaytmPaymentStatus(String orderId) {
+        /*try {
+            TimeUnit.SECONDS.sleep(1);  // important delay for getting result from paytm
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
 
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
 
@@ -2143,11 +2184,25 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
     public void paymentFinished() {
         String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.QUESTIONNAIRE, "");
-        if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
-            QuestionnaireInput input = new QuestionnaireInput();
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            input = gson.fromJson(inputString, QuestionnaireInput.class);
-            ApiSubmitQuestionnnaire(input, ynwUUID);
+        ArrayList<OrderItem> itemsList = db.getOrderItems();
+        boolean isSrvcOptionPresent = false;
+        for (int i = 0; i < itemsList.size(); i++) {
+            String srvcOptnInput = itemsList.get(i).getServiceOptionInput();
+            if (srvcOptnInput != null && !srvcOptnInput.trim().isEmpty()) {
+                isSrvcOptionPresent = true;
+            }
+        }
+        if ((inputString != null && !inputString.trim().equalsIgnoreCase("")) || isSrvcOptionPresent) {
+            if (inputString != null && !inputString.trim().equalsIgnoreCase("")) {
+                QuestionnaireInput input = new QuestionnaireInput();
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                input = gson.fromJson(inputString, QuestionnaireInput.class);
+                ApiSubmitQuestionnnaire(input, ynwUUID);
+            }
+            if (isSrvcOptionPresent) {
+                ApiSubmitServiceOptionQuestionnnaire(itemsList, ynwUUID);
+            }
+            getOrderConfirmationDetails(providerId);
         } else {
             getOrderConfirmationDetails(providerId);
         }
@@ -2440,7 +2495,16 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         obj.put("consumerNote", "");
                     }
                     obj.put("itemType", itemsList.get(i).getItemType());
+                    QuestionnairInpt answerLine;
+                    String input = db.getServiceOptioniput(itemsList.get(i).getId());
+                    if (input != null && !input.trim().isEmpty()) {
+                        Gson gson = new Gson();
+                        answerLine = gson.fromJson(input, QuestionnairInpt.class);
+                        String jsonInString = new Gson().toJson(answerLine);
+                        JSONObject mJSONObject = new JSONObject(jsonInString);
+                        obj.put("srvAnswers", mJSONObject);
 
+                    }
                     orderItemsArray.put(obj);
                 }
             }
@@ -2603,6 +2667,10 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                 rlPCoupon.setVisibility(View.GONE);
                             }
                         }
+                    } else {
+                        String asd = response.errorBody().string();
+                        System.out.println(asd);
+                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2647,6 +2715,108 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                 e.printStackTrace();
             }
         }
+    }
+
+    public ArrayList<LabelPath> serviceOptionImagePathList = new ArrayList<>();
+
+    public void getServiceOptionQnrImages(String imagesString) {
+        if (imagesString != null && !imagesString.trim().equalsIgnoreCase("")) {
+            Type labelPathType = new TypeToken<ArrayList<LabelPath>>() {
+            }.getType();
+            try {
+                ArrayList<LabelPath> pathList = new Gson().fromJson(imagesString, labelPathType);
+                serviceOptionImagePathList = pathList;
+            } catch (JsonSyntaxException e) {
+                serviceOptionImagePathList = new ArrayList<>();
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void ApiSubmitServiceOptionQuestionnnaire(ArrayList<OrderItem> itemsList, String uid) {
+
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        MediaType type = MediaType.parse("*/*");
+        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
+        mBuilder.setType(MultipartBody.FORM);
+        if (itemsList.get(0).getServiceOptionInput() != null && !itemsList.get(0).getServiceOptionInput().trim().isEmpty()) {
+            getServiceOptionQnrImages(itemsList.get(0).getServiceOptionInput());
+        }
+        for (int i = 0; i < serviceOptionImagePathList.size(); i++) {
+            file = new File(serviceOptionImagePathList.get(i).getPath());///////
+
+            mBuilder.addFormDataPart("files", file.getName(), RequestBody.create(type, file));
+        }
+        QuestionnairInpt answerLine;
+
+        Gson gson = new GsonBuilder().create();
+        answerLine = gson.fromJson(itemsList.get(0).getServiceOptionInput(), QuestionnairInpt.class);
+        String json = gson.toJson(answerLine);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+        mBuilder.addFormDataPart("question", "blob", body);
+        RequestBody requestBody = mBuilder.build();
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<SubmitQuestionnaire> call = null;
+
+        call = apiService.submitOrderItemServiceOptionQnr(itemsList.get(0).getId(), uid, requestBody, providerId);
+
+
+        call.enqueue(new Callback<SubmitQuestionnaire>() {
+            @Override
+            public void onResponse(Call<SubmitQuestionnaire> call, Response<SubmitQuestionnaire> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                        if (response.code() == 200) {
+
+                        SubmitQuestionnaire result = response.body();
+
+                        if (result != null && result.getUrls().size() > 0) {
+
+                            for (QuestionnaireUrls url : result.getUrls()) {
+
+                                for (LabelPath p : serviceOptionImagePathList) {
+
+                                    if (url.getUrl().contains(p.getFileName())) {
+
+                                        p.setUrl(url.getUrl());
+                                    }
+                                }
+                            }
+
+                            uploadFilesToS3(serviceOptionImagePathList, result);
+                        } /*else {
+                            getOrderConfirmationDetails(providerId);
+                        }*/
+                        itemsList.remove(0);
+                        if(itemsList.size() != 0) {
+                            ApiSubmitServiceOptionQuestionnnaire(itemsList, uid);
+                        }
+                    } else {
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
+                       ////////// getOrderConfirmationDetails(providerId);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SubmitQuestionnaire> call, Throwable t) {
+                // Log error here since request failed
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
     }
 
     private void ApiSubmitQuestionnnaire(QuestionnaireInput input, String uid) {
@@ -2711,15 +2881,15 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                             }
 
                             uploadFilesToS3(imagePathList, result);
-                        } else {
+                        } /*else {
                             getOrderConfirmationDetails(providerId);
-                        }
+                        }*/
 
                     } else {
                         if (response.code() == 422) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
-                        getOrderConfirmationDetails(providerId);// make confirm Order if any QNR uploading error
+                        //getOrderConfirmationDetails(providerId);// make confirm Order if any QNR uploading error
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2751,13 +2921,13 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
             }
             // Zip all requests with the Function, which will receive the results.
             Observable.zip(requests, new Function<Object[], Object>() {
-                @Override
-                public Object apply(Object[] objects) throws Exception {
-                    // Objects[] is an array of combined results of completed requests
-                    // do something with those results and emit new event
-                    return objects;
-                }
-            })
+                        @Override
+                        public Object apply(Object[] objects) throws Exception {
+                            // Objects[] is an array of combined results of completed requests
+                            // do something with those results and emit new event
+                            return objects;
+                        }
+                    })
                     // After all requests had been performed the next observer will receive the Object, returned from Function
 
                     .subscribe(
@@ -2843,7 +3013,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                         Config.closeDialog(getParent(), mDialog);
 
                     if (response.code() == 200) {
-                        getOrderConfirmationDetails(accountId);
+/////////////////////////////////                        getOrderConfirmationDetails(accountId);
 
 
                     } else {

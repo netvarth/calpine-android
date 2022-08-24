@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -278,6 +279,10 @@ public class RescheduleCheckinActivity extends AppCompatActivity implements ISel
 
                 da.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 da.show();
+                da.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                da.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+
+
             }
         });
 

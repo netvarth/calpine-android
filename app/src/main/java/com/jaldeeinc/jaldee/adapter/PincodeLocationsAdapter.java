@@ -86,7 +86,7 @@ public class PincodeLocationsAdapter extends RecyclerView.Adapter<PincodeLocatio
                 Config.logV("lastCheckedRB------@@@@--------------" + lastCheckedRB);
 
 
-                pincodeLocations.get(position).setCheck(true);;
+                pincodeLocations.get(position).setCheck(true);
                 iFamillyListSelected.SelectedPincodeLocation(pincodeLocations.get(position));
 
 

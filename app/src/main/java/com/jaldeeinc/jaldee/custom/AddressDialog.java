@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -85,7 +83,7 @@ public class AddressDialog extends Dialog implements IEditAddress {
     CustomEditTextRegular etMailId;
 
     @BindView(R.id.tv_errorMessage)
-    CustomTextViewItalicSemiBold tvErrorMessage;
+    CustomTextViewBoldItalic tvErrorMessage;
 
     @BindView(R.id.ll_back)
     LinearLayout llBack;

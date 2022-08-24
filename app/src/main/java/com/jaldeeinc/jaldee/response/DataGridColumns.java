@@ -4,8 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
 
-import org.json.JSONObject;
-
 import java.io.Serializable;
 
 public class DataGridColumns implements Serializable {
@@ -30,6 +28,18 @@ public class DataGridColumns implements Serializable {
     @Expose
     private Object labelValues;
 
+    @SerializedName("quantity") // for serviceOptionQNR
+    @Expose
+    private String quantity;
+
+    @SerializedName("baseAmnt") // for serviceOptionQNR
+    @Expose
+    private String baseAmnt;
+
+    @SerializedName("boolProperties")
+    @Expose
+    private BoolProperties boolProperties;
+
     @SerializedName("filePropertie")
     @Expose
     private FileProperties fileProperties;
@@ -49,6 +59,30 @@ public class DataGridColumns implements Serializable {
     @SerializedName("numberPropertie")
     @Expose
     private NumberProperties numberProperties;
+
+    @SerializedName("order")
+    @Expose
+    private int order;
+
+    public int getOrder() {
+        return order;
+    }
+
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getBaseAmnt() {
+        return baseAmnt;
+    }
+
+    public void setBaseAmnt(String baseAmnt) {
+        this.baseAmnt = baseAmnt;
+    }
 
     private GridColumnAnswerLine answer = null;
 

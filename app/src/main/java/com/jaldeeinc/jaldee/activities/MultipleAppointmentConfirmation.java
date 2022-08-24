@@ -350,10 +350,10 @@ public class MultipleAppointmentConfirmation extends AppCompatActivity {
                     Intent intent = new Intent(Intent.ACTION_INSERT);
                     intent.setData(CalendarContract.Events.CONTENT_URI);
                     if (activeCheckInInfo.getProviderAccount().getBusinessName() != null && !activeCheckInInfo.getProviderAccount().getBusinessName().equalsIgnoreCase("")) {
-                        intent.putExtra(CalendarContract.Events.TITLE, "booking with - " + activeCheckInInfo.getProviderAccount().getBusinessName());//activeCheckInInfo.getCheckinEncId());
+                        intent.putExtra(CalendarContract.Events.TITLE, activeCheckInInfo.getProviderAccount().getBusinessName() +" - "+ activeCheckInInfo.getService().getName());//activeCheckInInfo.getCheckinEncId());
                     } else {
                         String name = activeCheckInInfo.getProvider().getFirstName() + " " + activeCheckInInfo.getProvider().getLastName();
-                        intent.putExtra(CalendarContract.Events.TITLE, "booking with - " + name);// activeCheckInInfo.getCheckinEncId());
+                        intent.putExtra(CalendarContract.Events.TITLE, name +" - "+ activeCheckInInfo.getService().getName());// activeCheckInInfo.getCheckinEncId());
                     }
                     intent.putExtra(CalendarContract.Events.DESCRIPTION, "Time slots : " + times
                             .stream()

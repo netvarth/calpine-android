@@ -781,7 +781,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="3"
                             android:background="@drawable/editbox"
-                            android:fontFamily="@font/customfont"
+                            android:fontFamily="@font/font_bold"
                             android:hint="Enter coupon code"
                             android:textSize="@dimen/txtsize_hint" />
 
@@ -791,7 +791,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="7"
                             android:background="@drawable/button"
-                            android:fontFamily="@font/customfont"
+                            android:fontFamily="@font/font_bold"
                             android:text="ADD"
                             android:textColor="#ffffff"
                             android:textSize="@dimen/txtsize_subtitle"

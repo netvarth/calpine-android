@@ -25,9 +25,7 @@ public class Questionnaire implements Serializable {
         return questionnaireId;
     }
 
-    public void setQuestionnaireId(String questionnaireId) {
-        this.questionnaireId = questionnaireId;
-    }
+    public void setQuestionnaireId(String questionnaireId) { this.questionnaireId = questionnaireId; }
 
     public int getId() {
         return id;
@@ -41,7 +39,5 @@ public class Questionnaire implements Serializable {
         return questionsList;
     }
 
-    public void setQuestionsList(ArrayList<Questions> questionsList) {
-        this.questionsList = questionsList;
-    }
+    public void setQuestionsList(ArrayList<Questions> questionsList) { this.questionsList = questionsList; }
 }

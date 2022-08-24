@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.custom;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Filter;
@@ -190,6 +192,7 @@ public class MultiSpinnerSearch extends AppCompatSpinner implements OnCancelList
 		}).start();
 	}
 
+	@SuppressLint("ResourceAsColor")
 	@Override
 	public boolean performClick() {
 
@@ -275,7 +278,16 @@ public class MultiSpinnerSearch extends AppCompatSpinner implements OnCancelList
 
 		builder.setOnCancelListener(this);
 		ad = builder.show();
-		Objects.requireNonNull(ad.getWindow()).setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+		ad.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(R.color.colorAccent);
+		ad.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(R.color.colorAccent);
+		ad.getButton(DatePickerDialog.BUTTON_NEUTRAL).setTextColor(R.color.colorAccent);
+//		ad.getButton(DatePickerDialog.BUTTON_NEGATIVE).setBackgroundColor(Color.BLACK);
+//		ad.getButton(DatePickerDialog.BUTTON_POSITIVE).setBackgroundColor(Color.BLACK);
+//		ad.getButton(DatePickerDialog.BUTTON_NEUTRAL).setBackgroundColor(Color.BLACK);
+
+
+		Objects.requireNonNull(ad.getWindow()).setLayout(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		return true;
 	}
 

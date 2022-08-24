@@ -33,21 +33,21 @@
             android:layout_width="@dimen/dimen_25dp"
             android:layout_height="@dimen/dimen_25dp"
             android:indeterminateTint="@color/dark_blue"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
             android:id="@+id/number_counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/padding3"
             android:layout_alignLeft="@id/myProgress"
             android:layout_alignTop="@id/myProgress"
             android:layout_alignRight="@id/myProgress"
             android:layout_alignBottom="@id/myProgress"
-            android:text="0"
-            android:gravity="center"
-            android:textColor="@color/dark_blue"
+            android:layout_marginBottom="@dimen/padding3"
             android:background="@color/transparent"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/dark_blue"
             android:textSize="@dimen/dimen_16dp" />
 
     </RelativeLayout>
@@ -68,8 +68,8 @@
 
         <ImageView
             android:id="@+id/iv_add"
-            android:layout_width="@dimen/dimen_8dp"
-            android:layout_height="@dimen/dimen_8dp"
+            android:layout_width="4dp"
+            android:layout_height="7dp"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/dimen_8dp"
             android:layout_marginEnd="@dimen/dimen_8dp"

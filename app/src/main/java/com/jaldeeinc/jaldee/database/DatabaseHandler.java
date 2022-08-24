@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
@@ -36,6 +37,7 @@ import com.jaldeeinc.jaldee.response.VirtualServiceDetails;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -200,7 +202,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     + "tax REAL,"
                     + "isTaxable NUMERIC,"
                     + "maxQuantity INTEGER,"
-                    + "itemType TEXT )";
+                    + "itemType TEXT,"
+                    + "serviceOptionQnr TEXT,"
+                    + "serviceOptioniput TEXT,"
+                    + "serviceOptionAtachedImages TEXT,"
+                    + "serviceOptionPrice REAL)";
 
 
             //create table
@@ -212,7 +218,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public void insertItemToCart(CartItemModel cartItemModel) {
+    public boolean insertItemToCart(CartItemModel cartItemModel) {
 
         try {
 
@@ -237,9 +243,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("isPromotional", cartItemModel.getIsPromotional());
                 values.put("isExpired", cartItemModel.isExpired());
                 values.put("maxQuantity", cartItemModel.getMaxQuantity());
-                values.put("tax",cartItemModel.getTax());
-                values.put("isTaxable",cartItemModel.getIsTaxable());
-                values.put("itemType",cartItemModel.getItemType());
+                values.put("tax", cartItemModel.getTax());
+                values.put("isTaxable", cartItemModel.getIsTaxable());
+                values.put("itemType", cartItemModel.getItemType());
+                if (cartItemModel.getQuestionnaire() != null) {
+                    values.put("serviceOptionQnr", cartItemModel.getQuestionnaire());
+                }
+                if (cartItemModel.getServiceOptioniput() != null) {
+                    values.put("serviceOptioniput", cartItemModel.getServiceOptioniput());
+                }
+                if (cartItemModel.getServiceOptionAtachedImages() != null) {
+                    values.put("serviceOptionAtachedImages", cartItemModel.getServiceOptionAtachedImages());
+                }
+                values.put("serviceOptionPrice", cartItemModel.getServiceOptionPrice());
+
 
                 db.insert(mContext.getString(R.string.db_table_cart), null, values);
 
@@ -253,7 +270,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        return true;
     }
 
     public void removeItemFromCart(int itemId) {
@@ -411,7 +428,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             ArrayList<OrderItem> orderItemsList = new ArrayList<>();
             SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
             db.beginTransaction();
-            Cursor cursor = db.rawQuery("SELECT itemId, sum(quantity), instruction, itemType FROM " + mContext.getString(R.string.db_table_cart) + " GROUP BY itemId ", null);
+            Cursor cursor = db.rawQuery("SELECT itemId, sum(quantity), instruction, itemType, serviceOptioniput, serviceOptionAtachedImages FROM " + mContext.getString(R.string.db_table_cart) + " GROUP BY itemId ", null);
 
             if (cursor.moveToFirst()) {
                 do {
@@ -419,7 +436,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     int quantity = cursor.getInt(1);
                     String instruction = cursor.getString(2);
                     String itemType = cursor.getString(3);
-                    orderItemsList.add(new OrderItem(itemId, quantity,instruction, itemType));
+                    orderItemsList.add(new OrderItem(itemId, quantity, instruction, itemType, cursor.getString(4), cursor.getString(5)));
 
                 } while (cursor.moveToNext());
             }
@@ -519,12 +536,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public double getCartPrice() {
-
         try {
             double cartPrice = 0;
             SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
             db.beginTransaction();
-            Cursor cursor = db.rawQuery("SELECT sum(itemPrice * quantity) as cartCount FROM " + mContext.getString(R.string.db_table_cart), null);
+            Cursor cursor = db.rawQuery("SELECT sum((itemPrice * quantity) + serviceOptionPrice) as cartCount FROM " + mContext.getString(R.string.db_table_cart), null);
 
             if (cursor.moveToFirst()) {
                 do {
@@ -552,7 +568,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             double cartDiscountPrice = 0;
             SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
             db.beginTransaction();
-            Cursor cursor = db.rawQuery("SELECT sum(discountedPrice * quantity) as cartCount FROM " + mContext.getString(R.string.db_table_cart), null);
+            Cursor cursor = db.rawQuery("SELECT sum((discountedPrice * quantity) + serviceOptionPrice) as cartCount FROM " + mContext.getString(R.string.db_table_cart), null);
 
             if (cursor.moveToFirst()) {
                 do {
@@ -572,7 +588,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
     }
+    public double getItemDiscountedPrice(int itemId) {
 
+        try {
+            int quantity = 0;
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+            db.beginTransaction();
+            Cursor cursor = db.rawQuery("SELECT sum((discountedPrice * quantity) + serviceOptionPrice) FROM " + mContext.getString(R.string.db_table_cart) + " WHERE itemId = " + itemId, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    quantity = cursor.getInt(0);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+            return quantity;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+    }
 
     public double getTaxAmount() {
 
@@ -601,6 +642,144 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    public boolean isAddedServiceOption(int itemId) {
+
+        try {
+            String serviceOptionQnr, serviceOptioniput;
+            int quantity;
+            boolean isAddedServiceOption = false;
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+            db.beginTransaction();
+            Cursor cursor = db.rawQuery("SELECT serviceOptionQnr, serviceOptioniput, quantity FROM " + mContext.getString(R.string.db_table_cart) + " WHERE serviceOptionQnr IS NOT NULL AND serviceOptioniput IS NOT NULL AND itemId = " + itemId, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    serviceOptionQnr = cursor.getString(0);
+                    serviceOptioniput = cursor.getString(1);
+                    quantity = cursor.getInt(2);
+                    if (serviceOptionQnr != null && !serviceOptionQnr.trim().isEmpty() && serviceOptioniput != null && !serviceOptioniput.trim().isEmpty() && quantity > 0) {
+                        isAddedServiceOption = true;
+                    } else {
+                        isAddedServiceOption = false;
+                    }
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+            return isAddedServiceOption;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    public boolean updateServiceOptionInput(int itemId, String serviceOption, String serviceOptionAtachedImages, float serviceOtpionPrice) {
+        boolean result = false;
+
+        try {
+            SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put("serviceOptioniput", serviceOption);
+            values.put("serviceOptionAtachedImages", serviceOptionAtachedImages);
+            values.put("serviceOptionPrice", serviceOtpionPrice);
+
+
+            String[] args = new String[]{String.valueOf(itemId)};
+            db.update(mContext.getString(R.string.db_table_cart), values, "itemId = ?", args);
+            db.close();
+//            db.execSQL("update  " + mContext.getString(R.string.db_table_cart) + " set serviceOptioniput = " + serviceOption + " where itemId = " + itemId);
+//            db.execSQL("update  " + mContext.getString(R.string.db_table_cart) + " set serviceOptionAtachedImages =" + serviceOptionAtachedImages + " where itemId = " + itemId);
+//            db.close();
+            result = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            result = false;
+        }
+        return result;
+    }
+
+    public String getServiceOptioniput(int itemId) {
+        String serviceOptioniput = null;
+
+        try {
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+            db.beginTransaction();
+            Cursor cursor = db.rawQuery("SELECT serviceOptioniput FROM " + mContext.getString(R.string.db_table_cart) + " WHERE serviceOptioniput IS NOT NULL AND itemId = " + itemId, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    serviceOptioniput = cursor.getString(0);
+
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return serviceOptioniput;
+    }
+
+    public String getServiceOptioniputImages(int itemId) {
+        String serviceOptionAtachedImages = null;
+
+        try {
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+            db.beginTransaction();
+            Cursor cursor = db.rawQuery("SELECT serviceOptionAtachedImages FROM " + mContext.getString(R.string.db_table_cart) + " WHERE serviceOptionAtachedImages IS NOT NULL AND itemId = " + itemId, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    serviceOptionAtachedImages = cursor.getString(0);
+
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return serviceOptionAtachedImages;
+    }
+
+    public String getServiceOptionQnr(int itemId) {
+        String serviceOptionQnr = null;
+
+        try {
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+            db.beginTransaction();
+            Cursor cursor = db.rawQuery("SELECT serviceOptionQnr FROM " + mContext.getString(R.string.db_table_cart) + " WHERE serviceOptioniput IS NOT NULL AND itemId = " + itemId, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    serviceOptionQnr = cursor.getString(0);
+
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return serviceOptionQnr;
+    }
 
     public ArrayList<CartItemModel> getCartItems() {
 
@@ -609,7 +788,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
 
             String table = mContext.getString(R.string.db_table_cart);
-            String[] columns = {"itemId", "accountId", "catalogId", "itemName", "imageUrl", "quantity", "itemPrice", "price", "instruction", "discountedPrice", "discount", "promotionalType", "maxQuantity", "isPromotional","isExpired","uniqueId","tax","isTaxable","itemType"};
+            String[] columns = {"itemId", "accountId", "catalogId", "itemName", "imageUrl", "quantity", "itemPrice", "price", "instruction", "discountedPrice", "discount", "promotionalType", "maxQuantity", "isPromotional", "isExpired", "uniqueId", "tax", "isTaxable", "itemType"};
             String selection = " quantity >?";
             String[] selectionArgs = new String[]{"0"};
             db.beginTransaction();
@@ -1298,14 +1477,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put("phoneVerified", profileModel.getPhoneVerified());
             values.put("gender", profileModel.getGender());
             values.put("dob", profileModel.getDob());
-            if(profileModel.getTelegramNum() != null){
-                if(profileModel.getTelegramNum().get("countryCode") != null && profileModel.getTelegramNum().get("number") != null) {
+            if (profileModel.getTelegramNum() != null) {
+                if (profileModel.getTelegramNum().get("countryCode") != null && profileModel.getTelegramNum().get("number") != null) {
                     values.put("telgrmCountryCode", profileModel.getTelegramNum().get("countryCode").getAsString());
                     values.put("telgrmNumber", profileModel.getTelegramNum().get("number").getAsString());
                 }
             }
-            if(profileModel.getWhatsAppNum() != null){
-                if(profileModel.getWhatsAppNum().get("countryCode") != null && profileModel.getWhatsAppNum().get("number") != null) {
+            if (profileModel.getWhatsAppNum() != null) {
+                if (profileModel.getWhatsAppNum().get("countryCode") != null && profileModel.getWhatsAppNum().get("number") != null) {
                     values.put("whtsAppCountryCode", profileModel.getWhatsAppNum().get("countryCode").getAsString());
                     values.put("whtsAppNumber", profileModel.getWhatsAppNum().get("number").getAsString());
                 }
@@ -1340,14 +1519,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put("phoneVerified", profileModel.getPhoneVerified());
             values.put("gender", profileModel.getGender());
             values.put("dob", profileModel.getDob());
-            if(profileModel.getTelegramNum() != null){
-                if(profileModel.getTelegramNum().get("countryCode") != null && profileModel.getTelegramNum().get("number") != null) {
+            if (profileModel.getTelegramNum() != null) {
+                if (profileModel.getTelegramNum().get("countryCode") != null && profileModel.getTelegramNum().get("number") != null) {
                     values.put("telgrmCountryCode", profileModel.getTelegramNum().get("countryCode").getAsString());
                     values.put("telgrmNumber", profileModel.getTelegramNum().get("number").getAsString());
                 }
             }
-            if(profileModel.getWhatsAppNum() != null){
-                if(profileModel.getWhatsAppNum().get("countryCode") != null && profileModel.getWhatsAppNum().get("number") != null) {
+            if (profileModel.getWhatsAppNum() != null) {
+                if (profileModel.getWhatsAppNum().get("countryCode") != null && profileModel.getWhatsAppNum().get("number") != null) {
                     values.put("whtsAppCountryCode", profileModel.getTelegramNum().get("countryCode").getAsString());
                     values.put("whtsAppNumber", profileModel.getTelegramNum().get("number").getAsString());
                 }
@@ -1901,11 +2080,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.endTransaction();
         db.close();
 
-        for (InboxModel im  : inbox) {
+        for (InboxModel im : inbox) {
 
             for (InboxModel i : countsList) {
 
-                if (im.getUniqueID().equalsIgnoreCase(i.getUniqueID())){
+                if (im.getUniqueID().equalsIgnoreCase(i.getUniqueID())) {
 
                     im.setUnReadCount(i.getUnReadCount());
                 }

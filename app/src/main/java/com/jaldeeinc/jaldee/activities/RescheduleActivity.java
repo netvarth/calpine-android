@@ -17,6 +17,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -280,6 +281,8 @@ public class RescheduleActivity extends AppCompatActivity implements ISlotInfo, 
 
                 da.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 da.show();
+                da.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                da.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
             }
         });
 

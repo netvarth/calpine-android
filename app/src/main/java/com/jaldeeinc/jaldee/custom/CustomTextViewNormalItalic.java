@@ -4,19 +4,24 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 
-public class CustomItalicTextViewNormal extends androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.res.ResourcesCompat;
+
+import com.jaldeeinc.jaldee.R;
+
+public class CustomTextViewNormalItalic extends androidx.appcompat.widget.AppCompatTextView
 {
 
 
-    public CustomItalicTextViewNormal(Context context, AttributeSet attrs) {
+    public CustomTextViewNormalItalic(Context context, AttributeSet attrs) {
         super(context, attrs);
         // TODO Auto-generated constructor stub
 
         Typeface font = Typeface.createFromAsset(context.getAssets(),  "fonts/JosefinSans-LightItalic.ttf");
+
         this.setTypeface(font);
     }
 
-    public CustomItalicTextViewNormal(Context context) {
+    public CustomTextViewNormalItalic(Context context) {
         super(context);
         // TODO Auto-generated constructor stub
 

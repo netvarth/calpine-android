@@ -24,7 +24,7 @@
                 android:orientation="vertical"
                 android:visibility="visible">
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
+                <com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic
                     android:id="@+id/tv_today"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/dimen_16sp">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
+                </com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_todays"
@@ -74,7 +74,7 @@
                 </LinearLayout>
 
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
+                <com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic
                     android:id="@+id/tv_upcoming"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
                     android:textColor="@color/title_color"
                     android:textSize="@dimen/dimen_16sp">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
+                </com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_upcoming"

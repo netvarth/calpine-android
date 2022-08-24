@@ -707,9 +707,13 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
     // service item click action
     @Override
     public void onCheckInSelected(SearchService checkinServiceInfo) {
-
+        Intent intent = null;
         if (checkinServiceInfo != null) {
-            Intent intent = new Intent(UserDetailActivity.this, CheckInActivity.class);
+            if (checkinServiceInfo.getServiceOptionIds() != null && checkinServiceInfo.getServiceOptionIds().size() > 0) {
+                intent = new Intent(UserDetailActivity.this, ServiceOptionActivity.class);
+            } else {
+                intent = new Intent(UserDetailActivity.this, CheckInActivity.class);
+            }
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
             intent.putExtra("accountBusinessName", tvProviderName.getText().toString());
@@ -721,15 +725,28 @@ public class UserDetailActivity extends AppCompatActivity implements ISelectedPr
             intent.putExtra("fromUser", true);
             intent.putExtra("sector", sector);
 
+            ServiceInfo serviceInfo = new ServiceInfo();
+            serviceInfo.setServiceId(checkinServiceInfo.getId());
+            serviceInfo.setServiceName(checkinServiceInfo.getName());
+            serviceInfo.setDescription(checkinServiceInfo.getDescription());
+            serviceInfo.setType(Constants.CHECKIN);
+
+            intent.putExtra("serviceInfo", serviceInfo);
+
             startActivity(intent);
         }
     }
 
     @Override
     public void onAppointmentSelected(SearchAppoinment appointmentServiceInfo) {
-
+        Intent intent = null;
         if (appointmentServiceInfo != null) {
-            Intent intent = new Intent(UserDetailActivity.this, AppointmentActivity.class);
+            if (appointmentServiceInfo.getServiceOptionIds() != null && appointmentServiceInfo.getServiceOptionIds().size() > 0) {
+                intent = new Intent(UserDetailActivity.this, ServiceOptionActivity.class);
+            } else {
+                intent = new Intent(UserDetailActivity.this, AppointmentActivity.class);
+            }
+
             intent.putExtra("uniqueID", uniqueId);
             intent.putExtra("providerName", tvSpName.getText().toString());
             intent.putExtra("accountBusinessName", tvProviderName.getText().toString());

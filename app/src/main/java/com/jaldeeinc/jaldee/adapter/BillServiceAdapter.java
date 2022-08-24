@@ -2,8 +2,10 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,22 +42,23 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
         BillServiceAdapter.BillAdapterViewHolder gvh = new BillServiceAdapter.BillAdapterViewHolder(queueView);
         return gvh;
     }
+
     BIllDiscountAdapter billDiscountAdapter;
+
     @Override
     public void onBindViewHolder(final BillServiceAdapter.BillAdapterViewHolder holder, int position) {
-
 
 
 //        DecimalFormat format = new DecimalFormat("0.00");
         if (billServiceData.get(position).getServiceName() != null) {
             Config.logV("ServiceNAme" + billServiceData.get(position).getServiceName());
-            holder.txtservicenme.setText(billServiceData.get(position).getServiceName()+" ₹\u00a0"+Config.getAmountNoOrTwoDecimalPoints(billServiceData.get(position).getPrice()));
+            holder.txtservicenme.setText(billServiceData.get(position).getServiceName() + " ₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(billServiceData.get(position).getPrice()));
         } else {
-            holder.txtservicenme.setText(billServiceData.get(position).getItemName()+" ₹\u00a0"+ Config.getAmountNoOrTwoDecimalPoints(billServiceData.get(position).getPrice()));
+            holder.txtservicenme.setText(billServiceData.get(position).getItemName() + " ₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(billServiceData.get(position).getPrice()));
         }
         //holder.txt_amount.setText("₹ " + String.valueOf(billServiceData.get(position).getPrice()));
 
-       if (billServiceData.get(position).getGSTpercentage() == 0) {
+        if (billServiceData.get(position).getGSTpercentage() == 0) {
 
             holder.txttax.setVisibility(View.GONE);
         } else {
@@ -81,29 +84,34 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
                 holder.txtcoupan.setText(billServiceData.get(position).getCouponName());
             holder.txtcoupanval.setText("₹ " + String.valueOf(billServiceData.get(position).getCouponValue()));
         }*/
+        if (billServiceData.get(position).getServiceOptions() != null && billServiceData.get(position).getServiceOptions().size() > 0) {
+            RecyclerView.LayoutManager mLayoutMngr = new LinearLayoutManager(context);
+            holder.recycleView_item_ServiceOption.setLayoutManager(mLayoutMngr);
+            BillServiceOptionAdapter billServiceOptionAdapter = new BillServiceOptionAdapter(billServiceData.get(position).getServiceOptions(), context);
+            holder.recycleView_item_ServiceOption.setAdapter(billServiceOptionAdapter);
+            billServiceOptionAdapter.notifyDataSetChanged();
+        }
 
         holder.qtyval.setText("₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(billServiceData.get(position).getPrice() * billServiceData.get(position).getQuantity()));
 
         holder.qty.setText("Qty " + String.valueOf(billServiceData.get(position).getQuantity()));
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
         holder.recyclerView_discount.setLayoutManager(mLayoutManager);
-        if (billServiceData.get(position).getDiscount()!= null) {
+        if (billServiceData.get(position).getDiscount() != null) {
 
-            if(billServiceData.get(position).getDiscount().size()>0) {
+            if (billServiceData.get(position).getDiscount().size() > 0) {
                 holder.Lsubtotal.setVisibility(View.VISIBLE);
                 holder.txtsubtotalval.setText("₹\u00a0" + Config.getAmountNoOrTwoDecimalPoints(billServiceData.get(position).getNetRate()));
                 billDiscountAdapter = new BIllDiscountAdapter("service", billServiceData.get(position).getDiscount(), context);
                 holder.recyclerView_discount.setAdapter(billDiscountAdapter);
                 billDiscountAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 holder.Lsubtotal.setVisibility(View.GONE);
             }
 
-        }else{
+        } else {
             holder.Lsubtotal.setVisibility(View.GONE);
         }
-
-
 
 
     }
@@ -117,27 +125,28 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
     public class BillAdapterViewHolder extends RecyclerView.ViewHolder {
 
         TextView txtservicenme, qtyval, txtsubtotal, txtsubtotalval, qty, txtcoupanval, txtdiscount, txttax;
-        RecyclerView recyclerView_discount;
+        RecyclerView recyclerView_discount, recycleView_item_ServiceOption;
         LinearLayout Lsubtotal;
 
         public BillAdapterViewHolder(View view) {
             super(view);
-            txtsubtotal= view.findViewById(R.id.txtsubtotal);
-         //   txtcoupanval = view.findViewById(R.id.txtcoupanval);
+            txtsubtotal = view.findViewById(R.id.txtsubtotal);
+            //   txtcoupanval = view.findViewById(R.id.txtcoupanval);
             //txtaxval = view.findViewById(R.id.txtaxval);
             txtservicenme = view.findViewById(R.id.txtservicenme);
             txtservicenme = view.findViewById(R.id.txtservicenme);
             //txt_amount = view.findViewById(R.id.txt_amount);
-           // txtdiscountval = view.findViewById(R.id.txtdiscountval);
+            // txtdiscountval = view.findViewById(R.id.txtdiscountval);
             txtsubtotalval = view.findViewById(R.id.txtsubtotalval);
             qtyval = view.findViewById(R.id.qtyval);
-           // discountlayout = view.findViewById(R.id.discountlayout);
-          //  coupanlayout = view.findViewById(R.id.coupanlayout);
+            // discountlayout = view.findViewById(R.id.discountlayout);
+            //  coupanlayout = view.findViewById(R.id.coupanlayout);
             Lsubtotal = view.findViewById(R.id.Lsubtotal);
-          //  txtdiscount = view.findViewById(R.id.txtdiscount);
+            //  txtdiscount = view.findViewById(R.id.txtdiscount);
             txttax = view.findViewById(R.id.txttax);
             qty = view.findViewById(R.id.qty);
-            recyclerView_discount= view.findViewById(R.id.recycle_item_discount);
+            recyclerView_discount = view.findViewById(R.id.recycle_item_discount);
+            recycleView_item_ServiceOption = view.findViewById(R.id.recycle_view_item_ServiceOption);
 
             Typeface tyface = Typeface.createFromAsset(context.getAssets(),
                     "fonts/Montserrat_Bold.otf");

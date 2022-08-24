@@ -8,9 +8,8 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dimen_10dp"
         app:cardCornerRadius="@dimen/dimen_5dp"
-        app:cardElevation="@dimen/dimen_10dp">
+        app:cardElevation="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,34 +27,34 @@
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:orientation="horizontal">
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                <TextView
                     android:id="@+id/tv_questionName"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.9"
+                    android:fontFamily="@font/font_semibold"
                     android:text=""
-                    android:textColor="@color/title_color"
-                    android:textSize="@dimen/dimen_15dp">
+                    android:textColor="@color/black1"
+                    android:textSize="@dimen/dimen_14dp">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+                </TextView>
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                <TextView
                     android:id="@+id/tv_manditory"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimen_5dp"
-                    android:layout_weight="0.1"
+                    android:fontFamily="@font/font_semibold"
                     android:gravity="center"
                     android:text="*"
                     android:textColor="@color/red"
-                    android:textSize="@dimen/dimen_15dp"
+                    android:textSize="@dimen/dimen_14dp"
                     android:visibility="gone">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+                </TextView>
 
             </LinearLayout>
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            <TextView
                 android:id="@+id/tv_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,7 +65,7 @@
                 android:textSize="@dimen/dimen_12dp"
                 android:visibility="gone">
 
-            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+            </TextView>
 
             <FrameLayout
                 android:id="@+id/rl_parent"
@@ -75,7 +74,7 @@
                 android:layout_marginStart="@dimen/dimen_8dp"
                 android:layout_marginTop="@dimen/dimen_8dp">
 
-                <com.jaldeeinc.jaldee.custom.CustomEditTextRegular
+                <EditText
                     android:id="@+id/et_textBox"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_40dp"
@@ -85,7 +84,7 @@
                     android:paddingStart="@dimen/dimen_8dp"
                     android:textColor="@color/title_color">
 
-                </com.jaldeeinc.jaldee.custom.CustomEditTextRegular>
+                </EditText>
 
                 <LinearLayout
                     android:id="@+id/ll_mask"
@@ -97,7 +96,7 @@
                     android:visibility="gone" />
             </FrameLayout>
 
-            <com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal
+            <TextView
                 android:id="@+id/tv_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -108,7 +107,7 @@
                 android:textSize="@dimen/dimen_12dp"
                 android:visibility="gone">
 
-            </com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal>
+            </TextView>
 
         </LinearLayout>
 

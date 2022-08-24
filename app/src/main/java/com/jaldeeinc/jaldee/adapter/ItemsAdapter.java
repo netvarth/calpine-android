@@ -32,6 +32,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.jaldeeinc.jaldee.Interface.IDataGrid;
 import com.jaldeeinc.jaldee.Interface.IItemInterface;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
@@ -65,9 +66,10 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     ProgressBar progressBar;
     private CardView cvPlus;
     private Catalog catalogInfo;
+    public IDataGrid iDataGrid;
 
 
-    public ItemsAdapter(ArrayList<CatalogItem> itemsList, Context context, boolean isLoading, IItemInterface iItemInterface, int accountId, int uniqueId, Catalog catalogInfo) {
+    public ItemsAdapter(ArrayList<CatalogItem> itemsList, Context context, boolean isLoading, IItemInterface iItemInterface, int accountId, int uniqueId, Catalog catalogInfo, IDataGrid iDataGrid) {
         this.itemsList = itemsList;
         this.context = context;
         this.isLoading = isLoading;
@@ -76,6 +78,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         this.accountId = accountId;
         this.uniqueId = uniqueId;
         this.catalogInfo = catalogInfo;
+        this.iDataGrid = iDataGrid;
+
         vibe = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
     }
@@ -229,11 +233,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
                     if (db.getAccountId() == 0 || db.getAccountId() == accountId) {
 
-                        viewHolder.flAdd.setVisibility(View.GONE);
+                       /* viewHolder.flAdd.setVisibility(View.GONE);
                         viewHolder.numberButton.setVisibility(View.VISIBLE);
-                        viewHolder.numberButton.setNumber("1");
+                        viewHolder.numberButton.setNumber("1");*/
 
-                        CartItemModel item = new CartItemModel();
+                        /*CartItemModel item = new CartItemModel();
                         item.setItemId(catalogItem.getItems().getItemId());
                         item.setAccountId(accountId);
                         item.setCatalogId(catalogItem.getCatalogId());
@@ -265,7 +269,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
                         db.insertItemToCart(item);
 
-                        iItemInterface.checkItemQuantity();
+                        iItemInterface.checkItemQuantity(); // commented because service option*/
+                        iItemInterface.checkItemQuantity(catalogItem, viewHolder);  // newline because service option
+
                     } else {
 
                         showAlertDialog();
@@ -302,20 +308,30 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                             cvPlus.setBackgroundResource(R.drawable.disabled_plus);
                             cvPlus.setClickable(false);
                         }
-
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                //Do something after 100ms
-
-                                db.addQuantity(catalogItem.getItems().getItemId(), newValue);
-                                iItemInterface.checkItemQuantity();
-
-                                progressBar.setVisibility(View.GONE);
-
+                        boolean isAddedServiceOption = db.isAddedServiceOption(catalogItem.getItems().getItemId());
+                        if (isAddedServiceOption) {
+                            progressBar.setVisibility(View.GONE);
+                            boolean isDecreaseQty = false;
+                            if(newValue < oldValue){
+                                isDecreaseQty = true;
+                            } else if(newValue > oldValue) {
+                                isDecreaseQty = false;
                             }
-                        }, 500);
-                        // plus and minus icons are disabled based on minQuantity and new value
+                            iDataGrid.onAddClick(catalogItem, viewHolder, isDecreaseQty, newValue);
+                        } else {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //Do something after 100ms
+
+                                    db.addQuantity(catalogItem.getItems().getItemId(), newValue);
+                                    iItemInterface.checkItemQuantity();
+                                    progressBar.setVisibility(View.GONE);
+
+                                }
+                            }, 300);
+                            // plus and minus icons are disabled based on minQuantity and new value
+                        }
 
                     } else {
 
@@ -418,9 +434,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         private CustomTextViewBold tvItemName;
         private AutofitTextView tvPrice, tvDiscountedPrice;
         private BorderImageView bIvItemImage;
-        private ElegantNumberButton numberButton;
+        public ElegantNumberButton numberButton;
         private CardView cvCard;
-        private FrameLayout flAdd;
+        public FrameLayout flAdd;
         private SkeletonLoadingView shimmer;
         private LinearLayout llLoader, llActionPreventor;
         private RelativeLayout rlTag;
@@ -474,4 +490,5 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             return "0";
         }
     }
+
 }

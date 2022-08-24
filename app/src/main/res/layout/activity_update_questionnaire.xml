@@ -86,7 +86,8 @@
                     android:orientation="vertical">
 
 
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                    <TextView
+                        android:id="@+id/tv_1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dimen_8dp"
@@ -98,7 +99,7 @@
                         android:textSize="@dimen/dimen_15dp"
                         android:visibility="visible">
 
-                    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+                    </TextView>
 
 
                 </LinearLayout>
@@ -124,16 +125,17 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center">
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                <TextView
                     android:id="@+id/tv_buttonName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Update"
+                    android:fontFamily="@font/font_semibold"
                     android:textColor="@color/white"
                     android:textSize="@dimen/dimen_18sp">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+                </TextView>
 
                 <ImageView
                     android:id="@+id/iv_next"

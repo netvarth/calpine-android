@@ -8,9 +8,8 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dimen_10dp"
         app:cardCornerRadius="@dimen/dimen_5dp"
-        app:cardElevation="@dimen/dimen_10dp">
+        app:cardElevation="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,34 +27,34 @@
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:orientation="horizontal">
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
+                <TextView
                     android:id="@+id/tv_questionName"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.9"
+                    android:fontFamily="@font/font_semibold"
                     android:text=""
-                    android:textColor="@color/title_color"
-                    android:textSize="@dimen/dimen_15dp">
+                    android:textColor="@color/black1"
+                    android:textSize="@dimen/dimen_14dp">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+                </TextView>
 
-                <com.jaldeeinc.jaldee.custom.CustomTextViewBold
+                <TextView
                     android:id="@+id/tv_manditory"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimen_5dp"
-                    android:layout_weight="0.1"
+                    android:fontFamily="@font/font_semibold"
                     android:gravity="center"
                     android:text="*"
                     android:textColor="@color/red"
-                    android:textSize="@dimen/dimen_15dp"
+                    android:textSize="@dimen/dimen_14dp"
                     android:visibility="gone">
 
-                </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
+                </TextView>
 
             </LinearLayout>
 
-            <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+            <TextView
                 android:id="@+id/tv_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,8 +65,7 @@
                 android:textSize="@dimen/dimen_12dp"
                 android:visibility="gone">
 
-            </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
-
+            </TextView>
 
             <FrameLayout
                 android:id="@+id/rl_parent"
@@ -78,33 +76,50 @@
 
                 <RelativeLayout
                     android:id="@+id/rl_calender"
-                    android:layout_width="175dp"
-                    android:layout_height="@dimen/dimen_35dp"
-                    android:background="@drawable/editetxt_new">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-                    <com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold
-                        android:id="@+id/tv_date"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="175dp"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="@dimen/dimen_15dp"
-                        android:text=""
-                        android:textColor="@color/title_color"
-                        android:textSize="@dimen/dimen_15dp">
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
 
-                    </com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold>
+                        <TextView
+                            android:id="@+id/tv_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/dimen_15dp"
+                            android:layout_marginEnd="@dimen/dimen_10dp"
+                            android:layout_weight="2"
+                            android:background="@drawable/rctgle_bordergrey_roundededge_greyfilled"
+                            android:text=""
+                            android:textColor="@color/title_color"
+                            android:textSize="@dimen/dimen_14dp"
+                            android:gravity="center">
 
-                    <ImageView
-                        android:id="@+id/iv_calender"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/dimen_15dp"
-                        android:src="@drawable/icon_calendar">
+                        </TextView>
 
-                    </ImageView>
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="@dimen/dimen_30dp"
+                            android:layout_height="@dimen/dimen_30dp"
+                            android:layout_marginEnd="@dimen/dimen_15dp"
+                            android:backgroundTint="@color/grey9"
+                            app:cardCornerRadius="@dimen/dimen_50dp">
 
+                            <ImageView
+                                android:id="@+id/iv_calender"
+                                android:layout_width="@dimen/dimen_20dp"
+                                android:layout_height="@dimen/dimen_20dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="center"
+                                android:src="@drawable/icon_calendar1">
+
+                            </ImageView>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
                 </RelativeLayout>
 
                 <LinearLayout
@@ -118,7 +133,7 @@
             </FrameLayout>
 
 
-            <com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal
+            <TextView
                 android:id="@+id/tv_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -129,7 +144,7 @@
                 android:textSize="@dimen/dimen_12dp"
                 android:visibility="gone">
 
-            </com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal>
+            </TextView>
 
         </LinearLayout>
 

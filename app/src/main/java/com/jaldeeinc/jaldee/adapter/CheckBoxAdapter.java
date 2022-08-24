@@ -1,27 +1,22 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jaldeeinc.jaldee.Interface.IEditAddress;
+import com.jaldeeinc.jaldee.Interface.IServiceOption;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
-import com.jaldeeinc.jaldee.model.Address;
+import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.model.QuestionnaireCheckbox;
-import com.jaldeeinc.jaldee.response.Questionnaire;
 
 import java.util.ArrayList;
 
@@ -29,10 +24,26 @@ public class CheckBoxAdapter extends RecyclerView.Adapter<CheckBoxAdapter.ViewHo
 
     ArrayList<QuestionnaireCheckbox> checkboxList = new ArrayList<>();
     public Context context;
+    int maxAnswerable;
+    private RadioButton lastCheckedRB = null;
+    private IServiceOption iServiceOptionListOptionChange;
 
     public CheckBoxAdapter(ArrayList<QuestionnaireCheckbox> checkBoxList, Context context) {
         this.checkboxList = checkBoxList;
         this.context = context;
+    }
+
+    public CheckBoxAdapter(ArrayList<QuestionnaireCheckbox> checkBoxList, int maxAnswerable, Context context, IServiceOption iServiceOptionListOptionChange) {
+        this.checkboxList = checkBoxList;
+        this.context = context;
+        this.maxAnswerable = maxAnswerable;
+        this.iServiceOptionListOptionChange = iServiceOptionListOptionChange;
+    }
+
+    public CheckBoxAdapter(ArrayList<QuestionnaireCheckbox> checkBoxList, int maxAnswerable, Context context) {
+        this.checkboxList = checkBoxList;
+        this.context = context;
+        this.maxAnswerable = maxAnswerable;
     }
 
     @NonNull
@@ -49,20 +60,72 @@ public class CheckBoxAdapter extends RecyclerView.Adapter<CheckBoxAdapter.ViewHo
 
         final QuestionnaireCheckbox checkbox = checkboxList.get(position);
 
-        viewHolder.checkBox.setText(checkbox.getText());
-        viewHolder.checkBox.setChecked(checkbox.isChecked());
+        if (maxAnswerable == 1) {
+            viewHolder.checkBox.setVisibility(View.GONE);
+            viewHolder.radioButton.setVisibility(View.VISIBLE);
+            viewHolder.radioButton.setText(checkbox.getText());
+            viewHolder.radioButton.setChecked(checkbox.isChecked());
+            if (checkbox.isChecked()) {
+                lastCheckedRB = viewHolder.radioButton;
+            }
+
+        } else {
+            viewHolder.checkBox.setVisibility(View.VISIBLE);
+            viewHolder.radioButton.setVisibility(View.GONE);
+            viewHolder.checkBox.setText(checkbox.getText());
+            viewHolder.checkBox.setChecked(checkbox.isChecked());
+        }
+        viewHolder.tvItemAmount.setVisibility(View.VISIBLE);
+        if (checkbox.getPrice() != null) {
+            if (checkbox.isBase) {
+                viewHolder.tvItemAmount.setText("₹" + Config.getAmountNoOrTwoDecimalPoints(checkbox.getPrice()));
+                viewHolder.tvItemAmount.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.tvItemAmount.setText("+ ₹" + Config.getAmountNoOrTwoDecimalPoints(checkbox.getPrice()));
+                viewHolder.tvItemAmount.setVisibility(View.VISIBLE);
+            }
+        }
+        if (checkboxList.size() == position + 1) {
+            viewHolder.llDivider.setVisibility(View.GONE);
+        } else {
+            viewHolder.llDivider.setVisibility(View.VISIBLE);
+        }
+        //
+
 
         viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
                 checkboxList.get(position).setChecked(b);
+                if (iServiceOptionListOptionChange != null) {
+                    iServiceOptionListOptionChange.updateTotalPrice();
+                }
 
 //                try {
 //                    notifyDataSetChanged();
 //                } catch (Exception e) {
 //                    e.printStackTrace();
 //                }
+            }
+        });
+        viewHolder.radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (lastCheckedRB != null) {
+                    lastCheckedRB.setChecked(false);
+                }
+                //store the clicked radiobutton
+                lastCheckedRB = viewHolder.radioButton;
+                Config.logV("lastCheckedRB------@@@@--------------" + lastCheckedRB);
+
+                checkboxList.get(position).setChecked(isChecked);
+                if (iServiceOptionListOptionChange != null) {
+                    iServiceOptionListOptionChange.updateTotalPrice();
+                }
+                //iFamillyListSelected.SelectedPincodeLocation(pincodeLocations.get(position));
+
             }
         });
 
@@ -73,12 +136,12 @@ public class CheckBoxAdapter extends RecyclerView.Adapter<CheckBoxAdapter.ViewHo
         return checkboxList.size();
     }
 
-    public int getCheckedCount(){
+    public int getCheckedCount() {
 
         int count = 0;
-        for (QuestionnaireCheckbox obj: checkboxList) {
+        for (QuestionnaireCheckbox obj : checkboxList) {
 
-            if (obj.isChecked()){
+            if (obj.isChecked()) {
                 count++;
             }
         }
@@ -86,12 +149,12 @@ public class CheckBoxAdapter extends RecyclerView.Adapter<CheckBoxAdapter.ViewHo
         return count;
     }
 
-    public ArrayList<QuestionnaireCheckbox> getSelectedCheckboxes(){
+    public ArrayList<QuestionnaireCheckbox> getSelectedCheckboxes() {
 
         ArrayList<QuestionnaireCheckbox> selectedCheckboxes = new ArrayList<>();
-        for (QuestionnaireCheckbox obj: checkboxList) {
+        for (QuestionnaireCheckbox obj : checkboxList) {
 
-            if (obj.isChecked()){
+            if (obj.isChecked()) {
 
                 selectedCheckboxes.add(obj);
 
@@ -105,14 +168,20 @@ public class CheckBoxAdapter extends RecyclerView.Adapter<CheckBoxAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public CheckBox checkBox;
+        public RadioButton radioButton;
+
+        public TextView tvItemAmount;
+        public LinearLayout llDivider;
 
         public ViewHolder(@NonNull View itemView) {
 
             super(itemView);
 
             checkBox = itemView.findViewById(R.id.cb_checkBox);
+            radioButton = itemView.findViewById(R.id.rb_radioButton);
+            tvItemAmount = itemView.findViewById(R.id.tv_item_amount);
+            llDivider = itemView.findViewById(R.id.ll_divider);
 
         }
     }
-
 }

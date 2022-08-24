@@ -19,13 +19,18 @@ import android.widget.LinearLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.Interface.IDeleteImagesInterface;
 import com.jaldeeinc.jaldee.Interface.ISaveNotes;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.ItemsActivity;
 import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
+import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.widgets.TouchImageView;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -79,6 +84,16 @@ public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapte
 
             Uri imgUri = Uri.parse(itemList.get(position).getImagePath());
             myViewHolder.iv_file_attach.setImageURI(imgUri);
+           // Glide.with(mContext).load(imgUri).placeholder(R.drawable.icon_noimage).into(myViewHolder.iv_file_attach);
+            /*Picasso.Builder builder = new Picasso.Builder(myViewHolder.iv_file_attach.getContext());
+            builder.listener(new Picasso.Listener() {
+                @Override
+                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                    //exception.printStackTrace();
+                    myViewHolder.iv_file_attach.setImageURI(imgUri);
+                }
+            });
+            builder.build().load(imgUri).fit().into(myViewHolder.iv_file_attach);*/
 
         }
 

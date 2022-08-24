@@ -1,25 +1,21 @@
 package com.jaldeeinc.jaldee.custom;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
-
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.widget.TextView;
 
 import com.google.gson.JsonObject;
-import com.jaldeeinc.jaldee.Interface.IDataGrid;
+import com.jaldeeinc.jaldee.Interface.IServiceOption;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.DataGridAdapter;
 import com.jaldeeinc.jaldee.model.AnswerLine;
-import com.jaldeeinc.jaldee.model.DataGridModel;
 import com.jaldeeinc.jaldee.model.GridColumnAnswerLine;
 import com.jaldeeinc.jaldee.response.DataGridColumns;
 import com.jaldeeinc.jaldee.response.GetQuestion;
-
-import java.util.ArrayList;
 
 public class QuestionnaireTextView extends LinearLayout {
 
@@ -27,18 +23,26 @@ public class QuestionnaireTextView extends LinearLayout {
     private AttributeSet attrs;
     private int styleAttr;
 
-    private CustomTextViewSemiBold tvQuestionName;
-    private CustomTextViewBold tvManditory;
-    private CustomEditTextRegular etTextBox;
-    private CustomTextViewMedium tvHint;
-    private CustomItalicTextViewNormal tvError;
+    private TextView tvQuestionName;
+    private TextView tvManditory;
+    private EditText etTextBox;
+    private TextView tvHint;
+    private TextView tvError;
     private GetQuestion question;
     private DataGridColumns gridQuestion;
-
+    IServiceOption iServiceOptionListOptionChange;
+    float itemPrice;
 
     public QuestionnaireTextView(Context context) {
         super(context);
         this.context = context;
+        initView();
+    }
+
+    public QuestionnaireTextView(Context context, IServiceOption iServiceOptionListOptionChange) {
+        super(context);
+        this.context = context;
+        this.iServiceOptionListOptionChange = iServiceOptionListOptionChange;
         initView();
     }
 
@@ -66,7 +70,29 @@ public class QuestionnaireTextView extends LinearLayout {
         etTextBox = findViewById(R.id.et_textBox);
         tvHint = findViewById(R.id.tv_hint);
         tvError = findViewById(R.id.tv_error);
+        etTextBox.addTextChangedListener(new TextWatcher() {
+            String before = "", after = "";
 
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                before = charSequence.toString().trim();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (iServiceOptionListOptionChange != null) {
+                    after = editable.toString().trim();
+                    if ((before.isEmpty() && !after.isEmpty()) || (!before.isEmpty() && after.isEmpty())) {
+                        iServiceOptionListOptionChange.updateTotalPrice();
+                    }
+                }
+            }
+        });
     }
 
     public void setQuestionData(GetQuestion q) {
@@ -104,6 +130,11 @@ public class QuestionnaireTextView extends LinearLayout {
         }
 
     }
+    public void setServiceOptionGridQuestionData(DataGridColumns gQuestion, float itemPrice) {
+        setGridQuestionData(gQuestion);
+        this.itemPrice = itemPrice;
+    }
+
 
     public void setAnswerData(GetQuestion q) {
 
@@ -184,7 +215,10 @@ public class QuestionnaireTextView extends LinearLayout {
         column.addProperty("plainText", etTextBox.getText().toString());
 
         obj.setColumn(column);
-
+        if(!etTextBox.getText().toString().trim().isEmpty()) {
+            obj.setPrice(itemPrice);
+            obj.setQuantity(1);
+        }
         return obj;
 
     }
@@ -198,16 +232,14 @@ public class QuestionnaireTextView extends LinearLayout {
                 tvError.setVisibility(View.VISIBLE);
                 tvError.setText("Enter " + gridQuestion.getColumnId());
                 return false;
-            }
-
-           else if (etTextBox.getText().toString().trim().length() < gridQuestion.getPlainTextProperties().getMinNoOfLetter()) {
+            } else if (gridQuestion.getPlainTextProperties() != null && etTextBox.getText().toString().trim().length() < gridQuestion.getPlainTextProperties().getMinNoOfLetter()) {
 
                 tvError.setVisibility(View.VISIBLE);
                 tvError.setText("Enter minimum " + gridQuestion.getPlainTextProperties().getMinNoOfLetter() + " Characters");
                 return false;
             } else {
 
-               return true;
+                return true;
             }
         } else {
 

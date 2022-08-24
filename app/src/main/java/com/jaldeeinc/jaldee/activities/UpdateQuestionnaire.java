@@ -1,13 +1,5 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -20,7 +12,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -28,12 +19,22 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -53,15 +54,15 @@ import com.jaldeeinc.jaldee.adapter.FilesAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.CustomEditTextRegular;
-import com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
+import com.jaldeeinc.jaldee.custom.CustomTextViewNormalItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.custom.KeyPairBoolData;
 import com.jaldeeinc.jaldee.custom.MultiSpinnerListener;
 import com.jaldeeinc.jaldee.custom.MultiSpinnerSearch;
 import com.jaldeeinc.jaldee.custom.QuestionnaireGridView;
+import com.jaldeeinc.jaldee.custom.ServiceOptionAddItemDialog;
+import com.jaldeeinc.jaldee.custom.ServiceOptionGridView;
 import com.jaldeeinc.jaldee.model.AnswerLine;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.DataGrid;
@@ -132,13 +133,16 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
     CardView cvSubmit;
 
     @BindView(R.id.tv_buttonName)
-    CustomTextViewBold tvButtonName;
+    TextView tvButtonName;
 
     @BindView(R.id.iv_next)
     ImageView ivNext;
 
     @BindView(R.id.cv_back)
     CardView cvBack;
+
+    @BindView(R.id.tv_1)
+    TextView tv_1;
 
     private static Context mContext;
     private IFilesInterface iFilesInterface;
@@ -316,7 +320,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                         View singleFileUploadView = viewsList.get(question.getLabelName());
                         ImageView ivSingleFile = (ImageView) singleFileUploadView.findViewById(R.id.iv_file);
-                        CustomTextViewMedium tvPath = (CustomTextViewMedium) singleFileUploadView.findViewById(R.id.tv_path);
+                        TextView tvPath = singleFileUploadView.findViewById(R.id.tv_path);
 
                         String path = null;
                         if (!tvPath.getText().toString().trim().equalsIgnoreCase("")) {
@@ -464,7 +468,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 } else if (question.getFieldDataType().equalsIgnoreCase("plainText")) {
 
                     View textFieldView = viewsList.get(question.getLabelName());
-                    CustomEditTextRegular etTextField = (CustomEditTextRegular) textFieldView.findViewById(R.id.et_textBox);
+                    EditText etTextField = (EditText) textFieldView.findViewById(R.id.et_textBox);
 
                     AnswerLine obj = new AnswerLine();
                     obj.setLabelName(question.getLabelName());
@@ -478,7 +482,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 } else if (question.getFieldDataType().equalsIgnoreCase("number")) {
 
                     View numberFieldView = viewsList.get(question.getLabelName());
-                    CustomEditTextRegular etTextField = (CustomEditTextRegular) numberFieldView.findViewById(R.id.et_textBox);
+                    EditText etTextField = (EditText) numberFieldView.findViewById(R.id.et_textBox);
 
                     AnswerLine obj = new AnswerLine();
                     obj.setLabelName(question.getLabelName());
@@ -1041,7 +1045,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                     View fileUploadView = viewsList.get(question.getLabelName());
                     RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
                     FilesAdapter filesAdapter = (FilesAdapter) rvFiles.getAdapter();
-                    CustomItalicTextViewNormal tvError = (CustomItalicTextViewNormal) fileUploadView.findViewById(R.id.tv_error);
+                    CustomTextViewNormalItalic tvError = (CustomTextViewNormalItalic) fileUploadView.findViewById(R.id.tv_error);
 
                     List<KeyPairBoolData> files = filesAdapter.getFiles();
 
@@ -1077,7 +1081,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                     View singleFileUploadView = viewsList.get(question.getLabelName());
                     ImageView ivSingleFile = (ImageView) singleFileUploadView.findViewById(R.id.iv_file);
-                    CustomItalicTextViewNormal tvError = (CustomItalicTextViewNormal) singleFileUploadView.findViewById(R.id.tv_error);
+                    CustomTextViewNormalItalic tvError = (CustomTextViewNormalItalic) singleFileUploadView.findViewById(R.id.tv_error);
 
 
                     if (ivSingleFile.getDrawable() == null) {
@@ -1095,7 +1099,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 View listFieldView = viewsList.get(question.getLabelName());
                 RecyclerView rvCheckBoxes = (RecyclerView) listFieldView.findViewById(R.id.rv_checkBoxes);
                 CheckBoxAdapter checkBoxAdapter = (CheckBoxAdapter) rvCheckBoxes.getAdapter();
-                CustomItalicTextViewNormal tvError = (CustomItalicTextViewNormal) listFieldView.findViewById(R.id.tv_error);
+                CustomTextViewNormalItalic tvError = (CustomTextViewNormalItalic) listFieldView.findViewById(R.id.tv_error);
 
                 ListProperties properties = new ListProperties();
                 properties = question.getListProperties();
@@ -1124,7 +1128,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 RadioGroup radioGroup = (RadioGroup) boolFieldView.findViewById(R.id.rg_radioGroup);
                 RadioButton radioButtonYes = (RadioButton) boolFieldView.findViewById(R.id.rb_yes);
                 RadioButton radioButtonNo = (RadioButton) boolFieldView.findViewById(R.id.rb_no);
-                CustomItalicTextViewNormal tvError = (CustomItalicTextViewNormal) boolFieldView.findViewById(R.id.tv_error);
+                CustomTextViewNormalItalic tvError = (CustomTextViewNormalItalic) boolFieldView.findViewById(R.id.tv_error);
 
                 if (!radioButtonYes.isChecked() && !radioButtonNo.isChecked()) {
 
@@ -1136,8 +1140,8 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
             } else if (question.getFieldDataType().equalsIgnoreCase("plainText") && question.isMandatory()) {
 
                 View textFieldView = viewsList.get(question.getLabelName());
-                CustomEditTextRegular etTextField = (CustomEditTextRegular) textFieldView.findViewById(R.id.et_textBox);
-                CustomItalicTextViewNormal tvError = (CustomItalicTextViewNormal) textFieldView.findViewById(R.id.tv_error);
+                EditText etTextField = (EditText) textFieldView.findViewById(R.id.et_textBox);
+                CustomTextViewNormalItalic tvError = (CustomTextViewNormalItalic) textFieldView.findViewById(R.id.tv_error);
 
                 if (etTextField.getText().toString().trim().equalsIgnoreCase("")) {
 
@@ -1149,8 +1153,8 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
             } else if (question.getFieldDataType().equalsIgnoreCase("number") && question.isMandatory()) {
 
                 View numberFieldView = viewsList.get(question.getLabelName());
-                CustomEditTextRegular etTextField = (CustomEditTextRegular) numberFieldView.findViewById(R.id.et_textBox);
-                CustomItalicTextViewNormal tvError = (CustomItalicTextViewNormal) numberFieldView.findViewById(R.id.tv_error);
+                EditText etTextField = (EditText) numberFieldView.findViewById(R.id.et_textBox);
+                CustomTextViewNormalItalic tvError = (CustomTextViewNormalItalic) numberFieldView.findViewById(R.id.tv_error);
 
                 if (etTextField.getText().toString().trim().equalsIgnoreCase("")) {
 
@@ -1163,7 +1167,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                 View dateFieldView = viewsList.get(question.getLabelName());
                 CustomTextViewSemiBold tvDate = (CustomTextViewSemiBold) dateFieldView.findViewById(R.id.tv_date);
-                CustomItalicTextViewNormal tvError = (CustomItalicTextViewNormal) dateFieldView.findViewById(R.id.tv_error);
+                CustomTextViewNormalItalic tvError = (CustomTextViewNormalItalic) dateFieldView.findViewById(R.id.tv_error);
 
                 if (tvDate.getText().toString().trim().equalsIgnoreCase("")) {
 
@@ -1323,6 +1327,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 listModel.setManditory(question.isMandatory());
                 listModel.setLabelName(question.getLabelName());
                 listModel.setHint(question.getHint());
+                listModel.setMaxAnswerable(question.getListProperties().getMaxAnswers());
                 ArrayList values = (ArrayList) question.getLabelValues();
                 listModel.setLabels(values);
 
@@ -1397,6 +1402,62 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                 llParentLayout.addView(gridView);
                 viewsList.put(question.getLabelName(), gridView);
 
+            } else if (question.getFieldDataType().equalsIgnoreCase("dataGridList")) {
+                cvSubmit.setVisibility(View.GONE);
+                tv_1.setVisibility(View.GONE);
+                ServiceOptionGridView gridView = new ServiceOptionGridView(this, false);
+                gridView.setQuestionData(question);
+
+                ArrayList<DataGrid> dataGridList = new ArrayList<>();
+
+                for (AnswerLine answerLine : qInput.getAnswerLines()) {
+                    if (answerLine != null && answerLine.getLabelName().equalsIgnoreCase(question.getLabelName())) {
+                        JSONObject txtObj = new JSONObject(answerLine.getAnswer().toString());
+                        dataGridList = answerLine.getDataGridListList();
+                    }
+                }
+                gridView.setGridDataList(dataGridList);
+//                gridView.getLlAdd().setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//
+//                        SharedPreference.getInstance(UpdateQuestionnaire.this).setValue(Constants.QUESTION, "");
+//                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTION, new Gson().toJson(question));
+//
+//                        DataGridFragment dataGridFragment = DataGridFragment.newInstance("");
+//                        dataGridFragment.setGridView(gridView);
+//                        final FragmentManager fragmentManager = getSupportFragmentManager();
+//                        fragmentManager.beginTransaction()
+//                                .replace(R.id.container, dataGridFragment).addToBackStack("DataGrid")
+//                                .commit();
+//                    }
+//                });
+//
+
+                gridView.setiDataGridListener(new IDataGridListener() {
+                    @Override
+                    public void onEditClick(DataGrid gridObj, int position) {
+
+                        SharedPreference.getInstance(UpdateQuestionnaire.this).setValue(Constants.QUESTION, "");
+                        SharedPreference.getInstance(mContext).setValue(Constants.ANSWER, "");
+
+                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTION, new Gson().toJson(question));
+                        SharedPreference.getInstance(mContext).setValue(Constants.ANSWER, new Gson().toJson(gridObj));
+
+                        ServiceOptionAddItemDialog serviceOptionAddItemDialog = ServiceOptionAddItemDialog.newInstance("", "", position, false);
+                        serviceOptionAddItemDialog.setGridView(gridView);
+                        final FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.container, serviceOptionAddItemDialog).addToBackStack("DataGrid")
+                                .commit();
+//                        ServiceOptionAddItemDialog serviceOptionAddItemDialog = new ServiceOptionAddItemDialog(mContext, position);
+//                        serviceOptionAddItemDialog.setGridView(gridView);
+//                        serviceOptionAddItemDialog.ServiceOptnAddItemDialog();
+                    }
+                });
+                llParentLayout.addView(gridView);
+                viewsList.put(question.getLabelName(), gridView);
+
             }
         }
 
@@ -1407,14 +1468,14 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
         View fileUploadView = getLayoutInflater().inflate(R.layout.singlefile_upload, null, false);
 
-        CustomTextViewSemiBold tvQuestionName = (CustomTextViewSemiBold) fileUploadView.findViewById(R.id.tv_questionName);
-        CustomTextViewBold tvMutipleFileManditory = (CustomTextViewBold) fileUploadView.findViewById(R.id.tv_singleFileManditory);
-        CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
+        TextView tvQuestionName = fileUploadView.findViewById(R.id.tv_questionName);
+        TextView tvMutipleFileManditory = fileUploadView.findViewById(R.id.tv_singleFileManditory);
+        TextView tvSupportedTypes = fileUploadView.findViewById(R.id.tv_supportedTypes);
         LinearLayout llUpload = (LinearLayout) fileUploadView.findViewById(R.id.ll_upload);
         ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
         ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
-        CustomTextViewMedium tvHint = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_hint);
-        CustomTextViewMedium tvPath = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_path);
+        TextView tvHint = fileUploadView.findViewById(R.id.tv_hint);
+        TextView tvPath = fileUploadView.findViewById(R.id.tv_path);
 
 
         tvQuestionName.setText(singleFile.getQuestionName());
@@ -1605,12 +1666,12 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
         View fileUploadView = getLayoutInflater().inflate(R.layout.questnnarefile_upload, null, false);
 
-        CustomTextViewSemiBold tvQuestionName = (CustomTextViewSemiBold) fileUploadView.findViewById(R.id.tv_questionName);
+        TextView tvQuestionName = fileUploadView.findViewById(R.id.tv_questionName);
         MultiSpinnerSearch filesSpinner = (MultiSpinnerSearch) fileUploadView.findViewById(R.id.mfilesSpinner);
         RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
-        CustomTextViewBold tvMutipleFileManditory = (CustomTextViewBold) fileUploadView.findViewById(R.id.tv_multipleFileManditory);
-        CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
-        CustomTextViewMedium tvHint = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_hint);
+        TextView tvMutipleFileManditory = fileUploadView.findViewById(R.id.tv_multipleFileManditory);
+        TextView tvSupportedTypes = fileUploadView.findViewById(R.id.tv_supportedTypes);
+        TextView tvHint = fileUploadView.findViewById(R.id.tv_hint);
 
         tvQuestionName.setText(model.getQuestionName());
         tvSupportedTypes.setText(model.getAllowedTypes().toString());
@@ -1658,10 +1719,10 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         View textFieldView = getLayoutInflater().inflate(R.layout.edittext_field, null, false);
 
         LinearLayout ll_mask = (LinearLayout) textFieldView.findViewById(R.id.ll_mask);
-        CustomTextViewSemiBold tvQuestionName = (CustomTextViewSemiBold) textFieldView.findViewById(R.id.tv_questionName);
-        CustomTextViewBold tvTextFieldManditory = (CustomTextViewBold) textFieldView.findViewById(R.id.tv_manditory);
-        CustomEditTextRegular etTextField = (CustomEditTextRegular) textFieldView.findViewById(R.id.et_textBox);
-        CustomTextViewMedium tvHint = (CustomTextViewMedium) textFieldView.findViewById(R.id.tv_hint);
+        TextView tvQuestionName = (TextView) textFieldView.findViewById(R.id.tv_questionName);
+        TextView tvTextFieldManditory = (TextView) textFieldView.findViewById(R.id.tv_manditory);
+        EditText etTextField = (EditText) textFieldView.findViewById(R.id.et_textBox);
+        TextView tvHint = (TextView) textFieldView.findViewById(R.id.tv_hint);
 
 
         tvQuestionName.setText(textField.getQuestionName());
@@ -1718,11 +1779,11 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         View dateFieldView = getLayoutInflater().inflate(R.layout.date_item, null, false);
 
         LinearLayout ll_mask = (LinearLayout) dateFieldView.findViewById(R.id.ll_mask);
-        CustomTextViewSemiBold tvQuestionName = (CustomTextViewSemiBold) dateFieldView.findViewById(R.id.tv_questionName);
-        CustomTextViewBold tvTextFieldManditory = (CustomTextViewBold) dateFieldView.findViewById(R.id.tv_manditory);
+        TextView tvQuestionName = (TextView) dateFieldView.findViewById(R.id.tv_questionName);
+        TextView tvTextFieldManditory = (TextView) dateFieldView.findViewById(R.id.tv_manditory);
         RelativeLayout rlCalender = (RelativeLayout) dateFieldView.findViewById(R.id.rl_calender);
-        CustomTextViewSemiBold tvDate = (CustomTextViewSemiBold) dateFieldView.findViewById(R.id.tv_date);
-        CustomTextViewMedium tvHint = (CustomTextViewMedium) dateFieldView.findViewById(R.id.tv_hint);
+        TextView tvDate = (TextView) dateFieldView.findViewById(R.id.tv_date);
+        TextView tvHint = (TextView) dateFieldView.findViewById(R.id.tv_hint);
 
         tvQuestionName.setText(dateField.getQuestionName());
 
@@ -1767,10 +1828,10 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         View dateFieldView = getLayoutInflater().inflate(R.layout.numberfield_item, null, false);
 
         LinearLayout ll_mask = (LinearLayout) dateFieldView.findViewById(R.id.ll_mask);
-        CustomTextViewSemiBold tvQuestionName = (CustomTextViewSemiBold) dateFieldView.findViewById(R.id.tv_questionName);
-        CustomTextViewBold tvTextFieldManditory = (CustomTextViewBold) dateFieldView.findViewById(R.id.tv_manditory);
-        CustomEditTextRegular etTextField = (CustomEditTextRegular) dateFieldView.findViewById(R.id.et_textBox);
-        CustomTextViewMedium tvHint = (CustomTextViewMedium) dateFieldView.findViewById(R.id.tv_hint);
+        TextView tvQuestionName = (TextView) dateFieldView.findViewById(R.id.tv_questionName);
+        TextView tvTextFieldManditory = (TextView) dateFieldView.findViewById(R.id.tv_manditory);
+        EditText etTextField = (EditText) dateFieldView.findViewById(R.id.et_textBox);
+        TextView tvHint = (TextView) dateFieldView.findViewById(R.id.tv_hint);
 
         tvQuestionName.setText(numberField.getQuestionName());
 
@@ -1825,12 +1886,12 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         View boolFieldView = getLayoutInflater().inflate(R.layout.boolean_item, null, false);
 
         LinearLayout ll_mask = (LinearLayout) boolFieldView.findViewById(R.id.ll_mask);
-        CustomTextViewSemiBold tvQuestionName = (CustomTextViewSemiBold) boolFieldView.findViewById(R.id.tv_questionName);
-        CustomTextViewBold tvTextFieldManditory = (CustomTextViewBold) boolFieldView.findViewById(R.id.tv_manditory);
+        TextView tvQuestionName = (TextView) boolFieldView.findViewById(R.id.tv_questionName);
+        TextView tvTextFieldManditory = (TextView) boolFieldView.findViewById(R.id.tv_manditory);
         RadioGroup radioGroup = (RadioGroup) boolFieldView.findViewById(R.id.rg_radioGroup);
         RadioButton radioButtonYes = (RadioButton) boolFieldView.findViewById(R.id.rb_yes);
         RadioButton radioButtonNo = (RadioButton) boolFieldView.findViewById(R.id.rb_no);
-        CustomTextViewMedium tvHint = (CustomTextViewMedium) boolFieldView.findViewById(R.id.tv_hint);
+        TextView tvHint = (TextView) boolFieldView.findViewById(R.id.tv_hint);
 
         tvQuestionName.setText(boolField.getQuestionName());
 
@@ -1875,10 +1936,10 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         View listFieldView = getLayoutInflater().inflate(R.layout.list_fielditem, null, false);
 
         LinearLayout ll_mask = (LinearLayout) listFieldView.findViewById(R.id.ll_mask);
-        CustomTextViewSemiBold tvQuestionName = (CustomTextViewSemiBold) listFieldView.findViewById(R.id.tv_questionName);
-        CustomTextViewBold tvTextFieldManditory = (CustomTextViewBold) listFieldView.findViewById(R.id.tv_manditory);
+        TextView tvQuestionName = (TextView) listFieldView.findViewById(R.id.tv_questionName);
+        TextView tvTextFieldManditory = (TextView) listFieldView.findViewById(R.id.tv_manditory);
         RecyclerView rvCheckBoxes = (RecyclerView) listFieldView.findViewById(R.id.rv_checkBoxes);
-        CustomTextViewMedium tvHint = (CustomTextViewMedium) listFieldView.findViewById(R.id.tv_hint);
+        TextView tvHint = (TextView) listFieldView.findViewById(R.id.tv_hint);
 
         tvQuestionName.setText(listModel.getQuestionName());
 
@@ -1917,7 +1978,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
         }
 
         rvCheckBoxes.setLayoutManager(new LinearLayoutManager(this));
-        CheckBoxAdapter checkBoxAdapter = new CheckBoxAdapter(checkBoxList, mContext);
+        CheckBoxAdapter checkBoxAdapter = new CheckBoxAdapter(checkBoxList, listModel.getMaxAnswerable(), mContext);
         rvCheckBoxes.setAdapter(checkBoxAdapter);
         if (from.equalsIgnoreCase(Constants.DONATION) && !isEdit) {  // if it from Donation, its not need to editable,there for use a masking layout above the parent layout
             ll_mask.setVisibility(View.VISIBLE);
@@ -2107,7 +2168,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                         View fileUploadView = viewsList.get(qLabelName);
                         RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
-                        CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
+                        TextView tvSupportedTypes = fileUploadView.findViewById(R.id.tv_supportedTypes);
                         FilesAdapter filesAdapter = (FilesAdapter) rvFiles.getAdapter();
 
                         if (tvSupportedTypes.getText().toString().contains(extension)) {
@@ -2164,7 +2225,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
 
                             View fileUploadView = viewsList.get(qLabelName);
                             RecyclerView rvFiles = (RecyclerView) fileUploadView.findViewById(R.id.rv_files);
-                            CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
+                            TextView tvSupportedTypes = fileUploadView.findViewById(R.id.tv_supportedTypes);
                             FilesAdapter filesAdapter = (FilesAdapter) rvFiles.getAdapter();
 
                             if (tvSupportedTypes.getText().toString().contains(extension)) {
@@ -2269,8 +2330,8 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                         singleFilePath = orgFilePath;
                         View fileUploadView = viewsList.get(qLabelName);
                         ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
-                        CustomTextViewMedium tvPath = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_path);
-                        CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
+                        TextView tvPath = fileUploadView.findViewById(R.id.tv_path);
+                        TextView tvSupportedTypes = fileUploadView.findViewById(R.id.tv_supportedTypes);
                         ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
                         ivClose.setVisibility(View.VISIBLE);
                         tvPath.setText(orgFilePath);
@@ -2349,8 +2410,8 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                             singleFilePath = orgFilePath;
                             View fileUploadView = viewsList.get(qLabelName);
                             ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
-                            CustomTextViewMedium tvPath = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_path);
-                            CustomTextViewMedium tvSupportedTypes = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_supportedTypes);
+                            TextView tvPath = fileUploadView.findViewById(R.id.tv_path);
+                            TextView tvSupportedTypes = fileUploadView.findViewById(R.id.tv_supportedTypes);
                             ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
                             ivClose.setVisibility(View.VISIBLE);
                             tvPath.setText(orgFilePath);
@@ -2417,7 +2478,7 @@ public class UpdateQuestionnaire extends AppCompatActivity implements IFilesInte
                     View fileUploadView = viewsList.get(qLabelName);
                     ImageView ivSingleFile = (ImageView) fileUploadView.findViewById(R.id.iv_file);
                     ImageView ivClose = (ImageView) fileUploadView.findViewById(R.id.iv_close);
-                    CustomTextViewMedium tvPath = (CustomTextViewMedium) fileUploadView.findViewById(R.id.tv_path);
+                    TextView tvPath = fileUploadView.findViewById(R.id.tv_path);
                     ivSingleFile.setImageBitmap(BitmapFactory.decodeFile(path));
                     ivClose.setVisibility(View.VISIBLE);
                     tvPath.setText(path);

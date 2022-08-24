@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -127,12 +128,14 @@ public class CustomDateTimePicker implements View.OnClickListener {
         btn_set.setLayoutParams(button_params);
         btn_set.setText("Set");
         btn_set.setId(SET);
+        btn_set.setTextColor(Color.BLACK);
         btn_set.setOnClickListener(this);
 
         btn_cancel = new Button(activity);
         btn_cancel.setLayoutParams(button_params);
         btn_cancel.setText("Cancel");
         btn_cancel.setId(CANCEL);
+        btn_cancel.setTextColor(Color.BLACK);
         btn_cancel.setOnClickListener(this);
 
         linear_bottom.addView(btn_set);
@@ -256,21 +259,21 @@ public class CustomDateTimePicker implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case SET_DATE:
-            btn_setTime.setEnabled(true);
-            btn_setDate.setEnabled(false);
+                btn_setTime.setEnabled(true);
+                btn_setDate.setEnabled(false);
 
-            if (viewSwitcher.getCurrentView() != datePicker) {
-                viewSwitcher.showPrevious();
-            }
-            break;
+                if (viewSwitcher.getCurrentView() != datePicker) {
+                    viewSwitcher.showPrevious();
+                }
+                break;
 
-        case SET_TIME:
-            btn_setTime.setEnabled(false);
-            btn_setDate.setEnabled(true);
-            if (viewSwitcher.getCurrentView() == datePicker) {
-                viewSwitcher.showNext();
-            }
-            break;
+            case SET_TIME:
+                btn_setTime.setEnabled(false);
+                btn_setDate.setEnabled(true);
+                if (viewSwitcher.getCurrentView() == datePicker) {
+                    viewSwitcher.showNext();
+                }
+                break;
 
 
             case SET:
@@ -314,15 +317,12 @@ public class CustomDateTimePicker implements View.OnClickListener {
     }
 
     /**
-     * @param date
-     *            date in String
-     * @param fromFormat
-     *            format of your <b>date</b> eg: if your date is 2011-07-07
-     *            09:09:09 then your format will be <b>yyyy-MM-dd hh:mm:ss</b>
-     * @param toFormat
-     *            format to which you want to convert your <b>date</b> eg: if
-     *            required format is 31 July 2011 then the toFormat should be
-     *            <b>d MMMM yyyy</b>
+     * @param date       date in String
+     * @param fromFormat format of your <b>date</b> eg: if your date is 2011-07-07
+     *                   09:09:09 then your format will be <b>yyyy-MM-dd hh:mm:ss</b>
+     * @param toFormat   format to which you want to convert your <b>date</b> eg: if
+     *                   required format is 31 July 2011 then the toFormat should be
+     *                   <b>d MMMM yyyy</b>
      * @return formatted date
      */
     public static String convertDate(String date, String fromFormat,

@@ -1,37 +1,19 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.custom.BorderImageView;
-import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
 import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
-import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
-import com.jaldeeinc.jaldee.custom.PicassoTrustAll;
 import com.jaldeeinc.jaldee.custom.ViewNotesDialog;
-import com.jaldeeinc.jaldee.response.ItemDetails;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
-import com.omjoonkim.skeletonloadingview.SkeletonLoadingView;
-import com.squareup.picasso.Callback;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class PhoneNumbersAdapter extends RecyclerView.Adapter<PhoneNumbersAdapter.ViewHolder> {

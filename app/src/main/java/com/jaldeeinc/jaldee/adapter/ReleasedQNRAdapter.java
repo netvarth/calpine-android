@@ -38,32 +38,32 @@ public class ReleasedQNRAdapter extends RecyclerView.Adapter<ReleasedQNRAdapter.
     public int serviceId;
     public int pAccountId;
     public String uid;
-    public String uniqueId;
+    public Integer uniqueId;
     public String status;
     public String from;
     public ArrayList<QuestionnaireResponse> questionnaires;
 
-    public ReleasedQNRAdapter(Context mContext, ArrayList<RlsdQnr> rlsdQnrs, int serviceId, int pAccountId, String uid, String uniqueId, String status, String from, ArrayList<QuestionnaireResponse> questionnaireResponses) {
+    public ReleasedQNRAdapter(Context mContext, ArrayList<RlsdQnr> rlsdQnrs, int serviceId, int pAccountId, String uid, String uniqueIdNumber, String status, String from, ArrayList<QuestionnaireResponse> questionnaireResponses) {
         this.rlsdQnrs = rlsdQnrs;
         this.mContext = mContext;
         this.serviceId = serviceId;
         this.pAccountId = pAccountId;
         this.uid = uid;
-        this.uniqueId = uniqueId;
+        this.uniqueId = Integer.parseInt(uniqueIdNumber);
         this.status = status;
         this.from = from;
         this.questionnaires = questionnaireResponses;
 
     }
 
-    public ReleasedQNRAdapter(Context mContext, ArrayList<RlsdQnr> rlsdQnrs, ArrayList<Questionnaire> afterQuestionnaire, int serviceId, int pAccountId, String uid, String uniqueId, String status, String from, ArrayList<QuestionnaireResponse> questionnaireResponses) {
+    public ReleasedQNRAdapter(Context mContext, ArrayList<RlsdQnr> rlsdQnrs, ArrayList<Questionnaire> afterQuestionnaire, int serviceId, int pAccountId, String uid, String uniqueIdNumber, String status, String from, ArrayList<QuestionnaireResponse> questionnaireResponses) {
         this.rlsdQnrs = rlsdQnrs;
         this.mContext = mContext;
         this.afterQuestionnaire = afterQuestionnaire;
         this.serviceId = serviceId;
         this.pAccountId = pAccountId;
         this.uid = uid;
-        this.uniqueId = uniqueId;
+        this.uniqueId = Integer.parseInt(uniqueIdNumber);
         this.status = status;
         this.from = from;
         this.questionnaires = questionnaireResponses;
@@ -111,7 +111,7 @@ public class ReleasedQNRAdapter extends RecyclerView.Adapter<ReleasedQNRAdapter.
                                 intent.putExtra("accountId", pAccountId);
                                 intent.putExtra("uid", uid);
                                 intent.putExtra("isEdit", false);
-                                intent.putExtra("uniqueId", Integer.valueOf(uniqueId));
+                                intent.putExtra("uniqueId", uniqueId);
                                 intent.putExtra("status", status);
                                 intent.putExtra("from", from);
                                 intent.putExtra("afterQnr", myJson);

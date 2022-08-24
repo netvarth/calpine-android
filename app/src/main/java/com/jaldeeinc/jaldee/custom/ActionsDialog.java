@@ -83,7 +83,9 @@ import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 public class ActionsDialog extends Dialog {
 
     private Context mContext;
-    private LinearLayout llReschedule, llMessages, llRating, llCancel, llTrackingOn, llInstructions, llCustomerNotes, llMeetingDetails, llBillDetails, llPrescription, llSendAttachments, llViewAttachments, llQuestionnaire;
+    private LinearLayout llReschedule, llMessages, llRating, llCancel, llTrackingOn,
+            llInstructions, llCustomerNotes, llMeetingDetails, llBillDetails, llPrescription,
+            llSendAttachments, llViewAttachments, llQuestionnaire, ll_service_option_qnr;
     private CustomTextViewMedium tvTrackingText, tvBillText, tvCustomerNotes;
     private boolean isActive = false;
     private Bookings bookings = new Bookings();
@@ -159,12 +161,17 @@ public class ActionsDialog extends Dialog {
                 }
                 if (bookings.getAppointmentInfo().getReleasedQnr() != null && bookings.getAppointmentInfo().getQuestionnaire() != null && bookings.getAppointmentInfo().getQuestionnaire().getQuestionAnswers() != null && bookings.getAppointmentInfo().getQuestionnaire().getQuestionAnswers().size() > 0) {
                     llQuestionnaire.setVisibility(View.VISIBLE);
-                } else if (bookings.getAppointmentInfo().getReleasedQnr() != null && bookings.getAppointmentInfo().getReleasedQnr().size() > 0) {
+//              } else if (bookings.getAppointmentInfo().getReleasedQnr() != null && bookings.getAppointmentInfo().getReleasedQnr().size() > 0) {
+                } else if (bookings.getAppointmentInfo().getReleasedQnr() != null && bookings.getAppointmentInfo().getQuestionnaire() != null && bookings.getAppointmentInfo().getQuestionnaire().getQuestionAnswers() != null && bookings.getAppointmentInfo().getQuestionnaire() != null && bookings.getAppointmentInfo().getReleasedQnr().size() > 0) {
                     llQuestionnaire.setVisibility(View.VISIBLE);
                 } else {
                     hideView(llQuestionnaire);
                 }
-
+                if (bookings.getAppointmentInfo().getServiceOption() != null && bookings.getAppointmentInfo().getServiceOption().getQuestionAnswers() != null && bookings.getAppointmentInfo().getServiceOption().getQuestionAnswers().size() > 0) {
+                    ll_service_option_qnr.setVisibility(View.VISIBLE);
+                } else {
+                    hideView(ll_service_option_qnr);
+                }
                 // about liveTracking option
                 if (bookings.getAppointmentInfo().getService() != null) {
                     if (bookings.getAppointmentInfo().getService().getLivetrack().equalsIgnoreCase("true")) {
@@ -339,12 +346,17 @@ public class ActionsDialog extends Dialog {
                 // to show Questionnaire option
                 if (bookings.getCheckInInfo().getReleasedQnr() != null && bookings.getCheckInInfo().getQuestionnaire() != null && bookings.getCheckInInfo().getQuestionnaire().getQuestionAnswers() != null && bookings.getCheckInInfo().getQuestionnaire().getQuestionAnswers().size() > 0) {
                     llQuestionnaire.setVisibility(View.VISIBLE);
-                } else if (bookings.getCheckInInfo().getReleasedQnr() != null && bookings.getCheckInInfo().getReleasedQnr().size() > 0) {
+//              } else if (bookings.getCheckInInfo().getReleasedQnr() != null && bookings.getCheckInInfo().getReleasedQnr().size() > 0) {
+                } else if (bookings.getCheckInInfo().getReleasedQnr() != null && bookings.getCheckInInfo().getQuestionnaire() != null && bookings.getCheckInInfo().getQuestionnaire().getQuestionAnswers() != null && bookings.getCheckInInfo().getReleasedQnr().size() > 0) {
                     llQuestionnaire.setVisibility(View.VISIBLE);
                 } else {
                     hideView(llQuestionnaire);
                 }
-
+                if (bookings.getCheckInInfo().getServiceOption() != null && bookings.getCheckInInfo().getServiceOption().getQuestionAnswers() != null && bookings.getCheckInInfo().getServiceOption().getQuestionAnswers().size() > 0) {
+                    ll_service_option_qnr.setVisibility(View.VISIBLE);
+                } else {
+                    hideView(ll_service_option_qnr);
+                }
                 // about liveTracking option
                 if (bookings.getCheckInInfo().getService() != null) {
                     if (bookings.getCheckInInfo().getService().getLivetrack().equalsIgnoreCase("true")) {
@@ -526,6 +538,7 @@ public class ActionsDialog extends Dialog {
             hideView(llCustomerNotes);
             hideView(llMeetingDetails);
             hideView(llQuestionnaire);
+            hideView(ll_service_option_qnr);
             if (bookings != null && bookings.getCheckInInfo() != null) {
                 if (bookings.getCheckInInfo().isPrescShared()) {
                     llPrescription.setVisibility(View.VISIBLE);
@@ -719,7 +732,7 @@ public class ActionsDialog extends Dialog {
             public void onClick(View v) {
 
                 iSendData.viewAttachments(bookings);
-                dismiss();
+                // dismiss();
 
             }
         });
@@ -999,7 +1012,52 @@ public class ActionsDialog extends Dialog {
                 }
             }
         });
+        ll_service_option_qnr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (bookings.getAppointmentInfo() != null) {
+                    if (bookings.getAppointmentInfo().getServiceOption() != null && bookings.getAppointmentInfo().getServiceOption().getQuestionAnswers() != null && bookings.getAppointmentInfo().getServiceOption().getQuestionAnswers().size() > 0) {
+                        QuestionnaireResponseInput input = buildQuestionnaireInput(bookings.getAppointmentInfo().getServiceOption());
+                        ArrayList<LabelPath> labelPaths = buildQuestionnaireLabelPaths(bookings.getAppointmentInfo().getServiceOption());
 
+                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
+                        SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
+
+                        Intent intent = new Intent(mContext, UpdateQuestionnaire.class);
+                        intent.putExtra("serviceId", bookings.getAppointmentInfo().getService().getId());
+                        intent.putExtra("accountId", bookings.getAppointmentInfo().getProviderAccount().getId());
+                        intent.putExtra("uid", bookings.getAppointmentInfo().getUid());
+                        intent.putExtra("isEdit", false);
+                        intent.putExtra("from", Constants.BOOKING_APPOINTMENT);
+                        if (bookings.getAppointmentInfo() != null && bookings.getAppointmentInfo().getApptStatus() != null) {
+                            intent.putExtra("status", bookings.getAppointmentInfo().getApptStatus());
+                        }
+                        mContext.startActivity(intent);
+
+                    }
+                } else if (bookings.getCheckInInfo() != null) {
+                    if (bookings.getCheckInInfo().getServiceOption() != null && bookings.getCheckInInfo().getServiceOption().getQuestionAnswers() != null && bookings.getCheckInInfo().getServiceOption().getQuestionAnswers().size() > 0) {
+                        QuestionnaireResponseInput input = buildQuestionnaireInput(bookings.getCheckInInfo().getServiceOption());
+                        ArrayList<LabelPath> labelPaths = buildQuestionnaireLabelPaths(bookings.getCheckInInfo().getServiceOption());
+
+                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
+                        SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
+
+                        Intent intent = new Intent(mContext, UpdateQuestionnaire.class);
+                        intent.putExtra("serviceId", bookings.getCheckInInfo().getService().getId());
+                        intent.putExtra("accountId", bookings.getCheckInInfo().getProviderAccount().getId());
+                        intent.putExtra("uid", bookings.getCheckInInfo().getYnwUuid());
+                        intent.putExtra("isEdit", false);
+                        intent.putExtra("from", Constants.BOOKING_CHECKIN);
+                        if (bookings.getCheckInInfo() != null && bookings.getCheckInInfo().getWaitlistStatus() != null) {
+                            intent.putExtra("status", bookings.getCheckInInfo().getWaitlistStatus());
+                        }
+                        mContext.startActivity(intent);
+
+                    }
+                }
+            }
+        });
         llQuestionnaire.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1150,6 +1208,7 @@ public class ActionsDialog extends Dialog {
         llSendAttachments = findViewById(R.id.ll_sendAttachments);
         llViewAttachments = findViewById(R.id.ll_viewAttachments);
         llQuestionnaire = findViewById(R.id.ll_questionnaire);
+        ll_service_option_qnr = findViewById(R.id.ll_service_option_qnr);
         tvCustomerNotes = findViewById(R.id.tv_customerNotes);
 
     }
@@ -1339,7 +1398,7 @@ public class ActionsDialog extends Dialog {
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
                             DynamicToast.make(context, "Appointment cancelled successfully", AppCompatResources.getDrawable(
-                                    context, R.drawable.ic_info_black),
+                                            context, R.drawable.ic_info_black),
                                     ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
 
                             dialog.dismiss();
@@ -1391,7 +1450,7 @@ public class ActionsDialog extends Dialog {
                                 mesg = "CheckIn cancelled successfully";
                             }
                             DynamicToast.make(context, mesg, AppCompatResources.getDrawable(
-                                    context, R.drawable.ic_info_black),
+                                            context, R.drawable.ic_info_black),
                                     ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
 
                             dialog.dismiss();
@@ -1576,7 +1635,7 @@ public class ActionsDialog extends Dialog {
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
                             DynamicToast.make(context, "Rated successfully", AppCompatResources.getDrawable(
-                                    context, R.drawable.icon_tickmark),
+                                            context, R.drawable.icon_tickmark),
                                     ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
                             dismiss();
                         }
@@ -1749,7 +1808,7 @@ public class ActionsDialog extends Dialog {
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
                             DynamicToast.make(context, "Rated successfully", AppCompatResources.getDrawable(
-                                    context, R.drawable.icon_tickmark),
+                                            context, R.drawable.icon_tickmark),
                                     ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
                             dismiss();
                         }

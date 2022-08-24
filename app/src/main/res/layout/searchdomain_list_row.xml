@@ -23,7 +23,7 @@
             android:textColor="@color/title_grey"
             android:text="Service" />
 
-        <com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal
+        <com.jaldeeinc.jaldee.custom.CustomTextViewNormalItalic
             android:id="@+id/txtdomain"
             android:layout_width="0dp"
             android:layout_weight="0.3"

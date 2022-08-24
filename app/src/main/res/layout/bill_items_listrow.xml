@@ -57,6 +57,12 @@
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_hint" />
     </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_view_item_ServiceOption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding3"
+        android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle_item_discount"

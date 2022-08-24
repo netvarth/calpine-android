@@ -1,11 +1,13 @@
 package com.jaldeeinc.jaldee.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.jaldeeinc.jaldee.CustomSwipe.DiscreteScrollView;
 import com.jaldeeinc.jaldee.CustomSwipe.transform.ScaleTransformer;
@@ -23,6 +25,9 @@ public class ViewAttachmentActivity extends AppCompatActivity {
 
     @BindView(R.id.rv_preview)
     DiscreteScrollView rvPreview;
+
+    @BindView(R.id.cv_back)
+    CardView cvBack;
 
     private Context mContext;
     private ArrayList<ShoppingList> imagesList= new ArrayList<>();
@@ -45,6 +50,13 @@ public class ViewAttachmentActivity extends AppCompatActivity {
                     .setMinScale(0.8f)
                     .build());
         }
+        cvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                finish();
+            }
+        });
     }
+
 }

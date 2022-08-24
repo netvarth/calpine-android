@@ -66,7 +66,7 @@
         android:padding="@dimen/padding5"
         android:background="@drawable/curved_save"
         android:backgroundTint="@color/button_background"
-        android:fontFamily="@font/customfont"
+        android:fontFamily="@font/font_bold"
         android:layout_gravity="center"/>
 
 </LinearLayout>

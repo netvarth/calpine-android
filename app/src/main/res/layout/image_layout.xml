@@ -15,7 +15,7 @@
 
     </ImageView>
 
-    <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
+    <com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
         android:textColor="@color/location_theme"
         android:textSize="@dimen/dimen_16dp">
 
-    </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
+    </com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic>
 
     <FrameLayout
         android:id="@+id/qr_code_container"

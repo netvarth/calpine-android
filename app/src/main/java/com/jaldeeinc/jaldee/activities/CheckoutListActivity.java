@@ -122,6 +122,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -642,7 +643,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
             } else {
                 file = new File(chekoutItemUloadImage.get(i).getImagePath());
             }*/
-            file = new File(imagePathList.get(i).getPath());///////
+            file = new File(chekoutItemUloadImage.get(i).getImagePath());///////
 
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
@@ -2058,7 +2059,11 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     }
 
     private void ApiCheckPaytmPaymentStatus(String orderId) {
-
+       /* try {
+            TimeUnit.SECONDS.sleep(1);  // important delay for getting result from paytm
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));

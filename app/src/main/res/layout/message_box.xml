@@ -90,7 +90,7 @@
 
         </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
 
-        <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
+        <com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic
             android:id="@+id/tv_phoneNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
             android:textIsSelectable="true"
             android:textSize="@dimen/dimen_15sp">
 
-        </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
+        </com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic>
 
 
     </LinearLayout>

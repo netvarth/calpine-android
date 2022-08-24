@@ -8,6 +8,8 @@ public class OrderItem implements Serializable {
     private int quantity;
     private String consumerNote;
     private String itemType;
+    private String serviceOptionInput;
+    private String serviceOptionInputImages;
 
     public OrderItem(){
 
@@ -18,11 +20,29 @@ public class OrderItem implements Serializable {
         this.quantity = quantity;
     }
 
-    public OrderItem(int id, int quantity, String consumerNote, String itemType) {
+    public OrderItem(int id, int quantity, String consumerNote, String itemType, String serviceOptionInput, String serviceOptionInputImages) {
         this.id = id;
         this.quantity = quantity;
         this.consumerNote = consumerNote;
         this.itemType = itemType;
+        this.serviceOptionInput = serviceOptionInput;
+        this.serviceOptionInputImages = serviceOptionInputImages;
+    }
+
+    public String getServiceOptionInput() {
+        return serviceOptionInput;
+    }
+
+    public void setServiceOptionInput(String serviceOptionInput) {
+        this.serviceOptionInput = serviceOptionInput;
+    }
+
+    public String getServiceOptionInputImages() {
+        return serviceOptionInputImages;
+    }
+
+    public void setServiceOptionInputImages(String serviceOptionInputImages) {
+        this.serviceOptionInputImages = serviceOptionInputImages;
     }
 
     public String getItemType() { return itemType; }

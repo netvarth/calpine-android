@@ -12,8 +12,15 @@ import com.jaldeeinc.jaldee.Interface.IDataGrid;
 import com.jaldeeinc.jaldee.Interface.IDataGridListener;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.DataGridAdapter;
+import com.jaldeeinc.jaldee.adapter.DetailPageItemsAdapter;
+import com.jaldeeinc.jaldee.adapter.ItemsAdapter;
+import com.jaldeeinc.jaldee.adapter.SelectedItemsAdapter;
+import com.jaldeeinc.jaldee.model.CartItemModel;
 import com.jaldeeinc.jaldee.model.DataGrid;
+import com.jaldeeinc.jaldee.model.QuestionnairInpt;
+import com.jaldeeinc.jaldee.response.CatalogItem;
 import com.jaldeeinc.jaldee.response.GetQuestion;
+import com.jaldeeinc.jaldee.response.Questionnaire;
 
 import java.util.ArrayList;
 
@@ -31,7 +38,7 @@ public class QuestionnaireGridView extends LinearLayout implements IDataGrid {
     private CustomTextViewBold tvManditory;
     private LinearLayout llAdd, llDivider;
     private CustomTextViewMedium tvHint;
-    private CustomItalicTextViewNormal tvError;
+    private CustomTextViewNormalItalic tvError;
     private RecyclerView rvDataTable;
     private GetQuestion question;
     private DataGridAdapter dataGridAdapter;
@@ -183,10 +190,41 @@ public class QuestionnaireGridView extends LinearLayout implements IDataGrid {
     }
 
     @Override
+    public void onEditClick(Questionnaire qnr, QuestionnairInpt answerGridObj, int position, CartItemModel itemDetails, boolean isEdit) {
+
+    }
+
+
+    @Override
     public void onDeleteClick(int position) {
 
         gridDataList.remove(position);
         dataGridAdapter.updateDataList(gridDataList);
+    }
+
+    @Override
+    public void onAddClick(int position) {
+
+    }
+
+    @Override
+    public void onAddClick(CatalogItem catalogItem, ItemsAdapter.ViewHolder viewHolder, boolean isDecreaseQty, int newValue) {
+
+    }
+
+    @Override
+    public void onAddClick(CartItemModel cartItemModel, SelectedItemsAdapter.ViewHolder viewHolder, boolean isDecreaseQty, int newValue) {
+
+    }
+
+    @Override
+    public void onAddClick(CatalogItem catalogItem, DetailPageItemsAdapter.ViewHolder viewHolder, boolean isDecreaseQty, int newValue) {
+
+    }
+
+    @Override
+    public void onRemoveClick(int position, Questionnaire questionnaire, QuestionnairInpt answerLine, CartItemModel itemDetails) {
+
     }
 }
 

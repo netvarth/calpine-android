@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.jaldeeinc.jaldee.Interface.IServiceOption;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CheckBoxAdapter;
 import com.jaldeeinc.jaldee.model.AnswerLine;
@@ -28,19 +30,26 @@ public class QuestionnaireListView extends LinearLayout {
     private AttributeSet attrs;
     private int styleAttr;
 
-    private CustomTextViewSemiBold tvQuestionName;
-    private CustomTextViewBold tvManditory;
-    private CustomTextViewMedium tvHint;
-    private CustomItalicTextViewNormal tvError;
+    private TextView tvQuestionName;
+    private TextView tvManditory;
+    private TextView tvHint;
+    private TextView tvError;
     private RecyclerView rvCheckBoxes;
     private GetQuestion question;
     private DataGridColumns gridQuestion;
     private CheckBoxAdapter checkBoxAdapter;
-
+    IServiceOption iServiceOptionListOptionChange;
 
     public QuestionnaireListView(Context context) {
         super(context);
         this.context = context;
+        initView();
+    }
+
+    public QuestionnaireListView(Context context, IServiceOption iServiceOptionListOptionChange) {
+        super(context);
+        this.context = context;
+        this.iServiceOptionListOptionChange = iServiceOptionListOptionChange;
         initView();
     }
 
@@ -123,11 +132,51 @@ public class QuestionnaireListView extends LinearLayout {
         }
 
         rvCheckBoxes.setLayoutManager(new LinearLayoutManager(getContext()));
-        checkBoxAdapter = new CheckBoxAdapter(checkBoxList, getContext());
+        checkBoxAdapter = new CheckBoxAdapter(checkBoxList, gQuestion.getListProperties().getMaxAnswers(), getContext());
         rvCheckBoxes.setAdapter(checkBoxAdapter);
 
 
     }
+
+    public void setServiceOptionGridQuestionData(DataGridColumns gQuestion, ArrayList<QuestionnaireCheckbox> checkBoxList, int maxAnswerable) {
+
+        gridQuestion = gQuestion;
+
+        setQuestionName(gQuestion.getLabel());
+        setMandatory(gQuestion.isMandatory() ? "*" : "");
+
+       /* ArrayList<QuestionnaireCheckbox> checkBoxList = new ArrayList<>();
+        for (String text : gQuestion.getListProperties().getValues()) {
+
+            QuestionnaireCheckbox checkBoxObj = new QuestionnaireCheckbox(false, text);
+            checkBoxList.add(checkBoxObj);
+
+        }*/
+
+        if (gQuestion.getAnswer() != null) {
+
+            GridColumnAnswerLine answerLine = gQuestion.getAnswer();
+            JsonObject column = answerLine.getColumn();
+
+            JsonArray array = column.getAsJsonArray("list");
+
+            for (QuestionnaireCheckbox c : checkBoxList) {
+
+                for (JsonElement e : array) {
+
+                    if (c.getText().equalsIgnoreCase(e.getAsString())) {
+
+                        c.setChecked(true);
+                    }
+                }
+            }
+        }
+
+        rvCheckBoxes.setLayoutManager(new LinearLayoutManager(getContext()));
+        checkBoxAdapter = new CheckBoxAdapter(checkBoxList, maxAnswerable, getContext(), iServiceOptionListOptionChange);
+        rvCheckBoxes.setAdapter(checkBoxAdapter);
+    }
+
 
     public void setAnswerData(GetQuestion q) {
 
@@ -215,15 +264,25 @@ public class QuestionnaireListView extends LinearLayout {
 
             selectedCheckboxes = checkBoxAdapter.getSelectedCheckboxes();
         }
+        float price = 0;
         for (QuestionnaireCheckbox item : selectedCheckboxes) {
 
             list.add(item.getText());
+            float itemPrice = 0;
+            if (item.getPrice() == null) {
+                itemPrice = 0;
+            } else {
+                itemPrice = item.getPrice();
+            }
+            price = price + itemPrice;
+
+            obj.setQuantity(1);
         }
 
         column.add("list", list);
 
         obj.setColumn(column);
-
+        obj.setPrice(price);
         return obj;
 
     }
@@ -240,8 +299,13 @@ public class QuestionnaireListView extends LinearLayout {
             if (checkBoxAdapter != null) {
                 checkedCount = checkBoxAdapter.getCheckedCount();
             }
+            if(checkedCount <= 0){
+                tvError.setVisibility(View.VISIBLE);
+                tvError.setText("Please select atleast " + 1 + " Checkbox");
+                return false;
+            }
 
-            if (minAnswers == 0 && maxAnswers == 0){
+            if (minAnswers == 0 && maxAnswers == 0) {
 
                 return true;
             }

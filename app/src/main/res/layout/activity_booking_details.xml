@@ -466,27 +466,27 @@
                                         </com.jaldeeinc.jaldee.custom.CustomTextViewBold>
 
                                     </LinearLayout>
-                                   <!-- <LinearLayout
-                                        android:id="@+id/ll_calender"
-                                        android:layout_width="0dp"
-                                        android:layout_height="match_parent"
-                                        android:layout_columnWeight="1"
-                                        android:layout_marginTop="@dimen/dimen_10dp"
-                                        android:layout_marginEnd="@dimen/dimen_8dp"
-                                        android:orientation="vertical">
+                                    <!-- <LinearLayout
+                                         android:id="@+id/ll_calender"
+                                         android:layout_width="0dp"
+                                         android:layout_height="match_parent"
+                                         android:layout_columnWeight="1"
+                                         android:layout_marginTop="@dimen/dimen_10dp"
+                                         android:layout_marginEnd="@dimen/dimen_8dp"
+                                         android:orientation="vertical">
 
-                                        <com.jaldeeinc.jaldee.custom.CustomTextViewLight
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="Payment"
-                                            android:textAllCaps="true"
-                                            android:textSize="@dimen/txtsize_12">
+                                         <com.jaldeeinc.jaldee.custom.CustomTextViewLight
+                                             android:layout_width="wrap_content"
+                                             android:layout_height="wrap_content"
+                                             android:text="Payment"
+                                             android:textAllCaps="true"
+                                             android:textSize="@dimen/txtsize_12">
 
-                                        </com.jaldeeinc.jaldee.custom.CustomTextViewLight>
+                                         </com.jaldeeinc.jaldee.custom.CustomTextViewLight>
 
 
 
-                                    </LinearLayout>-->
+                                     </LinearLayout>-->
 
                                 </GridLayout>
 
@@ -1102,6 +1102,43 @@
 
                                             </LinearLayout>
 
+
+                                        </LinearLayout>
+
+                                        <LinearLayout
+                                            android:id="@+id/ll_service_option_qnr"
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_columnWeight="1"
+                                            android:layout_marginTop="@dimen/dimen_10dp"
+                                            android:visibility="gone">
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:gravity="center"
+                                                android:orientation="vertical">
+
+                                                <ImageView
+                                                    android:layout_width="@dimen/dimen_30dp"
+                                                    android:layout_height="@dimen/dimen_30dp"
+                                                    android:src="@drawable/questionnaire_icon">
+
+                                                </ImageView>
+
+                                                <com.jaldeeinc.jaldee.custom.CustomTextViewMedium
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_marginTop="@dimen/padding5"
+                                                    android:gravity="center"
+                                                    android:text="Service Option"
+                                                    android:textColor="@color/title_color"
+                                                    android:textSize="@dimen/txtsize_12"
+                                                    android:visibility="visible">
+
+                                                </com.jaldeeinc.jaldee.custom.CustomTextViewMedium>
+
+                                            </LinearLayout>
 
                                         </LinearLayout>
 

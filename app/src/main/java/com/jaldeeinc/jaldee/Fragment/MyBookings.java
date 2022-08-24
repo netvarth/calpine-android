@@ -63,7 +63,7 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.ActionsDialog;
 import com.jaldeeinc.jaldee.custom.CustomNotes;
-import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.Bookings;
@@ -128,7 +128,7 @@ public class MyBookings extends RootFragment implements ISelectedBooking, ISendD
 
     private Context mContext;
     private Activity mActivity;
-    private CustomTextViewItalicSemiBold tvToday, tvUpcoming;
+    private CustomTextViewBoldItalic tvToday, tvUpcoming;
     private LinearLayout llNoBookingsForToday, llNoBookingsForFuture, llNoBookings, llBookings;
     private RecyclerView rvTodays, rvUpcomings;
     private TodayBookingsAdapter todayBookingsAdapter;

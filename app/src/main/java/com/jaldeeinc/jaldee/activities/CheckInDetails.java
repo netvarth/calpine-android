@@ -1,11 +1,9 @@
 package com.jaldeeinc.jaldee.activities;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,31 +11,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.ClipData;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -46,7 +32,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
@@ -76,7 +61,7 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.Contents;
 import com.jaldeeinc.jaldee.custom.CustomNotes;
 import com.jaldeeinc.jaldee.custom.CustomTextViewBold;
-import com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold;
+import com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic;
 import com.jaldeeinc.jaldee.custom.CustomTextViewLight;
 import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewRegularItalic;
@@ -92,7 +77,6 @@ import com.jaldeeinc.jaldee.model.LabelPath;
 import com.jaldeeinc.jaldee.model.QuestionnaireResponseInput;
 import com.jaldeeinc.jaldee.model.RlsdQnr;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
-import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AnswerLineResponse;
 import com.jaldeeinc.jaldee.response.GetQuestion;
@@ -109,29 +93,22 @@ import com.karumi.dexter.listener.DexterError;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.payumoney.core.entity.TransactionResponse;
-import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
-import com.payumoney.sdkui.ui.utils.ResultModel;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -247,7 +224,7 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
     CustomTextViewRegularItalic tvAmountToPay;
 
     @BindView(R.id.tv_tokenWaitTime)
-    CustomTextViewItalicSemiBold tvTokenWaitTime;
+    CustomTextViewBoldItalic tvTokenWaitTime;
 
     @BindView(R.id.tv_hint)
     CustomTextViewLight tvHint;
@@ -287,6 +264,9 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
 
     @BindView(R.id.ll_questionnaire)
     LinearLayout llQuestionnaire;
+
+    @BindView(R.id.ll_service_option_qnr)
+    LinearLayout ll_service_option_qnr;
 
     @BindView(R.id.scroll_view)
     ScrollView scrollView;
@@ -667,7 +647,32 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                 }
             }
         });
+        ll_service_option_qnr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (activeCheckIn != null) {
+                    if (activeCheckIn.getServiceOption() != null && activeCheckIn.getServiceOption().getQuestionAnswers() != null && activeCheckIn.getServiceOption().getQuestionAnswers().size() > 0) {
+                        QuestionnaireResponseInput input = buildQuestionnaireInput(activeCheckIn.getServiceOption());
+                        ArrayList<LabelPath> labelPaths = buildQuestionnaireLabelPaths(activeCheckIn.getServiceOption());
 
+                        SharedPreference.getInstance(mContext).setValue(Constants.QUESTIONNAIRE, new Gson().toJson(input));
+                        SharedPreference.getInstance(mContext).setValue(Constants.QIMAGES, new Gson().toJson(labelPaths));
+
+                        Intent intent = new Intent(mContext, UpdateQuestionnaire.class);
+                        intent.putExtra("serviceId", activeCheckIn.getService().getId());
+                        intent.putExtra("accountId", activeCheckIn.getProviderAccount().getId());
+                        intent.putExtra("uid", activeCheckIn.getYnwUuid());
+                        intent.putExtra("isEdit", false);
+                        intent.putExtra("from", Constants.BOOKING_CHECKIN);
+                        if (activeCheckIn != null && activeCheckIn.getWaitlistStatus() != null) {
+                            intent.putExtra("status", activeCheckIn.getWaitlistStatus());
+                        }
+                        mContext.startActivity(intent);
+
+                    }
+                }
+            }
+        });
         llQuestionnaire.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1130,12 +1135,17 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                     // to show Questionnaire option
                     if (checkInInfo.getQuestionnaire() != null && checkInInfo.getQuestionnaire().getQuestionAnswers() != null && checkInInfo.getQuestionnaire().getQuestionAnswers().size() > 0) {
                         llQuestionnaire.setVisibility(View.VISIBLE);
-                    } else if (checkInInfo.getReleasedQnr() != null && checkInInfo.getReleasedQnr().size() > 0) {
+//                  } else if (checkInInfo.getReleasedQnr() != null && checkInInfo.getReleasedQnr().size() > 0) {
+                    } else if (checkInInfo.getReleasedQnr() != null && checkInInfo.getQuestionnaire() != null && checkInInfo.getQuestionnaire().getQuestionAnswers() != null && checkInInfo.getReleasedQnr().size() > 0) {
                         llQuestionnaire.setVisibility(View.VISIBLE);
                     } else {
                         hideView(llQuestionnaire);
                     }
-
+                    if (checkInInfo.getServiceOption() != null && checkInInfo.getServiceOption().getQuestionAnswers() != null && checkInInfo.getServiceOption().getQuestionAnswers().size() > 0) {
+                        ll_service_option_qnr.setVisibility(View.VISIBLE);
+                    } else {
+                        hideView(ll_service_option_qnr);
+                    }
                     if (checkInInfo.getService() != null) {
 
                         if (checkInInfo.getService().getLivetrack().equalsIgnoreCase("true")) {
@@ -1585,7 +1595,7 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
                             DynamicToast.make(context, "Rated successfully", AppCompatResources.getDrawable(
-                                    context, R.drawable.icon_tickmark),
+                                            context, R.drawable.icon_tickmark),
                                     ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -1629,7 +1639,7 @@ public class CheckInDetails extends AppCompatActivity implements IDeleteImagesIn
                                 mesg = "CheckIn cancelled successfully";
                             }
                             DynamicToast.make(context, mesg, AppCompatResources.getDrawable(
-                                    context, R.drawable.ic_info_black),
+                                            context, R.drawable.ic_info_black),
                                     ContextCompat.getColor(context, R.color.white), ContextCompat.getColor(context, R.color.green), Toast.LENGTH_SHORT).show();
 
                             dialog.dismiss();
