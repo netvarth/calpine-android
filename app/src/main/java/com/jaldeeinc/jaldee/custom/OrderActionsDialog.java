@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.Interface.IActions;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
@@ -34,17 +35,20 @@ import com.jaldeeinc.jaldee.activities.ChatActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.OrderDetailActivity;
 import com.jaldeeinc.jaldee.activities.ReleasedQNRActivity;
+import com.jaldeeinc.jaldee.activities.ShowCartServiceOption;
 import com.jaldeeinc.jaldee.activities.UpdateQuestionnaire;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.Bookings;
 import com.jaldeeinc.jaldee.model.LabelPath;
+import com.jaldeeinc.jaldee.model.QuestionnairInpt;
 import com.jaldeeinc.jaldee.model.QuestionnaireResponseInput;
 import com.jaldeeinc.jaldee.model.RlsdQnr;
 import com.jaldeeinc.jaldee.response.ActiveOrders;
 import com.jaldeeinc.jaldee.response.AnswerLineResponse;
 import com.jaldeeinc.jaldee.response.GetQuestion;
+import com.jaldeeinc.jaldee.response.ItemDetails;
 import com.jaldeeinc.jaldee.response.QuestionAnswers;
 import com.jaldeeinc.jaldee.response.QuestionnaireResponse;
 import com.jaldeeinc.jaldee.response.RatingResponse;
@@ -102,6 +106,9 @@ public class OrderActionsDialog extends Dialog {
     @BindView(R.id.ll_questionnaire)
     LinearLayout llQuestionnaire;
 
+    @BindView(R.id.ll_service_option_qnr)
+    LinearLayout ll_service_option_qnr;
+
     public OrderActionsDialog(@NonNull Context context, boolean isActive, ActiveOrders activeOrder, IActions iActions) {
         super(context);
         this.mContext = context;
@@ -149,12 +156,26 @@ public class OrderActionsDialog extends Dialog {
         }
         if (orderInfo.getReleasedQnr() != null && orderInfo.getQuestionnaire() != null && orderInfo.getQuestionnaire().getQuestionAnswers() != null && orderInfo.getQuestionnaire().getQuestionAnswers().size() > 0) {
             llQuestionnaire.setVisibility(View.VISIBLE);
-        } else if (orderInfo.getReleasedQnr() != null && orderInfo.getReleasedQnr().size() > 0) {
+        } else if (orderInfo.getReleasedQnr() != null && orderInfo.getQuestionnaire() != null && orderInfo.getReleasedQnr().size() > 0) {
             llQuestionnaire.setVisibility(View.VISIBLE);
         } else {
             hideView(llQuestionnaire);
         }
-
+        // To show ServiceOption details
+        if(orderInfo.getItemsList() != null && orderInfo.getItemsList().size() > 0){
+            ArrayList<ItemDetails> itemsDetails = orderInfo.getItemsList();
+            for(ItemDetails i : itemsDetails){
+                if(i.getSrvAnswers() != null ){
+                    QuestionnairInpt answerLine;
+                    JsonObject jsonObject = i.getSrvAnswers();
+                    Gson gson = new Gson();
+                    answerLine = gson.fromJson(jsonObject, QuestionnairInpt.class);
+                    if(answerLine.getAnswerLines().size() > 0){
+                        ll_service_option_qnr.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        }
         // To show Bill details
         if (orderInfo.getBill() != null) {
             if (orderInfo.getBill().getBillPaymentStatus().equalsIgnoreCase("FullyPaid") || orderInfo.getBill().getBillPaymentStatus().equalsIgnoreCase("Refund")) {
@@ -288,6 +309,27 @@ public class OrderActionsDialog extends Dialog {
                             intent.putExtra("from", Constants.ORDERS);
                             mContext.startActivity(intent);
                         }
+                    }
+                }
+                dismiss();
+            }
+        });
+        ll_service_option_qnr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (orderInfo != null) {
+                    if (orderInfo.getItemsList() != null && orderInfo.getItemsList().size() > 0) {
+
+                            Intent intent = new Intent(mContext, ShowCartServiceOption.class);
+                            //intent.putExtra("serviceId", orderInfo.getCatalog().getCatLogId());
+                           // intent.putExtra("accountId", orderInfo.getProviderAccount().getId());
+                           // intent.putExtra("uid", orderInfo.getUid());
+                            intent.putExtra("orderInfo", new Gson().toJson(orderInfo));
+                            intent.putExtra("from", Constants.ORDERS);
+
+                            mContext.startActivity(intent);
+
                     }
                 }
                 dismiss();

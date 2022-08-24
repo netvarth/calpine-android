@@ -266,7 +266,7 @@
                                                 android:gravity="center"
                                                 android:orientation="horizontal">
 
-                                                <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
+                                                <com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic
                                                     android:id="@+id/tv_timeOrCount"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
@@ -275,9 +275,9 @@
                                                     android:textColor="@color/location_theme"
                                                     android:textSize="14dp">
 
-                                                </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
+                                                </com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic>
 
-                                                <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
+                                                <com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic
                                                     android:id="@+id/tv_timeOrCountHint"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
@@ -286,7 +286,7 @@
                                                     android:textColor="@color/title_color"
                                                     android:textSize="@dimen/dimen_10dp">
 
-                                                </com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold>
+                                                </com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic>
 
                                             </LinearLayout>
 
@@ -310,7 +310,7 @@
                                     android:layout_marginEnd="@dimen/dimen_12dp"
                                     android:layout_marginStart="@dimen/dimen_12dp">
 
-                                    <com.jaldeeinc.jaldee.custom.CustomTextViewItalicSemiBold
+                                    <com.jaldeeinc.jaldee.custom.CustomTextViewBoldItalic
                                         android:id="@+id/claimable"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
@@ -348,7 +348,7 @@
                     android:orientation="horizontal"
                     android:visibility="gone">
 
-                    <com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewNormalItalic
                         android:id="@+id/tv_serviceOne"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -359,7 +359,7 @@
                         android:textColor="@color/location_theme"
                         android:textSize="14dp" />
 
-                    <com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewNormalItalic
                         android:id="@+id/tv_serviceTwo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -371,7 +371,7 @@
                         android:textColor="@color/location_theme"
                         android:textSize="14dp" />
 
-                    <com.jaldeeinc.jaldee.custom.CustomItalicTextViewNormal
+                    <com.jaldeeinc.jaldee.custom.CustomTextViewNormalItalic
                         android:id="@+id/tv_serviceThree"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
