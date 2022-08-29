@@ -50,7 +50,7 @@ public class PaymentGateway {
         iPaymentResponse = paymentResponse;
     }
 
-    public void ApiGenerateHash(final String amount, String paymentMode, String ynwUUID, String accountID, String purpose, int serviceId, boolean isInternational, String encId, int customerId) {
+    public void ApiGenerateHash(final String amount, String paymentMode, String ynwUUID, String accountID, String purpose, int serviceId, boolean isInternational, String encId, int customerId, String paymentRequestId) {
 
         ApiInterface apiService =
                 ApiClient.getClient(mCOntext).create(ApiInterface.class);
@@ -75,7 +75,9 @@ public class PaymentGateway {
                 jsonObj.put("custId", customerId);
             }
             jsonObj.put("source", Constants.SOURCE_PAYMENT);
-
+            if(paymentRequestId != null && !paymentRequestId.trim().isEmpty() && !paymentRequestId.equalsIgnoreCase("0")){
+                jsonObj.put("paymentRequestId", paymentRequestId);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -115,6 +117,8 @@ public class PaymentGateway {
                                     map.put("CHECKSUMHASH", response_data.getChecksum());
                                     map.put("MERC_UNQ_REF", accountID + "_" + encId);
                                     map.put("txnToken", response_data.getTxnToken());
+
+                                    iPaymentResponse.setPaymentRequestId(response_data.getPaymentRequestId());
 
                                     PaytmPayment payment = new PaytmPayment(mCOntext, iPaymentResponse);
 
@@ -166,7 +170,7 @@ public class PaymentGateway {
         });
     }
 
-    public void ApiGenerateHashWallet(final String amount, String paymentMode, String ynwUUID, String accountID, String purpose, int serviceId, boolean isInternational, String encId, boolean isJcashUsed) {
+    public void ApiGenerateHashWallet(final String amount, String paymentMode, String ynwUUID, String accountID, String purpose, int serviceId, boolean isInternational, String encId, boolean isJcashUsed, String paymentRequestId) {
 
         ApiInterface apiService = ApiClient.getClient(mCOntext).create(ApiInterface.class);
 
@@ -189,7 +193,9 @@ public class PaymentGateway {
             jsonObj.put("paymentPurpose", purpose);
             jsonObj.put("serviceId", serviceId);
             jsonObj.put("uuid", ynwUUID);
-
+            if(paymentRequestId != null && !paymentRequestId.trim().isEmpty() && !paymentRequestId.equalsIgnoreCase("0")){
+                jsonObj.put("paymentRequestId", paymentRequestId);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -236,6 +242,8 @@ public class PaymentGateway {
                                         map.put("CHECKSUMHASH", response_data.getChecksum());
                                         map.put("MERC_UNQ_REF", accountID + "_" + encId);
                                         map.put("txnToken", response_data.getTxnToken());
+
+                                        iPaymentResponse.setPaymentRequestId(response_data.getPaymentRequestId());
 
                                         PaytmPayment payment = new PaytmPayment(mCOntext, iPaymentResponse);
                                         payment.PaytmPay(map, response_data.getPaymentEnv(), purpose);

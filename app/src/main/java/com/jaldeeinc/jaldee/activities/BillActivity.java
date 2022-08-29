@@ -144,6 +144,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     private boolean fromPushNotification = false;
     private Provider providerResponse = new Provider();
     private BottomSheetDialog dialog;
+    String paymentRequestId;
 
 
     @Override
@@ -326,6 +327,12 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         }
     }
 
+    @Override
+    public void setPaymentRequestId(String paymntRequestId) {
+        paymentRequestId = paymntRequestId;
+
+    }
+
     private void getPrePayRemainingAmntNeeded(String amount) {
         final ApiInterface apiService =
                 ApiClient.getClient(BillActivity.this).create(ApiInterface.class);
@@ -431,9 +438,9 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                                 if (selectedpaymentMode != null) {
 
                                     if (cbJCash.isChecked()) {
-                                        new PaymentGateway(mCOntext, mActivity, iPaymentResponse).ApiGenerateHashWallet(sAmountPay, selectedpaymentMode, ynwUUID, accountID, Constants.PURPOSE_BILLPAYMENT, 0, isInternational, encId, true);
+                                        new PaymentGateway(mCOntext, mActivity, iPaymentResponse).ApiGenerateHashWallet(sAmountPay, selectedpaymentMode, ynwUUID, accountID, Constants.PURPOSE_BILLPAYMENT, 0, isInternational, encId, true, paymentRequestId);
                                     } else {
-                                        new PaymentGateway(mCOntext, mActivity, iPaymentResponse).ApiGenerateHash(sAmountPay, selectedpaymentMode, ynwUUID, accountID, Constants.PURPOSE_BILLPAYMENT, 0, isInternational, encId, customerId);
+                                        new PaymentGateway(mCOntext, mActivity, iPaymentResponse).ApiGenerateHash(sAmountPay, selectedpaymentMode, ynwUUID, accountID, Constants.PURPOSE_BILLPAYMENT, 0, isInternational, encId, customerId, paymentRequestId);
                                     }
                                     dialog.dismiss();
                                 } else {

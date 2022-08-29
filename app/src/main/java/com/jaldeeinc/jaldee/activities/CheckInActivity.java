@@ -1097,7 +1097,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                             } else {
                                 tvEmail.setHint("Enter your Mail Id");
                             }
-                            if (checkInInfo.getServiceType() != null && checkInInfo.getServiceType().equalsIgnoreCase("virtualService")) {
+                            /*if (checkInInfo.getServiceType() != null && checkInInfo.getServiceType().equalsIgnoreCase("virtualService")) {
 
                                 customerInformationDialog = new CustomerInformationDialog(CheckInActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, checkInInfo.isPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, sector);
                                 customerInformationDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
@@ -1107,7 +1107,7 @@ public class CheckInActivity extends AppCompatActivity implements ISelectQ, IMob
                                 int width = (int) (metrics.widthPixels * 1);
                                 customerInformationDialog.setCancelable(false);
                                 customerInformationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            }
+                            }*/
                         }
                     }
                 } catch (Exception e) {

@@ -304,6 +304,9 @@
         <activity
             android:name=".activities.BillActivity"
             android:screenOrientation="unspecified" />
+        <activity
+            android:name=".activities.OneTimeQuestionnaire"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".service.MyFirebaseMessagingService"

@@ -82,14 +82,19 @@ import com.jaldeeinc.jaldee.custom.LocationAmenitiesDialog;
 import com.jaldeeinc.jaldee.custom.LocationsDialog;
 import com.jaldeeinc.jaldee.custom.QRCodeEncoder;
 import com.jaldeeinc.jaldee.custom.ResizableCustomView;
+import com.jaldeeinc.jaldee.model.JaldeeConsumerDetails;
+import com.jaldeeinc.jaldee.model.ProviderConsumerFamilyMemberModel;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.response.Catalog;
 import com.jaldeeinc.jaldee.response.DepServiceInfo;
 import com.jaldeeinc.jaldee.response.DepartmentInfo;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
+import com.jaldeeinc.jaldee.response.GetQuestion;
 import com.jaldeeinc.jaldee.response.OrderResponse;
 import com.jaldeeinc.jaldee.response.ProfilePicture;
 import com.jaldeeinc.jaldee.response.Provider;
+import com.jaldeeinc.jaldee.response.Questionnaire;
+import com.jaldeeinc.jaldee.response.Questions;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
@@ -105,7 +110,11 @@ import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 import com.jaldeeinc.jaldee.response.ServiceInfo;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.jaldeeinc.jaldee.widgets.CustomDialog;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -291,6 +300,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     private int uniqueId;
     private int providerId;
     private int locationId;
+    public int providerConsumerId;
     String accountType = "";
     boolean isToken;
     private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
@@ -350,6 +360,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     private LocationAmenitiesDialog locationAmenitiesDialog;
     private Provider providerResponse = new Provider();
     ArrayList<SearchDonation> donationServices = new ArrayList<>();
+    int consumerId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -360,6 +371,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         iGetSelectedLocation = this;
         iSelectedService = this;
         iSendMessage = this;
+        consumerId = SharedPreference.getInstance(ProviderDetailActivity.this).getIntValue("consumerId", 0);
 
 
         Intent intent = getIntent();
@@ -1669,182 +1681,182 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
             // Zip all requests with the Function, which will receive the results.
             Observable.zip(requests, new Function<Object[], Object>() {
-                @Override
-                public Object apply(Object[] objects) throws Exception {
-                    // Objects[] is an array of combined results of completed requests
-                    ArrayList<QueueList> queueList = new ArrayList<>();
-                    ArrayList<ScheduleList> schedulesList = new ArrayList<>();
-                    ArrayList<SearchService> checkInServList = new ArrayList<>();
-                    ArrayList<SearchAppoinment> apptServicesList = new ArrayList<>();
-                    ArrayList<Catalog> catalogs = new ArrayList<>();
-                    if (orderEnabled) {
+                        @Override
+                        public Object apply(Object[] objects) throws Exception {
+                            // Objects[] is an array of combined results of completed requests
+                            ArrayList<QueueList> queueList = new ArrayList<>();
+                            ArrayList<ScheduleList> schedulesList = new ArrayList<>();
+                            ArrayList<SearchService> checkInServList = new ArrayList<>();
+                            ArrayList<SearchAppoinment> apptServicesList = new ArrayList<>();
+                            ArrayList<Catalog> catalogs = new ArrayList<>();
+                            if (orderEnabled) {
 
-                        queueList = (ArrayList<QueueList>) objects[0];
-                        schedulesList = (ArrayList<ScheduleList>) objects[1];
-                        checkInServList = (ArrayList<SearchService>) objects[2];
-                        apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
-                        catalogs = (ArrayList<Catalog>) objects[4];
+                                queueList = (ArrayList<QueueList>) objects[0];
+                                schedulesList = (ArrayList<ScheduleList>) objects[1];
+                                checkInServList = (ArrayList<SearchService>) objects[2];
+                                apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
+                                catalogs = (ArrayList<Catalog>) objects[4];
 
-                    } else {
-                        queueList = (ArrayList<QueueList>) objects[0];
-                        schedulesList = (ArrayList<ScheduleList>) objects[1];
-                        checkInServList = (ArrayList<SearchService>) objects[2];
-                        apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
-                    }
+                            } else {
+                                queueList = (ArrayList<QueueList>) objects[0];
+                                schedulesList = (ArrayList<ScheduleList>) objects[1];
+                                checkInServList = (ArrayList<SearchService>) objects[2];
+                                apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
+                            }
 
-                    queueList = queueList == null ? new ArrayList<QueueList>() : queueList;
+                            queueList = queueList == null ? new ArrayList<QueueList>() : queueList;
 
-                    schedulesList = schedulesList == null ? new ArrayList<ScheduleList>() : schedulesList;
+                            schedulesList = schedulesList == null ? new ArrayList<ScheduleList>() : schedulesList;
 
-                    checkInServList = checkInServList == null ? new ArrayList<SearchService>() : checkInServList;
+                            checkInServList = checkInServList == null ? new ArrayList<SearchService>() : checkInServList;
 
-                    apptServicesList = apptServicesList == null ? new ArrayList<SearchAppoinment>() : apptServicesList;
+                            apptServicesList = apptServicesList == null ? new ArrayList<SearchAppoinment>() : apptServicesList;
 
-                    donationServices = donationServices == null ? new ArrayList<SearchDonation>() : donationServices;
+                            donationServices = donationServices == null ? new ArrayList<SearchDonation>() : donationServices;
 
-                    catalogs = catalogs == null ? new ArrayList<Catalog>() : catalogs;
+                            catalogs = catalogs == null ? new ArrayList<Catalog>() : catalogs;
 
-                    serviceInfoList.clear();
-                    DepartmentInfo departmentInfo = new DepartmentInfo();
-                    ArrayList<DepServiceInfo> services = new ArrayList<DepServiceInfo>();
+                            serviceInfoList.clear();
+                            DepartmentInfo departmentInfo = new DepartmentInfo();
+                            ArrayList<DepServiceInfo> services = new ArrayList<DepServiceInfo>();
 
-                    if (queueList.get(0).isWaitlistEnabled()) {
-                        for (SearchService checkInService : checkInServList) {
+                            if (queueList.get(0).isWaitlistEnabled()) {
+                                for (SearchService checkInService : checkInServList) {
 
-                            if (checkInService.getCheckInServiceAvailability() != null) {
+                                    if (checkInService.getCheckInServiceAvailability() != null) {
 
-                                DepServiceInfo serviceInfo = new DepServiceInfo();
-                                serviceInfo.setDepartmentId(0);
-                                serviceInfo.setDepartmentName("");
-                                serviceInfo.setId(checkInService.getId());
-                                serviceInfo.setName(checkInService.getName());
-                                serviceInfo.setType(Constants.CHECKIN);
-                                serviceInfo.setToken(isToken);
-                                serviceInfo.setOnline(onlinePresence);
-                                if (checkInService.getCheckInServiceAvailability() != null) {
+                                        DepServiceInfo serviceInfo = new DepServiceInfo();
+                                        serviceInfo.setDepartmentId(0);
+                                        serviceInfo.setDepartmentName("");
+                                        serviceInfo.setId(checkInService.getId());
+                                        serviceInfo.setName(checkInService.getName());
+                                        serviceInfo.setType(Constants.CHECKIN);
+                                        serviceInfo.setToken(isToken);
+                                        serviceInfo.setOnline(onlinePresence);
+                                        if (checkInService.getCheckInServiceAvailability() != null) {
+                                            serviceInfo.setAvailability(true);
+                                            if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
+                                                serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
+                                            }
+                                            if (checkInService.getCheckInServiceAvailability().getPersonAhead() != null) {
+                                                serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
+                                            }
+                                            serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
+                                            serviceInfo.setNextAvailableDate(checkInService.getCheckInServiceAvailability().getAvailableDate());
+                                            if (checkInService.getCheckInServiceAvailability().getServiceTime() != null) {
+                                                serviceInfo.setNextAvailableTime(checkInService.getCheckInServiceAvailability().getServiceTime());
+                                            }
+                                        }
+                                        serviceInfo.setServiceMode(checkInService.getServiceType());
+                                        if (checkInService.getVirtualCallingModes() != null) {
+                                            serviceInfo.setCallingMode(checkInService.getVirtualCallingModes().get(0).getCallingMode());
+                                            serviceInfo.setVirtualServiceType(checkInService.getVirtualServiceType());
+                                        }
+                                        // adding all the info
+                                        serviceInfo.setChecinServiceInfo(checkInService);
+                                        services.add(serviceInfo);
+                                    }
+
+                                }
+                            }
+
+                            if (schedulesList.get(0).isApptEnabled()) {
+                                for (SearchAppoinment appt : apptServicesList) {
+                                    if (appt.getAppointServiceAvailability() != null) {
+                                        DepServiceInfo serviceInfo = new DepServiceInfo();
+                                        serviceInfo.setDepartmentId(0);
+                                        serviceInfo.setDepartmentName("");
+                                        serviceInfo.setId(appt.getId());
+                                        serviceInfo.setName(appt.getName());
+                                        serviceInfo.setType(Constants.APPOINTMENT);
+                                        serviceInfo.setEstTime("");
+                                        serviceInfo.setPeopleInLine(0);
+                                        serviceInfo.setCalculationMode("");
+                                        serviceInfo.setOnline(onlinePresence);
+                                        serviceInfo.setServiceMode(appt.getServiceType());
+                                        if (appt.getVirtualCallingModes() != null) {
+                                            serviceInfo.setCallingMode(appt.getVirtualCallingModes().get(0).getCallingMode());
+                                            serviceInfo.setVirtualServiceType(appt.getVirtualServiceType());
+                                        }
+                                        if (appt.getAppointServiceAvailability() != null) {
+                                            serviceInfo.setAvailability(true);
+                                            serviceInfo.setNextAvailableDate(appt.getAppointServiceAvailability().getNextAvailableDate());
+                                            if (appt.getAppointServiceAvailability().getNextAvailable() != null) {
+                                                serviceInfo.setNextAvailableTime(appt.getAppointServiceAvailability().getNextAvailable().split("-")[0]);
+                                            }
+
+                                        }
+                                        // adding all the info
+                                        serviceInfo.setAppointmentServiceInfo(appt);
+                                        services.add(serviceInfo);
+                                    }
+
+                                }
+                            }
+
+                            // adding donations only when donations are accepted
+                            if (onlinePresence && mBusinessDataList.isDonationFundRaising()) {
+                                for (SearchDonation donation : donationServices) {
+
+                                    DepServiceInfo serviceInfo = new DepServiceInfo();
+                                    serviceInfo.setDepartmentId(0);
+                                    serviceInfo.setDepartmentName("");
+                                    serviceInfo.setId(donation.getId());
+                                    serviceInfo.setName(donation.getName());
+                                    serviceInfo.setType(Constants.DONATION);
+                                    serviceInfo.setEstTime("");
+                                    serviceInfo.setPeopleInLine(0);
+                                    serviceInfo.setCalculationMode("");
+                                    serviceInfo.setServiceMode("");
+                                    serviceInfo.setOnline(onlinePresence);
+                                    serviceInfo.setCallingMode("");
+                                    serviceInfo.setNextAvailableTime("");
                                     serviceInfo.setAvailability(true);
-                                    if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
-                                        serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
+                                    serviceInfo.setProviderImage("");
+                                    if (donation.getMinDonationAmount() != null && donation.getMaxDonationAmount() != null) {
+                                        serviceInfo.setMinDonationAmount(donation.getMinDonationAmount());
+                                        serviceInfo.setMaxDonationAmount(donation.getMaxDonationAmount());
                                     }
-                                    if (checkInService.getCheckInServiceAvailability().getPersonAhead() != null) {
-                                        serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
-                                    }
-                                    serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
-                                    serviceInfo.setNextAvailableDate(checkInService.getCheckInServiceAvailability().getAvailableDate());
-                                    if (checkInService.getCheckInServiceAvailability().getServiceTime() != null) {
-                                        serviceInfo.setNextAvailableTime(checkInService.getCheckInServiceAvailability().getServiceTime());
-                                    }
+                                    // adding all the info
+                                    serviceInfo.setDonationServiceInfo(donation);
+                                    services.add(serviceInfo);
                                 }
-                                serviceInfo.setServiceMode(checkInService.getServiceType());
-                                if (checkInService.getVirtualCallingModes() != null) {
-                                    serviceInfo.setCallingMode(checkInService.getVirtualCallingModes().get(0).getCallingMode());
-                                    serviceInfo.setVirtualServiceType(checkInService.getVirtualServiceType());
-                                }
-                                // adding all the info
-                                serviceInfo.setChecinServiceInfo(checkInService);
-                                services.add(serviceInfo);
                             }
 
-                        }
-                    }
+                            if (onlinePresence) {
 
-                    if (schedulesList.get(0).isApptEnabled()) {
-                        for (SearchAppoinment appt : apptServicesList) {
-                            if (appt.getAppointServiceAvailability() != null) {
-                                DepServiceInfo serviceInfo = new DepServiceInfo();
-                                serviceInfo.setDepartmentId(0);
-                                serviceInfo.setDepartmentName("");
-                                serviceInfo.setId(appt.getId());
-                                serviceInfo.setName(appt.getName());
-                                serviceInfo.setType(Constants.APPOINTMENT);
-                                serviceInfo.setEstTime("");
-                                serviceInfo.setPeopleInLine(0);
-                                serviceInfo.setCalculationMode("");
-                                serviceInfo.setOnline(onlinePresence);
-                                serviceInfo.setServiceMode(appt.getServiceType());
-                                if (appt.getVirtualCallingModes() != null) {
-                                    serviceInfo.setCallingMode(appt.getVirtualCallingModes().get(0).getCallingMode());
-                                    serviceInfo.setVirtualServiceType(appt.getVirtualServiceType());
-                                }
-                                if (appt.getAppointServiceAvailability() != null) {
-                                    serviceInfo.setAvailability(true);
-                                    serviceInfo.setNextAvailableDate(appt.getAppointServiceAvailability().getNextAvailableDate());
-                                    if (appt.getAppointServiceAvailability().getNextAvailable() != null) {
-                                        serviceInfo.setNextAvailableTime(appt.getAppointServiceAvailability().getNextAvailable().split("-")[0]);
+                                if (catalogs.size() > 0) {
+
+                                    for (Catalog catalog : catalogs) {
+
+                                        DepServiceInfo serviceInfo = new DepServiceInfo();
+                                        if (catalog.getCatLogName() != null) {
+                                            serviceInfo.setName(catalog.getCatLogName());
+                                        }
+                                        if (catalog.getCatalogImagesList() != null && catalog.getCatalogImagesList().size() > 0) {
+                                            serviceInfo.setProviderImage(catalog.getCatalogImagesList().get(0).getUrl());
+                                        }
+                                        serviceInfo.setType(Constants.ORDERS);
+                                        serviceInfo.setEstTime("");
+                                        serviceInfo.setPeopleInLine(0);
+                                        serviceInfo.setCalculationMode("");
+                                        serviceInfo.setServiceMode("");
+                                        serviceInfo.setAvailability(true);
+                                        serviceInfo.setCallingMode("");
+                                        serviceInfo.setNextAvailableTime("");
+                                        serviceInfo.setCatalogInfo(catalog); // adding all the catalog info
+                                        services.add(serviceInfo);
+                                        break; // if more than one catalog,in this line break the loop and add only one catalog to diaplay(current system only support one catalog)(****   catalog commented on 3 locations   ***)
                                     }
 
                                 }
-                                // adding all the info
-                                serviceInfo.setAppointmentServiceInfo(appt);
-                                services.add(serviceInfo);
                             }
 
+                            serviceInfoList.addAll(services);
+                            //do something with those results and emit new event
+                            return serviceInfoList;
                         }
-                    }
-
-                    // adding donations only when donations are accepted
-                    if (onlinePresence && mBusinessDataList.isDonationFundRaising()) {
-                        for (SearchDonation donation : donationServices) {
-
-                            DepServiceInfo serviceInfo = new DepServiceInfo();
-                            serviceInfo.setDepartmentId(0);
-                            serviceInfo.setDepartmentName("");
-                            serviceInfo.setId(donation.getId());
-                            serviceInfo.setName(donation.getName());
-                            serviceInfo.setType(Constants.DONATION);
-                            serviceInfo.setEstTime("");
-                            serviceInfo.setPeopleInLine(0);
-                            serviceInfo.setCalculationMode("");
-                            serviceInfo.setServiceMode("");
-                            serviceInfo.setOnline(onlinePresence);
-                            serviceInfo.setCallingMode("");
-                            serviceInfo.setNextAvailableTime("");
-                            serviceInfo.setAvailability(true);
-                            serviceInfo.setProviderImage("");
-                            if (donation.getMinDonationAmount() != null && donation.getMaxDonationAmount() != null) {
-                                serviceInfo.setMinDonationAmount(donation.getMinDonationAmount());
-                                serviceInfo.setMaxDonationAmount(donation.getMaxDonationAmount());
-                            }
-                            // adding all the info
-                            serviceInfo.setDonationServiceInfo(donation);
-                            services.add(serviceInfo);
-                        }
-                    }
-
-                    if (onlinePresence) {
-
-                        if (catalogs.size() > 0) {
-
-                            for (Catalog catalog : catalogs) {
-
-                                DepServiceInfo serviceInfo = new DepServiceInfo();
-                                if (catalog.getCatLogName() != null) {
-                                    serviceInfo.setName(catalog.getCatLogName());
-                                }
-                                if (catalog.getCatalogImagesList() != null && catalog.getCatalogImagesList().size() > 0) {
-                                    serviceInfo.setProviderImage(catalog.getCatalogImagesList().get(0).getUrl());
-                                }
-                                serviceInfo.setType(Constants.ORDERS);
-                                serviceInfo.setEstTime("");
-                                serviceInfo.setPeopleInLine(0);
-                                serviceInfo.setCalculationMode("");
-                                serviceInfo.setServiceMode("");
-                                serviceInfo.setAvailability(true);
-                                serviceInfo.setCallingMode("");
-                                serviceInfo.setNextAvailableTime("");
-                                serviceInfo.setCatalogInfo(catalog); // adding all the catalog info
-                                services.add(serviceInfo);
-                                break; // if more than one catalog,in this line break the loop and add only one catalog to diaplay(current system only support one catalog)(****   catalog commented on 3 locations   ***)
-                            }
-
-                        }
-                    }
-
-                    serviceInfoList.addAll(services);
-                    //do something with those results and emit new event
-                    return serviceInfoList;
-                }
-            })
+                    })
                     // After all requests had been performed the next observer will receive the Object, returned from Function
 
                     .subscribe(
@@ -1930,202 +1942,142 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
             // Zip all requests with the Function, which will receive the results.
             Observable.zip(requests, new Function<Object[], Object>() {
-                @Override
-                public Object apply(Object[] objects) throws Exception {
-                    // Objects[] is an array of combined results of completed requests
-                    ArrayList<QueueList> queueList = new ArrayList<>();
-                    ArrayList<ScheduleList> schedulesList = new ArrayList<>();
-                    ArrayList<SearchService> checkInServList = new ArrayList<>();
-                    ArrayList<SearchAppoinment> apptServicesList = new ArrayList<>();
-                    ArrayList<Catalog> catalogs = new ArrayList<>();
+                        @Override
+                        public Object apply(Object[] objects) throws Exception {
+                            // Objects[] is an array of combined results of completed requests
+                            ArrayList<QueueList> queueList = new ArrayList<>();
+                            ArrayList<ScheduleList> schedulesList = new ArrayList<>();
+                            ArrayList<SearchService> checkInServList = new ArrayList<>();
+                            ArrayList<SearchAppoinment> apptServicesList = new ArrayList<>();
+                            ArrayList<Catalog> catalogs = new ArrayList<>();
 
-                    if (orderEnabled) {
+                            if (orderEnabled) {
 
-                        queueList = (ArrayList<QueueList>) objects[0];
-                        schedulesList = (ArrayList<ScheduleList>) objects[1];
-                        checkInServList = (ArrayList<SearchService>) objects[2];
-                        apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
-                        catalogs = (ArrayList<Catalog>) objects[4];
+                                queueList = (ArrayList<QueueList>) objects[0];
+                                schedulesList = (ArrayList<ScheduleList>) objects[1];
+                                checkInServList = (ArrayList<SearchService>) objects[2];
+                                apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
+                                catalogs = (ArrayList<Catalog>) objects[4];
 
-                    } else {
+                            } else {
 
-                        queueList = (ArrayList<QueueList>) objects[0];
-                        schedulesList = (ArrayList<ScheduleList>) objects[1];
-                        checkInServList = (ArrayList<SearchService>) objects[2];
-                        apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
-                    }
-
-                    queueList = queueList == null ? new ArrayList<QueueList>() : queueList;
-
-                    schedulesList = schedulesList == null ? new ArrayList<ScheduleList>() : schedulesList;
-
-                    providersList = providersList == null ? new ArrayList<ProviderUserModel>() : providersList;
-
-                    checkInServList = checkInServList == null ? new ArrayList<SearchService>() : checkInServList;
-
-                    apptServicesList = apptServicesList == null ? new ArrayList<SearchAppoinment>() : apptServicesList;
-
-                    donationServices = donationServices == null ? new ArrayList<SearchDonation>() : donationServices;
-
-                    catalogs = catalogs == null ? new ArrayList<Catalog>() : catalogs;
-
-                    serviceInfoList.clear();
-                    DepartmentInfo departmentInfo = new DepartmentInfo();
-                    ArrayList<DepServiceInfo> services = new ArrayList<DepServiceInfo>();
-
-                    if (queueList.get(0).isWaitlistEnabled()) {
-                        for (SearchService checkInService : checkInServList) {
-
-                            if (checkInService.getProvider() == null) {  // adding only Sp level services
-
-                                if (checkInService.getCheckInServiceAvailability() != null) {
-
-                                    DepServiceInfo serviceInfo = new DepServiceInfo();
-                                    serviceInfo.setDepartmentId(0);
-                                    serviceInfo.setDepartmentName("");
-                                    serviceInfo.setId(checkInService.getId());
-                                    serviceInfo.setName(checkInService.getName());
-                                    serviceInfo.setType(Constants.CHECKIN);
-                                    serviceInfo.setToken(isToken);
-                                    serviceInfo.setOnline(onlinePresence);
-                                    if (checkInService.getCheckInServiceAvailability() != null) {
-                                        serviceInfo.setAvailability(true);
-                                        if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
-                                            serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
-                                        }
-                                        if (checkInService.getCheckInServiceAvailability().getPersonAhead() != null) {
-                                            serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
-                                        }
-                                        serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
-                                        serviceInfo.setNextAvailableDate(checkInService.getCheckInServiceAvailability().getAvailableDate());
-                                        if (checkInService.getCheckInServiceAvailability().getServiceTime() != null) {
-                                            serviceInfo.setNextAvailableTime(checkInService.getCheckInServiceAvailability().getServiceTime());
-                                        }
-                                    }
-                                    serviceInfo.setServiceMode(checkInService.getServiceType());
-                                    if (checkInService.getVirtualCallingModes() != null) {
-                                        serviceInfo.setCallingMode(checkInService.getVirtualCallingModes().get(0).getCallingMode());
-                                        serviceInfo.setVirtualServiceType(checkInService.getVirtualServiceType());
-                                    }
-                                    // adding all the info
-                                    serviceInfo.setChecinServiceInfo(checkInService);
-                                    services.add(serviceInfo);
-                                }
-
+                                queueList = (ArrayList<QueueList>) objects[0];
+                                schedulesList = (ArrayList<ScheduleList>) objects[1];
+                                checkInServList = (ArrayList<SearchService>) objects[2];
+                                apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
                             }
 
-                        }
-                    }
+                            queueList = queueList == null ? new ArrayList<QueueList>() : queueList;
 
-                    if (schedulesList.get(0).isApptEnabled()) {
-                        for (SearchAppoinment appt : apptServicesList) {
+                            schedulesList = schedulesList == null ? new ArrayList<ScheduleList>() : schedulesList;
 
-                            if (appt.getProvider() == null) {  // adding only Sp level services
-                                if (appt.getAppointServiceAvailability() != null) {
+                            providersList = providersList == null ? new ArrayList<ProviderUserModel>() : providersList;
 
-                                    DepServiceInfo serviceInfo = new DepServiceInfo();
-                                    serviceInfo.setDepartmentId(0);
-                                    serviceInfo.setDepartmentName("");
-                                    serviceInfo.setId(appt.getId());
-                                    serviceInfo.setName(appt.getName());
-                                    serviceInfo.setType(Constants.APPOINTMENT);
-                                    serviceInfo.setEstTime("");
-                                    serviceInfo.setOnline(onlinePresence);
-                                    serviceInfo.setPeopleInLine(0);
-                                    serviceInfo.setCalculationMode("");
-                                    serviceInfo.setServiceMode(appt.getServiceType());
-                                    if (appt.getVirtualCallingModes() != null) {
-                                        serviceInfo.setCallingMode(appt.getVirtualCallingModes().get(0).getCallingMode());
-                                        serviceInfo.setVirtualServiceType(appt.getVirtualServiceType());
+                            checkInServList = checkInServList == null ? new ArrayList<SearchService>() : checkInServList;
+
+                            apptServicesList = apptServicesList == null ? new ArrayList<SearchAppoinment>() : apptServicesList;
+
+                            donationServices = donationServices == null ? new ArrayList<SearchDonation>() : donationServices;
+
+                            catalogs = catalogs == null ? new ArrayList<Catalog>() : catalogs;
+
+                            serviceInfoList.clear();
+                            DepartmentInfo departmentInfo = new DepartmentInfo();
+                            ArrayList<DepServiceInfo> services = new ArrayList<DepServiceInfo>();
+
+                            if (queueList.get(0).isWaitlistEnabled()) {
+                                for (SearchService checkInService : checkInServList) {
+
+                                    if (checkInService.getProvider() == null) {  // adding only Sp level services
+
+                                        if (checkInService.getCheckInServiceAvailability() != null) {
+
+                                            DepServiceInfo serviceInfo = new DepServiceInfo();
+                                            serviceInfo.setDepartmentId(0);
+                                            serviceInfo.setDepartmentName("");
+                                            serviceInfo.setId(checkInService.getId());
+                                            serviceInfo.setName(checkInService.getName());
+                                            serviceInfo.setType(Constants.CHECKIN);
+                                            serviceInfo.setToken(isToken);
+                                            serviceInfo.setOnline(onlinePresence);
+                                            if (checkInService.getCheckInServiceAvailability() != null) {
+                                                serviceInfo.setAvailability(true);
+                                                if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
+                                                    serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
+                                                }
+                                                if (checkInService.getCheckInServiceAvailability().getPersonAhead() != null) {
+                                                    serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
+                                                }
+                                                serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
+                                                serviceInfo.setNextAvailableDate(checkInService.getCheckInServiceAvailability().getAvailableDate());
+                                                if (checkInService.getCheckInServiceAvailability().getServiceTime() != null) {
+                                                    serviceInfo.setNextAvailableTime(checkInService.getCheckInServiceAvailability().getServiceTime());
+                                                }
+                                            }
+                                            serviceInfo.setServiceMode(checkInService.getServiceType());
+                                            if (checkInService.getVirtualCallingModes() != null) {
+                                                serviceInfo.setCallingMode(checkInService.getVirtualCallingModes().get(0).getCallingMode());
+                                                serviceInfo.setVirtualServiceType(checkInService.getVirtualServiceType());
+                                            }
+                                            // adding all the info
+                                            serviceInfo.setChecinServiceInfo(checkInService);
+                                            services.add(serviceInfo);
+                                        }
+
                                     }
-                                    if (appt.getAppointServiceAvailability() != null) {
-                                        serviceInfo.setAvailability(true);
-                                        serviceInfo.setNextAvailableDate(appt.getAppointServiceAvailability().getNextAvailableDate());
-                                        serviceInfo.setNextAvailableTime(appt.getAppointServiceAvailability().getNextAvailable().split("-")[0]);
 
-                                    }
-                                    // adding all the info
-                                    serviceInfo.setAppointmentServiceInfo(appt);
-                                    services.add(serviceInfo);
                                 }
                             }
 
-                        }
-                    }
+                            if (schedulesList.get(0).isApptEnabled()) {
+                                for (SearchAppoinment appt : apptServicesList) {
 
-                    // for providers
-                    for (ProviderUserModel provider : providersList) {
+                                    if (appt.getProvider() == null) {  // adding only Sp level services
+                                        if (appt.getAppointServiceAvailability() != null) {
 
-                        DepServiceInfo serviceInfo = new DepServiceInfo();
-                        serviceInfo.setDepartmentId(provider.getDeptId());
-                        serviceInfo.setDepartmentName("");
-                        serviceInfo.setId(provider.getId());
-                        if (provider.getBusinessName() != null) {
-                            serviceInfo.setName(provider.getBusinessName());
-                        } else {
-                            serviceInfo.setName(provider.getFirstName() + " " + provider.getLastName());
-                        }
-                        serviceInfo.setType(Constants.PROVIDER);
-                        serviceInfo.setEstTime("");
-                        serviceInfo.setPeopleInLine(0);
-                        serviceInfo.setCalculationMode("");
-                        serviceInfo.setServiceMode("");
-                        serviceInfo.setAvailability(true);
-                        serviceInfo.setCallingMode("");
-                        serviceInfo.setNextAvailableTime("");
-                        if (provider.getProfilePicture() != null) {
-                            String url = provider.getProfilePicture().getUrl();
-                            serviceInfo.setProviderImage(url);
-                        }
-                        // adding all the info
-                        serviceInfo.setProviderInfo(provider);
-                        services.add(serviceInfo);
+                                            DepServiceInfo serviceInfo = new DepServiceInfo();
+                                            serviceInfo.setDepartmentId(0);
+                                            serviceInfo.setDepartmentName("");
+                                            serviceInfo.setId(appt.getId());
+                                            serviceInfo.setName(appt.getName());
+                                            serviceInfo.setType(Constants.APPOINTMENT);
+                                            serviceInfo.setEstTime("");
+                                            serviceInfo.setOnline(onlinePresence);
+                                            serviceInfo.setPeopleInLine(0);
+                                            serviceInfo.setCalculationMode("");
+                                            serviceInfo.setServiceMode(appt.getServiceType());
+                                            if (appt.getVirtualCallingModes() != null) {
+                                                serviceInfo.setCallingMode(appt.getVirtualCallingModes().get(0).getCallingMode());
+                                                serviceInfo.setVirtualServiceType(appt.getVirtualServiceType());
+                                            }
+                                            if (appt.getAppointServiceAvailability() != null) {
+                                                serviceInfo.setAvailability(true);
+                                                serviceInfo.setNextAvailableDate(appt.getAppointServiceAvailability().getNextAvailableDate());
+                                                serviceInfo.setNextAvailableTime(appt.getAppointServiceAvailability().getNextAvailable().split("-")[0]);
 
-                    }
+                                            }
+                                            // adding all the info
+                                            serviceInfo.setAppointmentServiceInfo(appt);
+                                            services.add(serviceInfo);
+                                        }
+                                    }
 
-                    // adding donations only when donations are accepted
-                    if (mBusinessDataList.isDonationFundRaising()) {
-                        for (SearchDonation donation : donationServices) {
-
-                            DepServiceInfo serviceInfo = new DepServiceInfo();
-                            serviceInfo.setDepartmentId(0);
-                            serviceInfo.setDepartmentName("");
-                            serviceInfo.setId(donation.getId());
-                            serviceInfo.setName(donation.getName());
-                            serviceInfo.setType(Constants.DONATION);
-                            serviceInfo.setEstTime("");
-                            serviceInfo.setPeopleInLine(0);
-                            serviceInfo.setCalculationMode("");
-                            serviceInfo.setServiceMode("");
-                            serviceInfo.setCallingMode("");
-                            serviceInfo.setOnline(onlinePresence);
-                            serviceInfo.setAvailability(true);
-                            serviceInfo.setNextAvailableTime("");
-                            serviceInfo.setProviderImage("");
-                            if (donation.getMinDonationAmount() != null && donation.getMaxDonationAmount() != null) {
-                                serviceInfo.setMinDonationAmount(donation.getMinDonationAmount());
-                                serviceInfo.setMaxDonationAmount(donation.getMaxDonationAmount());
+                                }
                             }
-                            // adding all the info
-                            serviceInfo.setDonationServiceInfo(donation);
-                            services.add(serviceInfo);
-                        }
-                    }
 
-                    if (onlinePresence) {
-
-                        if (catalogs.size() > 0) {
-
-                            for (Catalog catalog : catalogs) {
+                            // for providers
+                            for (ProviderUserModel provider : providersList) {
 
                                 DepServiceInfo serviceInfo = new DepServiceInfo();
-                                if (catalog.getCatLogName() != null) {
-                                    serviceInfo.setName(catalog.getCatLogName());
+                                serviceInfo.setDepartmentId(provider.getDeptId());
+                                serviceInfo.setDepartmentName("");
+                                serviceInfo.setId(provider.getId());
+                                if (provider.getBusinessName() != null) {
+                                    serviceInfo.setName(provider.getBusinessName());
+                                } else {
+                                    serviceInfo.setName(provider.getFirstName() + " " + provider.getLastName());
                                 }
-                                if (catalog.getCatalogImagesList() != null && catalog.getCatalogImagesList().size() > 0) {
-                                    serviceInfo.setProviderImage(catalog.getCatalogImagesList().get(0).getUrl());
-                                }
-                                serviceInfo.setType(Constants.ORDERS);
+                                serviceInfo.setType(Constants.PROVIDER);
                                 serviceInfo.setEstTime("");
                                 serviceInfo.setPeopleInLine(0);
                                 serviceInfo.setCalculationMode("");
@@ -2133,21 +2085,81 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                 serviceInfo.setAvailability(true);
                                 serviceInfo.setCallingMode("");
                                 serviceInfo.setNextAvailableTime("");
-                                serviceInfo.setCatalogInfo(catalog); // adding all the catalog info
+                                if (provider.getProfilePicture() != null) {
+                                    String url = provider.getProfilePicture().getUrl();
+                                    serviceInfo.setProviderImage(url);
+                                }
+                                // adding all the info
+                                serviceInfo.setProviderInfo(provider);
                                 services.add(serviceInfo);
-                                break; // if more than one catalog,in this line break the loop and add only one catalog to diaplay(current system only support one catalog)(****   catalog commented on 3 locations   ***)
 
                             }
 
+                            // adding donations only when donations are accepted
+                            if (mBusinessDataList.isDonationFundRaising()) {
+                                for (SearchDonation donation : donationServices) {
+
+                                    DepServiceInfo serviceInfo = new DepServiceInfo();
+                                    serviceInfo.setDepartmentId(0);
+                                    serviceInfo.setDepartmentName("");
+                                    serviceInfo.setId(donation.getId());
+                                    serviceInfo.setName(donation.getName());
+                                    serviceInfo.setType(Constants.DONATION);
+                                    serviceInfo.setEstTime("");
+                                    serviceInfo.setPeopleInLine(0);
+                                    serviceInfo.setCalculationMode("");
+                                    serviceInfo.setServiceMode("");
+                                    serviceInfo.setCallingMode("");
+                                    serviceInfo.setOnline(onlinePresence);
+                                    serviceInfo.setAvailability(true);
+                                    serviceInfo.setNextAvailableTime("");
+                                    serviceInfo.setProviderImage("");
+                                    if (donation.getMinDonationAmount() != null && donation.getMaxDonationAmount() != null) {
+                                        serviceInfo.setMinDonationAmount(donation.getMinDonationAmount());
+                                        serviceInfo.setMaxDonationAmount(donation.getMaxDonationAmount());
+                                    }
+                                    // adding all the info
+                                    serviceInfo.setDonationServiceInfo(donation);
+                                    services.add(serviceInfo);
+                                }
+                            }
+
+                            if (onlinePresence) {
+
+                                if (catalogs.size() > 0) {
+
+                                    for (Catalog catalog : catalogs) {
+
+                                        DepServiceInfo serviceInfo = new DepServiceInfo();
+                                        if (catalog.getCatLogName() != null) {
+                                            serviceInfo.setName(catalog.getCatLogName());
+                                        }
+                                        if (catalog.getCatalogImagesList() != null && catalog.getCatalogImagesList().size() > 0) {
+                                            serviceInfo.setProviderImage(catalog.getCatalogImagesList().get(0).getUrl());
+                                        }
+                                        serviceInfo.setType(Constants.ORDERS);
+                                        serviceInfo.setEstTime("");
+                                        serviceInfo.setPeopleInLine(0);
+                                        serviceInfo.setCalculationMode("");
+                                        serviceInfo.setServiceMode("");
+                                        serviceInfo.setAvailability(true);
+                                        serviceInfo.setCallingMode("");
+                                        serviceInfo.setNextAvailableTime("");
+                                        serviceInfo.setCatalogInfo(catalog); // adding all the catalog info
+                                        services.add(serviceInfo);
+                                        break; // if more than one catalog,in this line break the loop and add only one catalog to diaplay(current system only support one catalog)(****   catalog commented on 3 locations   ***)
+
+                                    }
+
+                                }
+                            }
+
+
+                            serviceInfoList.addAll(services);
+                            //do something with those results and emit new event
+                            return serviceInfoList;
                         }
-                    }
-
-
-                    serviceInfoList.addAll(services);
-                    //do something with those results and emit new event
-                    return serviceInfoList;
-                }
-            })
+                    })
                     // After all requests had been performed the next observer will receive the Object, returned from Function
 
                     .subscribe(
@@ -2230,258 +2242,258 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
             // Zip all requests with the Function, which will receive the results.
             Observable.zip(requests, new Function<Object[], Object>() {
-                @Override
-                public Object apply(Object[] objects) throws Exception {
-                    // Objects[] is an array of combined results of completed requests
-                    ArrayList<QueueList> queueList = new ArrayList<>();
-                    ArrayList<ScheduleList> schedulesList = new ArrayList<>();
-                    ArrayList<SearchService> checkInServicesList = new ArrayList<>();
-                    ArrayList<SearchAppoinment> apptServicesList = new ArrayList<>();
-                    ArrayList<Catalog> catalogs = new ArrayList<>();
+                        @Override
+                        public Object apply(Object[] objects) throws Exception {
+                            // Objects[] is an array of combined results of completed requests
+                            ArrayList<QueueList> queueList = new ArrayList<>();
+                            ArrayList<ScheduleList> schedulesList = new ArrayList<>();
+                            ArrayList<SearchService> checkInServicesList = new ArrayList<>();
+                            ArrayList<SearchAppoinment> apptServicesList = new ArrayList<>();
+                            ArrayList<Catalog> catalogs = new ArrayList<>();
 
-                    if (orderEnabled) {
+                            if (orderEnabled) {
 
-                        queueList = (ArrayList<QueueList>) objects[0];
-                        schedulesList = (ArrayList<ScheduleList>) objects[1];
-                        checkInServicesList = (ArrayList<SearchService>) objects[2];
-                        apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
-                        catalogs = (ArrayList<Catalog>) objects[4];
+                                queueList = (ArrayList<QueueList>) objects[0];
+                                schedulesList = (ArrayList<ScheduleList>) objects[1];
+                                checkInServicesList = (ArrayList<SearchService>) objects[2];
+                                apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
+                                catalogs = (ArrayList<Catalog>) objects[4];
 
-                    } else {
+                            } else {
 
-                        queueList = (ArrayList<QueueList>) objects[0];
-                        schedulesList = (ArrayList<ScheduleList>) objects[1];
-                        checkInServicesList = (ArrayList<SearchService>) objects[2];
-                        apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
-                    }
+                                queueList = (ArrayList<QueueList>) objects[0];
+                                schedulesList = (ArrayList<ScheduleList>) objects[1];
+                                checkInServicesList = (ArrayList<SearchService>) objects[2];
+                                apptServicesList = (ArrayList<SearchAppoinment>) objects[3];
+                            }
 
-                    checkInServicesList = checkInServicesList == null ? new ArrayList<SearchService>() : checkInServicesList;
+                            checkInServicesList = checkInServicesList == null ? new ArrayList<SearchService>() : checkInServicesList;
 
-                    departmentProviders = departmentProviders == null ? new ArrayList<SearchDepartmentServices>() : departmentProviders;
+                            departmentProviders = departmentProviders == null ? new ArrayList<SearchDepartmentServices>() : departmentProviders;
 
-                    queueList = queueList == null ? new ArrayList<QueueList>() : queueList;
+                            queueList = queueList == null ? new ArrayList<QueueList>() : queueList;
 
-                    schedulesList = schedulesList == null ? new ArrayList<ScheduleList>() : schedulesList;
+                            schedulesList = schedulesList == null ? new ArrayList<ScheduleList>() : schedulesList;
 
-                    donationServices = donationServices == null ? new ArrayList<SearchDonation>() : donationServices;
+                            donationServices = donationServices == null ? new ArrayList<SearchDonation>() : donationServices;
 
-                    departmentsList.clear();
-                    for (SearchDepartmentServices department : departmentProviders) {
+                            departmentsList.clear();
+                            for (SearchDepartmentServices department : departmentProviders) {
 
-                        DepartmentInfo departmentInfo = new DepartmentInfo();
-                        ArrayList<DepServiceInfo> services = new ArrayList<DepServiceInfo>();
+                                DepartmentInfo departmentInfo = new DepartmentInfo();
+                                ArrayList<DepServiceInfo> services = new ArrayList<DepServiceInfo>();
 
-                        if (queueList.get(0).isWaitlistEnabled()) {
+                                if (queueList.get(0).isWaitlistEnabled()) {
 
-                            for (SearchService checkInService : checkInServicesList) {
+                                    for (SearchService checkInService : checkInServicesList) {
 
-                                if (department.getDepartmentId() == checkInService.getDepartment()) {
+                                        if (department.getDepartmentId() == checkInService.getDepartment()) {
 
-                                    if (checkInService.getProvider() == null) {  // adding only Sp level services
+                                            if (checkInService.getProvider() == null) {  // adding only Sp level services
 
-                                        if (checkInService.getCheckInServiceAvailability() != null) {
+                                                if (checkInService.getCheckInServiceAvailability() != null) {
 
-                                            DepServiceInfo serviceInfo = new DepServiceInfo();
-                                            serviceInfo.setDepartmentId(checkInService.getDepartment());
-                                            serviceInfo.setDepartmentName(department.getDepartmentName());
-                                            serviceInfo.setId(checkInService.getId());
-                                            serviceInfo.setName(checkInService.getName());
-                                            serviceInfo.setType(Constants.CHECKIN);
-                                            serviceInfo.setToken(isToken);
-                                            serviceInfo.setOnline(onlinePresence);
-                                            if (checkInService.getCheckInServiceAvailability() != null) {
-                                                serviceInfo.setAvailability(true);
-                                                if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
-                                                    serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
-                                                }
-                                                if (checkInService.getCheckInServiceAvailability().getPersonAhead() != null) {
-                                                    serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
-                                                }
-                                                serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
-                                                serviceInfo.setNextAvailableDate(checkInService.getCheckInServiceAvailability().getAvailableDate());
-                                                if (checkInService.getCheckInServiceAvailability().getServiceTime() != null) {
-                                                    serviceInfo.setNextAvailableTime(checkInService.getCheckInServiceAvailability().getServiceTime());
+                                                    DepServiceInfo serviceInfo = new DepServiceInfo();
+                                                    serviceInfo.setDepartmentId(checkInService.getDepartment());
+                                                    serviceInfo.setDepartmentName(department.getDepartmentName());
+                                                    serviceInfo.setId(checkInService.getId());
+                                                    serviceInfo.setName(checkInService.getName());
+                                                    serviceInfo.setType(Constants.CHECKIN);
+                                                    serviceInfo.setToken(isToken);
+                                                    serviceInfo.setOnline(onlinePresence);
+                                                    if (checkInService.getCheckInServiceAvailability() != null) {
+                                                        serviceInfo.setAvailability(true);
+                                                        if (checkInService.getCheckInServiceAvailability().getQueueWaitingTime() != null) {
+                                                            serviceInfo.setEstTime(checkInService.getCheckInServiceAvailability().getQueueWaitingTime());
+                                                        }
+                                                        if (checkInService.getCheckInServiceAvailability().getPersonAhead() != null) {
+                                                            serviceInfo.setPeopleInLine(checkInService.getCheckInServiceAvailability().getPersonAhead());
+                                                        }
+                                                        serviceInfo.setCalculationMode(checkInService.getCheckInServiceAvailability().getCalculationMode());
+                                                        serviceInfo.setNextAvailableDate(checkInService.getCheckInServiceAvailability().getAvailableDate());
+                                                        if (checkInService.getCheckInServiceAvailability().getServiceTime() != null) {
+                                                            serviceInfo.setNextAvailableTime(checkInService.getCheckInServiceAvailability().getServiceTime());
+                                                        }
+                                                    }
+                                                    serviceInfo.setServiceMode(checkInService.getServiceType());
+                                                    serviceInfo.setChecinServiceInfo(checkInService);
+                                                    if (checkInService.getVirtualCallingModes() != null) {
+                                                        serviceInfo.setCallingMode(checkInService.getVirtualCallingModes().get(0).getCallingMode());
+                                                        serviceInfo.setVirtualServiceType(checkInService.getVirtualServiceType());
+                                                    }
+                                                    // adding all the info
+                                                    services.add(serviceInfo);
                                                 }
                                             }
-                                            serviceInfo.setServiceMode(checkInService.getServiceType());
-                                            serviceInfo.setChecinServiceInfo(checkInService);
-                                            if (checkInService.getVirtualCallingModes() != null) {
-                                                serviceInfo.setCallingMode(checkInService.getVirtualCallingModes().get(0).getCallingMode());
-                                                serviceInfo.setVirtualServiceType(checkInService.getVirtualServiceType());
-                                            }
-                                            // adding all the info
-                                            services.add(serviceInfo);
                                         }
                                     }
                                 }
-                            }
-                        }
 
-                        // adding appointment services only when appointment is enabled
+                                // adding appointment services only when appointment is enabled
 
-                        if (schedulesList.get(0).isApptEnabled()) {
-                            for (SearchAppoinment appt : apptServicesList) {
+                                if (schedulesList.get(0).isApptEnabled()) {
+                                    for (SearchAppoinment appt : apptServicesList) {
 
-                                if (department.getDepartmentId() == appt.getDepartment()) {
+                                        if (department.getDepartmentId() == appt.getDepartment()) {
 
-                                    if (appt.getProvider() == null) {  // adding only Sp level services
+                                            if (appt.getProvider() == null) {  // adding only Sp level services
 
-                                        if (appt.getAppointServiceAvailability() != null) {
+                                                if (appt.getAppointServiceAvailability() != null) {
+
+                                                    DepServiceInfo serviceInfo = new DepServiceInfo();
+                                                    serviceInfo.setDepartmentId(appt.getDepartment());
+                                                    serviceInfo.setDepartmentName(department.getDepartmentName());
+                                                    serviceInfo.setId(appt.getId());
+                                                    serviceInfo.setName(appt.getName());
+                                                    serviceInfo.setType(Constants.APPOINTMENT);
+                                                    serviceInfo.setOnline(onlinePresence);
+                                                    serviceInfo.setEstTime("");
+                                                    serviceInfo.setPeopleInLine(0);
+                                                    serviceInfo.setCalculationMode("");
+                                                    serviceInfo.setServiceMode(appt.getServiceType());
+                                                    if (appt.getVirtualCallingModes() != null) {
+                                                        serviceInfo.setCallingMode(appt.getVirtualCallingModes().get(0).getCallingMode());
+                                                        serviceInfo.setVirtualServiceType(appt.getVirtualServiceType());
+                                                    }
+                                                    if (appt.getAppointServiceAvailability() != null) {
+                                                        serviceInfo.setAvailability(true);
+                                                        serviceInfo.setNextAvailableDate(appt.getAppointServiceAvailability().getNextAvailableDate());
+                                                        serviceInfo.setNextAvailableTime(appt.getAppointServiceAvailability().getNextAvailable().split("-")[0]);
+
+                                                    }
+                                                    // adding all the info
+                                                    serviceInfo.setAppointmentServiceInfo(appt);
+                                                    services.add(serviceInfo);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // for providers
+                                for (SearchDepartmentServices provider : departmentProviders) {
+
+                                    if (department.getDepartmentId() == provider.getDepartmentId()) {
+
+                                        for (ProviderUserModel user : provider.getUsers()) {
 
                                             DepServiceInfo serviceInfo = new DepServiceInfo();
-                                            serviceInfo.setDepartmentId(appt.getDepartment());
-                                            serviceInfo.setDepartmentName(department.getDepartmentName());
-                                            serviceInfo.setId(appt.getId());
-                                            serviceInfo.setName(appt.getName());
-                                            serviceInfo.setType(Constants.APPOINTMENT);
-                                            serviceInfo.setOnline(onlinePresence);
+                                            serviceInfo.setDepartmentId(provider.getDepartmentId());
+                                            serviceInfo.setDepartmentName(provider.getDepartmentName());
+                                            serviceInfo.setId(user.getId());
+                                            if (user.getBusinessName() != null) {
+                                                serviceInfo.setName(user.getBusinessName());
+                                            } else {
+                                                serviceInfo.setName(user.getFirstName() + " " + user.getLastName());
+                                            }
+                                            serviceInfo.setType(Constants.PROVIDER);
                                             serviceInfo.setEstTime("");
                                             serviceInfo.setPeopleInLine(0);
                                             serviceInfo.setCalculationMode("");
-                                            serviceInfo.setServiceMode(appt.getServiceType());
-                                            if (appt.getVirtualCallingModes() != null) {
-                                                serviceInfo.setCallingMode(appt.getVirtualCallingModes().get(0).getCallingMode());
-                                                serviceInfo.setVirtualServiceType(appt.getVirtualServiceType());
-                                            }
-                                            if (appt.getAppointServiceAvailability() != null) {
-                                                serviceInfo.setAvailability(true);
-                                                serviceInfo.setNextAvailableDate(appt.getAppointServiceAvailability().getNextAvailableDate());
-                                                serviceInfo.setNextAvailableTime(appt.getAppointServiceAvailability().getNextAvailable().split("-")[0]);
-
+                                            serviceInfo.setServiceMode("");
+                                            serviceInfo.setAvailability(true);
+                                            serviceInfo.setCallingMode("");
+                                            serviceInfo.setNextAvailableTime("");
+                                            if (user.getProfilePicture() != null) {
+                                                String url = user.getProfilePicture().getUrl();
+                                                serviceInfo.setProviderImage(url);
                                             }
                                             // adding all the info
-                                            serviceInfo.setAppointmentServiceInfo(appt);
+                                            serviceInfo.setProviderInfo(user);
                                             services.add(serviceInfo);
                                         }
+
                                     }
                                 }
+
+                                if (services.size() > 0) {
+                                    departmentInfo.setDeptServicesList(services);
+                                    departmentInfo.setDepartmentName(department.getDepartmentName());
+
+                                    departmentsList.add(departmentInfo);
+                                }
                             }
-                        }
 
-                        // for providers
-                        for (SearchDepartmentServices provider : departmentProviders) {
+                            // adding donations only when donations are accepted
+                            if (mBusinessDataList.isDonationFundRaising()) {
+                                // to add donation services
+                                DepartmentInfo donationDepartment = new DepartmentInfo();
+                                ArrayList<DepServiceInfo> donationServicesList = new ArrayList<DepServiceInfo>();
+                                donationDepartment.setDepartmentName("Donations");
 
-                            if (department.getDepartmentId() == provider.getDepartmentId()) {
-
-                                for (ProviderUserModel user : provider.getUsers()) {
+                                for (SearchDonation donation : donationServices) {
 
                                     DepServiceInfo serviceInfo = new DepServiceInfo();
-                                    serviceInfo.setDepartmentId(provider.getDepartmentId());
-                                    serviceInfo.setDepartmentName(provider.getDepartmentName());
-                                    serviceInfo.setId(user.getId());
-                                    if (user.getBusinessName() != null) {
-                                        serviceInfo.setName(user.getBusinessName());
-                                    } else {
-                                        serviceInfo.setName(user.getFirstName() + " " + user.getLastName());
-                                    }
-                                    serviceInfo.setType(Constants.PROVIDER);
+                                    serviceInfo.setDepartmentId(0);
+                                    serviceInfo.setDepartmentName("");
+                                    serviceInfo.setId(donation.getId());
+                                    serviceInfo.setName(donation.getName());
+                                    serviceInfo.setType(Constants.DONATION);
                                     serviceInfo.setEstTime("");
                                     serviceInfo.setPeopleInLine(0);
                                     serviceInfo.setCalculationMode("");
-                                    serviceInfo.setServiceMode("");
+                                    serviceInfo.setOnline(onlinePresence);
                                     serviceInfo.setAvailability(true);
+                                    serviceInfo.setServiceMode("");
                                     serviceInfo.setCallingMode("");
                                     serviceInfo.setNextAvailableTime("");
-                                    if (user.getProfilePicture() != null) {
-                                        String url = user.getProfilePicture().getUrl();
-                                        serviceInfo.setProviderImage(url);
+                                    if (donation.getMinDonationAmount() != null && donation.getMaxDonationAmount() != null) {
+                                        serviceInfo.setMinDonationAmount(donation.getMinDonationAmount());
+                                        serviceInfo.setMaxDonationAmount(donation.getMaxDonationAmount());
                                     }
                                     // adding all the info
-                                    serviceInfo.setProviderInfo(user);
-                                    services.add(serviceInfo);
+                                    serviceInfo.setDonationServiceInfo(donation);
+                                    donationServicesList.add(serviceInfo);
                                 }
 
-                            }
-                        }
-
-                        if (services.size() > 0) {
-                            departmentInfo.setDeptServicesList(services);
-                            departmentInfo.setDepartmentName(department.getDepartmentName());
-
-                            departmentsList.add(departmentInfo);
-                        }
-                    }
-
-                    // adding donations only when donations are accepted
-                    if (mBusinessDataList.isDonationFundRaising()) {
-                        // to add donation services
-                        DepartmentInfo donationDepartment = new DepartmentInfo();
-                        ArrayList<DepServiceInfo> donationServicesList = new ArrayList<DepServiceInfo>();
-                        donationDepartment.setDepartmentName("Donations");
-
-                        for (SearchDonation donation : donationServices) {
-
-                            DepServiceInfo serviceInfo = new DepServiceInfo();
-                            serviceInfo.setDepartmentId(0);
-                            serviceInfo.setDepartmentName("");
-                            serviceInfo.setId(donation.getId());
-                            serviceInfo.setName(donation.getName());
-                            serviceInfo.setType(Constants.DONATION);
-                            serviceInfo.setEstTime("");
-                            serviceInfo.setPeopleInLine(0);
-                            serviceInfo.setCalculationMode("");
-                            serviceInfo.setOnline(onlinePresence);
-                            serviceInfo.setAvailability(true);
-                            serviceInfo.setServiceMode("");
-                            serviceInfo.setCallingMode("");
-                            serviceInfo.setNextAvailableTime("");
-                            if (donation.getMinDonationAmount() != null && donation.getMaxDonationAmount() != null) {
-                                serviceInfo.setMinDonationAmount(donation.getMinDonationAmount());
-                                serviceInfo.setMaxDonationAmount(donation.getMaxDonationAmount());
-                            }
-                            // adding all the info
-                            serviceInfo.setDonationServiceInfo(donation);
-                            donationServicesList.add(serviceInfo);
-                        }
-
-                        if (donationServicesList.size() > 0) {
-                            donationDepartment.setDeptServicesList(donationServicesList);
-                            departmentsList.add(donationDepartment);
-                        }
-                    }
-
-                    if (onlinePresence) {
-
-                        if (catalogs.size() > 0) {
-                            DepartmentInfo catalogDepartment = new DepartmentInfo();
-                            ArrayList<DepServiceInfo> catalogsList = new ArrayList<DepServiceInfo>();
-                            catalogDepartment.setDepartmentName("Catalog");
-
-                            for (Catalog catalog : catalogs) {
-
-                                DepServiceInfo serviceInfo = new DepServiceInfo();
-                                if (catalog.getCatLogName() != null) {
-                                    serviceInfo.setName(catalog.getCatLogName());
+                                if (donationServicesList.size() > 0) {
+                                    donationDepartment.setDeptServicesList(donationServicesList);
+                                    departmentsList.add(donationDepartment);
                                 }
-                                if (catalog.getCatalogImagesList() != null && catalog.getCatalogImagesList().size() > 0) {
-                                    serviceInfo.setProviderImage(catalog.getCatalogImagesList().get(0).getUrl());
+                            }
+
+                            if (onlinePresence) {
+
+                                if (catalogs.size() > 0) {
+                                    DepartmentInfo catalogDepartment = new DepartmentInfo();
+                                    ArrayList<DepServiceInfo> catalogsList = new ArrayList<DepServiceInfo>();
+                                    catalogDepartment.setDepartmentName("Catalog");
+
+                                    for (Catalog catalog : catalogs) {
+
+                                        DepServiceInfo serviceInfo = new DepServiceInfo();
+                                        if (catalog.getCatLogName() != null) {
+                                            serviceInfo.setName(catalog.getCatLogName());
+                                        }
+                                        if (catalog.getCatalogImagesList() != null && catalog.getCatalogImagesList().size() > 0) {
+                                            serviceInfo.setProviderImage(catalog.getCatalogImagesList().get(0).getUrl());
+                                        }
+                                        serviceInfo.setType(Constants.ORDERS);
+                                        serviceInfo.setEstTime("");
+                                        serviceInfo.setPeopleInLine(0);
+                                        serviceInfo.setCalculationMode("");
+                                        serviceInfo.setServiceMode("");
+                                        serviceInfo.setAvailability(true);
+                                        serviceInfo.setCallingMode("");
+                                        serviceInfo.setNextAvailableTime("");
+                                        serviceInfo.setCatalogInfo(catalog); // adding all the catalog info
+                                        catalogsList.add(serviceInfo);
+                                        break; // if more than one catalog,in this line break the loop and add only one catalog to diaplay(current system only support one catalog)(****   catalog commented on 3 locations   ***)
+
+                                    }
+
+                                    if (catalogsList.size() > 0) {
+                                        catalogDepartment.setDeptServicesList(catalogsList);
+                                        departmentsList.add(catalogDepartment);
+                                    }
+
                                 }
-                                serviceInfo.setType(Constants.ORDERS);
-                                serviceInfo.setEstTime("");
-                                serviceInfo.setPeopleInLine(0);
-                                serviceInfo.setCalculationMode("");
-                                serviceInfo.setServiceMode("");
-                                serviceInfo.setAvailability(true);
-                                serviceInfo.setCallingMode("");
-                                serviceInfo.setNextAvailableTime("");
-                                serviceInfo.setCatalogInfo(catalog); // adding all the catalog info
-                                catalogsList.add(serviceInfo);
-                                break; // if more than one catalog,in this line break the loop and add only one catalog to diaplay(current system only support one catalog)(****   catalog commented on 3 locations   ***)
-
                             }
 
-                            if (catalogsList.size() > 0) {
-                                catalogDepartment.setDeptServicesList(catalogsList);
-                                departmentsList.add(catalogDepartment);
-                            }
-
+                            // do something with those results and emit new event
+                            return departmentsList;
                         }
-                    }
-
-                    // do something with those results and emit new event
-                    return departmentsList;
-                }
-            })
+                    })
                     // After all requests had been performed the next observer will receive the Object, returned from Function
 
                     .subscribe(
@@ -2863,103 +2875,29 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
 
     @Override
     public void onCheckInSelected(SearchService checkinServiceInfo) {
-        Intent intent = null;
+        Intent intent = new Intent();
         if (checkinServiceInfo != null) {
             if (checkinServiceInfo.getServiceOptionIds() != null && checkinServiceInfo.getServiceOptionIds().size() > 0) {
-                intent = new Intent(ProviderDetailActivity.this, ServiceOptionActivity.class);
+                intent = createCheckinIntent(checkinServiceInfo);
+                intent.setClass(ProviderDetailActivity.this, ServiceOptionActivity.class);
+                startActivity(intent);
             } else {
-                intent = new Intent(ProviderDetailActivity.this, CheckInActivity.class);
+                ApiGetOneTimeQNR(Constants.CHECKIN, null, checkinServiceInfo, null);  // for get providerconsumer id then check is OnetimeQNR is available/not
             }
-            //intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
-
-            intent.putExtra("uniqueID", uniqueId);
-            intent.putExtra("providerName", tvSpName.getText().toString());
-            intent.putExtra("locationName", tvLocationName.getText().toString());
-            intent.putExtra("providerId", providerId);
-            intent.putExtra("locationId", locationId);
-            intent.putExtra("checkInInfo", checkinServiceInfo);
-            intent.putExtra("fromUser", false);
-            intent.putExtra("sector", mBusinessDataList.getServiceSector().getDomain());
-
-            ServiceInfo serviceInfo = new ServiceInfo();
-            serviceInfo.setServiceId(checkinServiceInfo.getId());
-            serviceInfo.setServiceName(checkinServiceInfo.getName());
-            serviceInfo.setDescription(checkinServiceInfo.getDescription());
-
-            serviceInfo.setType(Constants.CHECKIN);
-
-            intent.putExtra("serviceInfo", serviceInfo);
-
-            startActivity(intent);
         }
-
     }
 
     @Override
     public void onAppointmentSelected(SearchAppoinment appointmentServiceInfo) {
-        Intent intent = null;
+        Intent intent = new Intent();
         if (appointmentServiceInfo != null) {
             if (appointmentServiceInfo.getServiceOptionIds() != null && appointmentServiceInfo.getServiceOptionIds().size() > 0) {
-                intent = new Intent(ProviderDetailActivity.this, ServiceOptionActivity.class);
+                intent = createAppointmentIntent(appointmentServiceInfo);
+                intent.setClass(ProviderDetailActivity.this, ServiceOptionActivity.class);
+                startActivity(intent);
             } else {
-                intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
+                ApiGetOneTimeQNR(Constants.APPOINTMENT, appointmentServiceInfo, null, null);  // for get providerconsumer id then check is OnetimeQNR is available/not
             }
-            //intent = new Intent(ProviderDetailActivity.this, AppointmentActivity.class);
-
-            intent.putExtra("uniqueID", uniqueId);
-            intent.putExtra("providerName", tvSpName.getText().toString());
-            intent.putExtra("locationName", tvLocationName.getText().toString());
-            intent.putExtra("locationId", locationId);
-            intent.putExtra("providerId", providerId);
-            intent.putExtra("fromUser", false);
-            intent.putExtra("sector", mBusinessDataList.getServiceSector().getDomain());
-
-            ServiceInfo serviceInfo = new ServiceInfo();
-            serviceInfo.setServiceId(appointmentServiceInfo.getId());
-            serviceInfo.setServiceName(appointmentServiceInfo.getName());
-            serviceInfo.setDescription(appointmentServiceInfo.getDescription());
-            serviceInfo.setType(Constants.APPOINTMENT);
-            serviceInfo.setUser(false);
-            serviceInfo.setNoteManidtory(appointmentServiceInfo.isConsumerNoteMandatory());
-            if (appointmentServiceInfo.getConsumerNoteTitle() != null) {
-                serviceInfo.setConsumerNoteTitle(appointmentServiceInfo.getConsumerNoteTitle());
-            }
-            serviceInfo.setIsPrePayment(appointmentServiceInfo.getIsPrePayment());
-            serviceInfo.setLivetrack(appointmentServiceInfo.getLivetrack());
-            if (appointmentServiceInfo.getMinPrePaymentAmount() != null) {
-                serviceInfo.setMinPrePaymentAmount(appointmentServiceInfo.getMinPrePaymentAmount());
-            }
-            serviceInfo.setPreInfoEnabled(appointmentServiceInfo.isPreInfoEnabled());
-            if (appointmentServiceInfo.getPreInfoText() != null) {
-                serviceInfo.setPreInfoText(appointmentServiceInfo.getPreInfoText());
-            }
-            if (appointmentServiceInfo.getPreInfoTitle() != null) {
-                serviceInfo.setPreInfoTitle(appointmentServiceInfo.getPreInfoTitle());
-            }
-            if (appointmentServiceInfo.getServiceType() != null) {
-                serviceInfo.setServiceType(appointmentServiceInfo.getServiceType());
-            }
-            if (appointmentServiceInfo.getVirtualCallingModes() != null) {
-                serviceInfo.setCallingMode(appointmentServiceInfo.getVirtualCallingModes().get(0).getCallingMode());
-                serviceInfo.setVirtualCallingValue(appointmentServiceInfo.getVirtualCallingModes().get(0).getValue());
-                serviceInfo.setVirtualServiceType(appointmentServiceInfo.getVirtualServiceType());
-            }
-            if (appointmentServiceInfo.getAppointServiceAvailability() != null) {
-                serviceInfo.setScheduleId(appointmentServiceInfo.getAppointServiceAvailability().getId());
-                serviceInfo.setAvailableDate(appointmentServiceInfo.getAppointServiceAvailability().getNextAvailableDate());
-                serviceInfo.setTime(appointmentServiceInfo.getAppointServiceAvailability().getNextAvailable());
-            }
-
-            if (appointmentServiceInfo.getTotalAmount() != null) {
-                serviceInfo.setTotalAmount(appointmentServiceInfo.getTotalAmount());
-            }
-            if (appointmentServiceInfo.getMaxBookingsAllowed() > 0) {
-                serviceInfo.setMaxBookingsAllowed(appointmentServiceInfo.getMaxBookingsAllowed());
-            }
-            serviceInfo.setShowOnlyAvailableSlots(appointmentServiceInfo.isShowOnlyAvailableSlots());
-            intent.putExtra("serviceInfo", serviceInfo);
-
-            startActivity(intent);
         }
     }
 
@@ -2982,19 +2920,8 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
     @Override
     public void onDonationSelected(SearchDonation donationServiceInfo) {
 
-        Intent intent = new Intent(ProviderDetailActivity.this, DonationActivity.class);
-        intent.putExtra("uniqueID", uniqueId);
-        intent.putExtra("locationId", locationId);
-        intent.putExtra("providerName", tvSpName.getText().toString());
-        intent.putExtra("providerId", providerId);
-        intent.putExtra("donationInfo", donationServiceInfo);
-        intent.putExtra("locationName", tvLocationName.getText().toString());
-        String pCountryCode = providerResponse.getBusinessProfile().getCountryCode();
-        String pPhNo = providerResponse.getBusinessProfile().getAccountLinkedPhNo();
-        if ((pCountryCode != null) && (!pCountryCode.isEmpty()) && (pPhNo != null) && (!pPhNo.isEmpty())) {
-            intent.putExtra("providerPhNumber", pCountryCode + " " + pPhNo);
-        }
-        startActivity(intent);
+        ApiGetOneTimeQNR(Constants.DONATION, null, null, donationServiceInfo);  // for get providerconsumer id then check is OnetimeQNR is available/not
+
     }
 
     @Override
@@ -3009,6 +2936,116 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         catalogIntent.putExtra("uniqueId", uniqueId);
         startActivity(catalogIntent);
 
+    }
+
+    private Intent createDonationIntent(SearchDonation donationServiceInfo) {
+        Intent intent = new Intent();
+        intent.putExtra("uniqueID", uniqueId);
+        intent.putExtra("locationId", locationId);
+        intent.putExtra("providerName", tvSpName.getText().toString());
+        intent.putExtra("providerId", providerId);
+        intent.putExtra("donationInfo", donationServiceInfo);
+        intent.putExtra("locationName", tvLocationName.getText().toString());
+        intent.putExtra("consumerId", consumerId);
+        intent.putExtra("familyMemId", 0);
+        intent.putExtra("requestFor", Constants.DONATION);
+        intent.putExtra("requestFrom", "");
+
+        String pCountryCode = providerResponse.getBusinessProfile().getCountryCode();
+        String pPhNo = providerResponse.getBusinessProfile().getAccountLinkedPhNo();
+        if ((pCountryCode != null) && (!pCountryCode.isEmpty()) && (pPhNo != null) && (!pPhNo.isEmpty())) {
+            intent.putExtra("providerPhNumber", pCountryCode + " " + pPhNo);
+        }
+        return intent;
+    }
+
+    private Intent createCheckinIntent(SearchService checkinServiceInfo) {
+        Intent intent = new Intent();
+        intent.putExtra("uniqueID", uniqueId);
+        intent.putExtra("providerName", tvSpName.getText().toString());
+        intent.putExtra("locationName", location);
+        intent.putExtra("providerId", providerId);
+        intent.putExtra("locationId", locationId);
+        intent.putExtra("checkInInfo", checkinServiceInfo);
+        intent.putExtra("fromUser", false);
+        intent.putExtra("sector", mBusinessDataList.getServiceSector().getDomain());
+        intent.putExtra("consumerId", consumerId);
+        intent.putExtra("familyMemId", 0);
+        intent.putExtra("requestFor", Constants.CHECKIN);
+        intent.putExtra("requestFrom", "");
+
+        ServiceInfo serviceInfo = new ServiceInfo();
+        serviceInfo.setServiceId(checkinServiceInfo.getId());
+        serviceInfo.setServiceName(checkinServiceInfo.getName());
+        serviceInfo.setDescription(checkinServiceInfo.getDescription());
+
+        serviceInfo.setType(Constants.CHECKIN);
+
+        intent.putExtra("serviceInfo", serviceInfo);
+
+        return intent;
+    }
+
+    private Intent createAppointmentIntent(SearchAppoinment appointmentServiceInfo) {
+        Intent intent = new Intent();
+        intent.putExtra("uniqueID", uniqueId);
+        intent.putExtra("providerName", tvSpName.getText().toString());
+        intent.putExtra("locationName", location);
+        intent.putExtra("locationId", locationId);
+        intent.putExtra("providerId", providerId);
+        intent.putExtra("fromUser", false);
+        intent.putExtra("sector", mBusinessDataList.getServiceSector().getDomain());
+        intent.putExtra("consumerId", consumerId);
+        intent.putExtra("familyMemId", 0);
+        intent.putExtra("requestFor", Constants.APPOINTMENT);
+        intent.putExtra("requestFrom", "");
+
+        ServiceInfo serviceInfo = new ServiceInfo();
+        serviceInfo.setServiceId(appointmentServiceInfo.getId());
+        serviceInfo.setServiceName(appointmentServiceInfo.getName());
+        serviceInfo.setDescription(appointmentServiceInfo.getDescription());
+        serviceInfo.setType(Constants.APPOINTMENT);
+        serviceInfo.setUser(false);
+        serviceInfo.setNoteManidtory(appointmentServiceInfo.isConsumerNoteMandatory());
+        if (appointmentServiceInfo.getConsumerNoteTitle() != null) {
+            serviceInfo.setConsumerNoteTitle(appointmentServiceInfo.getConsumerNoteTitle());
+        }
+        serviceInfo.setIsPrePayment(appointmentServiceInfo.getIsPrePayment());
+        serviceInfo.setLivetrack(appointmentServiceInfo.getLivetrack());
+        if (appointmentServiceInfo.getMinPrePaymentAmount() != null) {
+            serviceInfo.setMinPrePaymentAmount(appointmentServiceInfo.getMinPrePaymentAmount());
+        }
+        serviceInfo.setPreInfoEnabled(appointmentServiceInfo.isPreInfoEnabled());
+        if (appointmentServiceInfo.getPreInfoText() != null) {
+            serviceInfo.setPreInfoText(appointmentServiceInfo.getPreInfoText());
+        }
+        if (appointmentServiceInfo.getPreInfoTitle() != null) {
+            serviceInfo.setPreInfoTitle(appointmentServiceInfo.getPreInfoTitle());
+        }
+        if (appointmentServiceInfo.getServiceType() != null) {
+            serviceInfo.setServiceType(appointmentServiceInfo.getServiceType());
+        }
+        if (appointmentServiceInfo.getVirtualCallingModes() != null) {
+            serviceInfo.setCallingMode(appointmentServiceInfo.getVirtualCallingModes().get(0).getCallingMode());
+            serviceInfo.setVirtualCallingValue(appointmentServiceInfo.getVirtualCallingModes().get(0).getValue());
+            serviceInfo.setVirtualServiceType(appointmentServiceInfo.getVirtualServiceType());
+        }
+        if (appointmentServiceInfo.getAppointServiceAvailability() != null) {
+            serviceInfo.setScheduleId(appointmentServiceInfo.getAppointServiceAvailability().getId());
+            serviceInfo.setAvailableDate(appointmentServiceInfo.getAppointServiceAvailability().getNextAvailableDate());
+            serviceInfo.setTime(appointmentServiceInfo.getAppointServiceAvailability().getNextAvailable());
+        }
+
+        if (appointmentServiceInfo.getTotalAmount() != null) {
+            serviceInfo.setTotalAmount(appointmentServiceInfo.getTotalAmount());
+        }
+        if (appointmentServiceInfo.getMaxBookingsAllowed() > 0) {
+            serviceInfo.setMaxBookingsAllowed(appointmentServiceInfo.getMaxBookingsAllowed());
+        }
+        serviceInfo.setShowOnlyAvailableSlots(appointmentServiceInfo.isShowOnlyAvailableSlots());
+        intent.putExtra("serviceInfo", serviceInfo);
+
+        return intent;
     }
 
     @Override
@@ -3040,5 +3077,90 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         }
         view.draw(canvas);
         return returnedBitmap;
+    }
+
+    private void ApiGetOneTimeQNR( String from, SearchAppoinment appointmentServiceInfo, SearchService checkinServiceInfo, SearchDonation donationServiceInfo) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        Call<Questionnaire> call = apiService.getOneTimeQnr(0, consumerId, providerId);
+        //Call<Questionnaire> call = apiService.getOneTimeQuestionss(providerConsumerId,  consumerId, providerId);
+
+//        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+        call.enqueue(new Callback<Questionnaire>() {
+            @Override
+            public void onResponse(Call<Questionnaire> call, Response<Questionnaire> response) {
+
+                try {
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        Questionnaire oneTimeQnr = response.body();
+                        boolean isOneTimeQnrAvailable = false;
+                        if (oneTimeQnr != null && oneTimeQnr.getQuestionsList() != null && oneTimeQnr.getQuestionsList().size() > 0) {
+                            for (Questions qns : oneTimeQnr.getQuestionsList()) {
+                                if (qns.getGetQuestions() != null && qns.getGetQuestions().size() > 0) {
+                                    isOneTimeQnrAvailable = true;
+                                }
+                            }
+                        }
+                        if(isOneTimeQnrAvailable){
+                            SharedPreference.getInstance(mContext).setValue("uniqueID", uniqueId);
+                            //SharedPreference.getInstance(mContext).setValue("locationId", locationId);
+
+                        }
+                        Intent intent = new Intent();
+
+                        if (from == Constants.APPOINTMENT && appointmentServiceInfo != null) {
+                            intent = createAppointmentIntent(appointmentServiceInfo);
+                            if (isOneTimeQnrAvailable) {
+                                intent.setClass(ProviderDetailActivity.this, OneTimeQuestionnaire.class);
+                            } else {
+                                intent.setClass(ProviderDetailActivity.this, AppointmentActivity.class);
+                            }
+                        } else if (from == Constants.CHECKIN && checkinServiceInfo != null) {
+                            intent = createCheckinIntent(checkinServiceInfo);
+                            if (isOneTimeQnrAvailable) {
+                                intent.setClass(ProviderDetailActivity.this, OneTimeQuestionnaire.class);
+                            } else {
+                                intent.setClass(ProviderDetailActivity.this, CheckInActivity.class);
+                            }
+                        } else if (from == Constants.DONATION && donationServiceInfo != null) {
+                            intent = createDonationIntent(donationServiceInfo);
+                            if (isOneTimeQnrAvailable) {
+                                intent.setClass(ProviderDetailActivity.this, OneTimeQuestionnaire.class);
+                            } else {
+                                intent.setClass(ProviderDetailActivity.this, DonationActivity.class);
+                            }
+                        }
+
+                        startActivity(intent);
+
+                    } else {
+
+                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
+
+                        Config.logV("Error" + response.errorBody().string());
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Questionnaire> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+//                if (mDialog.isShowing())
+//                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
     }
 }

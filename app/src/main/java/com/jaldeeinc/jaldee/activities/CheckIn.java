@@ -3924,4 +3924,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
     }
 
+    @Override
+    public void setPaymentRequestId(String paymentRequestId) {
+
+    }
+
 }

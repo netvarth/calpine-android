@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -17,6 +18,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.jaldeeinc.jaldee.Interface.ICartInterface;
 import com.jaldeeinc.jaldee.Interface.IDataGrid;
 import com.jaldeeinc.jaldee.Interface.ISaveNotes;
@@ -86,10 +88,15 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
             final CartItemModel cartItem = cartItemsList.get(position);
 
             setAnimation(viewHolder.cvLayout, position);
-            if(fromSelectedItemsDialog){
+            if (fromSelectedItemsDialog) {
                 viewHolder.numberButton.setVisibilityOfAddRemoveButtons(false);
             }
             viewHolder.tvItemName.setText(cartItem.getItemName());
+
+            //Set item image
+            if(cartItem.getImageUrl() != null && !cartItem.getImageUrl().trim().isEmpty()){
+                Glide.with(context).load(cartItem.getImageUrl()).placeholder(R.drawable.icon_noimage).into(viewHolder.iv_item_image);
+            }
 
             if (isAddNote) {
                 //viewHolder.llAddNote.setVisibility(View.VISIBLE);
@@ -103,7 +110,7 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
                 viewHolder.llAddNote.setVisibility(View.GONE);
             }
 
-                if (cartItem.getIsPromotional() == 1) {
+            if (cartItem.getIsPromotional() == 1) {
 
                 viewHolder.tvPrice.setVisibility(View.VISIBLE);
                 viewHolder.tvDiscountedPrice.setVisibility(View.VISIBLE);
@@ -121,7 +128,7 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
 
             }
             boolean isAddedServiceOption = db.isAddedServiceOption(cartItem.getItemId());
-                if (isAddedServiceOption) {
+            if (isAddedServiceOption) {
                 viewHolder.cv_itemDetails.setVisibility(View.VISIBLE);
                 linearLayoutManager = new LinearLayoutManager(context);
                 viewHolder.rv_itemDetails.setLayoutManager(linearLayoutManager);
@@ -176,12 +183,12 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
                         if (isAddedServiceOption) {
                             progressBar.setVisibility(View.GONE);
                             boolean isDecreaseQty = false;
-                            if(newValue < oldValue){
+                            if (newValue < oldValue) {
                                 isDecreaseQty = true;
-                            } else if(newValue > oldValue) {
+                            } else if (newValue > oldValue) {
                                 isDecreaseQty = false;
                             }
-                            iDataGrid.onAddClick(cartItem , viewHolder, isDecreaseQty, newValue);
+                            iDataGrid.onAddClick(cartItem, viewHolder, isDecreaseQty, newValue);
                         } else {
                             new Handler().postDelayed(new Runnable() {
                                 @Override
@@ -271,6 +278,7 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
         private CustomTextViewBoldItalic tvNote;
         private RecyclerView rv_itemDetails;
         private CardView cv_itemDetails;
+        private ImageView iv_item_image;
 
         public ViewHolder(@NonNull View itemView, boolean isLoading) {
 
@@ -286,7 +294,7 @@ public class SelectedItemsAdapter extends RecyclerView.Adapter<SelectedItemsAdap
                 tvNote = itemView.findViewById(R.id.tv_note);
                 rv_itemDetails = itemView.findViewById(R.id.rv_itemDetails);
                 cv_itemDetails = itemView.findViewById(R.id.cv_itemDetails);
-
+                iv_item_image = itemView.findViewById(R.id.iv_item_image);
             }
         }
     }

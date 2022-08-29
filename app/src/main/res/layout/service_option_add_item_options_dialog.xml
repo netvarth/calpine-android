@@ -20,52 +20,81 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/ll_7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_20dp"
-            android:layout_marginTop="@dimen/dimen_20dp"
-            android:layout_marginRight="@dimen/dimen_20dp"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/dimen_2dp"
+            android:weightSum="10">
 
-            <LinearLayout
-                android:id="@+id/ll_8"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="12">
-
-                <TextView
-                    android:id="@+id/tv_item_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="11"
-                    android:fontFamily="@font/font_semibold"
-                    android:text=""
-                    android:textColor="@color/dark_blue"
-                    android:textSize="17dp" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_image"
+                android:layout_width="@dimen/dimen_50dp"
+                android:layout_height="@dimen/dimen_50dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_2dp"
+                android:elevation="1dp"
+                android:visibility="visible"
+                app:cardCornerRadius="40dp">
 
                 <ImageView
-                    android:id="@+id/iv_close"
+                    android:id="@+id/iv_item_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_weight="1"
-                    android:src="@drawable/close">
+                    android:padding="@dimen/dimen_2dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_item" />
+            </androidx.cardview.widget.CardView>
 
-                </ImageView>
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tv_item_price"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/ll_7"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                android:fontFamily="@font/font_semibold"
-                android:text="₹ 0"
-                android:textColor="@color/black3"
-                android:textSize="@dimen/dimen_10dp" />
+                android:layout_marginLeft="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginRight="@dimen/dimen_20dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/ll_8"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="12">
+
+                    <TextView
+                        android:id="@+id/tv_item_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="11"
+                        android:fontFamily="@font/font_semibold"
+                        android:text=""
+                        android:textColor="@color/dark_blue"
+                        android:textSize="17dp" />
+
+                    <ImageView
+                        android:id="@+id/iv_close"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:src="@drawable/close">
+
+                    </ImageView>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_item_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:fontFamily="@font/font_semibold"
+                    android:text="₹ 0"
+                    android:textColor="@color/black3"
+                    android:textSize="@dimen/dimen_10dp" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

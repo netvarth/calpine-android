@@ -38,6 +38,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewMedium;
 import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.LabelPath;
+import com.jaldeeinc.jaldee.model.ProviderConsumerFamilyMemberModel;
 import com.jaldeeinc.jaldee.model.QuestionnaireInput;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
@@ -950,11 +951,11 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
 
-        Call<ResponseBody> call = apiService.getFamilyMemberProviderConsumer(consumerId, bookingModel.getAccountId());
+        Call<ArrayList<ProviderConsumerFamilyMemberModel>> call = apiService.getFamilyMemberProviderConsumer(consumerId, bookingModel.getAccountId());
 //        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new Callback<ArrayList<ProviderConsumerFamilyMemberModel>>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<ArrayList<ProviderConsumerFamilyMemberModel>> call, Response<ArrayList<ProviderConsumerFamilyMemberModel>> response) {
 
                 try {
 
@@ -962,17 +963,14 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
 
-                        String reader = response.body().string();
-
-                        familyArrayModelProviderConsumer = new JSONArray(reader);
-                        if(familyArrayModelProviderConsumer.length() != 0) {
-
-                            JSONObject jsonObject = familyArrayModelProviderConsumer.getJSONObject(0);
-                            if (jsonObject != null && jsonObject.has("jaldeeConsumer")) {
-                                providerConsumerId = jsonObject.getInt("id");
+                        ArrayList<ProviderConsumerFamilyMemberModel> familyArrayModelProviderConsumer = response.body();
+                        if (familyArrayModelProviderConsumer != null && familyArrayModelProviderConsumer.size() > 0) {
+                            ProviderConsumerFamilyMemberModel providerConsumerFamilyMemberModel = familyArrayModelProviderConsumer.get(0);
+                            if (providerConsumerFamilyMemberModel != null) {
+                                providerConsumerId = providerConsumerFamilyMemberModel.getJaldeeConsumer();
                             }
                             findFamilyMembersNeededToAddProviderConsumer(familyArrayModelProviderConsumer, providerConsumerId);
-                        } else{
+                        } else {
                             ArrayList<Integer> familyMemberIds = new ArrayList<>();
                             familyMemberIds.add(0);
                             apiAddFamilyMEmbersProviderConsumer(familyMemberIds, consumerId, bookingModel.getAccountId());
@@ -993,7 +991,7 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<ArrayList<ProviderConsumerFamilyMemberModel>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
 //                if (mDialog.isShowing())
@@ -1004,7 +1002,7 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
 
     }
 
-    private void findFamilyMembersNeededToAddProviderConsumer(JSONArray familyArrayModelProviderConsumer, Integer providerConsumerId) {
+    private void findFamilyMembersNeededToAddProviderConsumer(ArrayList<ProviderConsumerFamilyMemberModel> familyArrayModelProviderConsumer, Integer providerConsumerId) {
         try {
             JSONArray familymemFor = null;
             if (bookingModel.getFrom().equalsIgnoreCase(Constants.CHECKIN)) {
@@ -1020,10 +1018,10 @@ public class ReconfirmationMultipleApptActivity extends AppCompatActivity {
                     String lName = j1.getString("lastName");
                     boolean isAlreadyAddedTpProviderConsumer = false;
                     if (fName != null && lName != null) {
-                        for (int j = 0; j < familyArrayModelProviderConsumer.length(); j++) {
-                            JSONObject j2 = (JSONObject) familyArrayModelProviderConsumer.get(j);
-                            String firstName = j2.getString("firstName");
-                            String lastName = j2.getString("lastName");
+                        for (int j = 0; j < familyArrayModelProviderConsumer.size(); j++) {
+                            ProviderConsumerFamilyMemberModel j2 = familyArrayModelProviderConsumer.get(j);
+                            String firstName = j2.getFirstName();
+                            String lastName = j2.getLastName();
                             if ((firstName != null && lastName != null) && (fName.equals(firstName)) && (lName.equals(lastName))) {
                                 isAlreadyAddedTpProviderConsumer = true;
                             }

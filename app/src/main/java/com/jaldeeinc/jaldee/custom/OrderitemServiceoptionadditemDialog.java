@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +36,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -107,9 +114,11 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
     IItemInterface iItemInterface;
     boolean fromAddedAsNew;
     private DatabaseHandler db;
+
     public OrderitemServiceoptionadditemDialog(IServiceOption iSrvcOptionListOptionChange) {
         this.iSrvcOptionListOptionChange = iSrvcOptionListOptionChange;
     }
+
     public OrderitemServiceoptionadditemDialog(IServiceOption iSrvcOptionListOptionChange, IItemInterface iItemInterface) {
         this.iSrvcOptionListOptionChange = iSrvcOptionListOptionChange;
         this.iItemInterface = iItemInterface;
@@ -139,7 +148,7 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
             args.putString(GRID_QUESTION, qnr);
             args.putString(GRID_ANSWERS, qnrInput);
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         args.putSerializable(ITEM_DETAILSCATALOGMODEL, (Serializable) itemDetails);
@@ -165,7 +174,7 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
                 String qnrInput = getArguments().getString(GRID_ANSWERS);
                 answer = gson.fromJson(qnrInput, QuestionnairInpt.class);
 
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             itemDetails = (CatalogItem) getArguments().getSerializable(ITEM_DETAILS);
@@ -191,7 +200,6 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
     private void
     createDialog(Questionnaire questionnaire) {
 
-//        if (selectedItemNme != null && !selectedItemNme.trim().isEmpty()) {
         itemOptionsDialog = new Dialog(mContext);
         itemOptionsDialog.getWindow().getAttributes().windowAnimations = R.style.slidingUpAndDown;
         itemOptionsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -204,12 +212,12 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
         itemOptionsDialog.getWindow().setGravity(Gravity.BOTTOM);
         llParentLayout = itemOptionsDialog.findViewById(R.id.ll_mainLayout);
         ImageView iv_close = itemOptionsDialog.findViewById(R.id.iv_close);
+        ImageView iv_item_image = itemOptionsDialog.findViewById(R.id.iv_item_image);
         TextView tv_item_name = itemOptionsDialog.findViewById(R.id.tv_item_name);
         TextView tv_item_price = itemOptionsDialog.findViewById(R.id.tv_item_price);
         tv_totalprice = itemOptionsDialog.findViewById(R.id.tv_totalprice);
         cv_submit = itemOptionsDialog.findViewById(R.id.cv_submit);
         cv_cover = itemOptionsDialog.findViewById(R.id.cv_cover);
-        //tv_item_name.setText(selectedItemNme);
         if (!isEdit) {
             cv_submit.setVisibility(View.GONE);
             cv_cover.setVisibility(View.VISIBLE);
@@ -217,18 +225,25 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
             cv_submit.setVisibility(View.VISIBLE);
             cv_cover.setVisibility(View.GONE);
         }
-        tv_item_price.setVisibility(View.GONE);
+        if(itemDetails.getItems().getPrice() > 0){
+            tv_item_price.setText("₹ " + itemDetails.getItems().getPrice());
+        } else {
+            tv_item_price.setVisibility(View.GONE);
+        }
         tv_item_name.setText(itemDetails.getItems().getDisplayName());
-            /*
-            if (selectedItemPrice != null && !selectedItemPrice.equals("")) {
-                tv_item_price.setText("RS:" + Config.getAmountNoOrTwoDecimalPoints(selectedItemPrice) + "/-");
-                tv_item_price.setVisibility(View.VISIBLE);
-            } else {
-                tv_item_price.setVisibility(View.GONE);
-            }*/
+
+        //Set item image
+        if (itemDetails.getItems().getItemImagesList() != null && itemDetails.getItems().getItemImagesList().size() > 0) {
+            for (int i = 0; i < itemDetails.getItems().getItemImagesList().size(); i++) {
+                if (itemDetails.getItems().getItemImagesList().get(i).isDisplayImage()) {
+                    Glide.with(mContext).load(itemDetails.getItems().getItemImagesList().get(i).getUrl()).placeholder(R.drawable.icon_noimage).into(iv_item_image);
+                }
+            }
+        }
+
         itemOptionsDialog.show();
         try {
-            //if()
+            String inputString = new Gson().toJson(questionnaire);
             createQuestionnaire(questionnaire.getQuestionsList());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -244,11 +259,7 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
             public void onClick(View view) {
 
                 addDataToQuestionnaireGrid();
-//                try {
-//                    submitServiceOptionsQNR();
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
+
             }
         });
         if (!isEdit) {
@@ -259,12 +270,6 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
                 }
             });
         }
-
-//        } else {
-//            DynamicToast.make(mContext, "Please select an item",
-//                    ContextCompat.getColor(mContext, R.color.white), ContextCompat.getColor(mContext, R.color.red), Toast.LENGTH_SHORT).show();
-//
-//        }
     }
 
 
@@ -322,8 +327,6 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
             input.setQuestionnaireId(questionnaire.getId());
             ArrayList<AnswerLine> answerLines = new ArrayList<>();
 
-            //if (validForm(questionnaire.getQuestionsList())) {
-
             labelPaths = new ArrayList<>();
             if (fromAddedAsNew) { // from service option add as a new repeatsame dialog
                 QuestionnairInpt questionnairInpt = new QuestionnairInpt();
@@ -364,8 +367,6 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
 
                             for (DataGrid d : dataGridList) {
 
-                                //ArrayList<GridColumnAnswerLine> gridColumnAnswerLines = d.getDataGridListColumn();
-
                                 for (GridColumnAnswerLine a : d.getDataGridListColumn()) {
 
                                     JsonObject column = a.getColumn();
@@ -399,16 +400,11 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
                     i++;
                 }
 
-
-                //SharedPreference.getInstance(mContext).setValue(Constants.SERVICEOPTIONQNR, new Gson().toJson(input));
-                //SharedPreference.getInstance(mContext).setValue(Constants.SERVICEOPTIONQIMAGES, new Gson().toJson(labelPaths));
-
-                String inputString = new Gson().toJson(questionnairInpt);
                 itemOptionsDialog.cancel(); // close the dialogbox
                 String qnr = db.getServiceOptionQnr(itemDetails.getItems().getItemId());
 
                 float serviceOtpionPrice = 0;
-                if (qnr.trim() != null && questionnairInpt != null && !questionnairInpt.getAnswerLines().isEmpty() ) {
+                if (qnr.trim() != null && questionnairInpt != null && !questionnairInpt.getAnswerLines().isEmpty()) {
                     Gson gson = new Gson();
                     try {
                         ItemsActivity itemsActivity = new ItemsActivity();
@@ -449,8 +445,6 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
 
                             for (DataGrid d : dataGridList) {
 
-                                //ArrayList<GridColumnAnswerLine> gridColumnAnswerLines = d.getDataGridListColumn();
-
                                 for (GridColumnAnswerLine a : d.getDataGridListColumn()) {
 
                                     JsonObject column = a.getColumn();
@@ -485,87 +479,78 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
 
                 input.setAnswerLines(answerLines);
 
-                //SharedPreference.getInstance(mContext).setValue(Constants.SERVICEOPTIONQNR, new Gson().toJson(input));
-                //SharedPreference.getInstance(mContext).setValue(Constants.SERVICEOPTIONQIMAGES, new Gson().toJson(labelPaths));
-
                 String inputString = new Gson().toJson(input);
                 itemOptionsDialog.cancel(); // close the dialogbox
-                float price = calculatePrice();
                 iSrvcOptionListOptionChange.savetoDataBase(itemDetails, new Gson().toJson(input), new Gson().toJson(labelPaths));
             }
         } else {
             try {
 
+                int k = 0;
+                for (Questions question : questionnaire.getQuestionsList()) {
+                    if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("dataGridList")) {
 
-            int k = 0;
-            //ArrayList<AnswerLine> als = answer.getAnswerLines();
-            for (Questions question : questionnaire.getQuestionsList()) {
-                if (question.getGetQuestion().getFieldDataType().equalsIgnoreCase("dataGridList")) {
+                        gridFieldView = (OrderItemServiceOptionAddItemGridView) viewsList.get(question.getGetQuestion().getLabelName());
 
-                    gridFieldView = (OrderItemServiceOptionAddItemGridView) viewsList.get(question.getGetQuestion().getLabelName());
+                        ArrayList<DataGrid> dataGridList = new ArrayList<>();
 
-                    ArrayList<DataGrid> dataGridList = new ArrayList<>();
+                        if (gridFieldView != null) {
 
-                    if (gridFieldView != null) {
+                            dataGridList = gridFieldView.getGridDataList();
+                        }
+                        if (dataGridList != null && dataGridList.size() > 0) {
 
-                        dataGridList = gridFieldView.getGridDataList();
-                    }
-                    if (dataGridList != null && dataGridList.size() > 0) {
+                            AnswerLine obj = new AnswerLine();
+                            obj.setLabelName(question.getGetQuestion().getLabelName());
 
-                        AnswerLine obj = new AnswerLine();
-                        obj.setLabelName(question.getGetQuestion().getLabelName());
-
-                        JsonObject answe = new JsonObject();
-                        Gson gson = new Gson();
+                            JsonObject answe = new JsonObject();
+                            Gson gson = new Gson();
 
 
-                        ArrayList<DataGrid> dt = answer.getAnswerLines().get(k).getDataGridListList();
-                        dt.set(position, dataGridList.get(0));
-                        JsonElement element = gson.toJsonTree(dt);
-                        answe.add("dataGridList", element);
-                        answer.getAnswerLines().get(k).setAnswer(answe);
+                            ArrayList<DataGrid> dt = answer.getAnswerLines().get(k).getDataGridListList();
+                            dt.set(position, dataGridList.get(0));
+                            JsonElement element = gson.toJsonTree(dt);
+                            answe.add("dataGridList", element);
+                            answer.getAnswerLines().get(k).setAnswer(answe);
 
-                        for (DataGrid d : dataGridList) {
+                            for (DataGrid d : dataGridList) {
 
-                            //ArrayList<GridColumnAnswerLine> gridColumnAnswerLines = d.getDataGridListColumn();
+                                for (GridColumnAnswerLine a : d.getDataGridListColumn()) {
 
-                            for (GridColumnAnswerLine a : d.getDataGridListColumn()) {
+                                    JsonObject column = a.getColumn();
 
-                                JsonObject column = a.getColumn();
+                                    if (column.has("fileUpload")) {
 
-                                if (column.has("fileUpload")) {
+                                        JsonArray fileUploadList = column.getAsJsonArray("fileUpload");
 
-                                    JsonArray fileUploadList = column.getAsJsonArray("fileUpload");
+                                        for (JsonElement e : fileUploadList) {
 
-                                    for (JsonElement e : fileUploadList) {
+                                            JsonObject fileObj = e.getAsJsonObject();
+                                            String name = fileObj.get("caption").getAsString();
+                                            String fileName = null;
+                                            if (fileObj.get("url") != null) {
+                                                fileName = fileObj.get("url").getAsString();
+                                            }
+                                            String filePath = "";
+                                            if (fileObj.get("path") != null && !fileObj.get("path").getAsString().trim().equalsIgnoreCase("")) {
+                                                filePath = fileObj.get("path").getAsString();
+                                            }
+                                            String mimeType = Config.getMimeType(filePath);
 
-                                        JsonObject fileObj = e.getAsJsonObject();
-                                        String name = fileObj.get("caption").getAsString();
-                                        String fileName = null;
-                                        if (fileObj.get("url") != null) {
-                                            fileName = fileObj.get("url").getAsString();
+                                            LabelPath lPath = new LabelPath(labelPaths.size(), question.getGetQuestion().getLabelName(), filePath, fileName, mimeType);
+                                            labelPaths.add(lPath);
                                         }
-                                        String filePath = "";
-                                        if (fileObj.get("path") != null && !fileObj.get("path").getAsString().trim().equalsIgnoreCase("")) {
-                                            filePath = fileObj.get("path").getAsString();
-                                        }
-                                        String mimeType = Config.getMimeType(filePath);
-
-                                        LabelPath lPath = new LabelPath(labelPaths.size(), question.getGetQuestion().getLabelName(), filePath, fileName, mimeType);
-                                        labelPaths.add(lPath);
                                     }
                                 }
                             }
                         }
                     }
+                    k++;
                 }
-                k++;
-            }
-            //String inputString = new Gson().toJson(answer);
-            itemOptionsDialog.cancel(); // close the dialogbox
-            //float price = calculatePrice();
-            iSrvcOptionListOptionChange.savetoDataBase(itemDetails, new Gson().toJson(answer), new Gson().toJson(labelPaths));
-        } catch (Exception e) {
+                String inputString = new Gson().toJson(answer);
+                itemOptionsDialog.cancel(); // close the dialogbox
+                iSrvcOptionListOptionChange.savetoDataBase(itemDetails, new Gson().toJson(answer), new Gson().toJson(labelPaths));
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -638,7 +623,7 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
             }
         }
 
-        tv_totalprice.setText("Price ₹" + Config.getAmountNoOrTwoDecimalPoints(totalPrice));
+        tv_totalprice.setText("Price ₹" + Config.getAmountNoOrTwoDecimalPoints(totalPrice + itemDetails.getItems().getPrice()));
         return totalPrice;
     }
 
@@ -669,7 +654,9 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
     public void savetoDataBase(CatalogItem itemDetails, String serviceOption, String serviceOptionAtachedImages) {
 
     }
+
     boolean mIsActivityDone = false;
+
     @Override
     public KeyPairBoolData openImageOptions(KeyPairBoolData fileObject, String qLabelName, HashMap<String, View> viewsList) {
         this.fileObject1 = fileObject;
@@ -775,17 +762,6 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
     private int GALLERY = 3, CAMERA = 4;
     private KeyPairBoolData fileObject1 = new KeyPairBoolData();
     private String qLabelName1 = "";
@@ -835,7 +811,7 @@ public class OrderitemServiceoptionadditemDialog extends Fragment implements ISe
     private void openCamera() {
 
         try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 
 

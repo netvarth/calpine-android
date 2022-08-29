@@ -119,7 +119,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -381,6 +380,7 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
     public File file;
     public File f;
     private static final String IMAGE_DIRECTORY = "/Jaldee" + "";
+    String paymentRequestId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1138,10 +1138,10 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
                                 if (selectedpaymentMode != null) {
 
                                     if (cbJCash.isChecked()) {
-                                        new PaymentGateway(mContext, (Activity) mContext, iPaymentResponse).ApiGenerateHashWallet(prepayAmount, selectedpaymentMode, ynwUUID, String.valueOf(providerId), Constants.PURPOSE_PREPAYMENT, 0, isInternational, orderId, true);
+                                        new PaymentGateway(mContext, (Activity) mContext, iPaymentResponse).ApiGenerateHashWallet(prepayAmount, selectedpaymentMode, ynwUUID, String.valueOf(providerId), Constants.PURPOSE_PREPAYMENT, 0, isInternational, orderId, true, paymentRequestId);
 
                                     } else {
-                                        new PaymentGateway(mContext, (Activity) mContext, iPaymentResponse).ApiGenerateHash(prepayAmount, selectedpaymentMode, ynwUUID, String.valueOf(providerId), Constants.PURPOSE_PREPAYMENT, 0, isInternational, orderId, 0);
+                                        new PaymentGateway(mContext, (Activity) mContext, iPaymentResponse).ApiGenerateHash(prepayAmount, selectedpaymentMode, ynwUUID, String.valueOf(providerId), Constants.PURPOSE_PREPAYMENT, 0, isInternational, orderId, 0, paymentRequestId);
 
                                     }
                                     dialog.dismiss();
@@ -2058,6 +2058,12 @@ public class CheckoutItemsActivity extends AppCompatActivity implements IAddress
 
     @Override
     public void update() {
+
+    }
+
+    @Override
+    public void setPaymentRequestId(String paymntRequestId) {
+        paymentRequestId = paymntRequestId;
 
     }
 

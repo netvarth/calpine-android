@@ -46,6 +46,15 @@ public class CheckSumModel implements Serializable {
     String txnToken;
 
     String paymentmode;
+    String paymentRequestId;
+
+    public String getPaymentRequestId() {
+        return paymentRequestId;
+    }
+
+    public void setPaymentRequestId(String paymentRequestId) {
+        this.paymentRequestId = paymentRequestId;
+    }
 
     public String getPaymentmode() {
         return paymentmode;

@@ -72,6 +72,7 @@ import com.jaldeeinc.jaldee.custom.SlotsDialog;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
+import com.jaldeeinc.jaldee.model.ProviderConsumerFamilyMemberModel;
 import com.jaldeeinc.jaldee.model.SelectedSlotDetail;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
@@ -82,6 +83,10 @@ import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.response.Provider;
 import com.jaldeeinc.jaldee.response.ProviderCouponResponse;
 import com.jaldeeinc.jaldee.response.Questionnaire;
+import com.jaldeeinc.jaldee.response.Questions;
+import com.jaldeeinc.jaldee.response.SearchAppoinment;
+import com.jaldeeinc.jaldee.response.SearchDonation;
+import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
@@ -122,6 +127,7 @@ import java.util.stream.Collectors;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -148,8 +154,6 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
 
     @BindView(R.id.ll_editDetails)
     LinearLayout llEditDetails;
-
-    static CustomTextViewBold tvConsumerName;
 
     @BindView(R.id.tv_number)
     CustomTextViewMedium tvNumber;
@@ -237,6 +241,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
     @BindView(R.id.ll_coupons)
     LinearLayout llCoupons;
 
+    static CustomTextViewBold tvConsumerName;
     CountryCodePicker virtual_NmbrCCPicker;
     String mFirstName, mLastName;
     int consumerID;
@@ -1017,7 +1022,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
                             } else {
                                 tvEmail.setHint("Enter your Mail Id");
                             }
-                            if (serviceInfo.getServiceType() != null && serviceInfo.getServiceType().equalsIgnoreCase("virtualService")) {
+                            /*if (serviceInfo.getServiceType() != null && serviceInfo.getServiceType().equalsIgnoreCase("virtualService")) {
 
                                 customerInformationDialog = new CustomerInformationDialog(AppointmentActivity.this, familyMEmID, tvEmail.getText().toString(), phoneNumber, serviceInfo.getIsPrePayment(), iFamilyMemberDetails, profileDetails, multiplemem, 0, countryCode, sector);
                                 customerInformationDialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
@@ -1027,7 +1032,7 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
                                 int width = (int) (metrics.widthPixels * 1);
                                 customerInformationDialog.setCancelable(false);
                                 customerInformationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            }
+                            }*/
                         }
                     } else {
                     }
@@ -2430,4 +2435,8 @@ public class AppointmentActivity extends AppCompatActivity implements ISlotInfo,
         imagePathList.get(position).setCaption(caption);
         imagePreviewAdapter.notifyDataSetChanged();
     }
+
+
+
+
 }

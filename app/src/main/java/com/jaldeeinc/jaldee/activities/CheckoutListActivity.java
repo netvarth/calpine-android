@@ -336,6 +336,7 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
 
     private ICpn iCpn;
     private DatabaseHandler db;
+    String paymentRequestId;
 
 
     @Override
@@ -1051,10 +1052,10 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
                                 if (selectedpaymentMode != null) {
 
                                     if (cbJCash.isChecked()) {
-                                        new PaymentGateway(mContext, (Activity) mContext, iPaymentResponse).ApiGenerateHashWallet(prepayAmount, selectedpaymentMode, ynwUUID, String.valueOf(providerId), Constants.PURPOSE_PREPAYMENT, 0, isInternational, orderId, true);
+                                        new PaymentGateway(mContext, (Activity) mContext, iPaymentResponse).ApiGenerateHashWallet(prepayAmount, selectedpaymentMode, ynwUUID, String.valueOf(providerId), Constants.PURPOSE_PREPAYMENT, 0, isInternational, orderId, true, paymentRequestId);
 
                                     } else {
-                                        new PaymentGateway(mContext, (Activity) mContext, iPaymentResponse).ApiGenerateHash(prepayAmount, selectedpaymentMode, ynwUUID, String.valueOf(providerId), Constants.PURPOSE_PREPAYMENT, 0, isInternational, orderId, 0);
+                                        new PaymentGateway(mContext, (Activity) mContext, iPaymentResponse).ApiGenerateHash(prepayAmount, selectedpaymentMode, ynwUUID, String.valueOf(providerId), Constants.PURPOSE_PREPAYMENT, 0, isInternational, orderId, 0, paymentRequestId);
 
                                     }
                                     dialog.dismiss();
@@ -1931,6 +1932,11 @@ public class CheckoutListActivity extends AppCompatActivity implements IAddressI
     @Override
     public void update() {
 
+    }
+
+    @Override
+    public void setPaymentRequestId(String paymntRequestId) {
+        paymentRequestId = paymntRequestId;
     }
 
     private void getOrderConfirmationDetails(int acctId) {

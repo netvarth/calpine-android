@@ -5574,6 +5574,11 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     public void update() {
 
     }
+
+    @Override
+    public void setPaymentRequestId(String paymentRequestId) {
+
+    }
 }
 
 

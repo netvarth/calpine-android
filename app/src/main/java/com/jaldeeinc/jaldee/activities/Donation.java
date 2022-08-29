@@ -3010,6 +3010,11 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
     public void update() {
 
     }
+
+    @Override
+    public void setPaymentRequestId(String paymentRequestId) {
+
+    }
     //
 //    private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
 //

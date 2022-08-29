@@ -8,8 +8,10 @@ import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
+import com.jaldeeinc.jaldee.model.JaldeeConsumerDetails;
 import com.jaldeeinc.jaldee.model.PincodeLocationsResponse;
 import com.jaldeeinc.jaldee.model.PriceList;
+import com.jaldeeinc.jaldee.model.ProviderConsumerFamilyMemberModel;
 import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.TestModel;
@@ -251,7 +253,7 @@ public interface ApiInterface {
     Call<ArrayList<FamilyArrayModel>> getFamilyList();
 
     @GET("consumer/familyMember/providerconsumer/{consumerId}?")
-    Call<ResponseBody> getFamilyMemberProviderConsumer(@Path("consumerId") int familyMemId, @Query("account") Integer account);
+    Call<ArrayList<ProviderConsumerFamilyMemberModel>> getFamilyMemberProviderConsumer(@Path("consumerId") int familyMemId, @Query("account") Integer account);
 
     @POST("consumer/familyMember/providerconsumer/{familyMemId}/{providerConsumerId}")
     Call<ResponseBody> AddFamilyMEmberProviderConsumer(@Path("familyMemId") int familyMemId, @Path("providerConsumerId") int providerConsumerId, @Query("account") String account);
@@ -944,6 +946,16 @@ public interface ApiInterface {
 
     @PUT("consumer/orders/questionnaire/upload/status/{uid}?")
     Call<ResponseBody> checkOrderUploadStatus(@Path("uid") String id, @Query("account") int accountId, @Body RequestBody jsonObj);
+
+    @GET("consumer/providerCustomer/{fmId}/{consId}?")
+    Call<Questionnaire> getOneTimeQnr(@Path("fmId") int fMemId, @Path("consId") int consId, @Query("account") int providerId);
+
+    @POST("consumer/onetimequestionnaire/{fmId}/{consId}?")
+    Call<SubmitQuestionnaire> submitOneTimeQnr(@Path("fmId") int fMemId, @Path("consId") int consId, @Query("account") int providerId, @Body RequestBody jsonObj);
+
+    @PUT("consumer/questionnaire/upload/status/{fmId}/{consId}?")
+    Call<ResponseBody> checkOneTimeQnrUploadStatus(@Path("fmId") int fMemId, @Path("consId") int consId, @Query("account") int accountId, @Body RequestBody jsonObj);
+
     /****************   Questionnaire URLs  ***************/
 
     //    @Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})

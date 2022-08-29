@@ -324,4 +324,9 @@ public class PaymentActivity extends AppCompatActivity implements IPaymentRespon
     public void update() {
 
     }
+
+    @Override
+    public void setPaymentRequestId(String paymentRequestId) {
+
+    }
 }

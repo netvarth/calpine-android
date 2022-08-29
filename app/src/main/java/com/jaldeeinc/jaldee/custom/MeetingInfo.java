@@ -16,14 +16,14 @@ import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 
 public class MeetingInfo extends Dialog {
 
-    TextView tvServiceName,tvTime,tvOK,tvPhoneNumber;
+    TextView tvServiceName, tvTime, tvOK, tvPhoneNumber;
     String time = null;
-    String serviceName,callingMode;
+    String serviceName, callingMode;
     TeleServiceCheckIn teleServiceCheckInResponse;
     Context context;
     String phoneNumber;
     String virtualServiceType;
-    String countryCode,bookingType;
+    String countryCode, bookingType;
     ImageView ivClose;
 
 
@@ -52,14 +52,13 @@ public class MeetingInfo extends Dialog {
         ivClose = findViewById(R.id.iv_close);
 
 
-
-        if (serviceName != null){
+        if (serviceName != null) {
             String name = serviceName;
 //            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
             tvServiceName.setText(name);
 
             try {
-                if(callingMode!=null) {
+                if (callingMode != null) {
                     if (callingMode.equalsIgnoreCase("Zoom")) {
                         tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.zoom, 0, 0, 0);
                         tvServiceName.setCompoundDrawablePadding(15);
@@ -67,10 +66,9 @@ public class MeetingInfo extends Dialog {
                         tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.googlemeet, 0, 0, 0);
                         tvServiceName.setCompoundDrawablePadding(15);
                     } else if (callingMode.equalsIgnoreCase("WhatsApp")) {
-                        if(virtualServiceType!=null && virtualServiceType.equalsIgnoreCase("videoService")){
+                        if (virtualServiceType != null && virtualServiceType.equalsIgnoreCase("videoService")) {
                             tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappvide_custom, 0, 0, 0);
-                        }
-                        else {
+                        } else {
                             tvServiceName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
                         }
                         tvServiceName.setCompoundDrawablePadding(15);
@@ -85,12 +83,12 @@ public class MeetingInfo extends Dialog {
             }
         }
 
-        if (time != null){
+        if (time != null) {
             tvTime.setText(time);
         }
 
-        if(phoneNumber!=null){
-            tvPhoneNumber.setText("+" + phoneNumber);
+        if (phoneNumber != null) {
+            tvPhoneNumber.setText(phoneNumber);
         }
 
 //        if(phoneNumber!=null&& countryCode!=null && bookingType.equalsIgnoreCase(Constants.CHECKIN)){

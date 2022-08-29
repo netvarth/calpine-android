@@ -45,6 +45,7 @@ import com.jaldeeinc.jaldee.custom.CustomTextViewSemiBold;
 import com.jaldeeinc.jaldee.model.BookingModel;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.LabelPath;
+import com.jaldeeinc.jaldee.model.ProviderConsumerFamilyMemberModel;
 import com.jaldeeinc.jaldee.model.QuestionnaireInput;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.model.ShoppingListModel;
@@ -223,6 +224,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
     JSONArray familyArrayModelProviderConsumer = new JSONArray();
     Integer providerConsumerId;
     int consumerId;
+    String paymentRequestId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1108,7 +1110,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                                 try {
                                     final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
                                     mDialog.show();
-                                    new PaymentGateway(ReconfirmationActivity.this, ReconfirmationActivity.this, iPaymentResponse).ApiGenerateHash(bookingModel.getDonationAmount(), selectedpaymentMode, value, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_DONATIONPAYMENT, serviceId, isInternational, encId, familyMEmID);
+                                    new PaymentGateway(ReconfirmationActivity.this, ReconfirmationActivity.this, iPaymentResponse).ApiGenerateHash(bookingModel.getDonationAmount(), selectedpaymentMode, value, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_DONATIONPAYMENT, serviceId, isInternational, encId, familyMEmID, paymentRequestId);
                                     mDialog.dismiss();
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -1420,9 +1422,9 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                                 } else if (prepayAmount != null && Float.parseFloat(prepayAmount) > 0) {
                                     if (selectedpaymentMode != null) {
                                         if (cbJCash.isChecked()) {
-                                            new PaymentGateway(ReconfirmationActivity.this, ReconfirmationActivity.this, iPaymentResponse).ApiGenerateHashWallet(prepayAmount, selectedpaymentMode, value, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, serviceId, isInternational, encId, true);
+                                            new PaymentGateway(ReconfirmationActivity.this, ReconfirmationActivity.this, iPaymentResponse).ApiGenerateHashWallet(prepayAmount, selectedpaymentMode, value, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, serviceId, isInternational, encId, true, paymentRequestId);
                                         } else {
-                                            new PaymentGateway(ReconfirmationActivity.this, ReconfirmationActivity.this, iPaymentResponse).ApiGenerateHash(prepayAmount, selectedpaymentMode, value, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, serviceId, isInternational, encId, familyMEmID);
+                                            new PaymentGateway(ReconfirmationActivity.this, ReconfirmationActivity.this, iPaymentResponse).ApiGenerateHash(prepayAmount, selectedpaymentMode, value, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, serviceId, isInternational, encId, familyMEmID, paymentRequestId);
                                         }
                                     } else {
                                         Toast.makeText(mContext, "Please select mode of payment", Toast.LENGTH_LONG).show();
@@ -1511,9 +1513,9 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                                 } else if (prepayAmount != null && Float.parseFloat(prepayAmount) > 0) {
                                     if (selectedpaymentMode != null) {
                                         if (cbJCash.isChecked()) {
-                                            new PaymentGateway(ReconfirmationActivity.this, ReconfirmationActivity.this, iPaymentResponse).ApiGenerateHashWallet(prepayAmount, selectedpaymentMode, value, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, serviceId, isInternational, encId, true);
+                                            new PaymentGateway(ReconfirmationActivity.this, ReconfirmationActivity.this, iPaymentResponse).ApiGenerateHashWallet(prepayAmount, selectedpaymentMode, value, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, serviceId, isInternational, encId, true, paymentRequestId);
                                         } else {
-                                            new PaymentGateway(ReconfirmationActivity.this, ReconfirmationActivity.this, iPaymentResponse).ApiGenerateHash(prepayAmount, selectedpaymentMode, value, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, serviceId, isInternational, encId, familyMEmID);
+                                            new PaymentGateway(ReconfirmationActivity.this, ReconfirmationActivity.this, iPaymentResponse).ApiGenerateHash(prepayAmount, selectedpaymentMode, value, String.valueOf(bookingModel.getAccountId()), Constants.PURPOSE_PREPAYMENT, serviceId, isInternational, encId, familyMEmID, paymentRequestId);
                                         }
                                     } else {
                                         Toast.makeText(mContext, "Please select mode of payment", Toast.LENGTH_LONG).show();
@@ -1756,11 +1758,11 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            if (bookingModel.getFrom().equalsIgnoreCase(Constants.APPOINTMENT) || bookingModel.getFrom().equalsIgnoreCase(Constants.CHECKIN) || bookingModel.getFrom().equalsIgnoreCase(Constants.TOKEN)) {
+                           /* if (bookingModel.getFrom().equalsIgnoreCase(Constants.APPOINTMENT) || bookingModel.getFrom().equalsIgnoreCase(Constants.CHECKIN) || bookingModel.getFrom().equalsIgnoreCase(Constants.TOKEN)) {
                                 Intent homeIntent = new Intent(ReconfirmationActivity.this, Home.class);
                                 startActivity(homeIntent);
                             }
-                            finish();
+                            finish();*/
 
                         }
                     });
@@ -1930,7 +1932,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
     }
 
 
-    private void findFamilyMembersNeededToAddProviderConsumer(JSONArray familyArrayModelProviderConsumer, Integer providerConsumerId) {
+    private void findFamilyMembersNeededToAddProviderConsumer(ArrayList<ProviderConsumerFamilyMemberModel> familyArrayModelProviderConsumer, Integer providerConsumerId) {
         try {
             JSONArray familymemFor = null;
             if (bookingModel.getFrom().equalsIgnoreCase(Constants.CHECKIN)) {
@@ -1946,10 +1948,10 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                     String lName = j1.getString("lastName");
                     boolean isAlreadyAddedTpProviderConsumer = false;
                     if (fName != null && lName != null) {
-                        for (int j = 0; j < familyArrayModelProviderConsumer.length(); j++) {
-                            JSONObject j2 = (JSONObject) familyArrayModelProviderConsumer.get(j);
-                            String firstName = j2.getString("firstName");
-                            String lastName = j2.getString("lastName");
+                        for (int j = 0; j < familyArrayModelProviderConsumer.size(); j++) {
+                            ProviderConsumerFamilyMemberModel j2 = familyArrayModelProviderConsumer.get(j);
+                            String firstName = j2.getFirstName();
+                            String lastName = j2.getLastName();
                             if ((firstName != null && lastName != null) && (fName.equals(firstName)) && (lName.equals(lastName))) {
                                 isAlreadyAddedTpProviderConsumer = true;
                             }
@@ -2478,6 +2480,11 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
     }
 
     @Override
+    public void setPaymentRequestId(String paymntRequestId) {
+        paymentRequestId = paymntRequestId;
+    }
+
+    @Override
     public void selectedPaymentMode(String mode) {
         selectedpaymentMode = mode;
     }
@@ -2488,11 +2495,11 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
 
-        Call<ResponseBody> call = apiService.getFamilyMemberProviderConsumer(consumerId, bookingModel.getAccountId());
+        Call<ArrayList<ProviderConsumerFamilyMemberModel>> call = apiService.getFamilyMemberProviderConsumer(consumerId, bookingModel.getAccountId());
 //        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new Callback<ArrayList<ProviderConsumerFamilyMemberModel>>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<ArrayList<ProviderConsumerFamilyMemberModel>> call, Response<ArrayList<ProviderConsumerFamilyMemberModel>> response) {
 
                 try {
 
@@ -2500,10 +2507,22 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
 
-                        String reader = response.body().string();
+                        //String reader = response.body().toString();
+                        ArrayList<ProviderConsumerFamilyMemberModel> familyArrayModelProviderConsumer = response.body();
+                        if (familyArrayModelProviderConsumer != null && familyArrayModelProviderConsumer.size() > 0) {
+                            ProviderConsumerFamilyMemberModel providerConsumerFamilyMemberModel = familyArrayModelProviderConsumer.get(0);
+                            if (providerConsumerFamilyMemberModel != null) {
+                                providerConsumerId = providerConsumerFamilyMemberModel.getJaldeeConsumer();
+                            }
+                            findFamilyMembersNeededToAddProviderConsumer(familyArrayModelProviderConsumer, providerConsumerId);
+                        } else {
+                            ArrayList<Integer> familyMemberIds = new ArrayList<>();
+                            familyMemberIds.add(0);
+                            apiAddFamilyMEmbersProviderConsumer(familyMemberIds, consumerId, bookingModel.getAccountId());
+                        }
 
-                        familyArrayModelProviderConsumer = new JSONArray(reader);
-                        if(familyArrayModelProviderConsumer.length() != 0) {
+                        /*familyArrayModelProviderConsumer = new JSONArray(reader);
+                        if (familyArrayModelProviderConsumer.length() != 0) {
                             JSONObject jsonObject = familyArrayModelProviderConsumer.getJSONObject(0);
                             if (jsonObject != null && jsonObject.has("jaldeeConsumer")) {
                                 providerConsumerId = jsonObject.getInt("id");
@@ -2513,7 +2532,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
                             ArrayList<Integer> familyMemberIds = new ArrayList<>();
                             familyMemberIds.add(0);
                             apiAddFamilyMEmbersProviderConsumer(familyMemberIds, consumerId, bookingModel.getAccountId());
-                        }
+                        }*/
                     } else {
 
                         Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
@@ -2530,7 +2549,7 @@ public class ReconfirmationActivity extends AppCompatActivity implements Payment
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<ArrayList<ProviderConsumerFamilyMemberModel>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
 //                if (mDialog.isShowing())

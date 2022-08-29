@@ -736,7 +736,6 @@ public class CustomQuestionnaire extends AppCompatActivity implements IFilesInte
 
             }
 
-
         }
 
     }

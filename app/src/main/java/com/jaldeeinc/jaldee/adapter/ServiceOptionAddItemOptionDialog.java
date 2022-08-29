@@ -115,7 +115,7 @@ public class ServiceOptionAddItemOptionDialog extends Dialog implements DatePick
         cv_submit = findViewById(R.id.cv_submit);
         tv_item_name.setText(itemName);
         if (itemPrice != null && !itemPrice.equals("")) {
-            tv_item_price.setText("RS:" + Config.getAmountNoOrTwoDecimalPoints(itemPrice) + "/-");
+            tv_item_price.setText("₹ "  + Config.getAmountNoOrTwoDecimalPoints(itemPrice));
             tv_item_price.setVisibility(View.VISIBLE);
         } else {
             tv_item_price.setVisibility(View.GONE);

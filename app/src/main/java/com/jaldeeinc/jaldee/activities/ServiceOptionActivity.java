@@ -409,7 +409,7 @@ public class ServiceOptionActivity extends AppCompatActivity implements IFilesIn
                             String filename = null;
                             String mimeType = Config.getMimeType(path);
 
-                            if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video"))) {
+                            if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video") || mimeType.contains("image/jpeg"))) {
 
                                 filename = path.substring(path.lastIndexOf("/") + 1);
 
@@ -467,7 +467,7 @@ public class ServiceOptionActivity extends AppCompatActivity implements IFilesIn
 
                                 String filename = path.substring(path.lastIndexOf("/") + 1);
 
-                                if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video"))) {
+                                if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video") || mimeType.contains("image/jpeg"))) {
 
 
                                     fileInfo.addProperty("mimeType", mimeType);
