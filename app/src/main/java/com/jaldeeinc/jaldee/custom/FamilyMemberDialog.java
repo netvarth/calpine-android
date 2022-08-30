@@ -716,13 +716,14 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
 
     }
 
-    Integer providerConsumerId, jaldeeProviderConsumerId;
     private void ApiGetOneTimeQNR() {
 
 
         ApiInterface apiService =
                 ApiClient.getClient(context).create(ApiInterface.class);
-
+        if(memId == consumerId){ //if membid is equal parent id , then set memid as 0. for et oneTimeQnr
+            memId = 0;
+        }
         Call<Questionnaire> call = apiService.getOneTimeQnr(memId, consumerId, providerId);
         //Call<Questionnaire> call = apiService.getOneTimeQuestionss(providerConsumerId,  consumerId, providerId);
 
