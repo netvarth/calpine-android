@@ -409,7 +409,8 @@ public class ServiceOptionActivity extends AppCompatActivity implements IFilesIn
                             String filename = null;
                             String mimeType = Config.getMimeType(path);
 
-                            if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video") || mimeType.contains("image/jpeg"))) {
+                            //if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video") || mimeType.contains("image/jpeg"))) {
+                            if (mimeType != null) {
 
                                 filename = path.substring(path.lastIndexOf("/") + 1);
 
@@ -467,9 +468,8 @@ public class ServiceOptionActivity extends AppCompatActivity implements IFilesIn
 
                                 String filename = path.substring(path.lastIndexOf("/") + 1);
 
-                                if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video") || mimeType.contains("image/jpeg"))) {
-
-
+                                //if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video") || mimeType.contains("image/jpeg"))) {
+                                if (mimeType != null) {
                                     fileInfo.addProperty("mimeType", mimeType);
                                     fileInfo.addProperty("url", filename);
 
@@ -637,7 +637,7 @@ public class ServiceOptionActivity extends AppCompatActivity implements IFilesIn
         String inputString = SharedPreference.getInstance(mContext).getStringValue(Constants.SERVICEOPTIONQNR, "");
         if (serviceInfo.getType() != null) {
             Intent intent = getIntent();
-            if(tv_total_price != null && !tv_total_price.getText().toString().trim().isEmpty()){
+            if (tv_total_price != null && !tv_total_price.getText().toString().trim().isEmpty()) {
                 String prc = tv_total_price.getText().toString();
                 prc = prc.replace("₹", "");
                 prc = prc.trim();

@@ -185,7 +185,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int uniqueID = SharedPreference.getInstance(mContext).getIntValue("uniqueID",0);
+                int uniqueID = SharedPreference.getInstance(mContext).getIntValue("uniqueID", 0);
                 if (uniqueID != 0) {
                     Intent intent = new Intent(OneTimeQuestionnaire.this, ProviderDetailActivity.class);
                     intent.putExtra("uniqueID", String.valueOf(uniqueID));
@@ -555,8 +555,8 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                                     String filename = null;
                                     String mimeType = Config.getMimeType(path);
 
-                                    if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video") || mimeType.contains("image/jpeg"))) {
-
+                                    // if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video") || mimeType.contains("image/jpeg"))) {
+                                    if (mimeType != null) {
                                         filename = path.substring(path.lastIndexOf("/") + 1);
 
                                         fileInfo.addProperty("mimeType", mimeType);
@@ -613,8 +613,8 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
 
                                         String filename = path.substring(path.lastIndexOf("/") + 1);
 
-                                        if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video") || mimeType.contains("image/jpeg"))) {
-
+                                        // if (mimeType != null && (mimeType.toLowerCase().contains("audio") || mimeType.toLowerCase().contains("video") || mimeType.contains("image/jpeg"))) {
+                                        if (mimeType != null) {
 
                                             fileInfo.addProperty("mimeType", mimeType);
                                             fileInfo.addProperty("url", filename);
@@ -2090,7 +2090,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                             Toast.makeText(mContext, "Updated Successfully", Toast.LENGTH_SHORT).show();
                             finish();
                         }
-                        if(!requestFor.isEmpty() && requestFrom.isEmpty()) {
+                        if (!requestFor.isEmpty() && requestFrom.isEmpty()) {
                             if (requestFor.equalsIgnoreCase(Constants.APPOINTMENT)) {
                                 intent.setClass(OneTimeQuestionnaire.this, AppointmentActivity.class);
                             } else if (requestFor.equalsIgnoreCase(Constants.CHECKIN)) {
@@ -2099,7 +2099,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                                 intent.setClass(OneTimeQuestionnaire.this, DonationActivity.class);
                             }
                             startActivity(intent);
-                        } else if(requestFor.isEmpty() && !requestFrom.isEmpty()){
+                        } else if (requestFor.isEmpty() && !requestFrom.isEmpty()) {
                             finish();
                         }
                     } else {
@@ -2214,7 +2214,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
         uploadObj.putOpt("urls", uploadArray);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
         Call<ResponseBody> call = null;
-        call = apiService.checkOneTimeQnrUploadStatus(fMemId,consumerId, providerId, body);
+        call = apiService.checkOneTimeQnrUploadStatus(fMemId, consumerId, providerId, body);
 
 
         call.enqueue(new Callback<ResponseBody>() {
