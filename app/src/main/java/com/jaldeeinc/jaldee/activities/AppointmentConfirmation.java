@@ -427,7 +427,7 @@ public class AppointmentConfirmation extends AppCompatActivity {
             }
 
             // hide instructions link when there are no post instructions
-            if (activeCheckInInfo.getService() != null && activeCheckInInfo.getService().isPostInfoEnabled()) {
+            if (activeCheckInInfo.getService() != null && activeCheckInInfo.getService().isPostInfoEnabled() && !activeCheckInInfo.getService().getPostInfoText().trim().isEmpty()) {
                 llInstructions.setVisibility(View.VISIBLE);
             } else {
                 llInstructions.setVisibility(View.GONE);

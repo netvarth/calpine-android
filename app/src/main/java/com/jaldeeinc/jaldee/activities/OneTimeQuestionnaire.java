@@ -157,6 +157,8 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
     File file;
     String requestFor, requestFrom;
     Intent intent;
+    boolean fromUserProvider;
+    int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,6 +179,8 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
         providerId = intent.getIntExtra("providerId", 0);
         consumerId = intent.getIntExtra("consumerId", 0);
         fMemId = intent.getIntExtra("familyMemId", 0);
+        userId = intent.getIntExtra("userId", 0);
+        fromUserProvider = intent.getBooleanExtra("fromUser", false);
         try {
             ApiGetOneTimeQNR();
         } catch (Exception e) {
@@ -262,8 +266,12 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
 
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-        Call<Questionnaire> call = apiService.getOneTimeQnr(fMemId, consumerId, providerId);
+        Call<Questionnaire> call;
+        if (fromUserProvider) {
+            call = apiService.getOneTimeQnr(fMemId, consumerId, userId);
+        } else {
+            call = apiService.getOneTimeQnr(fMemId, consumerId, providerId);
+        }
 //        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
         call.enqueue(new Callback<Questionnaire>() {
             @Override
@@ -2069,7 +2077,11 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<SubmitQuestionnaire> call = null;
-        call = apiService.submitOneTimeQnr(fMemId, consumerId, providerId, requestBody);
+        if(fromUserProvider){
+            call = apiService.submitOneTimeQnr(fMemId, consumerId, userId, requestBody);
+        }else {
+            call = apiService.submitOneTimeQnr(fMemId, consumerId, providerId, requestBody);
+        }
 
 
         call.enqueue(new Callback<SubmitQuestionnaire>() {
@@ -2177,7 +2189,8 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                                             try {
                                                 if (mDialog.isShowing())
                                                     Config.closeDialog(getParent(), mDialog);
-                                                ApiCheckStatus(fMemId, consumerId, providerId, result);
+
+                                                    ApiCheckStatus(fMemId, consumerId, result);
 
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
@@ -2201,7 +2214,7 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
         }
     }
 
-    private void ApiCheckStatus(int fMemId, int consumerId, int providerId, SubmitQuestionnaire result) throws JSONException {
+    private void ApiCheckStatus(int fMemId, int consumerId, SubmitQuestionnaire result) throws JSONException {
 
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
 
@@ -2228,7 +2241,11 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
         uploadObj.putOpt("urls", uploadArray);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), uploadObj.toString());
         Call<ResponseBody> call = null;
-        call = apiService.checkOneTimeQnrUploadStatus(fMemId, consumerId, providerId, body);
+        if(fromUserProvider){
+            call = apiService.checkOneTimeQnrUploadStatus(fMemId, consumerId, userId, body);
+        }else {
+            call = apiService.checkOneTimeQnrUploadStatus(fMemId, consumerId, providerId, body);
+        }
 
 
         call.enqueue(new Callback<ResponseBody>() {
