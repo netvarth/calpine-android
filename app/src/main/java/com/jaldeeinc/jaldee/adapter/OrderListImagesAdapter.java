@@ -83,7 +83,7 @@ public class OrderListImagesAdapter extends RecyclerView.Adapter<OrderListImages
         } else {
             myViewHolder.iv_file_attach.setVisibility(View.VISIBLE);
 
-            if (itemList.get(position).getType() != null && itemList.get(position).getType().equalsIgnoreCase("application/pdf")) {
+            if (itemList.get(position).getType() != null && (itemList.get(position).getType().equalsIgnoreCase("application/pdf") || itemList.get(position).getType().equalsIgnoreCase("pdf"))) {
 
                 if (!((Activity) mContext).isFinishing()) {
 
@@ -150,7 +150,7 @@ public class OrderListImagesAdapter extends RecyclerView.Adapter<OrderListImages
             @Override
             public void onClick(View v) {
 
-                if (itemList.get(position).getType().equalsIgnoreCase("application/pdf")) {
+                if (itemList.get(position).getType().equalsIgnoreCase("application/pdf") || itemList.get(position).getType().equalsIgnoreCase("pdf")) {
 
                     openOnlinePdf(mContext, itemList.get(position).getS3path());
 

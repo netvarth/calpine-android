@@ -182,16 +182,18 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         cvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int uniqueID = SharedPreference.getInstance(mContext).getIntValue("uniqueID", 0);
                 if (uniqueID != 0) {
+                    finish();
+
                     Intent intent = new Intent(OneTimeQuestionnaire.this, ProviderDetailActivity.class);
                     intent.putExtra("uniqueID", String.valueOf(uniqueID));
                     startActivity(intent);
                 }
-                //finish();
             }
         });
         cvSubmit.setOnClickListener(new View.OnClickListener() {
@@ -204,6 +206,18 @@ public class OneTimeQuestionnaire extends AppCompatActivity implements IFilesInt
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        int uniqueID = SharedPreference.getInstance(mContext).getIntValue("uniqueID", 0);
+        if (uniqueID != 0) {
+            finish();
+
+            Intent intent = new Intent(OneTimeQuestionnaire.this, ProviderDetailActivity.class);
+            intent.putExtra("uniqueID", String.valueOf(uniqueID));
+            startActivity(intent);
+        }
     }
 
     // files related

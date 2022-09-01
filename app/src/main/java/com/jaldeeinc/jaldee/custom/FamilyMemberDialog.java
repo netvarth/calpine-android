@@ -159,9 +159,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
         slideUp = AnimationUtils.loadAnimation(context, R.anim.slide_in_left);
         slideRight = AnimationUtils.loadAnimation(context, R.anim.slide_out_right);
         cCodePicker = findViewById(R.id.ccp);
-        if (isVirtualService) {
-            ll_chooseMember.setVisibility(View.GONE);
-        }
+
         if (profileDetails.getUserprofile().getGender() != null) {
             if (!profileDetails.getUserprofile().getGender().equalsIgnoreCase("")) {
                 if (profileDetails.getUserprofile().getGender().equalsIgnoreCase("Male")) {
@@ -223,14 +221,8 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
             }
         });
 
-        if (isVirtualService) {
-            bt_save.setEnabled(true);
-            bt_save.setBackground(context.getResources().getDrawable(R.drawable.curved_save));
-            bt_save.setTextColor(context.getResources().getColor(R.color.white));
-        } else {
-            bt_save.setEnabled(false);
-            bt_save.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
-        }
+        bt_save.setEnabled(false);
+        bt_save.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
         bt_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -276,7 +268,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                                 }
                             } else {
                                 CheckInActivity.refreshName(s_changename, memberid);
-                               // dismiss();
+                                // dismiss();
                             }
                         }
                         // }
@@ -569,7 +561,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
                             SharedPreference.getInstance(context).setValue("email", et_email.getText().toString());
-                            if(!multiple) {
+                            if (!multiple) {
                                 ApiGetOneTimeQNR();
                             } else {
                                 Toast.makeText(context, "Details saved successfully ", Toast.LENGTH_LONG).show();
@@ -721,7 +713,7 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
 
         ApiInterface apiService =
                 ApiClient.getClient(context).create(ApiInterface.class);
-        if(memId == consumerId){ //if membid is equal parent id , then set memid as 0. for et oneTimeQnr
+        if (memId == consumerId) { //if membid is equal parent id , then set memid as 0. for et oneTimeQnr
             memId = 0;
         }
         Call<Questionnaire> call = apiService.getOneTimeQnr(memId, consumerId, providerId);
@@ -768,7 +760,6 @@ public class FamilyMemberDialog extends Dialog implements IFamillyListSelected {
                             iFamillyListSelected.CheckedFamilyList(checkedfamilyList);
                             dismiss();
                         }
-
 
 
                     } else {

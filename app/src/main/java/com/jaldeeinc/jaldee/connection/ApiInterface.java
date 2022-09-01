@@ -252,12 +252,6 @@ public interface ApiInterface {
     @GET("consumer/familyMember")
     Call<ArrayList<FamilyArrayModel>> getFamilyList();
 
-    @GET("consumer/familyMember/providerconsumer/{consumerId}?")
-    Call<ArrayList<ProviderConsumerFamilyMemberModel>> getFamilyMemberProviderConsumer(@Path("consumerId") int familyMemId, @Query("account") Integer account);
-
-    @POST("consumer/familyMember/providerconsumer/{familyMemId}/{providerConsumerId}")
-    Call<ResponseBody> AddFamilyMEmberProviderConsumer(@Path("familyMemId") int familyMemId, @Path("providerConsumerId") int providerConsumerId, @Query("account") String account);
-
     //@Headers({"BOOKING_REQ_FROM: CONSUMER_APP"})
     @GET("provider/account/settings/locations/{pincode}")
     Call<ArrayList<PincodeLocationsResponse>> getPinLocations(@Path("pincode") int id);

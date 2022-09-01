@@ -3079,7 +3079,7 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
         return returnedBitmap;
     }
 
-    private void ApiGetOneTimeQNR( String from, SearchAppoinment appointmentServiceInfo, SearchService checkinServiceInfo, SearchDonation donationServiceInfo) {
+    private void ApiGetOneTimeQNR(String from, SearchAppoinment appointmentServiceInfo, SearchService checkinServiceInfo, SearchDonation donationServiceInfo) {
 
 
         ApiInterface apiService =
@@ -3106,11 +3106,9 @@ public class ProviderDetailActivity extends AppCompatActivity implements IGetSel
                                 }
                             }
                         }
-                        if(isOneTimeQnrAvailable){
-                            SharedPreference.getInstance(mContext).setValue("uniqueID", uniqueId);
-                            //SharedPreference.getInstance(mContext).setValue("locationId", locationId);
+                        SharedPreference.getInstance(mContext).setValue("uniqueID", uniqueId);
+                        //SharedPreference.getInstance(mContext).setValue("locationId", locationId);
 
-                        }
                         Intent intent = new Intent();
 
                         if (from == Constants.APPOINTMENT && appointmentServiceInfo != null) {
